@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Legenda Lumina — Action RPG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.80.1/phaser.min.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+ <div id="screen"><div id="light"></div><div id="dark"></div><div id="ui"></div><div id="fade"></div></div>
+ <div id="pad">
+  <div id="joy"><div id="knob"></div></div>
+  <div class="btn" id="bA" data-k="a">⚔<small>SERANG</small></div>
+  <div class="btn" id="bB" data-k="b">✦<small>SIHIR</small></div>
+  <div class="btn" id="bI" data-k="item">♥<small>OBAT</small></div>
+  <div class="btn" id="bT" data-k="bag">TAS</div>
+  <div class="btn" id="bD" data-k="dash">»<small>DASH</small></div>
+  <div class="btn" id="bM" data-k="menu">MENU</div>
+  <div class="btn" id="bP" data-k="map">PETA</div>
+ </div>
+ <div id="keys">Panah/WASD: jalan · Z/J/Spasi: serang & bicara · X/K: sihir api · Q: minum ramuan · Esc: menu · M/Tab: peta · I: tas · Shift: dash · C: nova es · tahan Z: tebasan putar</div>
+</div>
+<!-- urutan penting: file di bawah memakai yang di atas -->
+<script src="src/core/util.js"></script>
+<script src="src/core/audio.js"></script>
+<script src="src/core/input.js"></script>
+<script src="src/art/base.js"></script>
+<script src="src/art/nature.js"></script>
+<script src="src/art/buildings.js"></script>
+<script src="src/art/characters.js"></script>
+<script src="src/art/monsters.js"></script>
+<script src="src/art/items.js"></script>
+<script src="src/art/fx.js"></script>
+<script src="src/art/interior.js"></script>
+<script src="src/world/objects.js"></script>
+<script src="src/world/ground.js"></script>
+<script src="src/world/maps/village.js"></script>
+<script src="src/world/maps/forest.js"></script>
+<script src="src/world/maps/meadow.js"></script>
+<script src="src/world/maps/cave.js"></script>
+<script src="src/world/maps/swamp.js"></script>
+<script src="src/world/maps/interiors.js"></script>
+<script src="src/ui/widgets.js"></script>
+<script src="src/core/state.js"></script>
+<script src="src/data/items.js"></script>
+<script src="src/data/enemies.js"></script>
+<script src="src/data/quests.js"></script>
+<script src="src/systems/daynight.js"></script>
+<script src="src/systems/achievements.js"></script>
+<script src="src/gfx/bake.js"></script>
+<script src="src/gfx/textures.js"></script>
+<script src="src/scene/world.js"></script>
+<script src="src/systems/combat.js"></script>
+<script src="src/systems/skills.js"></script>
+<script src="src/ai/enemies.js"></script>
+<script src="src/ai/bosses.js"></script>
+<script src="src/systems/life.js"></script>
+<script src="src/systems/story.js"></script>
+<script src="src/npc/npcs.js"></script>
+<script src="src/npc/dialog.js"></script>
+<script src="src/ui/shop.js"></script>
+<script src="src/ui/bag.js"></script>
+<script src="src/ui/map.js"></script>
+<script src="src/ui/menus.js"></script>
+<script src="src/ui/title.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>

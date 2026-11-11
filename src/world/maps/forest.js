@@ -1,0 +1,49 @@
+'use strict';
+// Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)
+// ---------------- HUTAN ----------------
+MAPS.forest = {
+  id: 'forest', name: 'Hutan Lumina', w: 1280, h: 1200, bgm: 'field', ground: 'forest',
+  paths: [
+    [640, 0, 640, 160, 14], [640, 160, 420, 260, 14], [420, 260, 380, 440, 14], [380, 440, 400, 560, 14], [400, 560, 410, 690, 14],
+    [410, 690, 700, 780, 14], [700, 780, 640, 920, 14], [640, 920, 640, 1010, 14],
+    [420, 260, 760, 320, 12], [760, 320, 1000, 320, 12],
+    [380, 440, 200, 560, 11], [200, 560, 180, 820, 11],
+    [700, 780, 1000, 850, 11],
+  ],
+  discs: [[1010, 320, 72], [180, 846, 58], [1030, 860, 62], [640, 1068, 92], [380, 440, 30], [640, 150, 34]],
+  river: { y: 600, amp: 30, k: .009, w: 36, bridge: [380, 432] },
+  objs: [
+    ['shrine', 640, 1094], ['sign', 676, 120, { text: 'Kuil Kristal: ikuti jalan ke selatan.\nTimur: perkemahan goblin.\nTenggara: sarang ular.' }],
+    ['log', 860, 270], ['stump', 1080, 380], ['rock', 960, 384], ['rock', 1100, 270], ['log', 228, 760], ['rock', 130, 880],
+    ['rock', 520, 820], ['stump', 760, 900], ['rock', 520, 1050], ['rock', 760, 1060], ['mush', 300, 300], ['mush', 450, 700],
+    ['mush', 860, 800], ['mush', 140, 760], ['bushy', 560, 200], ['bushv', 460, 360], ['bushy', 800, 700], ['bushv', 280, 700],
+    ['rock', 1080, 900], ['log', 980, 880], ['mush', 1050, 820],
+  ],
+  chests: [{ id: 'c1', x: 1060, y: 300, item: 'iron' }, { id: 'c2', x: 180, y: 852, item: 'ether2' }, { id: 'c3', x: 676, y: 156, item: 'potion2' }, { id: 'c4', x: 1060, y: 852, item: 'gold150', lock: 1 }],
+  crystal: { x: 640, y: 1076 },
+  walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 1200], [1240, 0, 40, 1200], [0, 1170, 1280, 30]],
+  exits: [{ x: 600, y: 0, w: 80, h: 12, to: 'village', tx: 512, ty: 664, dir: 'up', label: 'Desa Lumina' }],
+  npcs: [{ id: 'hunter', ch: 'hunter', name: 'Pemburu Raka', x: 600, y: 90, dir: 'down' }],
+  enemies: [
+    ['slime', 520, 220], ['slime', 600, 250], ['slime', 400, 330], ['bat', 440, 400], ['slime', 330, 470],
+    ['slime', 780, 320], ['goblin', 960, 300], ['goblin', 1040, 360], ['bat', 900, 340], ['wolf', 980, 260],
+    ['shroom', 210, 620], ['shroom', 170, 760], ['bat', 240, 700], ['wolf', 200, 520],
+    ['slimeb', 480, 720], ['shroom', 580, 740], ['bat', 660, 720], ['goblin', 680, 860], ['slimeb', 600, 900], ['wolf', 720, 950],
+    ['snake', 960, 830], ['snake', 1060, 900], ['snake', 1000, 800], ['shroom', 1100, 830],
+  ],
+  bosses: [
+    { type: 'gchief', flag: 'mb_goblin', x: 1010, y: 320, zone: [950, 262, 120, 116], need: 2, after: 'seal',
+      intro: [['Kepala Goblin', 'Heh! Pecahan segel ini punyaku. Raja yang menyuruhku menjaganya!']] },
+    { type: 'squeen', flag: 'mb_queen', x: 180, y: 846, zone: [126, 792, 108, 108], need: 2, after: 'seal',
+      intro: [['Ratu Jamur', 'Fufufu... pecahan bersinar ini cocok untuk mahkotaku. Jadilah pupuk!']] },
+    { type: 'gsnake', flag: 'mb_snake', x: 1030, y: 860, zone: [972, 802, 116, 116], need: 2, after: 'seal',
+      intro: [[null, 'Tanah berdesis... Seekor ular raksasa melingkari pecahan segel!']] },
+    { type: 'gking', flag: 'boss', x: 640, y: 1046, zone: [560, 996, 160, 114], need: 3, after: 'crystal',
+      intro: [['Raja Goblin', 'GRAAAH! Kau menghancurkan segelku?! Kristal ini sumber kekuatanku sekarang!'], ['Arka', 'Cahayanya akan kubawa pulang ke desa. Bersiaplah!']] },
+  ],
+  barrier: { x: 640, y: 984, w: 64 },
+  ring: { cx: 640, cy: 1068, r: 104, gap: 22 },
+  mochi: { x: 112, y: 430 },
+  fish: [[446, 598]],
+  trees: { n: 3200, min: 34, types: [['pined', .3], ['pine', .15], ['treeAd', .3], ['treeBd', .25]] }, butterflies: 4,
+};

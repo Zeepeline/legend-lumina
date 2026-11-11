@@ -1,0 +1,349 @@
+{
+ "name": "Lumina Art Bible",
+ "version": 1,
+ "color": {
+  "themes": [
+   {
+    "id": "game",
+    "name": "Game"
+   }
+  ],
+  "tokens": [
+   {
+    "name": "leaf-outline",
+    "value": "#2e5a40",
+    "usage": "Garis tepi daun dan semak (warna gelap berwarna, bukan hitam)."
+   },
+   {
+    "name": "leaf-shadow",
+    "value": "#44805f",
+    "usage": "Bayangan daun; bergeser ke teal."
+   },
+   {
+    "name": "leaf-base",
+    "value": "#5fbf68",
+    "usage": "Warna dasar kanopi pohon dan semak."
+   },
+   {
+    "name": "leaf-light",
+    "value": "#85e07a",
+    "usage": "Gumpalan daun yang kena cahaya kiri-atas."
+   },
+   {
+    "name": "leaf-highlight",
+    "value": "#c4f48e",
+    "usage": "Sorotan daun; bergeser ke kuning. Pakai sedikit saja."
+   },
+   {
+    "name": "forest-outline",
+    "value": "#21422e",
+    "usage": "Garis tepi pohon hutan (versi gelap)."
+   },
+   {
+    "name": "forest-shadow",
+    "value": "#356a4c",
+    "usage": "Bayangan pohon hutan."
+   },
+   {
+    "name": "forest-base",
+    "value": "#4a9a58",
+    "usage": "Dasar kanopi pohon hutan."
+   },
+   {
+    "name": "forest-light",
+    "value": "#6cc06c",
+    "usage": "Sisi terang pohon hutan."
+   },
+   {
+    "name": "forest-highlight",
+    "value": "#a6e08a",
+    "usage": "Sorotan pohon hutan."
+   },
+   {
+    "name": "grass-1",
+    "value": "#7ec462",
+    "usage": "Rumput desa, tingkat 1 dari 4 (diacak dengan noise)."
+   },
+   {
+    "name": "grass-2",
+    "value": "#8ccf6c",
+    "usage": "Rumput desa, tingkat 2 dari 4 (diacak dengan noise)."
+   },
+   {
+    "name": "grass-3",
+    "value": "#98d877",
+    "usage": "Rumput desa, tingkat 3 dari 4 (diacak dengan noise)."
+   },
+   {
+    "name": "grass-4",
+    "value": "#a6e083",
+    "usage": "Rumput desa, tingkat 4 dari 4 (diacak dengan noise)."
+   },
+   {
+    "name": "grass-edge",
+    "value": "#72b85c",
+    "usage": "Garis rumput tepat di tepi jalan batu."
+   },
+   {
+    "name": "stone-mortar",
+    "value": "#b5b8a2",
+    "usage": "Nat jalan batu; abu kehijauan, bukan abu netral."
+   },
+   {
+    "name": "stone-1",
+    "value": "#d2c8bd",
+    "usage": "Batu jalan paling gelap."
+   },
+   {
+    "name": "stone-2",
+    "value": "#ddd4c9",
+    "usage": "Batu jalan sedang."
+   },
+   {
+    "name": "stone-3",
+    "value": "#eae2d6",
+    "usage": "Batu jalan terang."
+   },
+   {
+    "name": "stone-4",
+    "value": "#f1ebe1",
+    "usage": "Sorotan batu di sisi kiri-atas."
+   },
+   {
+    "name": "roof-outline",
+    "value": "#6a3226",
+    "usage": "Garis tepi atap."
+   },
+   {
+    "name": "roof-shadow",
+    "value": "#965244",
+    "usage": "Baris genteng sisi bayangan."
+   },
+   {
+    "name": "roof-base",
+    "value": "#d37048",
+    "usage": "Warna dasar atap oranye."
+   },
+   {
+    "name": "roof-light",
+    "value": "#e4976a",
+    "usage": "Genteng sisi terang (kiri)."
+   },
+   {
+    "name": "roof-highlight",
+    "value": "#f6c08a",
+    "usage": "Bubungan atap yang kena cahaya."
+   },
+   {
+    "name": "wood-outline",
+    "value": "#5a3a30",
+    "usage": "Garis tepi kayu dan batang pohon."
+   },
+   {
+    "name": "wood-shadow",
+    "value": "#7a5446",
+    "usage": "Sisi kanan batang & papan."
+   },
+   {
+    "name": "wood-base",
+    "value": "#a06a52",
+    "usage": "Kayu dasar: pintu, bangku, peti."
+   },
+   {
+    "name": "wood-light",
+    "value": "#c48c66",
+    "usage": "Sisi terang kayu."
+   },
+   {
+    "name": "wall-cream",
+    "value": "#f8e9c8",
+    "usage": "Dinding plester rumah."
+   },
+   {
+    "name": "timber",
+    "value": "#673c3d",
+    "usage": "Rangka kayu rumah (gaya Tudor)."
+   },
+   {
+    "name": "water-deep",
+    "value": "#2e5a8a",
+    "usage": "Air terdalam / garis tepi air."
+   },
+   {
+    "name": "water-shadow",
+    "value": "#4a8ed0",
+    "usage": "Air bagian tengah."
+   },
+   {
+    "name": "water-base",
+    "value": "#66b8ee",
+    "usage": "Warna dasar air."
+   },
+   {
+    "name": "water-light",
+    "value": "#8fd8f6",
+    "usage": "Air dekat tepi."
+   },
+   {
+    "name": "water-highlight",
+    "value": "#d8f4fb",
+    "usage": "Kilau riak air."
+   },
+   {
+    "name": "skin",
+    "value": "#ffd6b0",
+    "usage": "Kulit karakter manusia."
+   },
+   {
+    "name": "eye",
+    "value": "#3a2438",
+    "usage": "Mata karakter (2px, dengan titik putih kilau)."
+   },
+   {
+    "name": "blush",
+    "value": "#ff9e9a",
+    "usage": "Pipi merona karakter."
+   },
+   {
+    "name": "ui-parchment",
+    "value": "#fbf1d9",
+    "usage": "Latar jendela dialog & menu."
+   },
+   {
+    "name": "ui-wood",
+    "value": "#6e4222",
+    "usage": "Bingkai jendela UI."
+   },
+   {
+    "name": "ui-ink",
+    "value": "#3b2618",
+    "usage": "Teks di atas ui-parchment (kontras 13:1)."
+   },
+   {
+    "name": "ui-accent",
+    "value": "#d0582a",
+    "usage": "Kursor pilihan menu, panah lanjut."
+   },
+   {
+    "name": "ui-green",
+    "value": "#5aa04a",
+    "usage": "Label nama pembicara."
+   },
+   {
+    "name": "bar-hp",
+    "value": "#3cae3a",
+    "usage": "Bar HP."
+   },
+   {
+    "name": "bar-mp",
+    "value": "#3a8ee0",
+    "usage": "Bar MP."
+   },
+   {
+    "name": "gold",
+    "value": "#ffd23a",
+    "usage": "Koin dan teks emas."
+   }
+  ]
+ },
+ "type": {
+  "fonts": [],
+  "families": {
+   "pixel": "\"Pixelify Sans\", \"Courier New\", monospace"
+  },
+  "groups": [
+   {
+    "name": "UI game",
+    "family": "pixel",
+    "styles": [
+     {
+      "name": "judul",
+      "fontSize": "34px",
+      "lineHeight": "34px",
+      "fontWeight": 700
+     },
+     {
+      "name": "banner",
+      "fontSize": "16px",
+      "lineHeight": "18px",
+      "fontWeight": 700
+     },
+     {
+      "name": "dialog",
+      "fontSize": "10.5px",
+      "lineHeight": "13px",
+      "fontWeight": 400
+     },
+     {
+      "name": "menu",
+      "fontSize": "10px",
+      "lineHeight": "14px",
+      "fontWeight": 400
+     },
+     {
+      "name": "kecil",
+      "fontSize": "8px",
+      "lineHeight": "10px",
+      "fontWeight": 400
+     }
+    ]
+   }
+  ]
+ },
+ "spacing": {
+  "tokens": [
+   {
+    "name": "pixel",
+    "value": "1px",
+    "usage": "Satu piksel game. Semua ukuran sprite kelipatan ini."
+   },
+   {
+    "name": "tile",
+    "value": "16px",
+    "usage": "Ukuran petak dunia & grid tabrakan."
+   },
+   {
+    "name": "char-w",
+    "value": "20px",
+    "usage": "Lebar frame karakter (16px badan + garis tepi + ruang)."
+   },
+   {
+    "name": "char-h",
+    "value": "26px",
+    "usage": "Tinggi frame karakter. Kepala ±13px (chibi 2 kepala)."
+   },
+   {
+    "name": "icon",
+    "value": "14px",
+    "usage": "Ukuran ikon item di tas & toko."
+   },
+   {
+    "name": "view-w",
+    "value": "288px",
+    "usage": "Lebar layar game (tinggi 224–320px)."
+   }
+  ]
+ },
+ "radius": {
+  "tokens": [
+   {
+    "name": "radius-sprite",
+    "value": "0px",
+    "usage": "Sprite selalu kotak piksel tajam, tanpa anti-alias."
+   },
+   {
+    "name": "radius-win",
+    "value": "4px",
+    "usage": "Sudut jendela dialog dan menu."
+   },
+   {
+    "name": "radius-pill",
+    "value": "13px",
+    "usage": "Tombol MENU/PETA di layar sentuh."
+   }
+  ]
+ },
+ "meta": {
+  "source": "Gambar referensi desa (dari pengguna) + kode game Legenda Lumina"
+ }
+}
