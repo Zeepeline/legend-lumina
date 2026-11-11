@@ -77,8 +77,8 @@ Lainnya: `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png`
 
 ## Tes & CI
 
-- Tes Playwright di `tests/*.spec.js` (pembantu di `tests/helpers.js`). **Tidak perlu dijalankan di lokal**: push saja, GitHub Actions (`.github/workflows/ci.yml`) menjalankan `npm run check`, cek `dist/` terbaru, lalu `npm test`. Laporan + screenshot ada di artefak `laporan-tes`.
-- Kalau CI hijau di `main`, `pages.yml` men-deploy game ke GitHub Pages.
+- Tes Playwright di `tests/*.spec.js` (pembantu di `tests/helpers.js`). Workflow CI (`.github/workflows/ci.yml`) **hanya manual** (Actions → CI → Run workflow): menjalankan `npm run check`, cek `dist/` terbaru, lalu `npm test`. Laporan + screenshot ada di artefak `laporan-tes`.
+- Setiap push ke `main`, `pages.yml` langsung men-deploy game ke GitHub Pages (tanpa tes).
 - Lokal tanpa internet: `PHASER_LOCAL=/path/phaser.min.js npm test`.
 
 ## Status
