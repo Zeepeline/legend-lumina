@@ -2,6 +2,7 @@
 const { defineConfig } = require('@playwright/test');
 module.exports = defineConfig({
   testDir: 'tests',
+  testIgnore: process.env.SAPU ? [] : ['**/sapu.spec.js'],
   timeout: 90_000,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : 1,

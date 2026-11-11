@@ -8,6 +8,7 @@ const cityLines = {
   pedagang: ['Kain dari Teluk Karang! Rempah dari Simpang Rantau! Lihat-lihat dulu!', 'Serikat menaikkan sewa lapak. Kalau begini terus, aku pulang ke desa saja.', 'Serpihan kristal? Ssst... jangan keras-keras. Yang punya izin cuma orang Serikat.'],
   murid: ['Ujian sihir cahaya minggu depan. Aku belum hafal satu pun mantra.', 'Arsip lantai bawah? Hanya guru yang boleh masuk.', 'Konon dulu Akademi melatih para Penjaga Cahaya. Sekarang tinggal cerita.'],
   bawah: ['Dapur umum Guru Lestari satu-satunya alasan anak-anak di sini masih bisa makan.', 'Orang atas tak pernah turun ke sini. Kecuali penagih sewa.', 'Aku dulu penambang di Lembah Besi. Lembahnya makin dingin, jadi aku pindah ke kota.'],
+  gerbang: ['Selamat datang di Kota Lumina! Lewat saja di bawah lengkungan gerbang, lurus ke utara menuju Distrik Pasar.', 'Gerbang terbuka untuk pendatang. Pasar ada di balik tembok ini, ikuti jalan batu ke utara.'],
   penjaga: ['Gerbang dibuka dari fajar sampai tengah malam. Jangan bikin onar.', 'Sejak jalan longsor dibuka, pendatang dari timur makin banyak.'],
 };
 const citizens = (list) => list.map(([id, ch, name, x, y, kind, wander = 22]) => ({ id, ch, name, x, y, dir: 'down', wander, lines: cityLines[kind] }));
@@ -35,15 +36,15 @@ MAPS.kgate = {
   ponds: [[300, 470, 210, 70], [900, 470, 210, 70]],
   objs: [['gatehouse', 600, 404], ...[[60, 404], [192, 404], [324, 404], [876, 404], [1008, 404], [1140, 404]].map(([x, y]) => ['cwall', x, y]),
     ...lampRow(560, 560, 2, 80), ...lampRow(560, 720, 2, 80), ...lampRow(540, 250, 3, 60),
-    ['sign', 680, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\nPintu masuk: Distrik Pasar.' }], ['crate', 260, 620], ['crate', 282, 616], ['barrel', 330, 630], ['crate', 880, 620], ['barrel', 930, 626],
+    ['sign', 680, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\n↑ Masuk lewat gerbang di utara → Distrik Pasar.' }], ['crate', 260, 620], ['crate', 282, 616], ['barrel', 330, 630], ['crate', 880, 620], ['barrel', 930, 626],
     ['houseB', 200, 230], ['houseC', 1000, 230], ['planter', 470, 300], ['planter', 730, 300],
     ['pigeons', 680, 520], ['pigeons', 420, 680],
     ['archerytarget', 340, 720]],
-  walls: [[0, 0, 540, 40], [660, 0, 540, 40], [0, 0, 40, 900], [1160, 0, 40, 900], [0, 860, 560, 40], [640, 860, 560, 40], [0, 380, 540, 26], [660, 380, 540, 26]],
+  walls: [[0, 0, 540, 40], [660, 0, 540, 40], [0, 0, 40, 900], [1160, 0, 40, 900], [0, 860, 560, 40], [640, 860, 560, 40], [0, 380, 564, 26], [636, 380, 564, 26]],
   border: { top: 40, bottom: 860, left: 40, right: 1160, gap: [560, 640], gapT: [540, 660], types: ['treeA', 'treeB'] },
   exits: [{ x: 560, y: 888, w: 80, h: 12, to: 'road', tx: 450, ty: 60, dir: 'down', label: 'Jalan Raya Lama' },
     { x: 540, y: 0, w: 120, h: 12, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' }],
-  npcs: citizens([['gj1', 'guard', 'Penjaga Gerbang', 556, 470, 'penjaga', 0], ['gj2', 'guard', 'Penjaga Gerbang', 644, 470, 'penjaga', 0], ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'], ['gw2', 'farmer', 'Petani', 900, 700, 'warga']]),
+  npcs: citizens([['gj1', 'guard', 'Penjaga Gerbang', 540, 450, 'gerbang', 0], ['gj2', 'guard', 'Penjaga Gerbang', 660, 450, 'gerbang', 0], ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'], ['gw2', 'farmer', 'Petani', 900, 700, 'warga']]),
   trees: { n: 160, min: 30, types: [['treeA', .5], ['bushG1', .3], ['rock', .2]] },
 };
 

@@ -53,7 +53,8 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `ai/enemies.js` | AI musuh biasa (`updEnemy`, cabang per `ai`) |
 | `ai/bosses.js` | AI boss, `startBoss()`, `bossDown()` |
 | `npc/dialog.js` | `talkNpc()` (semua dialog per NPC), `npcHasQuest()` (tanda !), toko, bengkel, penginapan |
-| `npc/npcs.js` | gerak NPC & hewan |
+| `npc/npcs.js` | gerak dasar NPC, sapaan (`NPC_BARKS`), hewan |
+| `npc/brain.js` | **rutinitas NPC** sesuai peran (`NPC_ROLE`, `WORK`, `STORY_NPC`): bekerja, berpatroli, duduk, mengobrol, pulang saat malam. Aturan: `docs/NPC_RULES.md` |
 | `ui/widgets.js` | `say`, `talk`, `choose`, `ask`, `banner`, `popWorld`, HUD (`updHud`) |
 | `ui/savecode.js` | ekspor/impor kode save (`saveCode()`, `readCode()`, `codeDialog()`) |
 | `ui/shop.js` (juga `cookMenu`, `upgradeMenu`) · `bag.js` (tas & **jurnal** `openQuests`) · `map.js` · `menus.js` · `title.js` | layar toko/tempa, tas & buku misi, peta, menu utama/bestiari, judul |
@@ -91,6 +92,10 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 **Ikuti `docs/PLACEMENT_RULES.md`.** Setiap objek harus punya alasan logis berada di titiknya: tidak di tengah jalan, tidak menutup pintu atau jalan keluar, tidak bertumpuk, tidak di air, dan benda alam liar (api unggun, tulang, jamur) tidak ada di permukiman. **Sebelum push, `node tools/check-layout.js` harus "0 masalah"** (juga dijalankan oleh `npm run check`). Periksa hasil potongan gambar dengan mata sebelum dipakai.
 
+## NPC & dialog (WAJIB)
+
+**Ikuti `docs/NPC_RULES.md`:** tidak ada NPC yang hanya diam; setiap NPC punya peran dan rutinitas (`npc/brain.js`). Format dialog yang benar: `say('teks', 'Nama')`, `talk('Nama', [..])`, `choose({ head, items: [{ t }] })`. `popWorld` adalah fungsi global. Setiap `G.lock++` wajib dibuka lagi di `finally`. Untuk mengecek semua objek interaktif tidak membeku: `npm run sapu`.
+
 ## Arah desain & cerita
 
 **Wajib mengikuti `docs/GAME_DESIGN.md`** untuk semua cerita, misi, bab, NPC, dan boss: tiga lapis tujuan (langsung, tengah, jangka panjang), misteri diungkap bertahap, tidak semua bab punya boss, dunia bereaksi terhadap tindakan pemain. Misteri utama dan peta pengungkapan per bab ada di bagian "Story bible". Jangan membocorkan rahasia besar lebih cepat dari jadwal di tabel itu. **Musuh terakhir & akhir cerita** ada di `docs/SPOILER_ENDING.md`: wajib dipatuhi, tapi **pemilik tidak ingin spoiler**, jadi jangan pernah membahas isinya dengan pemilik.
@@ -115,6 +120,7 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 - **Dunia:** Desa Lumina, Hutan Lumina (+ Hutan Dalam, Reruntuhan Aurel, Jalur Sungai Senja), Padang Angin (+ Desa Kincir), Gua Batu, Rawa Senja, Puncak Beku, Danau Cermin, Jalan Raya Lama, Kota Lumina (Gerbang, Pasar, Akademi, Kota Bawah) + 6 interior.
 - **Cerita:** Bab 1–5 (stage 0–27; Bab 4 & 5 tanpa boss), jurnal 3 lapis tujuan + lore + misteri, foreshadowing sesuai `docs/SPOILER_ENDING.md`, 4 misi sampingan.
+- **NPC:** semua NPC beraktivitas sesuai peran & pulang saat malam (`npc/brain.js`).
 - **Sistem:** belajar 7 jurus dari 5 guru (penguasaan I–III), 4 gaya senjata, status, pancing, kebun, masak, upgrade, teleport, siang-malam & cuaca, suasana alam, puluhan objek interaktif (`systems/life.js`), penunjuk misi, simpan otomatis, ekspor/impor save, PWA, gamepad.
 - **Aset pemilik:** 21 potret NPC + hewan (`assets/img/npc_*`, `ani_*`), dekorasi Pixel 16. Gambar salah potong ada di `assets/raw/salah-potong/` (jangan dipakai).
 

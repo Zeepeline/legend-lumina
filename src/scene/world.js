@@ -449,7 +449,7 @@ class World extends Phaser.Scene {
   }
   spawnNpc(n) {
     const s = this.physics.add.sprite(n.x, n.y, 'ch_' + n.ch, 'down0').setOrigin(.5, 1).setDepth(n.y);
-    s.body.setSize(12, 7).setOffset(4, CH_FH - 8); s.setImmovable(true); s.setCollideWorldBounds(true);
+    s.body.setSize(12, 7).setOffset((s.width - 12) / 2, s.height - 8); s.setImmovable(true); s.setCollideWorldBounds(true);
     this.physics.add.collider(s, this.walls);
     const o = { n, spr: s, ch: n.ch, home: { x: n.x, y: n.y }, t: rnd(1, 3), dir: n.dir, sh: this.add.image(n.x, n.y, 'shadow').setAlpha(.25) };
     this.face(o, n.dir); this.npcs.push(o);

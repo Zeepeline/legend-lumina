@@ -6,7 +6,8 @@
     "serve": "python3 -m http.server 8000",
     "bundle": "python3 tools/bundle.py",
     "check": "node tools/check-syntax.js && node tools/check-layout.js",
-    "test": "playwright test"
+    "test": "playwright test",
+    "sapu": "SAPU=1 playwright test sapu --timeout=2400000"
   },
   "devDependencies": {
     "@playwright/test": "1.49.1"

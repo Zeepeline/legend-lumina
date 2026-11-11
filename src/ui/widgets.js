@@ -10,7 +10,11 @@ function fadeTo(v) { FADE.style.opacity = v; return sleep(360); }
 function shake() { if (!OPT.shake) return; SCREEN.classList.remove('shake'); void SCREEN.offsetWidth; SCREEN.classList.add('shake'); }
 
 // ---- dialog ----
+// Catatan: say(teks, nama) & choose({ head, items }). Format lama/salah dari agent lain juga diterima agar layar tidak membeku:
+//   say('Nama', ['baris', ...])  → dialog beberapa baris;  choose('Judul', ['opsi', ...])  → menu
 function say(text, name) {
+  if (Array.isArray(name)) return talk(text, name);
+  if (Array.isArray(text)) return talk(name || null, text);
   return new Promise(res => {
     const prev = UIH;
     const w = win('dlg act', (name ? `<div class="nm">${name}</div>` : '') + '<div class="tx"></div><div class="more">▼</div>');
@@ -30,7 +34,9 @@ async function talk(name, lines) { G.lock++; try { for (const l of lines) await 
 
 // ---- menu pilihan ----
 // items: [{t, r, dis, desc}]  → Promise<index | -1>
-function choose(o) {
+function choose(o, items) {
+  if (typeof o === 'string' || Array.isArray(o)) { const head = typeof o === 'string' ? o : null, list = Array.isArray(o) ? o : items || []; o = { head, x: 24, y: 40, w: 260, items: list.map(t => typeof t === 'string' ? { t } : t) }; }
+  if (!o || !Array.isArray(o.items) || !o.items.length) { console.warn('choose() tanpa pilihan'); return Promise.resolve(-1); }
   return new Promise(res => {
     const prev = UIH;
     const w = win('menu act', (o.head ? `<div class="mh">${o.head}</div>` : '') + '<div class="ops"></div>' + (o.foot ? '<div class="mf"></div>' : ''));
@@ -69,7 +75,7 @@ function banner(text, sub, big, ms = 1800) {
 // ---- angka melayang (menempel di dunia) ----
 const POPS = [];
 function popWorld(x, y, text, cls = '') {
-  const e = document.createElement('div'); e.className = 'pop ' + cls; e.textContent = text; UI.appendChild(e);
+  const e = document.createElement('div'); const col = typeof cls === 'string' && cls[0] === '#'; e.className = 'pop ' + (col ? '' : cls); if (col) e.style.color = cls; e.textContent = text; UI.appendChild(e);
   POPS.push({ e, x, y }); setTimeout(() => { e.remove(); const i = POPS.findIndex(p => p.e === e); if (i >= 0) POPS.splice(i, 1); }, 900);
 }
 function updPops(cam) { for (const p of POPS) { p.e.style.left = Math.round(p.x - cam.scrollX) + 'px'; p.e.style.top = Math.round(p.y - cam.scrollY) + 'px'; } }

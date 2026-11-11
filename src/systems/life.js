@@ -825,7 +825,7 @@ Object.assign(World.prototype, {
     // Sizzling caramel sound and smoke animation
     await sleep(500);
     sfx("step");
-    this.popWorld(cx - 5, py = cy - 26, "Tssss...", "#ffab91");
+    this.popWorld(cx - 5, cy - 26, "Tssss...", "#ffab91");
     await sleep(400);
     sfx("crit");
     this.popWorld(cx + 5, cy - 26, "Krak-klik...", "#ffd54f");
@@ -5092,7 +5092,7 @@ Object.assign(World.prototype, {
           this.cameras.main.flash(400, 255, 230, 200);
           for (let i = 0; i < 14; i++) {
             this.time.delayedCall(i * 70, () => {
-              this.sparkle(tx + rnd(-14, 14), sy = ty - rnd(8, 28), [0xffd84a, 0xff4a4a, 0xffffff][i % 3]);
+              this.sparkle(tx + rnd(-14, 14), ty - rnd(8, 28), [0xffd84a, 0xff4a4a, 0xffffff][i % 3]);
             });
           }
 

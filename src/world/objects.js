@@ -110,7 +110,7 @@ const OBJ = {
   bushv: { key: 'bushv', col: [18, 6, 0], sh: [12, 3] },
   barrel: { key: 'barrel', col: [12, 6, 0], sh: [7, 2] },
   crate: { key: 'crate', col: [14, 6, 0], sh: [8, 2] },
-  gatehouse: { key: 'gatehouse', col: [240, 30, 0], sh: [120, 8], mm: 1 },
+  gatehouse: { key: 'gatehouse', col: [0, 0, 0], sh: [120, 8], mm: 1 },
   cwall: { key: 'cwall', col: [132, 26, 0], sh: [66, 6] },
   academy: { key: 'academy', col: [250, 60, 0], sh: [128, 10], fade: 1, mm: 1 },
   root: { key: 'root', col: [40, 10, 0], sh: [30, 6] },
