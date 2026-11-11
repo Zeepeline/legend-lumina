@@ -106,7 +106,15 @@ Jangan menjadikan "kalahkan boss" sebagai satu-satunya tujuan.
 | 3 (sudah ada) | Nyalakan obor, hadapi Kryos | Siapa yang membangunkan naga? | Jawab: Morgath membangunkan Kryos. Tanam: Kryos tidak jahat, hanya "dibangunkan oleh bisikan"; relief obor bergambar wanita dengan tanda yang sama di tangan. |
 | 4 (rencana) | Selidiki mimpi buruk penduduk | Ada apa di bawah pohon desa? | **Tanpa boss.** Investigasi: kumpulkan kesaksian NPC, petunjuk lingkungan, puzzle akar. Pilihan: konfrontasi Bram atau diam-diam. Jawab sebagian: Bram mengaku Arka ditemukan di dekat kristal. |
 | 5+ (rencana) | Perjalanan mencari jejak Selene | Apakah Selene masih hidup? | Wilayah baru, dungeon, NPC baru. Satu boss boleh, tapi bukan inti bab. |
-| Akhir | Segel ulang atau hadapi makhluk itu | — | Payoff semua foreshadowing; pilihan pemain memengaruhi akhir. |
+| Akhir | **Perang besar** (dikunci pemilik) | — | Segel pecah, pasukan bayangan menyerang dari kristal-kristal yang dulu meredup. Payoff semua foreshadowing. Lihat "Ending: perang besar". |
+
+## Ending: perang besar (keputusan pemilik, dikunci)
+
+- **Pemicu:** segel di bawah akar pecah. "Yang Tertidur di Bawah Akar" melepaskan pasukan bayangan lewat kristal-kristal yang pernah meredup (hutan, rawa, puncak).
+- **Sekutu = hasil pilihan & hubungan pemain** (payoff sistem hubungan NPC dan pilihan sepanjang cerita). Contoh: Raka memimpin penjaga desa; Kryos membantu bila tidak dihancurkan; Morgath bisa menebus kesalahan; sisa goblin bisa jadi kawan atau lawan.
+- **Bentuk main (rencana):** bertahan di desa melawan gelombang musuh bersama NPC sekutu → memilih front yang dibantu (front yang ditinggal bisa jatuh dan memengaruhi akhir) → turun ke bawah akar untuk konfrontasi terakhir, dengan Selene ikut terlibat.
+- **Pacing:** bab-bab menjelang akhir sebaiknya "tenang" (investigasi, perjalanan, hubungan) agar perang terasa besar.
+- Detail (siapa saja sekutu, jumlah front, nasib Selene, akhir alternatif) **belum dikunci**. Tanyakan pemilik sebelum menulisnya.
 
 ## Aturan penerapan untuk agent
 
