@@ -149,6 +149,9 @@ body.touch #keys{display:none}
  body.touch #bT{left:18px;top:46px}
  body.touch #bD{right:122px;top:auto;bottom:96px;width:46px;height:46px}
 }
+.codew textarea{width:100%;height:88px;font:9px/1.25 monospace;border:1px solid #6e4222;border-radius:3px;background:#fffaf0;color:#3b2618;resize:none;word-break:break-all;user-select:text;-webkit-user-select:text}
+.codew .cbtn{display:flex;gap:8px;justify-content:center;margin-top:4px}
+.codew .cbtn .opt{padding:2px 12px;border:1px solid #6e4222;border-radius:3px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -987,6 +990,8 @@ const ICON_MAP = {
   spear: ["...........W", "..........LW", ".........LL.", "........K...", ".......K....", "......K.....", ".....K......", "....K.......", "...K........", "..K.........", ".K.........."],
   axe: ["......LLL...", ".....LWWWL..", "....KLWWWL..", "...K.LWWL...", "..K...LL....", ".K..........", "K..........."],
   bow: ["...KK.......", "....KK..S...", ".....K.S....", ".....KS.....", ".....SK.....", "....S..K....", "...S...K....", "......KK....", "....KK......"],
+  bowl: ["............", "...W..W.....", "....W..W....", "............", ".LLLLLLLLLL.", "CSSSSSSSSSSC", "CCCCCCCCCCCC", ".CDCCCCCCDC.", "..DDDDDDDD..", "............"],
+  skewer: ["..........K.", ".........K..", "......CCC...", ".....CLCCE..", "....CCCCC...", "...CCCCC....", "..KCCC......", ".K..........", "K..........."],
   shirt: ["............", "..CC..CC....", ".CCCCCCCC...", "CCCLCCCCCC..", "CC.LCCCC.C..", "...LCCCC....", "...CCCCC....", "...CCCCC....", "...DDDDD...."],
   shield: ["............", ".DCCCCCCD...", ".CLLCCCCC...", ".CLWCCCCC...", ".CLCCCCCC...", ".CCCCCCCD...", "..CCCCCD....", "...CCCD.....", "....DD......"],
   ring: ["............", "....RRR.....", "...RWRRR....", "....RRR.....", "...YYYYY....", "..Y.....Y...", "..Y.....Y...", "..Y.....Y...", "...YYYYY...."],
@@ -1013,6 +1018,11 @@ const ICONS_DEF = {
   wsword: ['sword', { L: '#c08a5a', W: '#e8c090', G: '#8a5a32', K: '#5a3a20' }],
   ispear: ['spear', { K: '#8a5a32', L: '#8a96b0', W: '#eef4ff' }],
   fspear: ['spear', { K: '#4a6a9a', L: '#9ad4f4', W: '#f0faff' }],
+  f_fish: ['skewer', { C: '#e0904a', L: '#ffd08a', E: '#3a1a10', K: '#8a5a32' }],
+  f_soup: ['bowl', { C: '#c8763a', D: '#8a4a20', L: '#fff0d0', S: '#7ac84a', W: '#ffffff' }],
+  f_ginger: ['bowl', { C: '#c8763a', D: '#8a4a20', L: '#fff0d0', S: '#f0b040', W: '#ffffff' }],
+  f_jelly: ['blob', { C: '#ff8ac0', L: '#fff0f8', D: '#c04a8a', E: '#c04a8a' }],
+  f_hero: ['bowl', { C: '#e8c050', D: '#a07a20', L: '#fff8d8', S: '#ff6a4a', W: '#ffffff' }],
   baxe: ['axe', { K: '#8a5a32', L: '#6a7a9a', W: '#e0e8f8' }],
   hbow: ['bow', { K: '#9a6a34', S: '#f0e8d0' }],
   isword: ['sword', { L: '#8a96b0', W: '#eef4ff', G: '#e8c050', K: '#6a3e1e' }],
@@ -1100,6 +1110,7 @@ function artRockShot() { const [c, x] = mk(12, 11); ellF(x, '#7a7484', 6, 6, 4.5
 function artBrazier() { const [c, x] = mk(18, 16); fr(x, '#6a7488', 6, 8, 6, 8); fr(x, '#8a94a8', 7, 8, 2, 8); ellF(x, '#5a6478', 9, 6, 8.5, 3.5); ellF(x, '#8a94a8', 9, 5, 7.5, 2.6); ellF(x, '#2a2e3a', 9, 5, 5.5, 1.6); fr(x, '#4a5266', 4, 14, 10, 2); return outline(c, '#2a2c3a'); }
 function artIceGate() { const [c, x] = mk(84, 34); for (let i = 0; i < 9; i++) { const w = 10, h = 22 + ((i * 7) % 11), X = i * 9 + 1; fr(x, '#9ad4f4', X, 34 - h, w, h); fr(x, '#e8f8ff', X + 2, 34 - h + 2, 2, h - 6); fr(x, '#6aa8d8', X + w - 2, 34 - h, 2, h); } return outline(c, '#3a6a9a'); }
 function artIceBolt() { const [c, x] = mk(10, 8); ellF(x, '#9ad4f4', 5, 4, 4, 2.5); fr(x, '#ffffff', 3, 3, 3, 1); return outline(c, '#3a6a9a'); }
+function artWarp(on) { const [c, x] = mk(16, 28); fr(x, '#6a6478', 3, 22, 10, 5); fr(x, '#8a8498', 4, 6, 8, 17); fr(x, '#aaa4b8', 5, 6, 2, 17); fr(x, '#8a8498', 5, 3, 6, 3); fr(x, '#aaa4b8', 6, 2, 3, 1); const r = on ? '#7af0ff' : '#5a5468'; fr(x, r, 7, 9, 2, 1); fr(x, r, 6, 11, 4, 1); fr(x, r, 7, 13, 2, 4); fr(x, r, 6, 18, 4, 1); if (on) { fr(x, '#ffffff', 7, 13, 1, 2); } return outline(c, '#2a2634'); }
 function artLight(r) { const s = r * 2, [c, x] = mk(s, s); const g = x.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.45, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, s, s); return c; }
 function artRain() { const [c, x] = mk(2, 7); fr(x, '#d8ecff', 1, 0, 1, 3); fr(x, '#d8ecff', 0, 3, 1, 4); return c; }
 // bayangan karakter lembut (gradasi, bukan elips keras)
@@ -1293,7 +1304,7 @@ function genGround(M) {
     if (sd(X, Y) < 3 || near(X, Y)) continue;
     const r = hash(n, 3, 21), forest = M.ground === 'forest';
     if (r < (M.flowers ? .55 : .78)) { px(x, GP.tuft, X, Y); px(x, GP.tuft, X - 1, Y - 1); px(x, GP.tuft, X + 1, Y - 1); px(x, GP.tuft2, X, Y - 2); }
-    else if (r < .97 || forest) { const fl = ['#ffffff', '#ffd84a', '#ff8ac0', '#b48aea', '#ff6a5a'][Math.floor(hash(n, 4, 21) * 5)]; px(x, fl, X, Y - 1); px(x, fl, X - 1, Y); px(x, fl, X + 1, Y); px(x, fl, X, Y + 1); px(x, '#ffe27a', X, Y); }
+    else if (r < .97 || forest) { const fl = GP.ice ? ['#ffffff', '#cfe6fa', '#b4d4f0'][Math.floor(hash(n, 4, 21) * 3)] : ['#ffffff', '#ffd84a', '#ff8ac0', '#b48aea', '#ff6a5a'][Math.floor(hash(n, 4, 21) * 5)]; px(x, fl, X, Y - 1); px(x, fl, X - 1, Y); px(x, fl, X + 1, Y); px(x, fl, X, Y + 1); px(x, GP.ice ? '#ffffff' : '#ffe27a', X, Y); }
     else { ellF(x, '#d6d0c4', X, Y, 2.5, 1.6); px(x, '#f0ece2', X - 1, Y - 1); }
   }
   for (const [gx, gy, gw, gh, t] of (M.gardens || [])) {
@@ -1309,7 +1320,7 @@ function genGround(M) {
     }
   }
   // teratai di kolam
-  for (const P of ponds) for (let n = 0; n < 7; n++) { const a = hash(n, 1, 77) * 6.28, r = .3 + hash(n, 2, 77) * .5; const X = P[0] + Math.cos(a) * P[2] * r, Y = P[1] + Math.sin(a) * P[3] * r; ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5); if (n % 2) { px(x, '#ffb4d8', X + 1, Y - 1); px(x, '#ffffff', X + 2, Y - 1); } }
+  if (!GP.ice) for (const P of ponds) for (let n = 0; n < 7; n++) { const a = hash(n, 1, 77) * 6.28, r = .3 + hash(n, 2, 77) * .5; const X = P[0] + Math.cos(a) * P[2] * r, Y = P[1] + Math.sin(a) * P[3] * r; ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5); if (n % 2) { px(x, '#ffb4d8', X + 1, Y - 1); px(x, '#ffffff', X + 2, Y - 1); } }
   return c;
 }
 // kotak tabrakan dari grid (dinding gua, kolam)
@@ -1746,9 +1757,19 @@ const OPT_KEY = 'legenda_lumina_opt';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0 }, garden: [null, null], pet: false }; }
-function eqv(k) { let v = 0; for (const s of ['wpn', 'arm', 'acc']) { const it = ITEMS[S.eq[s]]; if (it && it[k]) v += it[k]; } return v; }
-function stat() { const l = S.lv; return { maxhp: 34 + l * 8, maxmp: 12 + l * 2, atk: 6 + l * 2 + eqv('atk'), def: 1 + l + eqv('def'), mag: 9 + l * 3 + eqv('mag'), spd: 1 + eqv('spd'), regen: eqv('regen') }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {} }; }
+function eqv(k) {
+  let v = 0;
+  for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
+  return v;
+}
+// Upgrade perlengkapan (+1..+5) di Pak Besi: tambahan per tingkat
+const UPG = { wpn: 3, arm: 2, max: 5 };
+const itemName = id => ITEMS[id].n + ((S.up && S.up[id]) ? ' +' + S.up[id] : '');
+// Bonus masakan aktif (S.buff[jenis] = sisa detik)
+const BUFF = { atk: { n: 'Kuat', ic: '⚔', mul: 1.2 }, def: { n: 'Kebal', ic: '🛡', mul: 1.25 }, warm: { n: 'Hangat', ic: '♨' } };
+const buffOn = k => S.buff && S.buff[k] > 0;
+function stat() { const l = S.lv; return { maxhp: 34 + l * 8, maxmp: 12 + l * 2, atk: Math.round((6 + l * 2 + eqv('atk')) * (buffOn('atk') ? BUFF.atk.mul : 1)), def: Math.round((1 + l + eqv('def')) * (buffOn('def') ? BUFF.def.mul : 1)), mag: 9 + l * 3 + eqv('mag'), spd: 1 + eqv('spd'), regen: eqv('regen') }; }
 function need(lv) { return 12 * lv + 6 * (lv - 1) * (lv - 1); }
 const has = (id, n = 1) => (S.inv[id] || 0) >= n;
 function addItem(id, n = 1) { S.inv[id] = (S.inv[id] || 0) + n; if (S.inv[id] <= 0) delete S.inv[id]; }
@@ -1763,6 +1784,11 @@ const ITEMS = {
   potion: { n: 'Ramuan', k: 'use', hp: 40, price: 8, d: 'Pulihkan 40 HP.' },
   hipotion: { n: 'Ramuan Besar', k: 'use', hp: 120, price: 30, d: 'Pulihkan 120 HP.' },
   antidote: { n: 'Penawar', k: 'use', cure: 1, price: 6, d: 'Sembuhkan racun, terbakar & dingin.' },
+  f_fish: { n: 'Ikan Bakar', k: 'use', hp: 60, buff: [['atk', 180]], sell: 10, d: 'Pulihkan 60 HP. Serangan +20% selama 3 menit.' },
+  f_soup: { n: 'Sup Sayur', k: 'use', hp: 80, buff: [['def', 180]], sell: 12, d: 'Pulihkan 80 HP. Pertahanan +25% selama 3 menit.' },
+  f_ginger: { n: 'Sup Jahe Hangat', k: 'use', hp: 50, buff: [['warm', 300]], sell: 12, d: 'Pulihkan 50 HP. Kebal dingin selama 5 menit.' },
+  f_jelly: { n: 'Jeli Manis', k: 'use', mp: 30, sell: 8, d: 'Pulihkan 30 MP. Kenyal!' },
+  f_hero: { n: 'Hidangan Pahlawan', k: 'use', hp: 999, buff: [['atk', 300], ['def', 300]], sell: 60, d: 'Pulihkan semua HP. Serangan & pertahanan naik selama 5 menit.' },
   ether: { n: 'Eter', k: 'use', mp: 15, price: 15, d: 'Pulihkan 15 MP.' },
   jelly: { n: 'Lendir Slime', k: 'mat', sell: 2, d: 'Kenyal dan lengket. Dari slime.' },
   pelt: { n: 'Bulu Serigala', k: 'mat', sell: 5, d: 'Hangat dan kuat. Bahan rompi.' },
@@ -1804,6 +1830,11 @@ const ITEMS = {
   mochi: { n: 'Mochi', k: 'key', d: 'Kucing putih milik Lina. Ia mendengkur.' },
 };
 const ICON_OF = { stonearm: 'chain' };
+// Masak di penginapan (Bu Rina)
+const COOK = [
+  { id: 'f_fish', need: { fish: 1 } }, { id: 'f_soup', need: { veg: 2 } }, { id: 'f_ginger', need: { veg: 1, fish: 1 } },
+  { id: 'f_jelly', need: { jelly: 3 } }, { id: 'f_hero', need: { gfish: 1, veg: 2 } },
+];
 const RECIPES = [
   { id: 'leather', gold: 40, need: { pelt: 3 } },
   { id: 'ssword', gold: 120, need: { tusk: 3, scale: 3 } },
@@ -1948,7 +1979,7 @@ function buildTextures(sc) {
   addStrip(sc, 'snakei', artMon('snake', { G: '#9ad4f4', L: '#f0faff', E: '#1a2a5a', R: '#4a8aff' }));
   addStrip(sc, 'wisp', artWisp()); addStrip(sc, 'frog', artMon('frog')); addStrip(sc, 'slimep', artMon('slime', { G: '#a060d0', D: '#5a2a8a', L: '#f0d8ff' }));
   one('gate', artGate()); one('boulder', artBoulder()); one('plate', artPlate());
-  one('treeSw', (() => { const c = darkTree(IMGEL.treeB), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = yy < .25 ? .75 : yy < .55 ? .5 : .3; const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('icegate', artIceGate()); one('icebolt', artIceBolt());
+  one('treeSw', (() => { const c = darkTree(IMGEL.treeB), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = yy < .25 ? .75 : yy < .55 ? .5 : .3; const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('warp0', artWarp(false)); one('warp1', artWarp(true)); one('icegate', artIceGate()); one('icebolt', artIceBolt());
   one('light', artLight(80)); one('lights', artLight(36)); one('nlL', artLightP(54, .9)); one('nlS', artLightP(38, .85)); one('nlW', artLightP(18, .75));
   for (const id in ITEMS) { const c = artIcon(ICON_OF[id] && id === 'stonearm' ? 'chain' : id); one('ic_' + id, c); ICONS[id] = c.toDataURL(); }
   const A = sc.anims, fr2 = (k, n) => [...Array(n).keys()].map(i => ({ key: k, frame: i }));
@@ -1977,7 +2008,7 @@ class World extends Phaser.Scene {
     const M = this.M = MAPS[data.map || 'village'];
     if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
-    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
+    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
     this.walls = this.physics.add.staticGroup();
@@ -1996,6 +2027,7 @@ class World extends Phaser.Scene {
     if (M.gardens) this.spawnGarden();
     if (M.gate) this.spawnPuzzle();
     if (M.torches) this.spawnTorches();
+    if (WARPS[M.id]) this.spawnWarp();
     if (M.iceGate && S.stage < 12) this.spawnIceGate();
     for (const c of M.chests || []) if (!c.needFlag || S.flags[c.needFlag]) this.spawnChest(c);
     if (M.crystal) this.spawnCrystal();
@@ -2352,8 +2384,9 @@ Object.assign(World.prototype, {
   },
   useItem(id) {
     const it = ITEMS[id], st = stat();
-    if (it.hp) { if (S.hp >= st.maxhp) { sfx('buzz'); return false; } const h = Math.min(it.hp, st.maxhp - S.hp); S.hp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h, 'heal'); }
-    if (it.mp) { if (S.mp >= st.maxmp) { sfx('buzz'); return false; } const h = Math.min(it.mp, st.maxmp - S.mp); S.mp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h + ' MP', 'mpc'); }
+    if (it.hp) { if (S.hp >= st.maxhp && !it.buff) { sfx('buzz'); return false; } const h = Math.min(it.hp, st.maxhp - S.hp); S.hp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h, 'heal'); }
+    if (it.mp) { if (S.mp >= st.maxmp && !it.buff) { sfx('buzz'); return false; } const h = Math.min(it.mp, st.maxmp - S.mp); S.mp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h + ' MP', 'mpc'); }
+    if (it.buff) { for (const [k, sec] of it.buff) S.buff[k] = Math.max(S.buff[k] || 0, sec); popWorld(this.pl.x, this.pl.y - 40, it.buff.map(([k]) => BUFF[k].n).join(' & ') + '!', 'xp'); updStatusHud(this); }
     if (it.cure) { if (!Object.keys(this.pst).length && !it.hp) { sfx('buzz'); return false; } this.cure(); popWorld(this.pl.x, this.pl.y - 40, 'pulih!', 'heal'); }
     addItem(id, -1); sfx('heal'); this.sparkle(this.pl.x, this.pl.y - 10, it.mp ? 'dot' : 'dotg'); updHud(); return true;
   },
@@ -2528,6 +2561,7 @@ Object.assign(World.prototype, {
     if (!fx || this.pl.dead) return; const [k, sec, ch = 1] = fx;
     if (Math.random() > ch) return;
     if (k === 'poison' && S.eq.acc === 'amulet') return; // Jimat Daun kebal racun
+    if (k === 'chill' && buffOn('warm')) return; // Sup Jahe: kebal dingin
     const fresh = !(this.pst[k] > 0); this.pst[k] = Math.max(this.pst[k] || 0, sec);
     if (fresh) { popWorld(this.pl.x, this.pl.y - 38, STATUS[k].n + '!', STATUS[k].c); this.pstT[k] = STATUS[k].every; }
     updStatusHud(this);
@@ -2536,6 +2570,7 @@ Object.assign(World.prototype, {
   speedMul() { return this.pst.chill > 0 ? STATUS.chill.slow : 1; },
   updStatus(dt) {
     const pl = this.pl; let any = null;
+    for (const k in S.buff) { if (S.buff[k] > 0) { S.buff[k] -= dt; if (S.buff[k] <= 0) { delete S.buff[k]; popWorld(pl.x, pl.y - 38, 'Efek ' + BUFF[k].n + ' habis', 'xp'); updStatusHud(this); updHud(); } } }
     for (const k in this.pst) {
       if (!(this.pst[k] > 0)) continue;
       this.pst[k] -= dt; any = k; const D = STATUS[k];
@@ -2570,7 +2605,8 @@ function updStatusHud(sc) {
   let el = $('hSt'); const h2 = $('hud2'); if (!h2) return;
   if (!el) { el = document.createElement('span'); el.id = 'hSt'; h2.appendChild(el); }
   const ks = Object.keys(sc.pst).filter(k => sc.pst[k] > 0);
-  el.textContent = ks.map(k => STATUS[k].ic).join(''); el.style.display = ks.length ? '' : 'none';
+  const bs = Object.keys(S.buff || {}).filter(k => S.buff[k] > 0);
+  el.textContent = ks.map(k => STATUS[k].ic).join('') + bs.map(k => BUFF[k].ic).join(''); el.style.display = ks.length + bs.length ? '' : 'none';
 }
 
 'use strict';
@@ -2632,6 +2668,35 @@ Object.assign(World.prototype, {
     else if (e.st === 'ring') { if (e.t <= 0) { s.clearTint(); this.eShoot(e, 'ice', [...Array(10).keys()].map(i => i / 10 * Math.PI * 2 + this.t), D.atk - 8, true); e.st = 'rec'; e.t = .7; } }
     else if (e.st === 'stomp') { if (e.t <= 0) { s.clearTint(); this.shockwave(s.x, s.y, 78, D.atk); e.st = 'rec'; e.t = .8; } }
     else if (e.st === 'rec') { s.setVelocity(0); if (e.t <= 0) { e.st = 'chase'; e.t = rnd(1, 1.7) / m; } }
+  },
+});
+
+'use strict';
+// Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif.
+const WARPS = { village: [548, 604], forest: [670, 162], meadow: [230, 372], cave: [166, 760], swamp: [672, 172], snow: [680, 1052] };
+for (const id in WARPS) { const M = MAPS[id]; (M.discs = M.discs || []).push([WARPS[id][0], WARPS[id][1], 22]); }
+Object.assign(World.prototype, {
+  spawnWarp() {
+    const W = WARPS[this.M.id]; if (!W) return; const [x, y] = W, on = !!S.warps[this.M.id];
+    this.warpS = this.add.image(x, y, on ? 'warp1' : 'warp0').setOrigin(.5, 1).setDepth(y); this.shadow(x, y, 8, 3); this.wall(x - 7, y - 7, 14, 7);
+    this.lights.push({ x, y: y - 14, small: !on });
+    this.inter.push({ x, y: y + 4, r: 16, fn: () => this.useWarp() });
+  },
+  async useWarp() {
+    const id = this.M.id; G.lock++;
+    try {
+      if (!S.warps[id]) {
+        S.warps[id] = 1; this.warpS.setTexture('warp1'); sfx('save'); this.sparkle(WARPS[id][0], WARPS[id][1] - 16, 'dot', 18);
+        banner('Patung Teleport aktif', MAPS[id].name, false, 1800); saveGame(this);
+        await say('Rune di patung menyala biru. Sekarang kamu bisa teleport ke sini dari patung lain.');
+      }
+      const list = Object.keys(WARPS).filter(k => S.warps[k] && k !== id);
+      if (!list.length) { await say('Belum ada patung lain yang aktif. Temukan patung serupa di wilayah lain!'); return; }
+      const r = await choose({ head: 'TELEPORT', x: 60, y: 40, w: 170, items: [...list.map(k => ({ t: MAPS[k].name })), { t: 'Batal' }] });
+      if (r < 0 || r >= list.length) return;
+      const k = list[r]; sfx('ice'); this.cameras.main.flash(250, 180, 220, 255);
+      await sleep(250); this.goto(k, WARPS[k][0], WARPS[k][1] + 18, 'down');
+    } finally { G.lock--; }
   },
 });
 
@@ -3119,16 +3184,19 @@ Object.assign(World.prototype, {
     G.lock++;
     await say(pick(['Heh, butuh senjata? Bengkel Pak Besi siap!', 'Bawakan bahan monster, akan kutempa jadi barang hebat.']), 'Pak Besi');
     for (; ;) {
-      const m = await choose({ head: 'Bengkel Pak Besi · ' + S.gold + ' G', x: 70, y: 50, w: 148, items: [{ t: 'Beli perlengkapan' }, { t: 'Tempa dengan bahan' }, { t: 'Keluar' }] });
+      const m = await choose({ head: 'Bengkel Pak Besi · ' + S.gold + ' G', x: 70, y: 50, w: 148, items: [{ t: 'Beli perlengkapan' }, { t: 'Tempa dengan bahan' }, { t: 'Tingkatkan (+1)' }, { t: 'Keluar' }] });
       if (m === 0) await buyMenu('Bengkel Pak Besi', ['isword', 'ispear', 'hbow', 'chain']);
       else if (m === 1) await forgeMenu();
+      else if (m === 2) await upgradeMenu();
       else break;
     }
     G.lock--;
   },
   async innTalk() {
     G.lock++;
-    const ok = await ask('Istirahat semalam? 10 G\n(HP & MP pulih, permainan tersimpan)', 'Bu Rina');
+    const m = await choose({ head: 'Penginapan Bu Rina', x: 70, y: 50, w: 150, items: [{ t: 'Menginap', r: '10 G' }, { t: 'Masak' }, { t: 'Keluar' }] });
+    if (m === 1) { await cookMenu(); G.lock--; return; }
+    const ok = m === 0;
     if (ok) {
       if (S.gold < 10) { sfx('buzz'); await say('Maaf, uangmu belum cukup.', 'Bu Rina'); }
       else { S.gold -= 10; await fadeTo(1); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Selamat pagi! Tidurmu nyenyak? Permainan sudah tersimpan.', 'Bu Rina'); }
@@ -3180,6 +3248,35 @@ async function forgeMenu() {
     if (await ask(`TANG! TANG! ${it.n} selesai ditempa! Langsung pasang?`, 'Pak Besi')) { S.eq[sl] = R.id; sfx('ok'); updHud(); }
   }
 }
+// ---------------- MASAK (penginapan) ----------------
+async function cookMenu() {
+  let sel = 0; const can = R => Object.entries(R.need).every(([k, n]) => has(k, n));
+  for (; ;) {
+    const r = await choose({ head: 'Dapur Bu Rina', x: 24, y: 22, w: 240, start: sel,
+      items: [...COOK.map(R => ({ t: icon(R.id) + ITEMS[R.id].n, r: 'x' + (S.inv[R.id] || 0) })), { t: 'Kembali' }],
+      foot: i => { if (i >= COOK.length) return ''; const R = COOK[i]; return ITEMS[R.id].d + '<br>Bahan: ' + Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
+    if (r < 0 || r === COOK.length) return; sel = r; const R = COOK[r];
+    if (!can(R)) { sfx('buzz'); await say('Bahannya belum cukup. Ikan dari memancing, sayur dari kebun.', 'Bu Rina'); continue; }
+    for (const [k, n] of Object.entries(R.need)) addItem(k, -n); addItem(R.id); sfx('fire'); await sleep(300); sfx('chest'); updHud();
+    await say(`Harum sekali! ${ITEMS[R.id].n} siap. Makan dari TAS saat dibutuhkan.`, 'Bu Rina');
+  }
+}
+// ---------------- UPGRADE (bengkel) ----------------
+function upgCost(id) { const u = (S.up[id] || 0) + 1; return { gold: 60 * u * u + 40, need: u >= 4 ? { ore: u, shard: u - 2 } : { ore: u } }; }
+async function upgradeMenu() {
+  let sel = 0;
+  for (; ;) {
+    const L = Object.keys(S.inv).filter(id => ITEMS[id] && (ITEMS[id].k === 'wpn' || ITEMS[id].k === 'arm'));
+    const r = await choose({ head: 'Tingkatkan · ' + S.gold + ' G', x: 24, y: 22, w: 240, start: sel,
+      items: [...L.map(id => { const u = S.up[id] || 0; return { t: icon(id) + itemName(id), r: u >= UPG.max ? 'MAKS' : upgCost(id).gold + ' G', dis: u >= UPG.max }; }), { t: 'Kembali' }],
+      foot: i => { if (i >= L.length) return 'Setiap tingkat: senjata Serang +' + UPG.wpn + ', baju Tahan +' + UPG.arm + '.'; const id = L[i]; if ((S.up[id] || 0) >= UPG.max) return 'Sudah tingkat maksimal!'; const C = upgCost(id); return (ITEMS[id].k === 'wpn' ? 'Serang +' + UPG.wpn : 'Tahan +' + UPG.arm) + '<br>Bahan: ' + Object.entries(C.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
+    if (r < 0 || r === L.length) return; sel = r; const id = L[r], C = upgCost(id);
+    if (S.gold < C.gold || !Object.entries(C.need).every(([k, n]) => has(k, n))) { sfx('buzz'); await say('Bahan atau uangnya belum cukup. Bijih Batu dari golem, Pecahan Kristal dari makhluk es.', 'Pak Besi'); continue; }
+    S.gold -= C.gold; for (const [k, n] of Object.entries(C.need)) addItem(k, -n); S.up[id] = (S.up[id] || 0) + 1;
+    sfx('boom'); await sleep(250); sfx('chest'); G.scene.cameras.main.flash(200, 255, 200, 120); updHud();
+    await say(`TANG! ${itemName(id)} jadi lebih kuat!`, 'Pak Besi');
+  }
+}
 
 'use strict';
 // Tas (inventaris) & buku misi
@@ -3193,8 +3290,8 @@ async function openBag(sc) {
   function draw() {
     const L = list(); sel = clamp(sel, 0, Math.max(0, L.length - 1)); const st = stat();
     w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="gold">${S.gold} G</span></div>
-     <div class="bb"><div class="bl">${L.length ? L.map((id, i) => `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span>${ITEMS[id].n}</span><b>${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`).join('') : '<div class="empty">Kosong</div>'}</div>
-     <div class="bs"><div class="mh">Arka · Lv ${S.lv}</div>${['wpn', 'arm', 'acc'].map(s => `<div class="eqs">${S.eq[s] ? icon(S.eq[s]) + ITEMS[S.eq[s]].n : '<i>(kosong)</i>'}</div>`).join('')}
+     <div class="bb"><div class="bl">${L.length ? L.map((id, i) => `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span>${itemName(id)}</span><b>${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`).join('') : '<div class="empty">Kosong</div>'}</div>
+     <div class="bs"><div class="mh">Arka · Lv ${S.lv}</div>${['wpn', 'arm', 'acc'].map(s => `<div class="eqs">${S.eq[s] ? icon(S.eq[s]) + itemName(S.eq[s]) : '<i>(kosong)</i>'}</div>`).join('')}
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b><br>HP <b>${S.hp}/${st.maxhp}</b></div></div></div>
      <div class="bd">${L.length ? ITEMS[L[sel]].d + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · B tutup'}</div>`;
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
@@ -3313,6 +3410,8 @@ async function openSettings() {
     ['Getar', () => onoff(OPT.vib), () => { OPT.vib = !OPT.vib; if (OPT.vib && navigator.vibrate) navigator.vibrate(30); }, 'Getar HP saat memukul/terkena'],
     ['Goyang', () => onoff(OPT.shake), () => { OPT.shake = !OPT.shake; }, 'Goyang layar saat serangan kuat'],
     ['Layar penuh', () => onoff(fs()), async () => { try { fs() ? await document.exitFullscreen() : await document.documentElement.requestFullscreen(); } catch (_) { } await sleep(150); }, 'Sembunyikan bilah browser'],
+    ['Ekspor save', () => null, async () => { saveGame(G.scene); await codeDialog('out'); }, 'Salin kode save ke perangkat lain'],
+    ['Impor save', () => null, async () => { if (await codeDialog('in')) { await say('Save berhasil dimuat. Game akan dibuka ulang.'); location.reload(); } }, 'Muat progres dari kode save'],
     ['Kembali', () => null, null, 'Tutup pengaturan']];
   let sel = 0;
   for (; ;) {
@@ -3341,13 +3440,48 @@ async function openAch() {
 }
 
 'use strict';
+// Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)
+const CODE_TAG = 'LUMINA1:';
+function saveCode() { return CODE_TAG + btoa(unescape(encodeURIComponent(JSON.stringify(S)))); }
+function readCode(t) {
+  t = (t || '').replace(/\s+/g, ''); if (!t.startsWith(CODE_TAG)) return null;
+  try { const o = JSON.parse(decodeURIComponent(escape(atob(t.slice(CODE_TAG.length))))); return o && o.lv ? o : null; } catch (_) { return null; }
+}
+// mode 'out': tampilkan kode untuk disalin. mode 'in': tempel kode, kembalikan true jika berhasil dimuat ke localStorage.
+function codeDialog(mode) {
+  return new Promise(res => {
+    G.lock++; const prev = UIH;
+    const w = win('menu codew', `<div class="mh">${mode === 'out' ? 'Ekspor Save' : 'Impor Save'}</div>
+      <div class="mf" style="margin:2px 0 4px">${mode === 'out' ? 'Salin kode ini dan simpan di tempat aman (catatan, chat ke diri sendiri). Tempel di menu Impor di perangkat lain.' : 'Tempel kode save di bawah. Progres sekarang akan diganti.'}</div>
+      <textarea spellcheck="false" ${mode === 'out' ? 'readonly' : 'placeholder="LUMINA1:..."'}></textarea>
+      <div class="cbtn"><span class="opt sel" data-a="ok">${mode === 'out' ? 'Salin' : 'Muat'}</span><span class="opt" data-a="x">Tutup</span></div>`);
+    Object.assign(w.style, { left: '12px', right: '12px', top: '24px' });
+    const ta = w.querySelector('textarea'); if (mode === 'out') ta.value = saveCode();
+    ta.addEventListener('keydown', e => e.stopPropagation()); ta.addEventListener('keyup', e => e.stopPropagation());
+    const msg = w.querySelector('.mf');
+    const done = v => { w.remove(); UIH = prev; G.lock--; res(v); };
+    const act = async a => {
+      if (a === 'x') return done(false);
+      if (mode === 'out') { ta.select(); try { await navigator.clipboard.writeText(ta.value); msg.textContent = 'Tersalin! Simpan kode ini baik-baik.'; } catch (_) { try { document.execCommand('copy'); msg.textContent = 'Tersalin!'; } catch (__) { msg.textContent = 'Tahan teks lalu pilih Salin.'; } } sfx('ok'); return; }
+      const o = readCode(ta.value); if (!o) { sfx('buzz'); msg.textContent = 'Kode tidak valid. Pastikan disalin lengkap, diawali LUMINA1:'; return; }
+      try { localStorage.setItem(SAVE_KEY, JSON.stringify(o)); } catch (_) { }
+      sfx('save'); done(true);
+    };
+    w.querySelectorAll('[data-a]').forEach(b => b.addEventListener('pointerdown', ev => { ev.stopPropagation(); act(b.dataset.a); }));
+    UIH = k => { if (k === 'b' || k === 'menu' || k === 'back') done(false); };
+    if (mode === 'in') setTimeout(() => ta.focus(), 50);
+  });
+}
+
+'use strict';
 // Layar judul
 // ---------------- LAYAR JUDUL ----------------
 async function titleScreen() {
   const t = document.createElement('div'); t.id = 'title';
   t.innerHTML = `<div class="logo"><small>LEGENDA</small>LUMINA</div><div class="sub">— ACTION RPG —</div><div class="hint">Phaser 3 · 4 wilayah · 21 jenis musuh</div>`;
   UI.appendChild(t); showHud(false);
-  const r = await choose({ items: [{ t: 'Mulai Baru' }, { t: 'Lanjutkan', dis: !hasSave() }], start: hasSave() ? 1 : 0, cancel: false, style: { left: '50%', transform: 'translateX(-50%)', bottom: '30px', width: '110px' } });
+  const r = await choose({ items: [{ t: 'Mulai Baru' }, { t: 'Lanjutkan', dis: !hasSave() }, { t: 'Impor Kode' }], start: hasSave() ? 1 : 0, cancel: false, style: { left: '50%', transform: 'translateX(-50%)', bottom: '30px', width: '110px' } });
+  if (r === 2) { t.remove(); if (await codeDialog('in')) { location.reload(); return; } return titleScreen(); }
   auInit(); t.remove(); await fadeTo(1);
   if (r === 1 && loadSave()) { G.title = false; G.scene.scene.restart({ map: S.map, x: S.x, y: S.y, dir: S.dir }); }
   else {

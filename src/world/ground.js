@@ -89,7 +89,7 @@ function genGround(M) {
     if (sd(X, Y) < 3 || near(X, Y)) continue;
     const r = hash(n, 3, 21), forest = M.ground === 'forest';
     if (r < (M.flowers ? .55 : .78)) { px(x, GP.tuft, X, Y); px(x, GP.tuft, X - 1, Y - 1); px(x, GP.tuft, X + 1, Y - 1); px(x, GP.tuft2, X, Y - 2); }
-    else if (r < .97 || forest) { const fl = ['#ffffff', '#ffd84a', '#ff8ac0', '#b48aea', '#ff6a5a'][Math.floor(hash(n, 4, 21) * 5)]; px(x, fl, X, Y - 1); px(x, fl, X - 1, Y); px(x, fl, X + 1, Y); px(x, fl, X, Y + 1); px(x, '#ffe27a', X, Y); }
+    else if (r < .97 || forest) { const fl = GP.ice ? ['#ffffff', '#cfe6fa', '#b4d4f0'][Math.floor(hash(n, 4, 21) * 3)] : ['#ffffff', '#ffd84a', '#ff8ac0', '#b48aea', '#ff6a5a'][Math.floor(hash(n, 4, 21) * 5)]; px(x, fl, X, Y - 1); px(x, fl, X - 1, Y); px(x, fl, X + 1, Y); px(x, fl, X, Y + 1); px(x, GP.ice ? '#ffffff' : '#ffe27a', X, Y); }
     else { ellF(x, '#d6d0c4', X, Y, 2.5, 1.6); px(x, '#f0ece2', X - 1, Y - 1); }
   }
   for (const [gx, gy, gw, gh, t] of (M.gardens || [])) {
@@ -105,7 +105,7 @@ function genGround(M) {
     }
   }
   // teratai di kolam
-  for (const P of ponds) for (let n = 0; n < 7; n++) { const a = hash(n, 1, 77) * 6.28, r = .3 + hash(n, 2, 77) * .5; const X = P[0] + Math.cos(a) * P[2] * r, Y = P[1] + Math.sin(a) * P[3] * r; ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5); if (n % 2) { px(x, '#ffb4d8', X + 1, Y - 1); px(x, '#ffffff', X + 2, Y - 1); } }
+  if (!GP.ice) for (const P of ponds) for (let n = 0; n < 7; n++) { const a = hash(n, 1, 77) * 6.28, r = .3 + hash(n, 2, 77) * .5; const X = P[0] + Math.cos(a) * P[2] * r, Y = P[1] + Math.sin(a) * P[3] * r; ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5); if (n % 2) { px(x, '#ffb4d8', X + 1, Y - 1); px(x, '#ffffff', X + 2, Y - 1); } }
   return c;
 }
 // kotak tabrakan dari grid (dinding gua, kolam)

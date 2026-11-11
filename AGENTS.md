@@ -22,8 +22,8 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `core/util.js` | `VW`/`VH` (ukuran layar game), `rnd`, `clamp`, `sleep`, `$` |
 | `core/audio.js` | musik `TRACKS`, `playBGM(nama)`, efek `sfx(nama)` |
 | `core/input.js` | `Input` (keyboard, joystick, tombol), `KEYMAP`, `layout()` |
-| `core/state.js` | status pemain `S`, `newState()`, `stat()`, `has()`, `addItem()`, simpan/muat, pengaturan perangkat `OPT` (`saveOpt()`) |
-| `data/items.js` | `ITEMS`, `RECIPES` (tempa) |
+| `core/state.js` | status pemain `S`, `newState()`, `stat()`, `has()`, `addItem()`, simpan/muat, pengaturan perangkat `OPT` (`saveOpt()`), upgrade `UPG`/`S.up`/`itemName()`, bonus masakan `BUFF`/`S.buff` |
+| `data/items.js` | `ITEMS`, `COOK` (masak di penginapan), `RECIPES` (tempa) |
 | `data/enemies.js` | `ENEMY` (stat & jenis AI tiap musuh), `PROJ` (proyektil) |
 | `data/quests.js` | `STAGE_TXT`, `STAGE_GOAL` (misi utama), `SKILLS`, `ACH` (pencapaian) |
 | `art/base.js` | kanvas & warna, **aturan gaya**: `toneC()` (bayangan kebiruan/sorotan kekuningan), `outline()` (garis tepi berwarna), `renderMap()` |
@@ -37,6 +37,7 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `systems/combat.js` | `WEAPON_STYLE` (pedang/tombak/kapak/busur, dipilih lewat `ITEMS[..].wt`), serang, sihir, damage, `hitStop()`, drop, EXP, proyektil, kalah |
 | `systems/skills.js` | dash, tebasan putar, nova es |
 | `systems/status.js` | efek status `STATUS` (racun/terbakar/dingin) pemain & musuh; sumber = `fx` di `ENEMY`/`PROJ` |
+| `systems/travel.js` | teleport: `WARPS` (posisi patung per peta), aktif di `S.warps` |
 | `systems/chapter3.js` | Bab 3: obor kuno, gerbang es, AI Naga Es (`updDragon`, ai `dboss`) |
 | `systems/life.js` | interior, memancing, kebun, teka-teki batu, Mochi |
 | `systems/story.js` | segel kuil, kristal, peti (termasuk peti terkunci) |
@@ -46,7 +47,8 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `npc/dialog.js` | `talkNpc()` (semua dialog per NPC), `npcHasQuest()` (tanda !), toko, bengkel, penginapan |
 | `npc/npcs.js` | gerak NPC & hewan |
 | `ui/widgets.js` | `say`, `talk`, `choose`, `ask`, `banner`, `popWorld`, HUD (`updHud`) |
-| `ui/shop.js` · `bag.js` · `map.js` · `menus.js` · `title.js` | layar toko/tempa, tas & buku misi, peta, menu utama/bestiari, judul |
+| `ui/savecode.js` | ekspor/impor kode save (`saveCode()`, `readCode()`, `codeDialog()`) |
+| `ui/shop.js` (juga `cookMenu`, `upgradeMenu`) · `bag.js` · `map.js` · `menus.js` · `title.js` | layar toko/tempa, tas & buku misi, peta, menu utama/bestiari, judul |
 | `main.js` | mulai Phaser |
 
 Lainnya: `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png` (aset dari gambar referensi), `assets/reference/` (gambar asli), `docs/ART_BIBLE.md` (aturan gaya), `docs/sprites/` (lembar contoh), `tools/` (bundle, pemotong aset).
@@ -85,7 +87,7 @@ Lainnya: `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png`
 
 ## Status
 
-Sudah ada: 6 wilayah (+ Puncak Beku) + 3 interior, 30 jenis musuh, 8 boss/mini-boss, misi bab 1–3 (stage 0–14), 3 misi sampingan, tas/perlengkapan/tempa/toko, 4 gaya senjata, jurus (dash, tebasan putar, nova es), efek status + Penawar, siang-malam, cuaca, pancing, kebun, teka-teki (batu & obor), bestiari, pencapaian, peta, hit-stop + getar, menu pengaturan, PWA (`manifest.webmanifest`, `sw.js`; naikkan `VERSI` di `sw.js` saat rilis besar).
+Sudah ada: 6 wilayah (+ Puncak Beku) + 3 interior, 30 jenis musuh, 8 boss/mini-boss, misi bab 1–3 (stage 0–14), 3 misi sampingan, tas/perlengkapan/tempa/toko, 4 gaya senjata, jurus (dash, tebasan putar, nova es), efek status + Penawar, siang-malam, cuaca, pancing, kebun, teka-teki (batu & obor), bestiari, pencapaian, peta, hit-stop + getar, menu pengaturan, teleport 6 patung, ekspor/impor kode save, upgrade +1..+5 di bengkel, masak 5 resep dengan bonus sementara, PWA (`manifest.webmanifest`, `sw.js`; naikkan `VERSI` di `sw.js` saat rilis besar).
 
 Belum: sprite karakter bergaya gambar referensi (menunggu lembar sprite dari pemilik), gamepad, bab 4.
 

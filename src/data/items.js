@@ -5,6 +5,11 @@ const ITEMS = {
   potion: { n: 'Ramuan', k: 'use', hp: 40, price: 8, d: 'Pulihkan 40 HP.' },
   hipotion: { n: 'Ramuan Besar', k: 'use', hp: 120, price: 30, d: 'Pulihkan 120 HP.' },
   antidote: { n: 'Penawar', k: 'use', cure: 1, price: 6, d: 'Sembuhkan racun, terbakar & dingin.' },
+  f_fish: { n: 'Ikan Bakar', k: 'use', hp: 60, buff: [['atk', 180]], sell: 10, d: 'Pulihkan 60 HP. Serangan +20% selama 3 menit.' },
+  f_soup: { n: 'Sup Sayur', k: 'use', hp: 80, buff: [['def', 180]], sell: 12, d: 'Pulihkan 80 HP. Pertahanan +25% selama 3 menit.' },
+  f_ginger: { n: 'Sup Jahe Hangat', k: 'use', hp: 50, buff: [['warm', 300]], sell: 12, d: 'Pulihkan 50 HP. Kebal dingin selama 5 menit.' },
+  f_jelly: { n: 'Jeli Manis', k: 'use', mp: 30, sell: 8, d: 'Pulihkan 30 MP. Kenyal!' },
+  f_hero: { n: 'Hidangan Pahlawan', k: 'use', hp: 999, buff: [['atk', 300], ['def', 300]], sell: 60, d: 'Pulihkan semua HP. Serangan & pertahanan naik selama 5 menit.' },
   ether: { n: 'Eter', k: 'use', mp: 15, price: 15, d: 'Pulihkan 15 MP.' },
   jelly: { n: 'Lendir Slime', k: 'mat', sell: 2, d: 'Kenyal dan lengket. Dari slime.' },
   pelt: { n: 'Bulu Serigala', k: 'mat', sell: 5, d: 'Hangat dan kuat. Bahan rompi.' },
@@ -46,6 +51,11 @@ const ITEMS = {
   mochi: { n: 'Mochi', k: 'key', d: 'Kucing putih milik Lina. Ia mendengkur.' },
 };
 const ICON_OF = { stonearm: 'chain' };
+// Masak di penginapan (Bu Rina)
+const COOK = [
+  { id: 'f_fish', need: { fish: 1 } }, { id: 'f_soup', need: { veg: 2 } }, { id: 'f_ginger', need: { veg: 1, fish: 1 } },
+  { id: 'f_jelly', need: { jelly: 3 } }, { id: 'f_hero', need: { gfish: 1, veg: 2 } },
+];
 const RECIPES = [
   { id: 'leather', gold: 40, need: { pelt: 3 } },
   { id: 'ssword', gold: 120, need: { tusk: 3, scale: 3 } },

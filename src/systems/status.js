@@ -13,6 +13,7 @@ Object.assign(World.prototype, {
     if (!fx || this.pl.dead) return; const [k, sec, ch = 1] = fx;
     if (Math.random() > ch) return;
     if (k === 'poison' && S.eq.acc === 'amulet') return; // Jimat Daun kebal racun
+    if (k === 'chill' && buffOn('warm')) return; // Sup Jahe: kebal dingin
     const fresh = !(this.pst[k] > 0); this.pst[k] = Math.max(this.pst[k] || 0, sec);
     if (fresh) { popWorld(this.pl.x, this.pl.y - 38, STATUS[k].n + '!', STATUS[k].c); this.pstT[k] = STATUS[k].every; }
     updStatusHud(this);
@@ -21,6 +22,7 @@ Object.assign(World.prototype, {
   speedMul() { return this.pst.chill > 0 ? STATUS.chill.slow : 1; },
   updStatus(dt) {
     const pl = this.pl; let any = null;
+    for (const k in S.buff) { if (S.buff[k] > 0) { S.buff[k] -= dt; if (S.buff[k] <= 0) { delete S.buff[k]; popWorld(pl.x, pl.y - 38, 'Efek ' + BUFF[k].n + ' habis', 'xp'); updStatusHud(this); updHud(); } } }
     for (const k in this.pst) {
       if (!(this.pst[k] > 0)) continue;
       this.pst[k] -= dt; any = k; const D = STATUS[k];
@@ -55,5 +57,6 @@ function updStatusHud(sc) {
   let el = $('hSt'); const h2 = $('hud2'); if (!h2) return;
   if (!el) { el = document.createElement('span'); el.id = 'hSt'; h2.appendChild(el); }
   const ks = Object.keys(sc.pst).filter(k => sc.pst[k] > 0);
-  el.textContent = ks.map(k => STATUS[k].ic).join(''); el.style.display = ks.length ? '' : 'none';
+  const bs = Object.keys(S.buff || {}).filter(k => S.buff[k] > 0);
+  el.textContent = ks.map(k => STATUS[k].ic).join('') + bs.map(k => BUFF[k].ic).join(''); el.style.display = ks.length + bs.length ? '' : 'none';
 }

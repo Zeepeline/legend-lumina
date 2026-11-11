@@ -41,3 +41,32 @@ async function forgeMenu() {
     if (await ask(`TANG! TANG! ${it.n} selesai ditempa! Langsung pasang?`, 'Pak Besi')) { S.eq[sl] = R.id; sfx('ok'); updHud(); }
   }
 }
+// ---------------- MASAK (penginapan) ----------------
+async function cookMenu() {
+  let sel = 0; const can = R => Object.entries(R.need).every(([k, n]) => has(k, n));
+  for (; ;) {
+    const r = await choose({ head: 'Dapur Bu Rina', x: 24, y: 22, w: 240, start: sel,
+      items: [...COOK.map(R => ({ t: icon(R.id) + ITEMS[R.id].n, r: 'x' + (S.inv[R.id] || 0) })), { t: 'Kembali' }],
+      foot: i => { if (i >= COOK.length) return ''; const R = COOK[i]; return ITEMS[R.id].d + '<br>Bahan: ' + Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
+    if (r < 0 || r === COOK.length) return; sel = r; const R = COOK[r];
+    if (!can(R)) { sfx('buzz'); await say('Bahannya belum cukup. Ikan dari memancing, sayur dari kebun.', 'Bu Rina'); continue; }
+    for (const [k, n] of Object.entries(R.need)) addItem(k, -n); addItem(R.id); sfx('fire'); await sleep(300); sfx('chest'); updHud();
+    await say(`Harum sekali! ${ITEMS[R.id].n} siap. Makan dari TAS saat dibutuhkan.`, 'Bu Rina');
+  }
+}
+// ---------------- UPGRADE (bengkel) ----------------
+function upgCost(id) { const u = (S.up[id] || 0) + 1; return { gold: 60 * u * u + 40, need: u >= 4 ? { ore: u, shard: u - 2 } : { ore: u } }; }
+async function upgradeMenu() {
+  let sel = 0;
+  for (; ;) {
+    const L = Object.keys(S.inv).filter(id => ITEMS[id] && (ITEMS[id].k === 'wpn' || ITEMS[id].k === 'arm'));
+    const r = await choose({ head: 'Tingkatkan · ' + S.gold + ' G', x: 24, y: 22, w: 240, start: sel,
+      items: [...L.map(id => { const u = S.up[id] || 0; return { t: icon(id) + itemName(id), r: u >= UPG.max ? 'MAKS' : upgCost(id).gold + ' G', dis: u >= UPG.max }; }), { t: 'Kembali' }],
+      foot: i => { if (i >= L.length) return 'Setiap tingkat: senjata Serang +' + UPG.wpn + ', baju Tahan +' + UPG.arm + '.'; const id = L[i]; if ((S.up[id] || 0) >= UPG.max) return 'Sudah tingkat maksimal!'; const C = upgCost(id); return (ITEMS[id].k === 'wpn' ? 'Serang +' + UPG.wpn : 'Tahan +' + UPG.arm) + '<br>Bahan: ' + Object.entries(C.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
+    if (r < 0 || r === L.length) return; sel = r; const id = L[r], C = upgCost(id);
+    if (S.gold < C.gold || !Object.entries(C.need).every(([k, n]) => has(k, n))) { sfx('buzz'); await say('Bahan atau uangnya belum cukup. Bijih Batu dari golem, Pecahan Kristal dari makhluk es.', 'Pak Besi'); continue; }
+    S.gold -= C.gold; for (const [k, n] of Object.entries(C.need)) addItem(k, -n); S.up[id] = (S.up[id] || 0) + 1;
+    sfx('boom'); await sleep(250); sfx('chest'); G.scene.cameras.main.flash(200, 255, 200, 120); updHud();
+    await say(`TANG! ${itemName(id)} jadi lebih kuat!`, 'Pak Besi');
+  }
+}

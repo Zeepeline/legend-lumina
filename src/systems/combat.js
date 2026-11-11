@@ -78,8 +78,9 @@ Object.assign(World.prototype, {
   },
   useItem(id) {
     const it = ITEMS[id], st = stat();
-    if (it.hp) { if (S.hp >= st.maxhp) { sfx('buzz'); return false; } const h = Math.min(it.hp, st.maxhp - S.hp); S.hp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h, 'heal'); }
-    if (it.mp) { if (S.mp >= st.maxmp) { sfx('buzz'); return false; } const h = Math.min(it.mp, st.maxmp - S.mp); S.mp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h + ' MP', 'mpc'); }
+    if (it.hp) { if (S.hp >= st.maxhp && !it.buff) { sfx('buzz'); return false; } const h = Math.min(it.hp, st.maxhp - S.hp); S.hp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h, 'heal'); }
+    if (it.mp) { if (S.mp >= st.maxmp && !it.buff) { sfx('buzz'); return false; } const h = Math.min(it.mp, st.maxmp - S.mp); S.mp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h + ' MP', 'mpc'); }
+    if (it.buff) { for (const [k, sec] of it.buff) S.buff[k] = Math.max(S.buff[k] || 0, sec); popWorld(this.pl.x, this.pl.y - 40, it.buff.map(([k]) => BUFF[k].n).join(' & ') + '!', 'xp'); updStatusHud(this); }
     if (it.cure) { if (!Object.keys(this.pst).length && !it.hp) { sfx('buzz'); return false; } this.cure(); popWorld(this.pl.x, this.pl.y - 40, 'pulih!', 'heal'); }
     addItem(id, -1); sfx('heal'); this.sparkle(this.pl.x, this.pl.y - 10, it.mp ? 'dot' : 'dotg'); updHud(); return true;
   },

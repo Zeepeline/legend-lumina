@@ -120,16 +120,19 @@ Object.assign(World.prototype, {
     G.lock++;
     await say(pick(['Heh, butuh senjata? Bengkel Pak Besi siap!', 'Bawakan bahan monster, akan kutempa jadi barang hebat.']), 'Pak Besi');
     for (; ;) {
-      const m = await choose({ head: 'Bengkel Pak Besi · ' + S.gold + ' G', x: 70, y: 50, w: 148, items: [{ t: 'Beli perlengkapan' }, { t: 'Tempa dengan bahan' }, { t: 'Keluar' }] });
+      const m = await choose({ head: 'Bengkel Pak Besi · ' + S.gold + ' G', x: 70, y: 50, w: 148, items: [{ t: 'Beli perlengkapan' }, { t: 'Tempa dengan bahan' }, { t: 'Tingkatkan (+1)' }, { t: 'Keluar' }] });
       if (m === 0) await buyMenu('Bengkel Pak Besi', ['isword', 'ispear', 'hbow', 'chain']);
       else if (m === 1) await forgeMenu();
+      else if (m === 2) await upgradeMenu();
       else break;
     }
     G.lock--;
   },
   async innTalk() {
     G.lock++;
-    const ok = await ask('Istirahat semalam? 10 G\n(HP & MP pulih, permainan tersimpan)', 'Bu Rina');
+    const m = await choose({ head: 'Penginapan Bu Rina', x: 70, y: 50, w: 150, items: [{ t: 'Menginap', r: '10 G' }, { t: 'Masak' }, { t: 'Keluar' }] });
+    if (m === 1) { await cookMenu(); G.lock--; return; }
+    const ok = m === 0;
     if (ok) {
       if (S.gold < 10) { sfx('buzz'); await say('Maaf, uangmu belum cukup.', 'Bu Rina'); }
       else { S.gold -= 10; await fadeTo(1); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Selamat pagi! Tidurmu nyenyak? Permainan sudah tersimpan.', 'Bu Rina'); }
