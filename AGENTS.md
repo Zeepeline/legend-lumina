@@ -51,7 +51,7 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `ui/shop.js` (juga `cookMenu`, `upgradeMenu`) · `bag.js` · `map.js` · `menus.js` · `title.js` | layar toko/tempa, tas & buku misi, peta, menu utama/bestiari, judul |
 | `main.js` | mulai Phaser |
 
-Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.md` (aturan dunia & wilayah), `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png` (aset dari gambar referensi), `assets/reference/` (gambar asli), `docs/ART_BIBLE.md` (aturan gaya), `docs/sprites/` (lembar contoh), `tools/` (bundle, pemotong aset).
+Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.md` (aturan dunia & wilayah), `docs/BENUA_LUMINA.md` (usulan peta benua), `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png` (aset dari gambar referensi), `assets/reference/` (gambar asli), `docs/ART_BIBLE.md` (aturan gaya), `docs/sprites/` (lembar contoh), `tools/` (bundle, pemotong aset).
 
 ## Cara menambah sesuatu (file yang disentuh)
 
@@ -81,7 +81,7 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 ## Aturan dunia & wilayah
 
-**Wajib mengikuti `docs/WORLD_DESIGN.md`** sebelum menambah wilayah, kota, desa, dungeon, atau lokasi apa pun. Fokus saat ini adalah **Benua Lumina**; benua lain hanya untuk lore dan foreshadowing. Setiap lokasi baru wajib lolos **World Design Review** (checklist di bagian 23). Jika banyak jawaban belum jelas, **usulkan desainnya ke pemilik dulu, jangan langsung diimplementasikan.** Ukuran peta mengikuti fungsi lokasinya (kota jauh lebih besar dari desa, alam boleh sangat luas dan dibagi beberapa zona), bukan ukuran seragam.
+**Wajib mengikuti `docs/WORLD_DESIGN.md`** sebelum menambah wilayah, kota, desa, dungeon, atau lokasi apa pun. Fokus saat ini adalah **Benua Lumina**; benua lain hanya untuk lore dan foreshadowing. Setiap lokasi baru wajib lolos **World Design Review** (checklist di bagian 23). Jika banyak jawaban belum jelas, **usulkan desainnya ke pemilik dulu, jangan langsung diimplementasikan.** Rancangan benua (usulan, belum disetujui) ada di `docs/BENUA_LUMINA.md`; jangan diimplementasikan sebelum pemilik menyetujuinya. Ukuran peta mengikuti fungsi lokasinya (kota jauh lebih besar dari desa, alam boleh sangat luas dan dibagi beberapa zona), bukan ukuran seragam.
 
 ## Gaya visual
 
