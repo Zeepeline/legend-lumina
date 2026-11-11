@@ -164,6 +164,12 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #autosv{position:absolute;right:6px;bottom:6px;font-size:9px;color:#fff;background:rgba(20,16,30,.55);padding:1px 6px;border-radius:6px;opacity:0;pointer-events:none;z-index:40}
 #autosv.on{animation:asv 2.2s ease}
 @keyframes asv{0%,100%{opacity:0}15%,70%{opacity:1}}
+/* kartu misi */
+#quest{pointer-events:auto!important;cursor:pointer;background:rgba(28,20,36,.72);border:1px solid #e8c050;border-radius:6px;padding:3px 7px 3px;max-width:52%;text-align:left!important;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+#quest .qh{font-size:8px;letter-spacing:1px;color:#e8c050}
+#quest .qt{font-size:10px;line-height:1.25;color:#fff}
+#quest .qp{display:inline-block;background:#e8c050;color:#2a1a10;border-radius:6px;padding:0 4px;font-size:9px;font-weight:bold}
+#quest .qf{font-size:7px;color:#b8a8c8;margin-top:1px}
 </style>
 </head>
 <body>
@@ -2079,7 +2085,11 @@ function updHud() {
   $('hXp').firstChild.style.width = (S.exp / need(S.lv) * 100) + '%';
   $('hGold').textContent = S.gold; $('hPot').textContent = (S.inv.potion || 0) + (S.inv.hipotion || 0);
   const q = $('quest');
-  q.innerHTML = S.stage < 9 ? '<b>Misi</b><br>' + STAGE_TXT[S.stage] + (S.stage === 2 ? ` (${S.inv.seal || 0}/3)` : '') : '';
+  const prog = { 2: [S.inv.seal || 0, 3], 11: [[0, 1, 2].filter(k => S.flags['torch' + k]).length, 3], 15: [['m_darto', 'm_sari', 'm_dodi'].filter(k => S.flags[k]).length, 3], 25: [(typeof ARSIP !== 'undefined' ? ARSIP : []).filter(k => S.lore[k]).length, 4] }[S.stage];
+  const txt = STAGE_TXT[S.stage];
+  q.innerHTML = txt ? `<div class="qh">★ MISI UTAMA</div><div class="qt">${txt}${prog ? ` <span class="qp">${prog[0]}/${prog[1]}</span>` : ''}</div><div class="qf">ketuk: Jurnal</div>` : '';
+  q.style.display = txt ? '' : 'none';
+  if (!q._tap) { q._tap = 1; q.addEventListener('pointerdown', e => { e.stopPropagation(); if (!G.lock && !G.title) openQuests(); }); }
 }
 function showHud(v) { if (!HUD) return; for (const id of ['hud', 'hud2', 'quest']) $(id).style.opacity = v ? 1 : 0; }
 function bossBar(name, f) { const b = $('boss'); if (name === null) { b.style.display = 'none'; return; } b.style.display = 'block'; $('bName').textContent = name; $('bHp').style.width = Math.max(0, f * 100) + '%'; }
@@ -2394,7 +2404,7 @@ function buildTextures(sc) {
   addStrip(sc, 'snakei', artMon('snake', { G: '#9ad4f4', L: '#f0faff', E: '#1a2a5a', R: '#4a8aff' }));
   addStrip(sc, 'wisp', artWisp()); addStrip(sc, 'frog', artMon('frog')); addStrip(sc, 'slimep', artMon('slime', { G: '#a060d0', D: '#5a2a8a', L: '#f0d8ff' }));
   one('gate', artGate()); one('boulder', artBoulder()); one('plate', artPlate());
-  one('treeSw', (() => { const c = darkTree(IMGEL.treeB), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = yy < .25 ? .75 : yy < .55 ? .5 : .3; const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('warp0', artWarp(false)); one('stele', artStele()); artCritters(T); one('root', artRoot()); one('gatehouse', artGatehouse()); one('cwall', artCityWall()); one('academy', artAcademy()); one('boat', artBoat()); one('relief', artRelief()); one('sealdoor0', artSealDoor(false)); one('sealdoor1', artSealDoor(true)); one('warp1', artWarp(true)); one('icegate', artIceGate()); one('icebolt', artIceBolt());
+  one('treeSw', (() => { const c = darkTree(IMGEL.treeB), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = yy < .25 ? .75 : yy < .55 ? .5 : .3; const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('warp0', artWarp(false)); one('stele', artStele()); artCritters(T); artQuestArrow(T); one('root', artRoot()); one('gatehouse', artGatehouse()); one('cwall', artCityWall()); one('academy', artAcademy()); one('boat', artBoat()); one('relief', artRelief()); one('sealdoor0', artSealDoor(false)); one('sealdoor1', artSealDoor(true)); one('warp1', artWarp(true)); one('icegate', artIceGate()); one('icebolt', artIceBolt());
   one('light', artLight(80)); one('lights', artLight(36)); one('nlL', artLightP(54, .9)); one('nlS', artLightP(38, .85)); one('nlW', artLightP(18, .75));
   for (const id in ITEMS) { const c = artIcon(ICON_OF[id] && id === 'stonearm' ? 'chain' : id); one('ic_' + id, c); ICONS[id] = c.toDataURL(); }
   const A = sc.anims, fr2 = (k, n) => [...Array(n).keys()].map(i => ({ key: k, frame: i }));
@@ -2423,7 +2433,7 @@ class World extends Phaser.Scene {
     const M = this.M = MAPS[data.map || 'village'];
     if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
-    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
+    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.qArrow = null; this.qStar = null; this.qGoal = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
     this.walls = this.physics.add.staticGroup();
@@ -2611,7 +2621,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt);
+    this.updAmbient(dt); this.updQuestGuide(dt);
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       if (this.boulder) this.updBoulder(dt);
@@ -3117,6 +3127,26 @@ Object.assign(World.prototype, {
   },
   ambOff() { const v = this.cameras.main.worldView, M = this.M, side = Math.floor(Math.random() * 4); return [clamp(side === 0 ? v.x - 60 : side === 1 ? v.right + 60 : rnd(v.x, v.right), 40, M.w - 40), clamp(side === 2 ? v.y - 60 : side === 3 ? v.bottom + 60 : rnd(v.y, v.bottom), 60, M.h - 40)]; },
   ripple(x, y) { const g = this.add.graphics().setDepth(y), o = { r: 2 }; this.tweens.add({ targets: o, r: 12, duration: 600, onUpdate: () => { g.clear(); g.lineStyle(1, 0xffffff, .8 - o.r / 15).strokeEllipse(x, y, o.r * 2, o.r); }, onComplete: () => g.destroy() }); },
+});
+// ---- penunjuk arah misi: panah di tepi layar bila tujuan di luar layar, bintang memantul bila terlihat ----
+function artQuestArrow(T) {
+  const [c, x] = mk(18, 18); x.fillStyle = '#ffd84a'; x.beginPath(); x.moveTo(17, 9); x.lineTo(3, 2); x.lineTo(7, 9); x.lineTo(3, 16); x.closePath(); x.fill();
+  x.strokeStyle = '#3a2410'; x.lineWidth = 1.5; x.stroke(); T.addCanvas('qarrow', c);
+  const [c2, y] = mk(14, 14); y.fillStyle = '#ffd84a'; y.strokeStyle = '#3a2410'; y.lineWidth = 1.2; y.beginPath();
+  for (let i = 0; i < 10; i++) { const r = i % 2 ? 2.8 : 6.4, a = -Math.PI / 2 + i * Math.PI / 5; y.lineTo(7 + Math.cos(a) * r, 7 + Math.sin(a) * r); } y.closePath(); y.fill(); y.stroke(); T.addCanvas('qstar', c2);
+}
+Object.assign(World.prototype, {
+  updQuestGuide(dt) {
+    if (!this.qArrow) { this.qArrow = this.add.image(0, 0, 'qarrow').setScale(1.5).setScrollFactor(0).setDepth(2.1e5).setVisible(false); this.qStar = this.add.image(0, 0, 'qstar').setScale(1.3).setDepth(2.05e5).setVisible(false); this.qT = 0; }
+    this.qT -= dt; if (this.qT <= 0) { this.qT = .4; this.qGoal = G.title ? null : questTarget(this.M); }
+    const q = this.qGoal, A = this.qArrow, St = this.qStar; if (!q || G.lock) { A.setVisible(false); St.setVisible(false); return; }
+    const v = this.cameras.main.worldView, m = 26, inView = q.x > v.x + m && q.x < v.right - m && q.y > v.y + m && q.y < v.bottom - m;
+    if (inView) { A.setVisible(false); St.setVisible(true).setPosition(q.x, q.y - 26 + Math.sin(this.t * 4) * 3); return; }
+    St.setVisible(false);
+    const cx = v.width / 2, cy = v.height / 2, dx = q.x - (v.x + cx), dy = q.y - (v.y + cy), a = Math.atan2(dy, dx);
+    const k = Math.min((cx - 18) / Math.abs(dx || 1e-6), (cy - 18) / Math.abs(dy || 1e-6));
+    A.setVisible(true).setRotation(a).setPosition(cx + dx * k, cy + dy * k).setAlpha(.75 + Math.sin(this.t * 5) * .25);
+  },
 });
 
 'use strict';

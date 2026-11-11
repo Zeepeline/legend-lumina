@@ -92,7 +92,11 @@ function updHud() {
   $('hXp').firstChild.style.width = (S.exp / need(S.lv) * 100) + '%';
   $('hGold').textContent = S.gold; $('hPot').textContent = (S.inv.potion || 0) + (S.inv.hipotion || 0);
   const q = $('quest');
-  q.innerHTML = S.stage < 9 ? '<b>Misi</b><br>' + STAGE_TXT[S.stage] + (S.stage === 2 ? ` (${S.inv.seal || 0}/3)` : '') : '';
+  const prog = { 2: [S.inv.seal || 0, 3], 11: [[0, 1, 2].filter(k => S.flags['torch' + k]).length, 3], 15: [['m_darto', 'm_sari', 'm_dodi'].filter(k => S.flags[k]).length, 3], 25: [(typeof ARSIP !== 'undefined' ? ARSIP : []).filter(k => S.lore[k]).length, 4] }[S.stage];
+  const txt = STAGE_TXT[S.stage];
+  q.innerHTML = txt ? `<div class="qh">★ MISI UTAMA</div><div class="qt">${txt}${prog ? ` <span class="qp">${prog[0]}/${prog[1]}</span>` : ''}</div><div class="qf">ketuk: Jurnal</div>` : '';
+  q.style.display = txt ? '' : 'none';
+  if (!q._tap) { q._tap = 1; q.addEventListener('pointerdown', e => { e.stopPropagation(); if (!G.lock && !G.title) openQuests(); }); }
 }
 function showHud(v) { if (!HUD) return; for (const id of ['hud', 'hud2', 'quest']) $(id).style.opacity = v ? 1 : 0; }
 function bossBar(name, f) { const b = $('boss'); if (name === null) { b.style.display = 'none'; return; } b.style.display = 'block'; $('bName').textContent = name; $('bHp').style.width = Math.max(0, f * 100) + '%'; }

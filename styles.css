@@ -146,3 +146,9 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #autosv{position:absolute;right:6px;bottom:6px;font-size:9px;color:#fff;background:rgba(20,16,30,.55);padding:1px 6px;border-radius:6px;opacity:0;pointer-events:none;z-index:40}
 #autosv.on{animation:asv 2.2s ease}
 @keyframes asv{0%,100%{opacity:0}15%,70%{opacity:1}}
+/* kartu misi */
+#quest{pointer-events:auto!important;cursor:pointer;background:rgba(28,20,36,.72);border:1px solid #e8c050;border-radius:6px;padding:3px 7px 3px;max-width:52%;text-align:left!important;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+#quest .qh{font-size:8px;letter-spacing:1px;color:#e8c050}
+#quest .qt{font-size:10px;line-height:1.25;color:#fff}
+#quest .qp{display:inline-block;background:#e8c050;color:#2a1a10;border-radius:6px;padding:0 4px;font-size:9px;font-weight:bold}
+#quest .qf{font-size:7px;color:#b8a8c8;margin-top:1px}

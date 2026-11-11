@@ -89,3 +89,23 @@ Object.assign(World.prototype, {
   ambOff() { const v = this.cameras.main.worldView, M = this.M, side = Math.floor(Math.random() * 4); return [clamp(side === 0 ? v.x - 60 : side === 1 ? v.right + 60 : rnd(v.x, v.right), 40, M.w - 40), clamp(side === 2 ? v.y - 60 : side === 3 ? v.bottom + 60 : rnd(v.y, v.bottom), 60, M.h - 40)]; },
   ripple(x, y) { const g = this.add.graphics().setDepth(y), o = { r: 2 }; this.tweens.add({ targets: o, r: 12, duration: 600, onUpdate: () => { g.clear(); g.lineStyle(1, 0xffffff, .8 - o.r / 15).strokeEllipse(x, y, o.r * 2, o.r); }, onComplete: () => g.destroy() }); },
 });
+// ---- penunjuk arah misi: panah di tepi layar bila tujuan di luar layar, bintang memantul bila terlihat ----
+function artQuestArrow(T) {
+  const [c, x] = mk(18, 18); x.fillStyle = '#ffd84a'; x.beginPath(); x.moveTo(17, 9); x.lineTo(3, 2); x.lineTo(7, 9); x.lineTo(3, 16); x.closePath(); x.fill();
+  x.strokeStyle = '#3a2410'; x.lineWidth = 1.5; x.stroke(); T.addCanvas('qarrow', c);
+  const [c2, y] = mk(14, 14); y.fillStyle = '#ffd84a'; y.strokeStyle = '#3a2410'; y.lineWidth = 1.2; y.beginPath();
+  for (let i = 0; i < 10; i++) { const r = i % 2 ? 2.8 : 6.4, a = -Math.PI / 2 + i * Math.PI / 5; y.lineTo(7 + Math.cos(a) * r, 7 + Math.sin(a) * r); } y.closePath(); y.fill(); y.stroke(); T.addCanvas('qstar', c2);
+}
+Object.assign(World.prototype, {
+  updQuestGuide(dt) {
+    if (!this.qArrow) { this.qArrow = this.add.image(0, 0, 'qarrow').setScale(1.5).setScrollFactor(0).setDepth(2.1e5).setVisible(false); this.qStar = this.add.image(0, 0, 'qstar').setScale(1.3).setDepth(2.05e5).setVisible(false); this.qT = 0; }
+    this.qT -= dt; if (this.qT <= 0) { this.qT = .4; this.qGoal = G.title ? null : questTarget(this.M); }
+    const q = this.qGoal, A = this.qArrow, St = this.qStar; if (!q || G.lock) { A.setVisible(false); St.setVisible(false); return; }
+    const v = this.cameras.main.worldView, m = 26, inView = q.x > v.x + m && q.x < v.right - m && q.y > v.y + m && q.y < v.bottom - m;
+    if (inView) { A.setVisible(false); St.setVisible(true).setPosition(q.x, q.y - 26 + Math.sin(this.t * 4) * 3); return; }
+    St.setVisible(false);
+    const cx = v.width / 2, cy = v.height / 2, dx = q.x - (v.x + cx), dy = q.y - (v.y + cy), a = Math.atan2(dy, dx);
+    const k = Math.min((cx - 18) / Math.abs(dx || 1e-6), (cy - 18) / Math.abs(dy || 1e-6));
+    A.setVisible(true).setRotation(a).setPosition(cx + dx * k, cy + dy * k).setAlpha(.75 + Math.sin(this.t * 5) * .25);
+  },
+});
