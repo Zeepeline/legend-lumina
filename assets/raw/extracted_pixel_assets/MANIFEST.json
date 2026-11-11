@@ -1,0 +1,7 @@
+{
+  "grid": "8 columns x 8 rows",
+  "source_size": "256x256 px",
+  "cell_size": "32x32 px",
+  "count": 192,
+  "note": "Each asset is an exact 32x32 cell from the original sprite sheet. Transparent padding inside each cell is preserved; no scaling or resampling was applied."
+}
