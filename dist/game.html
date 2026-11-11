@@ -2087,7 +2087,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {} }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -2105,7 +2105,7 @@ const has = (id, n = 1) => (S.inv[id] || 0) >= n;
 function addItem(id, n = 1) { S.inv[id] = (S.inv[id] || 0) + n; if (S.inv[id] <= 0) delete S.inv[id]; }
 function hasSave() { try { return !!localStorage.getItem(SAVE_KEY); } catch (_) { return false; } }
 function saveGame(sc) { try { if (sc && sc.pl) { S.x = Math.round(sc.pl.x); S.y = Math.round(sc.pl.y); S.dir = sc.pl.dir; S.map = sc.M.id; } localStorage.setItem(SAVE_KEY, JSON.stringify(S)); return true; } catch (_) { return false; } }
-function loadSave() { try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && s.lv) { S = Object.assign(newState(), s); if (!MAPS[S.map]) S.map = 'village'; return true; } } catch (_) { } return false; }
+function loadSave() { try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && s.lv) { S = Object.assign(newState(), s); if (!MAPS[S.map]) S.map = 'village'; if (!s.learn) { if (S.stage >= 1 || S.lv > 1) S.learn.fire = 1; if (S.lv >= 2) S.learn.dash = 1; if (S.lv >= 3) S.learn.spin = 1; if (S.lv >= 5) S.learn.nova = 1; S.spell = S.learn.fire ? 'fire' : null; } return true; } } catch (_) { } return false; }
 
 'use strict';
 // Data item & resep tempa
@@ -2770,13 +2770,16 @@ Object.assign(World.prototype, {
   },
   magic() {
     const pl = this.pl, st = stat(); if (pl.atkCd > 0) { Input.castAng = null; return; }
+    if (!S.spell || !learned(S.spell)) { Input.castAng = null; popWorld(pl.x, pl.y - 30, 'Belum bisa sihir', 'xp'); sfx('buzz'); return; }
+    if (S.spell === 'nova') { Input.castAng = null; return this.nova(); }
+    if (S.spell !== 'fire') { Input.castAng = null; return this.castSpell(S.spell); }
     if (S.mp < 3) { Input.castAng = null; popWorld(pl.x, pl.y - 30, 'MP kurang!', 'mpc'); sfx('buzz'); return; }
     const a = this.aimAngle(), dx = Math.cos(a), dy = Math.sin(a);
     S.mp -= 3; updHud(); pl.atkCd = .4; pl.atkT = .18; sfx('fire');
     pl.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'); pl.flipX = pl.dir === 'left';
     const big = S.eq.acc === 'ring';
     const s = this.add.sprite(pl.x + dx * 8, pl.y - 9 + dy * 6, 'fire').play('fire').setRotation(a).setScale(big ? 1.3 : 1);
-    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 200, vy: dy * 200, life: .85, kind: 'fire', mine: 1, dmg: st.mag });
+    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 200, vy: dy * 200, life: .85, kind: 'fire', mine: 1, dmg: st.mag * (1 + .25 * (tierOf('fire') - 1)) }); s.setScale(1 + .15 * (tierOf('fire') - 1)); useJurus(this, 'fire');
   },
   drink() {
     const st = stat(), id = has('potion') ? 'potion' : has('hipotion') ? 'hipotion' : null;
@@ -2856,7 +2859,7 @@ Object.assign(World.prototype, {
     S.exp += n; popWorld(x, y - 22, '+' + n + ' EXP', 'xp');
     let up = false; while (S.exp >= need(S.lv)) { S.exp -= need(S.lv); S.lv++; up = true; }
     if (up) {
-      const old = S.lv - 1; let k = 0; for (const J of SKILLS) if (S.lv >= J.lv && !S.flags['sk' + J.lv]) { S.flags['sk' + J.lv] = 1; this.time.delayedCall(1800 + k++ * 2200, () => { banner(J.n, 'JURUS BARU', false, 2000); popWorld(this.pl.x, this.pl.y - 36, J.d, 'xp'); }); }
+      const old = S.lv - 1; let k = 0; for (const J of []) if (S.lv >= J.lv && !S.flags['sk' + J.lv]) { S.flags['sk' + J.lv] = 1; this.time.delayedCall(1800 + k++ * 2200, () => { banner(J.n, 'JURUS BARU', false, 2000); popWorld(this.pl.x, this.pl.y - 36, J.d, 'xp'); }); }
       const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; sfx('lvl'); banner('LEVEL ' + S.lv + '!', 'NAIK LEVEL', true, 1600);
       const pl = this.pl, g = this.add.graphics().setDepth(pl.y + 2), o = { r: 4 };
       this.tweens.add({ targets: o, r: 34, duration: 600, onUpdate: () => { g.clear(); g.lineStyle(2, 0xffe27a, 1 - o.r / 34).strokeEllipse(pl.x, pl.y - 2, o.r * 2, o.r); }, onComplete: () => g.destroy() });
@@ -2917,34 +2920,92 @@ Object.assign(World.prototype, {
 Object.assign(World.prototype, {
   updSkills(dt) {
     const pl = this.pl; this.dashCd -= dt;
-    if (Input.keys.a && S.lv >= 3 && pl.atkCd < .2) {
+    if (Input.keys.a && learned('spin') && pl.atkCd < .2) {
       this.holdA += dt;
       if (this.holdA > .45 && !this.charged) { this.charged = true; sfx('cur'); this.sparkle(pl.x, pl.y - 10, 'doto', 6); }
       if (this.charged) { if (Math.floor(this.t * 14) % 2) pl.setTint(0xfff0a0); else pl.clearTint(); }
     } else { if (this.charged) { this.charged = false; pl.clearTint(); this.spin(); } this.holdA = 0; }
   },
   spin() {
-    const pl = this.pl, st = stat(); pl.atkCd = .45; pl.atkT = .3; sfx('swing'); this.time.delayedCall(90, () => sfx('swing'));
+    const pl = this.pl, st = stat(), tt = tierOf('spin'); useJurus(this, 'spin'); pl.atkCd = .45; pl.atkT = .3; sfx('swing'); this.time.delayedCall(90, () => sfx('swing'));
     const g = this.add.sprite(pl.x, pl.y - 9, 'slash').setOrigin(4 / 28, .5).setDepth(pl.y + 3).play('slash');
     this.tweens.add({ targets: g, rotation: Math.PI * 2, duration: 260, onComplete: () => g.destroy() });
     const ring = this.add.graphics().setDepth(pl.y + 2), o = { r: 6 };
-    this.tweens.add({ targets: o, r: 36, duration: 240, onUpdate: () => { ring.clear(); ring.lineStyle(2, 0xffffff, 1 - o.r / 40).strokeEllipse(pl.x, pl.y - 6, o.r * 2, o.r * 1.3); }, onComplete: () => ring.destroy() });
-    for (const e of this.enemies) { if (e.hp <= 0) continue; const dx = e.spr.x - pl.x, dy = e.spr.y - pl.y, d = Math.hypot(dx, dy) || 1; if (d < 36 + e.D.r * e.sc) this.hitEnemy(e, st.atk * 1.5, Math.random() < .15, dx / d, dy / d); }
+    this.tweens.add({ targets: o, r: 30 + tt * 8, duration: 240, onUpdate: () => { ring.clear(); ring.lineStyle(2, 0xffffff, 1 - o.r / 40).strokeEllipse(pl.x, pl.y - 6, o.r * 2, o.r * 1.3); }, onComplete: () => ring.destroy() });
+    for (const e of this.enemies) { if (e.hp <= 0) continue; const dx = e.spr.x - pl.x, dy = e.spr.y - pl.y, d = Math.hypot(dx, dy) || 1; if (d < 30 + tt * 8 + e.D.r * e.sc) this.hitEnemy(e, st.atk * (1.3 + .2 * tt), Math.random() < .15, dx / d, dy / d); }
   },
   dash() {
-    const pl = this.pl; if (S.lv < 2) { popWorld(pl.x, pl.y - 30, 'Dash terbuka di Lv 2', 'xp'); return; }
+    const pl = this.pl; if (!learned('dash')) { popWorld(pl.x, pl.y - 30, 'Belum belajar Dash', 'xp'); return; }
     if (this.dashCd > 0 || pl.dashT > 0) return;
     const v = Input.vec(); let dx = v.x, dy = v.y; if (Math.hypot(dx, dy) < .3) [dx, dy] = DIRV[pl.dir]; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
-    pl.dashT = .17; pl.dvx = dx * 290; pl.dvy = dy * 290; pl.inv = Math.max(pl.inv, .22); this.dashCd = .75; sfx('jump'); this.puff(pl.x, pl.y);
+    pl.dashT = .17; pl.dvx = dx * 290; pl.dvy = dy * 290; pl.inv = Math.max(pl.inv, .22 + .04 * tierOf('dash')); this.dashCd = .85 - .1 * tierOf('dash'); useJurus(this, 'dash'); sfx('jump'); this.puff(pl.x, pl.y);
   },
   nova() {
-    const pl = this.pl, st = stat(); if (S.lv < 5) { popWorld(pl.x, pl.y - 30, 'Nova Es terbuka di Lv 5', 'xp'); return; }
+    const pl = this.pl, st = stat(); if (!learned('nova')) { popWorld(pl.x, pl.y - 30, 'Belum belajar Nova Es', 'xp'); return; }
     if (pl.atkCd > 0) return; if (S.mp < 8) { popWorld(pl.x, pl.y - 30, 'MP kurang!', 'mpc'); sfx('buzz'); return; }
-    S.mp -= 8; updHud(); pl.atkCd = .5; pl.atkT = .2; sfx('ice'); this.cameras.main.flash(120, 180, 230, 255);
+    S.mp -= 8; updHud(); pl.atkCd = .5; pl.atkT = .2; sfx('ice'); useJurus(this, 'nova'); this.cameras.main.flash(120, 180, 230, 255);
     const g = this.add.graphics().setDepth(pl.y + 2), o = { r: 6 };
     this.tweens.add({ targets: o, r: 60, duration: 320, onUpdate: () => { g.clear(); g.fillStyle(0xbfe8ff, .25 * (1 - o.r / 70)).fillEllipse(pl.x, pl.y - 4, o.r * 2, o.r * 1.3); g.lineStyle(2, 0xe8f8ff, 1 - o.r / 70).strokeEllipse(pl.x, pl.y - 4, o.r * 2, o.r * 1.3); }, onComplete: () => g.destroy() });
     this.sparkle(pl.x, pl.y - 8, 'dot', 20);
     for (const e of this.enemies) { if (e.hp <= 0) continue; const dx = e.spr.x - pl.x, dy = e.spr.y - pl.y, d = Math.hypot(dx, dy) || 1; if (d < 60 + e.D.r * e.sc) { e.slow = 3; this.hitEnemy(e, st.mag * 1.2, false, dx / d, dy / d); this.freezeEnemy(e, 1.6); } }
+  },
+});
+
+'use strict';
+// Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipakai (tingkat I–III).
+// S.learn[id] = 1 (sudah dipelajari), S.mast[id] = jumlah pemakaian, S.spell = sihir di tombol SIHIR.
+const JURUS = {
+  fire:  { n: 'Bola Api', school: 'Sihir Api', kind: 'spell', mp: 3, guru: 'elder', where: 'Tetua Bram, Desa Lumina', can: () => S.stage >= 1, d: 'Ketuk SIHIR: bidik otomatis. Tarik: bidik manual. Membakar musuh.', lesson: ['Sebelum ke hutan, dengarkan baik-baik. Sihir bukan soal kekuatan, tapi soal niat.', 'Rasakan hangat di telapak tanganmu... bayangkan api kecil... lalu lepaskan!'] },
+  dash:  { n: 'Dash', school: 'Gerak', kind: 'move', guru: 'hunter', where: 'Pemburu Raka, Hutan Lumina', can: () => S.stage >= 1, d: 'Tombol DASH / Shift: melesat & kebal sesaat.', lesson: ['Kakimu terlalu kaku untuk bertarung di hutan. Serigala tak akan menunggumu.', 'Rendahkan badan, tolak dengan satu kaki, lalu melesat! Lihat? Saat melesat, cakar pun tak sempat mengenaimu.'] },
+  spin:  { n: 'Tebasan Putar', school: 'Pedang', kind: 'move', guru: 'smith', where: 'Pak Besi, Desa Lumina (Lv 3, 60 G)', cost: 60, can: () => S.lv >= 3, d: 'Tahan SERANG lalu lepas: tebas ke segala arah.', lesson: ['Pedang bukan cuma untuk menusuk ke depan. Musuh bisa datang dari mana saja.', 'Tahan pegangannya... kumpulkan tenaga di pinggang... lalu putar! Bagus!'] },
+  venom: { n: 'Kabut Racun', school: 'Sihir Alam', kind: 'spell', mp: 6, guru: 'hermit', where: 'Pertapa Sura, Rawa Senja', can: () => S.stage >= 7, d: 'Kabut beracun di sekelilingmu: musuh terluka perlahan.', lesson: ['Rawa ini mengajarkanku satu hal: racun juga bagian dari alam.', 'Hirup aroma lumpur, embuskan dengan niat... kabut ini hanya melukai yang memusuhimu.'] },
+  nova:  { n: 'Nova Es', school: 'Sihir Es', kind: 'spell', mp: 8, guru: 'nila', where: 'Penjaga Nila, Puncak Beku', can: () => S.stage >= 11, d: 'Ledakan es di sekitarmu: membekukan & melambatkan musuh. (Juga: tahan SIHIR / tombol C)', lesson: ['Di gunung ini, dingin bisa jadi kawan. Para penjaga dulu memakainya untuk menahan naga.', 'Kepalkan tanganmu, bayangkan salju yang paling sunyi... lalu lepaskan sekaligus!'] },
+  heal:  { n: 'Cahaya Pulih', school: 'Sihir Cahaya', kind: 'spell', mp: 8, guru: 'lestari', where: 'Guru Lestari, Kota Bawah', can: () => S.stage >= 26, d: 'Pulihkan HP dengan cahaya hangat.', lesson: ['Selene dulu mengajariku ini, waktu kami masih murid. Sekarang giliranku mengajarimu.', 'Cahaya bukan untuk menyerang. Letakkan tangan di dada... rasakan hangatnya... pulihlah.'] },
+  holy:  { n: 'Lentera Suci', school: 'Sihir Cahaya', kind: 'spell', mp: 10, guru: 'ka4', where: 'Guru Tua, Distrik Akademi (300 G)', cost: 300, can: () => S.stage >= 27, d: 'Ledakan cahaya di sekelilingmu. Sangat kuat melawan hantu & roh.', lesson: ['Sihir lentera, ilmu para Penjaga Cahaya. Sudah lama tak ada yang mempelajarinya.', 'Bayangkan seribu lentera kota ini menyala di dalam dirimu... sekarang!'] },
+};
+const MASTERY = [0, 15, 40]; // jumlah pemakaian untuk tingkat I, II, III
+const tierOf = id => (S.mast[id] || 0) >= MASTERY[2] ? 3 : (S.mast[id] || 0) >= MASTERY[1] ? 2 : 1;
+const learned = id => !!S.learn[id];
+function useJurus(sc, id) {
+  const before = tierOf(id); S.mast[id] = (S.mast[id] || 0) + 1; const t = tierOf(id);
+  if (t > before) { sfx('save'); banner(JURUS[id].n + ' ' + ['', 'I', 'II', 'III'][t], 'JURUS SEMAKIN MAHIR', true, 2200); }
+}
+const canTeach = id => Object.keys(JURUS).find(k => JURUS[k].guru === id && !learned(k) && JURUS[k].can());
+Object.assign(World.prototype, {
+  // Dipanggil sebelum dialog biasa. Kembalikan true jika percakapan dipakai untuk mengajar.
+  async learnTalk(id, T, gain) {
+    const k = canTeach(id); if (!k) return false;
+    if (id === 'hunter' && S.stage === 1) return false; // misi Raka dulu, baru mengajar
+    const J = JURUS[k];
+    await T(J.lesson[0]);
+    if (!(await ask(`Pelajari ${J.n}?${J.cost ? `\n(Biaya ${J.cost} G)` : ''}`))) return true;
+    if (J.cost && S.gold < J.cost) { await T(`Kumpulkan dulu ${J.cost} G. Ilmu ini tidak murah.`); return true; }
+    if (J.cost) S.gold -= J.cost;
+    await T(J.lesson[1]);
+    S.learn[k] = 1; if (J.kind === 'spell' && (!S.spell || !learned(S.spell))) S.spell = k;
+    sfx('chest'); this.sparkle(this.pl.x, this.pl.y - 14, 'doto', 18); updHud();
+    banner(J.n, 'JURUS BARU · ' + J.school.toUpperCase(), true, 2600);
+    await say(J.d + (J.kind === 'spell' ? '\nAtur sihir di tombol SIHIR lewat MENU → Jurus.' : ''));
+    saveGame(this); return true;
+  },
+  castSpell(id) {
+    const pl = this.pl, st = stat(), J = JURUS[id], t = tierOf(id);
+    if (pl.atkCd > 0) return; if (S.mp < J.mp) { popWorld(pl.x, pl.y - 30, 'MP kurang!', 'mpc'); sfx('buzz'); return; }
+    S.mp -= J.mp; updHud(); pl.atkCd = .45; pl.atkT = .2; useJurus(this, id);
+    if (id === 'heal') {
+      const n = Math.round(st.maxhp * (.22 + .08 * t)); S.hp = Math.min(st.maxhp, S.hp + n); updHud(); sfx('heal');
+      popWorld(pl.x, pl.y - 34, '+' + n, 'heal'); this.sparkle(pl.x, pl.y - 12, 'dot', 16); this.cameras.main.flash(150, 255, 250, 200); return;
+    }
+    const R = id === 'venom' ? 54 + t * 10 : 70 + t * 12, col = id === 'venom' ? 0x8ae86a : 0xfff2a0;
+    sfx(id === 'venom' ? 'hurt' : 'ice'); if (id === 'holy') this.cameras.main.flash(160, 255, 250, 210);
+    const g = this.add.graphics().setDepth(pl.y + 2), o = { r: 6 };
+    this.tweens.add({ targets: o, r: R, duration: 300, onUpdate: () => { g.clear(); g.fillStyle(col, .22 * (1 - o.r / R / 1.4)).fillEllipse(pl.x, pl.y - 6, o.r * 2, o.r * 1.3); g.lineStyle(2, col, 1 - o.r / R).strokeEllipse(pl.x, pl.y - 6, o.r * 2, o.r * 1.3); }, onComplete: () => g.destroy() });
+    for (const e of this.enemies) {
+      if (e.hp <= 0) continue; const dx = e.spr.x - pl.x, dy = e.spr.y - pl.y, d = Math.hypot(dx, dy) || 1;
+      if (d > R + e.D.r * e.sc) continue;
+      if (id === 'venom') { this.hitEnemy(e, st.mag * .5, false, dx / d * .3, dy / d * .3); this.burnEnemy(e, st.mag * (.18 + .07 * t), 3 + t); e.slow = 2; }
+      else { const spirit = /ghost|wisp/.test(e.D.tex); this.hitEnemy(e, st.mag * (1.1 + .25 * t) * (spirit ? 2.5 : 1), spirit, dx / d, dy / d); }
+    }
   },
 });
 
@@ -3697,7 +3758,7 @@ Object.assign(World.prototype, {
 Object.assign(World.prototype, {
   npcHasQuest(id) {
     const sd = S.side;
-    return (id === 'elder' && [0, 5, 8, 9, 13].includes(S.stage)) || (id === 'hermit' && S.stage === 6) || (id === 'nila' && S.stage === 10) || (id === 'girl' && S.stage === 14) || (S.stage === 15 && { farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id] && !S.flags[{ farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id]]) || (id === 'elder' && S.stage === 18) || (id === 'ratih' && S.stage >= 17 && !S.lore.ratih) || (id === 'wati' && S.side.patok === 0) || (id === 'ratih' && S.stage === 19) || (id === 'gun' && S.stage === 20) || (id === 'rudi' && S.stage === 22) || (id === 'lestari' && [23, 24, 26].includes(S.stage)) || (id === 'darma' && S.side.patok === 2) || (id === 'girl' && sd.mochi === 3 && !S.pet) || (id === 'mom' && has('fish') && has('veg')) || (id === 'hunter' && S.stage === 1) || (id === 'girl' && (sd.mochi === 0 || sd.mochi === 2)) ||
+    return (id === 'elder' && [0, 5, 8, 9, 13].includes(S.stage)) || (id === 'hermit' && S.stage === 6) || (id === 'nila' && S.stage === 10) || !!canTeach(id) || (id === 'girl' && S.stage === 14) || (S.stage === 15 && { farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id] && !S.flags[{ farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id]]) || (id === 'elder' && S.stage === 18) || (id === 'ratih' && S.stage >= 17 && !S.lore.ratih) || (id === 'wati' && S.side.patok === 0) || (id === 'ratih' && S.stage === 19) || (id === 'gun' && S.stage === 20) || (id === 'rudi' && S.stage === 22) || (id === 'lestari' && [23, 24, 26].includes(S.stage)) || (id === 'darma' && S.side.patok === 2) || (id === 'girl' && sd.mochi === 3 && !S.pet) || (id === 'mom' && has('fish') && has('veg')) || (id === 'hunter' && S.stage === 1) || (id === 'girl' && (sd.mochi === 0 || sd.mochi === 2)) ||
       (id === 'farmer' && (sd.darto === 0 || (sd.darto === 1 && has('jelly', 5)))) || (id === 'joko' && (sd.joko === 0 || (sd.joko === 1 && has('tusk', 3))));
   },
   async talkNpc(o) {
@@ -3706,11 +3767,11 @@ Object.assign(World.prototype, {
     if (o.walking) { o.spr.setVelocity(0); o.walking = false; }
     this.face(o, dir);
     const T = (...l) => talk(nm, l), gain = async (lines) => { sfx('chest'); updHud(); await talk(null, lines); };
-    if (!(await this.ch5Talk(id, nm, T, gain)) && !(await this.storyTalk(id, nm, T, gain, o.n))) switch (id) {
+    if (!(await this.learnTalk(id, T, gain)) && !(await this.ch5Talk(id, nm, T, gain)) && !(await this.storyTalk(id, nm, T, gain, o.n))) switch (id) {
       case 'elder':
         if (S.stage === 0) {
           await T('Ah, Arka. Syukurlah kamu datang.', 'Akhir-akhir ini cahaya Kristal Lumina di selatan hutan makin redup.', 'Pemburu Raka sedang menyelidiki hutan. Temui dia di pintu masuk hutan, di selatan desa.', 'Bawa ini. Dan belilah perlengkapan di desa sebelum pergi.');
-          S.stage = 1; addItem('potion', 2); S.gold += 30; banner('Temui Pemburu Raka', 'MISI BARU', false, 2200);
+          S.stage = 1; addItem('potion', 2); S.gold += 30; banner('Temui Pemburu Raka', 'MISI BARU', false, 2200); await sleep(1200); await this.learnTalk('elder', T, gain);
           await gain(['Dapat Ramuan x2 dan 30 G!', 'Tips: SERANG menebas, OBAT minum ramuan, TAS membuka inventaris. Tombol SIHIR bisa ditarik untuk membidik bola api!']);
         } else if (S.stage < 5) await T(['', 'Pemburu Raka menunggumu di pintu masuk hutan.', 'Pecahan Segel dijaga para pemimpin monster. Jangan memaksakan diri, naikkan levelmu dulu.', 'Segel sudah terbuka? Hati-hati, Raja Goblin itu kuat sekali.', 'Sentuh kristalnya agar cahayanya kembali!'][S.stage], 'Kalau terluka, beristirahatlah di penginapan Bu Rina.');
         else if (S.stage === 5) {
@@ -4076,11 +4137,18 @@ async function openSettings() {
     if (r < 0 || !rows[r][2]) break; sel = r; await rows[r][2](); saveOpt();
   }
 }
+// Menu Jurus: daftar jurus per aliran, tingkat penguasaan, guru, dan pilihan sihir untuk tombol SIHIR
 async function openSkills() {
-  const w = win('menu', `<div class="mh">Jurus Arka</div><div class="qr"><b>Tebasan</b><br>SERANG: tebas ke depan. Bisa dipakai sejak awal.</div><div class="qr"><b>Bola Api</b> (3 MP)<br>Ketuk SIHIR: bidik otomatis. Tarik SIHIR: bidik manual.</div>` +
-    SKILLS.map(J => `<div class="qr${S.lv >= J.lv ? '' : ' done'}"><b>${S.lv >= J.lv ? '✦' : '🔒'} ${J.n}</b> (Lv ${J.lv})<br>${J.d}</div>`).join(''));
-  Object.assign(w.style, { left: '20px', right: '20px', top: '16px' });
-  await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 12 }); w.remove();
+  const ids = Object.keys(JURUS); let sel = 0;
+  for (; ;) {
+    const r = await choose({ head: 'JURUS ARKA · SIHIR: ' + (S.spell ? JURUS[S.spell].n : '-'), x: 12, y: 16, w: 266, start: sel,
+      items: [...ids.map(k => { const J = JURUS[k], L = learned(k); return { t: (L ? (S.spell === k ? '★ ' : '✦ ') : '🔒 ') + J.n, r: L ? ['', 'I', 'II', 'III'][tierOf(k)] : J.school }; }), { t: 'Kembali' }],
+      foot: i => { if (i >= ids.length) return 'Tebasan dasar: SERANG. Jurus lain dipelajari dari guru.'; const k = ids[i], J = JURUS[k];
+        if (!learned(k)) return `<b>${J.school}</b> · Guru: ${J.where}${J.can() ? '<br><i>Guru siap mengajar! Temui beliau.</i>' : '<br><i>Belum waktunya...</i>'}`;
+        const t = tierOf(k), nx = MASTERY[t]; return `${J.d}${J.mp ? ` (${J.mp} MP)` : ''}<br>Penguasaan ${['', 'I', 'II', 'III'][t]}${t < 3 ? ` · ${S.mast[k] || 0}/${nx} pemakaian` : ' · MAHIR'}${J.kind === 'spell' ? '<br>Pilih: pasang di tombol SIHIR' : ''}`; } });
+    if (r < 0 || r >= ids.length) return; sel = r; const k = ids[r];
+    if (learned(k) && JURUS[k].kind === 'spell') { S.spell = k; sfx('ok'); } else sfx('cur');
+  }
 }
 function enemyThumb(sc, k) { const D = ENEMY[k]; try { return sc.textures.getBase64(D.tex, D.ch ? 'down0' : 0); } catch (_) { return ''; } }
 async function openBestiary(sc) {

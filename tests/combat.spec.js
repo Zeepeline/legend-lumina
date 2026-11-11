@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 const h = require('./helpers');
 
 test('serangan pedang mengurangi HP musuh', async ({ page }) => {
-  const errors = await h.boot(page); await h.newGame(page);
+  const errors = await h.boot(page); await h.newGame(page); await h.learnAll(page);
   await h.G(page, () => window.__game.S.stage = 2);
   await h.goto(page, 'forest', 300, 330, 'up');
   const before = await h.G(page, () => { const sc = window.__game.sc; sc.enemies.forEach(e => e.spr.setPosition(3000, 3000)); const e = sc.enemies[0]; e.spr.setPosition(300, 312); e.t = 9; return e.hp; });
@@ -13,7 +13,7 @@ test('serangan pedang mengurangi HP musuh', async ({ page }) => {
 });
 
 test('bola api mengikuti arah bidik & memakai MP', async ({ page }) => {
-  const errors = await h.boot(page); await h.newGame(page);
+  const errors = await h.boot(page); await h.newGame(page); await h.learnAll(page);
   const mp = (await h.S(page)).mp;
   await h.G(page, () => { window.__game.Input.castAng = Math.PI / 4; window.__game.press('b'); });
   await page.waitForTimeout(80);
@@ -24,7 +24,7 @@ test('bola api mengikuti arah bidik & memakai MP', async ({ page }) => {
 });
 
 test('jurus dash, nova es, tebasan putar', async ({ page }) => {
-  const errors = await h.boot(page); await h.newGame(page);
+  const errors = await h.boot(page); await h.newGame(page); await h.learnAll(page);
   await h.G(page, () => { window.__game.S.lv = 6; window.__game.S.mp = 40; });
   await h.press(page, 'dash', 1, 100);
   expect(await h.G(page, () => window.__game.sc.pl.dashT > 0 || window.__game.sc.dashCd > 0)).toBe(true);
@@ -38,7 +38,7 @@ test('jurus dash, nova es, tebasan putar', async ({ page }) => {
 });
 
 test('kalah saat boss → bangun di penginapan → boss muncul lagi', async ({ page }) => {
-  const errors = await h.boot(page); await h.newGame(page);
+  const errors = await h.boot(page); await h.newGame(page); await h.learnAll(page);
   await h.G(page, () => { const S = window.__game.S; S.stage = 3; S.flags.seal_open = 1; });
   await h.goto(page, 'forest', 640, 990);
   await h.hold(page, 'down', 700);

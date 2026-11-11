@@ -62,13 +62,16 @@ Object.assign(World.prototype, {
   },
   magic() {
     const pl = this.pl, st = stat(); if (pl.atkCd > 0) { Input.castAng = null; return; }
+    if (!S.spell || !learned(S.spell)) { Input.castAng = null; popWorld(pl.x, pl.y - 30, 'Belum bisa sihir', 'xp'); sfx('buzz'); return; }
+    if (S.spell === 'nova') { Input.castAng = null; return this.nova(); }
+    if (S.spell !== 'fire') { Input.castAng = null; return this.castSpell(S.spell); }
     if (S.mp < 3) { Input.castAng = null; popWorld(pl.x, pl.y - 30, 'MP kurang!', 'mpc'); sfx('buzz'); return; }
     const a = this.aimAngle(), dx = Math.cos(a), dy = Math.sin(a);
     S.mp -= 3; updHud(); pl.atkCd = .4; pl.atkT = .18; sfx('fire');
     pl.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'); pl.flipX = pl.dir === 'left';
     const big = S.eq.acc === 'ring';
     const s = this.add.sprite(pl.x + dx * 8, pl.y - 9 + dy * 6, 'fire').play('fire').setRotation(a).setScale(big ? 1.3 : 1);
-    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 200, vy: dy * 200, life: .85, kind: 'fire', mine: 1, dmg: st.mag });
+    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 200, vy: dy * 200, life: .85, kind: 'fire', mine: 1, dmg: st.mag * (1 + .25 * (tierOf('fire') - 1)) }); s.setScale(1 + .15 * (tierOf('fire') - 1)); useJurus(this, 'fire');
   },
   drink() {
     const st = stat(), id = has('potion') ? 'potion' : has('hipotion') ? 'hipotion' : null;
@@ -148,7 +151,7 @@ Object.assign(World.prototype, {
     S.exp += n; popWorld(x, y - 22, '+' + n + ' EXP', 'xp');
     let up = false; while (S.exp >= need(S.lv)) { S.exp -= need(S.lv); S.lv++; up = true; }
     if (up) {
-      const old = S.lv - 1; let k = 0; for (const J of SKILLS) if (S.lv >= J.lv && !S.flags['sk' + J.lv]) { S.flags['sk' + J.lv] = 1; this.time.delayedCall(1800 + k++ * 2200, () => { banner(J.n, 'JURUS BARU', false, 2000); popWorld(this.pl.x, this.pl.y - 36, J.d, 'xp'); }); }
+      const old = S.lv - 1; let k = 0; for (const J of []) if (S.lv >= J.lv && !S.flags['sk' + J.lv]) { S.flags['sk' + J.lv] = 1; this.time.delayedCall(1800 + k++ * 2200, () => { banner(J.n, 'JURUS BARU', false, 2000); popWorld(this.pl.x, this.pl.y - 36, J.d, 'xp'); }); }
       const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; sfx('lvl'); banner('LEVEL ' + S.lv + '!', 'NAIK LEVEL', true, 1600);
       const pl = this.pl, g = this.add.graphics().setDepth(pl.y + 2), o = { r: 4 };
       this.tweens.add({ targets: o, r: 34, duration: 600, onUpdate: () => { g.clear(); g.lineStyle(2, 0xffe27a, 1 - o.r / 34).strokeEllipse(pl.x, pl.y - 2, o.r * 2, o.r); }, onComplete: () => g.destroy() });

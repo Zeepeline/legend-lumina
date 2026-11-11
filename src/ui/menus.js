@@ -32,11 +32,18 @@ async function openSettings() {
     if (r < 0 || !rows[r][2]) break; sel = r; await rows[r][2](); saveOpt();
   }
 }
+// Menu Jurus: daftar jurus per aliran, tingkat penguasaan, guru, dan pilihan sihir untuk tombol SIHIR
 async function openSkills() {
-  const w = win('menu', `<div class="mh">Jurus Arka</div><div class="qr"><b>Tebasan</b><br>SERANG: tebas ke depan. Bisa dipakai sejak awal.</div><div class="qr"><b>Bola Api</b> (3 MP)<br>Ketuk SIHIR: bidik otomatis. Tarik SIHIR: bidik manual.</div>` +
-    SKILLS.map(J => `<div class="qr${S.lv >= J.lv ? '' : ' done'}"><b>${S.lv >= J.lv ? '✦' : '🔒'} ${J.n}</b> (Lv ${J.lv})<br>${J.d}</div>`).join(''));
-  Object.assign(w.style, { left: '20px', right: '20px', top: '16px' });
-  await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 12 }); w.remove();
+  const ids = Object.keys(JURUS); let sel = 0;
+  for (; ;) {
+    const r = await choose({ head: 'JURUS ARKA · SIHIR: ' + (S.spell ? JURUS[S.spell].n : '-'), x: 12, y: 16, w: 266, start: sel,
+      items: [...ids.map(k => { const J = JURUS[k], L = learned(k); return { t: (L ? (S.spell === k ? '★ ' : '✦ ') : '🔒 ') + J.n, r: L ? ['', 'I', 'II', 'III'][tierOf(k)] : J.school }; }), { t: 'Kembali' }],
+      foot: i => { if (i >= ids.length) return 'Tebasan dasar: SERANG. Jurus lain dipelajari dari guru.'; const k = ids[i], J = JURUS[k];
+        if (!learned(k)) return `<b>${J.school}</b> · Guru: ${J.where}${J.can() ? '<br><i>Guru siap mengajar! Temui beliau.</i>' : '<br><i>Belum waktunya...</i>'}`;
+        const t = tierOf(k), nx = MASTERY[t]; return `${J.d}${J.mp ? ` (${J.mp} MP)` : ''}<br>Penguasaan ${['', 'I', 'II', 'III'][t]}${t < 3 ? ` · ${S.mast[k] || 0}/${nx} pemakaian` : ' · MAHIR'}${J.kind === 'spell' ? '<br>Pilih: pasang di tombol SIHIR' : ''}`; } });
+    if (r < 0 || r >= ids.length) return; sel = r; const k = ids[r];
+    if (learned(k) && JURUS[k].kind === 'spell') { S.spell = k; sfx('ok'); } else sfx('cur');
+  }
 }
 function enemyThumb(sc, k) { const D = ENEMY[k]; try { return sc.textures.getBase64(D.tex, D.ch ? 'down0' : 0); } catch (_) { return ''; } }
 async function openBestiary(sc) {
