@@ -13,7 +13,7 @@ MAPS.meadow = {
   flowers: 1,
   objs: [
     ['windmill', 300, 170], ['campfire', 380, 240], ['hay', 250, 220], ['hay', 352, 214], ['hay', 330, 240], ['fence', 230, 250], ['fence', 248, 250], ['fence', 340, 250], ['fence', 358, 250],
-    ['houseA', 140, 252], ['houseB', 480, 246], ['crate', 214, 352], ['barrel', 232, 356], ['crate', 266, 350],
+    ['houseA', 140, 252], ['houseB', 480, 246], ['crate', 214, 352], ['barrel', 232, 356], ['crate', 214, 396],
     ['sign', 420, 300, { text: 'DESA KINCIR\nLumbung gandum Benua Lumina.' }],
     ['teatable', 430, 246],
     ['cavemouth', 1200, 170],

@@ -12,11 +12,11 @@ MAPS.deepwood = {
     // Reruntuhan Aurel (barat laut): cincin batu, kuil runtuh, prasasti
     ['shrine', 520, 400], ...ruinRing(520, 400, 170, 14), ['stele', 440, 330, { lore: 'aurel_gerbang' }], ['stele', 610, 470, { lore: 'aurel_istana' }],
     ['root', 380, 520], ['root', 680, 300], ['root', 300, 380], ['root', 560, 560], ['root', 470, 250], ...ruinRing(520, 400, 95, 9),
-    ['stalag', 360, 420], ['stalag', 690, 400], ['rock', 450, 470], ['rock', 600, 330], ['mush', 340, 470], ['mush', 700, 520], ['mush', 480, 300], ['bushG2', 410, 560], ['bushG2', 650, 250],
+    ['stalag', 360, 420], ['rock', 450, 470], ['rock', 600, 330], ['mush', 340, 470], ['mush', 700, 520], ['mush', 480, 300], ['bushG2', 410, 560], ['bushG2', 650, 250],
     // Pohon Tua raksasa (timur laut)
     ['bigtree', 2000, 330], ['stele', 2070, 380, { lore: 'pohon_tua' }],
     // kemah pemburu gelap
-    ['campfire', 1590, 1420],
+    ['campfire', 1530, 1470],
     ['bramble', 1720, 1450],
     ['hay', 1560, 1400], ['crate', 1640, 1390], ['barrel', 1660, 1400], ['log', 1600, 1460], ['sign', 1680, 1450, { text: 'DILARANG MASUK\nPerburuan lumut lumen. — Kelompok Sambo' }],
     // jamur & lumut bercahaya
@@ -39,10 +39,10 @@ MAPS.river = {
   ponds: [[560, 120, 70, 110], [640, 330, 60, 80], [760, 560, 90, 60], [1000, 860, 140, 50], [1500, 560, 60, 120], [1580, 820, 80, 70], [2000, 520, 110, 60], [2300, 760, 120, 70]],
   objs: [['rock', 700, 440], ['rock', 720, 470], ['rock', 1520, 420], ['rock', 1540, 690], ['rock', 2120, 590],
     ['pebbles', 750, 580], ['pebbles', 1560, 840],
-    ['orchidrock', 820, 580], ['canaryperch', 1240, 680],
+    ['orchidrock', 870, 520], ['canaryperch', 1240, 680],
     ['windmill', 1800, 160], ['fence', 1760, 220], ['fence', 1778, 220], ['fence', 1840, 220], ['stele', 1880, 210, { lore: 'kincir_tua' }],
     ['hay', 1270, 840], ['barrel', 1330, 830], ['log', 1300, 880], ['sign', 1380, 860, { text: 'Kemah Nelayan Sungai' }],
-    ['stele', 600, 300, { lore: 'sungai_senja' }], ['sign', 60, 490, { text: 'JALUR SUNGAI SENJA\nTimur: Rawa Senja · Barat: Hutan Lumina' }]],
+    ['stele', 730, 262, { lore: 'sungai_senja' }], ['sign', 60, 490, { text: 'JALUR SUNGAI SENJA\nTimur: Rawa Senja · Barat: Hutan Lumina' }]],
   walls: [[0, 0, 2600, 30], [0, 0, 40, 500], [0, 560, 40, 440], [2560, 0, 40, 450], [2560, 510, 40, 490], [0, 970, 2600, 30]],
   exits: [{ x: 0, y: 500, w: 12, h: 60, to: 'forest', tx: 1200, ty: 530, dir: 'left', label: 'Hutan Lumina' },
     { x: 2588, y: 450, w: 12, h: 60, to: 'swamp', tx: 60, ty: 480, dir: 'right', label: 'Rawa Senja' }],
