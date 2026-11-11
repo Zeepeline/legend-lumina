@@ -2,6 +2,7 @@
 
 > **Wajib dibaca sebelum menambah cerita, misi, bab, NPC, atau boss.**
 > Bagian 1 adalah arahan dari pemilik proyek (jangan diubah tanpa izin).
+> Aturan dunia, wilayah, dan lokasi ada di `docs/WORLD_DESIGN.md`.
 > Bagian 2 adalah story bible yang menerjemahkan arahan itu ke cerita Legenda Lumina.
 
 ---

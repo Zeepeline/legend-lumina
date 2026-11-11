@@ -51,7 +51,7 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `ui/shop.js` (juga `cookMenu`, `upgradeMenu`) · `bag.js` · `map.js` · `menus.js` · `title.js` | layar toko/tempa, tas & buku misi, peta, menu utama/bestiari, judul |
 | `main.js` | mulai Phaser |
 
-Lainnya: `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png` (aset dari gambar referensi), `assets/reference/` (gambar asli), `docs/ART_BIBLE.md` (aturan gaya), `docs/sprites/` (lembar contoh), `tools/` (bundle, pemotong aset).
+Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.md` (aturan dunia & wilayah), `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png` (aset dari gambar referensi), `assets/reference/` (gambar asli), `docs/ART_BIBLE.md` (aturan gaya), `docs/sprites/` (lembar contoh), `tools/` (bundle, pemotong aset).
 
 ## Cara menambah sesuatu (file yang disentuh)
 
@@ -79,6 +79,10 @@ Lainnya: `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png`
 
 **Wajib mengikuti `docs/GAME_DESIGN.md`** untuk semua cerita, misi, bab, NPC, dan boss: tiga lapis tujuan (langsung, tengah, jangka panjang), misteri diungkap bertahap, tidak semua bab punya boss, dunia bereaksi terhadap tindakan pemain. Misteri utama dan peta pengungkapan per bab ada di bagian "Story bible". Jangan membocorkan rahasia besar lebih cepat dari jadwal di tabel itu.
 
+## Aturan dunia & wilayah
+
+**Wajib mengikuti `docs/WORLD_DESIGN.md`** sebelum menambah wilayah, kota, desa, dungeon, atau lokasi apa pun. Fokus saat ini adalah **Benua Lumina**; benua lain hanya untuk lore dan foreshadowing. Setiap lokasi baru wajib lolos **World Design Review** (checklist di bagian 23). Jika banyak jawaban belum jelas, **usulkan desainnya ke pemilik dulu, jangan langsung diimplementasikan.** Ukuran peta mengikuti fungsi lokasinya (kota jauh lebih besar dari desa, alam boleh sangat luas dan dibagi beberapa zona), bukan ukuran seragam.
+
 ## Gaya visual
 
 **Wajib mengikuti `docs/ART_BIBLE.md`:** cahaya dari kiri-atas, bayangan kebiruan, sorotan kekuningan, garis tepi berwarna (bukan hitam), palet cerah lembut, karakter chibi 20×26 px, skala aset referensi 0,62×. Aset baru dari gambar referensi dipotong dengan `tools/extract_assets.py` lalu disimpan ke `assets/img/` dan didaftarkan di `IMG_LIST` (`gfx/textures.js`).
@@ -93,6 +97,6 @@ Lainnya: `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png`
 
 Sudah ada: 6 wilayah (+ Puncak Beku) + 3 interior, 30 jenis musuh, 8 boss/mini-boss, misi bab 1–3 (stage 0–14), 3 misi sampingan, tas/perlengkapan/tempa/toko, 4 gaya senjata, jurus (dash, tebasan putar, nova es), efek status + Penawar, siang-malam, cuaca, pancing, kebun, teka-teki (batu & obor), bestiari, pencapaian, peta, hit-stop + getar, menu pengaturan, teleport 6 patung, ekspor/impor kode save, upgrade +1..+5 di bengkel, masak 5 resep dengan bonus sementara, PWA (`manifest.webmanifest`, `sw.js`; naikkan `VERSI` di `sw.js` saat rilis besar).
 
-Belum (sesuai `docs/GAME_DESIGN.md`): jurnal 3 lapis tujuan & petunjuk, sistem hubungan NPC, foreshadowing misteri utama di Bab 1–3, Bab 4 (investigasi tanpa boss). Lainnya: sprite karakter bergaya gambar referensi (menunggu lembar sprite dari pemilik), gamepad, bab 4.
+Catatan dunia: 6 wilayah yang ada masih berukuran hampir seragam dan belum punya sejarah, ekonomi, atau hubungan antarlokasi seperti yang diminta `docs/WORLD_DESIGN.md`; perlu ditinjau ulang. Belum (sesuai `docs/GAME_DESIGN.md`): jurnal 3 lapis tujuan & petunjuk, sistem hubungan NPC, foreshadowing misteri utama di Bab 1–3, Bab 4 (investigasi tanpa boss). Lainnya: sprite karakter bergaya gambar referensi (menunggu lembar sprite dari pemilik), gamepad, bab 4.
 
 Setelah menyelesaikan fitur, **perbarui bagian Status ini**.
