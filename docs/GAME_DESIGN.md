@@ -115,7 +115,7 @@ Jangan menjadikan "kalahkan boss" sebagai satu-satunya tujuan.
 - **Sekutu = hasil pilihan & hubungan pemain** (payoff sistem hubungan NPC dan pilihan sepanjang cerita). Contoh: Raka memimpin penjaga desa; Kryos membantu bila tidak dihancurkan; Morgath bisa menebus kesalahan; sisa goblin bisa jadi kawan atau lawan.
 - **Bentuk main (rencana):** bertahan di desa melawan gelombang musuh bersama NPC sekutu → memilih front yang dibantu (front yang ditinggal bisa jatuh dan memengaruhi akhir) → turun ke bawah akar untuk konfrontasi terakhir, dengan Selene ikut terlibat.
 - **Pacing:** bab-bab menjelang akhir sebaiknya "tenang" (investigasi, perjalanan, hubungan) agar perang terasa besar.
-- Detail (siapa saja sekutu, jumlah front, nasib Selene, akhir alternatif) **belum dikunci**. Tanyakan pemilik sebelum menulisnya.
+- Detail musuh terakhir dan akhir cerita sudah dikunci di `docs/SPOILER_ENDING.md` (khusus agent; pemilik tidak ingin spoiler).
 
 ## Aturan penerapan untuk agent
 

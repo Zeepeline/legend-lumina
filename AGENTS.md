@@ -79,7 +79,7 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 ## Arah desain & cerita
 
-**Wajib mengikuti `docs/GAME_DESIGN.md`** untuk semua cerita, misi, bab, NPC, dan boss: tiga lapis tujuan (langsung, tengah, jangka panjang), misteri diungkap bertahap, tidak semua bab punya boss, dunia bereaksi terhadap tindakan pemain. Misteri utama dan peta pengungkapan per bab ada di bagian "Story bible". Jangan membocorkan rahasia besar lebih cepat dari jadwal di tabel itu.
+**Wajib mengikuti `docs/GAME_DESIGN.md`** untuk semua cerita, misi, bab, NPC, dan boss: tiga lapis tujuan (langsung, tengah, jangka panjang), misteri diungkap bertahap, tidak semua bab punya boss, dunia bereaksi terhadap tindakan pemain. Misteri utama dan peta pengungkapan per bab ada di bagian "Story bible". Jangan membocorkan rahasia besar lebih cepat dari jadwal di tabel itu. **Musuh terakhir & akhir cerita** ada di `docs/SPOILER_ENDING.md`: wajib dipatuhi, tapi **pemilik tidak ingin spoiler**, jadi jangan pernah membahas isinya dengan pemilik.
 
 ## Aturan dunia & wilayah
 
