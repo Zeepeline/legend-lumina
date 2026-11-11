@@ -30,7 +30,7 @@ class World extends Phaser.Scene {
     if (M.gate) this.spawnPuzzle();
     if (M.torches) this.spawnTorches();
     if (WARPS[M.id]) this.spawnWarp();
-    this.spawnCh4(); this.spawnCh5();
+    this.spawnCh4(); this.spawnCh5(); this.spawnAmbient();
     // simpan otomatis
     if (!G.title) { this.time.delayedCall(1200, () => { if (!G.lock && !this.pl.dead) saveGame(this); }); this.time.addEvent({ delay: 45000, loop: true, callback: () => { if (!G.lock && !this.pl.dead && !this.curBoss && !this.trans) { saveGame(this); autoSaveIcon(); } } }); }
     if (M.iceGate && S.stage < 12) this.spawnIceGate();
@@ -198,6 +198,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
+    this.updAmbient(dt);
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       if (this.boulder) this.updBoulder(dt);

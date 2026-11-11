@@ -9,6 +9,8 @@ const ITEMS = {
   f_soup: { n: 'Sup Sayur', k: 'use', hp: 80, buff: [['def', 180]], sell: 12, d: 'Pulihkan 80 HP. Pertahanan +25% selama 3 menit.' },
   f_ginger: { n: 'Sup Jahe Hangat', k: 'use', hp: 50, buff: [['warm', 300]], sell: 12, d: 'Pulihkan 50 HP. Kebal dingin selama 5 menit.' },
   f_jelly: { n: 'Jeli Manis', k: 'use', mp: 30, sell: 8, d: 'Pulihkan 30 MP. Kenyal!' },
+  f_tea: { n: 'Teh Herbal', k: 'use', hp: 40, cure: 1, sell: 8, d: 'Pulihkan 40 HP & sembuhkan racun, terbakar, dingin.' },
+  f_jam: { n: 'Selai Beri', k: 'use', hp: 50, mp: 15, sell: 8, d: 'Pulihkan 50 HP & 15 MP.' },
   f_hero: { n: 'Hidangan Pahlawan', k: 'use', hp: 999, buff: [['atk', 300], ['def', 300]], sell: 60, d: 'Pulihkan semua HP. Serangan & pertahanan naik selama 5 menit.' },
   ether: { n: 'Eter', k: 'use', mp: 15, price: 15, d: 'Pulihkan 15 MP.' },
   jelly: { n: 'Lendir Slime', k: 'mat', sell: 2, d: 'Kenyal dan lengket. Dari slime.' },
@@ -29,6 +31,8 @@ const ITEMS = {
   baxe: { n: 'Kapak Perang', k: 'wpn', wt: 'axe', atk: 15, d: 'Serang +15. Lambat, ayunan lebar, pukulan berat.' },
   hbow: { n: 'Busur Pemburu', k: 'wpn', wt: 'bow', atk: 2, price: 90, d: 'Serang +2. Tembak panah jarak jauh tanpa MP.' },
   fspear: { n: 'Tombak Beku', k: 'wpn', wt: 'spear', atk: 28, frz: .25, d: 'Serang +28. Tusukan kadang membekukan musuh. Harta Kryos.' },
+  herb: { n: 'Daun Obat', k: 'mat', sell: 3, d: 'Tumbuh di tepi jalan setapak. Bahan masakan & obat.' },
+  berry: { n: 'Buah Beri', k: 'use', hp: 15, sell: 2, d: 'Pulihkan 15 HP. Manis dan sedikit asam.' },
   aurelring: { n: 'Cincin Aurel', k: 'acc', atk: 6, def: 4, d: 'Cincin kerajaan kuno dari reruntuhan. Serang +6, Tahan +4.' },
   akey: { n: 'Kunci Arsip', k: 'key', d: 'Kunci Arsip Akademi dari Guru Lestari.' },
   bracelet: { n: 'Gelang Daun', k: 'acc', def: 2, regen: 1, d: 'Gelang kecil dari kuil dengan ukiran daun. Hangat saat dipakai.' },
@@ -57,7 +61,7 @@ const ICON_OF = { stonearm: 'chain' };
 // Masak di penginapan (Bu Rina)
 const COOK = [
   { id: 'f_fish', need: { fish: 1 } }, { id: 'f_soup', need: { veg: 2 } }, { id: 'f_ginger', need: { veg: 1, fish: 1 } },
-  { id: 'f_jelly', need: { jelly: 3 } }, { id: 'f_hero', need: { gfish: 1, veg: 2 } },
+  { id: 'f_jelly', need: { jelly: 3 } }, { id: 'f_tea', need: { herb: 3 } }, { id: 'f_jam', need: { berry: 4 } }, { id: 'f_hero', need: { gfish: 1, veg: 2 } },
 ];
 const RECIPES = [
   { id: 'leather', gold: 40, need: { pelt: 3 } },

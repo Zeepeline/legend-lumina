@@ -38,6 +38,7 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `systems/combat.js` | `WEAPON_STYLE` (pedang/tombak/kapak/busur, dipilih lewat `ITEMS[..].wt`), serang, sihir, damage, `hitStop()`, drop, EXP, proyektil, kalah |
 | `systems/skills.js` | dash, tebasan putar, nova es |
 | `systems/learn.js` | **sistem belajar jurus**: `JURUS` (aliran, guru, syarat, biaya, dialog latihan), `learnTalk()` (guru mengajar), `castSpell()` (Kabut Racun, Cahaya Pulih, Lentera Suci), penguasaan I–III (`tierOf`, `useJurus`, `MASTERY`). Jurus baru: tambah ke `JURUS` + efeknya |
+| `systems/ambient.js` | **suasana alam** per peta (`ENV`): burung/kelinci/tupai yang kabur, kupu-kupu, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, Daun Obat & Buah Beri di tepi jalan |
 | `systems/status.js` | efek status `STATUS` (racun/terbakar/dingin) pemain & musuh; sumber = `fx` di `ENEMY`/`PROJ` |
 | `systems/travel.js` | teleport: `WARPS` (posisi patung per peta), aktif di `S.warps` |
 | `systems/chapter4.js` | Bab 4 (investigasi tanpa boss), `storyTalk()` (dialog cerita yang menimpa dialog biasa), Desa Kincir, lentera & perahu Danau Cermin, kuil, prasasti (`readLore`) |

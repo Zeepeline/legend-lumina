@@ -61,6 +61,15 @@ function sfx(n) {
     case 'ok': tone(660, t, .05, 'square', .22, D); tone(990, t + .05, .07, 'square', .22, D); break;
     case 'back': tone(520, t, .05, 'square', .22, D); tone(330, t + .05, .07, 'square', .22, D); break;
     case 'buzz': tone(110, t, .16, 'square', .3, D); break;
+    case 'bird': { const f = 2200 + Math.random() * 900; for (let i = 0; i < 2 + Math.floor(Math.random() * 3); i++) { tone(f + i * 140, t + i * .09, .05, 'sine', .05, D); tone(f * 1.25, t + i * .09 + .03, .03, 'sine', .035, D); } break; }
+    case 'cricket': for (let i = 0; i < 6; i++) tone(4200, t + i * .045, .018, 'square', .012, D); break;
+    case 'owl': tone(420, t, .22, 'sine', .05, D); tone(360, t + .28, .32, 'sine', .05, D); break;
+    case 'frog': tone(160, t, .07, 'square', .04, D); tone(140, t + .1, .09, 'square', .04, D); break;
+    case 'creak': tone(90, t, .5, 'sawtooth', .015, D); break;
+    case 'wind': noise(t, 1.6, 500, .03); break;
+    case 'drip': tone(1500, t, .04, 'sine', .05, D); tone(1100, t + .04, .06, 'sine', .03, D); break;
+    case 'flap': noise(t, .12, 1200, .05); noise(t + .1, .1, 1200, .04); break;
+    case 'splash': noise(t, .18, 900, .06); break;
     case 'blip': tone(1250, t, .018, 'square', .05, D); break;
     case 'swing': noise(t, .09, 3800, .45, 1200); break;
     case 'hit': noise(t, .12, 1500, .8); tone(160, t, .07, 'square', .22, D); break;
