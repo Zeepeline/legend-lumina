@@ -24,3 +24,38 @@ function genRoom(M) {
   for (const f of M.furn || []) drawFurn(x, f[0], f[1], f[2], f[3] || 0);
   return c;
 }
+
+function artMusicBox() {
+  const c = mkC(20, 18), ctx = c.getContext("2d");
+  // Mahogany wood box base
+  ctx.fillStyle = "#4e2712";
+  ctx.fillRect(2, 6, 16, 10);
+  ctx.fillStyle = "#33180a";
+  ctx.fillRect(2, 13, 16, 3);
+
+  // Open lid tilted back
+  ctx.fillStyle = "#6d371a";
+  ctx.fillRect(2, 2, 16, 4);
+  // Gold corner brackets
+  ctx.fillStyle = "#ffd54f";
+  ctx.fillRect(2, 6, 2, 2);
+  ctx.fillRect(16, 6, 2, 2);
+  ctx.fillRect(2, 14, 2, 2);
+  ctx.fillRect(16, 14, 2, 2);
+
+  // Brass mechanical musical cylinder inside
+  ctx.fillStyle = "#ffca28";
+  ctx.fillRect(5, 7, 10, 4);
+  ctx.fillStyle = "#fff8e1";
+  ctx.fillRect(7, 8, 2, 1);
+  ctx.fillRect(11, 9, 2, 1);
+
+  // Side turning crank handle
+  ctx.fillStyle = "#b0bec5";
+  ctx.fillRect(18, 9, 2, 1);
+  ctx.fillRect(19, 7, 1, 3);
+  ctx.fillStyle = "#cfd8dc";
+  ctx.fillRect(19, 6, 1, 2);
+
+  return c;
+}

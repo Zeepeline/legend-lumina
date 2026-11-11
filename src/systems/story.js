@@ -31,7 +31,27 @@ Object.assign(World.prototype, {
   },
   async openChest(c, spr) {
     if (S.flags[c.id]) return talk(null, ['Petinya sudah kosong.']);
-    if (c.lock) { if (!has('key')) return talk(null, ['Peti ini terkunci rapat. Lubang kuncinya berkarat... mungkin ada kunci tua di suatu tempat.']); addItem('key', -1); await say('Kunci Tua berputar... KLIK! Peti terbuka.'); }
+    if (c.lock) {
+      if (!has('key')) return talk(null, ['Peti ini terkunci rapat. Lubang kuncinya berkarat... mungkin ada kunci tua di suatu tempat.']);
+      addItem('key', -1);
+      await say('Kunci Tua berputar... KLIK! Peti terbuka.');
+    }
+    if (c.locked) {
+      if (!has('lockpick')) {
+        sfx('buzz');
+        return talk(null, ['Peti besi ini terkunci rapat dengan gembok tembaga tua. Kamu butuh Peniti Pembobol (dijual di toko/kota) untuk membukanya!']);
+      }
+      const ok = await ask('Gunakan 1 Peniti Pembobol untuk membuka gembok peti besi ini?', 'Peti Terkunci', 'Bobol Gembok', 'Tinggalkan');
+      if (!ok) return;
+      addItem('lockpick', -1);
+      sfx('step');
+      popWorld(c.x, c.y - 12, 'KREK...', 'gold');
+      await sleep(350);
+      sfx('crit');
+      popWorld(c.x, c.y - 16, 'KLAK!', 'crit');
+      await sleep(200);
+      await say('Kawat peniti bergerak lincah di dalam lubang kunci... KLIK! Gembok besi berhasil terbongkar!');
+    }
     S.flags[c.id] = true; spr.setTexture('chesto'); sfx('chest'); G.lock++;
     this.sparkle(c.x, c.y - 10, 'doto', 12); await sleep(300);
     const G2 = { iron: ['isword', 1], ether2: ['ether', 2], ether3: ['ether', 3], potion2: ['potion', 2], potion3: ['potion', 3], hipotion2: ['hipotion', 2], ring: ['ring', 1], shield: ['cshield', 1], key: ['key', 1], mring: ['mring', 1], antidote3: ['antidote', 3], fspear: ['fspear', 1] }[c.item] || (ITEMS[c.item] && [c.item, 1]);

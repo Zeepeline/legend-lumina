@@ -88,5 +88,18 @@ function sfx(n) {
     case 'roar': noise(t, .6, 250, 1, 900); sweep(120, 60, t, .5, 'sawtooth', .25); break;
     case 'ice': [1568, 2093, 1760, 2349, 2637].forEach((f, i) => tone(f, t + i * .04, .12, 'triangle', .28, D)); noise(t, .25, 5000, .4, 2000); break;
     case 'step': noise(t, .03, 900, .15); break;
+    case 'bell':
+      [440, 880, 1320, 1760].forEach((f, i) => tone(f, t, .9 - i * .15, 'sine', .22 / (i + 1), D));
+      tone(220, t, 1.2, 'triangle', .28, D);
+      break;
+    case 'quack':
+      sweep(420, 310, t, .11, 'sawtooth', .25);
+      sweep(400, 280, t + .12, .12, 'sawtooth', .22);
+      break;
+    case 'water':
+      noise(t, .14, 1100, .07, 700);
+      tone(1200, t + .02, .05, 'sine', .04, D);
+      tone(1400, t + .08, .06, 'sine', .04, D);
+      break;
   }
 }

@@ -81,6 +81,7 @@ function buildHud(icons) {
   HUD.innerHTML = `<div id="hud"><div class="lv">LV<b id="hLv">1</b></div><div class="bars">
    <div class="bar hp" id="hHp"><i></i><span></span></div><div class="bar mp" id="hMp"><i></i><span></span></div><div class="bar xp" id="hXp"><i></i></div></div></div>
    <div id="hud2"><span id="hClock">☀</span><span><img src="${icons.coin}"><b id="hGold">0</b></span><span class="pt"><img src="${icons.potion}"><b id="hPot">0</b></span></div>
+   <div id="fps-meter" style="display:${OPT.fps ? 'block' : 'none'};position:absolute;top:28px;left:4px;font-size:9px;color:#a0f080;background:rgba(0,0,0,0.55);padding:2px 5px;border-radius:3px;z-index:9000;pointer-events:none;font-family:monospace;">60 FPS</div>
    <div id="quest"></div><div id="boss"><span id="bName"></span><div class="bar"><i id="bHp"></i></div></div>`;
   UI.appendChild(HUD);
 }

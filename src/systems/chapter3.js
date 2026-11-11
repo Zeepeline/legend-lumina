@@ -10,6 +10,50 @@ Object.assign(World.prototype, {
       this.inter.push({ x, y: y + 4, r: 16, fn: () => this.lightTorch(i) });
     });
   },
+  spawnCaveTorches() {
+    this.caveTorchS = [];
+    (this.M.caveTorches || []).forEach(([x, y], i) => {
+      const s = this.add.image(x, y, 'brazier').setOrigin(.5, 1).setDepth(y); this.shadow(x, y, 9, 3); this.wall(x - 8, y - 8, 16, 8);
+      const lit = !!S.flags['cave_torch_' + i];
+      const fl = this.add.sprite(x, y - 11, 'fire').play('fire').setRotation(-Math.PI / 2).setScale(1.2).setDepth(y + 1).setVisible(lit);
+      if (lit) this.lights.push({ x, y: y - 12, big: 1 });
+      this.caveTorchS.push(fl);
+      this.inter.push({
+        x, y: y + 4, r: 18,
+        fn: async () => {
+          if (S.flags['cave_torch_' + i]) {
+            await talk(null, ['Api obor menerangi sudut gelap lorong gua. Hawa dingin terusir.']);
+            return;
+          }
+          G.lock++;
+          if (S.spell === 'fire' || (ITEMS[S.eq.wpn] && ITEMS[S.eq.wpn].k === 'wpn')) {
+            S.flags['cave_torch_' + i] = 1;
+            sfx('fire');
+            fl.setVisible(true).setScale(.2);
+            this.tweens.add({ targets: fl, scale: 1.2, duration: 400 });
+            this.sparkle(x, y - 12, 'doto', 14);
+            popWorld(x, y - 18, '🔥 Menyala!', 'crit');
+            this.lights.push({ x, y: y - 12, big: 1 });
+            const totalLit = [0, 1, 2].filter(k => S.flags['cave_torch_' + k]).length;
+            if (totalLit === 3 && !S.flags.cave_torches) {
+              S.flags.cave_torches = 1;
+              sfx('lvl');
+              banner('Cahaya Api Menerangi Gua!', 'TEKA-TEKI SELESAI', true, 2500);
+              await sleep(1000);
+              this.spawnChest({ id: 'g_torch', x: 420, y: 640, item: 'gold100' });
+              await say('Ketiga obor di lorong gua telah menyala terang! Sebuah peti harta muncul di ruang tengah gua!', 'Gua Batu');
+              saveGame(this);
+            } else {
+              await say(`Obor lorong menyala hangat! (${totalLit}/3 obor dinyalakan)`);
+            }
+          } else {
+            await say('Mangkok obor batu kuno ini padam dan dingin. Gunakan api atau senjata untuk menyalakannya.');
+          }
+          G.lock--;
+        }
+      });
+    });
+  },
   async lightTorch(i) {
     if (S.flags['torch' + i]) return talk(null, ['Api obor kuno menyala hangat. Salju di sekitarnya mulai mencair.']);
     if (S.stage < 11) return talk(null, ['Obor batu kuno. Dingin dan padam... ada ukiran naga di tepinya.']);

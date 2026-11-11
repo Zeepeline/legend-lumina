@@ -16,6 +16,8 @@ MAPS.deepwood = {
     // Pohon Tua raksasa (timur laut)
     ['bigtree', 2000, 330], ['stele', 2070, 380, { lore: 'pohon_tua' }],
     // kemah pemburu gelap
+    ['campfire', 1590, 1420],
+    ['bramble', 1720, 1450],
     ['hay', 1560, 1400], ['crate', 1640, 1390], ['barrel', 1660, 1400], ['log', 1600, 1460], ['sign', 1680, 1450, { text: 'DILARANG MASUK\nPerburuan lumut lumen. — Kelompok Sambo' }],
     // jamur & lumut bercahaya
     ...[[900, 1300], [940, 1330], [870, 1340], [1200, 1100], [1230, 1130], [700, 1500], [1800, 1100], [1830, 1120], [400, 700], [2200, 1200]].map(([x, y]) => ['mush', x, y]),
@@ -23,7 +25,7 @@ MAPS.deepwood = {
   walls: [[0, 0, 2400, 30], [0, 0, 40, 1800], [2360, 0, 40, 700], [2360, 760, 40, 1040], [0, 1770, 2400, 30]],
   exits: [{ x: 2388, y: 700, w: 12, h: 60, to: 'forest', tx: 60, ty: 730, dir: 'right', label: 'Hutan Lumina' }],
   npcs: [{ id: 'sambo', ch: 'darma', name: 'Sambo, Pemburu Gelap', x: 1600, y: 1360, dir: 'down', wander: 18 }],
-  chests: [{ id: 'dw1', x: 520, y: 360, item: 'aurelring' }, { id: 'dw2', x: 2050, y: 280, item: 'gold250' }, { id: 'dw3', x: 120, y: 1700, item: 'hipotion2' }, { id: 'dw4', x: 1180, y: 1600, item: 'ether3' }],
+  chests: [{ id: 'dw1', x: 520, y: 360, item: 'aurelring' }, { id: 'dw2', x: 2050, y: 280, item: 'gold250' }, { id: 'dw3', x: 120, y: 1700, item: 'hipotion2' }, { id: 'dw4', x: 1180, y: 1600, item: 'ether3' }, { id: 'dw_bramble', x: 1760, y: 1450, item: 'gold180', needFlag: 'dw_bramble' }],
   fish: [[1250, 540], [330, 1340]],
   enemies: [['wolf', 2100, 900], ['wolf', 2150, 960], ['boar', 1800, 600], ['plant', 1700, 820], ['shroom', 1350, 1000], ['shroom', 1300, 1060], ['bee', 1000, 700], ['bee', 1050, 760],
     ['ghost', 560, 520], ['ghost', 420, 300], ['golem', 640, 260], ['wisp', 800, 600], ['plant', 900, 1200], ['snake', 700, 1400], ['snake', 1200, 1500], ['wolf', 1900, 1300], ['boar', 2100, 1500], ['golem', 300, 500], ['ghost', 1500, 400]],
@@ -36,6 +38,8 @@ MAPS.river = {
   // sungai berkelok dari utara ke selatan, dengan arungan (celah berbatu) untuk menyeberang
   ponds: [[560, 120, 70, 110], [640, 330, 60, 80], [760, 560, 90, 60], [1000, 860, 140, 50], [1500, 560, 60, 120], [1580, 820, 80, 70], [2000, 520, 110, 60], [2300, 760, 120, 70]],
   objs: [['rock', 700, 440], ['rock', 720, 470], ['rock', 1520, 420], ['rock', 1540, 690], ['rock', 2120, 590],
+    ['pebbles', 750, 580], ['pebbles', 1560, 840],
+    ['orchidrock', 820, 580], ['canaryperch', 1240, 680],
     ['windmill', 1800, 160], ['fence', 1760, 220], ['fence', 1778, 220], ['fence', 1840, 220], ['stele', 1880, 210, { lore: 'kincir_tua' }],
     ['hay', 1270, 840], ['barrel', 1330, 830], ['log', 1300, 880], ['sign', 1380, 860, { text: 'Kemah Nelayan Sungai' }],
     ['stele', 600, 300, { lore: 'sungai_senja' }], ['sign', 60, 490, { text: 'JALUR SUNGAI SENJA\nTimur: Rawa Senja · Barat: Hutan Lumina' }]],

@@ -26,6 +26,12 @@ class World extends Phaser.Scene {
     this.doors = [];
     for (const d of M.doors || []) { if (typeof d[2] === 'object') { const to = d[2].to; this.doors.push({ x: d[0], y: d[1], to }); this.inter.push({ x: d[0], y: d[1] + 4, r: 14, fn: () => this.enterRoom(to, d) }); } else this.inter.push({ x: d[0], y: d[1] + 4, r: 14, fn: () => talk(null, [d[2]]) }); }
     for (const f of M.fish || []) { this.add.sprite(f[0], f[1], 'ripple').play('ripple').setDepth(-8e5).setAlpha(.9); this.lights.push({ x: f[0], y: f[1], small: 1 }); this.inter.push({ x: f[0], y: f[1], r: 26, fn: () => this.fish(f) }); }
+    for (const p of M.feedSpots || []) {
+      this.inter.push({
+        x: p[0], y: p[1], r: 26,
+        fn: () => this.feedPond(p[0], p[1])
+      });
+    }
     if (M.gardens) this.spawnGarden();
     if (M.gate) this.spawnPuzzle();
     if (M.torches) this.spawnTorches();
@@ -95,7 +101,319 @@ class World extends Phaser.Scene {
       this.add.particles(cx, cy, 'smoke', { lifespan: 2600, speedY: { min: -16, max: -9 }, speedX: { min: -2, max: 7 }, scale: { start: .5, end: 1.5 }, alpha: { start: .5, end: 0 }, frequency: 480 }).setDepth(y + 1);
     }
     if (type === 'forge') this.add.particles(x, y - 22, 'doto', { lifespan: 700, speedY: { min: -30, max: -12 }, speedX: { min: -8, max: 8 }, alpha: { start: 1, end: 0 }, frequency: 160 }).setDepth(y + 1);
-    if (type === 'fountain') this.add.particles(x, y - 66, 'dot', { lifespan: 650, speedX: { min: -22, max: 22 }, speedY: { min: -26, max: -8 }, gravityY: 90, alpha: { start: .8, end: 0 }, frequency: 110, tint: 0xd8f6ff }).setDepth(y + 1);
+    if (type === 'pebbles') {
+      this.inter.push({
+        x, y: y + 2, r: 20,
+        fn: async () => {
+          await this.playStoneSkipping(x, y);
+        }
+      });
+    }
+    if (type === 'telescope') {
+      this.inter.push({
+        x, y: y + 2, r: 22,
+        fn: async () => {
+          await this.lookThroughTelescope(x, y);
+        }
+      });
+    }
+    if (type === 'altar') {
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          await this.interactShrineAltar(x, y);
+        }
+      });
+    }
+    if (type === 'fieldoven') {
+      this.inter.push({
+        x, y: y + 2, r: 22,
+        fn: async () => {
+          await this.roastHarvest(x, y);
+        }
+      });
+    }
+    if (type === 'dripstone') {
+      this.inter.push({
+        x, y: y + 2, r: 22,
+        fn: async () => {
+          await this.harvestCaveStalactite(x, y);
+        }
+      });
+    }
+    if (type === 'frostflower') {
+      this.inter.push({
+        x, y: y + 2, r: 22,
+        fn: async () => {
+          await this.harvestFrostFlower(x, y);
+        }
+      });
+    }
+    if (type === 'totem') {
+      this.inter.push({
+        x, y: y + 2, r: 22,
+        fn: async () => {
+          await this.interactSwampTotem(x, y);
+        }
+      });
+    }
+    if (type === 'pigeons') {
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          await this.feedCityPigeons(x, y);
+        }
+      });
+    }
+    if (type === 'teatable') {
+      this.inter.push({
+        x, y: y + 2, r: 22,
+        fn: async () => {
+          await this.interactTeaTable(x, y);
+        }
+      });
+    }
+    if (type === 'lotuspad') {
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          await this.interactLotusPond(x, y);
+        }
+      });
+    }
+    if (type === 'dockboat') {
+      this.inter.push({
+        x, y: y + 2, r: 26,
+        fn: async () => {
+          await this.interactLakeBoat(x, y, s);
+        }
+      });
+    }
+    if (type === 'coffeeshrub') {
+      this.inter.push({
+        x, y: y + 2, r: 22,
+        fn: async () => {
+          await this.harvestCoffeeShrub(x, y);
+        }
+      });
+    }
+    if (type === 'coffeekettle') {
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          await this.brewCharcoalCoffee(x, y);
+        }
+      });
+    }
+    if (type === 'orchidrock') {
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          await this.harvestRiverOrchid(x, y);
+        }
+      });
+    }
+    if (type === 'canaryperch') {
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          await this.whistleToCanary(x, y, s);
+        }
+      });
+    }
+    if (type === 'woodlandshrine') {
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          await this.interactWoodlandShrine(x, y);
+        }
+      });
+    }
+    if (type === 'bellows') {
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          await this.pumpBlacksmithBellows(x, y, s);
+        }
+      });
+    }
+    if (type === 'ringbooth') {
+      this.inter.push({
+        x, y: y + 2, r: 26,
+        fn: async () => {
+          await this.playRingToss(x, y, s);
+        }
+      });
+    }
+    if (type === 'archerytarget') {
+      this.inter.push({
+        x, y: y + 2, r: 26,
+        fn: async () => {
+          await this.playArcheryChallenge(x, y, s);
+        }
+      });
+    }
+    if (type === 'lakelighthouse') {
+      this.inter.push({
+        x, y: y + 2, r: 28,
+        fn: async () => {
+          await this.interactLighthouse(x, y, s);
+        }
+      });
+    }
+    if (type === 'streetdrum') {
+      this.inter.push({
+        x, y: y + 2, r: 26,
+        fn: async () => {
+          await this.playStreetDrum(x, y, s);
+        }
+      });
+    }
+    if (type === 'dummy') {
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          await this.strikeDummy(s, x, y);
+        }
+      });
+    }
+    if (type === 'pot' || type === 'bloom') {
+      const potId = `${x}_${y}`;
+      if (S.flags && S.flags[`bloom_${this.M.id}_${potId}`]) s.setTexture('bloom');
+      this.inter.push({
+        x, y: y + 2, r: 16,
+        fn: async () => {
+          await this.waterFloral(s, x, y, potId);
+        }
+      });
+    }
+    if (type === 'well') {
+      this.inter.push({
+        x, y: y + 4, r: 18,
+        fn: async () => {
+          G.lock++;
+          sfx('splash');
+          const st = stat();
+          S.hp = Math.min(st.maxhp, S.hp + 15);
+          updHud();
+          this.sparkle(x, y - 10, 'dotg', 8);
+          await say('Menimba air sumur yang dingin dan meminumnya segar. HP pulih 15 poin!');
+          G.lock--;
+        }
+      });
+    }
+    if (type === 'apple1' || type === 'apple2' || type === 'orange1') {
+      const isOrange = type === 'orange1';
+      this.inter.push({
+        x, y: y - 10, r: 20,
+        fn: async () => {
+          G.lock++;
+          sfx('swing');
+          this.tweens.add({
+            targets: s, angle: 4, duration: 70, yoyo: true, repeat: 4,
+            onComplete: () => { s.angle = 0; }
+          });
+          this.puff(x, y - 6);
+          
+          for (let i = 0; i < 4; i++) {
+            const leaf = this.add.image(x + rnd(-16, 16), y - 24, 'leaf').setDepth(y + 1);
+            this.tweens.add({
+              targets: leaf,
+              y: y + rnd(-4, 6),
+              x: leaf.x + rnd(-12, 12),
+              angle: rnd(-30, 30),
+              alpha: 0,
+              duration: rnd(600, 900),
+              onComplete: () => leaf.destroy()
+            });
+          }
+
+          const roll = Math.random();
+          if (roll < 0.35) {
+            const fruitId = isOrange ? 'orange' : 'apple';
+            addItem(fruitId, 1);
+            sfx('blip');
+            updHud();
+            this.sparkle(x, y - 12, 'dotg', 8);
+            popWorld(x, y - 20, `+${ITEMS[fruitId].n}`, 'xp');
+            await say(`Kamu menggoyang dahan pohon dengan kuat. Buah ${ITEMS[fruitId].n} yang ranum jatuh ke tanganmu!`);
+          } else if (roll < 0.55) {
+            const coinGain = rnd(4, 9);
+            S.gold += coinGain;
+            sfx('coin');
+            updHud();
+            this.sparkle(x, y - 12, 'doto', 10);
+            popWorld(x, y - 20, `+${coinGain} G`, 'gold');
+            await say(`Terdengar bunyi gemerincing dari sela dahan! Seseorang tampaknya pernah menyembunyikan koin tua di sini (+${coinGain} G).`);
+          } else if (roll > 0.88) {
+            sfx('buzz');
+            sfx('hurt');
+            this.camShake(180, .005);
+            const st = stat();
+            const dmg = Math.min(S.hp - 1, 8);
+            if (dmg > 0) S.hp -= dmg;
+            updHud();
+            addItem('honey', 1);
+            popWorld(this.pl.x, this.pl.y - 18, `-${dmg} HP (Sengatan Lebah!)`, 'crit');
+            await say(`DENGG!! Kawanan lebah liar terusik dari sarangnya dan menyengatmu (-${dmg} HP), namun kamu berhasil mengamankan Sarang Madu Liar! (+1 Madu Liar)`);
+          } else {
+            await say('Kamu menggoyang pohon. Dedaunan berguguran tertiup angin sepoi-sepoi, namun belum ada buah yang jatuh.');
+          }
+          G.lock--;
+        }
+      });
+    }
+    if (type === 'bench' || type === 'benchWood') {
+      this.inter.push({
+        x, y: y + 2, r: 16,
+        fn: async () => {
+          G.lock++;
+          sfx('heal');
+          const st = stat();
+          S.hp = Math.min(st.maxhp, S.hp + 20);
+          S.mp = Math.min(st.maxmp, S.mp + 10);
+          updHud();
+          this.sparkle(x, y - 10, 'dotg', 12);
+          await say('Duduk santai sejenak di bangku kayu sambil menghirup udara segar. HP pulih 20 poin & MP pulih 10 poin!');
+          G.lock--;
+        }
+      });
+    }
+    if (type === 'bell') {
+      this.inter.push({
+        x, y: y + 4, r: 24,
+        fn: async () => {
+          await this.ringVillageBell(s, x, y);
+        }
+      });
+    }
+    if (type === 'campfire') {
+      this.lights.push({ x, y: y - 12, big: 1 });
+      this.add.particles(x, y - 14, 'doto', { lifespan: 600, speedY: { min: -24, max: -8 }, speedX: { min: -6, max: 6 }, scale: { start: .9, end: 0 }, alpha: { start: 1, end: 0 }, frequency: 120 }).setDepth(y + 1);
+      this.inter.push({
+        x, y: y + 4, r: 24,
+        fn: async () => {
+          await this.interactCampfire(x, y);
+        }
+      });
+    }
+    if (type === 'board') {
+      this.inter.push({
+        x, y: y + 4, r: 18,
+        fn: async () => {
+          await this.bountyBoard();
+        }
+      });
+    }
+    if (type === 'fountain') {
+      this.add.particles(x, y - 66, 'dot', { lifespan: 650, speedX: { min: -22, max: 22 }, speedY: { min: -26, max: -8 }, gravityY: 90, alpha: { start: .8, end: 0 }, frequency: 110, tint: 0xd8f6ff }).setDepth(y + 1);
+      this.inter.push({
+        x, y: y + 8, r: 26,
+        fn: async () => {
+          await this.interactFountain(x, y);
+        }
+      });
+    }
     if (type === 'windmill') { const b = this.add.image(x, y - 70, 'blades').setDepth(y + 1); this.tweens.add({ targets: b, angle: 360, duration: 7000, repeat: -1 }); this.fades.push({ s: b, l: x - 36, r: x + 36, t: y - 110, b: y - 22 }); }
     if (type === 'cryst' || type === 'crystp') this.lights.push({ x, y: y - 8 });
     if (type === 'lamp') this.lights.push({ x, y: y - 24, big: 1 });

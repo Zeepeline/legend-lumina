@@ -7,7 +7,7 @@ MAPS.lake = {
     [205, 500, 240, 670, 10], [240, 670, 560, 742, 10], [560, 742, 900, 700, 10], [900, 700, 940, 500, 10], [1000, 500, 1000, 330, 11], [1000, 330, 820, 110, 11], [820, 110, 820, 0, 11]],
   discs: [[1080, 470, 70], [1120, 320, 60], [820, 110, 50]],
   ponds: [[560, 500, 330, 210]],
-  objs: [['shrine', 560, 520], ['rock', 470, 470], ['rock', 650, 470], ['rock', 520, 560], ['rock', 610, 565],
+  objs: [['shrine', 560, 520], ['campfire', 1080, 500], ['pebbles', 890, 500], ['pebbles', 230, 480], ['dockboat', 980, 520], ['dockboat', 200, 540], ['lakelighthouse', 1140, 430], ['rock', 470, 470], ['rock', 650, 470], ['rock', 520, 560], ['rock', 610, 565],
     ['houseC', 1120, 300], ['barrel', 1180, 300], ['crate', 1060, 300], ['fence', 1150, 340], ['fence', 1168, 340],
     ['stele', 1010, 452, { text: 'Prasasti Danau Cermin:\n"Cahaya lahir di utara, tumbuh di selatan, lalu pulang di barat. Hanya cahaya yang pulang yang boleh menyeberang."' }],
     ['sign', 880, 200, { text: 'Jalan ke KOTA LUMINA (utara)\nPerbaikan longsor oleh Dewan Kota.', lore: 'kota_lumina' }],
@@ -19,6 +19,7 @@ MAPS.lake = {
   npcs: [{ id: 'gun', ch: 'gun', name: 'Pak Gun', x: 930, y: 170, dir: 'left' }, { id: 'ratih', ch: 'ratih', name: 'Nenek Ratih', x: 1040, y: 560, dir: 'left' }],
   lanterns: [[560, 266], [560, 744], [206, 500]],
   boat: [902, 512],
+  feedSpots: [[890, 520]],
   enemies: [['frog', 300, 260], ['frog', 820, 760], ['wisp', 240, 800], ['wisp', 900, 220], ['slimep', 1200, 760], ['frog', 1180, 840], ['wisp', 360, 840]],
   trees: { n: 760, min: 30, types: [['treeA', .4], ['treeB', .3], ['bushG1', .15], ['rock', .15]] },
 };

@@ -5,13 +5,20 @@ const icon = id => `<img class="ic" src="${ICONS[id]}">`;
 const ownedEq = id => has(id) ? ' ✓' : '';
 async function buyMenu(title, list) {
   let sel = 0;
+  // Diskon keakraban bila pedagang berteman akrab
+  const discount = (title.includes('Sari') && (S.rel?.merchant >= 3)) ? 0.8 : 1;
   for (; ;) {
-    const r = await choose({ head: title + ' · ' + S.gold + ' G', x: 46, y: 30, w: 196, start: sel,
-      items: [...list.map(id => { const it = ITEMS[id], eq = it.k !== 'use' && it.k !== 'mat'; return { t: icon(id) + it.n + (eq ? ownedEq(id) : ` (${S.inv[id] || 0})`), r: it.price + ' G', dis: eq && has(id) }; }), { t: 'Kembali' }],
+    const r = await choose({ head: title + ' · ' + S.gold + ' G' + (discount < 1 ? ' (Diskon 20%)' : ''), x: 46, y: 30, w: 196, start: sel,
+      items: [...list.map(id => {
+        const it = ITEMS[id], eq = it.k !== 'use' && it.k !== 'mat';
+        const finalPrice = Math.max(1, Math.round(it.price * discount));
+        return { t: icon(id) + it.n + (eq ? ownedEq(id) : ` (${S.inv[id] || 0})`), r: finalPrice + ' G', dis: eq && has(id) };
+      }), { t: 'Kembali' }],
       foot: i => i < list.length ? ITEMS[list[i]].d : 'Uangmu: ' + S.gold + ' G' });
     if (r < 0 || r === list.length) return; sel = r; const id = list[r], it = ITEMS[id];
-    if (S.gold < it.price) { sfx('buzz'); await say('Uangnya kurang.'); continue; }
-    S.gold -= it.price; addItem(id); sfx('coin'); updHud();
+    const finalPrice = Math.max(1, Math.round(it.price * discount));
+    if (S.gold < finalPrice) { sfx('buzz'); await say('Uangnya kurang.'); continue; }
+    S.gold -= finalPrice; addItem(id); sfx('coin'); updHud();
     if (['wpn', 'arm', 'acc'].includes(it.k)) { const sl = it.k; if (await ask(`${it.n} dibeli! Langsung pasang?`)) { S.eq[sl] = id; sfx('ok'); updHud(); } }
   }
 }
@@ -41,17 +48,17 @@ async function forgeMenu() {
     if (await ask(`TANG! TANG! ${it.n} selesai ditempa! Langsung pasang?`, 'Pak Besi')) { S.eq[sl] = R.id; sfx('ok'); updHud(); }
   }
 }
-// ---------------- MASAK (penginapan) ----------------
-async function cookMenu() {
+// ---------------- MASAK (penginapan & perkemahan) ----------------
+async function cookMenu(title = 'Dapur Bu Rina', chef = 'Bu Rina') {
   let sel = 0; const can = R => Object.entries(R.need).every(([k, n]) => has(k, n));
   for (; ;) {
-    const r = await choose({ head: 'Dapur Bu Rina', x: 24, y: 22, w: 240, start: sel,
+    const r = await choose({ head: title, x: 24, y: 22, w: 240, start: sel,
       items: [...COOK.map(R => ({ t: icon(R.id) + ITEMS[R.id].n, r: 'x' + (S.inv[R.id] || 0) })), { t: 'Kembali' }],
       foot: i => { if (i >= COOK.length) return ''; const R = COOK[i]; return ITEMS[R.id].d + '<br>Bahan: ' + Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
     if (r < 0 || r === COOK.length) return; sel = r; const R = COOK[r];
-    if (!can(R)) { sfx('buzz'); await say('Bahannya belum cukup. Ikan dari memancing, sayur dari kebun.', 'Bu Rina'); continue; }
+    if (!can(R)) { sfx('buzz'); await say('Bahannya belum cukup. Ikan dari memancing, sayur dari kebun/alam liar.', chef); continue; }
     for (const [k, n] of Object.entries(R.need)) addItem(k, -n); addItem(R.id); sfx('fire'); await sleep(300); sfx('chest'); updHud();
-    await say(`Harum sekali! ${ITEMS[R.id].n} siap. Makan dari TAS saat dibutuhkan.`, 'Bu Rina');
+    await say(`Harum sekali! ${ITEMS[R.id].n} siap dimasak. Makan dari TAS saat dibutuhkan.`, chef);
   }
 }
 // ---------------- UPGRADE (bengkel) ----------------

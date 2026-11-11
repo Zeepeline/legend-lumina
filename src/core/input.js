@@ -2,7 +2,7 @@
 // Input keyboard, joystick, tombol sentuh, dan layout layar
 // ---------------- INPUT ----------------
 // Input.held: arah dari keyboard; Input.joy: vektor analog dari joystick; Input.q: tombol yang ditekan
-const Input = { held: [], joy: { x: 0, y: 0, on: false }, q: [], keys: {}, aim: { on: false, x: 0, y: 0 }, castAng: null };
+const Input = { held: [], joy: { x: 0, y: 0, on: false }, q: [], keys: {}, aim: { on: false, x: 0, y: 0 }, castAng: null, padAxes: { x: 0, y: 0 } };
 function press(k) { auInit(); Input.q.push(k); }
 const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', KeyZ: 'a', Space: 'a', Enter: 'a', KeyJ: 'a', KeyX: 'b', KeyK: 'b', Backspace: 'back', KeyQ: 'item', KeyE: 'item', KeyL: 'item', Escape: 'menu', KeyC: 'nova', ShiftLeft: 'dash', ShiftRight: 'dash', KeyV: 'dash', KeyM: 'map', Tab: 'map', KeyP: 'map', KeyI: 'bag', KeyB: 'bag' };
 const ISDIR = { up: 1, down: 1, left: 1, right: 1 };
@@ -12,11 +12,12 @@ addEventListener('keydown', e => {
   else if (!e.repeat) { Input.keys[k] = true; press(k); }
 });
 addEventListener('keyup', e => { const k = KEYMAP[e.code]; if (!k) return; if (ISDIR[k]) { const i = Input.held.indexOf(k); if (i >= 0) Input.held.splice(i, 1); } else Input.keys[k] = false; });
-addEventListener('blur', () => { Input.held.length = 0; Input.keys = {}; Input.joy.x = Input.joy.y = 0; });
+addEventListener('blur', () => { Input.held.length = 0; Input.keys = {}; Input.joy.x = Input.joy.y = 0; Input.padAxes.x = Input.padAxes.y = 0; });
 Input.vec = () => {
   let x = 0, y = 0;
   for (const d of Input.held) { if (d === 'left') x = -1; if (d === 'right') x = 1; if (d === 'up') y = -1; if (d === 'down') y = 1; }
   if (Input.held.length) { const l = Math.hypot(x, y) || 1; return { x: x / l, y: y / l }; }
+  if (Math.hypot(Input.padAxes.x, Input.padAxes.y) > 0.1) return { x: Input.padAxes.x, y: Input.padAxes.y };
   return { x: Input.joy.x, y: Input.joy.y };
 };
 function enableTouch() { if (!document.body.classList.contains('touch')) { document.body.classList.add('touch'); layout(); } }
@@ -57,6 +58,68 @@ addEventListener('touchstart', enableTouch, { passive: true });
   SCREEN.addEventListener('pointerdown', () => auInit());
 })();
 let UISCALE = 1;
+// Polling Gamepad API standar
+const PAD_STATE = { btns: {}, lastDir: null, rep: null };
+function pollGamepad() {
+  const gps = navigator.getGamepads ? navigator.getGamepads() : [];
+  let pad = null;
+  for (let i = 0; i < gps.length; i++) { if (gps[i] && gps[i].connected) { pad = gps[i]; break; } }
+  if (!pad) { Input.padAxes.x = 0; Input.padAxes.y = 0; return; }
+
+  // Analog stick kiri
+  let ax = pad.axes[0] || 0, ay = pad.axes[1] || 0;
+  if (Math.abs(ax) < 0.18) ax = 0;
+  if (Math.abs(ay) < 0.18) ay = 0;
+
+  // D-pad (buttons 12:up, 13:down, 14:left, 15:right)
+  const dUp = pad.buttons[12] && pad.buttons[12].pressed;
+  const dDown = pad.buttons[13] && pad.buttons[13].pressed;
+  const dLeft = pad.buttons[14] && pad.buttons[14].pressed;
+  const dRight = pad.buttons[15] && pad.buttons[15].pressed;
+
+  if (dLeft) ax = -1; else if (dRight) ax = 1;
+  if (dUp) ay = -1; else if (dDown) ay = 1;
+
+  Input.padAxes.x = ax;
+  Input.padAxes.y = ay;
+
+  // Navigasi menu via Gamepad D-pad & Stick
+  const d = Math.abs(ax) > Math.abs(ay) ? (ax > 0.5 ? 'right' : ax < -0.5 ? 'left' : null) : (ay > 0.5 ? 'down' : ay < -0.5 ? 'up' : null);
+  if (d !== PAD_STATE.lastDir) {
+    clearInterval(PAD_STATE.rep);
+    PAD_STATE.lastDir = d;
+    if (d) { Input.q.push('j' + d); PAD_STATE.rep = setInterval(() => Input.q.push('j' + d), 200); }
+  }
+
+  // Tombol aksi gamepad (Mapping standar):
+  // 0: A (Xbox A / PS X) -> 'a' (interaksi / serang)
+  // 1: B (Xbox B / PS O) -> 'dash' (lari cepat / back di menu)
+  // 2: X (Xbox X / PS Square) -> 'b' (sihir)
+  // 3: Y (Xbox Y / PS Triangle) -> 'nova' (jurus es/area)
+  // 4: L1/LB -> 'item' (minum ramuan)
+  // 5: R1/RB -> 'dash'
+  // 8: Select/Back/Share -> 'map' (peta)
+  // 9: Start/Options -> 'menu' (menu utama)
+  // 16: Menu tambahan -> 'bag' (tas)
+  const btnMap = {
+    0: 'a',
+    1: UIH ? 'b' : 'dash',
+    2: 'b',
+    3: 'nova',
+    4: 'item',
+    5: 'dash',
+    8: 'map',
+    9: 'menu'
+  };
+
+  for (const bIdx in btnMap) {
+    const k = btnMap[bIdx];
+    const isDown = pad.buttons[bIdx] && pad.buttons[bIdx].pressed;
+    const wasDown = PAD_STATE.btns[bIdx];
+    if (isDown && !wasDown) press(k);
+    PAD_STATE.btns[bIdx] = isDown;
+  }
+}
 function layout() {
   const vw = innerWidth, vh = innerHeight, touch = document.body.classList.contains('touch'), land = vw > vh;
   let aw = vw - 10, ah = vh - 10;

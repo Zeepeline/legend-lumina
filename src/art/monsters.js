@@ -17,10 +17,16 @@ const MON = {
   fox: { pal: { O: '#f08a3a', W: '#fff4e8', E: '#2a1a1a', D: '#4a2a1a' }, f: [
     [".O..O...........", ".OOOO...........", "OEOOEO......OOO.", "OOOOOO....OOOOOW", ".OWWOOOOOOOOO.WW", "..WOOOOOOOOO....", "...D.D...D.D....", "................"],
     [".O..O...........", ".OOOO.......OO..", "OEOOEO....OOOOO.", "OOOOOO...OOOOOWW", ".OWWOOOOOOOOO...", "..WOOOOOOOOO....", "..D.D.....D.D...", "................"]] },
+  chicken: { pal: { W: '#ffffff', R: '#e83a3a', Y: '#f0a820', E: '#1a1a2a', B: '#e0d8c8' }, f: [
+    ["..RR..........", "..RR..........", "..WWW.........", ".WEWWY........", ".WWWW.........", ".BBBBB.R......", "BBBBBBB.......", ".B...B........"],
+    ["..RR..........", "..RR..........", "..WWW.........", ".WEWWY........", ".WWWW.........", ".BBBBB........", "BBBBBBB.R.....", "..B.B........."]] },
+  duck: { pal: { G: '#2a7a3a', W: '#ffffff', Y: '#f0a820', E: '#1a1a2a', B: '#8a5a32', D: '#5a3a1e' }, f: [
+    ["....GG........", "...GGGG.......", "..GEGGY.......", "...GGGG.......", "..WWWW........", ".BBBBB........", "BBBBBBBD......", ".DDDDDDD......"],
+    ["....GG........", "...GGGG.......", "..GEGGY.......", "...GGGG.......", "..WWWW........", ".BBBBB..D.....", "BBBBBBBD......", "..DDDDDD......"]] },
 };
 var artMon = function (name, palOver) {
   const m = MON[name], pal = Object.assign({}, m.pal, palOver || {});
-  const fr0 = m.f.map(rows => { const c = renderMap(rows, pal); return outline(c, name === 'cat' || name === 'fox' ? '#3a2a2a' : '#1e1626'); });
+  const fr0 = m.f.map(rows => { const c = renderMap(rows, pal); return outline(c, name === 'cat' || name === 'fox' || name === 'chicken' ? '#3a2a2a' : '#1e1626'); });
   const w = Math.max(...fr0.map(c => c.width)) + 2, h = Math.max(...fr0.map(c => c.height)) + 2;
   return strip(fr0.map(c => { const [f, x] = mk(w, h); x.drawImage(c, 1, h - c.height - 1); return f; }));
 }

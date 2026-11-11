@@ -12,6 +12,9 @@ Object.assign(World.prototype, {
     if (o.walking) { o.spr.setVelocity(0); o.walking = false; }
     this.face(o, dir);
     const T = (...l) => talk(nm, l), gain = async (lines) => { sfx('chest'); updHud(); await talk(null, lines); };
+    // Fitur Hadiah & Hubungan NPC (Affinity/Gift)
+    S.rel = S.rel || {};
+    const relLv = S.rel[id] || 0;
     if (!(await this.learnTalk(id, T, gain)) && !(await this.ch5Talk(id, nm, T, gain)) && !(await this.storyTalk(id, nm, T, gain, o.n))) switch (id) {
       case 'elder':
         if (S.stage === 0) {
@@ -94,6 +97,21 @@ Object.assign(World.prototype, {
         if (!S.flags.lastri) { S.flags.lastri = 1; await T('Kue jaheku baru matang. Eh, kamu mau ke hutan? Bawa ini saja.'); addItem('ether'); await gain(['Dapat Eter!']); }
         else await T('Dulu suamiku juga penjaga desa. Kalau lelah, jangan memaksakan diri ya.');
         break;
+      case 'domba':
+        await this.feedAnimal('Domba Padang', 'veg', 'wool', 'Mbeeek');
+        break;
+      case 'ayam':
+        await this.feedAnimal('Ayam Desa', 'berry', 'egg', 'Petooook');
+        break;
+      case 'chick_master':
+        await this.startChickenRace();
+        break;
+      case 'dice_gambler':
+        await this.playTavernDice(o.spr.x, o.spr.y);
+        break;
+      case 'temple_priest':
+        await this.talkPriestElian(o);
+        break;
       case 'joko':
         if (S.side.joko === 0) { await T('Selamat datang di Padang Angin! Kincirku menggiling gandum untuk desa.', 'Babi hutan akan menyeruduk lurus. Minggir ke samping, biar mereka menabrak batu!', 'Bisa bawakan 3 Taring Babi? Akan kutukar dengan sepatu ajaib.', 'Ini bekal dulu.'); S.side.joko = 1; addItem('potion', 2); await gain(['Dapat Ramuan x2!', 'Misi sampingan: Bawa 3 Taring Babi ke Pak Joko.']); }
         else if (S.side.joko === 1 && has('tusk', 3)) { await T('Taring bagus! Ini Sepatu Angin, larimu akan secepat angin padang.'); addItem('tusk', -3); addItem('boots'); S.side.joko = 2; await gain(['Dapat Sepatu Angin! (Pasang di TAS)']); }
@@ -107,12 +125,46 @@ Object.assign(World.prototype, {
   },
   async shop() {
     G.lock++;
-    await say('Selamat datang! Mau beli atau jual?', 'Bu Sari');
+    await say('Selamat datang! Mau beli, jual, atau ada yang bisa kubantu?', 'Bu Sari');
     for (; ;) {
-      const m = await choose({ head: 'Kios Bu Sari · ' + S.gold + ' G', x: 80, y: 50, w: 128, items: [{ t: 'Beli' }, { t: 'Jual barang' }, { t: 'Keluar' }] });
-      if (m === 0) await buyMenu('Kios Bu Sari', ['potion', 'hipotion', 'antidote', 'ether', 'seed', 'rod']);
-      else if (m === 1) await sellMenu();
-      else break;
+      const rel = S.rel?.merchant || 0;
+      const m = await choose({
+        head: `Kios Bu Sari · ${S.gold} G · ${'♥'.repeat(Math.min(3, rel))}${'♡'.repeat(3 - Math.min(3, rel))}`,
+        x: 80, y: 50, w: 140,
+        items: [
+          { t: 'Beli' },
+          { t: 'Jual barang' },
+          { t: 'Beri Hadiah Beri', r: has('berry') ? '1 Beri' : '(kosong)' },
+          { t: 'Keluar' }
+        ],
+        foot: (i) => ['Beli perbekalan petualang.', 'Jual hasil buruan & panen.', 'Beri buah kesukaan Bu Sari untuk mempererat keakraban.', 'Tutup toko.'][i]
+      });
+      if (m === 0) {
+        // Diskon harga bila keakraban penuh (3 hati)
+        const items = ['potion', 'hipotion', 'antidote', 'ether', 'seed', 'rod', 'lockpick'];
+        await buyMenu('Kios Bu Sari', items);
+      } else if (m === 1) await sellMenu();
+      else if (m === 2) {
+        if (!has('berry')) {
+          sfx('buzz');
+          await say('Kamu tidak punya Buah Beri untuk diberikan.', 'Bu Sari');
+        } else {
+          addItem('berry', -1);
+          S.rel = S.rel || {};
+          S.rel.merchant = (S.rel.merchant || 0) + 1;
+          sfx('heal');
+          this.sparkle(this.pl.x, this.pl.y - 10, 'dotg', 12);
+          popWorld(this.pl.x, this.pl.y - 20, '♥ Keakraban Naik!', 'heal');
+          if (S.rel.merchant === 3) {
+            addItem('hipotion', 2);
+            sfx('chest');
+            updHud();
+            await say('Wah, terima kasih banyak Arka! Sebagai sahabat baik kiosku, terimalah Ramuan Besar x2 ini!', 'Bu Sari');
+          } else {
+            await say('Manis sekali buahnya! Terima kasih banyak ya, Arka.', 'Bu Sari');
+          }
+        }
+      } else break;
     }
     G.lock--;
   },
@@ -120,11 +172,44 @@ Object.assign(World.prototype, {
     G.lock++;
     await say(pick(['Heh, butuh senjata? Bengkel Pak Besi siap!', 'Bawakan bahan monster, akan kutempa jadi barang hebat.']), 'Pak Besi');
     for (; ;) {
-      const m = await choose({ head: 'Bengkel Pak Besi · ' + S.gold + ' G', x: 70, y: 50, w: 148, items: [{ t: 'Beli perlengkapan' }, { t: 'Tempa dengan bahan' }, { t: 'Tingkatkan (+1)' }, { t: 'Keluar' }] });
+      const rel = S.rel?.smith || 0;
+      const m = await choose({
+        head: `Bengkel Pak Besi · ${S.gold} G · ${'♥'.repeat(Math.min(3, rel))}${'♡'.repeat(3 - Math.min(3, rel))}`,
+        x: 70, y: 50, w: 156,
+        items: [
+          { t: 'Beli perlengkapan' },
+          { t: 'Tempa dengan bahan' },
+          { t: 'Tingkatkan (+1)' },
+          { t: 'Beri Bijih Batu', r: has('ore') ? '1 Bijih' : '(kosong)' },
+          { t: 'Keluar' }
+        ],
+        foot: (i) => ['Beli senjata & zirah standar.', 'Tempa perlengkapan langka dengan bahan monster.', 'Tingkatkan stat perlengkapan (+1..+5).', 'Beri bijih favorit Pak Besi untuk hadiah keakraban.', 'Tutup bengkel.'][i]
+      });
       if (m === 0) await buyMenu('Bengkel Pak Besi', ['isword', 'ispear', 'hbow', 'chain']);
       else if (m === 1) await forgeMenu();
       else if (m === 2) await upgradeMenu();
-      else break;
+      else if (m === 3) {
+        if (!has('ore')) {
+          sfx('buzz');
+          await say('Kamu tidak punya Bijih Batu. Kalahkan golem atau cari di gua dulu!', 'Pak Besi');
+        } else {
+          addItem('ore', -1);
+          S.rel = S.rel || {};
+          S.rel.smith = (S.rel.smith || 0) + 1;
+          sfx('heal');
+          this.sparkle(this.pl.x, this.pl.y - 10, 'doto', 12);
+          popWorld(this.pl.x, this.pl.y - 20, '♥ Keakraban Naik!', 'heal');
+          if (S.rel.smith === 3) {
+            addItem('iron', 2);
+            S.gold += 50;
+            sfx('chest');
+            updHud();
+            await say('WAHAHA! Bijih mutu tinggi! Sebagai tanda persahabatan, ambil 50 G dan Besi Tempa ini!', 'Pak Besi');
+          } else {
+            await say('Hahaha! Bijih yang padat! Terima kasih, ini sangat berguna untuk tempaan berikutnya!', 'Pak Besi');
+          }
+        }
+      } else break;
     }
     G.lock--;
   },

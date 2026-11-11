@@ -1,14 +1,64 @@
 'use strict';
-// Gerak NPC & hewan
+// Gerak NPC & hewan serta sapaan otomatis (barking dialog)
+const NPC_BARKS = {
+  guard: ['Waspada di luar desa.', 'Hutan sedang rawan.', 'Selamat jalan, petualang.'],
+  farmer: ['Sayur-sayurku segar!', 'Tanah hari ini subur.', 'Semoga panen melimpah.'],
+  merchant: ['Ada barang bagus hari ini!', 'Beli ramuan untuk bekal?', 'Diskon khusus petualang!'],
+  girl: ['Mochi ke mana ya...', 'Bunga di desa mekar indah.', 'Semangat petualangannya, Arka!'],
+  child: ['Kak Arka keren banget!', 'Mau ikut berburu monster!', 'Lari-lari sore yuk!'],
+  smith: ['Besi panas siap ditempa!', 'Butuh pedang yang tajam?', 'Kualitas tempa nomor satu.'],
+  hunter: ['Jejak monster ada di mana-mana.', 'Jaga pandanganmu di semak-semak.', 'Busurku tak pernah meleset.'],
+  inn: ['Istirahat sejenak bila lelah.', 'Kamar hangat selalu siap.', 'Sup hangat cocok malam ini.'],
+  lestari: ['Semua anak berhak makan kenyang.', 'Tetaplah rendah hati, Arka.'],
+  woman: ['Cuaca hari ini bersahabat.', 'Hati-hati di jalan ya.'],
+};
+const BARK_NODES = [];
+function popBark(npcObj, text) {
+  if (UIH || G.lock > 0) return;
+  const old = BARK_NODES.find(b => b.npc === npcObj);
+  if (old) { old.el.remove(); BARK_NODES.splice(BARK_NODES.indexOf(old), 1); }
+  const el = document.createElement('div');
+  el.className = 'bark';
+  el.textContent = text;
+  UI.appendChild(el);
+  const node = { el, npc: npcObj, t: 2.8 };
+  BARK_NODES.push(node);
+}
+function updBarks(cam, dt) {
+  for (let i = BARK_NODES.length - 1; i >= 0; i--) {
+    const b = BARK_NODES[i];
+    b.t -= dt;
+    if (b.t <= 0 || !b.npc.spr || !b.npc.spr.active) {
+      b.el.remove();
+      BARK_NODES.splice(i, 1);
+      continue;
+    }
+    b.el.style.left = Math.round(b.npc.spr.x - cam.scrollX) + 'px';
+    b.el.style.top = Math.round(b.npc.spr.y - cam.scrollY - 30) + 'px';
+  }
+}
+
 Object.assign(World.prototype, {
   updNpc(o, dt, locked) {
     const s = o.spr; s.setDepth(s.y); o.sh.setPosition(s.x, s.y - 1).setDepth(s.y - .5); if (o.mark) o.mark.y = s.y - 31 + Math.sin(this.t * 6) * 1.5;
+    const dPl = Math.hypot(this.pl.x - s.x, this.pl.y - s.y);
+
+    // Reaksi sapaan spontan saat pemain lewat di dekat NPC (jarak 34px)
+    o.barkCd = (o.barkCd || rnd(2, 6)) - dt;
+    if (!locked && !G.title && dPl < 34 && o.barkCd <= 0 && !UIH) {
+      const barks = NPC_BARKS[o.n.id] || NPC_BARKS[o.ch];
+      if (barks && barks.length) {
+        popBark(o, pick(barks));
+        o.barkCd = rnd(12, 22);
+      }
+    }
+
     if (!o.n.wander || locked) {
       if (o.walking) { s.setVelocity(0); o.walking = false; this.face(o, o.dir); }
       if (!o.n.wander) { o.t -= dt; if (o.t < 0 && !locked) { o.t = rnd(2, 5); if (Math.random() < .35) this.face(o, pick(['down', 'left', 'right', o.n.dir])); } }
       return;
     }
-    const near = Math.hypot(this.pl.x - s.x, this.pl.y - s.y) < 28;
+    const near = dPl < 28;
     o.t -= dt;
     if (o.walking && (o.t <= 0 || near)) { o.walking = false; s.setVelocity(0); this.face(o, o.dir); o.t = rnd(1.5, 4); }
     else if (!o.walking && o.t <= 0 && !near) {

@@ -25,6 +25,8 @@ function artCritters(T) {
   one('cr_fish', ['..BB..', '.BBBBT', 'BEBBB.', '.BBBBT', '..BB..'], { B: '#8ab0d8', E: '#1a2a3a', T: '#5a80b0' });
   one('cr_herb', ['G.G.G', '.GLG.', 'G.L.G', '..L..'], { G: '#4ab83a', L: '#2a7a2a' });
   one('cr_berry', ['.GG..', 'GRGR.', '.RRG.', 'GRR..'], { G: '#3a8a3a', R: '#d83a5a' });
+  one('cr_mush', ['..RR..', '.RRRR.', 'RRWWRR', '..SS..', '..SS..'], { R: '#9a6238', W: '#d8a878', S: '#f0e6d0' });
+  one('cr_gmush', ['..BB..', '.BBBB.', 'BBWWBB', '..SS..', '..SS..'], { B: '#3a8ad8', W: '#a0e0ff', S: '#e0f4ff' });
   const soft = (k, w, h, col, a) => { const [c, x] = mk(w, h); const g = x.createRadialGradient(w / 2, h / 2, 1, w / 2, h / 2, w / 2); g.addColorStop(0, `rgba(${col},${a})`); g.addColorStop(1, `rgba(${col},0)`); x.fillStyle = g; x.save(); x.scale(1, h / w); x.fillRect(0, 0, w, w); x.restore(); T.addCanvas(k, c); };
   soft('cr_cloud', 220, 120, '20,24,50', .5); soft('cr_fog', 200, 120, '235,240,255', .55); soft('cr_glow', 16, 16, '255,250,170', 1); { const [c, x] = mk(16, 16); const g = x.createRadialGradient(8, 8, 0, 8, 8, 8); g.addColorStop(0, 'rgba(255,255,230,1)'); g.addColorStop(.25, 'rgba(255,250,170,.9)'); g.addColorStop(1, 'rgba(255,240,120,0)'); x.fillStyle = g; x.fillRect(0, 0, 16, 16); T.removeKey ? T.remove('cr_glow') : 0; T.addCanvas('cr_glow2', c); }
   const [c, x] = mk(60, 220); const g = x.createLinearGradient(0, 0, 0, 220); g.addColorStop(0, 'rgba(255,248,200,0)'); g.addColorStop(.35, 'rgba(255,248,200,.5)'); g.addColorStop(1, 'rgba(255,248,200,0)'); x.fillStyle = g; x.fillRect(10, 0, 40, 220); T.addCanvas('cr_ray', c);
@@ -50,6 +52,17 @@ Object.assign(World.prototype, {
       const x = clamp(x1 + (x2 - x1) * t + nx / l * off * sg, 50, M.w - 50), y = clamp(y1 + (y2 - y1) * t + ny / l * off * sg, 70, M.h - 50), berry = Math.random() < .4;
       const s = this.add.image(x, y, berry ? 'cr_berry' : 'cr_herb').setOrigin(.5, 1).setDepth(y); this.herbS.push({ s, it: berry ? 'berry' : 'herb' });
     }
+    // jamur liar di area hutan, rawa, dan gua
+    const isForestOrDark = ['forest', 'deepwood', 'swamp', 'cave'].includes(M.id);
+    if (isForestOrDark) {
+      const mushCount = M.id === 'deepwood' ? 5 : 3;
+      for (let i = 0; i < mushCount; i++) {
+        const [mx, my] = near(220);
+        const isGlow = M.id === 'cave' || M.id === 'swamp' || (M.id === 'deepwood' && Math.random() < .4);
+        const s = this.add.image(mx, my, isGlow ? 'cr_gmush' : 'cr_mush').setOrigin(.5, 1).setDepth(my);
+        this.herbS.push({ s, it: isGlow ? 'gmush' : 'mush' });
+      }
+    }
   },
   addBird(x, y) { const E = this.envCfg, s = this.add.sprite(x, y, 'cr_bird', 0).setOrigin(.5, 1).setDepth(y); if (E.birdTint) s.setTint(E.birdTint); this.amb.push({ k: 'bird', s, st: 'peck', t: rnd(.5, 2) }); },
   addFly(x, y) { const E = this.envCfg, s = this.add.sprite(x, y, 'cr_fly').play('cr_fly_f').setTint((E.flyTint || [0xffe070, 0xff9ad8, 0x9ad8ff, 0xffffff])[Math.floor(Math.random() * (E.flyTint ? E.flyTint.length : 4))]).setDepth(1.3e5); this.amb.push({ k: 'fly', s, hx: x, hy: y, ph: rnd(0, 6) }); },
@@ -65,6 +78,22 @@ Object.assign(World.prototype, {
       } else if (a.k === 'fly') {
         s.setVisible(!night && this.weather !== 'rain'); a.ph += dt; s.x = a.hx + Math.sin(a.ph * 1.3) * 26 + Math.sin(a.ph * 3.1) * 6; s.y = a.hy + Math.cos(a.ph * .9) * 16 - 14;
         if (d < 30) { a.hx += (s.x - pl.x) * dt * 2; a.hy += (s.y - pl.y) * dt * 2; }
+        // Tangkap serangga jika pemain berada sangat dekat
+        if (!G.lock && s.visible && d < 18) {
+          const tint = s.tintTopLeft;
+          let itemId = 'bfly_gold';
+          if (tint === 0x9ad8ff || this.M.id === 'lake' || this.M.id === 'river') itemId = 'bfly_blue';
+          else if (tint === 0xff9ad8 || this.M.id === 'village') itemId = 'bfly_pink';
+          addItem(itemId, 1);
+          sfx('chest');
+          this.sparkle(s.x, s.y, 'dot', 10);
+          popWorld(s.x, s.y - 12, '★ ' + ITEMS[itemId].n, 'heal');
+          updHud();
+          s.destroy();
+          this.amb.splice(i, 1);
+          this.time.delayedCall(rnd(5000, 10000), () => { if (this.amb && !isNight()) this.addFly(...this.ambOff()); });
+          continue;
+        }
         if (off(s, 260)) { [a.hx, a.hy] = this.ambOff(); }
       } else if (a.k === 'crit') {
         a.t -= dt;
@@ -73,7 +102,19 @@ Object.assign(World.prototype, {
         if (off(s, 300)) { const [x, y] = this.ambOff(); s.setPosition(x, y); a.st = 'idle'; }
       } else if (a.k === 'fire') {
         a.ph += dt; const on = night || this.M.id === 'deepwood'; s.setAlpha(on ? (.45 + Math.sin(a.ph * 2.3) * .45) : 0);
-        s.x = a.hx + Math.sin(a.ph * .7) * 20; s.y = a.hy + Math.sin(a.ph * 1.1) * 12; if (off(s, 260)) { [a.hx, a.hy] = this.ambNear(260); }
+        s.x = a.hx + Math.sin(a.ph * .7) * 20; s.y = a.hy + Math.sin(a.ph * 1.1) * 12;
+        // Tangkap kunang-kunang di malam hari saat didekati
+        if (!G.lock && on && s.alpha > 0.4 && d < 18) {
+          addItem('firefly_item', 1);
+          sfx('chest');
+          this.sparkle(s.x, s.y, 'doto', 12);
+          popWorld(s.x, s.y - 12, '★ Kunang Botol', 'heal');
+          updHud();
+          s.destroy();
+          this.amb.splice(i, 1);
+          continue;
+        }
+        if (off(s, 260)) { [a.hx, a.hy] = this.ambNear(260); }
       } else if (a.k === 'fog') { s.x += a.vx * dt; if (off(s, 260)) { const [x, y] = this.ambNear(300); s.setPosition(x, y); } }
       else if (a.k === 'ray') { a.ph += dt * .5; s.setAlpha(night || this.weather === 'rain' ? 0 : .1 + Math.sin(a.ph) * .07); if (off(s, 200)) { const [x, y] = this.ambNear(180); s.setPosition(x, y - 60); } }
     }
@@ -85,6 +126,23 @@ Object.assign(World.prototype, {
     for (let i = this.herbS.length - 1; i >= 0; i--) { const h = this.herbS[i]; if (Math.hypot(h.s.x - pl.x, h.s.y - pl.y) < 12) { addItem(h.it); sfx('blip'); popWorld(h.s.x, h.s.y - 16, '+' + ITEMS[h.it].n, 'xp'); this.tweens.add({ targets: h.s, y: h.s.y - 10, alpha: 0, duration: 300, onComplete: () => h.s.destroy() }); this.herbS.splice(i, 1); } }
     // suara latar
     this.sndT -= dt; if (this.sndT <= 0) { this.sndT = rnd(3, 9); const L = night ? ['cricket', ...(E.snd || []).filter(k => k !== 'bird')] : (E.snd || (E.bird ? ['bird'] : [])).filter(k => k !== 'owl'); if (L.length && this.weather !== 'rain') sfx(L[Math.floor(Math.random() * L.length)]); }
+    // Dinamika cuaca alami (Peralihan cerah / hujan berkala)
+    if (!this.M.indoor && !this.M.dark && this.M.id !== 'swamp' && this.M.id !== 'snow' && !G.title) {
+      this._weatherT = (this._weatherT || 0) + dt;
+      if (this._weatherT > 180) { // Cek tiap 3 menit
+        this._weatherT = 0;
+        const willRain = Math.random() < 0.25;
+        if (willRain && this.weather !== 'rain') {
+          this.weather = 'rain';
+          banner('Hujan turun membasahi tanah...', 'CUACA', false, 2000);
+          playBGM(null);
+        } else if (!willRain && this.weather === 'rain') {
+          this.weather = 'clear';
+          banner('Hujan telah reda. Langit kembali cerah.', 'CUACA', false, 2000);
+          playBGM(this.M.bgm);
+        }
+      }
+    }
   },
   ambOff() { const v = this.cameras.main.worldView, M = this.M, side = Math.floor(Math.random() * 4); return [clamp(side === 0 ? v.x - 60 : side === 1 ? v.right + 60 : rnd(v.x, v.right), 40, M.w - 40), clamp(side === 2 ? v.y - 60 : side === 3 ? v.bottom + 60 : rnd(v.y, v.bottom), 60, M.h - 40)]; },
   ripple(x, y) { const g = this.add.graphics().setDepth(y), o = { r: 2 }; this.tweens.add({ targets: o, r: 12, duration: 600, onUpdate: () => { g.clear(); g.lineStyle(1, 0xffffff, .8 - o.r / 15).strokeEllipse(x, y, o.r * 2, o.r); }, onComplete: () => g.destroy() }); },

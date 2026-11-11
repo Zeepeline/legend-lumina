@@ -4,7 +4,7 @@
 async function mainMenu(sc) {
   G.lock++; sfx('ok'); let sel = 0;
   const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Jurnal', 'Tujuan, misteri & catatan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
-    ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()],
+    ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Buku Ikan', 'Catatan & habitat fauna air', () => openFishLog(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()],
     ['Simpan', 'Simpan permainan', async () => { const ok = saveGame(sc); sfx(ok ? 'save' : 'buzz'); await say(ok ? 'Permainan tersimpan.' : 'Gagal menyimpan.'); }],
     ['Pengaturan', 'Suara, getar, layar', () => openSettings()], ['Tutup', 'Kembali bermain', null]];
   for (; ;) {
@@ -22,6 +22,7 @@ async function openSettings() {
     ['Efek', () => bar(OPT.sfx), () => { OPT.sfx = (OPT.sfx + 1) % 5; sfx('ok'); }, 'Volume efek suara'],
     ['Getar', () => onoff(OPT.vib), () => { OPT.vib = !OPT.vib; if (OPT.vib && navigator.vibrate) navigator.vibrate(30); }, 'Getar HP saat memukul/terkena'],
     ['Goyang', () => onoff(OPT.shake), () => { OPT.shake = !OPT.shake; }, 'Goyang layar saat serangan kuat'],
+    ['FPS Monitor', () => onoff(OPT.fps), () => { OPT.fps = !OPT.fps; const f = document.getElementById('fps-meter'); if (f) f.style.display = OPT.fps ? 'block' : 'none'; }, 'Tampilkan indikator FPS & performa'],
     ['Layar penuh', () => onoff(fs()), async () => { try { fs() ? await document.exitFullscreen() : await document.documentElement.requestFullscreen(); } catch (_) { } await sleep(150); }, 'Sembunyikan bilah browser'],
     ['Ekspor save', () => null, async () => { saveGame(G.scene); await codeDialog('out'); }, 'Salin kode save ke perangkat lain'],
     ['Impor save', () => null, async () => { if (await codeDialog('in')) { await say('Save berhasil dimuat. Game akan dibuka ulang.'); location.reload(); } }, 'Muat progres dari kode save'],
@@ -50,6 +51,28 @@ async function openBestiary(sc) {
   const list = Object.keys(ENEMY), seen = list.filter(k => S.kills[k]).length;
   const w = win('menu', `<div class="mh">Bestiari · ${seen}/${list.length} · total ${totalKills()} kalah</div><div class="bgrid">` +
     list.map(k => { const D = ENEMY[k], n = S.kills[k]; return n ? `<div class="bc${BOSS_AI.includes(D.ai) ? ' boss' : ''}"><img src="${enemyThumb(sc, k)}"><b>${D.name}</b><span>HP ${D.hp} · ATK ${D.atk} · ×${n}</span></div>` : `<div class="bc unk"><b>???</b><span>belum ditemui</span></div>`; }).join('') + `</div><div class="mf">Kalahkan semua monster biasa untuk hadiah Medali Pemburu.</div>`);
+  Object.assign(w.style, { left: '8px', right: '8px', top: '8px', bottom: '34px', overflow: 'auto' });
+  await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 6 }); w.remove();
+}
+async function openFishLog(sc) {
+  S.fishLog = S.fishLog || {};
+  const entries = [
+    { id: 'fish', n: 'Ikan Sungai', h: 'Sungai tawar di siang/pagi hari', d: 'Ikan segar yang umum dijumpai di perairan Lumina.' },
+    { id: 'moonfish', n: 'Ikan Rembulan', h: 'Perairan tenang saat malam tiba', d: 'Memancarkan pendar biru lembut, memulihkan 45 MP.' },
+    { id: 'rainfish', n: 'Ikan Hujan', h: 'Hanya muncul saat hujan deras turun', d: 'Bersiik hijau giok berkilau saat basah, memulihkan 70 HP.' },
+    { id: 'gfish', n: 'Ikan Emas', h: 'Ikan langka di perairan jernih', d: 'Sangat langka dan berharga tinggi jika dijual ke pedagang.' },
+    { id: 'oldboot', n: 'Sepatu Usang', h: 'Sampah di dasar kolam/sungai', d: 'Barang rongsokan yang kadang tersangkut kail pancing.' }
+  ];
+  const caughtCount = entries.filter(e => (S.fishLog[e.id] || 0) > 0).length;
+  const w = win('menu', `<div class="mh">Buku Ikan · Koleksi ${caughtCount}/${entries.length}</div><div class="bgrid">` +
+    entries.map(e => {
+      const c = S.fishLog[e.id] || 0;
+      if (c > 0) {
+        return `<div class="bc"><div style="margin:4px auto;width:24px;height:24px;transform:scale(1.7);transform-origin:center">${icon(e.id)}</div><b>${e.n}</b><span>Tertangkap: ${c}×</span><div style="font-size:10px;color:#a0b8d0;margin-top:2px">${e.d}</div></div>`;
+      } else {
+        return `<div class="bc unk"><b>???</b><span style="color:#d8a050">Habitat:</span><div style="font-size:10px;color:#8090a8;margin-top:2px">${e.h}</div></div>`;
+      }
+    }).join('') + `</div><div class="mf">Gunakan pancingan di dekat air saat cuaca atau waktu yang tepat!</div>`);
   Object.assign(w.style, { left: '8px', right: '8px', top: '8px', bottom: '34px', overflow: 'auto' });
   await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 6 }); w.remove();
 }
