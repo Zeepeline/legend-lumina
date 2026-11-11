@@ -1,0 +1,8 @@
+name: Ide fitur
+description: Usulan fitur atau konten baru
+labels: [enhancement]
+body:
+  - type: textarea
+    id: ide
+    attributes: { label: Fiturnya apa?, description: Jelaskan sesingkat mungkin; sebutkan file di AGENTS.md jika tahu }
+    validations: { required: true }

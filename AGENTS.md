@@ -75,6 +75,12 @@ Lainnya: `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png`
 
 **Wajib mengikuti `docs/ART_BIBLE.md`:** cahaya dari kiri-atas, bayangan kebiruan, sorotan kekuningan, garis tepi berwarna (bukan hitam), palet cerah lembut, karakter chibi 20×26 px, skala aset referensi 0,62×. Aset baru dari gambar referensi dipotong dengan `tools/extract_assets.py` lalu disimpan ke `assets/img/` dan didaftarkan di `IMG_LIST` (`gfx/textures.js`).
 
+## Tes & CI
+
+- Tes Playwright di `tests/*.spec.js` (pembantu di `tests/helpers.js`). **Tidak perlu dijalankan di lokal**: push saja, GitHub Actions (`.github/workflows/ci.yml`) menjalankan `npm run check`, cek `dist/` terbaru, lalu `npm test`. Laporan + screenshot ada di artefak `laporan-tes`.
+- Kalau CI hijau di `main`, `pages.yml` men-deploy game ke GitHub Pages.
+- Lokal tanpa internet: `PHASER_LOCAL=/path/phaser.min.js npm test`.
+
 ## Status
 
 Sudah ada: 5 wilayah + 3 interior, 25 jenis musuh, 7 boss/mini-boss, misi bab 1–2, 3 misi sampingan, tas/perlengkapan/tempa/toko, jurus (dash, tebasan putar, nova es), siang-malam, cuaca, pancing, kebun, teka-teki, bestiari, pencapaian, peta.

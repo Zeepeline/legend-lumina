@@ -1,0 +1,14 @@
+name: Laporan bug
+description: Ada yang rusak di game
+labels: [bug]
+body:
+  - type: textarea
+    id: apa
+    attributes: { label: Apa yang terjadi?, description: Langkah untuk mengulang bug-nya }
+    validations: { required: true }
+  - type: textarea
+    id: harap
+    attributes: { label: Seharusnya bagaimana? }
+  - type: input
+    id: perangkat
+    attributes: { label: Perangkat & browser, placeholder: "contoh: Android, Chrome" }

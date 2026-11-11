@@ -1,0 +1,27 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+  workflow_dispatch:
+concurrency: { group: ci-${{ github.ref }}, cancel-in-progress: true }
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Cek sintaks & daftar skrip
+        run: npm run check
+      - name: Cek dist/game.html sudah dibangun ulang
+        run: |
+          python3 tools/bundle.py
+          git diff --exit-code --stat dist/ || (echo "::error::dist/game.html usang. Jalankan: python3 tools/bundle.py" && exit 1)
+      - name: Tes Playwright
+        run: npm test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: laporan-tes, path: playwright-report/, retention-days: 14 }
