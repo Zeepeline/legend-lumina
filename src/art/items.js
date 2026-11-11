@@ -103,8 +103,16 @@ const ICONS_DEF = {
   plushie: ['cat', { C: '#ffffff', E: '#1a1a24', P: '#ff6a8a', W: '#ffe0eb' }],
   lake_pearl: ['blob', { C: '#e4f4fc', L: '#ffffff', D: '#9ad0ec', E: '#70b4dc' }],
 };
-function artIcon(id) { const [m, pal] = ICONS_DEF[id]; const spr = outline(renderMap(ICON_MAP[m], pal)); const [c, x] = mk(14, 14); x.drawImage(spr, Math.floor((14 - spr.width) / 2), Math.floor((14 - spr.height) / 2)); return c; }
+// Ikon cadangan untuk item tanpa ICONS_DEF (agar game tidak macet); warna dari nama item agar tetap beragam
+function iconFallback(id) {
+  const it = (typeof ITEMS !== 'undefined' && ITEMS[id]) || {}, h = [...id].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7), hue = h % 360;
+  const c = (l, s = 55) => `hsl(${hue},${s}%,${l}%)`;
+  const shape = it.k === 'wpn' ? 'sword' : it.k === 'arm' ? 'shirt' : it.k === 'acc' ? 'ring' : it.k === 'use' ? 'flask' : 'blob';
+  return [ICON_MAP[shape] ? shape : 'blob', { C: c(55), L: c(82), D: c(32), E: c(25), G: c(55), K: '#6a4a2a', W: '#ffffff', Y: c(60), R: c(45), S: c(50), M: c(70), B: c(50), P: c(60) }];
+}
+function artIcon(id) { let def = ICONS_DEF[id]; if (!def || !ICON_MAP[def[0]]) { if (!artIcon.warned) { artIcon.warned = 1; } console.warn('Ikon cadangan dipakai untuk item:', id); def = iconFallback(id); } const [m, pal] = def; const spr = outline(renderMap(ICON_MAP[m], pal)); const [c, x] = mk(14, 14); x.drawImage(spr, Math.floor((14 - spr.width) / 2), Math.floor((14 - spr.height) / 2)); return c; }
 Object.assign(ICON_MAP, {
+  bread: ['..........', '...CCCC...', '..CLLLLC..', '.CLLCLLLC.', '.CCCCCCCC.', '.DDDDDDDD.', '..........'],
   fish: ["............", "......CC....", "..D..CCCC...", ".DD.CLCCCC..", "DDDCCCCCECC.", ".DD.CCCCCC..", "..D..CCCC...", "......CC...."],
   key: ["............", "..YYY.......", ".Y...Y......", ".Y...YYYYYYY", ".Y...Y...Y.Y", "..YYY......."],
   rod: ["..........K.", ".........K.W", "........K..W", ".......K...W", "......K....W", ".....K.....R", "....K.......", "...K........", "..K.........", ".B.........."],
