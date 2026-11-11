@@ -143,3 +143,6 @@ body.touch #keys{display:none}
 html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 *{-webkit-tap-highlight-color:transparent}
 .codew textarea,.jrn .jb{touch-action:pan-y}
+#autosv{position:absolute;right:6px;bottom:6px;font-size:9px;color:#fff;background:rgba(20,16,30,.55);padding:1px 6px;border-radius:6px;opacity:0;pointer-events:none;z-index:40}
+#autosv.on{animation:asv 2.2s ease}
+@keyframes asv{0%,100%{opacity:0}15%,70%{opacity:1}}

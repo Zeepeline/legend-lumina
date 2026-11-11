@@ -16,7 +16,7 @@ Object.assign(World.prototype, {
     await talk('Pak Gun', ['Itu dia! Monster batu keluar lagi dari reruntuhan! Tolong, anak muda!']);
     G.lock--;
     sfx('roar'); this.camShake(300, .005);
-    this.slideWave = [[700, 180], [940, 180], [820, 230]].map(([x, y]) => this.spawnEnemy('golem', x, y));
+    this.slideWave = [[700, 180], [940, 180], [820, 230]].map(([x, y]) => this.spawnEnemy('golem', x, y)); for (const e of this.slideWave) { e.hp = e.max = Math.round(e.hp * 1.6); }
     const chk = this.time.addEvent({ delay: 400, loop: true, callback: async () => {
       if (this.slideWave.some(e => e.hp > 0)) return;
       chk.remove(); S.flags.road_open = 1; this.slideWall.destroy(); sfx('boom'); this.camShake(400, .006);

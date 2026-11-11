@@ -18,7 +18,7 @@ const MON = {
     [".O..O...........", ".OOOO...........", "OEOOEO......OOO.", "OOOOOO....OOOOOW", ".OWWOOOOOOOOO.WW", "..WOOOOOOOOO....", "...D.D...D.D....", "................"],
     [".O..O...........", ".OOOO.......OO..", "OEOOEO....OOOOO.", "OOOOOO...OOOOOWW", ".OWWOOOOOOOOO...", "..WOOOOOOOOO....", "..D.D.....D.D...", "................"]] },
 };
-function artMon(name, palOver) {
+var artMon = function (name, palOver) {
   const m = MON[name], pal = Object.assign({}, m.pal, palOver || {});
   const fr0 = m.f.map(rows => { const c = renderMap(rows, pal); return outline(c, name === 'cat' || name === 'fox' ? '#3a2a2a' : '#1e1626'); });
   const w = Math.max(...fr0.map(c => c.width)) + 2, h = Math.max(...fr0.map(c => c.height)) + 2;

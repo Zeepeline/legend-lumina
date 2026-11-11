@@ -161,6 +161,9 @@ body.touch #keys{display:none}
 html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 *{-webkit-tap-highlight-color:transparent}
 .codew textarea,.jrn .jb{touch-action:pan-y}
+#autosv{position:absolute;right:6px;bottom:6px;font-size:9px;color:#fff;background:rgba(20,16,30,.55);padding:1px 6px;border-radius:6px;opacity:0;pointer-events:none;z-index:40}
+#autosv.on{animation:asv 2.2s ease}
+@keyframes asv{0%,100%{opacity:0}15%,70%{opacity:1}}
 </style>
 </head>
 <body>
@@ -931,7 +934,7 @@ const MON = {
     [".O..O...........", ".OOOO...........", "OEOOEO......OOO.", "OOOOOO....OOOOOW", ".OWWOOOOOOOOO.WW", "..WOOOOOOOOO....", "...D.D...D.D....", "................"],
     [".O..O...........", ".OOOO.......OO..", "OEOOEO....OOOOO.", "OOOOOO...OOOOOWW", ".OWWOOOOOOOOO...", "..WOOOOOOOOO....", "..D.D.....D.D...", "................"]] },
 };
-function artMon(name, palOver) {
+var artMon = function (name, palOver) {
   const m = MON[name], pal = Object.assign({}, m.pal, palOver || {});
   const fr0 = m.f.map(rows => { const c = renderMap(rows, pal); return outline(c, name === 'cat' || name === 'fox' ? '#3a2a2a' : '#1e1626'); });
   const w = Math.max(...fr0.map(c => c.width)) + 2, h = Math.max(...fr0.map(c => c.height)) + 2;
@@ -967,6 +970,78 @@ Object.assign(MON, {
     ["..GG......GG....", ".GWEG....GEWG...", ".GGGGGGGGGGGG...", "GGGGGGGGGGGGGG..", "GLLLLLLLLLLLLG..", ".GLLLLLLLLLLG...", "..GGGGGGGGGG....", ".G..........G...", "G............G.."]] },
 });
 function artWisp() { const fr2 = []; for (let f = 0; f < 2; f++) { const [c, x] = mk(14, 16); const g = x.createRadialGradient(7, 7, 0, 7, 7, 7); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.35, 'rgba(160,255,200,.95)'); g.addColorStop(1, 'rgba(60,200,140,0)'); x.fillStyle = g; x.fillRect(0, 0, 14, 14); fr(x, '#1a3a2a', 5, 6, 1, 2); fr(x, '#1a3a2a', 8, 6, 1, 2); fr(x, 'rgba(160,255,200,.6)', 6 + (f ? 1 : -1), 13, 2, 3); fr2.push(c); } return strip(fr2); }
+
+'use strict';
+// Monster versi garang: bentuk baru (mata menyala, taring, tanduk, duri) + pencahayaan otomatis. Menimpa MON lama, kunci palet tetap sama agar varian warna jalan.
+// anim: 'walk' (kaki bergantian), 'squash' (memantul), 'bob' (melayang). Satu frame cukup; frame ke-2 dibuat otomatis kecuali f berisi 2 frame.
+Object.assign(MON, {
+  slime: { pal: { G: '#4ec43c', L: '#d8ffc8', E: '#10200e', D: '#23701e', W: '#fff8e8', R: '#ff5a2a' }, anim: 'squash', f: [[
+    '......DDDD......', '....DDGGGGDD....', '...DGGLLGGGGD...', '..DGGLLGGGGGGD..', '..DGLGGGGGGGGD..', '.DGGEEGGGGEEGGD.', '.DGGGREGGERGGGD.', '.DGGGEEGGEEGGGD.',
+    'DGGGGGGGGGGGGGGD', 'DGGEWEWEWEWEGGGD', 'DGGGEEEEEEEEGGGD', '.DGGGGGGGGGGGGD.', '..DDGDDDDDDDGDD.', '....D......D....']] },
+  bat: { pal: { W: '#5a3a8a', B: '#3a2058', E: '#ff3a2a', F: '#ffffff', R: '#8a5ac0' }, f: [
+    ['W..................W', 'WW................WW', 'WRW.....B..B.....WRW', 'WRBW....BBBB....WBRW', 'WRWBW..BBBBBB..WBWRW', 'WR.BBWBBEBBEBBWBB.RW', 'W...BBBBBBBBBBBB...W', '......BFBBBBFB......', '......BBFBBFBB......', '.......BBBBBB.......', '........B..B........'],
+    ['....................', '........B..B........', '........BBBB........', '.......BBBBBB.......', '....WWBBEBBEBBWW....', '..WWRRBBBBBBBBRRWW..', '.WRRW.BFBBBBFB.WRRW.', 'WRRW..BBFBBFBB..WRRW', 'WRW....BBBBBB....WRW', 'WW......B..B......WW', 'W..................W']] },
+  wolf: { pal: { G: '#7e889e', D: '#4a5470', W: '#f2f4fa', E: '#ffd23a', K: '#26262e' }, anim: 'walk', legs: 4, f: [[
+    '..D..D................', '..DD.DD................', '.DGGGGGD....D.D.D.....', 'DGGEGGGGDDDDGDGDGD....', 'GGGGGGGGGGGGGGGGGGD.DD', 'WWKGGGGGGGGGGGGGGGGDD.',
+    'WKWKGGGGGGGGGGGGGGGD..', '.WWDGGGGGDDDDGGGGGD...', '..DGGGD......DGGGD....', '..DGGD.......DGGD.....', '..DGD.........DGD.....', '..KK..........KK......']] },
+  boar: { pal: { B: '#8a5a36', D: '#5a3820', P: '#e8988a', W: '#fffbe8', E: '#ff4a2a', K: '#2a1810', H: '#3a2414' }, anim: 'walk', legs: 3, f: [[
+    '......H.H.H.H.........', '....HHHHHHHHHHH.......', '...BBBBBBBBBBBBBB.....', '..BEBBBBBBBBBBBBBBH...', '.WBBBBBBBBBBBBBBBBBH..', 'WWPPBBBBBBBBBBBBBBB...',
+    'W.PPKBBBBDDDDBBBBBB...', '.W.BBBDDDDDDDDDDBB....', '...DBBD.......DBBD....', '...DBD........DBD.....', '...KK.........KK......']] },
+  snake: { pal: { G: '#5aa83a', L: '#d8f088', E: '#ff3a1a', R: '#e83a5a', D: '#2e6a22' }, anim: 'walk', legs: 4, f: [[
+    '...DGGGGD.........', '..DGGGGGGD........', '.DGGEGGEGGD.......', '.DGGLGGLGGD.......', '..DGLLLLGD........', '...DRLLRD.........', '....R.GGD.........', '......GGGD........',
+    '.....DGLGGD...DG..', '...DGGGLLGGDDGGGD.', '..DGLLGGGGLLGGGD..', '...DDGGGGGGGGDD...']] },
+  golem: { pal: { R: '#7a7486', D: '#4a4458', L: '#aaa4b6', E: '#5af0ff', M: '#5a9a4a', C: '#ffb43a' }, anim: 'walk', legs: 4, f: [[
+    '......DDDDDDDD........', '.....DRRRRRRRRD.......', '....DRLLRRRRRRRD......', '....DRLRRRRRRRRD......', '....DREERRRREERD......', '..MMDRRRRRRRRRRDMM....', '.DRRDDRRRCCRRRDDRRD...', 'DRLLRRRRCCCCRRRRRLRD..',
+    'DRLRRDRRRCCRRRRDRRRD..', 'DRRRDDRRRRRRRRRDDRRD..', '.DRRD.DRRRRRRRRD.DRRD.', '.DMMD.DRRRRRRRRD.DMMD.', '..DD..DRRDDDDRRD..DD..', '......DRRD..DRRD......', '......DRRD..DRRD......', '.....DDDDD..DDDDD.....']] },
+  ghost: { pal: { W: '#e8eeff', S: '#a8b8e0', K: '#1a1a3a', M: '#6a4a9a' }, anim: 'bob', f: [[
+    '.....WWWWWW.....', '...WWWWWWWWWW...', '..WWSWWWWWWWWW..', '.WWSWWWWWWWWWWW.', '.WWKKWWWWWKKWWW.', '.WWKKKWWWKKKWWW.', 'WWWWKWWWWWKWWWWW', 'WWWWWWMMMWWWWWWS',
+    'WWWWWMKKKMWWWWS.', 'SWWWWWMMMWWWWWS.', '.SWWWWWWWWWWWS..', '..SWWS.SWWS.SS..', '...SS...SS......']] },
+  shroom: { pal: { R: '#c82a3a', W: '#fff4e8', S: '#e8d0a8', E: '#ff3a1a', F: '#5a3a22' }, anim: 'squash', f: [[
+    '.....RRRRRR.....', '...RRWWRRRRRR...', '..RRWWRRRRWWRR..', '.RRRRRRRRRWWRRR.', 'RRWWRRRRRRRRRWWR', 'RWWWRRRRRRRRRWWR', '.RRRRRRRRRRRRRR.', '...FSSSSSSSSF...',
+    '...SFFSSSSFFS...', '...SSESSSSESS...', '...SSSFFFFSSS...', '...SSFWFWFFSS...', '....SSSSSSSS....', '...FF.SSSS.FF...']] },
+  bee: { pal: { Y: '#ffc82a', K: '#1e1618', W: '#d8f0ff', E: '#ff3a1a', S: '#e8e8e8' }, f: [
+    ['..WW...WW.....', '.WWWW.WWWW....', '..WWW.WWW.....', '....KYKYKYK...', '..EKYKYKYKYK..', '.KKKYKYKYKYKS.', '..KKYKYKYKYKSS', '...KYKYKYKK...', '....K..K......'],
+    ['..............', '..............', '....KYKYKYK...', '..EKYKYKYKYK..', '.KKKYKYKYKYKS.', '..KKYKYKYKYKSS', '.WWWYKYKYKK...', 'WWWWWWWWK.....', '.WW..WW.......']] },
+  plant: { pal: { P: '#d83a7a', Y: '#ffd84a', K: '#3a0a1a', R: '#ff5a5a', G: '#4a9a3a', L: '#6ac85a', D: '#2a6a2a', W: '#fffbe8' }, anim: 'squash', f: [[
+    '...PPPP..PPPP...', '..PPYPPPPPPYPP..', '.PPPPPPPPPPPPPP.', '.PKKKKKKKKKKKKP.', '.PKWKWKWKWKWKKP.', '.PKRRRRRRRRRRKP.', '.PKWKWKWKWKWKKP.', '.PPPPPPPPPPPPPP.',
+    '..PPPYPPPPYPPP..', '....DDGGGGDD....', '..L..DGGGGD..L..', '.LLL..GGGG..LLL.', 'LLLLL.DGGD.LLLLL', '.LL...DGGD...LL.', '.....DGGGGD.....', '....DDDDDDDD....']] },
+  frog: { pal: { G: '#4a8a3a', L: '#c8dc8a', W: '#ffffff', E: '#ff3a1a', D: '#1e3a16' }, anim: 'squash', f: [[
+    '.....WW....WW.....', '....WEEW..WEEW....', '...GGEWGGGGWEGG...', '..GGGGGGGGGGGGGG..', '.GGLGGLGGGGLGGLGG.', '.GGGGGGGGGGGGGGGG.', 'GDDDDDDDDDDDDDDDDG', '.GLLLLLLLLLLLLLLG.',
+    'GGGLLLLLLLLLLLLGGG', 'GG.GGG......GGG.GG', 'G...GG......GG...G']] },
+});
+// ---- pencahayaan: kiri-atas terang (kekuningan), bawah-kanan gelap (kebiruan), sesuai ART_BIBLE ----
+function mixHex(a, b, t) { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b); return A.map((v, i) => Math.round(v + (B[i] - v) * t)); }
+function shadeMon(c, pal) {
+  const x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), W = c.width, H = c.height, D = d.data;
+  const op = (i, j) => i >= 0 && j >= 0 && i < W && j < H && D[(j * W + i) * 4 + 3] > 0;
+  const glow = Object.values(pal).filter(h => { const [r, g, b] = mixHex(h, h, 0); return Math.max(r, g, b) > 200 && (Math.max(r, g, b) - Math.min(r, g, b)) > 120; });
+  const src = new Uint8ClampedArray(D);
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+    const k = (j * W + i) * 4; if (!src[k + 3]) continue;
+    const hex = '#' + [0, 1, 2].map(n => src[k + n].toString(16).padStart(2, '0')).join('');
+    if (glow.includes(hex)) continue; // mata menyala tidak diredupkan
+    let tone = 0; if (!op(i, j - 1)) tone += .28; if (!op(i - 1, j)) tone += .12; if (!op(i, j + 1)) tone -= .3; if (!op(i + 1, j)) tone -= .12; tone -= (j / H) * .14;
+    const [r, g, b] = tone > 0 ? mixHex(hex, '#fff2c0', tone) : mixHex(hex, '#1c1840', -tone);
+    D[k] = r; D[k + 1] = g; D[k + 2] = b;
+  }
+  x.putImageData(d, 0, 0); return c;
+}
+// frame ke-2 otomatis
+function monFrame2(rows, anim, legs = 3) {
+  const h = rows.length, w = Math.max(...rows.map(r => r.length)), R = rows.map(r => r.padEnd(w, '.'));
+  if (anim === 'walk') return R.map((r, j) => j < h - legs ? r : [...r].map((_, i) => i < w / 2 ? (r[i - 1] || '.') : (r[i + 1] || '.')).join(''));
+  if (anim === 'bob') return [...R.slice(1), '.'.repeat(w)];
+  // squash: lebih pendek 1 baris & sedikit melebar
+  const out = R.filter((_, j) => j !== Math.floor(h / 2)).map(r => '.' + r.slice(0, w - 1));
+  return ['.'.repeat(w), ...out.map((r, j) => j > out.length - 4 ? (r[1] + r.slice(0, w - 1)).slice(0, w) : r)];
+}
+artMon = function (name, palOver) {
+  const m = MON[name], pal = Object.assign({}, m.pal, palOver || {});
+  const frames = m.f.length > 1 ? m.f : [m.f[0], monFrame2(m.f[0], m.anim || 'bob', m.legs)];
+  const fr0 = frames.map(rows => { const c = shadeMon(renderMap(rows, pal), pal); return outline(c, name === 'cat' || name === 'fox' ? '#3a2a2a' : '#140c1c'); });
+  const w = Math.max(...fr0.map(c => c.width)) + 2, h = Math.max(...fr0.map(c => c.height)) + 2;
+  return strip(fr0.map(c => { const [f, x] = mk(w, h); x.drawImage(c, 1, h - c.height - 1); return f; }));
+};
 
 'use strict';
 // Ikon item & senjata
@@ -1681,7 +1756,7 @@ MAPS.snow = {
 // Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)
 // World Design Review: lihat docs/BENUA_LUMINA.md (Kuil Penjaga Cahaya, Kota Lumina)
 MAPS.lake = {
-  id: 'lake', name: 'Danau Cermin', w: 1400, h: 1000, bgm: 'meadow', ground: 'meadow',
+  id: 'lake', name: 'Danau Cermin', w: 1400, h: 1000, scale: 1.5, bgm: 'meadow', ground: 'meadow',
   paths: [[1400, 500, 940, 500, 14], [940, 500, 900, 300, 10], [900, 300, 560, 262, 10], [560, 262, 240, 330, 10], [240, 330, 205, 500, 10],
     [205, 500, 240, 670, 10], [240, 670, 560, 742, 10], [560, 742, 900, 700, 10], [900, 700, 940, 500, 10], [1000, 500, 1000, 330, 11], [1000, 330, 820, 110, 11], [820, 110, 820, 0, 11]],
   discs: [[1080, 470, 70], [1120, 320, 60], [820, 110, 50]],
@@ -1698,7 +1773,7 @@ MAPS.lake = {
   npcs: [{ id: 'gun', ch: 'gun', name: 'Pak Gun', x: 930, y: 170, dir: 'left' }, { id: 'ratih', ch: 'ratih', name: 'Nenek Ratih', x: 1040, y: 560, dir: 'left' }],
   lanterns: [[560, 266], [560, 744], [206, 500]],
   boat: [902, 512],
-  enemies: [['frog', 300, 260], ['frog', 820, 760], ['wisp', 240, 800], ['wisp', 900, 220], ['slime', 1200, 760], ['slime', 1180, 820], ['bee', 360, 840]],
+  enemies: [['frog', 300, 260], ['frog', 820, 760], ['wisp', 240, 800], ['wisp', 900, 220], ['slimep', 1200, 760], ['frog', 1180, 840], ['wisp', 360, 840]],
   trees: { n: 760, min: 30, types: [['treeA', .4], ['treeB', .3], ['bushG1', .15], ['rock', .15]] },
 };
 
@@ -1717,7 +1792,7 @@ const cityLines = {
 const citizens = (list) => list.map(([id, ch, name, x, y, kind, wander = 22]) => ({ id, ch, name, x, y, dir: 'down', wander, lines: cityLines[kind] }));
 
 MAPS.road = {
-  id: 'road', name: 'Jalan Raya Lama', w: 900, h: 2000, bgm: 'field', ground: 'meadow',
+  id: 'road', name: 'Jalan Raya Lama', w: 900, h: 2000, scale: 3.4, bgm: 'field', ground: 'meadow',
   paths: [[450, 2000, 450, 1500, 16], [450, 1500, 360, 1100, 16], [360, 1100, 520, 700, 16], [520, 700, 450, 300, 16], [450, 300, 450, 0, 16]],
   discs: [[400, 1260, 70], [470, 520, 60]],
   objs: [['stele', 500, 1720, { lore: 'batu_mil' }], ['stele', 560, 660, { text: 'Batu penanda jalan, aksaranya kuno: "AUREL — 40 langkah kuda".\nKota yang namanya tertulis di sini sudah lama tak ada.' }],
@@ -1940,6 +2015,8 @@ function updHud() {
 function showHud(v) { if (!HUD) return; for (const id of ['hud', 'hud2', 'quest']) $(id).style.opacity = v ? 1 : 0; }
 function bossBar(name, f) { const b = $('boss'); if (name === null) { b.style.display = 'none'; return; } b.style.display = 'block'; $('bName').textContent = name; $('bHp').style.width = Math.max(0, f * 100) + '%'; }
 SCREEN.addEventListener('pointerdown', () => { if (UIH && UIH.tap) press('tap'); });
+// Ikon kecil "tersimpan" di pojok saat simpan otomatis
+function autoSaveIcon() { let e = $('autosv'); if (!e) { e = document.createElement('div'); e.id = 'autosv'; e.textContent = '💾 tersimpan'; SCREEN.appendChild(e); } e.classList.remove('on'); void e.offsetWidth; e.classList.add('on'); }
 
 'use strict';
 // Status pemain (S), simpan/muat, rumus stat
@@ -2288,6 +2365,8 @@ class World extends Phaser.Scene {
     if (M.torches) this.spawnTorches();
     if (WARPS[M.id]) this.spawnWarp();
     this.spawnCh4(); this.spawnCh5();
+    // simpan otomatis
+    if (!G.title) { this.time.delayedCall(1200, () => { if (!G.lock && !this.pl.dead) saveGame(this); }); this.time.addEvent({ delay: 45000, loop: true, callback: () => { if (!G.lock && !this.pl.dead && !this.curBoss && !this.trans) { saveGame(this); autoSaveIcon(); } } }); }
     if (M.iceGate && S.stage < 12) this.spawnIceGate();
     for (const c of M.chests || []) if (!c.needFlag || S.flags[c.needFlag]) this.spawnChest(c);
     if (M.crystal) this.spawnCrystal();
@@ -2407,7 +2486,8 @@ class World extends Phaser.Scene {
     this.critters.push({ s, fly: 1, ax: x, ay: y, ph: rnd(0, 6), sp: rnd(.4, .8) });
   }
   spawnEnemy(type, x, y) {
-    const D = ENEMY[type];
+    let D = ENEMY[type]; const K = this.M.scale;
+    if (K && !BOSS_AI.includes(D.ai)) D = Object.assign({}, D, { hp: Math.round(D.hp * K), atk: Math.round(D.atk * (1 + (K - 1) * .55)), def: Math.round((D.def || 0) * (1 + (K - 1) * .5)), exp: Math.round(D.exp * K * .9), gold: D.gold && D.gold.map(g => Math.round(g * (1 + (K - 1) * .5))) });
     const s = this.physics.add.sprite(x, y, D.tex, D.ch ? 'down0' : 0).setOrigin(.5, 1).setDepth(y);
     if (D.scale) s.setScale(D.scale);
     if (D.ch) s.body.setSize(10, 7).setOffset(5, CH_FH - 8);
@@ -3090,7 +3170,7 @@ Object.assign(World.prototype, {
     await talk('Pak Gun', ['Itu dia! Monster batu keluar lagi dari reruntuhan! Tolong, anak muda!']);
     G.lock--;
     sfx('roar'); this.camShake(300, .005);
-    this.slideWave = [[700, 180], [940, 180], [820, 230]].map(([x, y]) => this.spawnEnemy('golem', x, y));
+    this.slideWave = [[700, 180], [940, 180], [820, 230]].map(([x, y]) => this.spawnEnemy('golem', x, y)); for (const e of this.slideWave) { e.hp = e.max = Math.round(e.hp * 1.6); }
     const chk = this.time.addEvent({ delay: 400, loop: true, callback: async () => {
       if (this.slideWave.some(e => e.hp > 0)) return;
       chk.remove(); S.flags.road_open = 1; this.slideWall.destroy(); sfx('boom'); this.camShake(400, .006);

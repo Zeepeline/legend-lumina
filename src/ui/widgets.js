@@ -97,3 +97,5 @@ function updHud() {
 function showHud(v) { if (!HUD) return; for (const id of ['hud', 'hud2', 'quest']) $(id).style.opacity = v ? 1 : 0; }
 function bossBar(name, f) { const b = $('boss'); if (name === null) { b.style.display = 'none'; return; } b.style.display = 'block'; $('bName').textContent = name; $('bHp').style.width = Math.max(0, f * 100) + '%'; }
 SCREEN.addEventListener('pointerdown', () => { if (UIH && UIH.tap) press('tap'); });
+// Ikon kecil "tersimpan" di pojok saat simpan otomatis
+function autoSaveIcon() { let e = $('autosv'); if (!e) { e = document.createElement('div'); e.id = 'autosv'; e.textContent = '💾 tersimpan'; SCREEN.appendChild(e); } e.classList.remove('on'); void e.offsetWidth; e.classList.add('on'); }

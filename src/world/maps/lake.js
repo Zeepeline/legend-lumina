@@ -2,7 +2,7 @@
 // Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)
 // World Design Review: lihat docs/BENUA_LUMINA.md (Kuil Penjaga Cahaya, Kota Lumina)
 MAPS.lake = {
-  id: 'lake', name: 'Danau Cermin', w: 1400, h: 1000, bgm: 'meadow', ground: 'meadow',
+  id: 'lake', name: 'Danau Cermin', w: 1400, h: 1000, scale: 1.5, bgm: 'meadow', ground: 'meadow',
   paths: [[1400, 500, 940, 500, 14], [940, 500, 900, 300, 10], [900, 300, 560, 262, 10], [560, 262, 240, 330, 10], [240, 330, 205, 500, 10],
     [205, 500, 240, 670, 10], [240, 670, 560, 742, 10], [560, 742, 900, 700, 10], [900, 700, 940, 500, 10], [1000, 500, 1000, 330, 11], [1000, 330, 820, 110, 11], [820, 110, 820, 0, 11]],
   discs: [[1080, 470, 70], [1120, 320, 60], [820, 110, 50]],
@@ -19,6 +19,6 @@ MAPS.lake = {
   npcs: [{ id: 'gun', ch: 'gun', name: 'Pak Gun', x: 930, y: 170, dir: 'left' }, { id: 'ratih', ch: 'ratih', name: 'Nenek Ratih', x: 1040, y: 560, dir: 'left' }],
   lanterns: [[560, 266], [560, 744], [206, 500]],
   boat: [902, 512],
-  enemies: [['frog', 300, 260], ['frog', 820, 760], ['wisp', 240, 800], ['wisp', 900, 220], ['slime', 1200, 760], ['slime', 1180, 820], ['bee', 360, 840]],
+  enemies: [['frog', 300, 260], ['frog', 820, 760], ['wisp', 240, 800], ['wisp', 900, 220], ['slimep', 1200, 760], ['frog', 1180, 840], ['wisp', 360, 840]],
   trees: { n: 760, min: 30, types: [['treeA', .4], ['treeB', .3], ['bushG1', .15], ['rock', .15]] },
 };

@@ -31,6 +31,8 @@ class World extends Phaser.Scene {
     if (M.torches) this.spawnTorches();
     if (WARPS[M.id]) this.spawnWarp();
     this.spawnCh4(); this.spawnCh5();
+    // simpan otomatis
+    if (!G.title) { this.time.delayedCall(1200, () => { if (!G.lock && !this.pl.dead) saveGame(this); }); this.time.addEvent({ delay: 45000, loop: true, callback: () => { if (!G.lock && !this.pl.dead && !this.curBoss && !this.trans) { saveGame(this); autoSaveIcon(); } } }); }
     if (M.iceGate && S.stage < 12) this.spawnIceGate();
     for (const c of M.chests || []) if (!c.needFlag || S.flags[c.needFlag]) this.spawnChest(c);
     if (M.crystal) this.spawnCrystal();
@@ -150,7 +152,8 @@ class World extends Phaser.Scene {
     this.critters.push({ s, fly: 1, ax: x, ay: y, ph: rnd(0, 6), sp: rnd(.4, .8) });
   }
   spawnEnemy(type, x, y) {
-    const D = ENEMY[type];
+    let D = ENEMY[type]; const K = this.M.scale;
+    if (K && !BOSS_AI.includes(D.ai)) D = Object.assign({}, D, { hp: Math.round(D.hp * K), atk: Math.round(D.atk * (1 + (K - 1) * .55)), def: Math.round((D.def || 0) * (1 + (K - 1) * .5)), exp: Math.round(D.exp * K * .9), gold: D.gold && D.gold.map(g => Math.round(g * (1 + (K - 1) * .5))) });
     const s = this.physics.add.sprite(x, y, D.tex, D.ch ? 'down0' : 0).setOrigin(.5, 1).setDepth(y);
     if (D.scale) s.setScale(D.scale);
     if (D.ch) s.body.setSize(10, 7).setOffset(5, CH_FH - 8);
