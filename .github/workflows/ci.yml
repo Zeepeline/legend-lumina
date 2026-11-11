@@ -24,6 +24,6 @@ jobs:
           git diff --exit-code --stat dist/ || (echo "::error::dist/game.html usang. Jalankan: python3 tools/bundle.py" && exit 1)
       - name: Tes Playwright
         run: npm test
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with: { name: laporan-tes, path: playwright-report/, retention-days: 14 }
