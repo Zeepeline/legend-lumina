@@ -41,6 +41,9 @@ function artShadow(w, h) { const [c, x] = mk(w, h); ellF(x, '#000000', w / 2, h 
 function artBone() { const [c, x] = mk(10, 6); fr(x, '#f0ead8', 2, 2, 6, 2); fr(x, '#f0ead8', 0, 1, 3, 4); fr(x, '#f0ead8', 7, 1, 3, 4); fr(x, '#c8bea8', 2, 3, 6, 1); return outline(c, '#3a3040'); }
 function artSeed() { const [c, x] = mk(7, 7); ellF(x, '#7ac84a', 3, 3, 2.6, 2.6); px(x, '#d8ff9a', 2, 2); return outline(c, '#1d3a1c'); }
 function artRockShot() { const [c, x] = mk(12, 11); ellF(x, '#7a7484', 6, 6, 4.5, 4); ellF(x, '#a8a2b2', 5, 5, 2.5, 2); return outline(c, '#2a2630'); }
+function artBrazier() { const [c, x] = mk(18, 16); fr(x, '#6a7488', 6, 8, 6, 8); fr(x, '#8a94a8', 7, 8, 2, 8); ellF(x, '#5a6478', 9, 6, 8.5, 3.5); ellF(x, '#8a94a8', 9, 5, 7.5, 2.6); ellF(x, '#2a2e3a', 9, 5, 5.5, 1.6); fr(x, '#4a5266', 4, 14, 10, 2); return outline(c, '#2a2c3a'); }
+function artIceGate() { const [c, x] = mk(84, 34); for (let i = 0; i < 9; i++) { const w = 10, h = 22 + ((i * 7) % 11), X = i * 9 + 1; fr(x, '#9ad4f4', X, 34 - h, w, h); fr(x, '#e8f8ff', X + 2, 34 - h + 2, 2, h - 6); fr(x, '#6aa8d8', X + w - 2, 34 - h, 2, h); } return outline(c, '#3a6a9a'); }
+function artIceBolt() { const [c, x] = mk(10, 8); ellF(x, '#9ad4f4', 5, 4, 4, 2.5); fr(x, '#ffffff', 3, 3, 3, 1); return outline(c, '#3a6a9a'); }
 function artLight(r) { const s = r * 2, [c, x] = mk(s, s); const g = x.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.45, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, s, s); return c; }
 function artRain() { const [c, x] = mk(2, 7); fr(x, '#d8ecff', 1, 0, 1, 3); fr(x, '#d8ecff', 0, 3, 1, 4); return c; }
 // bayangan karakter lembut (gradasi, bukan elips keras)

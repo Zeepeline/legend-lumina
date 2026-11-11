@@ -7,7 +7,7 @@ let UIH = null;            // handler input aktif untuk UI (null = gameplay)
 const G = { lock: 0, title: true, scene: null };
 function win(cls, html = '') { const d = document.createElement('div'); d.className = 'win ' + cls; d.innerHTML = html; UI.appendChild(d); return d; }
 function fadeTo(v) { FADE.style.opacity = v; return sleep(360); }
-function shake() { SCREEN.classList.remove('shake'); void SCREEN.offsetWidth; SCREEN.classList.add('shake'); }
+function shake() { if (!OPT.shake) return; SCREEN.classList.remove('shake'); void SCREEN.offsetWidth; SCREEN.classList.add('shake'); }
 
 // ---- dialog ----
 function say(text, name) {

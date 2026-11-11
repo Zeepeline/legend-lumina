@@ -6,12 +6,29 @@ async function mainMenu(sc) {
   const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Misi', 'Misi utama & sampingan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
     ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()],
     ['Simpan', 'Simpan permainan', async () => { const ok = saveGame(sc); sfx(ok ? 'save' : 'buzz'); await say(ok ? 'Permainan tersimpan.' : 'Gagal menyimpan.'); }],
-    ['Suara', 'Musik & efek suara', async () => { AU.on = !AU.on; if (AU.master) AU.master.gain.value = AU.on ? 1 : 0; }], ['Tutup', 'Kembali bermain', null]];
+    ['Pengaturan', 'Suara, getar, layar', () => openSettings()], ['Tutup', 'Kembali bermain', null]];
   for (; ;) {
-    const r = await choose({ head: 'MENU', x: 8, y: 22, w: 120, start: sel, items: acts.map(([t], i) => ({ t, r: t === 'Suara' ? (AU.on ? 'ON' : 'OFF') : null })), foot: i => acts[i][1] });
+    const r = await choose({ head: 'MENU', x: 8, y: 22, w: 120, start: sel, items: acts.map(([t]) => ({ t })), foot: i => acts[i][1] });
     if (r < 0 || !acts[r][2]) break; sel = r; await acts[r][2]();
   }
   G.lock--;
+}
+// ---------------- PENGATURAN ----------------
+async function openSettings() {
+  const bar = v => '■'.repeat(v) + '□'.repeat(4 - v), onoff = v => v ? 'ON' : 'OFF';
+  const fs = () => !!document.fullscreenElement;
+  const rows = [
+    ['Musik', () => bar(OPT.mus), () => { OPT.mus = (OPT.mus + 1) % 5; }, 'Volume musik (A untuk ubah)'],
+    ['Efek', () => bar(OPT.sfx), () => { OPT.sfx = (OPT.sfx + 1) % 5; sfx('ok'); }, 'Volume efek suara'],
+    ['Getar', () => onoff(OPT.vib), () => { OPT.vib = !OPT.vib; if (OPT.vib && navigator.vibrate) navigator.vibrate(30); }, 'Getar HP saat memukul/terkena'],
+    ['Goyang', () => onoff(OPT.shake), () => { OPT.shake = !OPT.shake; }, 'Goyang layar saat serangan kuat'],
+    ['Layar penuh', () => onoff(fs()), async () => { try { fs() ? await document.exitFullscreen() : await document.documentElement.requestFullscreen(); } catch (_) { } await sleep(150); }, 'Sembunyikan bilah browser'],
+    ['Kembali', () => null, null, 'Tutup pengaturan']];
+  let sel = 0;
+  for (; ;) {
+    const r = await choose({ head: 'PENGATURAN', x: 8, y: 22, w: 150, start: sel, items: rows.map(([t, v]) => ({ t, r: v() })), foot: i => rows[i][3] });
+    if (r < 0 || !rows[r][2]) break; sel = r; await rows[r][2](); saveOpt();
+  }
 }
 async function openSkills() {
   const w = win('menu', `<div class="mh">Jurus Arka</div><div class="qr"><b>Tebasan</b><br>SERANG: tebas ke depan. Bisa dipakai sejak awal.</div><div class="qr"><b>Bola Api</b> (3 MP)<br>Ketuk SIHIR: bidik otomatis. Tarik SIHIR: bidik manual.</div>` +
@@ -23,7 +40,7 @@ function enemyThumb(sc, k) { const D = ENEMY[k]; try { return sc.textures.getBas
 async function openBestiary(sc) {
   const list = Object.keys(ENEMY), seen = list.filter(k => S.kills[k]).length;
   const w = win('menu', `<div class="mh">Bestiari · ${seen}/${list.length} · total ${totalKills()} kalah</div><div class="bgrid">` +
-    list.map(k => { const D = ENEMY[k], n = S.kills[k]; return n ? `<div class="bc${['boss', 'gboss', 'qboss', 'sboss', 'wboss'].includes(D.ai) ? ' boss' : ''}"><img src="${enemyThumb(sc, k)}"><b>${D.name}</b><span>HP ${D.hp} · ATK ${D.atk} · ×${n}</span></div>` : `<div class="bc unk"><b>???</b><span>belum ditemui</span></div>`; }).join('') + `</div><div class="mf">Kalahkan semua monster biasa untuk hadiah Medali Pemburu.</div>`);
+    list.map(k => { const D = ENEMY[k], n = S.kills[k]; return n ? `<div class="bc${BOSS_AI.includes(D.ai) ? ' boss' : ''}"><img src="${enemyThumb(sc, k)}"><b>${D.name}</b><span>HP ${D.hp} · ATK ${D.atk} · ×${n}</span></div>` : `<div class="bc unk"><b>???</b><span>belum ditemui</span></div>`; }).join('') + `</div><div class="mf">Kalahkan semua monster biasa untuk hadiah Medali Pemburu.</div>`);
   Object.assign(w.style, { left: '8px', right: '8px', top: '8px', bottom: '34px', overflow: 'auto' });
   await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 6 }); w.remove();
 }

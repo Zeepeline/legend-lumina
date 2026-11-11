@@ -5,6 +5,11 @@ function artSword(iron) {
   const rows = ["..G...........", "KKGLLLLLLLLLL.", "KKGWWWWWWWWWWL", "..G..........."];
   return outline(renderMap(rows, { K: '#6a3e1e', G: '#e8c050', L: iron ? '#8a96b0' : '#b08a5a', W: iron ? '#e8f0ff' : '#d8b080' }), '#2a1c2a');
 }
+// Senjata lain (gambar saat dipakai; titik pegangan di kiri, mengarah ke kanan)
+function artSpear() { const rows = ["....................W..", "KKKKKKKKKKKKKKKKKKGLLW.", "....................W.."]; return outline(renderMap(rows, { K: '#7a4a24', G: '#e8c050', L: '#c8d4e8', W: '#f4f8ff' }), '#2a1c2a'); }
+function artAxe() { const rows = ["..........LLL", ".........LWWL", "KKKKKKKKKLWWL", ".........LWWL", "..........LLL"]; return outline(renderMap(rows, { K: '#7a4a24', L: '#7a8aa8', W: '#e0e8f8' }), '#2a1c2a'); }
+function artBow() { const rows = ["..KK.", "...KS", "....S", "...KS", "G..KS", "...KS", "....S", "...KS", "..KK."]; return outline(renderMap(rows, { K: '#9a6a34', S: '#f0e8d0', G: '#e8c050' }), '#2a1c2a'); }
+function artArrow() { const rows = ["F.......W.", "FKKKKKKKLW", "F.......W."]; return outline(renderMap(rows, { K: '#9a6a34', F: '#f0f0f0', L: '#c8d4e8', W: '#8a96b0' }), '#2a1c2a'); }
 function artCoin() {
   const frames = []; const ws = [3.5, 2.5, 1, 2.5];
   for (let f = 0; f < 4; f++) { const [c, x] = mk(10, 10); ellF(x, '#a8761a', 5, 5, ws[f] + .5, 4.5); ellF(x, '#ffd23a', 5, 5, ws[f], 4); if (ws[f] > 2) { fr(x, '#fff4a0', 4, 3, 1, 3); } frames.push(outline(c, '#4a2e0a')); }
@@ -27,6 +32,9 @@ const ICON_MAP = {
   ecto: ["....CCC.....", "...CLLCC....", "..CLCCCCC...", "..CECCECC...", "..CCCCCCC...", "..CCCCCCC...", "..C.CC.CC...", "....C...C..."],
   ore: ["............", "...DDDDD....", "..DCCYCCD...", ".DCLCCCCYD..", ".DCCYCCCCD..", ".DCCCCYCCD..", "..DCYCCCD...", "...DDDDD...."],
   sword: ["..........L.", ".........LW.", "........LW..", ".......LW...", "......LW....", ".....LW.....", "..G.LW......", "...GW.......", "..KGG.......", ".K..G.......", "K..........."],
+  spear: ["...........W", "..........LW", ".........LL.", "........K...", ".......K....", "......K.....", ".....K......", "....K.......", "...K........", "..K.........", ".K.........."],
+  axe: ["......LLL...", ".....LWWWL..", "....KLWWWL..", "...K.LWWL...", "..K...LL....", ".K..........", "K..........."],
+  bow: ["...KK.......", "....KK..S...", ".....K.S....", ".....KS.....", ".....SK.....", "....S..K....", "...S...K....", "......KK....", "....KK......"],
   shirt: ["............", "..CC..CC....", ".CCCCCCCC...", "CCCLCCCCCC..", "CC.LCCCC.C..", "...LCCCC....", "...CCCCC....", "...CCCCC....", "...DDDDD...."],
   shield: ["............", ".DCCCCCCD...", ".CLLCCCCC...", ".CLWCCCCC...", ".CLCCCCCC...", ".CCCCCCCD...", "..CCCCCD....", "...CCCD.....", "....DD......"],
   ring: ["............", "....RRR.....", "...RWRRR....", "....RRR.....", "...YYYYY....", "..Y.....Y...", "..Y.....Y...", "..Y.....Y...", "...YYYYY...."],
@@ -39,6 +47,7 @@ const ICONS_DEF = {
   potion: ['flask', { C: '#e8475a', L: '#ff9aa8', D: '#b02a40', G: '#d8e8f0', W: '#ffffff', K: '#8a5a32' }],
   hipotion: ['bigflask', { C: '#c8389a', L: '#ff9ad8', D: '#8a1a6a', G: '#d8e8f0', W: '#ffffff', K: '#8a5a32' }],
   ether: ['flask', { C: '#3a8ee0', L: '#9ad4ff', D: '#2a5aa8', G: '#d8e8f0', W: '#ffffff', K: '#8a5a32' }],
+  antidote: ['flask', { C: '#58c060', L: '#b8f0a0', D: '#2e8a3e', G: '#d8e8f0', W: '#ffffff', K: '#8a5a32' }],
   jelly: ['blob', { C: '#6cd45a', L: '#e0ffd0', D: '#3a9a3a', E: '#1a3a1a' }],
   pelt: ['pelt', { C: '#9aa2b4', L: '#e8ecf4', D: '#5c6680' }],
   tusk: ['tusk', { C: '#f4ead0', L: '#ffffff', D: '#9a6a42' }],
@@ -50,6 +59,10 @@ const ICONS_DEF = {
   ecto: ['ecto', { C: '#d8e8ff', L: '#ffffff', E: '#4a3a6a' }],
   ore: ['ore', { C: '#8a8494', L: '#c8c2d2', D: '#4e4858', Y: '#ffd23a' }],
   wsword: ['sword', { L: '#c08a5a', W: '#e8c090', G: '#8a5a32', K: '#5a3a20' }],
+  ispear: ['spear', { K: '#8a5a32', L: '#8a96b0', W: '#eef4ff' }],
+  fspear: ['spear', { K: '#4a6a9a', L: '#9ad4f4', W: '#f0faff' }],
+  baxe: ['axe', { K: '#8a5a32', L: '#6a7a9a', W: '#e0e8f8' }],
+  hbow: ['bow', { K: '#9a6a34', S: '#f0e8d0' }],
   isword: ['sword', { L: '#8a96b0', W: '#eef4ff', G: '#e8c050', K: '#6a3e1e' }],
   ssword: ['sword', { L: '#6a7a9a', W: '#c8e0ff', G: '#5a8ad8', K: '#3a3050' }],
   csword: ['sword', { L: '#3aa8e0', W: '#d8f8ff', G: '#c88aff', K: '#4a2a6a' }],

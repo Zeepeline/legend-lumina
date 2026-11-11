@@ -30,6 +30,6 @@ Object.assign(World.prototype, {
     const g = this.add.graphics().setDepth(pl.y + 2), o = { r: 6 };
     this.tweens.add({ targets: o, r: 60, duration: 320, onUpdate: () => { g.clear(); g.fillStyle(0xbfe8ff, .25 * (1 - o.r / 70)).fillEllipse(pl.x, pl.y - 4, o.r * 2, o.r * 1.3); g.lineStyle(2, 0xe8f8ff, 1 - o.r / 70).strokeEllipse(pl.x, pl.y - 4, o.r * 2, o.r * 1.3); }, onComplete: () => g.destroy() });
     this.sparkle(pl.x, pl.y - 8, 'dot', 20);
-    for (const e of this.enemies) { if (e.hp <= 0) continue; const dx = e.spr.x - pl.x, dy = e.spr.y - pl.y, d = Math.hypot(dx, dy) || 1; if (d < 60 + e.D.r * e.sc) { e.slow = 3; this.hitEnemy(e, st.mag * 1.2, false, dx / d, dy / d); } }
+    for (const e of this.enemies) { if (e.hp <= 0) continue; const dx = e.spr.x - pl.x, dy = e.spr.y - pl.y, d = Math.hypot(dx, dy) || 1; if (d < 60 + e.D.r * e.sc) { e.slow = 3; this.hitEnemy(e, st.mag * 1.2, false, dx / d, dy / d); this.freezeEnemy(e, 1.6); } }
   },
 });

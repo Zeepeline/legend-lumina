@@ -1,25 +1,54 @@
 'use strict';
 // Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah
+// pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali dorongan
+const WEAPON_STYLE = {
+  sword: { cd: .32, lock: .2, pts: [[14, 15]], mul: 1, crit: .1, kb: 1, fxs: 1 },
+  spear: { cd: .38, lock: .22, pts: [[12, 9], [22, 9], [31, 9]], mul: 1, crit: .12, kb: .7, fxs: 1 },
+  axe: { cd: .62, lock: .34, pts: [[13, 21]], mul: 1.25, crit: .18, kb: 1.6, fxs: 1.45, delay: 110 },
+  bow: { cd: .42, lock: .16 },
+};
 Object.assign(World.prototype, {
+  // Gaya serang per jenis senjata (ITEMS[..].wt): sword (default), spear, axe, bow
   attack() {
     const pl = this.pl; if (pl.atkCd > 0) return;
-    pl.atkCd = .32; pl.atkT = .2; sfx('swing');
+    const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword', W = WEAPON_STYLE[wt];
+    pl.atkCd = W.cd; pl.atkT = W.lock; sfx(wt === 'bow' ? 'jump' : 'swing');
+    if (wt === 'bow') return this.shootArrow();
     const [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx), ox = pl.x + dx * 3, oy = pl.y - 9 + dy * 2;
-    const sl = this.add.sprite(ox, oy, 'slash').setOrigin(4 / 28, .5).setRotation(ang).setDepth(pl.y + (dy < 0 ? -2 : 3)).setFlipY(dx < 0);
-    sl.play('slash'); sl.once('animationcomplete', () => sl.destroy());
-    const tier = { wsword: 0, isword: 1, ssword: 1, csword: 1 }[S.eq.wpn] || 0;
-    const sw = this.sword.setTexture('sword' + tier).setVisible(true).setPosition(ox + dx * 2, oy + 2).setRotation(ang - 1.3).setFlipY(dx < 0);
-    sw.setTint(S.eq.wpn === 'csword' ? 0x8ae8ff : S.eq.wpn === 'ssword' ? 0xc8d8ff : 0xffffff);
-    this.tweens.add({ targets: sw, rotation: ang + 1.2, duration: 150, onComplete: () => sw.setVisible(false) });
-    pl.anims.stop(); pl.setFrame((pl.dir === 'left' || pl.dir === 'right' ? 'side' : pl.dir) + '3');
-    const hx = pl.x + dx * 14, hy = pl.y - 6 + dy * 13, st = stat();
-    for (const e of this.enemies) {
-      if (e.hp <= 0) continue; const ey = e.spr.y - e.D.r * e.sc * .8 - (e.D.fly ? 6 : 0);
-      if (Math.hypot(e.spr.x - hx, ey - hy) < 15 + e.D.r * e.sc) {
-        const crit = Math.random() < .1; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1;
-        this.hitEnemy(e, st.atk, crit, (e.spr.x - pl.x) / n, (e.spr.y - pl.y) / n);
-      }
+    if (wt !== 'spear') {
+      const sl = this.add.sprite(ox, oy, 'slash').setOrigin(4 / 28, .5).setRotation(ang).setDepth(pl.y + (dy < 0 ? -2 : 3)).setFlipY(dx < 0).setScale(W.fxs);
+      sl.play('slash'); sl.once('animationcomplete', () => sl.destroy());
     }
+    const tier = { wsword: 0 }[S.eq.wpn] ?? 1;
+    const sw = this.sword.setTexture(wt === 'spear' ? 'wspear' : wt === 'axe' ? 'waxe' : 'sword' + tier).setVisible(true).setPosition(ox + dx * 2, oy + 2).setFlipY(dx < 0).setDepth(pl.y + (dy < 0 ? -3 : 4));
+    sw.setTint(S.eq.wpn === 'csword' ? 0x8ae8ff : S.eq.wpn === 'ssword' ? 0xc8d8ff : 0xffffff);
+    if (wt === 'spear') { sw.setRotation(ang).setPosition(ox - dx * 6, oy + 2); this.tweens.add({ targets: sw, x: ox + dx * 10, y: oy + 2 + dy * 10, duration: 90, yoyo: true, onComplete: () => sw.setVisible(false) }); }
+    else { sw.setRotation(ang - (wt === 'axe' ? 1.8 : 1.3)); this.tweens.add({ targets: sw, rotation: ang + (wt === 'axe' ? 1.8 : 1.2), duration: wt === 'axe' ? 230 : 150, ease: wt === 'axe' ? 'Quad.easeIn' : 'Linear', onComplete: () => sw.setVisible(false) }); }
+    pl.anims.stop(); pl.setFrame((pl.dir === 'left' || pl.dir === 'right' ? 'side' : pl.dir) + '3');
+    const st = stat(), hit = new Set();
+    const doHit = () => {
+      for (const [k, r] of W.pts) {
+        const hx = pl.x + dx * k, hy = pl.y - 6 + dy * k;
+        for (const e of this.enemies) {
+          if (e.hp <= 0 || hit.has(e)) continue; const ey = e.spr.y - e.D.r * e.sc * .8 - (e.D.fly ? 6 : 0);
+          if (Math.hypot(e.spr.x - hx, ey - hy) < r + e.D.r * e.sc) {
+            hit.add(e); const crit = Math.random() < W.crit; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1;
+            this.hitEnemy(e, st.atk * W.mul, crit, (e.spr.x - pl.x) / n * W.kb, (e.spr.y - pl.y) / n * W.kb);
+            const frz = (ITEMS[S.eq.wpn] || {}).frz; if (frz && Math.random() < frz) this.freezeEnemy(e, 1.2);
+          }
+        }
+      }
+    };
+    if (W.delay) this.time.delayedCall(W.delay, doHit); else doHit();
+  },
+  shootArrow() {
+    const pl = this.pl, st = stat(), a = this.aimAngle(), dx = Math.cos(a), dy = Math.sin(a);
+    pl.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'); pl.flipX = pl.dir === 'left';
+    pl.anims.stop(); pl.setFrame((pl.dir === 'left' || pl.dir === 'right' ? 'side' : pl.dir) + '3');
+    const b = this.sword.setTexture('wbow').setVisible(true).setPosition(pl.x + dx * 6, pl.y - 9 + dy * 4).setRotation(a).setFlipY(false).clearTint().setDepth(pl.y + (dy < 0 ? -3 : 4));
+    this.time.delayedCall(180, () => b.setVisible(false));
+    const s = this.add.image(pl.x + dx * 8, pl.y - 9 + dy * 6, 'arrow').setRotation(a);
+    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 270, vy: dy * 270, life: .7, kind: 'arrow', mine: 1, dmg: st.atk * .8 });
   },
   // sihir: arah dari tarikan tombol / arah gerak / musuh terdekat / arah hadap
   aimAngle() {
@@ -39,7 +68,7 @@ Object.assign(World.prototype, {
     pl.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'); pl.flipX = pl.dir === 'left';
     const big = S.eq.acc === 'ring';
     const s = this.add.sprite(pl.x + dx * 8, pl.y - 9 + dy * 6, 'fire').play('fire').setRotation(a).setScale(big ? 1.3 : 1);
-    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 200, vy: dy * 200, life: .85, kind: 'fire', dmg: st.mag });
+    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 200, vy: dy * 200, life: .85, kind: 'fire', mine: 1, dmg: st.mag });
   },
   drink() {
     const st = stat(), id = has('potion') ? 'potion' : has('hipotion') ? 'hipotion' : null;
@@ -51,13 +80,14 @@ Object.assign(World.prototype, {
     const it = ITEMS[id], st = stat();
     if (it.hp) { if (S.hp >= st.maxhp) { sfx('buzz'); return false; } const h = Math.min(it.hp, st.maxhp - S.hp); S.hp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h, 'heal'); }
     if (it.mp) { if (S.mp >= st.maxmp) { sfx('buzz'); return false; } const h = Math.min(it.mp, st.maxmp - S.mp); S.mp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h + ' MP', 'mpc'); }
+    if (it.cure) { if (!Object.keys(this.pst).length && !it.hp) { sfx('buzz'); return false; } this.cure(); popWorld(this.pl.x, this.pl.y - 40, 'pulih!', 'heal'); }
     addItem(id, -1); sfx('heal'); this.sparkle(this.pl.x, this.pl.y - 10, it.mp ? 'dot' : 'dotg'); updHud(); return true;
   },
   // Bekukan dunia sebentar (detik) agar pukulan terasa berat. Getar HP jika didukung.
   hitStop(sec, vib = 0) {
     if (G.title || this.pl.dead) return;
     this.hsT = Math.max(this.hsT, sec); this.physics.pause(); this.anims.pauseAll(); this.tweens.timeScale = .05;
-    if (vib && S.opt?.vib !== false && navigator.vibrate) try { navigator.vibrate(vib); } catch (_) { }
+    if (vib && OPT.vib && navigator.vibrate) try { navigator.vibrate(vib); } catch (_) { }
   },
   hitEnemy(e, base, crit, nx, ny) {
     if (this.pl.dead || e.hp <= 0 || !e.spr.active) return;
@@ -67,7 +97,7 @@ Object.assign(World.prototype, {
     sfx(crit ? 'crit' : 'hit'); if (crit) shake();
     const fatal = e.hp <= 0;
     this.hitStop(e.boss && fatal ? .22 : fatal || crit ? .085 : .045, crit || fatal ? 25 : 12);
-    if (crit || fatal || e.boss) this.cameras.main.shake(fatal ? 110 : 80, fatal ? .005 : .003);
+    if (crit || fatal || e.boss) this.camShake(fatal ? 110 : 80, fatal ? .005 : .003);
     e.spr.setTintFill(0xffffff); e.flash = .09;
     const heavy = e.boss || e.D.ai === 'golem' || e.D.ai === 'turret';
     const kb = heavy ? (e.D.ai === 'turret' ? 0 : 40) : 175; e.kb = heavy ? .06 : .17; e.kbx = nx * kb; e.kby = ny * kb;
@@ -125,14 +155,14 @@ Object.assign(World.prototype, {
     }
     updHud();
   },
-  hurtPlayer(atk, sx, sy) {
+  hurtPlayer(atk, sx, sy, fx) {
     const pl = this.pl; if (pl.inv > 0 || pl.dead || G.lock > 0 || UIH) return;
     if (pl.dashT > 0) return; if (this.night && isNight()) atk *= 1.15;
     const dmg = Math.max(1, Math.round(atk * rnd(.85, 1.15) - stat().def * .6));
-    S.hp = Math.max(0, S.hp - dmg); popWorld(pl.x, pl.y - 28, '-' + dmg, 'hurt'); sfx('hurt'); this.hitStop(.06, 40);
+    S.hp = Math.max(0, S.hp - dmg); popWorld(pl.x, pl.y - 28, '-' + dmg, 'hurt'); sfx('hurt'); this.hitStop(.06, 40); if (S.hp > 0) this.inflict(fx);
     pl.inv = 1; const dx = pl.x - sx, dy = pl.y - sy, n = Math.hypot(dx, dy) || 1; pl.kb = .14; pl.kbx = dx / n * 170; pl.kby = dy / n * 170;
     pl.setTintFill(0xff4a4a); this.time.delayedCall(90, () => pl.clearTint());
-    this.cameras.main.shake(120, .006); updHud();
+    this.camShake(120, .006); updHud();
     if (S.hp <= 0) this.defeat();
   },
   eShoot(e, kind, angles, dmg, abs) {
@@ -140,11 +170,11 @@ Object.assign(World.prototype, {
     sfx('spore');
     for (const a of angles) {
       const sp = this.add.image(s.x, s.y - 8, P.key);
-      this.shots.push({ s: sp, gx: s.x, gy: s.y, vx: Math.cos(base + a) * P.spd, vy: Math.sin(base + a) * P.spd, life: 2.6, kind, dmg, spin: P.spin, enemy: 1 });
+      this.shots.push({ s: sp, gx: s.x, gy: s.y, vx: Math.cos(base + a) * P.spd, vy: Math.sin(base + a) * P.spd, life: 2.6, kind, dmg, spin: P.spin, enemy: 1, fx: P.fx || e.D.fx });
     }
   },
   shockwave(x, y, R, atk) {
-    sfx('boom'); this.cameras.main.shake(250, .012);
+    sfx('boom'); this.camShake(250, .012);
     const g = this.add.graphics().setDepth(y - 1); const o = { r: 6 };
     this.tweens.add({ targets: o, r: R, duration: 300, onUpdate: () => { g.clear(); g.lineStyle(3, 0xfff0b0, 1 - o.r / R * .6).strokeEllipse(x, y, o.r * 2, o.r * 1.2); g.lineStyle(1, 0xffffff, .8).strokeEllipse(x, y, o.r * 1.6, o.r * .9); }, onComplete: () => g.destroy() });
     const p = this.add.particles(x, y, 'smoke', { lifespan: 600, speed: { min: 30, max: 70 }, angle: { min: 160, max: 380 }, scale: { start: .8, end: 1.6 }, alpha: { start: .6, end: 0 }, emitting: false, tint: 0xd8c8a0 }).setDepth(y + 1); p.explode(14); this.time.delayedCall(700, () => p.destroy());
@@ -157,8 +187,8 @@ Object.assign(World.prototype, {
       if (p.spin) p.s.rotation += dt * 14;
       let dead = p.life <= 0;
       if (!dead && this.physics.overlapRect(p.gx - 2, p.gy - 3, 4, 4, false, true).length) dead = true;
-      if (!dead && p.kind === 'fire') for (const e of this.enemies) { if (e.hp > 0 && Math.hypot(e.spr.x - p.gx, e.spr.y - e.D.r * e.sc * .7 - (e.D.fly ? 6 : 0) - (p.gy - 4)) < e.D.r * e.sc + 6) { const n = Math.hypot(p.vx, p.vy); this.hitEnemy(e, p.dmg, false, p.vx / n, p.vy / n); dead = true; break; } }
-      if (!dead && p.enemy && Math.hypot(this.pl.x - p.gx, this.pl.y - 4 - p.gy) < 8) { this.hurtPlayer(p.dmg, p.gx - p.vx, p.gy - p.vy); dead = true; }
+      if (!dead && p.mine) for (const e of this.enemies) { if (e.hp > 0 && Math.hypot(e.spr.x - p.gx, e.spr.y - e.D.r * e.sc * .7 - (e.D.fly ? 6 : 0) - (p.gy - 4)) < e.D.r * e.sc + 6) { const n = Math.hypot(p.vx, p.vy); this.hitEnemy(e, p.dmg, false, p.vx / n, p.vy / n); if (p.kind === 'fire') this.burnEnemy(e, p.dmg * .2, 2); dead = true; break; } }
+      if (!dead && p.enemy && Math.hypot(this.pl.x - p.gx, this.pl.y - 4 - p.gy) < 8) { this.hurtPlayer(p.dmg, p.gx - p.vx, p.gy - p.vy, p.fx); dead = true; }
       if (dead) { p.dead = true; p.s.destroy(); if (p.kind === 'fire') this.sparkle(p.gx, p.gy - 8, 'doto', 8); }
     }
     this.shots = this.shots.filter(p => !p.dead);

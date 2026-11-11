@@ -7,6 +7,7 @@ Object.assign(World.prototype, {
     if (e.flash > 0) { e.flash -= dt; if (e.flash <= 0) { s.clearTint(); if (['wind', 'swind', 'cwind', 'throw'].includes(e.st)) s.setTint(0xffa07a); else if (e.p2) s.setTint(0xffb8a8); } }
     if (e.kb > 0) { e.kb -= dt; s.setVelocity(e.kbx, e.kby); return; }
     if (locked) { s.setVelocity(0); return; }
+    if (this.enemyStatus(e, dt)) return;
     const dx = pl.x - s.x, dy = pl.y - s.y, d = Math.hypot(dx, dy) || 1;
     const aggro = !pl.dead && d < (e.boss ? 420 : 120);
     const hx = e.home.x - s.x, hy = e.home.y - s.y, hd = Math.hypot(hx, hy) || 1;
@@ -63,7 +64,7 @@ Object.assign(World.prototype, {
         } else if (e.st === 'wind') { s.x += Math.sin(this.t * 60) * .6; if (e.t <= 0) { e.st = 'run'; e.t = .9; s.clearTint(); s.setVelocity(e.lx * 220, e.ly * 220); sfx('roar'); } }
         else if (e.st === 'run') {
           s.anims.timeScale = 3; this.dustE = (this.dustE || 0) - dt; if (this.dustE <= 0) { this.dustE = .08; this.puff(s.x, s.y); }
-          const b = s.body.blocked; if (b.left || b.right || b.up || b.down) { e.st = 'stun'; e.t = 1.2; s.setVelocity(0); this.cameras.main.shake(100, .004); popWorld(s.x, s.y - 20, 'pusing!', 'xp'); }
+          const b = s.body.blocked; if (b.left || b.right || b.up || b.down) { e.st = 'stun'; e.t = 1.2; s.setVelocity(0); this.camShake(100, .004); popWorld(s.x, s.y - 20, 'pusing!', 'xp'); }
           else if (e.t <= 0) { e.st = 'rec'; e.t = .6; s.setVelocity(0); }
         } else if (e.st === 'stun' || e.st === 'rec') { s.anims.timeScale = .5; if (e.t <= 0) { e.st = 'chase'; e.cd = rnd(1, 2); s.anims.timeScale = 1; } }
         break;
@@ -76,10 +77,11 @@ Object.assign(World.prototype, {
       case 'qboss': this.updQueen(e, dt, dx, dy, d); break;
       case 'sboss': this.updSnake(e, dt, dx, dy, d); break;
       case 'wboss': this.updWitch(e, dt, dx, dy, d); break;
+      case 'dboss': this.updDragon(e, dt, dx, dy, d); break;
     }
     if (e.slow > 0) { e.slow -= dt; s.body.velocity.scale(.5); if (e.flash <= 0) s.setTint(0xa8dcff); if (e.slow <= 0) s.clearTint(); }
     const cy = s.y - D.r * sc * .6 - (D.fly ? 6 : 0);
-    if (!e.faded && Math.abs(pl.x - s.x) < D.r * sc + 5 && Math.abs(pl.y - 4 - cy) < D.r * sc + 6) this.hurtPlayer(D.atk * (['lunge', 'run', 'dash', 'charge'].includes(e.st) ? 1.35 : 1), s.x, s.y);
+    if (!e.faded && Math.abs(pl.x - s.x) < D.r * sc + 5 && Math.abs(pl.y - 4 - cy) < D.r * sc + 6) this.hurtPlayer(D.atk * (['lunge', 'run', 'dash', 'charge'].includes(e.st) ? 1.35 : 1), s.x, s.y, D.fx);
   },
   charAnim(e) {
     const s = e.spr, vx = s.body.velocity.x, vy = s.body.velocity.y, k = e.D.tex.slice(3);

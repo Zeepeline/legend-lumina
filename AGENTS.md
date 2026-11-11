@@ -22,7 +22,7 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `core/util.js` | `VW`/`VH` (ukuran layar game), `rnd`, `clamp`, `sleep`, `$` |
 | `core/audio.js` | musik `TRACKS`, `playBGM(nama)`, efek `sfx(nama)` |
 | `core/input.js` | `Input` (keyboard, joystick, tombol), `KEYMAP`, `layout()` |
-| `core/state.js` | status pemain `S`, `newState()`, `stat()`, `has()`, `addItem()`, simpan/muat |
+| `core/state.js` | status pemain `S`, `newState()`, `stat()`, `has()`, `addItem()`, simpan/muat, pengaturan perangkat `OPT` (`saveOpt()`) |
 | `data/items.js` | `ITEMS`, `RECIPES` (tempa) |
 | `data/enemies.js` | `ENEMY` (stat & jenis AI tiap musuh), `PROJ` (proyektil) |
 | `data/quests.js` | `STAGE_TXT`, `STAGE_GOAL` (misi utama), `SKILLS`, `ACH` (pencapaian) |
@@ -34,8 +34,10 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `gfx/textures.js` | `IMG_LIST` (PNG di `assets/img`), `buildTextures()`: daftar semua tekstur & animasi |
 | `gfx/bake.js` | bayangan objek dipanggang ke tekstur tanah |
 | `scene/world.js` | scene Phaser `World`: `create()` (bangun peta), `update()`, `camStep()` (kamera), `actionA()`, `checkZones()` |
-| `systems/combat.js` | serang, sihir, damage, drop, EXP, proyektil, kalah |
+| `systems/combat.js` | `WEAPON_STYLE` (pedang/tombak/kapak/busur, dipilih lewat `ITEMS[..].wt`), serang, sihir, damage, `hitStop()`, drop, EXP, proyektil, kalah |
 | `systems/skills.js` | dash, tebasan putar, nova es |
+| `systems/status.js` | efek status `STATUS` (racun/terbakar/dingin) pemain & musuh; sumber = `fx` di `ENEMY`/`PROJ` |
+| `systems/chapter3.js` | Bab 3: obor kuno, gerbang es, AI Naga Es (`updDragon`, ai `dboss`) |
 | `systems/life.js` | interior, memancing, kebun, teka-teki batu, Mochi |
 | `systems/story.js` | segel kuil, kristal, peti (termasuk peti terkunci) |
 | `systems/daynight.js` · `achievements.js` | jam & malam · cek pencapaian |
@@ -83,8 +85,8 @@ Lainnya: `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png`
 
 ## Status
 
-Sudah ada: 5 wilayah + 3 interior, 25 jenis musuh, 7 boss/mini-boss, misi bab 1–2, 3 misi sampingan, tas/perlengkapan/tempa/toko, jurus (dash, tebasan putar, nova es), siang-malam, cuaca, pancing, kebun, teka-teki, bestiari, pencapaian, peta, hit-stop + getar HP saat pukulan kena (`hitStop()` di `systems/combat.js`), PWA (`manifest.webmanifest`, `sw.js`; naikkan `VERSI` di `sw.js` saat rilis besar).
+Sudah ada: 6 wilayah (+ Puncak Beku) + 3 interior, 30 jenis musuh, 8 boss/mini-boss, misi bab 1–3 (stage 0–14), 3 misi sampingan, tas/perlengkapan/tempa/toko, 4 gaya senjata, jurus (dash, tebasan putar, nova es), efek status + Penawar, siang-malam, cuaca, pancing, kebun, teka-teki (batu & obor), bestiari, pencapaian, peta, hit-stop + getar, menu pengaturan, PWA (`manifest.webmanifest`, `sw.js`; naikkan `VERSI` di `sw.js` saat rilis besar).
 
-Belum: sprite karakter bergaya gambar referensi (menunggu lembar sprite dari pemilik), menu pengaturan (`S.opt.vib` sudah dibaca untuk getar), gamepad, senjata berbeda gaya, efek status, bab 3.
+Belum: sprite karakter bergaya gambar referensi (menunggu lembar sprite dari pemilik), gamepad, bab 4.
 
 Setelah menyelesaikan fitur, **perbarui bagian Status ini**.

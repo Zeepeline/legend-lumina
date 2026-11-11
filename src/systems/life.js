@@ -63,7 +63,7 @@ Object.assign(World.prototype, {
   async checkPlate() {
     const P = this.M.gate, b = this.boulder;
     if (Math.abs(b.x - P.plate[0]) > 4 || Math.abs(b.y - P.plate[1]) > 4) return;
-    S.flags.cave_gate = 1; G.lock++; sfx('chest'); this.sparkle(b.x, b.y - 6, 'dot', 14); this.cameras.main.shake(300, .006);
+    S.flags.cave_gate = 1; G.lock++; sfx('chest'); this.sparkle(b.x, b.y - 6, 'dot', 14); this.camShake(300, .006);
     this.walls.remove(this.gateW, true, true); this.tweens.add({ targets: this.gateS, y: this.gateS.y - 30, alpha: 0, duration: 900 });
     await sleep(600); banner('Gerbang terbuka!', 'TEKA-TEKI', false, 1600); await sleep(800); await say('Terdengar bunyi KLAK dari utara. Gerbang besi terangkat!'); G.lock--; achCheck(this); saveGame(this);
   },

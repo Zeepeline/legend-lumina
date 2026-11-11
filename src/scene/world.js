@@ -10,7 +10,7 @@ class World extends Phaser.Scene {
     const M = this.M = MAPS[data.map || 'village'];
     if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
-    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.hsT = 0; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
+    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
     this.walls = this.physics.add.staticGroup();
@@ -28,6 +28,8 @@ class World extends Phaser.Scene {
     for (const f of M.fish || []) { this.add.sprite(f[0], f[1], 'ripple').play('ripple').setDepth(-8e5).setAlpha(.9); this.lights.push({ x: f[0], y: f[1], small: 1 }); this.inter.push({ x: f[0], y: f[1], r: 26, fn: () => this.fish(f) }); }
     if (M.gardens) this.spawnGarden();
     if (M.gate) this.spawnPuzzle();
+    if (M.torches) this.spawnTorches();
+    if (M.iceGate && S.stage < 12) this.spawnIceGate();
     for (const c of M.chests || []) if (!c.needFlag || S.flags[c.needFlag]) this.spawnChest(c);
     if (M.crystal) this.spawnCrystal();
     if (M.barrier && !S.flags.seal_open) this.spawnBarrier();
@@ -55,7 +57,7 @@ class World extends Phaser.Scene {
     if (this.weather === 'rain') this.add.particles(0, 0, 'rain', { x: { min: -40, max: VW + 40 }, y: -10, lifespan: 700, speedY: { min: 300, max: 360 }, speedX: { min: -70, max: -50 }, alpha: { start: .7, end: .3 }, frequency: 12, quantity: 2 }).setScrollFactor(0).setDepth(1.95e5);
     if (this.weather === 'fog') this.add.particles(0, 0, 'fog', { x: { min: -60, max: VW + 60 }, y: { min: -20, max: VH + 20 }, lifespan: 9000, speedX: { min: 4, max: 12 }, scale: { start: 1.6, end: 2.4 }, alpha: { start: 0, end: .2, ease: 'Sine.inOut' }, frequency: 500 }).setScrollFactor(0).setDepth(1.95e5);
     // partikel suasana
-    const amb = this.weather === 'rain' ? null : { forest: ['leaf', 0xffffff, 900], meadow: ['petal', 0xffffff, 700], village: ['petal', 0xffffff, 1600], cave: ['dot', 0xb8a8ff, 500], swamp: ['dot', 0xa0ffc0, 600] }[M.id];
+    const amb = this.weather === 'rain' ? null : { forest: ['leaf', 0xffffff, 900], meadow: ['petal', 0xffffff, 700], village: ['petal', 0xffffff, 1600], cave: ['dot', 0xb8a8ff, 500], swamp: ['dot', 0xa0ffc0, 600], snow: ['dot', 0xffffff, 220] }[M.id];
     const motes = M.id === 'cave' || M.id === 'swamp';
     if (amb && !G.title) this.add.particles(0, 0, amb[0], { x: { min: -20, max: VW + 20 }, y: motes ? { min: 0, max: VH } : -8, lifespan: 6000, speedY: motes ? { min: -6, max: 6 } : { min: 14, max: 28 }, speedX: { min: -14, max: 6 }, rotate: { min: 0, max: 360 }, alpha: motes ? { start: .7, end: 0 } : 1, tint: amb[1], frequency: amb[2] }).setScrollFactor(0).setDepth(1.9e5);
     // kamera
@@ -155,11 +157,12 @@ class World extends Phaser.Scene {
     s.setCollideWorldBounds(true);
     if (D.ai === 'turret') s.setImmovable(true);
     if (!D.ch) { s.play(D.tex + '_mv'); s.anims.setProgress(Math.random()); } else s.anims.stop();
-    const e = { D, type, spr: s, sc: D.scale || 1, hp: D.hp, max: D.hp, st: 'idle', t: rnd(.2, 1.2), home: { x, y }, ph: rnd(0, 6), shootT: rnd(1, 2.5), flash: 0, kb: 0, cd: 0, boss: ['boss', 'gboss', 'qboss', 'sboss', 'wboss'].includes(D.ai), sh: this.add.image(x, y, D.scale ? 'shadowb' : 'shadow').setAlpha(.22) };
+    const e = { D, type, spr: s, sc: D.scale || 1, hp: D.hp, max: D.hp, st: 'idle', t: rnd(.2, 1.2), home: { x, y }, ph: rnd(0, 6), shootT: rnd(1, 2.5), flash: 0, kb: 0, cd: 0, boss: BOSS_AI.includes(D.ai), sh: this.add.image(x, y, D.scale ? 'shadowb' : 'shadow').setAlpha(.22) };
     if (D.fly) e.sh.setScale(.7);
     if (D.ai === 'ghost') { e.phT = rnd(2, 3.5); s.setAlpha(.9); }
     this.enemies.push(e); return e;
   }
+  camShake(ms, k) { if (OPT.shake) this.cameras.main.shake(ms, k); }
   update(time, dms) {
     // hit-stop: dunia membeku sesaat saat pukulan kena (lihat hitStop() di systems/combat.js)
     if (this.hsT > 0) { this.hsT -= Math.min(dms, 50) / 1000; if (this.hsT > 0) return; this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1; }
@@ -174,7 +177,7 @@ class World extends Phaser.Scene {
       if (pl.kb > 0) { pl.kb -= dt; pl.setVelocity(pl.kbx, pl.kby); }
       else if (locked) { pl.setVelocity(0); pl.anims.stop(); pl.setFrame(sd + '0'); }
       else {
-        const v = Input.vec(), m = Math.hypot(v.x, v.y), sp = (pl.atkT > 0 ? 26 : this.holdA > .45 ? 50 : 86) * stat().spd;
+        const v = Input.vec(), m = Math.hypot(v.x, v.y), sp = (pl.atkT > 0 ? 26 : this.holdA > .45 ? 50 : 86) * stat().spd * this.speedMul();
         if (pl.dashT > 0) { pl.dashT -= dt; pl.setVelocity(pl.dvx, pl.dvy); this.ghostT = (this.ghostT || 0) - dt; if (this.ghostT <= 0) { this.ghostT = .03; const g = this.add.image(pl.x, pl.y, pl.texture.key, pl.frame.name).setOrigin(.5, 1).setFlipX(pl.flipX).setTint(0x9ad8ff).setAlpha(.6).setDepth(pl.y - 1); this.tweens.add({ targets: g, alpha: 0, duration: 220, onComplete: () => g.destroy() }); } }
         else pl.setVelocity(v.x * sp, v.y * sp);
         if (m > .3 && v.y < -.5) for (const d of this.doors) if (Math.abs(pl.x - d.x) < 10 && pl.y < d.y + 15 && pl.y > d.y - 4) { this.enterRoom(d.to, [d.x, d.y]); break; }
@@ -189,7 +192,7 @@ class World extends Phaser.Scene {
       }
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
-    if (!locked && !pl.dead) this.updSkills(dt);
+    if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       if (this.boulder) this.updBoulder(dt);

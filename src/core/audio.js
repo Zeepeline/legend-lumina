@@ -34,7 +34,7 @@ function auInit() {
     const C = window.AudioContext || window.webkitAudioContext; if (!C) return; AU.ctx = new C();
     AU.master = AU.ctx.createGain(); AU.master.gain.value = AU.on ? 1 : 0; AU.master.connect(AU.ctx.destination);
     AU.music = AU.ctx.createGain(); AU.music.gain.value = .09; AU.music.connect(AU.master);
-    AU.sfx = AU.ctx.createGain(); AU.sfx.gain.value = .2; AU.sfx.connect(AU.master);
+    AU.sfx = AU.ctx.createGain(); AU.sfx.gain.value = .2; AU.sfx.connect(AU.master); if (typeof applyOpt === 'function') applyOpt();
     const len = AU.ctx.sampleRate; AU.noise = AU.ctx.createBuffer(1, len, AU.ctx.sampleRate); const d = AU.noise.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     if (AU.cur) { const c = AU.cur; AU.cur = null; playBGM(c); }
   } catch (e) { AU.ctx = null; }

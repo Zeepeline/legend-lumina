@@ -26,6 +26,7 @@ const OBJ = {
   treeB: { key: 'i_treeB', col: [10, 6, 2], sh: [17, 5], fade: 1 },
   treeAd: { key: 'treeAd', col: [10, 6, 2], sh: [18, 5], fade: 1 },
   treeBd: { key: 'treeBd', col: [10, 6, 2], sh: [17, 5], fade: 1 },
+  treeSn: { key: 'treeSn', col: [10, 6, 2], sh: [18, 5], fade: 1 },
   treeSw: { key: 'treeSw', col: [10, 6, 2], sh: [18, 5], fade: 1 },
   anvil: { key: 'anvil', col: [26, 8, 0], sh: [14, 3] },
   forge: { key: 'forge', col: [30, 12, 0], sh: [16, 3], mm: 1 },

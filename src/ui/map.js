@@ -2,7 +2,7 @@
 // Layar peta & navigasi tujuan misi
 // ---------------- PETA ----------------
 const MINI = {};
-const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja']];
+const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja'], ['snow', 'Puncak Beku']];
 function buildMini(sc, M, s) {
   const key = M.id + '_' + s.toFixed(4); if (MINI[key]) return MINI[key];
   const w = Math.round(M.w * s), h = Math.round(M.h * s), c = document.createElement('canvas'); c.width = w; c.height = h;
@@ -26,6 +26,7 @@ function routeNext(from, to) {
 function questTarget(M) {
   let goal = STAGE_GOAL[S.stage];
   if (S.stage === 2) { const F = MAPS.forest; if ((S.inv.seal || 0) >= 3) goal = ['forest', F.barrier.x, F.barrier.y]; else { const B = F.bosses.find(b => b.after === 'seal' && !S.flags[b.flag]); goal = B ? ['forest', B.x, B.y] : null; } }
+  if (S.stage === 11) { const T = MAPS.snow.torches, i = [0, 1, 2].find(k => !S.flags['torch' + k]); goal = i == null ? null : ['snow', T[i][0], T[i][1]]; }
   if (!goal) return null; if (M.id === goal[0]) return { x: goal[1], y: goal[2] };
   const nx = routeNext(M.id, goal[0]); if (!nx) return null; const ex = (M.exits || []).find(e => e.to === nx); return ex && { x: ex.x + ex.w / 2, y: ex.y + ex.h / 2 };
 }

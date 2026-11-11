@@ -2,7 +2,7 @@
 // AI boss & alur pertarungan boss
 Object.assign(World.prototype, {
   summon(e) {
-    const s = e.spr, D = e.D; e.summoned = true; e.st = 'roar'; e.t = .8; s.setVelocity(0); sfx('roar'); this.cameras.main.shake(400, .01); s.setTint(0xff7a5a);
+    const s = e.spr, D = e.D; e.summoned = true; e.st = 'roar'; e.t = .8; s.setVelocity(0); sfx('roar'); this.camShake(400, .01); s.setTint(0xff7a5a);
     banner(D.name + ' memanggil bantuan!', null, false, 1300);
     (D.adds || []).forEach((t, i, a) => { const ang = i / a.length * 6.28; const m = this.spawnEnemy(t, s.x + Math.cos(ang) * 50, s.y + Math.sin(ang) * 32); this.sparkle(m.spr.x, m.spr.y - 6, 'doto', 8); });
   },
@@ -10,7 +10,7 @@ Object.assign(World.prototype, {
     const s = e.spr, D = e.D, golem = D.ai === 'gboss';
     if (!e.awake) { s.setVelocity(0); if (D.ch) s.setFrame('down0'); return; }
     if (D.phase2 && !e.p2 && e.hp < e.max * .5) {
-      e.p2 = true; e.st = 'roar'; e.t = 1.2; s.setVelocity(0); sfx('roar'); this.cameras.main.shake(600, .014); this.cameras.main.flash(200, 255, 120, 80);
+      e.p2 = true; e.st = 'roar'; e.t = 1.2; s.setVelocity(0); sfx('roar'); this.camShake(600, .014); this.cameras.main.flash(200, 255, 120, 80);
       banner('Raja Goblin mengamuk!', 'FASE 2', true, 1500); s.setTint(0xffb8a8); e.spdM = 1.45;
       if (!e.summoned) this.summon(e); return;
     }
@@ -101,6 +101,7 @@ Object.assign(World.prototype, {
     }
     if (B.after === 'crystal') { S.stage = 4; updHud(); await say('Raja Goblin tumbang! Sentuh Kristal Lumina untuk memulihkan cahayanya.'); }
     if (B.after === 'witch') { S.stage = 8; updHud(); const c = this.M.chests.find(c => c.needFlag === 'witch'); const sp = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'doto', 20); await say('Morgath lenyap bersama kabutnya... Rawa Senja mulai terang.'); await say('Sebuah peti muncul di tempat ia berdiri. Setelah itu, laporkan ke Tetua Bram.'); }
+    if (B.after === 'dragon') { S.stage = 13; updHud(); const c = this.M.chests.find(c => c.needFlag === 'dragon'); const sp = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'dot', 20); sp.setAlpha(0); this.tweens.add({ targets: sp, alpha: 1, duration: 600 }); await say('Kryos hancur menjadi serpihan es berkilau... Badai salju mereda.'); await say('Sebuah peti muncul di puncak. Setelah itu, laporkan ke Tetua Bram!'); }
     if (B.after === 'golemchest') { const c = this.M.chests.find(c => c.needFlag === 'golem'); const s = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'doto', 20); s.setAlpha(0); this.tweens.add({ targets: s, alpha: 1, duration: 600 }); await say('Sebuah peti harta muncul dari reruntuhan Golem Purba!'); }
     this.bossOn = false; G.lock--; playBGM(this.M.bgm); achCheck(this); saveGame(this);
   },

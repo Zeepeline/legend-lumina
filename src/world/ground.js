@@ -21,6 +21,7 @@ const GROUND = {
   forest: { g: ['#3f7d2c', '#4f9234', '#5ea33c', '#6cb244'], edge: '#3a6e28', path: 'dirt', tuft: '#2f6420', tuft2: '#5aa03a' },
   meadow: { g: ['#8cc45e', '#9ccf66', '#aad870', '#b6de7a'], edge: '#7cb452', path: 'dirt', tuft: '#6aa846', tuft2: '#d0f08e' },
   swamp: { g: ['#4a6a4a', '#567a50', '#628858', '#507048'], edge: '#3e5a3e', path: 'dirt', tuft: '#3a5a3a', tuft2: '#8ab070' },
+  snow: { g: ['#e2ecf6', '#eaf2fa', '#dae6f2', '#f2f7fc'], edge: '#c4d6e8', path: 'dirt', tuft: '#b4c8de', tuft2: '#ffffff', ice: 1 },
   cave: { g: ['#2c2834', '#332e3c', '#28242e', '#38323f'], path: 'cave' },
 };
 function genGround(M) {
@@ -40,7 +41,7 @@ function genGround(M) {
     }
     return { m: d2 - d1, id, v: (x - fx) + (y - fy) };
   };
-  const water = (i, t, x, y) => { let c = t > .82 ? '#7cd0f0' : t > .55 ? '#4aa6e0' : '#3a8ed0'; const rp = Math.sin(x * .15 + y * .9) + Math.sin(x * .05 - y * .3) * 1.3; if (rp > 1.85 && t < .8) c = '#a8e8ff'; put(i, h2r(c)); };
+  const water = (i, t, x, y) => { let c = GP.ice ? (t > .82 ? '#e8f8ff' : t > .55 ? '#c4e8f8' : '#a8d8f0') : t > .82 ? '#7cd0f0' : t > .55 ? '#4aa6e0' : '#3a8ed0'; const rp = Math.sin(x * .15 + y * .9) + Math.sin(x * .05 - y * .3) * 1.3; if (rp > 1.85 && t < .8) c = '#a8e8ff'; put(i, h2r(c)); };
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     const i = (y * W + x) * 4;
     if (R) {
@@ -158,7 +159,7 @@ function borderTrees(M) {
   const out = [], b = M.border; let n = 0;
   const inGap = (g, v) => g && v > g[0] - 14 && v < g[1] + 14;
   const T = b.types || ['pined', 'pine', 'round'], tp = (k, s2) => T[Math.floor(hash(k, 9, s2) * T.length)];
-  for (let y = 34; y <= b.top + 6; y += 18) for (let x = 8 + ((y / 18) % 2) * 14; x < M.w; x += 30) { n++; out.push([tp(n, 41), x + Math.round((hash(n, 2, 41) - .5) * 10), y + Math.round(hash(n, 3, 41) * 6)]); }
+  for (let y = 34; y <= b.top + 6; y += 18) for (let x = 8 + ((y / 18) % 2) * 14; x < M.w; x += 30) { if (inGap(b.gapT, x)) continue; n++; out.push([tp(n, 41), x + Math.round((hash(n, 2, 41) - .5) * 10), y + Math.round(hash(n, 3, 41) * 6)]); }
   for (let y = b.top + 20; y < M.h + 40; y += 24) {
     for (const x of [14, 36]) { if (inGap(b.gapL, y)) continue; n++; out.push([tp(n, 42), x + Math.round((hash(n, 2, 42) - .5) * 8), y]); }
     for (const x of [M.w - 36, M.w - 14]) { if (inGap(b.gapR, y)) continue; n++; out.push([tp(n, 42), x + Math.round((hash(n, 2, 42) - .5) * 8), y]); }

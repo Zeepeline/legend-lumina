@@ -3,7 +3,7 @@
 Object.assign(World.prototype, {
   npcHasQuest(id) {
     const sd = S.side;
-    return (id === 'elder' && [0, 5, 8].includes(S.stage)) || (id === 'hermit' && S.stage === 6) || (id === 'girl' && sd.mochi === 3 && !S.pet) || (id === 'mom' && has('fish') && has('veg')) || (id === 'hunter' && S.stage === 1) || (id === 'girl' && (sd.mochi === 0 || sd.mochi === 2)) ||
+    return (id === 'elder' && [0, 5, 8, 9, 13].includes(S.stage)) || (id === 'hermit' && S.stage === 6) || (id === 'nila' && S.stage === 10) || (id === 'girl' && sd.mochi === 3 && !S.pet) || (id === 'mom' && has('fish') && has('veg')) || (id === 'hunter' && S.stage === 1) || (id === 'girl' && (sd.mochi === 0 || sd.mochi === 2)) ||
       (id === 'farmer' && (sd.darto === 0 || (sd.darto === 1 && has('jelly', 5)))) || (id === 'joko' && (sd.joko === 0 || (sd.joko === 1 && has('tusk', 3))));
   },
   async talkNpc(o) {
@@ -31,8 +31,26 @@ Object.assign(World.prototype, {
           await T('Kabut sudah hilang dan kristal bersinar lebih terang dari sebelumnya!', 'Morgath tidak akan mengganggu Lumina lagi. Terima ini, warisan keluarga kami.');
           S.stage = 9; S.gold += 300; addItem('hipotion', 3); addItem('ether', 3); saveGame(this);
           await gain(['Dapat 300 G, Ramuan Besar x3, dan Eter x3!']);
-          banner('TERIMA KASIH SUDAH BERMAIN', 'BAB 2 SELESAI', true, 3500);
+          banner('Bab 3 menanti...', 'BAB 2 SELESAI', true, 3000);
+        } else if (S.stage === 9) {
+          await T('Arka, ada kabar buruk. Pak Joko melihat badai salju aneh di utara Padang Angin, padahal ini musim panas!', 'Penjaga Nila tinggal di kaki Puncak Beku. Temui dia. Bawa Penawar, hawa dingin di sana bisa membekukan tubuhmu.');
+          S.stage = 10; addItem('antidote', 3); updHud(); await gain(['Dapat Penawar x3!']); banner('Temui Penjaga Nila', 'BAB 3 · MISI BARU', false, 2400);
+        } else if (S.stage >= 10 && S.stage <= 12) await T(['Puncak Beku ada di utara Padang Angin. Ikuti jalan ke atas dari kincir angin.', 'Obor kuno? Konon api itu menyegel naga es berabad-abad lalu.', 'Naga Es... Hati-hati, Arka. Kami semua berdoa untukmu.'][S.stage - 10]);
+        else if (S.stage === 13) {
+          await T('Badai salju sudah reda! Kamu mengalahkan naga es?!', 'Lumina berutang nyawa padamu, Arka. Kamu pahlawan sejati desa ini.');
+          S.stage = 14; S.gold += 500; addItem('hipotion', 5); addItem('ether', 5); saveGame(this);
+          await gain(['Dapat 500 G, Ramuan Besar x5, dan Eter x5!']);
+          banner('TERIMA KASIH SUDAH BERMAIN', 'BAB 3 SELESAI', true, 3500);
         } else await T(S.flags.golem ? 'Golem Purba, Morgath... Kamu pahlawan terbesar dalam sejarah Lumina!' : 'Kudengar Golem Purba di Gua Batu menyimpan perisai legendaris. Mungkin tantangan berikutnya untukmu?');
+        break;
+      case 'nila':
+        if (S.stage < 10) await T('Brrr... Puncak ini makin dingin setiap hari. Ada yang tidak beres di atas sana.', 'Kalau mau naik, jangan lupa bawa Penawar. Dinginnya bisa membuatmu lambat.');
+        else if (S.stage === 10) {
+          await T('Kamu Arka dari Lumina? Syukurlah! Naga Es Kryos telah bangun di puncak.', 'Dulu leluhur kami menyegelnya dengan tiga Obor Kuno. Apinya padam, dan gerbang es menutup jalan ke puncak.', 'Nyalakan ketiga obor itu! Hati-hati, para penjaga es akan bangkit saat api menyala. Cek PETA untuk letaknya.');
+          S.stage = 11; addItem('hipotion', 2); updHud(); await gain(['Dapat Ramuan Besar x2!']); banner('Nyalakan 3 Obor Kuno', 'MISI BARU', false, 2200);
+        } else if (S.stage === 11) await T(`Obor menyala: ${[0, 1, 2].filter(k => S.flags['torch' + k]).length}/3. Satu di barat, satu di timur, satu di tengah sebelum gerbang es.`);
+        else if (S.stage === 12) await T('Gerbang es sudah mencair! Kryos menyemburkan es. Menyamping saat dia mengambil napas, lalu serang!', 'Senjata api... maksudku, Bola Api-mu akan membakarnya.');
+        else await T('Langit kembali biru. Terima kasih, pahlawan Lumina!');
         break;
       case 'hunter':
         if (S.stage === 1) {
@@ -92,7 +110,7 @@ Object.assign(World.prototype, {
     await say('Selamat datang! Mau beli atau jual?', 'Bu Sari');
     for (; ;) {
       const m = await choose({ head: 'Kios Bu Sari · ' + S.gold + ' G', x: 80, y: 50, w: 128, items: [{ t: 'Beli' }, { t: 'Jual barang' }, { t: 'Keluar' }] });
-      if (m === 0) await buyMenu('Kios Bu Sari', ['potion', 'hipotion', 'ether', 'seed', 'rod']);
+      if (m === 0) await buyMenu('Kios Bu Sari', ['potion', 'hipotion', 'antidote', 'ether', 'seed', 'rod']);
       else if (m === 1) await sellMenu();
       else break;
     }
@@ -103,7 +121,7 @@ Object.assign(World.prototype, {
     await say(pick(['Heh, butuh senjata? Bengkel Pak Besi siap!', 'Bawakan bahan monster, akan kutempa jadi barang hebat.']), 'Pak Besi');
     for (; ;) {
       const m = await choose({ head: 'Bengkel Pak Besi · ' + S.gold + ' G', x: 70, y: 50, w: 148, items: [{ t: 'Beli perlengkapan' }, { t: 'Tempa dengan bahan' }, { t: 'Keluar' }] });
-      if (m === 0) await buyMenu('Bengkel Pak Besi', ['isword', 'chain']);
+      if (m === 0) await buyMenu('Bengkel Pak Besi', ['isword', 'ispear', 'hbow', 'chain']);
       else if (m === 1) await forgeMenu();
       else break;
     }
