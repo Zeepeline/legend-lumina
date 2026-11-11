@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#1a2a1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -157,6 +157,10 @@ body.touch #keys{display:none}
 .jrn .jh{font-size:9px;letter-spacing:1px;color:#8a5a2a;margin-top:6px;border-bottom:1px solid #e2c99a}
 .jrn .jt{margin:2px 0 2px}
 .jrn .jl.sel{background:#f4e2b8;border-radius:3px}
+/* kunci zoom: cegah double-tap zoom & cubit di semua elemen */
+html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+*{-webkit-tap-highlight-color:transparent}
+.codew textarea,.jrn .jb{touch-action:pan-y}
 </style>
 </head>
 <body>
@@ -897,6 +901,8 @@ CHARS.hunter = [{ H: '#3a2a1a', C: '#5a7a3a', P: '#5a4a3a', Y: '#a87a3a', K: '#5
 Object.assign(CHARS, {
   witch: [{ H: '#5a4a8a', C: '#3a2a5a', S: '#dccce8', E: '#e83ae0', r: '#c8a8d8', Y: '#3a2a5a', R: '#c84ae0', K: '#2a1a3a' }, { hat: 1, robe: 1, long: 1 }],
   hermit: [{ H: '#d8d8e0', C: '#6a7a5a', K: '#4a3a2a' }, { beard: 1, robe: 1 }],
+  lestari: [{ H: '#5a3a6a', C: '#4a6ac8', P: '#3a3a5a', K: '#2a2a3a', Y: '#e8d8a0' }, { long: 1 }],
+  gun: [{ H: '#3a2a1a', C: '#c87a3a', P: '#5a4a3a', K: '#3a2a1a', Y: '#e8c050' }, { hat: 1 }],
   ratih: [{ H: '#e4e4ec', C: '#6a8aa4', P: '#4a5a6a', K: '#3a3a4a', Y: '#d0a878' }, { long: 1 }],
   wati: [{ H: '#3a2414', C: '#7ab05a', P: '#6a5a3a', K: '#3a2a1a', Y: '#f0c890' }, { long: 1 }],
   darma: [{ H: '#2a1a10', C: '#a03a3a', P: '#3a3a4a', K: '#2a2a2a', Y: '#e8c050' }, { hat: 1 }],
@@ -1032,6 +1038,7 @@ const ICONS_DEF = {
   f_ginger: ['bowl', { C: '#c8763a', D: '#8a4a20', L: '#fff0d0', S: '#f0b040', W: '#ffffff' }],
   f_jelly: ['blob', { C: '#ff8ac0', L: '#fff0f8', D: '#c04a8a', E: '#c04a8a' }],
   f_hero: ['bowl', { C: '#e8c050', D: '#a07a20', L: '#fff8d8', S: '#ff6a4a', W: '#ffffff' }],
+  akey: ['key', { Y: '#9ad4f4' }],
   bracelet: ['ring', { Y: '#9ad4f4', R: '#7af0c0', W: '#ffffff' }],
   baxe: ['axe', { K: '#8a5a32', L: '#6a7a9a', W: '#e0e8f8' }],
   hbow: ['bow', { K: '#9a6a34', S: '#f0e8d0' }],
@@ -1125,6 +1132,27 @@ function artStele() { const [c, x] = mk(18, 24); fr(x, '#6e6a7a', 3, 20, 12, 4);
 function artBoat() { const [c, x] = mk(44, 16); fr(x, '#8a5a32', 4, 6, 36, 6); fr(x, '#a87444', 6, 6, 32, 2); fr(x, '#6a4224', 8, 12, 28, 2); fr(x, '#5a3a20', 6, 4, 32, 2); fr(x, '#c89a5a', 20, 2, 2, 4); fr(x, '#8a5a32', 30, 0, 2, 8); return outline(c, '#2a1c14'); }
 function artRelief() { const [c, x] = mk(40, 30); fr(x, '#8a94a8', 0, 0, 40, 30); fr(x, '#a8b2c4', 2, 2, 36, 26); fr(x, '#6a7488', 6, 20, 28, 2); fr(x, '#6a7488', 10, 8, 3, 12); fr(x, '#6a7488', 18, 5, 4, 15); fr(x, '#6a7488', 27, 9, 3, 11); fr(x, '#4a5468', 4, 23, 32, 1); fr(x, '#4a5468', 8, 25, 6, 1); fr(x, '#4a5468', 24, 25, 8, 1); fr(x, '#e8d070', 19, 3, 2, 2); return outline(c, '#2e3444'); }
 function artSealDoor(open) { const [c, x] = mk(30, 38); fr(x, '#7a8498', 0, 0, 30, 38); fr(x, '#5a6478', 3, 3, 24, 35); if (open) { fr(x, '#1a1e2a', 5, 5, 20, 33); fr(x, '#3a4458', 5, 5, 20, 3); } else { fr(x, '#9aa4b8', 5, 5, 20, 33); fr(x, '#b4bed0', 6, 6, 4, 31); const g = '#5af0d0'; fr(x, g, 14, 14, 2, 8); fr(x, g, 12, 16, 6, 1); fr(x, g, 11, 18, 8, 2); fr(x, g, 12, 20, 6, 1); } return outline(c, '#2a3040'); }
+function artGatehouse() {
+  const [c, x] = mk(260, 150); const st = '#a8a4b4', sd = '#7a7690', sl = '#c8c4d4', rf = '#5a6a9a';
+  fr(x, st, 0, 50, 260, 100); fr(x, sl, 0, 50, 260, 4);
+  for (let y = 58; y < 150; y += 10) for (let X = (y / 10 % 2) * 12; X < 260; X += 24) fr(x, sd, X, y, 1, 9);
+  for (const tx of [0, 196]) { fr(x, st, tx, 10, 64, 140); fr(x, sl, tx, 10, 64, 4); fr(x, rf, tx - 4, 0, 72, 14); fr(x, '#7a8ac0', tx - 4, 0, 72, 3); fr(x, '#3a3450', tx + 26, 50, 12, 18); fr(x, '#ffd870', tx + 28, 52, 8, 6); }
+  fr(x, '#3a3046', 92, 70, 76, 80); ellF(x, '#3a3046', 130, 72, 38, 26); fr(x, '#5a4a3a', 96, 120, 68, 30); for (let X = 98; X < 164; X += 8) fr(x, '#3a2a1a', X, 120, 2, 30);
+  fr(x, '#e8c050', 120, 40, 20, 8); fr(x, '#fff0a0', 124, 42, 12, 4);
+  return outline(c, '#2e2a3a');
+}
+function artCityWall() { const [c, x] = mk(132, 70); fr(x, '#a8a4b4', 0, 14, 132, 56); fr(x, '#c8c4d4', 0, 14, 132, 4); for (let X = 0; X < 132; X += 22) fr(x, '#a8a4b4', X, 4, 14, 12); for (let y = 22; y < 70; y += 10) for (let X = (y / 10 % 2) * 12; X < 132; X += 24) fr(x, '#7a7690', X, y, 1, 9); return outline(c, '#2e2a3a'); }
+function artAcademy() {
+  const [c, x] = mk(270, 200); const w = '#ece4d4', ws = '#c8bca4', rf = '#4a5a9a', rl = '#6a7ac0';
+  fr(x, w, 10, 80, 250, 120); fr(x, ws, 10, 190, 250, 10);
+  for (let i = 0; i < 5; i++) { const y = 80 - i * 14, inset = 4 + i * 26; fr(x, rf, inset, y - 14, 270 - inset * 2, 16); fr(x, rl, inset, y - 14, 270 - inset * 2, 3); }
+  fr(x, '#e8c050', 128, 0, 14, 22); ellF(x, '#fff0a0', 135, 8, 5, 5);
+  for (const cx of [30, 66, 102, 168, 204, 240]) { fr(x, '#f8f4ea', cx - 6, 96, 12, 94); fr(x, ws, cx + 3, 96, 3, 94); fr(x, ws, cx - 8, 92, 16, 5); fr(x, ws, cx - 8, 186, 16, 5); }
+  for (const cx of [48, 84, 186, 222]) { fr(x, '#3a4a7a', cx - 7, 110, 14, 22); fr(x, '#ffd870', cx - 5, 112, 10, 8); fr(x, '#3a4a7a', cx - 7, 148, 14, 22); fr(x, '#8ab0e0', cx - 5, 150, 10, 8); }
+  fr(x, '#5a3a2a', 116, 130, 38, 70); ellF(x, '#5a3a2a', 135, 132, 19, 14); fr(x, '#7a5238', 120, 136, 30, 64); fr(x, '#3a2a1a', 134, 136, 2, 64); fr(x, '#e8c050', 142, 166, 3, 3);
+  fr(x, '#e8c050', 110, 104, 50, 8); fr(x, '#fff8d0', 114, 106, 42, 4);
+  return outline(c, '#2a2a40');
+}
 function artLight(r) { const s = r * 2, [c, x] = mk(s, s); const g = x.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.45, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, s, s); return c; }
 function artRain() { const [c, x] = mk(2, 7); fr(x, '#d8ecff', 1, 0, 1, 3); fr(x, '#d8ecff', 0, 3, 1, 4); return c; }
 // bayangan karakter lembut (gradasi, bukan elips keras)
@@ -1211,6 +1239,9 @@ const OBJ = {
   bushv: { key: 'bushv', col: [18, 6, 0], sh: [12, 3] },
   barrel: { key: 'barrel', col: [12, 6, 0], sh: [7, 2] },
   crate: { key: 'crate', col: [14, 6, 0], sh: [8, 2] },
+  gatehouse: { key: 'gatehouse', col: [240, 30, 0], sh: [120, 8], mm: 1 },
+  cwall: { key: 'cwall', col: [132, 26, 0], sh: [66, 6] },
+  academy: { key: 'academy', col: [250, 60, 0], sh: [128, 10], fade: 1, mm: 1 },
   stele: { key: 'stele', col: [12, 5, 0], sh: [9, 3] },
   sign: { key: 'sign', col: [8, 4, 0], sh: [6, 2] },
   fence: { key: 'fence', col: [18, 4, 0] },
@@ -1652,22 +1683,125 @@ MAPS.snow = {
 MAPS.lake = {
   id: 'lake', name: 'Danau Cermin', w: 1400, h: 1000, bgm: 'meadow', ground: 'meadow',
   paths: [[1400, 500, 940, 500, 14], [940, 500, 900, 300, 10], [900, 300, 560, 262, 10], [560, 262, 240, 330, 10], [240, 330, 205, 500, 10],
-    [205, 500, 240, 670, 10], [240, 670, 560, 742, 10], [560, 742, 900, 700, 10], [900, 700, 940, 500, 10], [1000, 500, 1000, 330, 11], [1000, 330, 820, 110, 11]],
+    [205, 500, 240, 670, 10], [240, 670, 560, 742, 10], [560, 742, 900, 700, 10], [900, 700, 940, 500, 10], [1000, 500, 1000, 330, 11], [1000, 330, 820, 110, 11], [820, 110, 820, 0, 11]],
   discs: [[1080, 470, 70], [1120, 320, 60], [820, 110, 50]],
   ponds: [[560, 500, 330, 210]],
   objs: [['shrine', 560, 520], ['rock', 470, 470], ['rock', 650, 470], ['rock', 520, 560], ['rock', 610, 565],
     ['houseC', 1120, 300], ['barrel', 1180, 300], ['crate', 1060, 300], ['fence', 1150, 340], ['fence', 1168, 340],
     ['stele', 1010, 452, { text: 'Prasasti Danau Cermin:\n"Cahaya lahir di utara, tumbuh di selatan, lalu pulang di barat. Hanya cahaya yang pulang yang boleh menyeberang."' }],
-    ['sign', 860, 140, { text: 'Jalan ke KOTA LUMINA\nTertutup longsor. Perbaikan oleh Dewan Kota.', lore: 'kota_lumina' }],
-    ['rock', 790, 96], ['rock', 816, 84], ['rock', 842, 92], ['rock', 770, 110], ['log', 806, 112]],
-  walls: [[0, 0, 1400, 40], [0, 0, 40, 1000], [0, 960, 1400, 40], [1360, 0, 40, 470], [1360, 530, 40, 470], [760, 60, 110, 40]],
-  border: { top: 40, bottom: 960, left: 40, right: 1360, gapR: [470, 530], types: ['treeA', 'treeB', 'pine'] },
-  exits: [{ x: 1388, y: 470, w: 12, h: 60, to: 'village', tx: 40, ty: 590, dir: 'right', label: 'Desa Lumina' }],
-  npcs: [{ id: 'ratih', ch: 'ratih', name: 'Nenek Ratih', x: 1040, y: 560, dir: 'left' }],
+    ['sign', 880, 200, { text: 'Jalan ke KOTA LUMINA (utara)\nPerbaikan longsor oleh Dewan Kota.', lore: 'kota_lumina' }],
+    ['log', 900, 130]],
+  walls: [[0, 0, 780, 40], [860, 0, 540, 40], [0, 0, 40, 1000], [0, 960, 1400, 40], [1360, 0, 40, 470], [1360, 530, 40, 470]],
+  border: { top: 40, bottom: 960, left: 40, right: 1360, gapR: [470, 530], gapT: [780, 860], types: ['treeA', 'treeB', 'pine'] },
+  exits: [{ x: 780, y: 0, w: 80, h: 12, to: 'road', tx: 450, ty: 1940, dir: 'up', label: 'Jalan Raya Lama' },
+    { x: 1388, y: 470, w: 12, h: 60, to: 'village', tx: 40, ty: 590, dir: 'right', label: 'Desa Lumina' }],
+  npcs: [{ id: 'gun', ch: 'gun', name: 'Pak Gun', x: 930, y: 170, dir: 'left' }, { id: 'ratih', ch: 'ratih', name: 'Nenek Ratih', x: 1040, y: 560, dir: 'left' }],
   lanterns: [[560, 266], [560, 744], [206, 500]],
   boat: [902, 512],
   enemies: [['frog', 300, 260], ['frog', 820, 760], ['wisp', 240, 800], ['wisp', 900, 220], ['slime', 1200, 760], ['slime', 1180, 820], ['bee', 360, 840]],
   trees: { n: 760, min: 30, types: [['treeA', .4], ['treeB', .3], ['bushG1', .15], ['rock', .15]] },
+};
+
+'use strict';
+// Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md
+// Pembantu: deretan rumah & lentera
+const houseRow = (x0, y, n, dx = 132, types = ['houseA', 'houseB', 'houseC']) => [...Array(n)].map((_, i) => [types[i % types.length], x0 + i * dx, y]);
+const lampRow = (x0, y, n, dx) => [...Array(n)].map((_, i) => ['lamp', x0 + i * dx, y]);
+const cityLines = {
+  warga: ['Malam di sini tak pernah gelap. Seribu lentera, katanya. Aku belum pernah menghitungnya.', 'Harga roti naik lagi. Gandum dari Desa Kincir makin jarang datang.', 'Kudengar Akademi menolak murid baru tahun ini. Ada apa di dalam sana?', 'Dewan dan Serikat Dagang bertengkar soal pajak lagi. Kami yang kena getahnya.'],
+  pedagang: ['Kain dari Teluk Karang! Rempah dari Simpang Rantau! Lihat-lihat dulu!', 'Serikat menaikkan sewa lapak. Kalau begini terus, aku pulang ke desa saja.', 'Serpihan kristal? Ssst... jangan keras-keras. Yang punya izin cuma orang Serikat.'],
+  murid: ['Ujian sihir cahaya minggu depan. Aku belum hafal satu pun mantra.', 'Arsip lantai bawah? Hanya guru yang boleh masuk.', 'Konon dulu Akademi melatih para Penjaga Cahaya. Sekarang tinggal cerita.'],
+  bawah: ['Dapur umum Guru Lestari satu-satunya alasan anak-anak di sini masih bisa makan.', 'Orang atas tak pernah turun ke sini. Kecuali penagih sewa.', 'Aku dulu penambang di Lembah Besi. Lembahnya makin dingin, jadi aku pindah ke kota.'],
+  penjaga: ['Gerbang dibuka dari fajar sampai tengah malam. Jangan bikin onar.', 'Sejak jalan longsor dibuka, pendatang dari timur makin banyak.'],
+};
+const citizens = (list) => list.map(([id, ch, name, x, y, kind, wander = 22]) => ({ id, ch, name, x, y, dir: 'down', wander, lines: cityLines[kind] }));
+
+MAPS.road = {
+  id: 'road', name: 'Jalan Raya Lama', w: 900, h: 2000, bgm: 'field', ground: 'meadow',
+  paths: [[450, 2000, 450, 1500, 16], [450, 1500, 360, 1100, 16], [360, 1100, 520, 700, 16], [520, 700, 450, 300, 16], [450, 300, 450, 0, 16]],
+  discs: [[400, 1260, 70], [470, 520, 60]],
+  objs: [['stele', 500, 1720, { lore: 'batu_mil' }], ['stele', 560, 660, { text: 'Batu penanda jalan, aksaranya kuno: "AUREL — 40 langkah kuda".\nKota yang namanya tertulis di sini sudah lama tak ada.' }],
+    ['rock', 300, 900], ['rock', 312, 930], ['stump', 600, 820], ['log', 620, 1600],
+    ['crate', 360, 1240], ['crate', 382, 1236], ['barrel', 430, 1290], ['barrel', 450, 1294], ['hay', 340, 1290], ['sign', 470, 1210, { text: 'Pos Istirahat Kafilah\nKota Lumina: setengah hari ke utara.' }]],
+  walls: [[0, 0, 410, 40], [490, 0, 410, 40], [0, 0, 40, 2000], [860, 0, 40, 2000], [0, 1960, 410, 40], [490, 1960, 410, 40]],
+  border: { top: 40, bottom: 1960, left: 40, right: 860, gap: [410, 490], gapT: [410, 490], types: ['treeA', 'treeB', 'pine'] },
+  exits: [{ x: 410, y: 1988, w: 80, h: 12, to: 'lake', tx: 820, ty: 70, dir: 'down', label: 'Danau Cermin' },
+    { x: 410, y: 0, w: 80, h: 12, to: 'kgate', tx: 600, ty: 860, dir: 'up', label: 'Kota Lumina' }],
+  npcs: [{ id: 'kafilah', ch: 'darma', name: 'Kusir Kafilah', x: 410, y: 1250, dir: 'down' }],
+  enemies: [['wolf', 300, 1700], ['wolf', 600, 1620], ['boar', 560, 1420], ['boar', 280, 1050], ['wolf', 640, 980], ['bee', 300, 760], ['bee', 640, 600], ['boar', 360, 420], ['wolf', 560, 300]],
+  trees: { n: 900, min: 28, types: [['treeA', .4], ['treeB', .3], ['pine', .15], ['rock', .15]] },
+};
+
+MAPS.kgate = {
+  id: 'kgate', name: 'Gerbang Kota Lumina', w: 1200, h: 900, bgm: 'town', ground: 'village', glow: [600, 360, 600],
+  paths: [[600, 900, 600, 0, 34], [600, 640, 300, 640, 12], [600, 640, 900, 640, 12]],
+  discs: [[600, 300, 120], [300, 640, 50], [900, 640, 50]],
+  ponds: [[300, 470, 210, 70], [900, 470, 210, 70]],
+  objs: [['gatehouse', 600, 404], ...[[60, 404], [192, 404], [324, 404], [876, 404], [1008, 404], [1140, 404]].map(([x, y]) => ['cwall', x, y]),
+    ...lampRow(560, 560, 2, 80), ...lampRow(560, 720, 2, 80), ...lampRow(540, 250, 3, 60),
+    ['sign', 680, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\nPintu masuk: Distrik Pasar.' }], ['crate', 260, 620], ['crate', 282, 616], ['barrel', 330, 630], ['crate', 880, 620], ['barrel', 930, 626],
+    ['houseB', 200, 230], ['houseC', 1000, 230], ['planter', 470, 300], ['planter', 730, 300]],
+  walls: [[0, 0, 540, 40], [660, 0, 540, 40], [0, 0, 40, 900], [1160, 0, 40, 900], [0, 860, 560, 40], [640, 860, 560, 40], [0, 380, 540, 26], [660, 380, 540, 26]],
+  border: { top: 40, bottom: 860, left: 40, right: 1160, gap: [560, 640], gapT: [540, 660], types: ['treeA', 'treeB'] },
+  exits: [{ x: 560, y: 888, w: 80, h: 12, to: 'road', tx: 450, ty: 60, dir: 'down', label: 'Jalan Raya Lama' },
+    { x: 540, y: 0, w: 120, h: 12, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' }],
+  npcs: citizens([['gj1', 'guard', 'Penjaga Gerbang', 556, 470, 'penjaga', 0], ['gj2', 'guard', 'Penjaga Gerbang', 644, 470, 'penjaga', 0], ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'], ['gw2', 'farmer', 'Petani', 900, 700, 'warga']]),
+  trees: { n: 160, min: 30, types: [['treeA', .5], ['bushG1', .3], ['rock', .2]] },
+};
+
+MAPS.kpasar = {
+  id: 'kpasar', name: 'Distrik Pasar', w: 1600, h: 1200, bgm: 'town', ground: 'village', glow: [800, 600, 900],
+  paths: [[800, 1200, 800, 0, 34], [0, 620, 1600, 620, 30], [400, 360, 1200, 360, 18], [400, 900, 1200, 900, 18], [400, 360, 400, 900, 18], [1200, 360, 1200, 900, 18]],
+  discs: [[800, 620, 170], [400, 900, 40], [1200, 360, 40]],
+  objs: [['fountain', 800, 640], ...[[640, 500], [960, 500], [640, 790], [960, 790], [560, 640], [1040, 640]].map(([x, y]) => ['market', x, y]),
+    ...lampRow(480, 560, 2, 640), ...lampRow(480, 700, 2, 640), ...lampRow(700, 430, 3, 100), ...lampRow(700, 850, 3, 100), ...lampRow(200, 580, 3, 120), ...lampRow(1160, 580, 3, 120),
+    ...houseRow(180, 300, 2), ...houseRow(1300, 300, 2), ...houseRow(180, 1100, 2), ...houseRow(1300, 1100, 2), ['houseC', 560, 300], ['houseA', 1040, 300], ['houseB', 560, 1100], ['houseC', 1040, 1100],
+    ['bench', 720, 720], ['bench', 880, 720], ['planter', 690, 560], ['planter', 910, 560], ['barrel', 520, 840], ['crate', 1080, 840],
+    ['sign', 860, 1120, { text: 'DISTRIK PASAR\nUtara: Distrik Akademi · Barat: Kota Bawah · Timur: Balai Dewan' }],
+    ['sign', 1540, 680, { text: 'BALAI DEWAN KOTA\nTertutup untuk umum. Urusan dewan saja.' }], ['sign', 610, 330, { text: 'Penginapan "Seribu Lentera"' }]],
+  walls: [[0, 0, 760, 40], [840, 0, 760, 40], [0, 0, 40, 590], [0, 650, 40, 550], [1560, 0, 40, 1200], [0, 1160, 760, 40], [840, 1160, 760, 40]],
+  border: { top: 40, bottom: 1160, left: 40, right: 1560, gap: [760, 840], gapT: [760, 840], gapL: [590, 650], types: ['treeAd', 'treeBd'] },
+  exits: [{ x: 760, y: 1188, w: 80, h: 12, to: 'kgate', tx: 600, ty: 60, dir: 'down', label: 'Gerbang Kota' },
+    { x: 760, y: 0, w: 80, h: 12, to: 'kakademi', tx: 700, ty: 960, dir: 'up', label: 'Distrik Akademi' },
+    { x: 0, y: 590, w: 12, h: 60, to: 'kbawah', tx: 1150, ty: 500, dir: 'left', label: 'Kota Bawah' }],
+  doors: [[560, 300, { to: 'kinn' }], [180, 300, 'Rumah penjahit. Pintunya terkunci.'], [1300, 300, 'Kantor Serikat Dagang cabang Kota Lumina. Penjaganya menatapmu tajam.'], [1040, 300, 'Toko buku. "Tutup sampai ujian Akademi selesai."']],
+  npcs: [{ id: 'kmerchant', ch: 'merchant', name: 'Pedagang Pasar', x: 640, y: 530, dir: 'down' }, { id: 'rudi', ch: 'child', name: 'Rudi', x: 980, y: 700, dir: 'left', wander: 20 },
+    ...citizens([['kp1', 'woman', 'Warga', 700, 760, 'warga'], ['kp2', 'farmer', 'Warga', 900, 470, 'warga'], ['kp3', 'merchant', 'Pedagang', 960, 530, 'pedagang', 0], ['kp4', 'girl', 'Gadis Kota', 520, 660, 'warga'],
+      ['kp5', 'smith', 'Kuli Angkut', 1100, 880, 'pedagang'], ['kp6', 'joko', 'Pedagang Rempah', 640, 820, 'pedagang', 0], ['kp7', 'woman', 'Warga', 300, 640, 'warga'], ['kp8', 'guard', 'Penjaga Kota', 1480, 640, 'penjaga', 0]])],
+  animals: [['cat', 760, 760, 0], ['cat', 1150, 520, 1]],
+  trees: { n: 120, min: 30, types: [['treeA', .4], ['bushG1', .4], ['planter', .2]] },
+};
+
+MAPS.kakademi = {
+  id: 'kakademi', name: 'Distrik Akademi', w: 1400, h: 1000, bgm: 'town', ground: 'village', glow: [700, 500, 700],
+  paths: [[700, 1000, 700, 380, 30], [300, 640, 1100, 640, 16], [300, 640, 300, 420, 12], [1100, 640, 1100, 420, 12]],
+  discs: [[700, 520, 150], [300, 380, 70], [1100, 380, 70]],
+  objs: [['academy', 700, 380], ['shrine', 700, 600], ...lampRow(560, 440, 4, 94), ...lampRow(600, 760, 3, 100), ...lampRow(240, 660, 2, 120), ...lampRow(1040, 660, 2, 120),
+    ['bench', 580, 620], ['bench', 820, 620], ['planter', 520, 520], ['planter', 880, 520], ['planter', 520, 700], ['planter', 880, 700],
+    ['houseA', 300, 380], ['houseC', 1100, 380], ['sign', 760, 900, { text: 'AKADEMI CAHAYA\nDidirikan oleh para penyintas Aurel. Ilmu adalah lentera.' }]],
+  walls: [[0, 0, 1400, 40], [0, 0, 40, 1000], [1360, 0, 40, 1000], [0, 960, 660, 40], [740, 960, 660, 40]],
+  border: { top: 40, bottom: 960, left: 40, right: 1360, gap: [660, 740], types: ['treeA', 'treeB', 'pine'] },
+  exits: [{ x: 660, y: 988, w: 80, h: 12, to: 'kpasar', tx: 800, ty: 60, dir: 'down', label: 'Distrik Pasar' }],
+  doors: [[700, 380, { to: 'arsip' }], [300, 380, 'Asrama murid. "Hanya murid Akademi."'], [1100, 380, 'Rumah guru. Ada papan nama: "L." Sisanya sudah pudar.']],
+  npcs: citizens([['ka1', 'girl', 'Murid Akademi', 600, 700, 'murid'], ['ka2', 'child', 'Murid Muda', 820, 560, 'murid'], ['ka3', 'woman', 'Murid Akademi', 1000, 700, 'murid'], ['ka4', 'elder', 'Guru Tua', 400, 640, 'murid', 0], ['ka5', 'guard', 'Penjaga Akademi', 650, 470, 'penjaga', 0]]),
+  trees: { n: 260, min: 30, types: [['treeA', .5], ['bushP', .2], ['bushG1', .3]] },
+};
+
+MAPS.kbawah = {
+  id: 'kbawah', name: 'Kota Bawah', w: 1200, h: 1000, bgm: 'town', ground: 'village',
+  paths: [[1200, 500, 200, 500, 18], [400, 500, 400, 120, 12], [700, 500, 700, 880, 12], [950, 500, 950, 160, 12], [200, 500, 200, 860, 12]],
+  discs: [[560, 640, 80]],
+  objs: [...houseRow(160, 330, 3, 118, ['houseB', 'houseC']), ...houseRow(560, 330, 3, 118, ['houseC', 'houseB']), ...houseRow(300, 800, 3, 118, ['houseC', 'houseB']), ...houseRow(820, 800, 3, 118, ['houseB', 'houseC']),
+    ['pot', 560, 640], ['barrel', 520, 610], ['barrel', 600, 612], ['crate', 500, 680], ['bench', 620, 690], ['lamp', 480, 560], ['lamp', 1080, 560],
+    ['crate', 1060, 440], ['barrel', 1100, 446], ['crate', 260, 600], ['hay', 300, 680], ['sign', 640, 560, { text: 'DAPUR UMUM\nMakan gratis untuk yang butuh. — L.' }]],
+  walls: [[0, 0, 1200, 40], [0, 0, 40, 1000], [1160, 0, 40, 470], [1160, 530, 40, 470], [0, 960, 1200, 40]],
+  border: { top: 40, bottom: 960, left: 40, right: 1160, gapR: [470, 530], types: ['treeAd', 'treeBd'] },
+  exits: [{ x: 1188, y: 470, w: 12, h: 60, to: 'kpasar', tx: 60, ty: 620, dir: 'right', label: 'Distrik Pasar' }],
+  doors: [[160, 330, 'Rumah petak. Terdengar batuk dari dalam.'], [560, 330, 'Rumah petak kosong. Pemiliknya pindah ke Lembah Besi... lalu kembali lagi.']],
+  npcs: [{ id: 'lestari', ch: 'lestari', name: 'Guru Lestari', x: 560, y: 600, dir: 'down' },
+    ...citizens([['kb1', 'child', 'Anak Kota Bawah', 650, 680, 'bawah'], ['kb2', 'farmer', 'Mantan Penambang', 300, 560, 'bawah'], ['kb3', 'woman', 'Ibu Kota Bawah', 900, 560, 'bawah'], ['kb4', 'child', 'Anak Kota Bawah', 450, 700, 'bawah']])],
+  animals: [['cat', 700, 600, 0], ['cat', 380, 520, 1]],
+  trees: { n: 80, min: 30, types: [['bushG1', .5], ['rock', .5]] },
 };
 
 'use strict';
@@ -1695,6 +1829,16 @@ MAPS.temple = makeRoom('temple', 'Kuil Penjaga Cahaya', [0, 0], {
   wallc: '#b4bfd2', floor: ['#6e7890', '#9aa4b8', '#a8b2c4', '#828ca2'], ground: 'room', bgm: 'cave', furn: [['rug', 132, 150, 1]], windows: [],
   exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'lake', tx: 936, ty: 530, dir: 'down', label: 'Danau Cermin' }],
   reliefs: [[86, 70, 'kuil_relief'], [234, 70, 'kuil_aurel']], sealDoor: [160, 74],
+});
+MAPS.kinn = makeRoom('kinn', 'Penginapan Seribu Lentera', [560, 300], {
+  wallc: '#e8d0b0', furn: [['rug', 132, 150, 2], ['counter', 120, 106], ['bed', 62, 120, 0], ['bed', 62, 176, 1], ['bed', 236, 120, 1], ['bed', 236, 176, 0], ['shelf', 64, 52, 1], ['shelf', 216, 52, 3]], windows: [110, 190],
+  exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'kpasar', tx: 560, ty: 320, dir: 'down', label: 'Distrik Pasar' }],
+  npcs: [{ id: 'inn', ch: 'inn', name: 'Bu Laras', x: 160, y: 102, dir: 'down', reach: 30 }],
+});
+MAPS.arsip = makeRoom('arsip', 'Arsip Akademi Cahaya', [0, 0], {
+  wallc: '#8a7a6a', floor: ['#5a4a3a', '#7a6248', '#84694e', '#6a5440'], bgm: 'cave', furn: [['rug', 132, 150, 1], ['table', 143, 140], ['shelf', 64, 52, 0], ['shelf', 104, 52, 3], ['shelf', 176, 52, 5], ['shelf', 216, 52, 1]], windows: [],
+  exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'kakademi', tx: 700, ty: 400, dir: 'down', label: 'Distrik Akademi' }],
+  loreSpots: [[64, 84, 'arsip_selene'], [104, 84, 'arsip_rongga'], [176, 84, 'arsip_bram'], [216, 84, 'arsip_morgath']],
 });
 
 'use strict';
@@ -1861,6 +2005,7 @@ const ITEMS = {
   baxe: { n: 'Kapak Perang', k: 'wpn', wt: 'axe', atk: 15, d: 'Serang +15. Lambat, ayunan lebar, pukulan berat.' },
   hbow: { n: 'Busur Pemburu', k: 'wpn', wt: 'bow', atk: 2, price: 90, d: 'Serang +2. Tembak panah jarak jauh tanpa MP.' },
   fspear: { n: 'Tombak Beku', k: 'wpn', wt: 'spear', atk: 28, frz: .25, d: 'Serang +28. Tusukan kadang membekukan musuh. Harta Kryos.' },
+  akey: { n: 'Kunci Arsip', k: 'key', d: 'Kunci Arsip Akademi dari Guru Lestari.' },
   bracelet: { n: 'Gelang Daun', k: 'acc', def: 2, regen: 1, d: 'Gelang kecil dari kuil dengan ukiran daun. Hangat saat dipakai.' },
   cloth: { n: 'Baju Kain', k: 'arm', def: 0, d: 'Pakaian sehari-hari.' },
   leather: { n: 'Rompi Kulit', k: 'arm', def: 3, d: 'Tahan +3.' },
@@ -1939,8 +2084,8 @@ const BEAST = Object.keys(ENEMY).filter(k => !BOSS_AI.includes(ENEMY[k].ai));
 
 'use strict';
 // Teks misi, tujuan misi, jurus, pencapaian
-const STAGE_TXT = ['Temui Tetua Bram di rumah pohon', 'Temui Pemburu Raka di pintu masuk Hutan Lumina', 'Rebut 3 Pecahan Segel dari pemimpin monster di hutan', 'Kalahkan Raja Goblin di Kuil Kristal', 'Sentuh Kristal Lumina untuk memulihkannya', 'Lapor ke Tetua Bram', 'Bab 2: Temui Pertapa Sura di Rawa Senja (selatan Padang Angin)', 'Kalahkan Morgath di jantung Rawa Senja', 'Lapor ke Tetua Bram', 'Bicara lagi dengan Tetua Bram', 'Bab 3: Temui Penjaga Nila di Puncak Beku (utara Padang Angin)', 'Nyalakan 3 Obor Kuno di Puncak Beku', 'Kalahkan Naga Es Kryos di puncak gunung', 'Lapor ke Tetua Bram', 'Bab 4: Bicara dengan Lina di desa', 'Tanyai penduduk desa tentang mimpi buruk', 'Periksa prasasti di Pohon Induk saat malam', 'Cari danau berkilau seperti cermin di barat desa', 'Tanyakan Tetua Bram tentang kamar di kuil', ''];
-const STAGE_GOAL = [['village', 486, 324], ['forest', 600, 90], null, ['forest', 640, 1046], ['forest', 640, 1076], ['village', 486, 324], ['swamp', 604, 130], ['swamp', 640, 840], ['village', 486, 324], ['village', 486, 324], ['snow', 596, 1080], null, ['snow', 640, 260], ['village', 486, 324], ['village', 604, 318], null, ['village', 560, 366], ['lake', 1010, 470], ['village', 486, 324]];
+const STAGE_TXT = ['Temui Tetua Bram di rumah pohon', 'Temui Pemburu Raka di pintu masuk Hutan Lumina', 'Rebut 3 Pecahan Segel dari pemimpin monster di hutan', 'Kalahkan Raja Goblin di Kuil Kristal', 'Sentuh Kristal Lumina untuk memulihkannya', 'Lapor ke Tetua Bram', 'Bab 2: Temui Pertapa Sura di Rawa Senja (selatan Padang Angin)', 'Kalahkan Morgath di jantung Rawa Senja', 'Lapor ke Tetua Bram', 'Bicara lagi dengan Tetua Bram', 'Bab 3: Temui Penjaga Nila di Puncak Beku (utara Padang Angin)', 'Nyalakan 3 Obor Kuno di Puncak Beku', 'Kalahkan Naga Es Kryos di puncak gunung', 'Lapor ke Tetua Bram', 'Bab 4: Bicara dengan Lina di desa', 'Tanyai penduduk desa tentang mimpi buruk', 'Periksa prasasti di Pohon Induk saat malam', 'Cari danau berkilau seperti cermin di barat desa', 'Tanyakan Tetua Bram tentang kamar di kuil', 'Bab 5: Tanyakan Nenek Ratih soal jalan ke Kota Lumina', 'Bantu Pak Gun membuka longsor di utara Danau Cermin', 'Tempuh Jalan Raya Lama menuju Kota Lumina', 'Cari Rudi, cucu Nenek Ratih, di Distrik Pasar', 'Temui Guru Lestari di Kota Bawah (barat pasar)', 'Bawa 3 Sayur Segar atau 3 Ikan untuk dapur umum', 'Baca catatan di Arsip Akademi (pintu utama Akademi)', 'Ceritakan temuanmu kepada Guru Lestari', ''];
+const STAGE_GOAL = [['village', 486, 324], ['forest', 600, 90], null, ['forest', 640, 1046], ['forest', 640, 1076], ['village', 486, 324], ['swamp', 604, 130], ['swamp', 640, 840], ['village', 486, 324], ['village', 486, 324], ['snow', 596, 1080], null, ['snow', 640, 260], ['village', 486, 324], ['village', 604, 318], null, ['village', 560, 366], ['lake', 1010, 470], ['village', 486, 324], ['lake', 1040, 560], ['lake', 930, 190], ['kgate', 600, 700], ['kpasar', 980, 700], ['kbawah', 560, 620], ['kbawah', 560, 620], ['kakademi', 700, 400], ['kbawah', 560, 620]];
 const SKILLS = [{ lv: 2, n: 'Dash', d: 'SHIFT / tombol DASH: melesat & kebal sesaat.' }, { lv: 3, n: 'Tebasan Putar', d: 'Tahan SERANG lalu lepas: tebas ke segala arah.' }, { lv: 5, n: 'Nova Es', d: 'Tahan SIHIR (atau C): ledakan es 8 MP, musuh melambat.' }];
 const ACH = [
   { id: 'k10', n: 'Pemburu Pemula', d: 'Kalahkan 10 monster', ok: () => totalKills() >= 10, gift: ['gold', 30] },
@@ -1975,6 +2120,12 @@ const LORE = {
   kuil_relief: ['Sejarah', 'Relief Perang Akar', 'Seribu tahun lalu sesuatu bangkit dari bawah akar. Para Penjaga Cahaya menancapkan kristal di seluruh benua untuk menahannya. Kristal adalah segel.'],
   kuil_aurel: ['Sejarah', 'Relief Kerajaan Aurel', 'Sebuah kota besar bermenara tinggi bernama Aurel. Di bawahnya, akar hitam menjalar... lalu kota itu runtuh.'],
   kuil_kamar: ['Petunjuk', 'Kamar terkunci', 'Pintu kamar terbuka saat tanda di tanganku menyentuhnya. Di dalam: buaian kosong, dan gelang kecil dengan tanda daun yang sama.'],
+  batu_mil: ['Sejarah', 'Batu Penanda Aurel', 'Batu penanda di Jalan Raya Lama menulis jarak ke "AUREL". Jalan ini dibangun kerajaan yang sudah runtuh seribu tahun lalu.'],
+  peti_segel: ['Dunia', 'Peti bersegel gading', 'Kafilah Serikat membawa peti-peti berat dan dingin, bersegel lilin warna gading. Perintah "langsung dari Ketua".'],
+  arsip_selene: ['Petunjuk', 'Catatan murid: Selene', 'Selene, murid terbaik Akademi, diangkat menjadi Penjaga Cahaya terakhir. Potretnya ada di arsip, tapi wajahnya dicat hitam. Catatannya berhenti 16 tahun lalu.'],
+  arsip_rongga: ['Sejarah', 'Nama yang ditakuti', 'Para Penjaga Cahaya menyebut makhluk di bawah akar "Sang Rongga": kekosongan yang lapar cahaya. Ia tak bisa bergerak, maka ia berbisik.'],
+  arsip_bram: ['Petunjuk', 'Daftar guru lama', 'Daftar pengajar 20 tahun lalu: "Bram, guru sihir segel" dan di bawahnya satu nama yang tercoret, dengan catatan kecil: "adiknya".'],
+  arsip_morgath: ['Sejarah', 'Surat pengusiran', 'Morgath diusir dari Akademi karena mencoba "mendengar suara di bawah akar". Surat itu ditandatangani: Bram.'],
   bram_aku: ['Petunjuk', 'Pengakuan Tetua Bram', '16 tahun lalu Bram menemukanku, masih bayi, di samping Kristal Lumina. Ia berjanji pada seseorang untuk merahasiakan sisanya.'],
 };
 // Misteri besar: muncul saat open() benar, terjawab (sebagian) saat ans() mengembalikan teks
@@ -1982,10 +2133,12 @@ const MYSTERY = [
   { q: 'Kenapa kristal-kristal meredup bersamaan?', open: () => S.stage >= 1, ans: () => S.lore.kuil_relief && 'Kristal adalah segel yang menahan sesuatu di bawah akar. Segelnya melemah.' },
   { q: 'Siapa "suara" yang menghasut para penjahat?', open: () => S.lore.suara_goblin, ans: () => null, hint: () => `Petunjuk: ${['suara_goblin', 'suara_morgath', 'suara_kryos'].filter(k => S.lore[k]).length}/3` },
   { q: 'Kenapa tanda di tanganku menyala?', open: () => S.lore.tanda, ans: () => null },
-  { q: 'Siapa Selene?', open: () => S.lore.sura_selene, ans: () => null },
+  { q: 'Siapa Selene?', open: () => S.lore.sura_selene, ans: () => S.lore.arsip_selene && 'Penjaga Cahaya terakhir, murid terbaik Akademi. Wajahnya dihapus dari potret, dan catatannya berhenti 16 tahun lalu.' },
+  { q: 'Siapa "adik" yang mengajar bersama Tetua Bram?', open: () => S.lore.arsip_bram, ans: () => null },
+  { q: 'Apa isi peti-peti bersegel gading milik Serikat?', open: () => S.lore.peti_segel, ans: () => null },
   { q: 'Siapa wanita bercahaya dalam mimpi?', open: () => S.lore.mimpi, ans: () => null },
   { q: 'Apa yang disembunyikan Tetua Bram?', open: () => S.lore.kuil_kamar, ans: () => S.lore.bram_aku && 'Aku ditemukan bayi di samping kristal. Bram belum mau bercerita semuanya.' },
-  { q: 'Apa yang ada di bawah akar?', open: () => S.lore.visi_pohon, ans: () => null },
+  { q: 'Apa yang ada di bawah akar?', open: () => S.lore.visi_pohon, ans: () => S.lore.arsip_rongga && 'Para Penjaga menyebutnya Sang Rongga: kekosongan yang lapar cahaya, dan ia berbisik.' },
 ];
 // Penyelidikan jangka menengah, mengikuti tahap cerita
 function midGoal() {
@@ -1994,7 +2147,8 @@ function midGoal() {
   if (s < 9) return 'Siapa Morgath, dan kenapa ia mengincar Lumina?';
   if (s < 14) return 'Siapa yang membangunkan naga es di utara?';
   if (s < 19) return 'Mimpi buruk apa yang menghantui penduduk desa?';
-  return 'Siapa wanita bercahaya itu? Catatan para Penjaga Cahaya tersimpan di Akademi Cahaya, Kota Lumina, tapi jalannya tertutup longsor.';
+  if (s < 27) return 'Apa yang disimpan Akademi Cahaya tentang para Penjaga, dan tentang wanita dalam mimpi?';
+  return 'Siapa yang mengambil catatan tambang Lembah Besi dari arsip, dan kenapa kristal-kristal meredup?';
 }
 function learn(id) {
   if (!LORE[id] || S.lore[id]) return false;
@@ -2084,7 +2238,7 @@ function buildTextures(sc) {
   addStrip(sc, 'snakei', artMon('snake', { G: '#9ad4f4', L: '#f0faff', E: '#1a2a5a', R: '#4a8aff' }));
   addStrip(sc, 'wisp', artWisp()); addStrip(sc, 'frog', artMon('frog')); addStrip(sc, 'slimep', artMon('slime', { G: '#a060d0', D: '#5a2a8a', L: '#f0d8ff' }));
   one('gate', artGate()); one('boulder', artBoulder()); one('plate', artPlate());
-  one('treeSw', (() => { const c = darkTree(IMGEL.treeB), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = yy < .25 ? .75 : yy < .55 ? .5 : .3; const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('warp0', artWarp(false)); one('stele', artStele()); one('boat', artBoat()); one('relief', artRelief()); one('sealdoor0', artSealDoor(false)); one('sealdoor1', artSealDoor(true)); one('warp1', artWarp(true)); one('icegate', artIceGate()); one('icebolt', artIceBolt());
+  one('treeSw', (() => { const c = darkTree(IMGEL.treeB), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = yy < .25 ? .75 : yy < .55 ? .5 : .3; const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('warp0', artWarp(false)); one('stele', artStele()); one('gatehouse', artGatehouse()); one('cwall', artCityWall()); one('academy', artAcademy()); one('boat', artBoat()); one('relief', artRelief()); one('sealdoor0', artSealDoor(false)); one('sealdoor1', artSealDoor(true)); one('warp1', artWarp(true)); one('icegate', artIceGate()); one('icebolt', artIceBolt());
   one('light', artLight(80)); one('lights', artLight(36)); one('nlL', artLightP(54, .9)); one('nlS', artLightP(38, .85)); one('nlW', artLightP(18, .75));
   for (const id in ITEMS) { const c = artIcon(ICON_OF[id] && id === 'stonearm' ? 'chain' : id); one('ic_' + id, c); ICONS[id] = c.toDataURL(); }
   const A = sc.anims, fr2 = (k, n) => [...Array(n).keys()].map(i => ({ key: k, frame: i }));
@@ -2113,7 +2267,7 @@ class World extends Phaser.Scene {
     const M = this.M = MAPS[data.map || 'village'];
     if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
-    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
+    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
     this.walls = this.physics.add.staticGroup();
@@ -2133,7 +2287,7 @@ class World extends Phaser.Scene {
     if (M.gate) this.spawnPuzzle();
     if (M.torches) this.spawnTorches();
     if (WARPS[M.id]) this.spawnWarp();
-    this.spawnCh4();
+    this.spawnCh4(); this.spawnCh5();
     if (M.iceGate && S.stage < 12) this.spawnIceGate();
     for (const c of M.chests || []) if (!c.needFlag || S.flags[c.needFlag]) this.spawnChest(c);
     if (M.crystal) this.spawnCrystal();
@@ -2800,7 +2954,7 @@ Object.assign(World.prototype, {
   },
   spawnPatok() { const [x, y] = this.M.patok; this.add.image(x, y, 'stele').setOrigin(.5, 1).setScale(.7).setDepth(y); this.wall(x - 5, y - 5, 10, 5); this.inter.push({ x, y: y + 4, r: 14, fn: () => this.findPatok() }); },
   async readLore(id) {
-    await talk(null, [LORE[id][2]]); learn(id);
+    await talk(null, [LORE[id][2]]); learn(id); this.arsipRead(id);
     if (id === 'prasasti_desa' && S.stage === 16) await this.treeVision();
   },
   // ---- Pohon Induk: penglihatan malam ----
@@ -2853,8 +3007,9 @@ Object.assign(World.prototype, {
     S.side.patok = 2; sfx('ok'); updHud();
   },
   // Dialog cerita yang menimpa dialog biasa. Kembalikan true jika sudah ditangani.
-  async storyTalk(id, nm, T, gain) {
+  async storyTalk(id, nm, T, gain, n) {
     const st = S.stage;
+    if (n && n.lines) { await T(pick(n.lines)); return true; }
     // ---- Bab 4 ----
     if (id === 'girl' && st === 14) {
       await T('Kak Arka... aku mimpi buruk lagi semalam. Akar hitam di bawah rumah kita, dan seorang wanita bercahaya yang menangis.', 'Mama juga memimpikannya. Kata Mama, banyak orang desa bermimpi hal yang sama.', 'Kak... tolong cari tahu ya?');
@@ -2883,7 +3038,7 @@ Object.assign(World.prototype, {
       learn('bram_aku'); S.stage = 19; updHud(); S.gold += 300; await gain(['Dapat 300 G.']);
       banner('Pertanyaan baru menunggu', 'BAB 4 SELESAI', true, 3200); saveGame(this); return true;
     }
-    if (id === 'elder' && st >= 19) { await T(S.flags.bram_choice === 'pelan' ? 'Arka... terima kasih sudah sabar dengan orang tua ini.' : 'Aku tahu kamu masih kesal. Aku tidak menyalahkanmu.', 'Jalan ke Kota Lumina tertutup longsor. Kalau sudah dibuka, Akademi Cahaya di sana mungkin punya jawaban yang tidak bisa kuberikan.'); return true; }
+    if (id === 'elder' && st >= 19 && false) { await T(S.flags.bram_choice === 'pelan' ? 'Arka... terima kasih sudah sabar dengan orang tua ini.' : 'Aku tahu kamu masih kesal. Aku tidak menyalahkanmu.', 'Jalan ke Kota Lumina tertutup longsor. Kalau sudah dibuka, Akademi Cahaya di sana mungkin punya jawaban yang tidak bisa kuberikan.'); return true; }
     if (id === 'ratih') {
       if (!S.lore.ratih && st >= 17) {
         await T('Hm? Anak muda... matamu. Kamu dari Desa Lumina, ya?', 'Aku sudah tinggal di tepi danau ini sejak muda. Cucuku pindah ke Kota Lumina, tapi aku tak mau pergi.', 'Enam belas tahun lalu, di malam paling terang yang pernah kulihat, seorang wanita bercahaya mendayung ke kuil di tengah danau... sambil menggendong bayi.', 'Paginya perahu itu kembali sendiri. Kosong.');
@@ -2918,8 +3073,87 @@ Object.assign(World.prototype, {
 });
 
 'use strict';
+// Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Raya Lama, Kota Lumina, Kota Bawah, Arsip Akademi
+// Tahap: 19 tanya Ratih → 20 bantu longsor → 21 jalan raya → 22 cari Rudi → 23 temui Lestari → 24 bahan dapur umum → 25 baca arsip (4) → 26 lapor Lestari → 27 selesai
+const ARSIP = ['arsip_selene', 'arsip_rongga', 'arsip_bram', 'arsip_morgath'];
+Object.assign(World.prototype, {
+  spawnCh5() {
+    const M = this.M;
+    if (M.id === 'lake' && !S.flags.road_open) {
+      this.slideWall = this.wall(760, 40, 120, 60);
+      this.slideS = [[790, 96], [816, 84], [842, 92], [770, 110], [806, 112], [860, 104]].map(([x, y]) => this.add.image(x, y, 'i_rock' in this.textures.list ? 'i_rock' : 'rock').setOrigin(.5, 1).setDepth(y));
+    }
+    if (M.id === 'kgate' && S.stage === 21) { S.stage = 22; updHud(); this.time.delayedCall(900, () => banner('Kota Seribu Lentera', 'BAB 5 · KOTA LUMINA', true, 3000)); saveGame(this); }
+  },
+  async clearSlide() {
+    G.lock++;
+    await talk('Pak Gun', ['Itu dia! Monster batu keluar lagi dari reruntuhan! Tolong, anak muda!']);
+    G.lock--;
+    sfx('roar'); this.camShake(300, .005);
+    this.slideWave = [[700, 180], [940, 180], [820, 230]].map(([x, y]) => this.spawnEnemy('golem', x, y));
+    const chk = this.time.addEvent({ delay: 400, loop: true, callback: async () => {
+      if (this.slideWave.some(e => e.hp > 0)) return;
+      chk.remove(); S.flags.road_open = 1; this.slideWall.destroy(); sfx('boom'); this.camShake(400, .006);
+      for (const s of this.slideS) this.tweens.add({ targets: s, alpha: 0, y: s.y - 10, duration: 700, onComplete: () => s.destroy() });
+      S.stage = 21; updHud(); await sleep(700);
+      await talk('Pak Gun', ['Terima kasih! Dengan monster itu pergi, batu-batu ini mudah disingkirkan.', 'Jalan Raya Lama terbuka lagi. Ikuti ke utara, Kota Lumina setengah hari perjalanan. Hati-hati, serigala suka mengikuti kafilah.']);
+      banner('Tempuh Jalan Raya Lama', 'PERJALANAN', false, 2400); saveGame(this);
+    } });
+  },
+  arsipRead(id) {
+    if (S.stage !== 25 || !ARSIP.includes(id)) return;
+    const n = ARSIP.filter(k => S.lore[k]).length;
+    if (n < 4) banner('Catatan arsip ' + n + '/4', 'PENYELIDIKAN', false, 1500);
+    else { S.stage = 26; updHud(); this.time.delayedCall(1600, () => banner('Ceritakan kepada Guru Lestari', 'PENYELIDIKAN', false, 2400)); saveGame(this); }
+  },
+  async ch5Talk(id, nm, T, gain) {
+    const st = S.stage;
+    if (id === 'ratih' && st === 19) {
+      await T('Kamu sudah ke kuil, ya? Wajahmu berubah, seperti orang yang baru menemukan sesuatu.', 'Kalau kamu mencari jawaban, cucuku Rudi bekerja di Kota Lumina. Katanya Akademi Cahaya menyimpan catatan segala hal.', 'Tapi jalannya tertutup longsor. Pak Gun dan para pekerja Dewan sudah berminggu-minggu di sana. Coba tanya dia, di utara danau.');
+      S.stage = 20; updHud(); banner('Bantu membuka longsor', 'BAB 5 · KOTA SERIBU LENTERA', true, 2800); saveGame(this); return true;
+    }
+    if (id === 'gun') {
+      if (st === 20 && !S.flags.road_open) { await T('Kamu mau ke kota? Jalannya masih tertutup.', 'Setiap kami menggeser batu, monster batu muncul dari reruntuhan di bawahnya. Konon dulu ini jalan raya Kerajaan Aurel.'); if (await ask('Bantu mengusir monster batu?', 'Pak Gun')) await this.clearSlide(); return true; }
+      await T(S.flags.road_open ? 'Jalan sudah terbuka. Dewan akan menambah lentera di sepanjang jalan, katanya.' : 'Longsornya parah. Kami butuh waktu.'); return true;
+    }
+    if (id === 'kafilah') { await T('Kafilah Serikat Dagang dari Simpang Rantau. Kami bawa peti untuk gudang Kota Lumina.', S.lore.peti_segel ? 'Isinya? Bukan urusanmu.' : 'Jangan sentuh peti-peti bersegel gading itu. Perintah langsung dari Ketua.'); if (!S.lore.peti_segel) learn('peti_segel'); return true; }
+    if (id === 'rudi') {
+      if (st === 22) {
+        await T('Nenek Ratih menyuruhmu? Wah, Nenek masih sehat?', 'Masuk Arsip Akademi? Susah. Aku cuma tukang angkut buku. Arsip bawah tanah hanya boleh dibuka atas izin guru.', 'Tapi ada satu guru yang baik: Guru Lestari, penjaga arsip. Sekarang dia lebih sering di Kota Bawah, mengurus dapur umum. Barat dari pasar ini.');
+        S.stage = 23; updHud(); return true;
+      }
+      await T(pick(['Seribu lentera di kota ini dinyalakan setiap senja oleh petugas Dewan. Aku pernah ikut, kakiku pegal!', 'Kalau ketemu Nenek, bilang aku akan pulang setelah jalan dibuka.', 'Serikat menyewa semua gudang di dekat gerbang. Isinya peti-peti berat dan dingin.'])); return true;
+    }
+    if (id === 'lestari') {
+      if (st === 23) {
+        await T('Kamu dari Desa Lumina? ...Pantas. Matamu mengingatkanku pada seseorang.', 'Arsip bawah? Aku memang memegang kuncinya. Tapi lihat dulu sekitarmu: orang-orang di sini kelaparan. Gandum dari Desa Kincir hampir tak datang lagi.', 'Bawakan aku bahan makanan untuk dapur umum, 3 Sayur Segar atau 3 Ikan, lalu kita bicara soal arsip.');
+        S.stage = 24; updHud(); return true;
+      }
+      if (st === 24) {
+        const k = has('veg', 3) ? 'veg' : has('fish', 3) ? 'fish' : null;
+        if (!k) { await T('Sayur dari kebunmu atau ikan dari danau, 3 saja cukup. Anak-anak di sini sudah lama tak makan sayur.'); return true; }
+        addItem(k, -3);
+        await T('Terima kasih. Kamu tidak harus melakukannya, tapi kamu melakukannya.', S.side.patok === 3 ? 'Oh ya, kabarnya ladang Desa Kincir selamat dari Serikat. Gandum mungkin akan datang lagi. Kalau itu ulahmu juga... hmm.' : 'Andai Desa Kincir bisa mengirim gandum lagi...', 'Ini kunci arsip. Masuklah lewat pintu utama Akademi. Baca apa yang kamu perlu, dan jangan bilang siapa pun aku yang memberimu.');
+        S.stage = 25; addItem('akey'); updHud(); await gain(['Dapat Kunci Arsip!']); return true;
+      }
+      if (st === 26) {
+        await T('Kamu membaca semuanya? ...Duduklah.', 'Selene adalah sahabatku di Akademi. Murid terbaik yang pernah ada. Lalu suatu hari ia pergi, dan wajahnya dihapus dari potret atas perintah Dewan.', 'Aku tak tahu kenapa. Tapi ada satu hal lagi: catatan tambang Lembah Besi hilang dari arsip bulan lalu. Hanya orang dengan izin Dewan atau Serikat yang bisa mengambilnya.', 'Kalau kamu ingin tahu kenapa kristal-kristal meredup, mulailah dari Lembah Besi.');
+        S.stage = 27; updHud(); S.gold += 400; addItem('ether', 3); await gain(['Dapat 400 G dan Eter x3!']);
+        banner('Jejak menuju Lembah Besi', 'BAB 5 SELESAI', true, 3200); saveGame(this); return true;
+      }
+      await T(st >= 27 ? 'Hati-hati dengan Serikat, Arka. Mereka punya mata di mana-mana.' : 'Dapur umum buka setiap sore. Semua boleh makan.'); return true;
+    }
+    if (id === 'ka5' && st < 25 && st >= 22) { await T('Arsip bawah hanya untuk guru. Tanpa izin, tak ada yang boleh lewat.'); return true; }
+    if (id === 'kmerchant') { await buyMenu('Pedagang Pasar Kota', ['hipotion', 'ether', 'antidote', 'chain', 'ispear', 'hbow']); return true; }
+    if (id === 'elder' && st >= 19 && st < 27) { await T(st === 19 ? 'Kalau kamu ingin ke Kota Lumina, tanyakan Nenek Ratih di Danau Cermin. Cucunya bekerja di sana.' : 'Kota Lumina... Sudah lama aku tak ke sana. Sampaikan salamku pada Akademi, kalau masih ada yang ingat aku.'); return true; }
+    if (id === 'elder' && st >= 27) { await T('Kamu ke Arsip, ya? ...Lestari. Tentu saja dia.', 'Arka, ada hal-hal yang akan kuceritakan. Tapi tidak hari ini. Hati-hati di Lembah Besi.'); return true; }
+    return false;
+  },
+});
+
+'use strict';
 // Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif.
-const WARPS = { village: [548, 604], forest: [670, 162], meadow: [230, 372], cave: [166, 760], swamp: [672, 172], snow: [680, 1052], lake: [1080, 440] };
+const WARPS = { village: [548, 604], forest: [670, 162], meadow: [230, 372], cave: [166, 760], swamp: [672, 172], snow: [680, 1052], lake: [1080, 440], kpasar: [860, 1060] };
 for (const id in WARPS) { const M = MAPS[id]; (M.discs = M.discs || []).push([WARPS[id][0], WARPS[id][1], 22]); }
 Object.assign(World.prototype, {
   spawnWarp() {
@@ -3151,7 +3385,10 @@ Object.assign(World.prototype, {
 'use strict';
 // Interior, memancing, kebun, teka-teki batu, Mochi
 Object.assign(World.prototype, {
-  enterRoom(to, d) { this.goto(to, 160, 226, 'up'); },
+  enterRoom(to, d) {
+    if (to === 'arsip' && !S.inv.akey) { if (!G.lock && !this._lockMsg) { this._lockMsg = 1; talk(null, ['Pintu Akademi tertutup. Penjaga menggeleng: "Arsip hanya untuk guru dan yang mendapat izin."']).then(() => { this.pl.y += 14; this._lockMsg = 0; }); } return; }
+    this.goto(to, 160, 226, 'up');
+  },
   async fish(f) {
     if (!has('rod')) return talk(null, ['Airnya beriak... ada ikan di sini! Kamu butuh Pancing (dijual di kios Bu Sari).']);
     if (this.fishing) return; this.fishing = true; G.lock++;
@@ -3316,7 +3553,7 @@ Object.assign(World.prototype, {
 Object.assign(World.prototype, {
   npcHasQuest(id) {
     const sd = S.side;
-    return (id === 'elder' && [0, 5, 8, 9, 13].includes(S.stage)) || (id === 'hermit' && S.stage === 6) || (id === 'nila' && S.stage === 10) || (id === 'girl' && S.stage === 14) || (S.stage === 15 && { farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id] && !S.flags[{ farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id]]) || (id === 'elder' && S.stage === 18) || (id === 'ratih' && S.stage >= 17 && !S.lore.ratih) || (id === 'wati' && S.side.patok === 0) || (id === 'darma' && S.side.patok === 2) || (id === 'girl' && sd.mochi === 3 && !S.pet) || (id === 'mom' && has('fish') && has('veg')) || (id === 'hunter' && S.stage === 1) || (id === 'girl' && (sd.mochi === 0 || sd.mochi === 2)) ||
+    return (id === 'elder' && [0, 5, 8, 9, 13].includes(S.stage)) || (id === 'hermit' && S.stage === 6) || (id === 'nila' && S.stage === 10) || (id === 'girl' && S.stage === 14) || (S.stage === 15 && { farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id] && !S.flags[{ farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id]]) || (id === 'elder' && S.stage === 18) || (id === 'ratih' && S.stage >= 17 && !S.lore.ratih) || (id === 'wati' && S.side.patok === 0) || (id === 'ratih' && S.stage === 19) || (id === 'gun' && S.stage === 20) || (id === 'rudi' && S.stage === 22) || (id === 'lestari' && [23, 24, 26].includes(S.stage)) || (id === 'darma' && S.side.patok === 2) || (id === 'girl' && sd.mochi === 3 && !S.pet) || (id === 'mom' && has('fish') && has('veg')) || (id === 'hunter' && S.stage === 1) || (id === 'girl' && (sd.mochi === 0 || sd.mochi === 2)) ||
       (id === 'farmer' && (sd.darto === 0 || (sd.darto === 1 && has('jelly', 5)))) || (id === 'joko' && (sd.joko === 0 || (sd.joko === 1 && has('tusk', 3))));
   },
   async talkNpc(o) {
@@ -3325,7 +3562,7 @@ Object.assign(World.prototype, {
     if (o.walking) { o.spr.setVelocity(0); o.walking = false; }
     this.face(o, dir);
     const T = (...l) => talk(nm, l), gain = async (lines) => { sfx('chest'); updHud(); await talk(null, lines); };
-    if (!(await this.storyTalk(id, nm, T, gain))) switch (id) {
+    if (!(await this.ch5Talk(id, nm, T, gain)) && !(await this.storyTalk(id, nm, T, gain, o.n))) switch (id) {
       case 'elder':
         if (S.stage === 0) {
           await T('Ah, Arka. Syukurlah kamu datang.', 'Akhir-akhir ini cahaya Kristal Lumina di selatan hutan makin redup.', 'Pemburu Raka sedang menyelidiki hutan. Temui dia di pintu masuk hutan, di selatan desa.', 'Bawa ini. Dan belilah perlengkapan di desa sebelum pergi.');
@@ -3614,7 +3851,7 @@ async function openQuests() {
 // Layar peta & navigasi tujuan misi
 // ---------------- PETA ----------------
 const MINI = {};
-const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja'], ['snow', 'Puncak Beku'], ['lake', 'Danau Cermin']];
+const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja'], ['snow', 'Puncak Beku'], ['lake', 'Danau Cermin'], ['road', 'Jalan Raya Lama'], ['kgate', 'Gerbang Kota Lumina'], ['kpasar', 'Distrik Pasar'], ['kakademi', 'Distrik Akademi'], ['kbawah', 'Kota Bawah']];
 function buildMini(sc, M, s) {
   const key = M.id + '_' + s.toFixed(4); if (MINI[key]) return MINI[key];
   const w = Math.round(M.w * s), h = Math.round(M.h * s), c = document.createElement('canvas'); c.width = w; c.height = h;
@@ -3771,6 +4008,16 @@ async function titleScreen() {
 
 'use strict';
 // Mulai game Phaser
+// Kunci zoom browser (cubit, double-tap, Ctrl+roda, Ctrl +/-). iOS Safari mengabaikan user-scalable=no, jadi perlu JS.
+(() => {
+  const stop = e => e.preventDefault(), opt = { passive: false };
+  for (const ev of ['gesturestart', 'gesturechange', 'gestureend']) document.addEventListener(ev, stop, opt);
+  document.addEventListener('touchmove', e => { if (e.touches.length > 1 || (e.scale && e.scale !== 1)) e.preventDefault(); }, opt);
+  let last = 0; document.addEventListener('touchend', e => { const t = Date.now(); if (t - last < 320 && !e.target.closest('textarea')) e.preventDefault(); last = t; }, opt);
+  document.addEventListener('dblclick', stop, opt);
+  window.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, opt);
+  window.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) e.preventDefault(); });
+})();
 // ---------------- MULAI ----------------
 S = newState();
 let game = null;

@@ -3,7 +3,7 @@
 Object.assign(World.prototype, {
   npcHasQuest(id) {
     const sd = S.side;
-    return (id === 'elder' && [0, 5, 8, 9, 13].includes(S.stage)) || (id === 'hermit' && S.stage === 6) || (id === 'nila' && S.stage === 10) || (id === 'girl' && S.stage === 14) || (S.stage === 15 && { farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id] && !S.flags[{ farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id]]) || (id === 'elder' && S.stage === 18) || (id === 'ratih' && S.stage >= 17 && !S.lore.ratih) || (id === 'wati' && S.side.patok === 0) || (id === 'darma' && S.side.patok === 2) || (id === 'girl' && sd.mochi === 3 && !S.pet) || (id === 'mom' && has('fish') && has('veg')) || (id === 'hunter' && S.stage === 1) || (id === 'girl' && (sd.mochi === 0 || sd.mochi === 2)) ||
+    return (id === 'elder' && [0, 5, 8, 9, 13].includes(S.stage)) || (id === 'hermit' && S.stage === 6) || (id === 'nila' && S.stage === 10) || (id === 'girl' && S.stage === 14) || (S.stage === 15 && { farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id] && !S.flags[{ farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id]]) || (id === 'elder' && S.stage === 18) || (id === 'ratih' && S.stage >= 17 && !S.lore.ratih) || (id === 'wati' && S.side.patok === 0) || (id === 'ratih' && S.stage === 19) || (id === 'gun' && S.stage === 20) || (id === 'rudi' && S.stage === 22) || (id === 'lestari' && [23, 24, 26].includes(S.stage)) || (id === 'darma' && S.side.patok === 2) || (id === 'girl' && sd.mochi === 3 && !S.pet) || (id === 'mom' && has('fish') && has('veg')) || (id === 'hunter' && S.stage === 1) || (id === 'girl' && (sd.mochi === 0 || sd.mochi === 2)) ||
       (id === 'farmer' && (sd.darto === 0 || (sd.darto === 1 && has('jelly', 5)))) || (id === 'joko' && (sd.joko === 0 || (sd.joko === 1 && has('tusk', 3))));
   },
   async talkNpc(o) {
@@ -12,7 +12,7 @@ Object.assign(World.prototype, {
     if (o.walking) { o.spr.setVelocity(0); o.walking = false; }
     this.face(o, dir);
     const T = (...l) => talk(nm, l), gain = async (lines) => { sfx('chest'); updHud(); await talk(null, lines); };
-    if (!(await this.storyTalk(id, nm, T, gain))) switch (id) {
+    if (!(await this.ch5Talk(id, nm, T, gain)) && !(await this.storyTalk(id, nm, T, gain, o.n))) switch (id) {
       case 'elder':
         if (S.stage === 0) {
           await T('Ah, Arka. Syukurlah kamu datang.', 'Akhir-akhir ini cahaya Kristal Lumina di selatan hutan makin redup.', 'Pemburu Raka sedang menyelidiki hutan. Temui dia di pintu masuk hutan, di selatan desa.', 'Bawa ini. Dan belilah perlengkapan di desa sebelum pergi.');

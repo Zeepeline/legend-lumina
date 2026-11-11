@@ -24,3 +24,13 @@ MAPS.temple = makeRoom('temple', 'Kuil Penjaga Cahaya', [0, 0], {
   exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'lake', tx: 936, ty: 530, dir: 'down', label: 'Danau Cermin' }],
   reliefs: [[86, 70, 'kuil_relief'], [234, 70, 'kuil_aurel']], sealDoor: [160, 74],
 });
+MAPS.kinn = makeRoom('kinn', 'Penginapan Seribu Lentera', [560, 300], {
+  wallc: '#e8d0b0', furn: [['rug', 132, 150, 2], ['counter', 120, 106], ['bed', 62, 120, 0], ['bed', 62, 176, 1], ['bed', 236, 120, 1], ['bed', 236, 176, 0], ['shelf', 64, 52, 1], ['shelf', 216, 52, 3]], windows: [110, 190],
+  exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'kpasar', tx: 560, ty: 320, dir: 'down', label: 'Distrik Pasar' }],
+  npcs: [{ id: 'inn', ch: 'inn', name: 'Bu Laras', x: 160, y: 102, dir: 'down', reach: 30 }],
+});
+MAPS.arsip = makeRoom('arsip', 'Arsip Akademi Cahaya', [0, 0], {
+  wallc: '#8a7a6a', floor: ['#5a4a3a', '#7a6248', '#84694e', '#6a5440'], bgm: 'cave', furn: [['rug', 132, 150, 1], ['table', 143, 140], ['shelf', 64, 52, 0], ['shelf', 104, 52, 3], ['shelf', 176, 52, 5], ['shelf', 216, 52, 1]], windows: [],
+  exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'kakademi', tx: 700, ty: 400, dir: 'down', label: 'Distrik Akademi' }],
+  loreSpots: [[64, 84, 'arsip_selene'], [104, 84, 'arsip_rongga'], [176, 84, 'arsip_bram'], [216, 84, 'arsip_morgath']],
+});

@@ -20,6 +20,12 @@ const LORE = {
   kuil_relief: ['Sejarah', 'Relief Perang Akar', 'Seribu tahun lalu sesuatu bangkit dari bawah akar. Para Penjaga Cahaya menancapkan kristal di seluruh benua untuk menahannya. Kristal adalah segel.'],
   kuil_aurel: ['Sejarah', 'Relief Kerajaan Aurel', 'Sebuah kota besar bermenara tinggi bernama Aurel. Di bawahnya, akar hitam menjalar... lalu kota itu runtuh.'],
   kuil_kamar: ['Petunjuk', 'Kamar terkunci', 'Pintu kamar terbuka saat tanda di tanganku menyentuhnya. Di dalam: buaian kosong, dan gelang kecil dengan tanda daun yang sama.'],
+  batu_mil: ['Sejarah', 'Batu Penanda Aurel', 'Batu penanda di Jalan Raya Lama menulis jarak ke "AUREL". Jalan ini dibangun kerajaan yang sudah runtuh seribu tahun lalu.'],
+  peti_segel: ['Dunia', 'Peti bersegel gading', 'Kafilah Serikat membawa peti-peti berat dan dingin, bersegel lilin warna gading. Perintah "langsung dari Ketua".'],
+  arsip_selene: ['Petunjuk', 'Catatan murid: Selene', 'Selene, murid terbaik Akademi, diangkat menjadi Penjaga Cahaya terakhir. Potretnya ada di arsip, tapi wajahnya dicat hitam. Catatannya berhenti 16 tahun lalu.'],
+  arsip_rongga: ['Sejarah', 'Nama yang ditakuti', 'Para Penjaga Cahaya menyebut makhluk di bawah akar "Sang Rongga": kekosongan yang lapar cahaya. Ia tak bisa bergerak, maka ia berbisik.'],
+  arsip_bram: ['Petunjuk', 'Daftar guru lama', 'Daftar pengajar 20 tahun lalu: "Bram, guru sihir segel" dan di bawahnya satu nama yang tercoret, dengan catatan kecil: "adiknya".'],
+  arsip_morgath: ['Sejarah', 'Surat pengusiran', 'Morgath diusir dari Akademi karena mencoba "mendengar suara di bawah akar". Surat itu ditandatangani: Bram.'],
   bram_aku: ['Petunjuk', 'Pengakuan Tetua Bram', '16 tahun lalu Bram menemukanku, masih bayi, di samping Kristal Lumina. Ia berjanji pada seseorang untuk merahasiakan sisanya.'],
 };
 // Misteri besar: muncul saat open() benar, terjawab (sebagian) saat ans() mengembalikan teks
@@ -27,10 +33,12 @@ const MYSTERY = [
   { q: 'Kenapa kristal-kristal meredup bersamaan?', open: () => S.stage >= 1, ans: () => S.lore.kuil_relief && 'Kristal adalah segel yang menahan sesuatu di bawah akar. Segelnya melemah.' },
   { q: 'Siapa "suara" yang menghasut para penjahat?', open: () => S.lore.suara_goblin, ans: () => null, hint: () => `Petunjuk: ${['suara_goblin', 'suara_morgath', 'suara_kryos'].filter(k => S.lore[k]).length}/3` },
   { q: 'Kenapa tanda di tanganku menyala?', open: () => S.lore.tanda, ans: () => null },
-  { q: 'Siapa Selene?', open: () => S.lore.sura_selene, ans: () => null },
+  { q: 'Siapa Selene?', open: () => S.lore.sura_selene, ans: () => S.lore.arsip_selene && 'Penjaga Cahaya terakhir, murid terbaik Akademi. Wajahnya dihapus dari potret, dan catatannya berhenti 16 tahun lalu.' },
+  { q: 'Siapa "adik" yang mengajar bersama Tetua Bram?', open: () => S.lore.arsip_bram, ans: () => null },
+  { q: 'Apa isi peti-peti bersegel gading milik Serikat?', open: () => S.lore.peti_segel, ans: () => null },
   { q: 'Siapa wanita bercahaya dalam mimpi?', open: () => S.lore.mimpi, ans: () => null },
   { q: 'Apa yang disembunyikan Tetua Bram?', open: () => S.lore.kuil_kamar, ans: () => S.lore.bram_aku && 'Aku ditemukan bayi di samping kristal. Bram belum mau bercerita semuanya.' },
-  { q: 'Apa yang ada di bawah akar?', open: () => S.lore.visi_pohon, ans: () => null },
+  { q: 'Apa yang ada di bawah akar?', open: () => S.lore.visi_pohon, ans: () => S.lore.arsip_rongga && 'Para Penjaga menyebutnya Sang Rongga: kekosongan yang lapar cahaya, dan ia berbisik.' },
 ];
 // Penyelidikan jangka menengah, mengikuti tahap cerita
 function midGoal() {
@@ -39,7 +47,8 @@ function midGoal() {
   if (s < 9) return 'Siapa Morgath, dan kenapa ia mengincar Lumina?';
   if (s < 14) return 'Siapa yang membangunkan naga es di utara?';
   if (s < 19) return 'Mimpi buruk apa yang menghantui penduduk desa?';
-  return 'Siapa wanita bercahaya itu? Catatan para Penjaga Cahaya tersimpan di Akademi Cahaya, Kota Lumina, tapi jalannya tertutup longsor.';
+  if (s < 27) return 'Apa yang disimpan Akademi Cahaya tentang para Penjaga, dan tentang wanita dalam mimpi?';
+  return 'Siapa yang mengambil catatan tambang Lembah Besi dari arsip, dan kenapa kristal-kristal meredup?';
 }
 function learn(id) {
   if (!LORE[id] || S.lore[id]) return false;

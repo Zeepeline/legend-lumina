@@ -49,6 +49,27 @@ function artStele() { const [c, x] = mk(18, 24); fr(x, '#6e6a7a', 3, 20, 12, 4);
 function artBoat() { const [c, x] = mk(44, 16); fr(x, '#8a5a32', 4, 6, 36, 6); fr(x, '#a87444', 6, 6, 32, 2); fr(x, '#6a4224', 8, 12, 28, 2); fr(x, '#5a3a20', 6, 4, 32, 2); fr(x, '#c89a5a', 20, 2, 2, 4); fr(x, '#8a5a32', 30, 0, 2, 8); return outline(c, '#2a1c14'); }
 function artRelief() { const [c, x] = mk(40, 30); fr(x, '#8a94a8', 0, 0, 40, 30); fr(x, '#a8b2c4', 2, 2, 36, 26); fr(x, '#6a7488', 6, 20, 28, 2); fr(x, '#6a7488', 10, 8, 3, 12); fr(x, '#6a7488', 18, 5, 4, 15); fr(x, '#6a7488', 27, 9, 3, 11); fr(x, '#4a5468', 4, 23, 32, 1); fr(x, '#4a5468', 8, 25, 6, 1); fr(x, '#4a5468', 24, 25, 8, 1); fr(x, '#e8d070', 19, 3, 2, 2); return outline(c, '#2e3444'); }
 function artSealDoor(open) { const [c, x] = mk(30, 38); fr(x, '#7a8498', 0, 0, 30, 38); fr(x, '#5a6478', 3, 3, 24, 35); if (open) { fr(x, '#1a1e2a', 5, 5, 20, 33); fr(x, '#3a4458', 5, 5, 20, 3); } else { fr(x, '#9aa4b8', 5, 5, 20, 33); fr(x, '#b4bed0', 6, 6, 4, 31); const g = '#5af0d0'; fr(x, g, 14, 14, 2, 8); fr(x, g, 12, 16, 6, 1); fr(x, g, 11, 18, 8, 2); fr(x, g, 12, 20, 6, 1); } return outline(c, '#2a3040'); }
+function artGatehouse() {
+  const [c, x] = mk(260, 150); const st = '#a8a4b4', sd = '#7a7690', sl = '#c8c4d4', rf = '#5a6a9a';
+  fr(x, st, 0, 50, 260, 100); fr(x, sl, 0, 50, 260, 4);
+  for (let y = 58; y < 150; y += 10) for (let X = (y / 10 % 2) * 12; X < 260; X += 24) fr(x, sd, X, y, 1, 9);
+  for (const tx of [0, 196]) { fr(x, st, tx, 10, 64, 140); fr(x, sl, tx, 10, 64, 4); fr(x, rf, tx - 4, 0, 72, 14); fr(x, '#7a8ac0', tx - 4, 0, 72, 3); fr(x, '#3a3450', tx + 26, 50, 12, 18); fr(x, '#ffd870', tx + 28, 52, 8, 6); }
+  fr(x, '#3a3046', 92, 70, 76, 80); ellF(x, '#3a3046', 130, 72, 38, 26); fr(x, '#5a4a3a', 96, 120, 68, 30); for (let X = 98; X < 164; X += 8) fr(x, '#3a2a1a', X, 120, 2, 30);
+  fr(x, '#e8c050', 120, 40, 20, 8); fr(x, '#fff0a0', 124, 42, 12, 4);
+  return outline(c, '#2e2a3a');
+}
+function artCityWall() { const [c, x] = mk(132, 70); fr(x, '#a8a4b4', 0, 14, 132, 56); fr(x, '#c8c4d4', 0, 14, 132, 4); for (let X = 0; X < 132; X += 22) fr(x, '#a8a4b4', X, 4, 14, 12); for (let y = 22; y < 70; y += 10) for (let X = (y / 10 % 2) * 12; X < 132; X += 24) fr(x, '#7a7690', X, y, 1, 9); return outline(c, '#2e2a3a'); }
+function artAcademy() {
+  const [c, x] = mk(270, 200); const w = '#ece4d4', ws = '#c8bca4', rf = '#4a5a9a', rl = '#6a7ac0';
+  fr(x, w, 10, 80, 250, 120); fr(x, ws, 10, 190, 250, 10);
+  for (let i = 0; i < 5; i++) { const y = 80 - i * 14, inset = 4 + i * 26; fr(x, rf, inset, y - 14, 270 - inset * 2, 16); fr(x, rl, inset, y - 14, 270 - inset * 2, 3); }
+  fr(x, '#e8c050', 128, 0, 14, 22); ellF(x, '#fff0a0', 135, 8, 5, 5);
+  for (const cx of [30, 66, 102, 168, 204, 240]) { fr(x, '#f8f4ea', cx - 6, 96, 12, 94); fr(x, ws, cx + 3, 96, 3, 94); fr(x, ws, cx - 8, 92, 16, 5); fr(x, ws, cx - 8, 186, 16, 5); }
+  for (const cx of [48, 84, 186, 222]) { fr(x, '#3a4a7a', cx - 7, 110, 14, 22); fr(x, '#ffd870', cx - 5, 112, 10, 8); fr(x, '#3a4a7a', cx - 7, 148, 14, 22); fr(x, '#8ab0e0', cx - 5, 150, 10, 8); }
+  fr(x, '#5a3a2a', 116, 130, 38, 70); ellF(x, '#5a3a2a', 135, 132, 19, 14); fr(x, '#7a5238', 120, 136, 30, 64); fr(x, '#3a2a1a', 134, 136, 2, 64); fr(x, '#e8c050', 142, 166, 3, 3);
+  fr(x, '#e8c050', 110, 104, 50, 8); fr(x, '#fff8d0', 114, 106, 42, 4);
+  return outline(c, '#2a2a40');
+}
 function artLight(r) { const s = r * 2, [c, x] = mk(s, s); const g = x.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.45, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, s, s); return c; }
 function artRain() { const [c, x] = mk(2, 7); fr(x, '#d8ecff', 1, 0, 1, 3); fr(x, '#d8ecff', 0, 3, 1, 4); return c; }
 // bayangan karakter lembut (gradasi, bukan elips keras)

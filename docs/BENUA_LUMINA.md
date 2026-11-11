@@ -2,6 +2,7 @@
 
 > **Status: DISETUJUI pemilik.** Diimplementasikan bertahap mengikuti urutan bab di bagian 7. Detail yang belum dikunci (nama, musuh terakhir) tetap tanyakan pemilik.
 > **Sudah dibuat (Fase 1):** prasasti lore di tiap wilayah, Desa Kincir (di Padang Angin, misi "Batas Ladang"), Danau Cermin, Kuil Penjaga Cahaya, Bab 4.
+> **Fase 2:** Jalan Raya Lama, Kota Lumina (Gerbang, Distrik Pasar, Distrik Akademi, Kota Bawah + Penginapan Seribu Lentera + Arsip Akademi), Bab 5. Belum: Balai Dewan, Pelabuhan Danau (ada papan/pintu tertutup).
 > Mengikuti `docs/WORLD_DESIGN.md` (aturan dunia) dan `docs/GAME_DESIGN.md` (cerita & story bible).
 > Lokasi bertanda ✅ sudah ada di game; 📝 usulan baru; 🔒 fondasi (disebut di lore, dibuat jauh nanti).
 

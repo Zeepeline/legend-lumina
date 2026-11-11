@@ -139,3 +139,7 @@ body.touch #keys{display:none}
 .jrn .jh{font-size:9px;letter-spacing:1px;color:#8a5a2a;margin-top:6px;border-bottom:1px solid #e2c99a}
 .jrn .jt{margin:2px 0 2px}
 .jrn .jl.sel{background:#f4e2b8;border-radius:3px}
+/* kunci zoom: cegah double-tap zoom & cubit di semua elemen */
+html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+*{-webkit-tap-highlight-color:transparent}
+.codew textarea,.jrn .jb{touch-action:pan-y}

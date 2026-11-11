@@ -20,7 +20,7 @@ Object.assign(World.prototype, {
   },
   spawnPatok() { const [x, y] = this.M.patok; this.add.image(x, y, 'stele').setOrigin(.5, 1).setScale(.7).setDepth(y); this.wall(x - 5, y - 5, 10, 5); this.inter.push({ x, y: y + 4, r: 14, fn: () => this.findPatok() }); },
   async readLore(id) {
-    await talk(null, [LORE[id][2]]); learn(id);
+    await talk(null, [LORE[id][2]]); learn(id); this.arsipRead(id);
     if (id === 'prasasti_desa' && S.stage === 16) await this.treeVision();
   },
   // ---- Pohon Induk: penglihatan malam ----
@@ -73,8 +73,9 @@ Object.assign(World.prototype, {
     S.side.patok = 2; sfx('ok'); updHud();
   },
   // Dialog cerita yang menimpa dialog biasa. Kembalikan true jika sudah ditangani.
-  async storyTalk(id, nm, T, gain) {
+  async storyTalk(id, nm, T, gain, n) {
     const st = S.stage;
+    if (n && n.lines) { await T(pick(n.lines)); return true; }
     // ---- Bab 4 ----
     if (id === 'girl' && st === 14) {
       await T('Kak Arka... aku mimpi buruk lagi semalam. Akar hitam di bawah rumah kita, dan seorang wanita bercahaya yang menangis.', 'Mama juga memimpikannya. Kata Mama, banyak orang desa bermimpi hal yang sama.', 'Kak... tolong cari tahu ya?');
@@ -103,7 +104,7 @@ Object.assign(World.prototype, {
       learn('bram_aku'); S.stage = 19; updHud(); S.gold += 300; await gain(['Dapat 300 G.']);
       banner('Pertanyaan baru menunggu', 'BAB 4 SELESAI', true, 3200); saveGame(this); return true;
     }
-    if (id === 'elder' && st >= 19) { await T(S.flags.bram_choice === 'pelan' ? 'Arka... terima kasih sudah sabar dengan orang tua ini.' : 'Aku tahu kamu masih kesal. Aku tidak menyalahkanmu.', 'Jalan ke Kota Lumina tertutup longsor. Kalau sudah dibuka, Akademi Cahaya di sana mungkin punya jawaban yang tidak bisa kuberikan.'); return true; }
+    if (id === 'elder' && st >= 19 && false) { await T(S.flags.bram_choice === 'pelan' ? 'Arka... terima kasih sudah sabar dengan orang tua ini.' : 'Aku tahu kamu masih kesal. Aku tidak menyalahkanmu.', 'Jalan ke Kota Lumina tertutup longsor. Kalau sudah dibuka, Akademi Cahaya di sana mungkin punya jawaban yang tidak bisa kuberikan.'); return true; }
     if (id === 'ratih') {
       if (!S.lore.ratih && st >= 17) {
         await T('Hm? Anak muda... matamu. Kamu dari Desa Lumina, ya?', 'Aku sudah tinggal di tepi danau ini sejak muda. Cucuku pindah ke Kota Lumina, tapi aku tak mau pergi.', 'Enam belas tahun lalu, di malam paling terang yang pernah kulihat, seorang wanita bercahaya mendayung ke kuil di tengah danau... sambil menggendong bayi.', 'Paginya perahu itu kembali sendiri. Kosong.');

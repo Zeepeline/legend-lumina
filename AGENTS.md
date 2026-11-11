@@ -39,6 +39,8 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `systems/status.js` | efek status `STATUS` (racun/terbakar/dingin) pemain & musuh; sumber = `fx` di `ENEMY`/`PROJ` |
 | `systems/travel.js` | teleport: `WARPS` (posisi patung per peta), aktif di `S.warps` |
 | `systems/chapter4.js` | Bab 4 (investigasi tanpa boss), `storyTalk()` (dialog cerita yang menimpa dialog biasa), Desa Kincir, lentera & perahu Danau Cermin, kuil, prasasti (`readLore`) |
+| `systems/chapter5.js` | Bab 5 (perjalanan & kota, tanpa boss): longsor Danau Cermin, `ch5Talk()`, arsip (`ARSIP`) |
+| `world/maps/city.js` | Jalan Raya Lama + Kota Lumina (4 area). NPC warga pakai `lines` (dialog acak, `cityLines`) |
 | `data/lore.js` | jurnal: `LORE` (catatan), `MYSTERY` (misteri besar), `midGoal()` (penyelidikan), `learn(id)` |
 | `systems/chapter3.js` | Bab 3: obor kuno, gerbang es, AI Naga Es (`updDragon`, ai `dboss`) |
 | `systems/life.js` | interior, memancing, kebun, teka-teki batu, Mochi |
@@ -97,9 +99,9 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 ## Status
 
-Sudah ada: 7 wilayah (+ Danau Cermin) + 4 interior (+ Kuil Penjaga Cahaya), Desa Kincir di Padang Angin, 30 jenis musuh, 8 boss/mini-boss, misi bab 1–4 (stage 0–19; Bab 4 investigasi tanpa boss), 4 misi sampingan, **jurnal 3 lapis tujuan** (sekarang/penyelidikan/misteri besar) + catatan lore + prasasti di tiap wilayah, foreshadowing misteri utama di Bab 1–3 (gumaman boss, tanda Arka, relief obor, Sura menyebut Selene), tas/perlengkapan/tempa/toko, 4 gaya senjata, jurus, efek status, siang-malam, cuaca, pancing, kebun, masak, teka-teki (batu, obor, lentera), bestiari, pencapaian, peta, teleport 7 patung, menu pengaturan, ekspor/impor save, upgrade +1..+5, PWA (`sw.js`; naikkan `VERSI` saat rilis besar).
+Sudah ada: Desa Lumina, Hutan Lumina, Padang Angin (+ Desa Kincir), Gua Batu, Rawa Senja, Puncak Beku, Danau Cermin, Jalan Raya Lama, **Kota Lumina** (Gerbang, Distrik Pasar, Distrik Akademi, Kota Bawah) + 6 interior (penginapan desa & kota, rumah tetua, rumah Lina, Kuil Penjaga Cahaya, Arsip Akademi). Misi bab 1–5 (stage 0–27; Bab 4 & 5 tanpa boss), 4 misi sampingan, jurnal 3 lapis tujuan + catatan lore + misteri, foreshadowing sesuai `docs/SPOILER_ENDING.md`, 30 jenis musuh, 8 boss, 4 gaya senjata, jurus, status, siang-malam, cuaca, pancing, kebun, masak, teka-teki, bestiari, pencapaian, peta, teleport 8 patung, pengaturan, ekspor/impor save, upgrade, PWA (`sw.js`; naikkan `VERSI` saat rilis besar), zoom browser dikunci (`main.js` + `styles.css`).
 
-Berikutnya sesuai `docs/BENUA_LUMINA.md` bagian 7: Bab 5 (perjalanan ke Kota Lumina: buka longsor di Danau Cermin, kota 5–7 area, Akademi Cahaya). Juga: perluas Desa Lumina (±1600×1100, Pohon Induk, makam tua), sistem hubungan NPC, keputusan pemilik soal musuh terakhir. Lainnya: sprite karakter bergaya gambar referensi (menunggu lembar sprite), gamepad.
+Berikutnya: Bab 6 (Lembah Besi & Simpang Rantau, lihat `docs/BENUA_LUMINA.md` bagian 7 dan jadwal di `docs/SPOILER_ENDING.md`). Juga: perluas Desa Lumina, sistem hubungan NPC, Balai Dewan & Pelabuhan Danau. Lainnya: sprite karakter bergaya gambar referensi (menunggu lembar sprite), gamepad.
 
 Catatan tes: fungsi di `h.G(page, fn)` jangan mengembalikan objek Phaser (misal hasil `setPosition`), karena serialisasinya bisa macet; bungkus dengan `{ }`. Tes memblokir service worker (`playwright.config.js`).
 

@@ -1,5 +1,15 @@
 'use strict';
 // Mulai game Phaser
+// Kunci zoom browser (cubit, double-tap, Ctrl+roda, Ctrl +/-). iOS Safari mengabaikan user-scalable=no, jadi perlu JS.
+(() => {
+  const stop = e => e.preventDefault(), opt = { passive: false };
+  for (const ev of ['gesturestart', 'gesturechange', 'gestureend']) document.addEventListener(ev, stop, opt);
+  document.addEventListener('touchmove', e => { if (e.touches.length > 1 || (e.scale && e.scale !== 1)) e.preventDefault(); }, opt);
+  let last = 0; document.addEventListener('touchend', e => { const t = Date.now(); if (t - last < 320 && !e.target.closest('textarea')) e.preventDefault(); last = t; }, opt);
+  document.addEventListener('dblclick', stop, opt);
+  window.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, opt);
+  window.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) e.preventDefault(); });
+})();
 // ---------------- MULAI ----------------
 S = newState();
 let game = null;
