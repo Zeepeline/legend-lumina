@@ -10,6 +10,6 @@
     "sapu": "SAPU=1 playwright test sapu --timeout=2400000"
   },
   "devDependencies": {
-    "@playwright/test": "1.49.1"
+    "@playwright/test": "1.65.0"
   }
 }
