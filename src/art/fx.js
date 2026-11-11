@@ -70,6 +70,9 @@ function artAcademy() {
   fr(x, '#e8c050', 110, 104, 50, 8); fr(x, '#fff8d0', 114, 106, 42, 4);
   return outline(c, '#2a2a40');
 }
+function artRoot() { const [c, x] = mk(70, 34); const R = '#3a2a2a', L = '#5a4038', D = '#221818';
+  for (let i = 0; i < 70; i++) { const y = 20 - Math.sin(i / 70 * Math.PI) * 16, t = 7 - Math.abs(i - 35) / 8; fr(x, R, i, y, 1, t + 6); fr(x, L, i, y, 1, 2); fr(x, D, i, y + t + 4, 1, 2); }
+  fr(x, R, 0, 22, 8, 12); fr(x, R, 62, 22, 8, 12); return outline(c, '#140c10'); }
 function artLight(r) { const s = r * 2, [c, x] = mk(s, s); const g = x.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.45, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, s, s); return c; }
 function artRain() { const [c, x] = mk(2, 7); fr(x, '#d8ecff', 1, 0, 1, 3); fr(x, '#d8ecff', 0, 3, 1, 4); return c; }
 // bayangan karakter lembut (gradasi, bukan elips keras)

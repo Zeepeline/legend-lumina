@@ -42,6 +42,7 @@ const OBJ = {
   gatehouse: { key: 'gatehouse', col: [240, 30, 0], sh: [120, 8], mm: 1 },
   cwall: { key: 'cwall', col: [132, 26, 0], sh: [66, 6] },
   academy: { key: 'academy', col: [250, 60, 0], sh: [128, 10], fade: 1, mm: 1 },
+  root: { key: 'root', col: [40, 10, 0], sh: [30, 6] },
   stele: { key: 'stele', col: [12, 5, 0], sh: [9, 3] },
   sign: { key: 'sign', col: [8, 4, 0], sh: [6, 2] },
   fence: { key: 'fence', col: [18, 4, 0] },

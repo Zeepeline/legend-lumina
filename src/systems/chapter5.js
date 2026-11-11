@@ -70,6 +70,8 @@ Object.assign(World.prototype, {
       await T(st >= 27 ? 'Hati-hati dengan Serikat, Arka. Mereka punya mata di mana-mana.' : 'Dapur umum buka setiap sore. Semua boleh makan.'); return true;
     }
     if (id === 'ka5' && st < 25 && st >= 22) { await T('Arsip bawah hanya untuk guru. Tanpa izin, tak ada yang boleh lewat.'); return true; }
+    if (id === 'sambo') { await T(pick(['Lumut lumen laku keras di Kota Lumina. Lentera-lentera kota butuh cahaya, kan?', 'Pemburu Raka menyebutku pencuri. Hutan ini bukan miliknya.', 'Di reruntuhan barat ada hantu prajurit. Aku tak pernah ke sana setelah gelap.', 'Akar di reruntuhan itu... kadang berdenyut. Sumpah.'])); return true; }
+    if (id === 'pancing') { await T(st >= 8 ? pick(['Sejak kabut rawa hilang, ikan kembali ke sungai! Kudengar nelayan Desa Muara di hilir juga senang.', 'Pancing di air yang berkilau. Ikan emas suka arus tenang.']) : pick(['Ikan di sungai ini makin sedikit. Airnya pahit sejak kabut aneh menutupi rawa di hilir.', 'Nelayan Desa Muara di muara sungai menyalahkan orang hulu. Padahal sumber racunnya dari rawa.'])); return true; }
     if (id === 'kmerchant') { await buyMenu('Pedagang Pasar Kota', ['hipotion', 'ether', 'antidote', 'chain', 'ispear', 'hbow']); return true; }
     if (id === 'elder' && st >= 19 && st < 27) { await T(st === 19 ? 'Kalau kamu ingin ke Kota Lumina, tanyakan Nenek Ratih di Danau Cermin. Cucunya bekerja di sana.' : 'Kota Lumina... Sudah lama aku tak ke sana. Sampaikan salamku pada Akademi, kalau masih ada yang ingat aku.'); return true; }
     if (id === 'elder' && st >= 27) { await T('Kamu ke Arsip, ya? ...Lestari. Tentu saja dia.', 'Arka, ada hal-hal yang akan kuceritakan. Tapi tidak hari ini. Hati-hati di Lembah Besi.'); return true; }

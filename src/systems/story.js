@@ -34,7 +34,7 @@ Object.assign(World.prototype, {
     if (c.lock) { if (!has('key')) return talk(null, ['Peti ini terkunci rapat. Lubang kuncinya berkarat... mungkin ada kunci tua di suatu tempat.']); addItem('key', -1); await say('Kunci Tua berputar... KLIK! Peti terbuka.'); }
     S.flags[c.id] = true; spr.setTexture('chesto'); sfx('chest'); G.lock++;
     this.sparkle(c.x, c.y - 10, 'doto', 12); await sleep(300);
-    const G2 = { iron: ['isword', 1], ether2: ['ether', 2], ether3: ['ether', 3], potion2: ['potion', 2], potion3: ['potion', 3], hipotion2: ['hipotion', 2], ring: ['ring', 1], shield: ['cshield', 1], key: ['key', 1], mring: ['mring', 1], antidote3: ['antidote', 3], fspear: ['fspear', 1] }[c.item];
+    const G2 = { iron: ['isword', 1], ether2: ['ether', 2], ether3: ['ether', 3], potion2: ['potion', 2], potion3: ['potion', 3], hipotion2: ['hipotion', 2], ring: ['ring', 1], shield: ['cshield', 1], key: ['key', 1], mring: ['mring', 1], antidote3: ['antidote', 3], fspear: ['fspear', 1] }[c.item] || (ITEMS[c.item] && [c.item, 1]);
     let msg;
     if (c.item.startsWith('gold')) { const n = +c.item.slice(4); S.gold += n; msg = `Dapat ${n} G!`; }
     else { addItem(G2[0], G2[1]); const it = ITEMS[G2[0]]; msg = `Dapat ${it.n}${G2[1] > 1 ? ' x' + G2[1] : ''}!` + (it.k === 'wpn' || it.k === 'arm' || it.k === 'acc' ? ' Pasang lewat TAS.' : ''); }

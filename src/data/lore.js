@@ -26,6 +26,11 @@ const LORE = {
   arsip_rongga: ['Sejarah', 'Nama yang ditakuti', 'Para Penjaga Cahaya menyebut makhluk di bawah akar "Sang Rongga": kekosongan yang lapar cahaya. Ia tak bisa bergerak, maka ia berbisik.'],
   arsip_bram: ['Petunjuk', 'Daftar guru lama', 'Daftar pengajar 20 tahun lalu: "Bram, guru sihir segel" dan di bawahnya satu nama yang tercoret, dengan catatan kecil: "adiknya".'],
   arsip_morgath: ['Sejarah', 'Surat pengusiran', 'Morgath diusir dari Akademi karena mencoba "mendengar suara di bawah akar". Surat itu ditandatangani: Bram.'],
+  aurel_gerbang: ['Sejarah', 'Gerbang Aurel', 'Lengkungan batu raksasa, setengah ditelan tanah. Ukirannya: barisan orang membawa lentera ke arah bawah tanah.'],
+  aurel_istana: ['Sejarah', 'Sisa istana', 'Lantai mozaik retak. Di tengahnya simbol daun bercahaya, simbol para Penjaga, dikelilingi akar hitam yang dipahat.'],
+  pohon_tua: ['Dunia', 'Pohon Tua', 'Pohon tertua di Hutan Dalam. Kata pemburu, akarnya menyentuh "sesuatu yang dingin" jauh di bawah.'],
+  sungai_senja: ['Dunia', 'Sungai Senja', 'Sungai ini mengalir dari Puncak Beku, melewati Rawa Senja, lalu ke laut di Desa Muara. Apa pun yang terjadi di hulu, terasa sampai hilir.'],
+  kincir_tua: ['Sejarah', 'Kincir air tua', 'Kincir ini dulu menggiling gandum untuk Kerajaan Aurel. Rodanya masih berputar pelan, padahal tak ada yang merawatnya.'],
   bram_aku: ['Petunjuk', 'Pengakuan Tetua Bram', '16 tahun lalu Bram menemukanku, masih bayi, di samping Kristal Lumina. Ia berjanji pada seseorang untuk merahasiakan sisanya.'],
 };
 // Misteri besar: muncul saat open() benar, terjawab (sebagian) saat ans() mengembalikan teks

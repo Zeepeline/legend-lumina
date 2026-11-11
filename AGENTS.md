@@ -41,6 +41,7 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `systems/travel.js` | teleport: `WARPS` (posisi patung per peta), aktif di `S.warps` |
 | `systems/chapter4.js` | Bab 4 (investigasi tanpa boss), `storyTalk()` (dialog cerita yang menimpa dialog biasa), Desa Kincir, lentera & perahu Danau Cermin, kuil, prasasti (`readLore`) |
 | `systems/chapter5.js` | Bab 5 (perjalanan & kota, tanpa boss): longsor Danau Cermin, `ch5Talk()`, arsip (`ARSIP`) |
+| `world/maps/wild.js` | zona alam luas: Hutan Dalam (+ Reruntuhan Aurel, barat Hutan Lumina) & Jalur Sungai Senja (Hutan Lumina ↔ Rawa Senja) |
 | `world/maps/city.js` | Jalan Raya Lama + Kota Lumina (4 area). NPC warga pakai `lines` (dialog acak, `cityLines`) |
 | `data/lore.js` | jurnal: `LORE` (catatan), `MYSTERY` (misteri besar), `midGoal()` (penyelidikan), `learn(id)` |
 | `systems/chapter3.js` | Bab 3: obor kuno, gerbang es, AI Naga Es (`updDragon`, ai `dboss`) |
@@ -100,7 +101,7 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 ## Status
 
-Sudah ada: Desa Lumina, Hutan Lumina, Padang Angin (+ Desa Kincir), Gua Batu, Rawa Senja, Puncak Beku, Danau Cermin, Jalan Raya Lama, **Kota Lumina** (Gerbang, Distrik Pasar, Distrik Akademi, Kota Bawah) + 6 interior (penginapan desa & kota, rumah tetua, rumah Lina, Kuil Penjaga Cahaya, Arsip Akademi). Misi bab 1–5 (stage 0–27; Bab 4 & 5 tanpa boss), 4 misi sampingan, jurnal 3 lapis tujuan + catatan lore + misteri, foreshadowing sesuai `docs/SPOILER_ENDING.md`, 30 jenis musuh, 8 boss, 4 gaya senjata, jurus, status, siang-malam, cuaca, pancing, kebun, masak, teka-teki, bestiari, pencapaian, peta, teleport 8 patung, pengaturan, ekspor/impor save, upgrade, PWA (`sw.js`; naikkan `VERSI` saat rilis besar), zoom browser dikunci (`main.js` + `styles.css`), simpan otomatis (masuk peta + tiap 45 detik saat aman), kekuatan musuh per peta lewat `scale` di file peta (Danau Cermin 1.5, Jalan Raya Lama 3.4).
+Sudah ada: Desa Lumina, Hutan Lumina, Padang Angin (+ Desa Kincir), Gua Batu, Rawa Senja, Puncak Beku, Danau Cermin, Jalan Raya Lama, Hutan Dalam (+ Reruntuhan Aurel), Jalur Sungai Senja, **Kota Lumina** (Gerbang, Distrik Pasar, Distrik Akademi, Kota Bawah) + 6 interior (penginapan desa & kota, rumah tetua, rumah Lina, Kuil Penjaga Cahaya, Arsip Akademi). Misi bab 1–5 (stage 0–27; Bab 4 & 5 tanpa boss), 4 misi sampingan, jurnal 3 lapis tujuan + catatan lore + misteri, foreshadowing sesuai `docs/SPOILER_ENDING.md`, 30 jenis musuh, 8 boss, 4 gaya senjata, jurus, status, siang-malam, cuaca, pancing, kebun, masak, teka-teki, bestiari, pencapaian, peta, teleport 8 patung, pengaturan, ekspor/impor save, upgrade, PWA (`sw.js`; naikkan `VERSI` saat rilis besar), zoom browser dikunci (`main.js` + `styles.css`), simpan otomatis (masuk peta + tiap 45 detik saat aman), kekuatan musuh per peta lewat `scale` di file peta (Danau Cermin 1.5, Jalan Raya Lama 3.4).
 
 Berikutnya: Bab 6 (Lembah Besi & Simpang Rantau, lihat `docs/BENUA_LUMINA.md` bagian 7 dan jadwal di `docs/SPOILER_ENDING.md`). Juga: perluas Desa Lumina, sistem hubungan NPC, Balai Dewan & Pelabuhan Danau. Lainnya: sprite karakter bergaya gambar referensi (menunggu lembar sprite), gamepad.
 

@@ -1113,6 +1113,7 @@ const ICONS_DEF = {
   f_ginger: ['bowl', { C: '#c8763a', D: '#8a4a20', L: '#fff0d0', S: '#f0b040', W: '#ffffff' }],
   f_jelly: ['blob', { C: '#ff8ac0', L: '#fff0f8', D: '#c04a8a', E: '#c04a8a' }],
   f_hero: ['bowl', { C: '#e8c050', D: '#a07a20', L: '#fff8d8', S: '#ff6a4a', W: '#ffffff' }],
+  aurelring: ['ring', { Y: '#e8c050', R: '#5af0d0', W: '#ffffff' }],
   akey: ['key', { Y: '#9ad4f4' }],
   bracelet: ['ring', { Y: '#9ad4f4', R: '#7af0c0', W: '#ffffff' }],
   baxe: ['axe', { K: '#8a5a32', L: '#6a7a9a', W: '#e0e8f8' }],
@@ -1228,6 +1229,9 @@ function artAcademy() {
   fr(x, '#e8c050', 110, 104, 50, 8); fr(x, '#fff8d0', 114, 106, 42, 4);
   return outline(c, '#2a2a40');
 }
+function artRoot() { const [c, x] = mk(70, 34); const R = '#3a2a2a', L = '#5a4038', D = '#221818';
+  for (let i = 0; i < 70; i++) { const y = 20 - Math.sin(i / 70 * Math.PI) * 16, t = 7 - Math.abs(i - 35) / 8; fr(x, R, i, y, 1, t + 6); fr(x, L, i, y, 1, 2); fr(x, D, i, y + t + 4, 1, 2); }
+  fr(x, R, 0, 22, 8, 12); fr(x, R, 62, 22, 8, 12); return outline(c, '#140c10'); }
 function artLight(r) { const s = r * 2, [c, x] = mk(s, s); const g = x.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.45, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, s, s); return c; }
 function artRain() { const [c, x] = mk(2, 7); fr(x, '#d8ecff', 1, 0, 1, 3); fr(x, '#d8ecff', 0, 3, 1, 4); return c; }
 // bayangan karakter lembut (gradasi, bukan elips keras)
@@ -1317,6 +1321,7 @@ const OBJ = {
   gatehouse: { key: 'gatehouse', col: [240, 30, 0], sh: [120, 8], mm: 1 },
   cwall: { key: 'cwall', col: [132, 26, 0], sh: [66, 6] },
   academy: { key: 'academy', col: [250, 60, 0], sh: [128, 10], fade: 1, mm: 1 },
+  root: { key: 'root', col: [40, 10, 0], sh: [30, 6] },
   stele: { key: 'stele', col: [12, 5, 0], sh: [9, 3] },
   sign: { key: 'sign', col: [8, 4, 0], sh: [6, 2] },
   fence: { key: 'fence', col: [18, 4, 0] },
@@ -1584,14 +1589,14 @@ MAPS.village = {
 // ---------------- HUTAN ----------------
 MAPS.forest = {
   id: 'forest', name: 'Hutan Lumina', w: 1280, h: 1200, bgm: 'field', ground: 'forest',
-  paths: [
+  paths: [[0, 730, 220, 730, 11], [1280, 530, 1060, 530, 11], 
     [640, 0, 640, 160, 14], [640, 160, 420, 260, 14], [420, 260, 380, 440, 14], [380, 440, 400, 560, 14], [400, 560, 410, 690, 14],
     [410, 690, 700, 780, 14], [700, 780, 640, 920, 14], [640, 920, 640, 1010, 14],
     [420, 260, 760, 320, 12], [760, 320, 1000, 320, 12],
     [380, 440, 200, 560, 11], [200, 560, 180, 820, 11],
     [700, 780, 1000, 850, 11],
   ],
-  discs: [[1010, 320, 72], [180, 846, 58], [1030, 860, 62], [640, 1068, 92], [380, 440, 30], [640, 150, 34]],
+  discs: [[60, 730, 40], [1220, 530, 40], [1010, 320, 72], [180, 846, 58], [1030, 860, 62], [640, 1068, 92], [380, 440, 30], [640, 150, 34]],
   river: { y: 600, amp: 30, k: .009, w: 36, bridge: [380, 432] },
   objs: [['stele', 556, 1004, { lore: 'prasasti_hutan' }], 
     ['shrine', 640, 1094], ['sign', 676, 120, { text: 'Kuil Kristal: ikuti jalan ke selatan.\nTimur: perkemahan goblin.\nTenggara: sarang ular.' }],
@@ -1602,8 +1607,8 @@ MAPS.forest = {
   ],
   chests: [{ id: 'c1', x: 1060, y: 300, item: 'iron' }, { id: 'c2', x: 180, y: 852, item: 'ether2' }, { id: 'c3', x: 676, y: 156, item: 'potion2' }, { id: 'c4', x: 1060, y: 852, item: 'gold150', lock: 1 }],
   crystal: { x: 640, y: 1076 },
-  walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 1200], [1240, 0, 40, 1200], [0, 1170, 1280, 30]],
-  exits: [{ x: 600, y: 0, w: 80, h: 12, to: 'village', tx: 512, ty: 664, dir: 'up', label: 'Desa Lumina' }],
+  walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 700], [0, 760, 40, 440], [1240, 0, 40, 500], [1240, 560, 40, 640], [0, 1170, 1280, 30]],
+  exits: [{ x: 0, y: 700, w: 12, h: 60, to: 'deepwood', tx: 2340, ty: 730, dir: 'left', label: 'Hutan Dalam' }, { x: 1268, y: 500, w: 12, h: 60, to: 'river', tx: 60, ty: 530, dir: 'right', label: 'Jalur Sungai' }, { x: 600, y: 0, w: 80, h: 12, to: 'village', tx: 512, ty: 664, dir: 'up', label: 'Desa Lumina' }],
   npcs: [{ id: 'hunter', ch: 'hunter', name: 'Pemburu Raka', x: 600, y: 90, dir: 'down' }],
   enemies: [
     ['slime', 520, 220], ['slime', 600, 250], ['slime', 400, 330], ['bat', 440, 400], ['slime', 330, 470],
@@ -1708,14 +1713,14 @@ MAPS.cave = {
 // ---------------- RAWA SENJA (bab 2) ----------------
 MAPS.swamp = {
   id: 'swamp', name: 'Rawa Senja', w: 1280, h: 960, bgm: 'cave', ground: 'swamp',
-  paths: [[640, 0, 640, 160, 14], [640, 160, 420, 300, 13], [420, 300, 300, 520, 13], [640, 160, 880, 320, 13], [880, 320, 960, 560, 13],
+  paths: [[0, 480, 220, 480, 11], [640, 0, 640, 160, 14], [640, 160, 420, 300, 13], [420, 300, 300, 520, 13], [640, 160, 880, 320, 13], [880, 320, 960, 560, 13],
     [300, 520, 560, 700, 13], [960, 560, 700, 720, 13], [560, 700, 640, 820, 13], [700, 720, 640, 820, 13]],
-  discs: [[640, 840, 92], [300, 520, 46], [960, 560, 46], [640, 150, 34]],
+  discs: [[60, 480, 40], [640, 840, 92], [300, 520, 46], [960, 560, 46], [640, 150, 34]],
   ponds: [[620, 440, 120, 66], [180, 770, 110, 60], [1080, 800, 120, 64], [1090, 200, 90, 50], [190, 200, 90, 50]],
   objs: [['stele', 330, 504, { lore: 'prasasti_rawa' }], ['sign', 676, 130, { text: 'RAWA SENJA\nKabut di sini bukan kabut biasa...' }], ['rock', 560, 300], ['log', 760, 600], ['stump', 420, 620], ['mush', 500, 560], ['mush', 820, 480], ['rock', 880, 700], ['bones', 600, 780], ['bones', 700, 800]],
   chests: [{ id: 's1', x: 300, y: 516, item: 'hipotion2' }, { id: 's2', x: 960, y: 556, item: 'ether3' }, { id: 's3', x: 640, y: 884, item: 'mring', needFlag: 'witch' }],
-  walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 960], [1240, 0, 40, 960], [0, 930, 1280, 30]],
-  exits: [{ x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }],
+  walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 450], [0, 510, 40, 450], [1240, 0, 40, 960], [0, 930, 1280, 30]],
+  exits: [{ x: 0, y: 450, w: 12, h: 60, to: 'river', tx: 2540, ty: 480, dir: 'left', label: 'Jalur Sungai' }, { x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }],
   npcs: [{ id: 'hermit', ch: 'hermit', name: 'Pertapa Sura', x: 604, y: 130, dir: 'down' }],
   enemies: [['frog', 520, 240], ['frog', 440, 330], ['wisp', 380, 420], ['slimep', 340, 480], ['frog', 260, 560], ['wisp', 420, 620],
     ['frog', 760, 250], ['slimep', 860, 340], ['wisp', 920, 440], ['plant', 1000, 520], ['frog', 900, 620], ['wisp', 820, 680],
@@ -1877,6 +1882,57 @@ MAPS.kbawah = {
     ...citizens([['kb1', 'child', 'Anak Kota Bawah', 650, 680, 'bawah'], ['kb2', 'farmer', 'Mantan Penambang', 300, 560, 'bawah'], ['kb3', 'woman', 'Ibu Kota Bawah', 900, 560, 'bawah'], ['kb4', 'child', 'Anak Kota Bawah', 450, 700, 'bawah']])],
   animals: [['cat', 700, 600, 0], ['cat', 380, 520, 1]],
   trees: { n: 80, min: 30, types: [['bushG1', .5], ['rock', .5]] },
+};
+
+'use strict';
+// Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja
+// World Design Review: docs/BENUA_LUMINA.md (Hutan Lumina: Hutan Dalam & Reruntuhan Aurel; Sungai Senja)
+const ruinRing = (cx, cy, r, n) => [...Array(n)].map((_, i) => { const a = i / n * Math.PI * 2; return [i % 3 ? 'rock' : 'stalag', Math.round(cx + Math.cos(a) * r), Math.round(cy + Math.sin(a) * r * .6)]; });
+MAPS.deepwood = {
+  id: 'deepwood', name: 'Hutan Dalam', w: 2400, h: 1800, bgm: 'field', ground: 'forest', scale: 2.2,
+  paths: [[2400, 730, 1900, 730, 13], [1900, 730, 1500, 980, 12], [1500, 980, 1100, 900, 12], [1100, 900, 700, 560, 12], [700, 560, 520, 420, 12],
+    [1500, 980, 1600, 1400, 10], [1600, 1400, 1200, 1580, 10], [1100, 900, 900, 1300, 10], [1900, 730, 2000, 360, 10]],
+  discs: [[520, 400, 210], [2000, 330, 90], [1600, 1420, 80], [900, 1320, 70], [1500, 980, 60], [1960, 760, 50]],
+  ponds: [[1250, 470, 150, 70], [1420, 560, 90, 50], [330, 1250, 160, 90], [1900, 1500, 140, 70]],
+  objs: [
+    // Reruntuhan Aurel (barat laut): cincin batu, kuil runtuh, prasasti
+    ['shrine', 520, 400], ...ruinRing(520, 400, 170, 14), ['stele', 440, 330, { lore: 'aurel_gerbang' }], ['stele', 610, 470, { lore: 'aurel_istana' }],
+    ['root', 380, 520], ['root', 680, 300], ['root', 300, 380], ['root', 560, 560], ['root', 470, 250], ...ruinRing(520, 400, 95, 9),
+    ['stalag', 360, 420], ['stalag', 690, 400], ['rock', 450, 470], ['rock', 600, 330], ['mush', 340, 470], ['mush', 700, 520], ['mush', 480, 300], ['bushG2', 410, 560], ['bushG2', 650, 250],
+    // Pohon Tua raksasa (timur laut)
+    ['bigtree', 2000, 330], ['stele', 2070, 380, { lore: 'pohon_tua' }],
+    // kemah pemburu gelap
+    ['hay', 1560, 1400], ['crate', 1640, 1390], ['barrel', 1660, 1400], ['log', 1600, 1460], ['sign', 1680, 1450, { text: 'DILARANG MASUK\nPerburuan lumut lumen. — Kelompok Sambo' }],
+    // jamur & lumut bercahaya
+    ...[[900, 1300], [940, 1330], [870, 1340], [1200, 1100], [1230, 1130], [700, 1500], [1800, 1100], [1830, 1120], [400, 700], [2200, 1200]].map(([x, y]) => ['mush', x, y]),
+    ['sign', 2300, 690, { text: 'HUTAN DALAM\nJangan tinggalkan jalan setapak. Lumut bercahaya menunjukkan arah pulang.' }]],
+  walls: [[0, 0, 2400, 30], [0, 0, 40, 1800], [2360, 0, 40, 700], [2360, 760, 40, 1040], [0, 1770, 2400, 30]],
+  exits: [{ x: 2388, y: 700, w: 12, h: 60, to: 'forest', tx: 60, ty: 730, dir: 'right', label: 'Hutan Lumina' }],
+  npcs: [{ id: 'sambo', ch: 'darma', name: 'Sambo, Pemburu Gelap', x: 1600, y: 1360, dir: 'down', wander: 18 }],
+  chests: [{ id: 'dw1', x: 520, y: 360, item: 'aurelring' }, { id: 'dw2', x: 2050, y: 280, item: 'gold250' }, { id: 'dw3', x: 120, y: 1700, item: 'hipotion2' }, { id: 'dw4', x: 1180, y: 1600, item: 'ether3' }],
+  fish: [[1250, 540], [330, 1340]],
+  enemies: [['wolf', 2100, 900], ['wolf', 2150, 960], ['boar', 1800, 600], ['plant', 1700, 820], ['shroom', 1350, 1000], ['shroom', 1300, 1060], ['bee', 1000, 700], ['bee', 1050, 760],
+    ['ghost', 560, 520], ['ghost', 420, 300], ['golem', 640, 260], ['wisp', 800, 600], ['plant', 900, 1200], ['snake', 700, 1400], ['snake', 1200, 1500], ['wolf', 1900, 1300], ['boar', 2100, 1500], ['golem', 300, 500], ['ghost', 1500, 400]],
+  trees: { n: 3600, min: 26, types: [['treeAd', .35], ['treeBd', .3], ['pined', .15], ['bushG2', .1], ['stump', .05], ['rock', .05]] },
+};
+MAPS.river = {
+  id: 'river', name: 'Jalur Sungai Senja', w: 2600, h: 1000, bgm: 'field', ground: 'meadow', scale: 1.8,
+  paths: [[0, 530, 400, 530, 12], [400, 530, 700, 760, 11], [700, 760, 1200, 700, 11], [1200, 700, 1500, 300, 11], [1500, 300, 2100, 260, 11], [2100, 260, 2400, 480, 11], [2400, 480, 2600, 480, 12], [1200, 700, 1700, 820, 9], [1700, 820, 2200, 760, 9]],
+  discs: [[1300, 840, 70], [1800, 180, 70], [600, 300, 80]],
+  // sungai berkelok dari utara ke selatan, dengan arungan (celah berbatu) untuk menyeberang
+  ponds: [[560, 120, 70, 110], [640, 330, 60, 80], [760, 560, 90, 60], [1000, 860, 140, 50], [1500, 560, 60, 120], [1580, 820, 80, 70], [2000, 520, 110, 60], [2300, 760, 120, 70]],
+  objs: [['rock', 700, 440], ['rock', 720, 470], ['rock', 1520, 420], ['rock', 1540, 690], ['rock', 2120, 590],
+    ['windmill', 1800, 160], ['fence', 1760, 220], ['fence', 1778, 220], ['fence', 1840, 220], ['stele', 1880, 210, { lore: 'kincir_tua' }],
+    ['hay', 1270, 840], ['barrel', 1330, 830], ['log', 1300, 880], ['sign', 1380, 860, { text: 'Kemah Nelayan Sungai' }],
+    ['stele', 600, 300, { lore: 'sungai_senja' }], ['sign', 60, 490, { text: 'JALUR SUNGAI SENJA\nTimur: Rawa Senja · Barat: Hutan Lumina' }]],
+  walls: [[0, 0, 2600, 30], [0, 0, 40, 500], [0, 560, 40, 440], [2560, 0, 40, 450], [2560, 510, 40, 490], [0, 970, 2600, 30]],
+  exits: [{ x: 0, y: 500, w: 12, h: 60, to: 'forest', tx: 1200, ty: 530, dir: 'left', label: 'Hutan Lumina' },
+    { x: 2588, y: 450, w: 12, h: 60, to: 'swamp', tx: 60, ty: 480, dir: 'right', label: 'Rawa Senja' }],
+  npcs: [{ id: 'pancing', ch: 'joko', name: 'Pak Teguh, Nelayan', x: 1290, y: 800, dir: 'down', wander: 16 }],
+  chests: [{ id: 'rv1', x: 1820, y: 120, item: 'gold180' }, { id: 'rv2', x: 2480, y: 900, item: 'ether2' }, { id: 'rv3', x: 120, y: 900, item: 'hipotion2' }],
+  fish: [[760, 630], [1000, 820], [1580, 760], [2000, 590]],
+  enemies: [['frog', 800, 640], ['frog', 1080, 780], ['snake', 1200, 500], ['bee', 1400, 200], ['bee', 1440, 240], ['boar', 1900, 400], ['plant', 2200, 300], ['frog', 2300, 680], ['snake', 1700, 900], ['boar', 400, 800], ['wolf', 300, 300], ['plant', 2450, 820]],
+  trees: { n: 1700, min: 28, types: [['treeA', .35], ['treeB', .25], ['bushG1', .15], ['round', .1], ['rock', .15]] },
 };
 
 'use strict';
@@ -2082,6 +2138,7 @@ const ITEMS = {
   baxe: { n: 'Kapak Perang', k: 'wpn', wt: 'axe', atk: 15, d: 'Serang +15. Lambat, ayunan lebar, pukulan berat.' },
   hbow: { n: 'Busur Pemburu', k: 'wpn', wt: 'bow', atk: 2, price: 90, d: 'Serang +2. Tembak panah jarak jauh tanpa MP.' },
   fspear: { n: 'Tombak Beku', k: 'wpn', wt: 'spear', atk: 28, frz: .25, d: 'Serang +28. Tusukan kadang membekukan musuh. Harta Kryos.' },
+  aurelring: { n: 'Cincin Aurel', k: 'acc', atk: 6, def: 4, d: 'Cincin kerajaan kuno dari reruntuhan. Serang +6, Tahan +4.' },
   akey: { n: 'Kunci Arsip', k: 'key', d: 'Kunci Arsip Akademi dari Guru Lestari.' },
   bracelet: { n: 'Gelang Daun', k: 'acc', def: 2, regen: 1, d: 'Gelang kecil dari kuil dengan ukiran daun. Hangat saat dipakai.' },
   cloth: { n: 'Baju Kain', k: 'arm', def: 0, d: 'Pakaian sehari-hari.' },
@@ -2203,6 +2260,11 @@ const LORE = {
   arsip_rongga: ['Sejarah', 'Nama yang ditakuti', 'Para Penjaga Cahaya menyebut makhluk di bawah akar "Sang Rongga": kekosongan yang lapar cahaya. Ia tak bisa bergerak, maka ia berbisik.'],
   arsip_bram: ['Petunjuk', 'Daftar guru lama', 'Daftar pengajar 20 tahun lalu: "Bram, guru sihir segel" dan di bawahnya satu nama yang tercoret, dengan catatan kecil: "adiknya".'],
   arsip_morgath: ['Sejarah', 'Surat pengusiran', 'Morgath diusir dari Akademi karena mencoba "mendengar suara di bawah akar". Surat itu ditandatangani: Bram.'],
+  aurel_gerbang: ['Sejarah', 'Gerbang Aurel', 'Lengkungan batu raksasa, setengah ditelan tanah. Ukirannya: barisan orang membawa lentera ke arah bawah tanah.'],
+  aurel_istana: ['Sejarah', 'Sisa istana', 'Lantai mozaik retak. Di tengahnya simbol daun bercahaya, simbol para Penjaga, dikelilingi akar hitam yang dipahat.'],
+  pohon_tua: ['Dunia', 'Pohon Tua', 'Pohon tertua di Hutan Dalam. Kata pemburu, akarnya menyentuh "sesuatu yang dingin" jauh di bawah.'],
+  sungai_senja: ['Dunia', 'Sungai Senja', 'Sungai ini mengalir dari Puncak Beku, melewati Rawa Senja, lalu ke laut di Desa Muara. Apa pun yang terjadi di hulu, terasa sampai hilir.'],
+  kincir_tua: ['Sejarah', 'Kincir air tua', 'Kincir ini dulu menggiling gandum untuk Kerajaan Aurel. Rodanya masih berputar pelan, padahal tak ada yang merawatnya.'],
   bram_aku: ['Petunjuk', 'Pengakuan Tetua Bram', '16 tahun lalu Bram menemukanku, masih bayi, di samping Kristal Lumina. Ia berjanji pada seseorang untuk merahasiakan sisanya.'],
 };
 // Misteri besar: muncul saat open() benar, terjawab (sebagian) saat ans() mengembalikan teks
@@ -2315,7 +2377,7 @@ function buildTextures(sc) {
   addStrip(sc, 'snakei', artMon('snake', { G: '#9ad4f4', L: '#f0faff', E: '#1a2a5a', R: '#4a8aff' }));
   addStrip(sc, 'wisp', artWisp()); addStrip(sc, 'frog', artMon('frog')); addStrip(sc, 'slimep', artMon('slime', { G: '#a060d0', D: '#5a2a8a', L: '#f0d8ff' }));
   one('gate', artGate()); one('boulder', artBoulder()); one('plate', artPlate());
-  one('treeSw', (() => { const c = darkTree(IMGEL.treeB), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = yy < .25 ? .75 : yy < .55 ? .5 : .3; const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('warp0', artWarp(false)); one('stele', artStele()); one('gatehouse', artGatehouse()); one('cwall', artCityWall()); one('academy', artAcademy()); one('boat', artBoat()); one('relief', artRelief()); one('sealdoor0', artSealDoor(false)); one('sealdoor1', artSealDoor(true)); one('warp1', artWarp(true)); one('icegate', artIceGate()); one('icebolt', artIceBolt());
+  one('treeSw', (() => { const c = darkTree(IMGEL.treeB), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = yy < .25 ? .75 : yy < .55 ? .5 : .3; const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('warp0', artWarp(false)); one('stele', artStele()); one('root', artRoot()); one('gatehouse', artGatehouse()); one('cwall', artCityWall()); one('academy', artAcademy()); one('boat', artBoat()); one('relief', artRelief()); one('sealdoor0', artSealDoor(false)); one('sealdoor1', artSealDoor(true)); one('warp1', artWarp(true)); one('icegate', artIceGate()); one('icebolt', artIceBolt());
   one('light', artLight(80)); one('lights', artLight(36)); one('nlL', artLightP(54, .9)); one('nlS', artLightP(38, .85)); one('nlW', artLightP(18, .75));
   for (const id in ITEMS) { const c = artIcon(ICON_OF[id] && id === 'stonearm' ? 'chain' : id); one('ic_' + id, c); ICONS[id] = c.toDataURL(); }
   const A = sc.anims, fr2 = (k, n) => [...Array(n).keys()].map(i => ({ key: k, frame: i }));
@@ -3224,6 +3286,8 @@ Object.assign(World.prototype, {
       await T(st >= 27 ? 'Hati-hati dengan Serikat, Arka. Mereka punya mata di mana-mana.' : 'Dapur umum buka setiap sore. Semua boleh makan.'); return true;
     }
     if (id === 'ka5' && st < 25 && st >= 22) { await T('Arsip bawah hanya untuk guru. Tanpa izin, tak ada yang boleh lewat.'); return true; }
+    if (id === 'sambo') { await T(pick(['Lumut lumen laku keras di Kota Lumina. Lentera-lentera kota butuh cahaya, kan?', 'Pemburu Raka menyebutku pencuri. Hutan ini bukan miliknya.', 'Di reruntuhan barat ada hantu prajurit. Aku tak pernah ke sana setelah gelap.', 'Akar di reruntuhan itu... kadang berdenyut. Sumpah.'])); return true; }
+    if (id === 'pancing') { await T(st >= 8 ? pick(['Sejak kabut rawa hilang, ikan kembali ke sungai! Kudengar nelayan Desa Muara di hilir juga senang.', 'Pancing di air yang berkilau. Ikan emas suka arus tenang.']) : pick(['Ikan di sungai ini makin sedikit. Airnya pahit sejak kabut aneh menutupi rawa di hilir.', 'Nelayan Desa Muara di muara sungai menyalahkan orang hulu. Padahal sumber racunnya dari rawa.'])); return true; }
     if (id === 'kmerchant') { await buyMenu('Pedagang Pasar Kota', ['hipotion', 'ether', 'antidote', 'chain', 'ispear', 'hbow']); return true; }
     if (id === 'elder' && st >= 19 && st < 27) { await T(st === 19 ? 'Kalau kamu ingin ke Kota Lumina, tanyakan Nenek Ratih di Danau Cermin. Cucunya bekerja di sana.' : 'Kota Lumina... Sudah lama aku tak ke sana. Sampaikan salamku pada Akademi, kalau masih ada yang ingat aku.'); return true; }
     if (id === 'elder' && st >= 27) { await T('Kamu ke Arsip, ya? ...Lestari. Tentu saja dia.', 'Arka, ada hal-hal yang akan kuceritakan. Tapi tidak hari ini. Hati-hati di Lembah Besi.'); return true; }
@@ -3233,7 +3297,7 @@ Object.assign(World.prototype, {
 
 'use strict';
 // Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif.
-const WARPS = { village: [548, 604], forest: [670, 162], meadow: [230, 372], cave: [166, 760], swamp: [672, 172], snow: [680, 1052], lake: [1080, 440], kpasar: [860, 1060] };
+const WARPS = { village: [548, 604], forest: [670, 162], meadow: [230, 372], cave: [166, 760], swamp: [672, 172], snow: [680, 1052], lake: [1080, 440], kpasar: [860, 1060], deepwood: [700, 420], river: [1240, 860] };
 for (const id in WARPS) { const M = MAPS[id]; (M.discs = M.discs || []).push([WARPS[id][0], WARPS[id][1], 22]); }
 Object.assign(World.prototype, {
   spawnWarp() {
@@ -3584,7 +3648,7 @@ Object.assign(World.prototype, {
     if (c.lock) { if (!has('key')) return talk(null, ['Peti ini terkunci rapat. Lubang kuncinya berkarat... mungkin ada kunci tua di suatu tempat.']); addItem('key', -1); await say('Kunci Tua berputar... KLIK! Peti terbuka.'); }
     S.flags[c.id] = true; spr.setTexture('chesto'); sfx('chest'); G.lock++;
     this.sparkle(c.x, c.y - 10, 'doto', 12); await sleep(300);
-    const G2 = { iron: ['isword', 1], ether2: ['ether', 2], ether3: ['ether', 3], potion2: ['potion', 2], potion3: ['potion', 3], hipotion2: ['hipotion', 2], ring: ['ring', 1], shield: ['cshield', 1], key: ['key', 1], mring: ['mring', 1], antidote3: ['antidote', 3], fspear: ['fspear', 1] }[c.item];
+    const G2 = { iron: ['isword', 1], ether2: ['ether', 2], ether3: ['ether', 3], potion2: ['potion', 2], potion3: ['potion', 3], hipotion2: ['hipotion', 2], ring: ['ring', 1], shield: ['cshield', 1], key: ['key', 1], mring: ['mring', 1], antidote3: ['antidote', 3], fspear: ['fspear', 1] }[c.item] || (ITEMS[c.item] && [c.item, 1]);
     let msg;
     if (c.item.startsWith('gold')) { const n = +c.item.slice(4); S.gold += n; msg = `Dapat ${n} G!`; }
     else { addItem(G2[0], G2[1]); const it = ITEMS[G2[0]]; msg = `Dapat ${it.n}${G2[1] > 1 ? ' x' + G2[1] : ''}!` + (it.k === 'wpn' || it.k === 'arm' || it.k === 'acc' ? ' Pasang lewat TAS.' : ''); }
@@ -3931,7 +3995,7 @@ async function openQuests() {
 // Layar peta & navigasi tujuan misi
 // ---------------- PETA ----------------
 const MINI = {};
-const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja'], ['snow', 'Puncak Beku'], ['lake', 'Danau Cermin'], ['road', 'Jalan Raya Lama'], ['kgate', 'Gerbang Kota Lumina'], ['kpasar', 'Distrik Pasar'], ['kakademi', 'Distrik Akademi'], ['kbawah', 'Kota Bawah']];
+const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja'], ['snow', 'Puncak Beku'], ['lake', 'Danau Cermin'], ['road', 'Jalan Raya Lama'], ['deepwood', 'Hutan Dalam'], ['river', 'Jalur Sungai Senja'], ['kgate', 'Gerbang Kota Lumina'], ['kpasar', 'Distrik Pasar'], ['kakademi', 'Distrik Akademi'], ['kbawah', 'Kota Bawah']];
 function buildMini(sc, M, s) {
   const key = M.id + '_' + s.toFixed(4); if (MINI[key]) return MINI[key];
   const w = Math.round(M.w * s), h = Math.round(M.h * s), c = document.createElement('canvas'); c.width = w; c.height = h;
