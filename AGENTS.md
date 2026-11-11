@@ -73,6 +73,10 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 ## Aturan penting (sering bikin bug)
 
+- **Objek baru:** buat fungsi `art<NamaObjek>()` (boleh pakai `mkC(w, h)`) lalu tambahkan entri di `OBJ`. Tekstur **didaftarkan otomatis** di `buildTextures` bila nama fungsinya cocok dengan `OBJ[..].key`. Item baru tanpa `ICONS_DEF` memakai ikon cadangan otomatis, tapi sebaiknya buat ikonnya.
+- **Aset pemilik:** potret NPC `assets/img/npc_<ch>.png` (32×32, dari `assets/raw/extracted_pixel_assets/rpg_npcs`) otomatis menggantikan gambar kode untuk NPC dengan `ch` itu (`regPortrait`). Hewan `assets/img/ani_*.png` dipakai di `systems/ambient.js`. Aset buatan pemilik sendiri, aman dipakai.
+- **Sebelum push:** jalankan CI (Actions → CI → Run workflow) atau `npm test` lokal. Game sempat tidak bisa dibuka karena ikon yang hilang.
+
 - **Scene di-restart, bukan dibuat ulang.** `this.scene.restart()` memakai instance `World` yang sama. Properti per-peta (`this.boulder`, `this.garden`, `this.bossOn`, dll.) **harus di-reset di awal `create()`** (`scene/world.js`).
 - **Kamera manual** di `camStep()` (event `postupdate`), dibulatkan ke piksel agar layar tidak bergetar. Jangan pakai `startFollow`.
 - **Fisika** arcade `fixedStep: false` (mulus di layar 90/120 Hz).

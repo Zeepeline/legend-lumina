@@ -9,11 +9,18 @@ const IMG_LIST = [
   "treeA", "treeB", "well", "woodpile", "houseD",
   "treeWoodsBig", "treeWoodsRound", "treeWoodsPine", "stumpWoods",
   "lampPost", "crateCart", "fenceWood", "benchWood", "barrelNew"
-];
+, 'npc_elder', 'npc_smith', 'npc_merchant', 'npc_farmer', 'npc_inn', 'npc_guard', 'npc_hunter', 'npc_hermit', 'npc_nila', 'npc_joko', 'npc_girl', 'npc_child', 'npc_woman', 'npc_mom', 'npc_ratih', 'npc_wati', 'npc_darma', 'npc_bayu', 'npc_lestari', 'npc_gun', 'npc_priest', 'ani_rabbit', 'ani_squirrel', 'ani_deer', 'ani_owl', 'ani_duck'];
 function loadImgs() { return Promise.all(IMG_LIST.map(k => new Promise(r => { const i = new Image(); i.onload = () => { IMGEL[k] = i; r(); }; i.onerror = () => { console.error('Gagal memuat gambar', k); r(); }; i.src = (window.IMG_INLINE && IMG_INLINE[k]) || 'assets/img/' + k + '.png'; }))); }
 function addStrip(scene, key, st) { const t = scene.textures.addCanvas(key, st.c); for (let i = 0; i < st.n; i++) t.add(i, 0, i * st.fw, 0, st.fw, st.fh); }
 function darkTree(img) { const [c, x] = mk(img.width, img.height); x.drawImage(img, 0, 0); const d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const hx = hsl2hex(hueToward(h, 165, 14), Math.min(1, s * 1.02), l * .78); const [r, g, b] = h2r(hx); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; }
-function regChar(T, k) { const st = artChar(CHARS[k][0], CHARS[k][1]); const t = T.addCanvas('ch_' + k, st.c); ['down', 'up', 'side'].forEach((d, di) => { for (let f = 0; f < 4; f++) t.add(d + f, 0, (di * 4 + f) * CH_FW, 0, CH_FW, CH_FH); }); }
+// Potret NPC dari aset pemilik (assets/img/npc_<ch>.png, 32×32). Frame dibuat dengan layout yang sama (down/up/side × 4).
+const NPC_W = 32, NPC_H = 32;
+function regPortrait(T, k) {
+  const img = IMGEL['npc_' + k]; const c = document.createElement('canvas'); c.width = NPC_W * 12; c.height = NPC_H; const x = c.getContext('2d'); x.imageSmoothingEnabled = false;
+  for (let i = 0; i < 12; i++) x.drawImage(img, i * NPC_W, (i % 4 === 1 || i % 4 === 2) ? -1 : 0);
+  const t = T.addCanvas('ch_' + k, c); ['down', 'up', 'side'].forEach((d, di) => { for (let f = 0; f < 4; f++) t.add(d + f, 0, (di * 4 + f) * NPC_W, 0, NPC_W, NPC_H); });
+}
+function regChar(T, k) { if (IMGEL['npc_' + k]) return regPortrait(T, k); const st = artChar(CHARS[k][0], CHARS[k][1]); const t = T.addCanvas('ch_' + k, st.c); ['down', 'up', 'side'].forEach((d, di) => { for (let f = 0; f < 4; f++) t.add(d + f, 0, (di * 4 + f) * CH_FW, 0, CH_FW, CH_FH); }); }
 function buildTextures(sc) {
   const T = sc.textures, one = (k, c) => T.addCanvas(k, c);
   for (const k in IMGEL) {
@@ -70,6 +77,16 @@ function buildTextures(sc) {
   for (const k of ['slime', 'slimeb', 'slimer', 'slimei', 'bat', 'batc', 'shroom', 'squeen', 'cat0', 'cat1', 'cat2', 'fox0', 'wolf', 'boar', 'bee', 'snake', 'plant', 'ghost', 'golem', 'wisp', 'frog', 'slimep', 'wolfs', 'slimef', 'salam', 'golemi', 'snakei', 'chick0', 'chick1', 'chick2', 'duck0', 'duck1'])
     A.create({ key: k + '_mv', frames: fr2(k, 2), frameRate: k === 'bat' || k === 'batc' || k === 'bee' ? 12 : k === 'wolf' || k === 'wolfs' ? 8 : 5, repeat: -1 });
   for (const k of ['fly', 'fly2']) A.create({ key: k, frames: fr2(k, 2), frameRate: 8, repeat: -1 });
+  // Daftarkan otomatis objek yang teksturnya belum ada: cari fungsi global art<Nama> yang cocok (tanpa peduli huruf besar), atau alias gambar
+  const ALIAS = { i_cart: 'i_crateCart', i_treePine: 'i_treeWoodsPine', i_treeOak: 'i_treeWoodsBig', i_rockWoods: 'rock' };
+  const artFns = Object.keys(window).filter(n => /^art[A-Z]/.test(n) && typeof window[n] === 'function');
+  for (const [k, o] of Object.entries(OBJ)) {
+    if (T.exists(o.key)) continue;
+    const want = ('art' + o.key).toLowerCase(), fn = artFns.find(n => n.toLowerCase() === want) || artFns.find(n => n.toLowerCase() === ('art' + k).toLowerCase());
+    try { if (fn) { const c = window[fn](); if (c) { T.addCanvas(o.key, c.c || c); continue; } } } catch (e) { console.warn('Gagal menggambar', o.key, e); }
+    const al = ALIAS[o.key]; if (al && T.exists(al)) { T.addImage(o.key, T.get(al).getSourceImage()); continue; }
+    console.warn('Objek tanpa tekstur:', k, '→', o.key);
+  }
   for (const k in CHARS) for (const d of ['down', 'up', 'side']) A.create({ key: k + '_' + d, frames: [1, 0, 2, 0].map(f => ({ key: 'ch_' + k, frame: d + f })), frameRate: 8, repeat: -1 });
   ICONS.coin = (() => { const s = artCoin(); const [c, x] = mk(10, 10); x.drawImage(s.c, 0, 0); return c.toDataURL(); })();
 }

@@ -3,12 +3,12 @@
 // Atur per peta di ENV. Jumlah sengaja kecil agar terasa hidup tapi tidak ramai.
 const ENV = {
   village:  { bird: 4, fly: 3, firefly: 6, cloud: 1, herb: 2 },
-  forest:   { bird: 5, fly: 4, crit: ['rabbit', 'squirrel'], ncrit: 3, firefly: 14, fish: 1, cloud: 1, ray: 1, herb: 5, snd: ['bird', 'owl'] },
-  deepwood: { bird: 3, fly: 2, flyTint: [0xc8a0ff, 0x8ae8ff], crit: ['squirrel'], ncrit: 2, firefly: 24, fish: 1, ray: 1, fog: 1, herb: 7, snd: ['owl', 'creak'] },
-  meadow:   { bird: 6, fly: 7, crit: ['rabbit'], ncrit: 4, firefly: 10, cloud: 1, herb: 4 },
+  forest:   { bird: 5, fly: 4, crit: ['rabbit', 'squirrel', 'deer'], ncrit: 4, firefly: 14, fish: 1, cloud: 1, ray: 1, herb: 5, snd: ['bird', 'owl'] },
+  deepwood: { bird: 3, fly: 2, flyTint: [0xc8a0ff, 0x8ae8ff], crit: ['squirrel', 'deer'], ncrit: 3, firefly: 24, fish: 1, ray: 1, fog: 1, herb: 7, snd: ['owl', 'creak'] },
+  meadow:   { bird: 6, fly: 7, crit: ['rabbit', 'rabbit', 'deer'], ncrit: 4, firefly: 10, cloud: 1, herb: 4 },
   river:    { bird: 4, fly: 4, crit: ['rabbit'], ncrit: 2, firefly: 14, fish: 3, cloud: 1, herb: 5, snd: ['bird', 'frog'] },
   lake:     { bird: 3, fly: 3, firefly: 18, fish: 2, cloud: 1, herb: 3, snd: ['bird', 'frog'] },
-  road:     { bird: 4, fly: 3, crit: ['rabbit'], ncrit: 2, cloud: 1, herb: 4 },
+  road:     { bird: 4, fly: 3, crit: ['rabbit', 'deer'], ncrit: 3, cloud: 1, herb: 4 },
   swamp:    { bird: 2, birdTint: 0x4a4a5a, firefly: 22, fireTint: 0xa0ffa0, fog: 1, herb: 3, snd: ['frog', 'creak'] },
   snow:     { cloud: 1, snd: ['wind'] },
   cave:     { snd: ['drip'] },
@@ -22,6 +22,9 @@ function artCritters(T) {
   two('cr_fly', ['P.P', 'PKP', 'P.P'], ['...', 'PKP', '...'], { P: '#ffffff', K: '#3a2a3a' });
   two('cr_rabbit', ['.W.W..', '.WWW..', 'WEWWW.', '.WWWWW', '.W..W.'], ['......', '.W.W..', 'WEWWWW', '.WWWW.', 'W....W'], { W: '#e8e0d4', E: '#3a2a2a' });
   two('cr_squirrel', ['.TT...', 'T..BB.', 'T.BEB.', 'TTBBB.', '..B.B.'], ['......', 'TT.BB.', 'T.BEB.', 'TTBBB.', '.B..B.'], { T: '#c86a2a', B: '#a85a2a', E: '#2a1a1a' });
+  // hewan dari aset pemilik (assets/img/ani_*.png): diperkecil rapi (kelipatan piksel), frame ke-2 melompat 1 piksel
+  const fromImg = (k, img, sc) => { const w = Math.round(32 * sc), h = Math.round(32 * sc), frs = [0, 1].map(f => { const [c, x] = mk(w, h + 1); x.imageSmoothingEnabled = false; x.drawImage(img, 0, f ? 0 : 1, w, h); return c; }); addStrip({ textures: T }, k, strip(frs)); };
+  for (const [k, sc] of [['rabbit', .5], ['squirrel', .5], ['deer', 1]]) { const img = IMGEL['ani_' + k]; if (img) { if (T.exists('cr_' + k)) T.remove('cr_' + k); fromImg('cr_' + k, img, sc); } else if (k === 'deer') fromImg('cr_deer', IMGEL.ani_rabbit || document.createElement('canvas'), 1); }
   one('cr_fish', ['..BB..', '.BBBBT', 'BEBBB.', '.BBBBT', '..BB..'], { B: '#8ab0d8', E: '#1a2a3a', T: '#5a80b0' });
   one('cr_herb', ['G.G.G', '.GLG.', 'G.L.G', '..L..'], { G: '#4ab83a', L: '#2a7a2a' });
   one('cr_berry', ['.GG..', 'GRGR.', '.RRG.', 'GRR..'], { G: '#3a8a3a', R: '#d83a5a' });
@@ -35,7 +38,7 @@ Object.assign(World.prototype, {
   spawnAmbient() {
     this.amb = []; this.ambT = 0; this.sndT = rnd(3, 8); this.cloudsA = []; this.herbS = [];
     const E = this.envCfg = ENV[this.M.id]; if (!E || G.title) return;
-    const A = this.anims; if (!A.exists('cr_bird_f')) { for (const k of ['cr_bird', 'cr_fly', 'cr_rabbit', 'cr_squirrel']) A.create({ key: k + '_f', frames: A.generateFrameNumbers ? [{ key: k, frame: 0 }, { key: k, frame: 1 }] : [], frameRate: k === 'cr_bird' ? 10 : k === 'cr_fly' ? 8 : 6, repeat: -1 }); }
+    const A = this.anims; if (!A.exists('cr_bird_f')) { for (const k of ['cr_bird', 'cr_fly', 'cr_rabbit', 'cr_squirrel', 'cr_deer']) A.create({ key: k + '_f', frames: A.generateFrameNumbers ? [{ key: k, frame: 0 }, { key: k, frame: 1 }] : [], frameRate: k === 'cr_bird' ? 10 : k === 'cr_fly' ? 8 : 6, repeat: -1 }); }
     const M = this.M, cam = this.cameras.main;
     const near = (r = 220) => [clamp(this.pl.x + rnd(-r, r), 40, M.w - 40), clamp(this.pl.y + rnd(-r, r), 60, M.h - 40)];
     this.ambNear = near;

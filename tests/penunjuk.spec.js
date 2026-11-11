@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const h = require('./helpers');
-test('kartu misi test('penunjuk misi' panah penunjuk arah', async ({ page }) => {
+test('kartu misi dan panah penunjuk arah', async ({ page }) => {
   const errors = await h.boot(page); await h.newGame(page);
   await h.G(page, () => { window.__game.S.stage = 17; window.__game.updHud && 0; });
   await h.goto(page, 'village', 600, 600, 'down'); await page.waitForTimeout(800);
