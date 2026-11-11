@@ -53,12 +53,21 @@ Object.assign(World.prototype, {
     if (it.mp) { if (S.mp >= st.maxmp) { sfx('buzz'); return false; } const h = Math.min(it.mp, st.maxmp - S.mp); S.mp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h + ' MP', 'mpc'); }
     addItem(id, -1); sfx('heal'); this.sparkle(this.pl.x, this.pl.y - 10, it.mp ? 'dot' : 'dotg'); updHud(); return true;
   },
+  // Bekukan dunia sebentar (detik) agar pukulan terasa berat. Getar HP jika didukung.
+  hitStop(sec, vib = 0) {
+    if (G.title || this.pl.dead) return;
+    this.hsT = Math.max(this.hsT, sec); this.physics.pause(); this.anims.pauseAll(); this.tweens.timeScale = .05;
+    if (vib && S.opt?.vib !== false && navigator.vibrate) try { navigator.vibrate(vib); } catch (_) { }
+  },
   hitEnemy(e, base, crit, nx, ny) {
     if (this.pl.dead || e.hp <= 0 || !e.spr.active) return;
     if (e.faded) { popWorld(e.spr.x, e.spr.y - 20, 'tembus!', 'mpc'); return; }
     const dmg = Math.max(1, Math.round(base * rnd(.9, 1.1) * (crit ? 1.7 : 1) - e.D.def * .5));
     e.hp -= dmg; popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 2 - (e.D.fly ? 10 : 0), crit ? dmg + '!' : '' + dmg, crit ? 'crit' : '');
     sfx(crit ? 'crit' : 'hit'); if (crit) shake();
+    const fatal = e.hp <= 0;
+    this.hitStop(e.boss && fatal ? .22 : fatal || crit ? .085 : .045, crit || fatal ? 25 : 12);
+    if (crit || fatal || e.boss) this.cameras.main.shake(fatal ? 110 : 80, fatal ? .005 : .003);
     e.spr.setTintFill(0xffffff); e.flash = .09;
     const heavy = e.boss || e.D.ai === 'golem' || e.D.ai === 'turret';
     const kb = heavy ? (e.D.ai === 'turret' ? 0 : 40) : 175; e.kb = heavy ? .06 : .17; e.kbx = nx * kb; e.kby = ny * kb;
@@ -120,7 +129,7 @@ Object.assign(World.prototype, {
     const pl = this.pl; if (pl.inv > 0 || pl.dead || G.lock > 0 || UIH) return;
     if (pl.dashT > 0) return; if (this.night && isNight()) atk *= 1.15;
     const dmg = Math.max(1, Math.round(atk * rnd(.85, 1.15) - stat().def * .6));
-    S.hp = Math.max(0, S.hp - dmg); popWorld(pl.x, pl.y - 28, '-' + dmg, 'hurt'); sfx('hurt');
+    S.hp = Math.max(0, S.hp - dmg); popWorld(pl.x, pl.y - 28, '-' + dmg, 'hurt'); sfx('hurt'); this.hitStop(.06, 40);
     pl.inv = 1; const dx = pl.x - sx, dy = pl.y - sy, n = Math.hypot(dx, dy) || 1; pl.kb = .14; pl.kbx = dx / n * 170; pl.kby = dy / n * 170;
     pl.setTintFill(0xff4a4a); this.time.delayedCall(90, () => pl.clearTint());
     this.cameras.main.shake(120, .006); updHud();

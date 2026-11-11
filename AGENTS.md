@@ -83,8 +83,8 @@ Lainnya: `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png`
 
 ## Status
 
-Sudah ada: 5 wilayah + 3 interior, 25 jenis musuh, 7 boss/mini-boss, misi bab 1–2, 3 misi sampingan, tas/perlengkapan/tempa/toko, jurus (dash, tebasan putar, nova es), siang-malam, cuaca, pancing, kebun, teka-teki, bestiari, pencapaian, peta.
+Sudah ada: 5 wilayah + 3 interior, 25 jenis musuh, 7 boss/mini-boss, misi bab 1–2, 3 misi sampingan, tas/perlengkapan/tempa/toko, jurus (dash, tebasan putar, nova es), siang-malam, cuaca, pancing, kebun, teka-teki, bestiari, pencapaian, peta, hit-stop + getar HP saat pukulan kena (`hitStop()` di `systems/combat.js`), PWA (`manifest.webmanifest`, `sw.js`; naikkan `VERSI` di `sw.js` saat rilis besar).
 
-Belum: sprite karakter bergaya gambar referensi (menunggu lembar sprite dari pemilik), menu pengaturan, efek hit-stop, PWA/offline, gamepad, senjata berbeda gaya, efek status, bab 3.
+Belum: sprite karakter bergaya gambar referensi (menunggu lembar sprite dari pemilik), menu pengaturan (`S.opt.vib` sudah dibaca untuk getar), gamepad, senjata berbeda gaya, efek status, bab 3.
 
 Setelah menyelesaikan fitur, **perbarui bagian Status ini**.

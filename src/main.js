@@ -12,3 +12,5 @@ loadImgs().then(() => {
   game.events.once('ready', () => { setTimeout(() => { SCREEN.insertBefore(game.canvas, SCREEN.firstChild); titleScreen(); }, 50); });
 });
 window.__game = { get S() { return S; }, G, MAPS, press, Input, get sc() { return G.scene; }, newState, saveGame, loadSave, ITEMS };
+// PWA: daftarkan service worker (hanya di http/https, bukan file://) agar bisa di-install & main offline.
+if ('serviceWorker' in navigator && /^https?:/.test(location.protocol) && !location.pathname.endsWith('/dist/game.html')) navigator.serviceWorker.register('sw.js').catch(() => { });

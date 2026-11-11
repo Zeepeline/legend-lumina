@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#1a2a1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
 <title>Legenda Lumina — Action RPG</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1903,7 +1910,7 @@ class World extends Phaser.Scene {
     const M = this.M = MAPS[data.map || 'village'];
     if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
-    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null;
+    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.hsT = 0; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
     this.walls = this.physics.add.staticGroup();
@@ -2054,6 +2061,8 @@ class World extends Phaser.Scene {
     this.enemies.push(e); return e;
   }
   update(time, dms) {
+    // hit-stop: dunia membeku sesaat saat pukulan kena (lihat hitStop() di systems/combat.js)
+    if (this.hsT > 0) { this.hsT -= Math.min(dms, 50) / 1000; if (this.hsT > 0) return; this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1; }
     const dt = this.dt = Math.min(dms, 50) / 1000; this.t += dt;
     this.pump();
     const pl = this.pl;
@@ -2248,12 +2257,21 @@ Object.assign(World.prototype, {
     if (it.mp) { if (S.mp >= st.maxmp) { sfx('buzz'); return false; } const h = Math.min(it.mp, st.maxmp - S.mp); S.mp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h + ' MP', 'mpc'); }
     addItem(id, -1); sfx('heal'); this.sparkle(this.pl.x, this.pl.y - 10, it.mp ? 'dot' : 'dotg'); updHud(); return true;
   },
+  // Bekukan dunia sebentar (detik) agar pukulan terasa berat. Getar HP jika didukung.
+  hitStop(sec, vib = 0) {
+    if (G.title || this.pl.dead) return;
+    this.hsT = Math.max(this.hsT, sec); this.physics.pause(); this.anims.pauseAll(); this.tweens.timeScale = .05;
+    if (vib && S.opt?.vib !== false && navigator.vibrate) try { navigator.vibrate(vib); } catch (_) { }
+  },
   hitEnemy(e, base, crit, nx, ny) {
     if (this.pl.dead || e.hp <= 0 || !e.spr.active) return;
     if (e.faded) { popWorld(e.spr.x, e.spr.y - 20, 'tembus!', 'mpc'); return; }
     const dmg = Math.max(1, Math.round(base * rnd(.9, 1.1) * (crit ? 1.7 : 1) - e.D.def * .5));
     e.hp -= dmg; popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 2 - (e.D.fly ? 10 : 0), crit ? dmg + '!' : '' + dmg, crit ? 'crit' : '');
     sfx(crit ? 'crit' : 'hit'); if (crit) shake();
+    const fatal = e.hp <= 0;
+    this.hitStop(e.boss && fatal ? .22 : fatal || crit ? .085 : .045, crit || fatal ? 25 : 12);
+    if (crit || fatal || e.boss) this.cameras.main.shake(fatal ? 110 : 80, fatal ? .005 : .003);
     e.spr.setTintFill(0xffffff); e.flash = .09;
     const heavy = e.boss || e.D.ai === 'golem' || e.D.ai === 'turret';
     const kb = heavy ? (e.D.ai === 'turret' ? 0 : 40) : 175; e.kb = heavy ? .06 : .17; e.kbx = nx * kb; e.kby = ny * kb;
@@ -2315,7 +2333,7 @@ Object.assign(World.prototype, {
     const pl = this.pl; if (pl.inv > 0 || pl.dead || G.lock > 0 || UIH) return;
     if (pl.dashT > 0) return; if (this.night && isNight()) atk *= 1.15;
     const dmg = Math.max(1, Math.round(atk * rnd(.85, 1.15) - stat().def * .6));
-    S.hp = Math.max(0, S.hp - dmg); popWorld(pl.x, pl.y - 28, '-' + dmg, 'hurt'); sfx('hurt');
+    S.hp = Math.max(0, S.hp - dmg); popWorld(pl.x, pl.y - 28, '-' + dmg, 'hurt'); sfx('hurt'); this.hitStop(.06, 40);
     pl.inv = 1; const dx = pl.x - sx, dy = pl.y - sy, n = Math.hypot(dx, dy) || 1; pl.kb = .14; pl.kbx = dx / n * 170; pl.kby = dy / n * 170;
     pl.setTintFill(0xff4a4a); this.time.delayedCall(90, () => pl.clearTint());
     this.cameras.main.shake(120, .006); updHud();
@@ -3094,6 +3112,8 @@ loadImgs().then(() => {
   game.events.once('ready', () => { setTimeout(() => { SCREEN.insertBefore(game.canvas, SCREEN.firstChild); titleScreen(); }, 50); });
 });
 window.__game = { get S() { return S; }, G, MAPS, press, Input, get sc() { return G.scene; }, newState, saveGame, loadSave, ITEMS };
+// PWA: daftarkan service worker (hanya di http/https, bukan file://) agar bisa di-install & main offline.
+if ('serviceWorker' in navigator && /^https?:/.test(location.protocol) && !location.pathname.endsWith('/dist/game.html')) navigator.serviceWorker.register('sw.js').catch(() => { });
 
 </script>
 </body>
