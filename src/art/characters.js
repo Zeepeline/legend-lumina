@@ -91,6 +91,10 @@ CHARS.hunter = [{ H: '#3a2a1a', C: '#5a7a3a', P: '#5a4a3a', Y: '#a87a3a', K: '#5
 Object.assign(CHARS, {
   witch: [{ H: '#5a4a8a', C: '#3a2a5a', S: '#dccce8', E: '#e83ae0', r: '#c8a8d8', Y: '#3a2a5a', R: '#c84ae0', K: '#2a1a3a' }, { hat: 1, robe: 1, long: 1 }],
   hermit: [{ H: '#d8d8e0', C: '#6a7a5a', K: '#4a3a2a' }, { beard: 1, robe: 1 }],
+  ratih: [{ H: '#e4e4ec', C: '#6a8aa4', P: '#4a5a6a', K: '#3a3a4a', Y: '#d0a878' }, { long: 1 }],
+  wati: [{ H: '#3a2414', C: '#7ab05a', P: '#6a5a3a', K: '#3a2a1a', Y: '#f0c890' }, { long: 1 }],
+  darma: [{ H: '#2a1a10', C: '#a03a3a', P: '#3a3a4a', K: '#2a2a2a', Y: '#e8c050' }, { hat: 1 }],
+  bayu: [{ H: '#5a3a1a', C: '#e0a040', P: '#5a4a3a', K: '#3a2a1a', Y: '#7ac0e0' }, { hat: 1 }],
   nila: [{ H: '#f0f4fa', C: '#3a7ac8', P: '#4a5a7a', K: '#2a3a5a', Y: '#8ad0ff' }, { hat: 1, long: 1 }],
   mom: [{ H: '#e8b040', C: '#d87a5a', K: '#5a3a2a' }, { long: 1, dress: 1, apron: 1 }],
 });

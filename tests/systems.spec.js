@@ -42,7 +42,7 @@ test('teka-teki batu membuka gerbang & kunci membuka peti', async ({ page }) => 
   await h.G(page, () => window.__game.sc.enemies.forEach(e => e.spr.setPosition(3000, 3000)));
   const until = async (dir, cond) => { await h.G(page, d => window.__game.Input.held.push(d), dir); await page.waitForFunction(cond, null, { timeout: 15_000 }); await h.G(page, () => window.__game.Input.held.length = 0); await page.waitForTimeout(300); };
   await until('right', () => window.__game.sc.boulder.x >= 334);
-  await h.G(page, () => window.__game.sc.pl.setPosition(334, 372));
+  await h.G(page, () => { window.__game.sc.pl.setPosition(334, 372); });
   await until('down', () => !!window.__game.S.flags.cave_gate);
   await page.waitForTimeout(1500); await h.flush(page);
   await h.G(page, () => { const sc = window.__game.sc; sc.pl.setPosition(640, 116); sc.pl.dir = 'up'; });

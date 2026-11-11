@@ -23,6 +23,7 @@ Object.assign(World.prototype, {
       updHud(); return;
     }
     S.stage = 12; updHud(); banner('Gerbang es mencair!', 'OBOR 3/3', true, 2200);
+    await sleep(900); await talk(null, ['Di sisi obor terakhir ada relief yang tersingkap salju yang mencair: seorang wanita mengangkat tangan bercahaya. Di telapaknya... tanda daun, sama seperti tanganmu.']); learn('relief_obor');
     await sleep(800); this.openIceGate(); await say('Ketiga obor menyala! Gerbang es di utara mencair. Naga Es menunggu di puncak.');
     saveGame(this);
   },

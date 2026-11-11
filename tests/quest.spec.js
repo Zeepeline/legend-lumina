@@ -21,7 +21,7 @@ test('misi utama bab 1 & 2', async ({ page }) => {
   await h.press(page, 'a', 1, 400); await page.waitForTimeout(2600); await h.flush(page);
   expect((await h.S(page)).stage).toBe(3);
   // Raja Goblin
-  await h.G(page, () => window.__game.sc.pl.setPosition(640, 975)); await h.hold(page, 'down', 700);
+  await h.G(page, () => { window.__game.sc.pl.setPosition(640, 975); }); await h.hold(page, 'down', 700);
   await page.waitForTimeout(2500); await h.flush(page); await h.killBoss(page);
   expect((await h.S(page)).stage).toBe(4);
   await h.G(page, () => { const sc = window.__game.sc; sc.pl.setPosition(640, 1092); sc.pl.dir = 'up'; });

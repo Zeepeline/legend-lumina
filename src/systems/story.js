@@ -23,7 +23,10 @@ Object.assign(World.prototype, {
     this.cameras.main.flash(600, 200, 240, 255); this.sparkle(this.crystal.x, this.crystal.y - 16, 'dot', 26);
     const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; S.stage = 5; updHud();
     await sleep(700); banner('Kristal Lumina pulih!', 'MISI SELESAI', true, 2000); await sleep(1800);
-    await say('Cahaya kristal memulihkan seluruh tenagamu. Saatnya pulang dan melapor ke Tetua Bram.');
+    await say('Cahaya kristal memulihkan seluruh tenagamu.');
+    await say('...Tanda berbentuk daun di telapak tanganmu berkedip sesaat, hangat, lalu meredup lagi. Sejak kapan tanda ini bisa menyala?');
+    learn('tanda'); await sleep(400);
+    await say('Saatnya pulang dan melapor ke Tetua Bram.');
     G.lock--; saveGame(this);
   },
   async openChest(c, spr) {

@@ -8,7 +8,7 @@ MAPS.cave = {
     [420, 700, 860, 790, 22], [620, 300, 640, 120, 20], [120, 800, 120, 900, 24],
   ],
   discs: [[120, 800, 76], [420, 700, 84], [300, 420, 72], [620, 300, 86], [900, 470, 128], [860, 790, 72], [640, 110, 56]],
-  objs: [
+  objs: [['stele', 452, 676, { lore: 'prasasti_gua' }], 
     ['sign', 170, 760, { text: 'Gua Batu. Kristal ungu menerangi jalan.\nGolem Purba tidur di ruang timur.\nGerbang utara: dorong batu ke pelat bercahaya.' }],
   ],
   chests: [{ id: 'g1', x: 860, y: 800, item: 'potion3' }, { id: 'g2', x: 640, y: 100, item: 'key' }, { id: 'g3', x: 960, y: 420, item: 'shield', needFlag: 'golem' }],

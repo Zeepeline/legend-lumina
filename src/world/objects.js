@@ -39,6 +39,7 @@ const OBJ = {
   bushv: { key: 'bushv', col: [18, 6, 0], sh: [12, 3] },
   barrel: { key: 'barrel', col: [12, 6, 0], sh: [7, 2] },
   crate: { key: 'crate', col: [14, 6, 0], sh: [8, 2] },
+  stele: { key: 'stele', col: [12, 5, 0], sh: [9, 3] },
   sign: { key: 'sign', col: [8, 4, 0], sh: [6, 2] },
   fence: { key: 'fence', col: [18, 4, 0] },
   lamp: { key: 'lamp', col: [6, 4, 0], sh: [5, 2] },

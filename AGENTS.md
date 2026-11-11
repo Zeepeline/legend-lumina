@@ -38,6 +38,8 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `systems/skills.js` | dash, tebasan putar, nova es |
 | `systems/status.js` | efek status `STATUS` (racun/terbakar/dingin) pemain & musuh; sumber = `fx` di `ENEMY`/`PROJ` |
 | `systems/travel.js` | teleport: `WARPS` (posisi patung per peta), aktif di `S.warps` |
+| `systems/chapter4.js` | Bab 4 (investigasi tanpa boss), `storyTalk()` (dialog cerita yang menimpa dialog biasa), Desa Kincir, lentera & perahu Danau Cermin, kuil, prasasti (`readLore`) |
+| `data/lore.js` | jurnal: `LORE` (catatan), `MYSTERY` (misteri besar), `midGoal()` (penyelidikan), `learn(id)` |
 | `systems/chapter3.js` | Bab 3: obor kuno, gerbang es, AI Naga Es (`updDragon`, ai `dboss`) |
 | `systems/life.js` | interior, memancing, kebun, teka-teki batu, Mochi |
 | `systems/story.js` | segel kuil, kristal, peti (termasuk peti terkunci) |
@@ -48,10 +50,10 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `npc/npcs.js` | gerak NPC & hewan |
 | `ui/widgets.js` | `say`, `talk`, `choose`, `ask`, `banner`, `popWorld`, HUD (`updHud`) |
 | `ui/savecode.js` | ekspor/impor kode save (`saveCode()`, `readCode()`, `codeDialog()`) |
-| `ui/shop.js` (juga `cookMenu`, `upgradeMenu`) · `bag.js` · `map.js` · `menus.js` · `title.js` | layar toko/tempa, tas & buku misi, peta, menu utama/bestiari, judul |
+| `ui/shop.js` (juga `cookMenu`, `upgradeMenu`) · `bag.js` (tas & **jurnal** `openQuests`) · `map.js` · `menus.js` · `title.js` | layar toko/tempa, tas & buku misi, peta, menu utama/bestiari, judul |
 | `main.js` | mulai Phaser |
 
-Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.md` (aturan dunia & wilayah), `docs/BENUA_LUMINA.md` (usulan peta benua), `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png` (aset dari gambar referensi), `assets/reference/` (gambar asli), `docs/ART_BIBLE.md` (aturan gaya), `docs/sprites/` (lembar contoh), `tools/` (bundle, pemotong aset).
+Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.md` (aturan dunia & wilayah), `docs/BENUA_LUMINA.md` (desain benua yang disetujui), `index.html` (urutan skrip), `styles.css` (gaya UI), `assets/img/*.png` (aset dari gambar referensi), `assets/reference/` (gambar asli), `docs/ART_BIBLE.md` (aturan gaya), `docs/sprites/` (lembar contoh), `tools/` (bundle, pemotong aset).
 
 ## Cara menambah sesuatu (file yang disentuh)
 
@@ -81,7 +83,7 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 ## Aturan dunia & wilayah
 
-**Wajib mengikuti `docs/WORLD_DESIGN.md`** sebelum menambah wilayah, kota, desa, dungeon, atau lokasi apa pun. Fokus saat ini adalah **Benua Lumina**; benua lain hanya untuk lore dan foreshadowing. Setiap lokasi baru wajib lolos **World Design Review** (checklist di bagian 23). Jika banyak jawaban belum jelas, **usulkan desainnya ke pemilik dulu, jangan langsung diimplementasikan.** Rancangan benua (usulan, belum disetujui) ada di `docs/BENUA_LUMINA.md`; jangan diimplementasikan sebelum pemilik menyetujuinya. Ukuran peta mengikuti fungsi lokasinya (kota jauh lebih besar dari desa, alam boleh sangat luas dan dibagi beberapa zona), bukan ukuran seragam.
+**Wajib mengikuti `docs/WORLD_DESIGN.md`** sebelum menambah wilayah, kota, desa, dungeon, atau lokasi apa pun. Fokus saat ini adalah **Benua Lumina**; benua lain hanya untuk lore dan foreshadowing. Setiap lokasi baru wajib lolos **World Design Review** (checklist di bagian 23). Jika banyak jawaban belum jelas, **usulkan desainnya ke pemilik dulu, jangan langsung diimplementasikan.** Rancangan benua **sudah disetujui** di `docs/BENUA_LUMINA.md`; implementasikan bertahap sesuai urutan bab di bagian 7. Ukuran peta mengikuti fungsi lokasinya (kota jauh lebih besar dari desa, alam boleh sangat luas dan dibagi beberapa zona), bukan ukuran seragam.
 
 ## Gaya visual
 
@@ -95,8 +97,10 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 ## Status
 
-Sudah ada: 6 wilayah (+ Puncak Beku) + 3 interior, 30 jenis musuh, 8 boss/mini-boss, misi bab 1–3 (stage 0–14), 3 misi sampingan, tas/perlengkapan/tempa/toko, 4 gaya senjata, jurus (dash, tebasan putar, nova es), efek status + Penawar, siang-malam, cuaca, pancing, kebun, teka-teki (batu & obor), bestiari, pencapaian, peta, hit-stop + getar, menu pengaturan, teleport 6 patung, ekspor/impor kode save, upgrade +1..+5 di bengkel, masak 5 resep dengan bonus sementara, PWA (`manifest.webmanifest`, `sw.js`; naikkan `VERSI` di `sw.js` saat rilis besar).
+Sudah ada: 7 wilayah (+ Danau Cermin) + 4 interior (+ Kuil Penjaga Cahaya), Desa Kincir di Padang Angin, 30 jenis musuh, 8 boss/mini-boss, misi bab 1–4 (stage 0–19; Bab 4 investigasi tanpa boss), 4 misi sampingan, **jurnal 3 lapis tujuan** (sekarang/penyelidikan/misteri besar) + catatan lore + prasasti di tiap wilayah, foreshadowing misteri utama di Bab 1–3 (gumaman boss, tanda Arka, relief obor, Sura menyebut Selene), tas/perlengkapan/tempa/toko, 4 gaya senjata, jurus, efek status, siang-malam, cuaca, pancing, kebun, masak, teka-teki (batu, obor, lentera), bestiari, pencapaian, peta, teleport 7 patung, menu pengaturan, ekspor/impor save, upgrade +1..+5, PWA (`sw.js`; naikkan `VERSI` saat rilis besar).
 
-Catatan dunia: 6 wilayah yang ada masih berukuran hampir seragam dan belum punya sejarah, ekonomi, atau hubungan antarlokasi seperti yang diminta `docs/WORLD_DESIGN.md`; perlu ditinjau ulang. Belum (sesuai `docs/GAME_DESIGN.md`): jurnal 3 lapis tujuan & petunjuk, sistem hubungan NPC, foreshadowing misteri utama di Bab 1–3, Bab 4 (investigasi tanpa boss). Lainnya: sprite karakter bergaya gambar referensi (menunggu lembar sprite dari pemilik), gamepad, bab 4.
+Berikutnya sesuai `docs/BENUA_LUMINA.md` bagian 7: Bab 5 (perjalanan ke Kota Lumina: buka longsor di Danau Cermin, kota 5–7 area, Akademi Cahaya). Juga: perluas Desa Lumina (±1600×1100, Pohon Induk, makam tua), sistem hubungan NPC, keputusan pemilik soal musuh terakhir. Lainnya: sprite karakter bergaya gambar referensi (menunggu lembar sprite), gamepad.
+
+Catatan tes: fungsi di `h.G(page, fn)` jangan mengembalikan objek Phaser (misal hasil `setPosition`), karena serialisasinya bisa macet; bungkus dengan `{ }`. Tes memblokir service worker (`playwright.config.js`).
 
 Setelah menyelesaikan fitur, **perbarui bagian Status ini**.

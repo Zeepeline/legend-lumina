@@ -68,6 +68,7 @@ const ICONS_DEF = {
   f_ginger: ['bowl', { C: '#c8763a', D: '#8a4a20', L: '#fff0d0', S: '#f0b040', W: '#ffffff' }],
   f_jelly: ['blob', { C: '#ff8ac0', L: '#fff0f8', D: '#c04a8a', E: '#c04a8a' }],
   f_hero: ['bowl', { C: '#e8c050', D: '#a07a20', L: '#fff8d8', S: '#ff6a4a', W: '#ffffff' }],
+  bracelet: ['ring', { Y: '#9ad4f4', R: '#7af0c0', W: '#ffffff' }],
   baxe: ['axe', { K: '#8a5a32', L: '#6a7a9a', W: '#e0e8f8' }],
   hbow: ['bow', { K: '#9a6a34', S: '#f0e8d0' }],
   isword: ['sword', { L: '#8a96b0', W: '#eef4ff', G: '#e8c050', K: '#6a3e1e' }],

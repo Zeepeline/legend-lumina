@@ -7,7 +7,7 @@ MAPS.swamp = {
     [300, 520, 560, 700, 13], [960, 560, 700, 720, 13], [560, 700, 640, 820, 13], [700, 720, 640, 820, 13]],
   discs: [[640, 840, 92], [300, 520, 46], [960, 560, 46], [640, 150, 34]],
   ponds: [[620, 440, 120, 66], [180, 770, 110, 60], [1080, 800, 120, 64], [1090, 200, 90, 50], [190, 200, 90, 50]],
-  objs: [['sign', 676, 130, { text: 'RAWA SENJA\nKabut di sini bukan kabut biasa...' }], ['rock', 560, 300], ['log', 760, 600], ['stump', 420, 620], ['mush', 500, 560], ['mush', 820, 480], ['rock', 880, 700], ['bones', 600, 780], ['bones', 700, 800]],
+  objs: [['stele', 330, 504, { lore: 'prasasti_rawa' }], ['sign', 676, 130, { text: 'RAWA SENJA\nKabut di sini bukan kabut biasa...' }], ['rock', 560, 300], ['log', 760, 600], ['stump', 420, 620], ['mush', 500, 560], ['mush', 820, 480], ['rock', 880, 700], ['bones', 600, 780], ['bones', 700, 800]],
   chests: [{ id: 's1', x: 300, y: 516, item: 'hipotion2' }, { id: 's2', x: 960, y: 556, item: 'ether3' }, { id: 's3', x: 640, y: 884, item: 'mring', needFlag: 'witch' }],
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 960], [1240, 0, 40, 960], [0, 930, 1280, 30]],
   exits: [{ x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }],

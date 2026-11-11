@@ -16,7 +16,7 @@ function genRoom(M) {
   const [c, x] = mk(M.w, M.h), [rx, ry, rw, rh] = M.room;
   fr(x, '#140e0c', 0, 0, M.w, M.h);
   fr(x, '#5a3a30', rx - 5, ry - 41, rw + 10, rh + 46); 
-  for (let y = ry; y < ry + rh + 30; y += 8) { const r = Math.floor(y / 8); for (let X = rx; X < rx + rw; X++) { if (y >= ry + rh && (X < 140 || X >= 180)) continue; const seam = (X + (r % 2) * 13) % 26 === 0; fr(x, seam ? '#9a7248' : r % 2 ? '#c89a62' : '#d0a46c', X, y, 1, 7); fr(x, '#a87e50', X, y + 7, 1, 1); } }
+  for (let y = ry; y < ry + rh + 30; y += 8) { const r = Math.floor(y / 8); for (let X = rx; X < rx + rw; X++) { if (y >= ry + rh && (X < 140 || X >= 180)) continue; const seam = (X + (r % 2) * 13) % 26 === 0; const F = M.floor || ['#9a7248', '#c89a62', '#d0a46c', '#a87e50']; fr(x, seam ? F[0] : r % 2 ? F[1] : F[2], X, y, 1, 7); fr(x, F[3], X, y + 7, 1, 1); } }
   fr(x, '#5a3a30', rx - 5, ry + rh, 140 - rx + 5, 5); fr(x, '#5a3a30', 180, ry + rh, rx + rw - 180 + 5, 5);
   fr(x, M.wallc || '#ecdcb8', rx, ry - 36, rw, 36); fr(x, '#c8a878', rx, ry - 12, rw, 12); fr(x, '#a8845a', rx, ry - 12, rw, 1); fr(x, '#6e4222', rx, ry - 2, rw, 2);
   for (let X = rx + 8; X < rx + rw; X += 16) fr(x, '#b89668', X, ry - 11, 1, 9);

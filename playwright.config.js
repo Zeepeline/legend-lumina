@@ -8,6 +8,7 @@ module.exports = defineConfig({
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }], ['list']] : 'list',
   outputDir: 'test-results',
   use: {
+    serviceWorkers: 'block',
     baseURL: 'http://localhost:8000',
     viewport: { width: 390, height: 800 }, deviceScaleFactor: 2, hasTouch: true, isMobile: true,
     screenshot: 'only-on-failure', trace: 'retain-on-failure',

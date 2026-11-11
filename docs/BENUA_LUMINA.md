@@ -1,6 +1,7 @@
-# Benua Lumina — Usulan Desain Dunia
+# Benua Lumina — Desain Dunia
 
-> **Status: USULAN, menunggu persetujuan pemilik.** Jangan diimplementasikan sebelum disetujui.
+> **Status: DISETUJUI pemilik.** Diimplementasikan bertahap mengikuti urutan bab di bagian 7. Detail yang belum dikunci (nama, musuh terakhir) tetap tanyakan pemilik.
+> **Sudah dibuat (Fase 1):** prasasti lore di tiap wilayah, Desa Kincir (di Padang Angin, misi "Batas Ladang"), Danau Cermin, Kuil Penjaga Cahaya, Bab 4.
 > Mengikuti `docs/WORLD_DESIGN.md` (aturan dunia) dan `docs/GAME_DESIGN.md` (cerita & story bible).
 > Lokasi bertanda ✅ sudah ada di game; 📝 usulan baru; 🔒 fondasi (disebut di lore, dibuat jauh nanti).
 
@@ -129,7 +130,7 @@ Format setiap kartu: **fungsi, identitas, alasan ada, penghuni & mata pencaharia
 
 ### 📝 Kota Lumina — kota besar (beberapa area)
 - **Identitas:** "Kota Seribu Lentera", dibangun penyintas Kerajaan Aurel di tepi Danau Cermin. Di sinilah pusat Dewan dan **Akademi Cahaya**.
-- **Hubungan cerita:** Morgath adalah murid Akademi yang diusir (menjawab pertanyaan Bab 2). Arsip Akademi menyimpan catatan tentang Penjaga Cahaya dan Selene.
+- **Hubungan cerita:** Tetua Bram dulu mengajar di Akademi; Morgath muridnya yang diusir karena sihir terlarang (sesuai dialog Bab 2). Arsip Akademi menyimpan catatan tentang Penjaga Cahaya dan Selene.
 - **Area:** **Gerbang & Jembatan Danau**, **Distrik Pasar**, **Permukiman**, **Distrik Akademi**, **Balai Dewan**, **Pelabuhan Danau**, dan **Kota Bawah** (kumuh).
 - **Konflik lokal:** Dewan versus Serikat Dagang soal pajak. Kota Bawah kekurangan pangan karena Desa Kincir terganggu.
 - **Ukuran:** 5–7 area, masing-masing ±1600×1200. Ini harus jadi momen "dunia ternyata besar".
@@ -192,10 +193,7 @@ Hanya muncul lewat kabar, barang, dan NPC di Teluk Karang: Benua Barat, Benua Ti
 
 ---
 
-## 8. Keputusan yang dibutuhkan dari pemilik
+## 8. Keputusan
 
-1. Setuju dengan gagasan **"kristal = paku segel"**?
-2. Setuju dengan nama-nama usulan (Aurel, Simpang Rantau, Teluk Karang, Tapal Salju, Lembah Besi, Desa Kincir, Desa Muara, Benteng Sendaru, Danau Cermin)?
-3. Desa Lumina diperluas sekarang, atau nanti saat Bab 4?
-4. Urutan bab di bagian 7 sudah sesuai?
-5. Siapa musuh terakhir (wajah dari makhluk di bawah akar)? Ini masih terbuka dari diskusi sebelumnya.
+- Disetujui: kristal = paku segel, nama-nama lokasi, urutan bab.
+- Masih terbuka: Siapa musuh terakhir (wajah dari makhluk di bawah akar)? Ini masih terbuka dari diskusi sebelumnya.

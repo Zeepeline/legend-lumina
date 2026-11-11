@@ -42,14 +42,41 @@ async function openBag(sc) {
   });
   G.lock--;
 }
+// Jurnal: 3 lapis tujuan (sekarang, penyelidikan, misteri besar) + catatan lore
 async function openQuests() {
-  const sd = S.side, rows = [];
-  rows.push(['UTAMA', S.stage >= 9 ? 'Bab 2 selesai! Terima kasih sudah bermain.' : STAGE_TXT[S.stage] + (S.stage === 2 ? ` (${S.inv.seal || 0}/3)` : ''), S.stage >= 9]);
-  rows.push(['Golem Purba (opsional)', 'Kalahkan Golem Purba di Gua Batu', !!S.flags.golem]);
-  rows.push(['Mochi hilang', ['Bicara dengan Lina', 'Cari Mochi di barat Hutan Lumina', 'Bawa Mochi pulang ke Lina', S.pet ? 'Selesai · Mochi ikut berpetualang' : 'Selesai'][sd.mochi], sd.mochi === 3]);
-  rows.push(['Lendir untuk Pak Darto', ['Bicara dengan Pak Darto', `Kumpulkan Lendir Slime (${Math.min(5, S.inv.jelly || 0)}/5)`, 'Selesai'][sd.darto], sd.darto === 2]);
-  if (S.seen.meadow) rows.push(['Taring untuk Pak Joko', ['Bicara dengan Pak Joko di Padang Angin', `Kumpulkan Taring Babi (${Math.min(3, S.inv.tusk || 0)}/3)`, 'Selesai'][sd.joko], sd.joko === 2]);
-  const w = win('menu', `<div class="mh">Buku Misi</div>${rows.map(([t, d, done]) => `<div class="qr${done ? ' done' : ''}"><b>${done ? '✓' : '•'} ${t}</b><br>${d}</div>`).join('')}`);
-  Object.assign(w.style, { left: '20px', right: '20px', top: '20px' });
-  await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 14 }); w.remove();
+  const sd = S.side, side = [];
+  side.push(['Golem Purba (opsional)', 'Kalahkan Golem Purba di Gua Batu', !!S.flags.golem]);
+  side.push(['Mochi hilang', ['Bicara dengan Lina', 'Cari Mochi di barat Hutan Lumina', 'Bawa Mochi pulang ke Lina', S.pet ? 'Selesai · Mochi ikut berpetualang' : 'Selesai'][sd.mochi], sd.mochi === 3]);
+  side.push(['Lendir untuk Pak Darto', ['Bicara dengan Pak Darto', `Kumpulkan Lendir Slime (${Math.min(5, S.inv.jelly || 0)}/5)`, 'Selesai'][sd.darto], sd.darto === 2]);
+  if (S.seen.meadow) side.push(['Taring untuk Pak Joko', ['Bicara dengan Pak Joko di Padang Angin', `Kumpulkan Taring Babi (${Math.min(3, S.inv.tusk || 0)}/3)`, 'Selesai'][sd.joko], sd.joko === 2]);
+  if (sd.patok) side.push(['Batas Ladang Desa Kincir', ['', 'Cari patok batu kuno di ladang selatan Desa Kincir', 'Tunjukkan patok itu kepada Darma', 'Selesai'][sd.patok], sd.patok === 3]);
+  const now = STAGE_TXT[S.stage] ? STAGE_TXT[S.stage] + (S.stage === 2 ? ` (${S.inv.seal || 0}/3)` : '') + (S.stage === 15 ? ` (${['m_darto', 'm_sari', 'm_dodi'].filter(k => S.flags[k]).length}/3)` : '') : 'Belum ada tugas utama. Jelajahi dunia, misteri masih menunggu.';
+  const myst = MYSTERY.filter(m => m.open()), lore = Object.keys(LORE).filter(k => S.lore[k]);
+  const tabs = ['Tujuan', 'Misteri', 'Catatan'];
+  let tab = 0, sel = 0;
+  const w = win('menu jrn'); Object.assign(w.style, { left: '12px', right: '12px', top: '14px', bottom: '14px' });
+  const sec = (h, t) => `<div class="jh">${h}</div><div class="jt">${t}</div>`;
+  function draw() {
+    let body = '';
+    if (tab === 0) body = sec('SEKARANG', now) + sec('PENYELIDIKAN', midGoal()) + sec('MISTERI BESAR', myst.length ? myst.filter(m => !m.ans()).map(m => '❓ ' + m.q).join('<br>') || 'Semua pertanyaan sementara terjawab...' : '<i>Belum ada. Dunia ini menyimpan lebih banyak dari yang terlihat.</i>')
+      + `<div class="jh">MISI SAMPINGAN</div>` + side.map(([t, d, done]) => `<div class="qr${done ? ' done' : ''}"><b>${done ? '✓' : '•'} ${t}</b><br>${d}</div>`).join('');
+    else if (tab === 1) body = myst.length ? myst.map(m => { const a = m.ans(); return `<div class="qr${a ? ' done' : ''}"><b>${a ? '💡' : '❓'} ${m.q}</b>${a ? '<br>' + a : m.hint ? '<br>' + m.hint() : ''}</div>`; }).join('') : '<i>Belum ada misteri yang tercatat.</i>';
+    else body = lore.length ? lore.map((k, i) => `<div class="qr jl${i === sel ? ' sel' : ''}" data-i="${i}"><b>${LORE[k][1]}</b> <small>· ${LORE[k][0]}</small>${i === sel ? '<br>' + LORE[k][2] : ''}</div>`).join('') : '<i>Belum ada catatan. Baca prasasti, dengarkan penduduk, perhatikan sekitar.</i>';
+    w.innerHTML = `<div class="bt">${tabs.map((n, i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="gold">B: tutup</span></div><div class="jb">${body}</div>`;
+    w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
+    w.querySelectorAll('.jl').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); sel = +e.dataset.i; sfx('cur'); draw(); });
+    const s = w.querySelector('.jl.sel'); if (s) s.scrollIntoView({ block: 'nearest' });
+  }
+  G.lock++; draw();
+  await new Promise(res => {
+    const prev = UIH;
+    UIH = k => {
+      if (k === 'left' || k === 'right') { tab = (tab + (k === 'left' ? 2 : 1)) % 3; sel = 0; sfx('cur'); draw(); }
+      else if ((k === 'up' || k === 'down') && tab === 2 && lore.length) { sel = (sel + (k === 'up' ? lore.length - 1 : 1)) % lore.length; sfx('cur'); draw(); }
+      else if ((k === 'up' || k === 'down') && tab !== 2) w.querySelector('.jb').scrollTop += k === 'up' ? -40 : 40;
+      else if (k === 'b' || k === 'menu' || k === 'back' || k === 'a') { sfx('back'); UIH = prev; res(); }
+    };
+    w.addEventListener('pointerdown', ev => { if (ev.target === w) { UIH = prev; res(); } });
+  });
+  w.remove(); G.lock--;
 }

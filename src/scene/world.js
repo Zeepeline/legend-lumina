@@ -10,7 +10,7 @@ class World extends Phaser.Scene {
     const M = this.M = MAPS[data.map || 'village'];
     if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
-    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
+    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
     this.walls = this.physics.add.staticGroup();
@@ -30,6 +30,7 @@ class World extends Phaser.Scene {
     if (M.gate) this.spawnPuzzle();
     if (M.torches) this.spawnTorches();
     if (WARPS[M.id]) this.spawnWarp();
+    this.spawnCh4();
     if (M.iceGate && S.stage < 12) this.spawnIceGate();
     for (const c of M.chests || []) if (!c.needFlag || S.flags[c.needFlag]) this.spawnChest(c);
     if (M.crystal) this.spawnCrystal();
@@ -86,7 +87,7 @@ class World extends Phaser.Scene {
     if (type === 'shrine') { this.wall(x - 56, y - 30, 14, 12); this.wall(x + 42, y - 30, 14, 12); s.setDepth(y - 60); }
     if (type === 'cavemouth') { s.setDepth(y - 30); this.wall(x - 46, y - 40, 22, 40); this.wall(x + 24, y - 40, 22, 40); }
     if (d.fade) this.fades.push({ s, l: x - s.width / 2 + 6, r: x + s.width / 2 - 6, t: y - s.height + 8, b: y - (d.col ? d.col[1] + d.col[2] : 4) });
-    if (type === 'sign') this.inter.push({ x, y: y + 2, r: 14, fn: () => talk(null, [opt.text]) });
+    if (type === 'sign' || type === 'stele') this.inter.push({ x, y: y + 2, r: 14, fn: async () => { if (opt.lore && !opt.text) return this.readLore(opt.lore); await talk(null, [opt.text]); if (opt.lore) learn(opt.lore); } });
     if (d.chim) {
       const cx = x + (opt && opt.flip ? -1 : 1) * d.chim[0], cy = y - s.height + d.chim[1];
       this.add.particles(cx, cy, 'smoke', { lifespan: 2600, speedY: { min: -16, max: -9 }, speedX: { min: -2, max: 7 }, scale: { start: .5, end: 1.5 }, alpha: { start: .5, end: 0 }, frequency: 480 }).setDepth(y + 1);

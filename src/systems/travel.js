@@ -1,6 +1,6 @@
 'use strict';
 // Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif.
-const WARPS = { village: [548, 604], forest: [670, 162], meadow: [230, 372], cave: [166, 760], swamp: [672, 172], snow: [680, 1052] };
+const WARPS = { village: [548, 604], forest: [670, 162], meadow: [230, 372], cave: [166, 760], swamp: [672, 172], snow: [680, 1052], lake: [1080, 440] };
 for (const id in WARPS) { const M = MAPS[id]; (M.discs = M.discs || []).push([WARPS[id][0], WARPS[id][1], 22]); }
 Object.assign(World.prototype, {
   spawnWarp() {

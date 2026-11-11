@@ -152,6 +152,11 @@ body.touch #keys{display:none}
 .codew textarea{width:100%;height:88px;font:9px/1.25 monospace;border:1px solid #6e4222;border-radius:3px;background:#fffaf0;color:#3b2618;resize:none;word-break:break-all;user-select:text;-webkit-user-select:text}
 .codew .cbtn{display:flex;gap:8px;justify-content:center;margin-top:4px}
 .codew .cbtn .opt{padding:2px 12px;border:1px solid #6e4222;border-radius:3px;cursor:pointer}
+.jrn{display:flex;flex-direction:column}
+.jrn .jb{overflow-y:auto;flex:1;padding-right:2px}
+.jrn .jh{font-size:9px;letter-spacing:1px;color:#8a5a2a;margin-top:6px;border-bottom:1px solid #e2c99a}
+.jrn .jt{margin:2px 0 2px}
+.jrn .jl.sel{background:#f4e2b8;border-radius:3px}
 </style>
 </head>
 <body>
@@ -892,6 +897,10 @@ CHARS.hunter = [{ H: '#3a2a1a', C: '#5a7a3a', P: '#5a4a3a', Y: '#a87a3a', K: '#5
 Object.assign(CHARS, {
   witch: [{ H: '#5a4a8a', C: '#3a2a5a', S: '#dccce8', E: '#e83ae0', r: '#c8a8d8', Y: '#3a2a5a', R: '#c84ae0', K: '#2a1a3a' }, { hat: 1, robe: 1, long: 1 }],
   hermit: [{ H: '#d8d8e0', C: '#6a7a5a', K: '#4a3a2a' }, { beard: 1, robe: 1 }],
+  ratih: [{ H: '#e4e4ec', C: '#6a8aa4', P: '#4a5a6a', K: '#3a3a4a', Y: '#d0a878' }, { long: 1 }],
+  wati: [{ H: '#3a2414', C: '#7ab05a', P: '#6a5a3a', K: '#3a2a1a', Y: '#f0c890' }, { long: 1 }],
+  darma: [{ H: '#2a1a10', C: '#a03a3a', P: '#3a3a4a', K: '#2a2a2a', Y: '#e8c050' }, { hat: 1 }],
+  bayu: [{ H: '#5a3a1a', C: '#e0a040', P: '#5a4a3a', K: '#3a2a1a', Y: '#7ac0e0' }, { hat: 1 }],
   nila: [{ H: '#f0f4fa', C: '#3a7ac8', P: '#4a5a7a', K: '#2a3a5a', Y: '#8ad0ff' }, { hat: 1, long: 1 }],
   mom: [{ H: '#e8b040', C: '#d87a5a', K: '#5a3a2a' }, { long: 1, dress: 1, apron: 1 }],
 });
@@ -1023,6 +1032,7 @@ const ICONS_DEF = {
   f_ginger: ['bowl', { C: '#c8763a', D: '#8a4a20', L: '#fff0d0', S: '#f0b040', W: '#ffffff' }],
   f_jelly: ['blob', { C: '#ff8ac0', L: '#fff0f8', D: '#c04a8a', E: '#c04a8a' }],
   f_hero: ['bowl', { C: '#e8c050', D: '#a07a20', L: '#fff8d8', S: '#ff6a4a', W: '#ffffff' }],
+  bracelet: ['ring', { Y: '#9ad4f4', R: '#7af0c0', W: '#ffffff' }],
   baxe: ['axe', { K: '#8a5a32', L: '#6a7a9a', W: '#e0e8f8' }],
   hbow: ['bow', { K: '#9a6a34', S: '#f0e8d0' }],
   isword: ['sword', { L: '#8a96b0', W: '#eef4ff', G: '#e8c050', K: '#6a3e1e' }],
@@ -1111,6 +1121,10 @@ function artBrazier() { const [c, x] = mk(18, 16); fr(x, '#6a7488', 6, 8, 6, 8);
 function artIceGate() { const [c, x] = mk(84, 34); for (let i = 0; i < 9; i++) { const w = 10, h = 22 + ((i * 7) % 11), X = i * 9 + 1; fr(x, '#9ad4f4', X, 34 - h, w, h); fr(x, '#e8f8ff', X + 2, 34 - h + 2, 2, h - 6); fr(x, '#6aa8d8', X + w - 2, 34 - h, 2, h); } return outline(c, '#3a6a9a'); }
 function artIceBolt() { const [c, x] = mk(10, 8); ellF(x, '#9ad4f4', 5, 4, 4, 2.5); fr(x, '#ffffff', 3, 3, 3, 1); return outline(c, '#3a6a9a'); }
 function artWarp(on) { const [c, x] = mk(16, 28); fr(x, '#6a6478', 3, 22, 10, 5); fr(x, '#8a8498', 4, 6, 8, 17); fr(x, '#aaa4b8', 5, 6, 2, 17); fr(x, '#8a8498', 5, 3, 6, 3); fr(x, '#aaa4b8', 6, 2, 3, 1); const r = on ? '#7af0ff' : '#5a5468'; fr(x, r, 7, 9, 2, 1); fr(x, r, 6, 11, 4, 1); fr(x, r, 7, 13, 2, 4); fr(x, r, 6, 18, 4, 1); if (on) { fr(x, '#ffffff', 7, 13, 1, 2); } return outline(c, '#2a2634'); }
+function artStele() { const [c, x] = mk(18, 24); fr(x, '#6e6a7a', 3, 20, 12, 4); fr(x, '#9a96a6', 4, 4, 10, 17); fr(x, '#b8b4c4', 5, 4, 3, 17); fr(x, '#9a96a6', 5, 2, 8, 2); fr(x, '#5a5668', 7, 8, 5, 1); fr(x, '#5a5668', 7, 11, 4, 1); fr(x, '#5a5668', 7, 14, 5, 1); fr(x, '#5a5668', 7, 17, 3, 1); fr(x, '#7ab85a', 3, 21, 3, 2); fr(x, '#7ab85a', 13, 22, 2, 1); return outline(c, '#2e2a3a'); }
+function artBoat() { const [c, x] = mk(44, 16); fr(x, '#8a5a32', 4, 6, 36, 6); fr(x, '#a87444', 6, 6, 32, 2); fr(x, '#6a4224', 8, 12, 28, 2); fr(x, '#5a3a20', 6, 4, 32, 2); fr(x, '#c89a5a', 20, 2, 2, 4); fr(x, '#8a5a32', 30, 0, 2, 8); return outline(c, '#2a1c14'); }
+function artRelief() { const [c, x] = mk(40, 30); fr(x, '#8a94a8', 0, 0, 40, 30); fr(x, '#a8b2c4', 2, 2, 36, 26); fr(x, '#6a7488', 6, 20, 28, 2); fr(x, '#6a7488', 10, 8, 3, 12); fr(x, '#6a7488', 18, 5, 4, 15); fr(x, '#6a7488', 27, 9, 3, 11); fr(x, '#4a5468', 4, 23, 32, 1); fr(x, '#4a5468', 8, 25, 6, 1); fr(x, '#4a5468', 24, 25, 8, 1); fr(x, '#e8d070', 19, 3, 2, 2); return outline(c, '#2e3444'); }
+function artSealDoor(open) { const [c, x] = mk(30, 38); fr(x, '#7a8498', 0, 0, 30, 38); fr(x, '#5a6478', 3, 3, 24, 35); if (open) { fr(x, '#1a1e2a', 5, 5, 20, 33); fr(x, '#3a4458', 5, 5, 20, 3); } else { fr(x, '#9aa4b8', 5, 5, 20, 33); fr(x, '#b4bed0', 6, 6, 4, 31); const g = '#5af0d0'; fr(x, g, 14, 14, 2, 8); fr(x, g, 12, 16, 6, 1); fr(x, g, 11, 18, 8, 2); fr(x, g, 12, 20, 6, 1); } return outline(c, '#2a3040'); }
 function artLight(r) { const s = r * 2, [c, x] = mk(s, s); const g = x.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.45, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, s, s); return c; }
 function artRain() { const [c, x] = mk(2, 7); fr(x, '#d8ecff', 1, 0, 1, 3); fr(x, '#d8ecff', 0, 3, 1, 4); return c; }
 // bayangan karakter lembut (gradasi, bukan elips keras)
@@ -1147,7 +1161,7 @@ function genRoom(M) {
   const [c, x] = mk(M.w, M.h), [rx, ry, rw, rh] = M.room;
   fr(x, '#140e0c', 0, 0, M.w, M.h);
   fr(x, '#5a3a30', rx - 5, ry - 41, rw + 10, rh + 46); 
-  for (let y = ry; y < ry + rh + 30; y += 8) { const r = Math.floor(y / 8); for (let X = rx; X < rx + rw; X++) { if (y >= ry + rh && (X < 140 || X >= 180)) continue; const seam = (X + (r % 2) * 13) % 26 === 0; fr(x, seam ? '#9a7248' : r % 2 ? '#c89a62' : '#d0a46c', X, y, 1, 7); fr(x, '#a87e50', X, y + 7, 1, 1); } }
+  for (let y = ry; y < ry + rh + 30; y += 8) { const r = Math.floor(y / 8); for (let X = rx; X < rx + rw; X++) { if (y >= ry + rh && (X < 140 || X >= 180)) continue; const seam = (X + (r % 2) * 13) % 26 === 0; const F = M.floor || ['#9a7248', '#c89a62', '#d0a46c', '#a87e50']; fr(x, seam ? F[0] : r % 2 ? F[1] : F[2], X, y, 1, 7); fr(x, F[3], X, y + 7, 1, 1); } }
   fr(x, '#5a3a30', rx - 5, ry + rh, 140 - rx + 5, 5); fr(x, '#5a3a30', 180, ry + rh, rx + rw - 180 + 5, 5);
   fr(x, M.wallc || '#ecdcb8', rx, ry - 36, rw, 36); fr(x, '#c8a878', rx, ry - 12, rw, 12); fr(x, '#a8845a', rx, ry - 12, rw, 1); fr(x, '#6e4222', rx, ry - 2, rw, 2);
   for (let X = rx + 8; X < rx + rw; X += 16) fr(x, '#b89668', X, ry - 11, 1, 9);
@@ -1197,6 +1211,7 @@ const OBJ = {
   bushv: { key: 'bushv', col: [18, 6, 0], sh: [12, 3] },
   barrel: { key: 'barrel', col: [12, 6, 0], sh: [7, 2] },
   crate: { key: 'crate', col: [14, 6, 0], sh: [8, 2] },
+  stele: { key: 'stele', col: [12, 5, 0], sh: [9, 3] },
   sign: { key: 'sign', col: [8, 4, 0], sh: [6, 2] },
   fence: { key: 'fence', col: [18, 4, 0] },
   lamp: { key: 'lamp', col: [6, 4, 0], sh: [5, 2] },
@@ -1401,7 +1416,7 @@ MAPS.village = {
   id: 'village', name: 'Desa Lumina', w: 1024, h: 712, bgm: 'town', ground: 'village', glow: [512, 300, 520],
   paths: [
     [512, 340, 512, 430, 15],
-    [394, 266, 210, 266, 14], [210, 266, 210, 492, 14], [210, 492, 470, 492, 14], [104, 492, 210, 492, 13],
+    [394, 266, 210, 266, 14], [210, 266, 210, 492, 14], [210, 492, 470, 492, 14], [104, 492, 210, 492, 13], [150, 492, 100, 590, 12], [100, 590, 0, 590, 12],
     [630, 266, 814, 266, 14], [814, 266, 814, 492, 14], [814, 492, 554, 492, 14], [814, 492, 920, 492, 13],
     [814, 266, 1024, 266, 14],
     [512, 520, 512, 712, 16],
@@ -1426,6 +1441,8 @@ MAPS.village = {
     ['bushG2', 62, 424], ['bushG1', 652, 624], ['bushW', 382, 628], ['bushP2', 558, 634], ['bushP', 462, 634],
     ['pot', 186, 238], ['pot', 308, 228], ['planter', 712, 234], ['pot', 838, 238], ['planter', 140, 488],
     ['lamp', 470, 556], ['lamp', 556, 556], ['lamp', 404, 290], ['lamp', 620, 290],
+    ['stele', 560, 352, { lore: 'prasasti_desa' }],
+    ['sign', 72, 640, { text: 'Barat: DANAU CERMIN' }],
     ['sign', 548, 652, { text: 'Selatan: Hutan Lumina\nHati-hati, banyak monster!' }],
     ['sign', 960, 300, { text: 'Timur: Padang Angin\nLebih jauh lagi ada Gua Batu.' }],
     ['sign', 790, 240, { text: 'Penginapan "Daun Emas"\nMasuk lewat pintu. Istirahat 10 G' }],
@@ -1433,10 +1450,11 @@ MAPS.village = {
     ['fence', 334, 538], ['fence', 352, 538], ['fence', 370, 538], ['fence', 438, 538], ['fence', 456, 538],
     ['fence', 570, 538], ['fence', 588, 538], ['fence', 656, 538], ['fence', 674, 538], ['fence', 692, 538],
   ],
-  walls: [[0, 0, 1024, 116], [0, 0, 46, 712], [978, 0, 46, 238], [978, 296, 46, 416], [0, 676, 478, 40], [546, 676, 478, 40],
+  walls: [[0, 0, 1024, 116], [0, 0, 46, 560], [0, 620, 46, 92], [978, 0, 46, 238], [978, 296, 46, 416], [0, 676, 478, 40], [546, 676, 478, 40],
     [342, 552, 122, 50], [562, 552, 122, 50]],
-  border: { top: 120, bottom: 670, left: 44, right: 980, gap: [474, 550], gapR: [228, 304], types: ['treeAd', 'treeBd', 'pined'] },
-  exits: [{ x: 474, y: 700, w: 76, h: 30, to: 'forest', tx: 640, ty: 44, dir: 'down', label: 'Hutan Lumina' },
+  border: { top: 120, bottom: 670, left: 44, right: 980, gap: [474, 550], gapR: [228, 304], gapL: [560, 620], types: ['treeAd', 'treeBd', 'pined'] },
+  exits: [{ x: 0, y: 560, w: 12, h: 60, to: 'lake', tx: 1350, ty: 500, dir: 'left', label: 'Danau Cermin' },
+    { x: 474, y: 700, w: 76, h: 30, to: 'forest', tx: 640, ty: 44, dir: 'down', label: 'Hutan Lumina' },
     { x: 1010, y: 238, w: 30, h: 58, to: 'meadow', tx: 30, ty: 330, dir: 'right', label: 'Padang Angin' }],
   npcs: [
     { id: 'elder', ch: 'elder', name: 'Tetua Bram', x: 486, y: 324, dir: 'down' },
@@ -1469,7 +1487,7 @@ MAPS.forest = {
   ],
   discs: [[1010, 320, 72], [180, 846, 58], [1030, 860, 62], [640, 1068, 92], [380, 440, 30], [640, 150, 34]],
   river: { y: 600, amp: 30, k: .009, w: 36, bridge: [380, 432] },
-  objs: [
+  objs: [['stele', 556, 1004, { lore: 'prasasti_hutan' }], 
     ['shrine', 640, 1094], ['sign', 676, 120, { text: 'Kuil Kristal: ikuti jalan ke selatan.\nTimur: perkemahan goblin.\nTenggara: sarang ular.' }],
     ['log', 860, 270], ['stump', 1080, 380], ['rock', 960, 384], ['rock', 1100, 270], ['log', 228, 760], ['rock', 130, 880],
     ['rock', 520, 820], ['stump', 760, 900], ['rock', 520, 1050], ['rock', 760, 1060], ['mush', 300, 300], ['mush', 450, 700],
@@ -1515,11 +1533,13 @@ MAPS.meadow = {
     [460, 460, 420, 720, 12], [420, 720, 300, 840, 12], [820, 470, 1000, 700, 12], [1000, 700, 1220, 760, 12],
     [260, 330, 300, 190, 11], [1000, 700, 1000, 1040, 13], [460, 460, 600, 250, 12], [600, 250, 600, 0, 12],
   ],
-  discs: [[300, 180, 52], [300, 860, 56], [1240, 770, 66], [1200, 196, 40]],
+  discs: [[300, 180, 52], [140, 220, 70], [480, 220, 66], [240, 360, 50], [560, 640, 30], [300, 860, 56], [1240, 770, 66], [1200, 196, 40]],
   ponds: [[660, 730, 150, 82]],
   flowers: 1,
   objs: [
     ['windmill', 300, 170], ['hay', 250, 220], ['hay', 352, 214], ['hay', 330, 240], ['fence', 230, 250], ['fence', 248, 250], ['fence', 340, 250], ['fence', 358, 250],
+    ['houseA', 140, 252], ['houseB', 480, 246], ['crate', 214, 352], ['barrel', 232, 356], ['crate', 266, 350],
+    ['sign', 420, 300, { text: 'DESA KINCIR\nLumbung gandum Benua Lumina.' }],
     ['cavemouth', 1200, 170],
     ['sign', 120, 300, { text: 'Padang Angin\nBarat: Desa Lumina · Timur laut: Gua Batu' }],
     ['sign', 1040, 960, { text: 'Selatan: RAWA SENJA\nBerbahaya! Hanya untuk petualang berpengalaman.' }],
@@ -1537,7 +1557,11 @@ MAPS.meadow = {
     { x: 560, y: 0, w: 80, h: 12, to: 'snow', tx: 640, ty: 1150, dir: 'up', label: 'Puncak Beku' },
     { x: 960, y: 1026, w: 80, h: 30, to: 'swamp', tx: 640, ty: 44, dir: 'down', label: 'Rawa Senja' }],
   fish: [[660, 820]],
-  npcs: [{ id: 'joko', ch: 'joko', name: 'Pak Joko', x: 340, y: 290, dir: 'down', wander: 26 }],
+  npcs: [{ id: 'joko', ch: 'joko', name: 'Pak Joko', x: 340, y: 290, dir: 'down', wander: 26 },
+    { id: 'wati', ch: 'wati', name: 'Wati', x: 180, y: 290, dir: 'down', wander: 22 },
+    { id: 'darma', ch: 'darma', name: 'Darma', x: 520, y: 290, dir: 'left' },
+    { id: 'bayu', ch: 'bayu', name: 'Pedagang Bayu', x: 248, y: 372, dir: 'down' }],
+  patok: [560, 652],
   enemies: [
     ['bee', 500, 300], ['bee', 560, 330], ['boar', 640, 420], ['slimer', 700, 500], ['plant', 560, 540],
     ['wolf', 900, 420], ['bee', 960, 380], ['boar', 1000, 560], ['plant', 1120, 600], ['slimer', 1060, 660],
@@ -1557,7 +1581,7 @@ MAPS.cave = {
     [420, 700, 860, 790, 22], [620, 300, 640, 120, 20], [120, 800, 120, 900, 24],
   ],
   discs: [[120, 800, 76], [420, 700, 84], [300, 420, 72], [620, 300, 86], [900, 470, 128], [860, 790, 72], [640, 110, 56]],
-  objs: [
+  objs: [['stele', 452, 676, { lore: 'prasasti_gua' }], 
     ['sign', 170, 760, { text: 'Gua Batu. Kristal ungu menerangi jalan.\nGolem Purba tidur di ruang timur.\nGerbang utara: dorong batu ke pelat bercahaya.' }],
   ],
   chests: [{ id: 'g1', x: 860, y: 800, item: 'potion3' }, { id: 'g2', x: 640, y: 100, item: 'key' }, { id: 'g3', x: 960, y: 420, item: 'shield', needFlag: 'golem' }],
@@ -1582,7 +1606,7 @@ MAPS.swamp = {
     [300, 520, 560, 700, 13], [960, 560, 700, 720, 13], [560, 700, 640, 820, 13], [700, 720, 640, 820, 13]],
   discs: [[640, 840, 92], [300, 520, 46], [960, 560, 46], [640, 150, 34]],
   ponds: [[620, 440, 120, 66], [180, 770, 110, 60], [1080, 800, 120, 64], [1090, 200, 90, 50], [190, 200, 90, 50]],
-  objs: [['sign', 676, 130, { text: 'RAWA SENJA\nKabut di sini bukan kabut biasa...' }], ['rock', 560, 300], ['log', 760, 600], ['stump', 420, 620], ['mush', 500, 560], ['mush', 820, 480], ['rock', 880, 700], ['bones', 600, 780], ['bones', 700, 800]],
+  objs: [['stele', 330, 504, { lore: 'prasasti_rawa' }], ['sign', 676, 130, { text: 'RAWA SENJA\nKabut di sini bukan kabut biasa...' }], ['rock', 560, 300], ['log', 760, 600], ['stump', 420, 620], ['mush', 500, 560], ['mush', 820, 480], ['rock', 880, 700], ['bones', 600, 780], ['bones', 700, 800]],
   chests: [{ id: 's1', x: 300, y: 516, item: 'hipotion2' }, { id: 's2', x: 960, y: 556, item: 'ether3' }, { id: 's3', x: 640, y: 884, item: 'mring', needFlag: 'witch' }],
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 960], [1240, 0, 40, 960], [0, 930, 1280, 30]],
   exits: [{ x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }],
@@ -1623,6 +1647,30 @@ MAPS.snow = {
 };
 
 'use strict';
+// Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)
+// World Design Review: lihat docs/BENUA_LUMINA.md (Kuil Penjaga Cahaya, Kota Lumina)
+MAPS.lake = {
+  id: 'lake', name: 'Danau Cermin', w: 1400, h: 1000, bgm: 'meadow', ground: 'meadow',
+  paths: [[1400, 500, 940, 500, 14], [940, 500, 900, 300, 10], [900, 300, 560, 262, 10], [560, 262, 240, 330, 10], [240, 330, 205, 500, 10],
+    [205, 500, 240, 670, 10], [240, 670, 560, 742, 10], [560, 742, 900, 700, 10], [900, 700, 940, 500, 10], [1000, 500, 1000, 330, 11], [1000, 330, 820, 110, 11]],
+  discs: [[1080, 470, 70], [1120, 320, 60], [820, 110, 50]],
+  ponds: [[560, 500, 330, 210]],
+  objs: [['shrine', 560, 520], ['rock', 470, 470], ['rock', 650, 470], ['rock', 520, 560], ['rock', 610, 565],
+    ['houseC', 1120, 300], ['barrel', 1180, 300], ['crate', 1060, 300], ['fence', 1150, 340], ['fence', 1168, 340],
+    ['stele', 1010, 452, { text: 'Prasasti Danau Cermin:\n"Cahaya lahir di utara, tumbuh di selatan, lalu pulang di barat. Hanya cahaya yang pulang yang boleh menyeberang."' }],
+    ['sign', 860, 140, { text: 'Jalan ke KOTA LUMINA\nTertutup longsor. Perbaikan oleh Dewan Kota.', lore: 'kota_lumina' }],
+    ['rock', 790, 96], ['rock', 816, 84], ['rock', 842, 92], ['rock', 770, 110], ['log', 806, 112]],
+  walls: [[0, 0, 1400, 40], [0, 0, 40, 1000], [0, 960, 1400, 40], [1360, 0, 40, 470], [1360, 530, 40, 470], [760, 60, 110, 40]],
+  border: { top: 40, bottom: 960, left: 40, right: 1360, gapR: [470, 530], types: ['treeA', 'treeB', 'pine'] },
+  exits: [{ x: 1388, y: 470, w: 12, h: 60, to: 'village', tx: 40, ty: 590, dir: 'right', label: 'Desa Lumina' }],
+  npcs: [{ id: 'ratih', ch: 'ratih', name: 'Nenek Ratih', x: 1040, y: 560, dir: 'left' }],
+  lanterns: [[560, 266], [560, 744], [206, 500]],
+  boat: [902, 512],
+  enemies: [['frog', 300, 260], ['frog', 820, 760], ['wisp', 240, 800], ['wisp', 900, 220], ['slime', 1200, 760], ['slime', 1180, 820], ['bee', 360, 840]],
+  trees: { n: 760, min: 30, types: [['treeA', .4], ['treeB', .3], ['bushG1', .15], ['rock', .15]] },
+};
+
+'use strict';
 // Interior: penginapan, rumah pohon, rumah Lina
 // ---------------- INTERIOR ----------------
 function makeRoom(id, name, back, o) {
@@ -1642,6 +1690,11 @@ MAPS.elderhome = makeRoom('elderhome', 'Rumah Pohon Tetua', [513, 306], {
 MAPS.linahome = makeRoom('linahome', 'Rumah Lina', [272, 238], {
   wallc: '#f0d8c8', furn: [['rug', 132, 160, 0], ['table', 143, 112], ['stove', 64, 50], ['shelf', 220, 52, 4], ['bed', 62, 150, 0], ['bed', 236, 150, 1]], windows: [120, 180],
   npcs: [{ id: 'mom', ch: 'mom', name: 'Bu Wulan', x: 120, y: 112, dir: 'down' }],
+});
+MAPS.temple = makeRoom('temple', 'Kuil Penjaga Cahaya', [0, 0], {
+  wallc: '#b4bfd2', floor: ['#6e7890', '#9aa4b8', '#a8b2c4', '#828ca2'], ground: 'room', bgm: 'cave', furn: [['rug', 132, 150, 1]], windows: [],
+  exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'lake', tx: 936, ty: 530, dir: 'down', label: 'Danau Cermin' }],
+  reliefs: [[86, 70, 'kuil_relief'], [234, 70, 'kuil_aurel']], sealDoor: [160, 74],
 });
 
 'use strict';
@@ -1757,7 +1810,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {} }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {} }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -1808,6 +1861,7 @@ const ITEMS = {
   baxe: { n: 'Kapak Perang', k: 'wpn', wt: 'axe', atk: 15, d: 'Serang +15. Lambat, ayunan lebar, pukulan berat.' },
   hbow: { n: 'Busur Pemburu', k: 'wpn', wt: 'bow', atk: 2, price: 90, d: 'Serang +2. Tembak panah jarak jauh tanpa MP.' },
   fspear: { n: 'Tombak Beku', k: 'wpn', wt: 'spear', atk: 28, frz: .25, d: 'Serang +28. Tusukan kadang membekukan musuh. Harta Kryos.' },
+  bracelet: { n: 'Gelang Daun', k: 'acc', def: 2, regen: 1, d: 'Gelang kecil dari kuil dengan ukiran daun. Hangat saat dipakai.' },
   cloth: { n: 'Baju Kain', k: 'arm', def: 0, d: 'Pakaian sehari-hari.' },
   leather: { n: 'Rompi Kulit', k: 'arm', def: 3, d: 'Tahan +3.' },
   chain: { n: 'Zirah Besi', k: 'arm', def: 6, price: 150, d: 'Tahan +6.' },
@@ -1885,8 +1939,8 @@ const BEAST = Object.keys(ENEMY).filter(k => !BOSS_AI.includes(ENEMY[k].ai));
 
 'use strict';
 // Teks misi, tujuan misi, jurus, pencapaian
-const STAGE_TXT = ['Temui Tetua Bram di rumah pohon', 'Temui Pemburu Raka di pintu masuk Hutan Lumina', 'Rebut 3 Pecahan Segel dari pemimpin monster di hutan', 'Kalahkan Raja Goblin di Kuil Kristal', 'Sentuh Kristal Lumina untuk memulihkannya', 'Lapor ke Tetua Bram', 'Bab 2: Temui Pertapa Sura di Rawa Senja (selatan Padang Angin)', 'Kalahkan Morgath di jantung Rawa Senja', 'Lapor ke Tetua Bram', 'Bicara lagi dengan Tetua Bram', 'Bab 3: Temui Penjaga Nila di Puncak Beku (utara Padang Angin)', 'Nyalakan 3 Obor Kuno di Puncak Beku', 'Kalahkan Naga Es Kryos di puncak gunung', 'Lapor ke Tetua Bram', ''];
-const STAGE_GOAL = [['village', 486, 324], ['forest', 600, 90], null, ['forest', 640, 1046], ['forest', 640, 1076], ['village', 486, 324], ['swamp', 604, 130], ['swamp', 640, 840], ['village', 486, 324], ['village', 486, 324], ['snow', 596, 1080], null, ['snow', 640, 260], ['village', 486, 324]];
+const STAGE_TXT = ['Temui Tetua Bram di rumah pohon', 'Temui Pemburu Raka di pintu masuk Hutan Lumina', 'Rebut 3 Pecahan Segel dari pemimpin monster di hutan', 'Kalahkan Raja Goblin di Kuil Kristal', 'Sentuh Kristal Lumina untuk memulihkannya', 'Lapor ke Tetua Bram', 'Bab 2: Temui Pertapa Sura di Rawa Senja (selatan Padang Angin)', 'Kalahkan Morgath di jantung Rawa Senja', 'Lapor ke Tetua Bram', 'Bicara lagi dengan Tetua Bram', 'Bab 3: Temui Penjaga Nila di Puncak Beku (utara Padang Angin)', 'Nyalakan 3 Obor Kuno di Puncak Beku', 'Kalahkan Naga Es Kryos di puncak gunung', 'Lapor ke Tetua Bram', 'Bab 4: Bicara dengan Lina di desa', 'Tanyai penduduk desa tentang mimpi buruk', 'Periksa prasasti di Pohon Induk saat malam', 'Cari danau berkilau seperti cermin di barat desa', 'Tanyakan Tetua Bram tentang kamar di kuil', ''];
+const STAGE_GOAL = [['village', 486, 324], ['forest', 600, 90], null, ['forest', 640, 1046], ['forest', 640, 1076], ['village', 486, 324], ['swamp', 604, 130], ['swamp', 640, 840], ['village', 486, 324], ['village', 486, 324], ['snow', 596, 1080], null, ['snow', 640, 260], ['village', 486, 324], ['village', 604, 318], null, ['village', 560, 366], ['lake', 1010, 470], ['village', 486, 324]];
 const SKILLS = [{ lv: 2, n: 'Dash', d: 'SHIFT / tombol DASH: melesat & kebal sesaat.' }, { lv: 3, n: 'Tebasan Putar', d: 'Tahan SERANG lalu lepas: tebas ke segala arah.' }, { lv: 5, n: 'Nova Es', d: 'Tahan SIHIR (atau C): ledakan es 8 MP, musuh melambat.' }];
 const ACH = [
   { id: 'k10', n: 'Pemburu Pemula', d: 'Kalahkan 10 monster', ok: () => totalKills() >= 10, gift: ['gold', 30] },
@@ -1898,6 +1952,57 @@ const ACH = [
   { id: 'bosses', n: 'Penakluk', d: 'Kalahkan semua boss & mini-boss', ok: () => ['mb_goblin', 'mb_queen', 'mb_snake', 'boss', 'golem', 'witch', 'dragon'].every(f => S.flags[f]), gift: ['hipotion', 5] },
   { id: 'beast', n: 'Ahli Monster', d: 'Lengkapi bestiari monster biasa', ok: () => BEAST.every(k => S.kills[k]), gift: ['medal', 1] },
 ];
+
+'use strict';
+// Jurnal: catatan lore (LORE), misteri jangka panjang (MYSTERY), penyelidikan jangka menengah (midGoal). Lihat docs/GAME_DESIGN.md
+// LORE[id] = [kategori, judul, isi]. Didapat lewat learn(id) → S.lore[id] = 1
+const LORE = {
+  tanda: ['Petunjuk', 'Tanda di tanganku', 'Saat menyentuh Kristal Lumina, tanda berbentuk daun di telapak tanganku berkedip. Hangat... seperti dikenali.'],
+  suara_goblin: ['Petunjuk', 'Gumaman Raja Goblin', '"Suara itu... berjanji... cahaya untukku..." katanya sebelum tumbang. Suara siapa?'],
+  suara_morgath: ['Petunjuk', 'Kata terakhir Morgath', '"Dia di bawah akar... menjanjikan cahaya abadi..." Morgath juga mendengar suara itu?'],
+  suara_kryos: ['Petunjuk', 'Bisikan yang membangunkan naga', 'Kryos bilang ia dibangunkan oleh bisikan dari bawah tanah. Morgath hanya menyampaikannya.'],
+  relief_obor: ['Petunjuk', 'Relief di obor kuno', 'Ukiran seorang wanita mengangkat tangan bercahaya. Di telapaknya ada tanda daun... sama seperti tanganku.'],
+  sura_selene: ['Petunjuk', 'Nama dari Pertapa Sura', '"Matamu mirip seseorang... Selene." Sura langsung diam setelah mengucapkan nama itu.'],
+  prasasti_desa: ['Sejarah', 'Prasasti Pohon Induk', 'Tulisan kuno hampir terhapus: "...para Penjaga Cahaya menancapkan kristal, agar yang tertidur tetap tertidur..."'],
+  prasasti_hutan: ['Sejarah', 'Akar raksasa', 'Akar sebesar rumah menembus tanah hutan. Terlalu besar untuk pohon mana pun di sini.'],
+  prasasti_gua: ['Sejarah', 'Ukiran tambang', 'Ukiran di dinding gua: golem-golem dibuat untuk menjaga urat kristal. Gua ini dulunya tambang.'],
+  prasasti_rawa: ['Sejarah', 'Atap di bawah air', 'Di bawah air rawa tampak atap-atap batu. Prasasti yang tenggelam menyebut satu nama: "Aurel".'],
+  kincir_serikat: ['Dunia', 'Serikat Dagang', 'Serikat Dagang dari Simpang Rantau membeli lahan di mana-mana. Kata Darma, mereka butuh gudang untuk serpihan kristal dari Lembah Besi.'],
+  kota_lumina: ['Dunia', 'Kota Lumina', 'Kota Seribu Lentera di barat laut. Ada Dewan Kota dan Akademi Cahaya. Jalannya tertutup longsor.'],
+  mimpi: ['Petunjuk', 'Mimpi yang sama', 'Pak Darto, Bu Sari, dan Dodi memimpikan hal yang sama: akar hitam di bawah desa, dan wanita bercahaya yang menangis.'],
+  visi_pohon: ['Petunjuk', 'Penglihatan di Pohon Induk', 'Tanda di tanganku menyala. Aku melihat akar hitam berdenyut di bawah kristal... lalu sebuah danau berkilau seperti cermin di barat.'],
+  ratih: ['Petunjuk', 'Kesaksian Nenek Ratih', '16 tahun lalu, seorang wanita bercahaya menyeberangi Danau Cermin dengan perahu sambil menggendong bayi. Paginya perahu itu kembali kosong.'],
+  kuil_relief: ['Sejarah', 'Relief Perang Akar', 'Seribu tahun lalu sesuatu bangkit dari bawah akar. Para Penjaga Cahaya menancapkan kristal di seluruh benua untuk menahannya. Kristal adalah segel.'],
+  kuil_aurel: ['Sejarah', 'Relief Kerajaan Aurel', 'Sebuah kota besar bermenara tinggi bernama Aurel. Di bawahnya, akar hitam menjalar... lalu kota itu runtuh.'],
+  kuil_kamar: ['Petunjuk', 'Kamar terkunci', 'Pintu kamar terbuka saat tanda di tanganku menyentuhnya. Di dalam: buaian kosong, dan gelang kecil dengan tanda daun yang sama.'],
+  bram_aku: ['Petunjuk', 'Pengakuan Tetua Bram', '16 tahun lalu Bram menemukanku, masih bayi, di samping Kristal Lumina. Ia berjanji pada seseorang untuk merahasiakan sisanya.'],
+};
+// Misteri besar: muncul saat open() benar, terjawab (sebagian) saat ans() mengembalikan teks
+const MYSTERY = [
+  { q: 'Kenapa kristal-kristal meredup bersamaan?', open: () => S.stage >= 1, ans: () => S.lore.kuil_relief && 'Kristal adalah segel yang menahan sesuatu di bawah akar. Segelnya melemah.' },
+  { q: 'Siapa "suara" yang menghasut para penjahat?', open: () => S.lore.suara_goblin, ans: () => null, hint: () => `Petunjuk: ${['suara_goblin', 'suara_morgath', 'suara_kryos'].filter(k => S.lore[k]).length}/3` },
+  { q: 'Kenapa tanda di tanganku menyala?', open: () => S.lore.tanda, ans: () => null },
+  { q: 'Siapa Selene?', open: () => S.lore.sura_selene, ans: () => null },
+  { q: 'Siapa wanita bercahaya dalam mimpi?', open: () => S.lore.mimpi, ans: () => null },
+  { q: 'Apa yang disembunyikan Tetua Bram?', open: () => S.lore.kuil_kamar, ans: () => S.lore.bram_aku && 'Aku ditemukan bayi di samping kristal. Bram belum mau bercerita semuanya.' },
+  { q: 'Apa yang ada di bawah akar?', open: () => S.lore.visi_pohon, ans: () => null },
+];
+// Penyelidikan jangka menengah, mengikuti tahap cerita
+function midGoal() {
+  const s = S.stage;
+  if (s < 5) return 'Kenapa monster di sekitar desa mengamuk, dan kenapa Kristal Lumina meredup?';
+  if (s < 9) return 'Siapa Morgath, dan kenapa ia mengincar Lumina?';
+  if (s < 14) return 'Siapa yang membangunkan naga es di utara?';
+  if (s < 19) return 'Mimpi buruk apa yang menghantui penduduk desa?';
+  return 'Siapa wanita bercahaya itu? Catatan para Penjaga Cahaya tersimpan di Akademi Cahaya, Kota Lumina, tapi jalannya tertutup longsor.';
+}
+function learn(id) {
+  if (!LORE[id] || S.lore[id]) return false;
+  const before = MYSTERY.filter(m => m.open()).length; S.lore[id] = 1; sfx('save');
+  const after = MYSTERY.filter(m => m.open()).length;
+  banner(LORE[id][1], after > before ? 'MISTERI BARU · JURNAL' : 'JURNAL DIPERBARUI', false, 2000);
+  return true;
+}
 
 'use strict';
 // Jam & siang-malam
@@ -1979,7 +2084,7 @@ function buildTextures(sc) {
   addStrip(sc, 'snakei', artMon('snake', { G: '#9ad4f4', L: '#f0faff', E: '#1a2a5a', R: '#4a8aff' }));
   addStrip(sc, 'wisp', artWisp()); addStrip(sc, 'frog', artMon('frog')); addStrip(sc, 'slimep', artMon('slime', { G: '#a060d0', D: '#5a2a8a', L: '#f0d8ff' }));
   one('gate', artGate()); one('boulder', artBoulder()); one('plate', artPlate());
-  one('treeSw', (() => { const c = darkTree(IMGEL.treeB), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = yy < .25 ? .75 : yy < .55 ? .5 : .3; const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('warp0', artWarp(false)); one('warp1', artWarp(true)); one('icegate', artIceGate()); one('icebolt', artIceBolt());
+  one('treeSw', (() => { const c = darkTree(IMGEL.treeB), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = yy < .25 ? .75 : yy < .55 ? .5 : .3; const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('warp0', artWarp(false)); one('stele', artStele()); one('boat', artBoat()); one('relief', artRelief()); one('sealdoor0', artSealDoor(false)); one('sealdoor1', artSealDoor(true)); one('warp1', artWarp(true)); one('icegate', artIceGate()); one('icebolt', artIceBolt());
   one('light', artLight(80)); one('lights', artLight(36)); one('nlL', artLightP(54, .9)); one('nlS', artLightP(38, .85)); one('nlW', artLightP(18, .75));
   for (const id in ITEMS) { const c = artIcon(ICON_OF[id] && id === 'stonearm' ? 'chain' : id); one('ic_' + id, c); ICONS[id] = c.toDataURL(); }
   const A = sc.anims, fr2 = (k, n) => [...Array(n).keys()].map(i => ({ key: k, frame: i }));
@@ -2008,7 +2113,7 @@ class World extends Phaser.Scene {
     const M = this.M = MAPS[data.map || 'village'];
     if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
-    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
+    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
     this.walls = this.physics.add.staticGroup();
@@ -2028,6 +2133,7 @@ class World extends Phaser.Scene {
     if (M.gate) this.spawnPuzzle();
     if (M.torches) this.spawnTorches();
     if (WARPS[M.id]) this.spawnWarp();
+    this.spawnCh4();
     if (M.iceGate && S.stage < 12) this.spawnIceGate();
     for (const c of M.chests || []) if (!c.needFlag || S.flags[c.needFlag]) this.spawnChest(c);
     if (M.crystal) this.spawnCrystal();
@@ -2084,7 +2190,7 @@ class World extends Phaser.Scene {
     if (type === 'shrine') { this.wall(x - 56, y - 30, 14, 12); this.wall(x + 42, y - 30, 14, 12); s.setDepth(y - 60); }
     if (type === 'cavemouth') { s.setDepth(y - 30); this.wall(x - 46, y - 40, 22, 40); this.wall(x + 24, y - 40, 22, 40); }
     if (d.fade) this.fades.push({ s, l: x - s.width / 2 + 6, r: x + s.width / 2 - 6, t: y - s.height + 8, b: y - (d.col ? d.col[1] + d.col[2] : 4) });
-    if (type === 'sign') this.inter.push({ x, y: y + 2, r: 14, fn: () => talk(null, [opt.text]) });
+    if (type === 'sign' || type === 'stele') this.inter.push({ x, y: y + 2, r: 14, fn: async () => { if (opt.lore && !opt.text) return this.readLore(opt.lore); await talk(null, [opt.text]); if (opt.lore) learn(opt.lore); } });
     if (d.chim) {
       const cx = x + (opt && opt.flip ? -1 : 1) * d.chim[0], cy = y - s.height + d.chim[1];
       this.add.particles(cx, cy, 'smoke', { lifespan: 2600, speedY: { min: -16, max: -9 }, speedX: { min: -2, max: 7 }, scale: { start: .5, end: 1.5 }, alpha: { start: .5, end: 0 }, frequency: 480 }).setDepth(y + 1);
@@ -2634,6 +2740,7 @@ Object.assign(World.prototype, {
       updHud(); return;
     }
     S.stage = 12; updHud(); banner('Gerbang es mencair!', 'OBOR 3/3', true, 2200);
+    await sleep(900); await talk(null, ['Di sisi obor terakhir ada relief yang tersingkap salju yang mencair: seorang wanita mengangkat tangan bercahaya. Di telapaknya... tanda daun, sama seperti tanganmu.']); learn('relief_obor');
     await sleep(800); this.openIceGate(); await say('Ketiga obor menyala! Gerbang es di utara mencair. Naga Es menunggu di puncak.');
     saveGame(this);
   },
@@ -2672,8 +2779,147 @@ Object.assign(World.prototype, {
 });
 
 'use strict';
+// Bab 4 "Bisikan di Bawah Akar" (investigasi, tanpa boss) + Desa Kincir + prasasti lore. Lihat docs/GAME_DESIGN.md & docs/BENUA_LUMINA.md
+// Tahap: 14 bicara Lina → 15 tanya 3 penduduk → 16 Pohon Induk malam → 17 Danau Cermin & kuil → 18 tanya Bram → 19 selesai
+Object.assign(World.prototype, {
+  spawnCh4() {
+    const M = this.M;
+    for (const [x, y, id] of M.loreSpots || []) this.inter.push({ x, y, r: 16, fn: () => this.readLore(id) });
+    if (M.lanterns) {
+      this.lanS = M.lanterns.map(([x, y], i) => {
+        this.add.image(x, y, 'brazier').setOrigin(.5, 1).setDepth(y); this.wall(x - 8, y - 8, 16, 8);
+        const f = this.add.sprite(x, y - 11, 'fire').play('fire').setRotation(-Math.PI / 2).setScale(1.1).setDepth(y + 1).setVisible(!!S.flags.lake_path);
+        this.lights.push({ x, y: y - 12 }); this.inter.push({ x, y: y + 4, r: 16, fn: () => this.lightLantern(i) }); return f;
+      });
+      this.lanSeq = [];
+    }
+    if (M.boat) { const [x, y] = M.boat; this.add.image(x, y, 'boat').setOrigin(.5, 1).setDepth(y); this.inter.push({ x: x + 22, y: y - 4, r: 22, fn: () => this.useBoat() }); }
+    if (M.reliefs) for (const [x, y, id] of M.reliefs) { this.add.image(x, y, 'relief').setOrigin(.5, 1).setDepth(y); this.inter.push({ x, y: y + 12, r: 20, fn: () => this.readLore(id) }); }
+    if (M.sealDoor) { const [x, y] = M.sealDoor; this.sealS = this.add.image(x, y, S.lore.kuil_kamar ? 'sealdoor1' : 'sealdoor0').setOrigin(.5, 1).setDepth(y); this.inter.push({ x, y: y + 12, r: 20, fn: () => this.openSealDoor() }); }
+    if (M.patok && S.side.patok >= 1) this.spawnPatok();
+  },
+  spawnPatok() { const [x, y] = this.M.patok; this.add.image(x, y, 'stele').setOrigin(.5, 1).setScale(.7).setDepth(y); this.wall(x - 5, y - 5, 10, 5); this.inter.push({ x, y: y + 4, r: 14, fn: () => this.findPatok() }); },
+  async readLore(id) {
+    await talk(null, [LORE[id][2]]); learn(id);
+    if (id === 'prasasti_desa' && S.stage === 16) await this.treeVision();
+  },
+  // ---- Pohon Induk: penglihatan malam ----
+  async treeVision() {
+    if (!isNight()) {
+      if (!(await ask('Mimpi mereka selalu terjadi di malam hari. Tunggu di sini sampai malam?'))) return;
+      G.lock++; await fadeTo(1); S.time = 21; await sleep(500); await fadeTo(0); G.lock--;
+    }
+    G.lock++;
+    sfx('ice'); this.cameras.main.flash(900, 120, 220, 255); this.camShake(600, .004);
+    this.sparkle(this.pl.x, this.pl.y - 16, 'dot', 30); await sleep(900);
+    await talk(null, ['Tanda di telapak tanganmu menyala terang. Tanah di bawah kakimu terasa berdenyut...', 'Sekilas kamu melihat akar hitam yang sangat besar membelit kristal di bawah desa.', 'Lalu suara perempuan, lembut tapi jauh: "...Danau... cermin..."', 'Dan bayangan sebuah danau berkilau di barat, seperti cermin yang memantulkan bintang.']);
+    learn('visi_pohon'); S.stage = 17; updHud(); banner('Cari Danau Cermin di barat desa', 'PENYELIDIKAN', false, 2400); G.lock--; saveGame(this);
+  },
+  // ---- Danau Cermin: lentera kuno ----
+  async lightLantern(i) {
+    if (S.flags.lake_path) return talk(null, ['Lentera kuno menyala tenang. Permukaan danau berkilau seperti cermin.']);
+    if (S.stage < 17) return talk(null, ['Lentera batu kuno. Ada ukiran matahari di sisinya.']);
+    const order = [0, 1, 2]; this.lanSeq.push(i); sfx('fire'); this.lanS[i].setVisible(true);
+    const ok = this.lanSeq.every((v, k) => v === order[k]);
+    if (!ok) {
+      await sleep(400); sfx('buzz'); for (const f of this.lanS) f.setVisible(false); this.lanSeq = [];
+      return talk(null, ['Apinya padam satu per satu... Urutannya salah. Mungkin prasasti di dermaga memberi petunjuk.']);
+    }
+    if (this.lanSeq.length < 3) return;
+    S.flags.lake_path = 1; sfx('save'); this.cameras.main.flash(500, 220, 240, 255); this.sparkle(560, 500, 'dot', 30);
+    banner('Jalan cahaya terbuka', 'DANAU CERMIN', true, 2200);
+    await talk(null, ['Cahaya ketiga lentera memantul di permukaan danau, membentuk jalur berkilau menuju kuil di tengah danau.', 'Perahu di dermaga bergoyang pelan, seolah menunggu.']);
+    saveGame(this);
+  },
+  async useBoat() {
+    if (!S.flags.lake_path) return talk(null, ['Perahu tua. Setiap kali kamu mendorongnya, kabut tebal turun di tengah danau. Mungkin ada cara lain.']);
+    if (!(await ask('Naik perahu menuju kuil di tengah danau?'))) return;
+    this.goto('temple', 160, 224, 'up');
+  },
+  async openSealDoor() {
+    if (S.lore.kuil_kamar) return talk(null, ['Kamar kecil yang sunyi. Buaian kosong itu masih di sana.']);
+    if (!S.lore.kuil_relief || !S.lore.kuil_aurel) return talk(null, ['Pintu batu tanpa gagang. Ada ukiran telapak tangan di tengahnya. Mungkin pahami dulu relief di dinding kuil.']);
+    G.lock++;
+    await talk(null, ['Ukiran telapak tangan di pintu... bentuknya sama dengan tanganmu.', 'Kamu menempelkan tangan. Tanda daun di telapakmu menyala.']);
+    sfx('save'); this.cameras.main.flash(700, 200, 240, 255); this.sealS.setTexture('sealdoor1'); await sleep(700);
+    await talk(null, ['Pintu bergeser. Di dalam ada kamar kecil berdebu: sebuah buaian kosong, dan di atasnya gelang kecil dengan ukiran daun.', 'Siapa yang pernah tinggal di sini? Dan kenapa pintunya hanya terbuka oleh tanda di tanganmu?']);
+    learn('kuil_kamar'); addItem('bracelet'); S.stage = 18; updHud();
+    banner('Tanyakan Tetua Bram', 'PENYELIDIKAN', false, 2400); G.lock--; saveGame(this);
+  },
+  // ---- Desa Kincir: patok batas ladang ----
+  async findPatok() {
+    if (S.side.patok !== 1) return talk(null, ['Patok batu kuno: "Batas tanah keluarga Kincir. Disaksikan Penjaga Cahaya."']);
+    await talk(null, ['Di antara rumput tinggi ada patok batu tua. Tulisannya: "Batas tanah keluarga Kincir. Disaksikan Penjaga Cahaya."', 'Batasnya jauh di selatan, bukan di kincir. Tunjukkan ini kepada Darma.']);
+    S.side.patok = 2; sfx('ok'); updHud();
+  },
+  // Dialog cerita yang menimpa dialog biasa. Kembalikan true jika sudah ditangani.
+  async storyTalk(id, nm, T, gain) {
+    const st = S.stage;
+    // ---- Bab 4 ----
+    if (id === 'girl' && st === 14) {
+      await T('Kak Arka... aku mimpi buruk lagi semalam. Akar hitam di bawah rumah kita, dan seorang wanita bercahaya yang menangis.', 'Mama juga memimpikannya. Kata Mama, banyak orang desa bermimpi hal yang sama.', 'Kak... tolong cari tahu ya?');
+      S.stage = 15; updHud(); banner('Tanyai penduduk tentang mimpi buruk', 'BAB 4 · BISIKAN DI BAWAH AKAR', true, 2800); saveGame(this); return true;
+    }
+    if (st === 15 && ['farmer', 'merchant', 'child'].includes(id)) {
+      const k = { farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id];
+      if (!S.flags[k]) {
+        if (id === 'farmer') await T('Mimpi? Iya... akar hitam merayap dari bawah kebunku. Wanita bercahaya itu berdiri di atasnya, menahan akarnya dengan tangan.', 'Aneh, ya. Sejak kecil aku tak pernah bermimpi seburuk ini.');
+        if (id === 'merchant') await T('Kamu juga dengar? Aku memimpikannya tiga malam berturut-turut.', 'Wanita itu memanggil sebuah nama, tapi aku tak bisa mendengarnya. Lalu akarnya menelan cahaya.', 'Oh ya, pedagang keliling bilang orang di Kota Lumina juga gelisah. Entah ada hubungannya atau tidak.');
+        if (id === 'child') await T('Aku mimpi wanita bercahaya! Dia lihat ke arahku dan senyum, tapi matanya sedih.', 'Habis itu tanahnya gemetar. Aku bangun pas Mochi menggonggong... eh, Mochi kan kucing.');
+        S.flags[k] = 1; updHud();
+        const n = ['m_darto', 'm_sari', 'm_dodi'].filter(f => S.flags[f]).length;
+        if (n < 3) banner('Kesaksian ' + n + '/3', 'PENYELIDIKAN', false, 1600);
+        else { learn('mimpi'); await talk(null, ['Semua mimpi menunjuk ke bawah desa... ke akar Pohon Induk. Ada prasasti tua di dekat pohon itu.']); S.stage = 16; updHud(); saveGame(this); }
+        return true;
+      }
+    }
+    if (id === 'elder' && st >= 15 && st <= 17) { await T(['Mimpi buruk? Hm... jangan terlalu dipikirkan, Arka. Itu cuma mimpi.', 'Prasasti di Pohon Induk? Tulisannya sudah lama tak terbaca. Jangan... ah, tidak apa-apa.', 'Danau Cermin? Siapa yang memberitahumu tempat itu? ...Hati-hati di sana.'][st - 15]); return true; }
+    if (id === 'elder' && st === 18) {
+      await T('Gelang itu... dari mana kamu mendapatkannya?', '...Kamu masuk ke kamar di kuil.');
+      const r = await choose({ head: 'Bagaimana kamu bertanya?', x: 24, y: 40, w: 240, cancel: false, items: [{ t: 'Desak: "Kenapa Tetua merahasiakannya?"' }, { t: 'Pelan: "Aku hanya ingin tahu siapa aku."' }] });
+      S.flags.bram_choice = r === 0 ? 'desak' : 'pelan';
+      if (r === 0) await T('...Kamu berhak marah. Baiklah.', 'Enam belas tahun lalu aku menemukanmu, masih bayi, di samping Kristal Lumina. Gelang itu ada di tanganmu.', 'Aku berjanji pada seseorang untuk tidak menceritakan sisanya. Belum sekarang. Maafkan orang tua ini.');
+      else await T('...Kamu sudah besar, Arka. Duduklah.', 'Enam belas tahun lalu, di malam yang sangat terang, aku menemukanmu di samping Kristal Lumina. Gelang itu melingkar di tangan kecilmu.', 'Aku berjanji pada seseorang yang sangat menyayangimu untuk menjaga rahasia ini. Aku akan bercerita... saat waktunya tiba. Aku janji.');
+      learn('bram_aku'); S.stage = 19; updHud(); S.gold += 300; await gain(['Dapat 300 G.']);
+      banner('Pertanyaan baru menunggu', 'BAB 4 SELESAI', true, 3200); saveGame(this); return true;
+    }
+    if (id === 'elder' && st >= 19) { await T(S.flags.bram_choice === 'pelan' ? 'Arka... terima kasih sudah sabar dengan orang tua ini.' : 'Aku tahu kamu masih kesal. Aku tidak menyalahkanmu.', 'Jalan ke Kota Lumina tertutup longsor. Kalau sudah dibuka, Akademi Cahaya di sana mungkin punya jawaban yang tidak bisa kuberikan.'); return true; }
+    if (id === 'ratih') {
+      if (!S.lore.ratih && st >= 17) {
+        await T('Hm? Anak muda... matamu. Kamu dari Desa Lumina, ya?', 'Aku sudah tinggal di tepi danau ini sejak muda. Cucuku pindah ke Kota Lumina, tapi aku tak mau pergi.', 'Enam belas tahun lalu, di malam paling terang yang pernah kulihat, seorang wanita bercahaya mendayung ke kuil di tengah danau... sambil menggendong bayi.', 'Paginya perahu itu kembali sendiri. Kosong.');
+        learn('ratih'); return true;
+      }
+      await T(pick(st >= 17 ? ['Lentera-lentera kuno itu dulu dinyalakan setiap malam purnama. Kata nenekku, urutannya mengikuti jalan matahari... atau sebaliknya?', 'Kuil itu milik para Penjaga Cahaya. Sudah lama tak ada yang ke sana.'] : ['Danau ini memantulkan bintang bahkan di siang hari. Cantik, kan?', 'Jalan ke Kota Lumina tertutup longsor. Cucuku jadi jarang pulang.'])); return true;
+    }
+    // ---- Desa Kincir ----
+    if (id === 'wati') {
+      if (S.side.patok === 0) { await T('Kamu petualang yang menolong Ayah, kan? Aku Wati, anak Pak Joko.', 'Orang Serikat Dagang bilang ladang kami milik mereka. Peta mereka menunjukkan batasnya sampai di kincir!', 'Kakek buyut pernah memasang patok batu di ladang selatan. Kalau ketemu, Darma tak bisa membantah. Tolong carikan?'); S.side.patok = 1; if (this.M.patok) this.spawnPatok(); updHud(); return true; }
+      await T(['', 'Patoknya di ladang selatan, di antara rumput tinggi. Dulu dekat batu besar.', 'Ketemu?! Cepat tunjukkan ke Darma!', 'Ladang kami selamat. Desa Kincir berutang padamu!'][S.side.patok]); return true;
+    }
+    if (id === 'darma') {
+      if (S.side.patok === 2) {
+        await T('Patok kuno? "Disaksikan Penjaga Cahaya"... Hm. Peta Serikat ternyata salah.', 'Jujur saja, Serikat cuma butuh lahan untuk gudang. Serpihan kristal dari Lembah Besi menumpuk, dan pembeli dari luar benua mau berapa pun.', 'Baik. Aku akan melapor ke Simpang Rantau. Ladang ini tetap milik keluarga Kincir.');
+        S.side.patok = 3; learn('kincir_serikat'); S.gold += 150; addItem('seed', 3); await gain(['Wati mengirim hadiah: 150 G dan Benih x3!']); return true;
+      }
+      await T(S.side.patok === 3 ? 'Serikat sedang membangun gudang di tempat lain. Kristal itu laris sekali, aneh juga.' : 'Aku Darma, utusan Serikat Dagang dari Simpang Rantau. Lahan ini sudah tercatat di peta Serikat.', S.side.patok === 3 ? 'Kadang aku bertanya-tanya, untuk apa orang luar benua membeli serpihan kristal sebanyak itu.' : 'Kalau keluarga Kincir punya bukti lain, silakan tunjukkan.'); return true;
+    }
+    if (id === 'bayu') {
+      const m = await choose({ head: 'Pedagang Keliling Bayu', x: 70, y: 50, w: 160, items: [{ t: 'Beli' }, { t: 'Kabar dari jalan' }, { t: 'Keluar' }] });
+      if (m === 0) await buyMenu('Pedagang Keliling', ['antidote', 'hipotion', 'ether', 'seed']);
+      else if (m === 1) await T(pick(['Kota Lumina! Kota Seribu Lentera. Sayang jalannya dari Danau Cermin tertutup longsor, jadi aku harus memutar lewat sini.', 'Harga serpihan kristal naik tiga kali lipat bulan ini. Kapal-kapal dari Teluk Karang membawanya ke Benua Timur.', 'Penambang Lembah Besi bilang lembah mereka makin dingin. Padahal sekarang musim panas.', 'Simpang Rantau makin ramai. Serikat Dagang membangun gudang di mana-mana.']));
+      return true;
+    }
+    // ---- foreshadowing kecil ----
+    if (id === 'hermit' && st >= 8 && !S.lore.sura_selene) {
+      await T('Kabut menipis. Terima kasih, anak muda.', '...Tunggu. Biar kulihat wajahmu. Matamu... mirip seseorang. Selene...', '...Lupakan. Orang tua ini terlalu banyak bicara.'); learn('sura_selene'); return true;
+    }
+    return false;
+  },
+});
+
+'use strict';
 // Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif.
-const WARPS = { village: [548, 604], forest: [670, 162], meadow: [230, 372], cave: [166, 760], swamp: [672, 172], snow: [680, 1052] };
+const WARPS = { village: [548, 604], forest: [670, 162], meadow: [230, 372], cave: [166, 760], swamp: [672, 172], snow: [680, 1052], lake: [1080, 440] };
 for (const id in WARPS) { const M = MAPS[id]; (M.discs = M.discs || []).push([WARPS[id][0], WARPS[id][1], 22]); }
 Object.assign(World.prototype, {
   spawnWarp() {
@@ -2894,9 +3140,9 @@ Object.assign(World.prototype, {
       banner('Pecahan Segel ' + n + '/3', 'DAPAT', false, 2000);
       await say(n >= 3 ? 'Ketiga Pecahan Segel terkumpul! Bawa ke gerbang segel di depan Kuil Kristal.' : `Kamu mendapat Pecahan Segel (${n}/3). Masih ada ${3 - n} lagi di hutan ini.`);
     }
-    if (B.after === 'crystal') { S.stage = 4; updHud(); await say('Raja Goblin tumbang! Sentuh Kristal Lumina untuk memulihkan cahayanya.'); }
-    if (B.after === 'witch') { S.stage = 8; updHud(); const c = this.M.chests.find(c => c.needFlag === 'witch'); const sp = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'doto', 20); await say('Morgath lenyap bersama kabutnya... Rawa Senja mulai terang.'); await say('Sebuah peti muncul di tempat ia berdiri. Setelah itu, laporkan ke Tetua Bram.'); }
-    if (B.after === 'dragon') { S.stage = 13; updHud(); const c = this.M.chests.find(c => c.needFlag === 'dragon'); const sp = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'dot', 20); sp.setAlpha(0); this.tweens.add({ targets: sp, alpha: 1, duration: 600 }); await say('Kryos hancur menjadi serpihan es berkilau... Badai salju mereda.'); await say('Sebuah peti muncul di puncak. Setelah itu, laporkan ke Tetua Bram!'); }
+    if (B.after === 'crystal') { await say('Grr... suara itu... berjanji... cahaya untukku...', 'Raja Goblin'); learn('suara_goblin'); S.stage = 4; updHud(); await say('Raja Goblin tumbang! Sentuh Kristal Lumina untuk memulihkan cahayanya.'); }
+    if (B.after === 'witch') { await say('Kau tidak mengerti... Dia di bawah akar... menjanjikan cahaya abadi...', 'Morgath'); learn('suara_morgath'); S.stage = 8; updHud(); const c = this.M.chests.find(c => c.needFlag === 'witch'); const sp = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'doto', 20); await say('Morgath lenyap bersama kabutnya... Rawa Senja mulai terang.'); await say('Sebuah peti muncul di tempat ia berdiri. Setelah itu, laporkan ke Tetua Bram.'); }
+    if (B.after === 'dragon') { await say('Bukan... Morgath... yang membangunkanku... Bisikan dari bawah tanah... ia memanggil namamu, anak cahaya...', 'Kryos'); learn('suara_kryos'); S.stage = 13; updHud(); const c = this.M.chests.find(c => c.needFlag === 'dragon'); const sp = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'dot', 20); sp.setAlpha(0); this.tweens.add({ targets: sp, alpha: 1, duration: 600 }); await say('Kryos hancur menjadi serpihan es berkilau... Badai salju mereda.'); await say('Sebuah peti muncul di puncak. Setelah itu, laporkan ke Tetua Bram!'); }
     if (B.after === 'golemchest') { const c = this.M.chests.find(c => c.needFlag === 'golem'); const s = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'doto', 20); s.setAlpha(0); this.tweens.add({ targets: s, alpha: 1, duration: 600 }); await say('Sebuah peti harta muncul dari reruntuhan Golem Purba!'); }
     this.bossOn = false; G.lock--; playBGM(this.M.bgm); achCheck(this); saveGame(this);
   },
@@ -3010,7 +3256,10 @@ Object.assign(World.prototype, {
     this.cameras.main.flash(600, 200, 240, 255); this.sparkle(this.crystal.x, this.crystal.y - 16, 'dot', 26);
     const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; S.stage = 5; updHud();
     await sleep(700); banner('Kristal Lumina pulih!', 'MISI SELESAI', true, 2000); await sleep(1800);
-    await say('Cahaya kristal memulihkan seluruh tenagamu. Saatnya pulang dan melapor ke Tetua Bram.');
+    await say('Cahaya kristal memulihkan seluruh tenagamu.');
+    await say('...Tanda berbentuk daun di telapak tanganmu berkedip sesaat, hangat, lalu meredup lagi. Sejak kapan tanda ini bisa menyala?');
+    learn('tanda'); await sleep(400);
+    await say('Saatnya pulang dan melapor ke Tetua Bram.');
     G.lock--; saveGame(this);
   },
   async openChest(c, spr) {
@@ -3067,7 +3316,7 @@ Object.assign(World.prototype, {
 Object.assign(World.prototype, {
   npcHasQuest(id) {
     const sd = S.side;
-    return (id === 'elder' && [0, 5, 8, 9, 13].includes(S.stage)) || (id === 'hermit' && S.stage === 6) || (id === 'nila' && S.stage === 10) || (id === 'girl' && sd.mochi === 3 && !S.pet) || (id === 'mom' && has('fish') && has('veg')) || (id === 'hunter' && S.stage === 1) || (id === 'girl' && (sd.mochi === 0 || sd.mochi === 2)) ||
+    return (id === 'elder' && [0, 5, 8, 9, 13].includes(S.stage)) || (id === 'hermit' && S.stage === 6) || (id === 'nila' && S.stage === 10) || (id === 'girl' && S.stage === 14) || (S.stage === 15 && { farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id] && !S.flags[{ farmer: 'm_darto', merchant: 'm_sari', child: 'm_dodi' }[id]]) || (id === 'elder' && S.stage === 18) || (id === 'ratih' && S.stage >= 17 && !S.lore.ratih) || (id === 'wati' && S.side.patok === 0) || (id === 'darma' && S.side.patok === 2) || (id === 'girl' && sd.mochi === 3 && !S.pet) || (id === 'mom' && has('fish') && has('veg')) || (id === 'hunter' && S.stage === 1) || (id === 'girl' && (sd.mochi === 0 || sd.mochi === 2)) ||
       (id === 'farmer' && (sd.darto === 0 || (sd.darto === 1 && has('jelly', 5)))) || (id === 'joko' && (sd.joko === 0 || (sd.joko === 1 && has('tusk', 3))));
   },
   async talkNpc(o) {
@@ -3076,7 +3325,7 @@ Object.assign(World.prototype, {
     if (o.walking) { o.spr.setVelocity(0); o.walking = false; }
     this.face(o, dir);
     const T = (...l) => talk(nm, l), gain = async (lines) => { sfx('chest'); updHud(); await talk(null, lines); };
-    switch (id) {
+    if (!(await this.storyTalk(id, nm, T, gain))) switch (id) {
       case 'elder':
         if (S.stage === 0) {
           await T('Ah, Arka. Syukurlah kamu datang.', 'Akhir-akhir ini cahaya Kristal Lumina di selatan hutan makin redup.', 'Pemburu Raka sedang menyelidiki hutan. Temui dia di pintu masuk hutan, di selatan desa.', 'Bawa ini. Dan belilah perlengkapan di desa sebelum pergi.');
@@ -3322,23 +3571,50 @@ async function openBag(sc) {
   });
   G.lock--;
 }
+// Jurnal: 3 lapis tujuan (sekarang, penyelidikan, misteri besar) + catatan lore
 async function openQuests() {
-  const sd = S.side, rows = [];
-  rows.push(['UTAMA', S.stage >= 9 ? 'Bab 2 selesai! Terima kasih sudah bermain.' : STAGE_TXT[S.stage] + (S.stage === 2 ? ` (${S.inv.seal || 0}/3)` : ''), S.stage >= 9]);
-  rows.push(['Golem Purba (opsional)', 'Kalahkan Golem Purba di Gua Batu', !!S.flags.golem]);
-  rows.push(['Mochi hilang', ['Bicara dengan Lina', 'Cari Mochi di barat Hutan Lumina', 'Bawa Mochi pulang ke Lina', S.pet ? 'Selesai · Mochi ikut berpetualang' : 'Selesai'][sd.mochi], sd.mochi === 3]);
-  rows.push(['Lendir untuk Pak Darto', ['Bicara dengan Pak Darto', `Kumpulkan Lendir Slime (${Math.min(5, S.inv.jelly || 0)}/5)`, 'Selesai'][sd.darto], sd.darto === 2]);
-  if (S.seen.meadow) rows.push(['Taring untuk Pak Joko', ['Bicara dengan Pak Joko di Padang Angin', `Kumpulkan Taring Babi (${Math.min(3, S.inv.tusk || 0)}/3)`, 'Selesai'][sd.joko], sd.joko === 2]);
-  const w = win('menu', `<div class="mh">Buku Misi</div>${rows.map(([t, d, done]) => `<div class="qr${done ? ' done' : ''}"><b>${done ? '✓' : '•'} ${t}</b><br>${d}</div>`).join('')}`);
-  Object.assign(w.style, { left: '20px', right: '20px', top: '20px' });
-  await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 14 }); w.remove();
+  const sd = S.side, side = [];
+  side.push(['Golem Purba (opsional)', 'Kalahkan Golem Purba di Gua Batu', !!S.flags.golem]);
+  side.push(['Mochi hilang', ['Bicara dengan Lina', 'Cari Mochi di barat Hutan Lumina', 'Bawa Mochi pulang ke Lina', S.pet ? 'Selesai · Mochi ikut berpetualang' : 'Selesai'][sd.mochi], sd.mochi === 3]);
+  side.push(['Lendir untuk Pak Darto', ['Bicara dengan Pak Darto', `Kumpulkan Lendir Slime (${Math.min(5, S.inv.jelly || 0)}/5)`, 'Selesai'][sd.darto], sd.darto === 2]);
+  if (S.seen.meadow) side.push(['Taring untuk Pak Joko', ['Bicara dengan Pak Joko di Padang Angin', `Kumpulkan Taring Babi (${Math.min(3, S.inv.tusk || 0)}/3)`, 'Selesai'][sd.joko], sd.joko === 2]);
+  if (sd.patok) side.push(['Batas Ladang Desa Kincir', ['', 'Cari patok batu kuno di ladang selatan Desa Kincir', 'Tunjukkan patok itu kepada Darma', 'Selesai'][sd.patok], sd.patok === 3]);
+  const now = STAGE_TXT[S.stage] ? STAGE_TXT[S.stage] + (S.stage === 2 ? ` (${S.inv.seal || 0}/3)` : '') + (S.stage === 15 ? ` (${['m_darto', 'm_sari', 'm_dodi'].filter(k => S.flags[k]).length}/3)` : '') : 'Belum ada tugas utama. Jelajahi dunia, misteri masih menunggu.';
+  const myst = MYSTERY.filter(m => m.open()), lore = Object.keys(LORE).filter(k => S.lore[k]);
+  const tabs = ['Tujuan', 'Misteri', 'Catatan'];
+  let tab = 0, sel = 0;
+  const w = win('menu jrn'); Object.assign(w.style, { left: '12px', right: '12px', top: '14px', bottom: '14px' });
+  const sec = (h, t) => `<div class="jh">${h}</div><div class="jt">${t}</div>`;
+  function draw() {
+    let body = '';
+    if (tab === 0) body = sec('SEKARANG', now) + sec('PENYELIDIKAN', midGoal()) + sec('MISTERI BESAR', myst.length ? myst.filter(m => !m.ans()).map(m => '❓ ' + m.q).join('<br>') || 'Semua pertanyaan sementara terjawab...' : '<i>Belum ada. Dunia ini menyimpan lebih banyak dari yang terlihat.</i>')
+      + `<div class="jh">MISI SAMPINGAN</div>` + side.map(([t, d, done]) => `<div class="qr${done ? ' done' : ''}"><b>${done ? '✓' : '•'} ${t}</b><br>${d}</div>`).join('');
+    else if (tab === 1) body = myst.length ? myst.map(m => { const a = m.ans(); return `<div class="qr${a ? ' done' : ''}"><b>${a ? '💡' : '❓'} ${m.q}</b>${a ? '<br>' + a : m.hint ? '<br>' + m.hint() : ''}</div>`; }).join('') : '<i>Belum ada misteri yang tercatat.</i>';
+    else body = lore.length ? lore.map((k, i) => `<div class="qr jl${i === sel ? ' sel' : ''}" data-i="${i}"><b>${LORE[k][1]}</b> <small>· ${LORE[k][0]}</small>${i === sel ? '<br>' + LORE[k][2] : ''}</div>`).join('') : '<i>Belum ada catatan. Baca prasasti, dengarkan penduduk, perhatikan sekitar.</i>';
+    w.innerHTML = `<div class="bt">${tabs.map((n, i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="gold">B: tutup</span></div><div class="jb">${body}</div>`;
+    w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
+    w.querySelectorAll('.jl').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); sel = +e.dataset.i; sfx('cur'); draw(); });
+    const s = w.querySelector('.jl.sel'); if (s) s.scrollIntoView({ block: 'nearest' });
+  }
+  G.lock++; draw();
+  await new Promise(res => {
+    const prev = UIH;
+    UIH = k => {
+      if (k === 'left' || k === 'right') { tab = (tab + (k === 'left' ? 2 : 1)) % 3; sel = 0; sfx('cur'); draw(); }
+      else if ((k === 'up' || k === 'down') && tab === 2 && lore.length) { sel = (sel + (k === 'up' ? lore.length - 1 : 1)) % lore.length; sfx('cur'); draw(); }
+      else if ((k === 'up' || k === 'down') && tab !== 2) w.querySelector('.jb').scrollTop += k === 'up' ? -40 : 40;
+      else if (k === 'b' || k === 'menu' || k === 'back' || k === 'a') { sfx('back'); UIH = prev; res(); }
+    };
+    w.addEventListener('pointerdown', ev => { if (ev.target === w) { UIH = prev; res(); } });
+  });
+  w.remove(); G.lock--;
 }
 
 'use strict';
 // Layar peta & navigasi tujuan misi
 // ---------------- PETA ----------------
 const MINI = {};
-const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja'], ['snow', 'Puncak Beku']];
+const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja'], ['snow', 'Puncak Beku'], ['lake', 'Danau Cermin']];
 function buildMini(sc, M, s) {
   const key = M.id + '_' + s.toFixed(4); if (MINI[key]) return MINI[key];
   const w = Math.round(M.w * s), h = Math.round(M.h * s), c = document.createElement('canvas'); c.width = w; c.height = h;
@@ -3390,7 +3666,7 @@ async function openMap(sc) {
 // ---------------- MENU UTAMA ----------------
 async function mainMenu(sc) {
   G.lock++; sfx('ok'); let sel = 0;
-  const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Misi', 'Misi utama & sampingan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
+  const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Jurnal', 'Tujuan, misteri & catatan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
     ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()],
     ['Simpan', 'Simpan permainan', async () => { const ok = saveGame(sc); sfx(ok ? 'save' : 'buzz'); await say(ok ? 'Permainan tersimpan.' : 'Gagal menyimpan.'); }],
     ['Pengaturan', 'Suara, getar, layar', () => openSettings()], ['Tutup', 'Kembali bermain', null]];

@@ -15,6 +15,7 @@ async function boot(page, { fresh = true } = {}) {
   await page.waitForFunction(() => document.getElementById('title') && window.__game && window.__game.sc, null, { timeout: 30_000 });
   return errors;
 }
+// Catatan: fungsi jangan mengembalikan objek Phaser (serialisasi bisa macet); bungkus dengan { }.
 const G = (page, fn, arg) => page.evaluate(fn, arg);
 async function press(page, k, n = 1, wait = 150) { for (let i = 0; i < n; i++) { await G(page, k => window.__game.press(k), k); await page.waitForTimeout(wait); } }
 async function flush(page, max = 40) { // tekan A sampai semua dialog tertutup

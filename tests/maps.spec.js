@@ -17,7 +17,7 @@ test('semua peta bisa dimasuki', async ({ page }, info) => {
 test('pintu rumah & keluar lagi', async ({ page }) => {
   const errors = await h.boot(page);
   await h.newGame(page);
-  await h.G(page, () => window.__game.sc.pl.setPosition(513, 300));
+  await h.G(page, () => { window.__game.sc.pl.setPosition(513, 300); });
   await h.hold(page, 'up', 500);
   await page.waitForFunction(() => window.__game.sc.M.id === 'elderhome', null, { timeout: 8000 });
   await page.waitForTimeout(500);

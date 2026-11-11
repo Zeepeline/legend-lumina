@@ -29,6 +29,7 @@ const ITEMS = {
   baxe: { n: 'Kapak Perang', k: 'wpn', wt: 'axe', atk: 15, d: 'Serang +15. Lambat, ayunan lebar, pukulan berat.' },
   hbow: { n: 'Busur Pemburu', k: 'wpn', wt: 'bow', atk: 2, price: 90, d: 'Serang +2. Tembak panah jarak jauh tanpa MP.' },
   fspear: { n: 'Tombak Beku', k: 'wpn', wt: 'spear', atk: 28, frz: .25, d: 'Serang +28. Tusukan kadang membekukan musuh. Harta Kryos.' },
+  bracelet: { n: 'Gelang Daun', k: 'acc', def: 2, regen: 1, d: 'Gelang kecil dari kuil dengan ukiran daun. Hangat saat dipakai.' },
   cloth: { n: 'Baju Kain', k: 'arm', def: 0, d: 'Pakaian sehari-hari.' },
   leather: { n: 'Rompi Kulit', k: 'arm', def: 3, d: 'Tahan +3.' },
   chain: { n: 'Zirah Besi', k: 'arm', def: 6, price: 150, d: 'Tahan +6.' },

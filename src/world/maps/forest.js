@@ -12,7 +12,7 @@ MAPS.forest = {
   ],
   discs: [[1010, 320, 72], [180, 846, 58], [1030, 860, 62], [640, 1068, 92], [380, 440, 30], [640, 150, 34]],
   river: { y: 600, amp: 30, k: .009, w: 36, bridge: [380, 432] },
-  objs: [
+  objs: [['stele', 556, 1004, { lore: 'prasasti_hutan' }], 
     ['shrine', 640, 1094], ['sign', 676, 120, { text: 'Kuil Kristal: ikuti jalan ke selatan.\nTimur: perkemahan goblin.\nTenggara: sarang ular.' }],
     ['log', 860, 270], ['stump', 1080, 380], ['rock', 960, 384], ['rock', 1100, 270], ['log', 228, 760], ['rock', 130, 880],
     ['rock', 520, 820], ['stump', 760, 900], ['rock', 520, 1050], ['rock', 760, 1060], ['mush', 300, 300], ['mush', 450, 700],

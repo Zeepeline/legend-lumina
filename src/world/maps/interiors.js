@@ -19,3 +19,8 @@ MAPS.linahome = makeRoom('linahome', 'Rumah Lina', [272, 238], {
   wallc: '#f0d8c8', furn: [['rug', 132, 160, 0], ['table', 143, 112], ['stove', 64, 50], ['shelf', 220, 52, 4], ['bed', 62, 150, 0], ['bed', 236, 150, 1]], windows: [120, 180],
   npcs: [{ id: 'mom', ch: 'mom', name: 'Bu Wulan', x: 120, y: 112, dir: 'down' }],
 });
+MAPS.temple = makeRoom('temple', 'Kuil Penjaga Cahaya', [0, 0], {
+  wallc: '#b4bfd2', floor: ['#6e7890', '#9aa4b8', '#a8b2c4', '#828ca2'], ground: 'room', bgm: 'cave', furn: [['rug', 132, 150, 1]], windows: [],
+  exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'lake', tx: 936, ty: 530, dir: 'down', label: 'Danau Cermin' }],
+  reliefs: [[86, 70, 'kuil_relief'], [234, 70, 'kuil_aurel']], sealDoor: [160, 74],
+});
