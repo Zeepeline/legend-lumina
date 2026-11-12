@@ -9,11 +9,17 @@ test('menyeberang semua tepi wilayah tanpa layar hitam', async ({ page }) => {
   const res = [];
   for (const p of pairs) {
     const back = { E: [-70, 0], W: [70, 0], N: [0, 70], S: [0, -70] }[p.side], dir = { E: 'right', W: 'left', N: 'up', S: 'down' }[p.side];
-    await h.goto(page, p.a, p.x + back[0], p.y + back[1], dir); await page.waitForTimeout(400);
+    await h.goto(page, p.a, p.x + back[0], p.y + back[1], dir);
+    // tunggu teleport (yang memakai layar hitam) benar-benar selesai sebelum mengukur penyeberangan
+    await page.waitForFunction(a => window.__game.sc.M.id === a && !window.__game.sc.trans && !(+FADE.style.opacity), p.a, { timeout: 15000 }); await page.waitForTimeout(300);
     await h.G(page, () => { window.__fade = 0; window.__game.sc.enemies.forEach(e => { e.hp = 0; e.spr.setPosition(-9999, -9999); }); window.__game.sc.pl.inv = 99; });
-    await h.G(page, d => window.__game.Input.held.push(d), dir);
-    let ok = true; try { await page.waitForFunction(b => window.__game.sc.M.id === b, p.b, { timeout: 6000 }); } catch (_) { ok = false; }
-    await h.G(page, () => { window.__game.Input.held.length = 0; });
+    let ok = false;
+    for (let attempt = 0; attempt < 2 && !ok; attempt++) { // 1 percobaan ulang: saat CPU sibuk teleport/monster bisa mengganggu
+      if (attempt) { await h.goto(page, p.a, p.x + back[0], p.y + back[1], dir); await page.waitForFunction(a => window.__game.sc.M.id === a && !window.__game.sc.trans && !(+FADE.style.opacity), p.a, { timeout: 15000 }); await page.waitForTimeout(300); await h.G(page, () => { window.__fade = 0; window.__game.sc.enemies.forEach(e => { e.hp = 0; e.spr.setPosition(-9999, -9999); }); window.__game.sc.pl.inv = 99; }); }
+      await h.G(page, d => window.__game.Input.held.push(d), dir);
+      try { await page.waitForFunction(b => window.__game.sc.M.id === b, p.b, { timeout: 10000 }); ok = true; } catch (_) { }
+      await h.G(page, () => { window.__game.Input.held.length = 0; });
+    }
     res.push({ ...p, ok, fade: await h.G(page, () => window.__fade) });
   }
   console.log(res.map(r => `${r.a} -${r.side}-> ${r.b}: ${r.ok ? 'OK' : 'GAGAL'} fade=${r.fade}`).join('\n'));

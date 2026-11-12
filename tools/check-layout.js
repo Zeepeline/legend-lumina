@@ -12,7 +12,7 @@ const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const files = [...html.matchAll(/<script src="(src\/[^"]+)"><\/script>/g)].map(m => m[1]);
 // muat cukup file untuk MAPS & OBJ (fungsi art/ui tidak dijalankan)
 
-for (const f of files) if (/world\/(objects|ground|maps\/)/.test(f)) { try { load(f); } catch (e) { console.error('Gagal memuat', f, e.message); } }
+for (const f of files) if (/world\/(objects|ground|maps\/|layout)/.test(f)) { try { load(f); } catch (e) { console.error('Gagal memuat', f, e.message); } }
 const { MAPS, OBJ } = vm.runInContext('({ MAPS, OBJ })', ctx);
 
 // ---- aturan ----

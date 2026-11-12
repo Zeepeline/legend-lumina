@@ -36,8 +36,13 @@ Object.assign(World.prototype, {
     if (!this.owN || !this.owN.length || this.trans || G.lock || this.bossOn) return;
     const pl = this.pl, M = this.M; if (pl.x >= 0 && pl.x <= M.w && pl.y >= 0 && pl.y <= M.h) return;
     const n = this.owN.find(n => { const B = MAPS[n.to]; return pl.x >= n.ox && pl.x <= n.ox + B.w && pl.y >= n.oy && pl.y <= n.oy + B.h; });
-    if (!n) return;
-    if (n.to === 'forest' && S.stage === 0) { pl.setPosition(clamp(pl.x, 4, M.w - 4), clamp(pl.y, 4, M.h - 4)); this.guardStop(); return; }
+    const back = () => pl.setPosition(clamp(pl.x, 4, M.w - 4), clamp(pl.y, 4, M.h - 4));
+    // hanya lewat celah pintu tepi (di luar itu ada pagar/rumah/pohon wilayah sebelah)
+    const e = n.ex, along = n.side === 'E' || n.side === 'W' ? pl.y : pl.x, lo = n.side === 'E' || n.side === 'W' ? e.y : e.x, hi = lo + (n.side === 'E' || n.side === 'W' ? e.h : e.w);
+    if (along < lo - 18 || along > hi + 18) { back(); return; }
+    // awal cerita: penjaga melarang ke hutan (juga lewat medan peralihan menuju hutan)
+    const toForest = n.to === 'forest' || (MAPS[n.to].peralihan && MAPS[n.to].peralihan.includes('forest') && M.id === 'village');
+    if (toForest && S.stage === 0) { back(); this.guardStop(); return; }
     // ganti wilayah aktif tanpa layar hitam: posisi & kamera dipindah ke koordinat wilayah baru
     this.trans = true; const cam = this.cameras.main, x = Math.round(pl.x - n.ox), y = Math.round(pl.y - n.oy);
     S.map = n.to; S.x = x; S.y = y; S.dir = pl.dir;

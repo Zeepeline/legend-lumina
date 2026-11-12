@@ -26,6 +26,9 @@ test('senjata, status, pengaturan, bab 3', async ({ page }) => {
   await h.goto(page, 'village', 512, 360, 'up'); await h.talkTo(page, 'elder');
   expect((await h.S(page)).stage).toBe(10);
   await h.goto(page, 'meadow', 600, 120, 'up'); await h.hold(page, 'up', 1500);
+  // sejak dunia terbuka Tahap 2 ada Lereng Puncak Beku (medan peralihan) di antara padang & salju
+  await page.waitForFunction(() => window.__game.sc.M.id === 'pl_meadow_snow', null, { timeout: 8000 });
+  { const e = await h.G(page, () => { const e = MAPS.pl_meadow_snow.exits.find(e => e.to === 'snow'); return [e.x + e.w / 2, e.y + 40]; }); await h.goto(page, 'pl_meadow_snow', e[0], e[1], 'up'); await h.hold(page, 'up', 1500); }
   await page.waitForFunction(() => window.__game.sc.M.id === 'snow', null, { timeout: 8000 }); await page.waitForTimeout(800); await h.flush(page);
   await h.G(page, () => { const sc = window.__game.sc; sc.enemies.forEach(e => e.spr.setPosition(3000, 3000)); });
   await h.talkTo(page, 'nila'); expect((await h.S(page)).stage).toBe(11);
