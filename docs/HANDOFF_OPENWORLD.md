@@ -1,7 +1,7 @@
 # HANDOFF — Open World Legenda Lumina (lanjutan)
 
 > Untuk agen berikutnya. Baca ini + `AGENTS.md` sebelum mengubah apa pun.
-> Status per v1.27.0 (sw `lumina-v33`), 12 Nov 2026.
+> Status per v1.27.1 (sw `lumina-v34`), 12 Nov 2026.
 
 ## 0. Aturan wajib
 - Balas user dalam **Bahasa Indonesia**.
@@ -44,6 +44,7 @@ Saran implementasi: hapus clamp kamera antar wilayah (batas kamera = batas benua
 - `owHandoff(B)`: pindah kontrol ke B (salin state pemain, efek aktif `makeActiveFx`/`dropActiveFx`, musik, HUD, `S.map`, `B.owN`).
 - `updCross` (openworld.js): lintas hanya lewat celah exit (margin 6px); stage 0 → penjaga blokir hutan. Jika region sudah dimuat → handoff, kalau belum → fallback restart.
 - `hurtPlayer` dari scene pasif diteruskan ke `G.scene` dengan konversi koordinat.
+- Kamera: `regBounds()` juga memanggil `cameras.main.setBounds(camB)` (v1.27.1). Jangan kembalikan `setBounds(0,0,M.w,M.h)` untuk wilayah luar ruang.
 - Matikan untuk debug: `window.REGIONS_OFF = true` (regions) / `window.STREAM_OFF = true` (streaming).
 - Fungsi bantu: `relXY(from,to)`, `wposOf(id)`, `removeRegions(except)`.
 
@@ -92,7 +93,7 @@ PERF=1 npx playwright test tests/perf.spec.js  # cek frame (bandingkan dengan NO
 - Helper tes: `boot`, `newGame`, `loadGame`/`gotoGame`, `waitForGameReady`, `goto`, `press`, `flush`, `G`, `hold`, `faceNpc`, `learnAll`, `S`, `noErrors`.
 
 ## 6. Rutinitas rilis
-1. Bump `sw.js` `lumina-vNN` (+1, sekarang v33) dan `GAME_VERSION` (sekarang `1.27.0`).
+1. Bump `sw.js` `lumina-vNN` (+1, sekarang v34) dan `GAME_VERSION` (sekarang `1.27.1`).
 2. `python3 tools/bundle.py` lalu `npm run check` (0 masalah).
 3. Update `PROGRES_FITUR.md` dan baris terkait di `AGENTS.md`.
 4. Commit, lalu `git fetch origin main && git rebase FETCH_HEAD && git push`.
