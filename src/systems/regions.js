@@ -6,7 +6,7 @@
 const REG_LOAD = 960, REG_KEEP = 1400, REG_MAX = 7;
 const REG = new Map(); // id peta → scene pasif
 let regSeq = 0;
-function regionsOn() { return !window.REGIONS_OFF; }
+function regionsOn() { return !window.REGIONS_OFF && !BENUA; }
 function wposOf(id) { return WORLD_POS[id]; }
 function relXY(from, to) { const a = wposOf(from.M.id), b = wposOf(to.M.id); return [a[0] - b[0], a[1] - b[1]]; } // titik di `from` → koordinat `to`
 function removeRegions(except) { for (const [id, s] of REG) { if (s === except) continue; REG.delete(id); try { s.scene.remove(); } catch (_) { } } }
@@ -35,6 +35,7 @@ Object.assign(World.prototype, {
   },
   // ---- wilayah aktif: muat/buang wilayah di sekitar & selaraskan kamera ----
   updRegions(dt) {
+    if (this.M.benua) return this.updBenua(dt); // mode benua: satu peta (systems/benua_scene.js)
     if (!regionsOn() || this.passive || G.title || this.M.indoor || !wposOf(this.M.id)) return;
     this.regT = (this.regT || 0) - dt;
     if (this.regT <= 0) {

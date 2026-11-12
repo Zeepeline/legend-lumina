@@ -19,7 +19,8 @@ Object.assign(World.prototype, {
     const M = this.M; this.gImgs = new Map(); this.gL = []; this.gStream = !M.indoor && !G.title && !window.STREAM_OFF; // STREAM_OFF: hanya untuk tes perbandingan
     if (glOn(M)) { this.gStream = false; this.cameras.main.setBackgroundColor('rgba(0,0,0,0)'); return; } // tanah digambar lapisan bersama GL
     if (!this.gStream) { if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M)); this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6); return; }
-    this.gL.push(gLayer(M, 0, 0));
+    if (M.benua) this.gL = M.regions.map(id => gLayer(MAPS[id], WORLD_POS[id][0], WORLD_POS[id][1])); /* benua: tanah tiap wilayah di posisi globalnya */
+    else this.gL.push(gLayer(M, 0, 0));
     // potongan di sekitar titik masuk dibuat langsung agar layar pertama sudah lengkap
     const x = data.cam ? data.cam.x + VW / 2 : (data.x || S.x), y = data.cam ? data.cam.y + VH / 2 : (data.y || S.y);
     this.gFillView(x - VW / 2, y - VH / 2);

@@ -16,7 +16,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.27.6';
+const GAME_VERSION = '1.28.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
@@ -82,7 +82,7 @@ function addItem(id, n = 1) {
 function hasSave() { return !!readSaveRaw(); }
 function saveGame(sc) {
   try {
-    if (sc && sc.pl) { S.x = Math.round(sc.pl.x); S.y = Math.round(sc.pl.y); S.dir = sc.pl.dir; S.map = sc.M.id; }
+    if (sc && sc.pl) { S.x = Math.round(sc.pl.x); S.y = Math.round(sc.pl.y); S.dir = sc.pl.dir; S.map = sc.M.id; if (sc.M.benua) benuaLocalize(sc); }
     S.ver = GAME_VERSION; S.savedAt = Date.now(); const data = JSON.stringify(S);
     // cadangan bergilir (fitur #963): simpan salinan lama paling lama tiap 5 menit, maksimal 3
     try { const now = Date.now(), last = +localStorage.getItem(SAVE_KEY + '_bkt') || 0, old = localStorage.getItem(SAVE_KEY);

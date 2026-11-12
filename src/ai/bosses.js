@@ -80,7 +80,7 @@ Object.assign(World.prototype, {
     for (const o of this.enemies) if (!o.boss && Math.hypot(o.spr.x - B.x, o.spr.y - B.y) < 120) { o.spr.destroy(); o.sh.destroy(); o.hp = 0; }
     const e = this.spawnEnemy(B.type, B.x, B.y - 60); e.spr.setAlpha(0); this.bossE = e;
     const cam = this.cameras.main; this.camFollow = false; playBGM(null);
-    this.tweens.add({ targets: cam, scrollX: clamp(B.x - VW / 2, 0, this.M.w - VW), scrollY: clamp(B.y - 40 - VH / 2, 0, this.M.h - VH), duration: 700, ease: 'Sine.inOut' });
+    this.tweens.add({ targets: cam, scrollX: clamp(B.x - VW / 2, this.camB.x0, this.camB.x1 - VW), scrollY: clamp(B.y - 40 - VH / 2, this.camB.y0, this.camB.y1 - VH), duration: 700, ease: 'Sine.inOut' });
     await sleep(800); sfx('roar'); cam.shake(500, .012);
     this.tweens.add({ targets: e.spr, alpha: 1, y: B.y - 20, duration: 500 }); this.sparkle(e.spr.x, B.y - 30, 'doto', 20);
     await sleep(700);

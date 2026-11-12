@@ -29,6 +29,30 @@ Saran implementasi: hapus clamp kamera antar wilayah (batas kamera = batas benua
 ### Bug kecil yang terlihat di screenshot
 - HUD emas menampilkan pecahan panjang (`6640.7407867…`). Bulatkan saat menambah emas (`S.gold = Math.round(...)`, cari sumber pengali — kemungkinan bonus atribut/buff di `craft.js`/`polish.js`) dan tampilkan `Math.floor(S.gold)` di `updHud`.
 
+## 0b. MODE BENUA = ARAH UTAMA (keputusan pemilik 13 Nov): satu peta raksasa, file per wilayah tetap
+Pemilik memutuskan meninggalkan pendekatan multi-scene (wilayah pasif + handoff + GL) karena terus menimbulkan bug
+(celah, pohon terpotong, urutan kedalaman, layar gelap iPhone). Tahap 1 sudah ada di balik bendera: buka game dengan `?benua=1`
+(diingat di localStorage `lumina_benua`; `?benua=0` mematikan). Jika stabil → jadikan bawaan (ubah default `BENUA` di benua.js).
+**Cara kerja** (`systems/benua.js`, `systems/benua_scene.js`):
+- `buildBenua()` membuat `MAPS.benua`: objek, tembok (+ sungai/cincin), NPC, musuh, peti, ikan, pintu, boss, jalan dari SEMUA wilayah luar ruang
+  digeser ke `WORLD_POS`. Pintu ke wilayah luar lain dibuang (mulus), pintu ke interior/gua dipertahankan. File peta tidak diubah.
+- `World.create` dibungkus: `benuaData()` mengubah {map: wilayah, x, y lokal} → {map:'benua', x, y global, region}. Interior tetap peta biasa.
+- Tanah: `initGround` membuat lapisan `gLayer` per wilayah di posisi global (stream.js). Celah = hutan lebat (`updWilds`) + tembok.
+- `updBenua` (dipanggil dari `updRegions`): wilayah tempat Arka → `S.map`, `this.regId`, `this.R`, banner, musik; penjaga stage 0 ke hutan.
+- `goto(wilayahLuar, x, y)` di dalam benua = teleport tanpa memuat ulang. `saveGame` → `benuaLocalize` (save tetap id wilayah + koordinat lokal).
+- `questTarget` → `benuaTarget` (koordinat global). Kamera boss memakai `camB`.
+- Fitur per wilayah yang membaca `this.M` dipanggil lewat `withRegion(id, fn)` (this.M = `regionClone(id)`, koordinat digeser `shiftDeep`):
+  kebun, obor, patung teleport (WARPS digeser sementara), gerbang es, kristal, segel, Mochi, kucing desa.
+**BELUM di mode benua (kerjakan berurutan, lalu jadikan bawaan):**
+1. `spawnCh4`/`spawnCh5` (objek cerita Bab 4–5 memakai koordinat lokal literal) — WAJIB sebelum jadi bawaan. Saran: ubah fungsi
+   itu agar menerima offset (`const [ox, oy] = this.M._ox !== undefined ? [this.M._ox, this.M._oy] : [0, 0]`) lalu panggil via `withRegion`.
+2. `spawnAmbient`/`updAmbient` (ENV per `M.id`): pakai `this.R` (wilayah sekarang) + offset.
+3. `initSecrets`, `spawnHome`, `spawnRanch`, pedagang keliling (posMap lokal), wisp malam, cuaca per wilayah.
+4. Peta mini/peta besar & kabut (`explore.js`, `ui/map.js`) untuk `M.benua` (ringkasan `groundOverview` per wilayah sudah ada).
+5. Kinerja: benua = ±10.500 objek tampilan dalam 1 scene. Buat streaming objek per chunk (spawn saat dekat, hancurkan saat jauh).
+6. Setelah bawaan: hapus regions.js, groundlayer.js, openworld.js, peralihan border & kode `owN`.
+Uji cepat: `localStorage.lumina_benua='1'` lalu muat ulang; `__game.sc.M.id === 'benua'`, `__game.sc.regId` = wilayah sekarang.
+
 ## 1b. Update v1.27.4 (gradasi & hutan pengisi)
 - **Gradasi perbatasan** (`world/ground.js` `edgeSegs`/`edgeBlend`): pita 150 px tiap sisi, warna tanah tetangga muncul bertahap (noise koordinat GLOBAL + urutan id, jadi kedua sisi menyambung). Sisi tanpa tetangga memudar ke tanah hutan gelap. Menggantikan kasus khusus `pl_meadow_snow`/`pl_village_forest`.
 - **Hutan lebat pengisi celah** (`systems/wilds.js`): celah kosong di antara wilayah (±60% kotak benua) dihitung sekali dari `WORLD_POS`, digambar sebagai `tileSprite` kanopi + deretan pohon di tepi; dibuat lewat `makeActiveFx` (hanya wilayah aktif). Tidak ada lagi area hitam.

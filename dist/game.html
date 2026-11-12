@@ -5845,7 +5845,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.27.6';
+const GAME_VERSION = '1.28.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
@@ -5911,7 +5911,7 @@ function addItem(id, n = 1) {
 function hasSave() { return !!readSaveRaw(); }
 function saveGame(sc) {
   try {
-    if (sc && sc.pl) { S.x = Math.round(sc.pl.x); S.y = Math.round(sc.pl.y); S.dir = sc.pl.dir; S.map = sc.M.id; }
+    if (sc && sc.pl) { S.x = Math.round(sc.pl.x); S.y = Math.round(sc.pl.y); S.dir = sc.pl.dir; S.map = sc.M.id; if (sc.M.benua) benuaLocalize(sc); }
     S.ver = GAME_VERSION; S.savedAt = Date.now(); const data = JSON.stringify(S);
     // cadangan bergilir (fitur #963): simpan salinan lama paling lama tiap 5 menit, maksimal 3
     try { const now = Date.now(), last = +localStorage.getItem(SAVE_KEY + '_bkt') || 0, old = localStorage.getItem(SAVE_KEY);
@@ -8273,7 +8273,7 @@ Object.assign(World.prototype, {
     for (const o of this.enemies) if (!o.boss && Math.hypot(o.spr.x - B.x, o.spr.y - B.y) < 120) { o.spr.destroy(); o.sh.destroy(); o.hp = 0; }
     const e = this.spawnEnemy(B.type, B.x, B.y - 60); e.spr.setAlpha(0); this.bossE = e;
     const cam = this.cameras.main; this.camFollow = false; playBGM(null);
-    this.tweens.add({ targets: cam, scrollX: clamp(B.x - VW / 2, 0, this.M.w - VW), scrollY: clamp(B.y - 40 - VH / 2, 0, this.M.h - VH), duration: 700, ease: 'Sine.inOut' });
+    this.tweens.add({ targets: cam, scrollX: clamp(B.x - VW / 2, this.camB.x0, this.camB.x1 - VW), scrollY: clamp(B.y - 40 - VH / 2, this.camB.y0, this.camB.y1 - VH), duration: 700, ease: 'Sine.inOut' });
     await sleep(800); sfx('roar'); cam.shake(500, .012);
     this.tweens.add({ targets: e.spr, alpha: 1, y: B.y - 20, duration: 500 }); this.sparkle(e.spr.x, B.y - 30, 'doto', 20);
     await sleep(700);
@@ -16373,7 +16373,8 @@ Object.assign(World.prototype, {
     const M = this.M; this.gImgs = new Map(); this.gL = []; this.gStream = !M.indoor && !G.title && !window.STREAM_OFF; // STREAM_OFF: hanya untuk tes perbandingan
     if (glOn(M)) { this.gStream = false; this.cameras.main.setBackgroundColor('rgba(0,0,0,0)'); return; } // tanah digambar lapisan bersama GL
     if (!this.gStream) { if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M)); this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6); return; }
-    this.gL.push(gLayer(M, 0, 0));
+    if (M.benua) this.gL = M.regions.map(id => gLayer(MAPS[id], WORLD_POS[id][0], WORLD_POS[id][1])); /* benua: tanah tiap wilayah di posisi globalnya */
+    else this.gL.push(gLayer(M, 0, 0));
     // potongan di sekitar titik masuk dibuat langsung agar layar pertama sudah lengkap
     const x = data.cam ? data.cam.x + VW / 2 : (data.x || S.x), y = data.cam ? data.cam.y + VH / 2 : (data.y || S.y);
     this.gFillView(x - VW / 2, y - VH / 2);
@@ -16478,7 +16479,7 @@ Object.assign(World.prototype, {
 const REG_LOAD = 960, REG_KEEP = 1400, REG_MAX = 7;
 const REG = new Map(); // id peta → scene pasif
 let regSeq = 0;
-function regionsOn() { return !window.REGIONS_OFF; }
+function regionsOn() { return !window.REGIONS_OFF && !BENUA; }
 function wposOf(id) { return WORLD_POS[id]; }
 function relXY(from, to) { const a = wposOf(from.M.id), b = wposOf(to.M.id); return [a[0] - b[0], a[1] - b[1]]; } // titik di `from` → koordinat `to`
 function removeRegions(except) { for (const [id, s] of REG) { if (s === except) continue; REG.delete(id); try { s.scene.remove(); } catch (_) { } } }
@@ -16507,6 +16508,7 @@ Object.assign(World.prototype, {
   },
   // ---- wilayah aktif: muat/buang wilayah di sekitar & selaraskan kamera ----
   updRegions(dt) {
+    if (this.M.benua) return this.updBenua(dt); // mode benua: satu peta (systems/benua_scene.js)
     if (!regionsOn() || this.passive || G.title || this.M.indoor || !wposOf(this.M.id)) return;
     this.regT = (this.regT || 0) - dt;
     if (this.regT <= 0) {
@@ -16709,6 +16711,168 @@ Object.assign(GroundLayer.prototype, {
     return out;
   },
 });
+
+'use strict';
+// MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALIGUS dalam satu scene `World` berkoordinat
+// global (WORLD_POS). File tiap wilayah TIDAK diubah: datanya digeser saat MAPS.benua dibangun (buildBenua). Interior/gua tetap
+// peta terpisah. Save tetap menyimpan id wilayah + koordinat lokal (benuaLocalize), jadi kompatibel dengan mode lama.
+// Aktifkan: ?benua=1 (diingat di localStorage), matikan: ?benua=0. Status & sisa pekerjaan: docs/HANDOFF_OPENWORLD.md.
+const BENUA = (() => {
+  try {
+    const q = /[?&]benua=([01])/.exec(location.search);
+    if (q) localStorage.setItem('lumina_benua', q[1]);
+    return localStorage.getItem('lumina_benua') === '1';
+  } catch (_) { return false; }
+})();
+function isOutdoorRegion(id) { const M = MAPS[id]; return !!(M && WORLD_POS[id] && !M.indoor && M.ground !== 'room' && M.ground !== 'cave'); }
+function regionAt(x, y) {
+  for (const id of buildBenua().regions) { const [ox, oy] = WORLD_POS[id], M = MAPS[id]; if (x >= ox && x < ox + M.w && y >= oy && y < oy + M.h) return id; }
+  return null;
+}
+// geser koordinat secara umum: objek {x, y} dan larik angka [x, y, ...]
+function shiftDeep(v, ox, oy) {
+  if (Array.isArray(v)) {
+    if (v.length >= 2 && typeof v[0] === 'number' && typeof v[1] === 'number') return [v[0] + ox, v[1] + oy, ...v.slice(2).map(e => shiftDeep(e, ox, oy))];
+    return v.map(e => shiftDeep(e, ox, oy));
+  }
+  if (v && typeof v === 'object') {
+    const o = {};
+    for (const k in v) o[k] = (k === 'x' && typeof v.x === 'number') ? v.x + ox : (k === 'y' && typeof v.y === 'number') ? v.y + oy : shiftDeep(v[k], ox, oy);
+    return o;
+  }
+  return v;
+}
+const BENUA_SHIFT = ['gardens', 'gate', 'torches', 'iceGate', 'crystal', 'barrier', 'mochi', 'ranch', 'glow', 'paths', 'discs', 'rings', 'bosses', 'home'];
+function regionClone(id) { // salinan peta wilayah dengan koordinat global (untuk pemanggil spawnX yang membaca this.M)
+  const M = MAPS[id], [ox, oy] = WORLD_POS[id], C = Object.assign({}, M, { _ox: ox, _oy: oy });
+  for (const k of BENUA_SHIFT) if (M[k] !== undefined) C[k] = shiftDeep(M[k], ox, oy);
+  return C;
+}
+function buildBenua() {
+  if (MAPS.benua) return MAPS.benua;
+  const ids = Object.keys(WORLD_POS).filter(isOutdoorRegion);
+  const B = { id: 'benua', benua: 1, name: 'Benua Lumina', ground: 'meadow', regions: ids, objs: [], walls: [], npcs: [], enemies: [], chests: [],
+    fish: [], doors: [], feedSpots: [], animals: [], exits: [], bosses: [], paths: [], butterflies: 0 };
+  const xs = ids.map(id => WORLD_POS[id][0]), ys = ids.map(id => WORLD_POS[id][1]);
+  B.x0 = Math.min(...xs); B.y0 = Math.min(...ys);
+  B.w = Math.max(...ids.map(id => WORLD_POS[id][0] + MAPS[id].w)) - B.x0; B.h = Math.max(...ids.map(id => WORLD_POS[id][1] + MAPS[id].h)) - B.y0;
+  for (const id of ids) {
+    const M = MAPS[id], [ox, oy] = WORLD_POS[id], S2 = v => shiftDeep(v, ox, oy);
+    for (const o of mapObjects(M)) B.objs.push([o[0], o[1] + ox, o[2] + oy, o[3]]);
+    for (const r of [...mapWalls(M), ...blockRects(M)]) B.walls.push([r[0] + ox, r[1] + oy, r[2], r[3]]);
+    if (M.river) {
+      const R = M.river;
+      for (let x = 0; x < M.w; x += 8) {
+        if (x + 8 > R.bridge[0] + 4 && x < R.bridge[1] - 4) continue;
+        B.walls.push([x + ox, riverY(R, x + 4) - R.w / 2 - 1 + oy, 8, R.w + 2]);
+      }
+    }
+    if (M.ring) {
+      const R = M.ring;
+      for (let a = 0; a < 360; a += 4) {
+        if (Math.abs(a - 270) < R.gap - 2) continue; const t = a * Math.PI / 180;
+        B.walls.push([R.cx + Math.cos(t) * R.r - 6 + ox, R.cy + Math.sin(t) * R.r - 6 + oy, 12, 12]);
+      }
+    }
+    for (const n of M.npcs || []) B.npcs.push(Object.assign(S2(n), { reg: id }));
+    for (const e of M.enemies || []) B.enemies.push([e[0], e[1] + ox, e[2] + oy, ...e.slice(3)]);
+    for (const k of ['chests', 'fish', 'doors', 'feedSpots', 'animals', 'bosses', 'paths']) for (const v of M[k] || []) B[k].push(S2(v));
+    for (const ex of M.exits || []) if (!isOutdoorRegion(ex.to)) B.exits.push(Object.assign({}, ex, { x: ex.x + ox, y: ex.y + oy }));
+    B.butterflies += M.butterflies || 0;
+  }
+  B._list = B.objs; // mapObjects(B): daftar sudah jadi (pohon tepi & sebaran wilayah sudah termasuk)
+  MAPS.benua = B;
+  return B;
+}
+// data masuk scene: wilayah luar ruang → peta benua (koordinat global)
+function benuaData(data) {
+  const id = data.map || 'village';
+  if (!BENUA || data.passive || G.title || !isOutdoorRegion(id)) return data;
+  const [ox, oy] = WORLD_POS[id];
+  return Object.assign({}, data, { map: 'benua', x: (data.x || S.x) + ox, y: (data.y || S.y) + oy, region: id, quiet: true, cam: null });
+}
+// dipanggil saveGame: simpan wilayah & koordinat lokal
+function benuaLocalize(sc) {
+  const id = regionAt(sc.pl.x, sc.pl.y) || sc.regId || 'village', [ox, oy] = WORLD_POS[id];
+  S.map = id; S.x = Math.round(sc.pl.x - ox); S.y = Math.round(sc.pl.y - oy);
+}
+// tujuan misi dalam koordinat global
+function benuaTarget(goal) {
+  if (isOutdoorRegion(goal[0])) { const [ox, oy] = WORLD_POS[goal[0]]; return { x: goal[1] + ox, y: goal[2] + oy }; }
+  const B = buildBenua(), cur = S.map, nx = routeNext(cur, goal[0]);
+  const ex = B.exits.find(e => e.to === goal[0]) || B.exits.find(e => e.to === nx);
+  if (ex) return { x: ex.x + ex.w / 2, y: ex.y + ex.h / 2 };
+  if (nx && isOutdoorRegion(nx)) { const [ox, oy] = WORLD_POS[nx]; return { x: ox + MAPS[nx].w / 2, y: oy + MAPS[nx].h / 2 }; }
+  return null;
+}
+
+'use strict';
+// Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat Arka berada, teleport tanpa memuat ulang.
+{ // create dibungkus: wilayah luar ruang → peta benua; lalu batas fisika/kamera & fitur per wilayah
+  const create0 = World.prototype.create;
+  World.prototype.create = function (data) {
+    data = benuaData(data || {});
+    if (data.map === 'benua') buildBenua();
+    create0.call(this, data);
+    if (this.M.benua) this.initBenua(data);
+  };
+  const goto0 = World.prototype.goto;
+  World.prototype.goto = function (map, x, y, dir, extra = {}) {
+    if (!(this.M.benua && isOutdoorRegion(map) && !Object.keys(extra).length)) return goto0.call(this, map, x, y, dir, extra);
+    const [ox, oy] = WORLD_POS[map], pl = this.pl, cam = this.cameras.main; // teleport di dalam benua: tanpa memuat ulang
+    pl.setPosition(x + ox, y + oy); pl.body.reset(x + ox, y + oy); pl.dir = dir || pl.dir;
+    this.cx = pl.x - VW / 2; this.cy = pl.y - 12 - VH / 2; cam.setScroll(Math.round(this.cx), Math.round(this.cy));
+    S.map = map; S.x = x; S.y = y; this.regId = null; this.trans = false;
+  };
+}
+Object.assign(World.prototype, {
+  initBenua(data) {
+    const M = this.M, cam = this.cameras.main, pl = this.pl;
+    this.physics.world.setBounds(M.x0, M.y0, M.w, M.h);
+    cam.setBounds(M.x0, M.y0, M.w, M.h); cam.setBackgroundColor('#2f4a2a');
+    this.camB = { x0: M.x0, y0: M.y0, x1: M.x0 + M.w, y1: M.y0 + M.h };
+    this.cx = clamp(pl.x - VW / 2, this.camB.x0, this.camB.x1 - VW); this.cy = clamp(pl.y - 12 - VH / 2, this.camB.y0, this.camB.y1 - VH);
+    cam.setScroll(Math.round(this.cx), Math.round(this.cy));
+    for (const r of wildRects()) this.wall(r[0], r[1], r[2] - r[0], r[3] - r[1]); // celah hutan lebat tidak bisa dimasuki
+    this.wild = new Map(); this.wildT = 0; this.regId = null; this.regT = 0; this.safeXY = [pl.x, pl.y];
+    for (const id of M.regions) this.withRegion(id, () => this.spawnRegionFx(id));
+    this.updBenua(0, data.region);
+  },
+  // jalankan fn dengan this.M = salinan wilayah id berkoordinat global (agar spawnX lama menaruh benda di tempat yang benar)
+  withRegion(id, fn) {
+    const keep = this.M, w0 = WARPS[id]; this.M = regionClone(id);
+    if (w0) WARPS[id] = shiftDeep(w0, WORLD_POS[id][0], WORLD_POS[id][1]);
+    try { fn(); } catch (e) { console.warn('benua: fitur wilayah', id, e); } finally { this.M = keep; if (w0) WARPS[id] = w0; }
+  },
+  spawnRegionFx(id) {
+    const M = this.M, P = WARPS[id]; // satu kegagalan tidak boleh menghentikan pembangunan benua
+    const run = f => { try { f(); } catch (e) { console.warn('benua:', id, e); } };
+    if (M.gardens) run(() => this.spawnGarden());
+    if (M.torches) run(() => this.spawnTorches());
+    if (P) run(() => this.spawnWarp());
+    if (M.iceGate && S.stage < 12) run(() => this.spawnIceGate());
+    if (M.crystal) run(() => this.spawnCrystal());
+    if (M.barrier && !S.flags.seal_open) run(() => this.spawnBarrier());
+    if (M.mochi && S.side.mochi === 1) run(() => this.spawnMochi());
+    if (id === 'village' && S.side.mochi === 3 && !S.pet) run(() => this.spawnCritter(['cat', 586 + M._ox, 300 + M._oy, 2]));
+  },
+  // tiap frame (dipanggil dari updRegions): wilayah tempat Arka berada → S.map, nama, musik; hutan pengisi
+  updBenua(dt, first) {
+    if ((this.wildT -= dt) <= 0) { this.wildT = .4; this.updWilds(); }
+    if ((this.regT -= dt) > 0 && !first) return; this.regT = .25;
+    const pl = this.pl, id = first || regionAt(pl.x, pl.y); if (!id) return;
+    // awal cerita: penjaga melarang masuk hutan (dulu lewat pintu tepi)
+    if (S.stage === 0 && (id === 'forest' || (MAPS[id].peralihan || []).includes('forest')) && !this.bossOn) {
+      pl.setPosition(this.safeXY[0], this.safeXY[1]); pl.body.reset(this.safeXY[0], this.safeXY[1]); if (!G.lock) this.guardStop(); return;
+    }
+    this.safeXY = [pl.x, pl.y];
+    if (id === this.regId) return;
+    const R = MAPS[id], was = this.regId; this.regId = id; this.R = R; S.map = id; S.seen[id] = 1;
+    if (!this.bossOn && !G.title) playBGM(this.weather === 'rain' ? null : bgmFor(R));
+    if (was && !G.title) { banner(R.name, id === 'village' ? 'SELAMAT DATANG DI' : 'MEMASUKI'); updHud(); }
+  },
+});
+for (const k of ['wildCanopyTex', 'updWilds', 'makeWild']) World.prototype[k] = GroundLayer.prototype[k];
 
 'use strict';
 // Percakapan NPC, toko, bengkel, penginapan
@@ -17882,7 +18046,7 @@ function questTarget(M) {
   let goal = STAGE_GOAL[S.stage];
   if (S.stage === 2) { const F = MAPS.forest; if ((S.inv.seal || 0) >= 3) goal = ['forest', F.barrier.x, F.barrier.y]; else { const B = F.bosses.find(b => b.after === 'seal' && !S.flags[b.flag]); goal = B ? ['forest', B.x, B.y] : null; } }
   if (S.stage === 11) { const T = MAPS.snow.torches, i = [0, 1, 2].find(k => !S.flags['torch' + k]); goal = i == null ? null : ['snow', T[i][0], T[i][1]]; }
-  if (!goal) return null; if (M.id === goal[0]) return { x: goal[1], y: goal[2] };
+  if (!goal) return null; if (M.benua) return benuaTarget(goal); if (M.id === goal[0]) return { x: goal[1], y: goal[2] };
   const nx = routeNext(M.id, goal[0]); if (!nx) return null; const ex = (M.exits || []).find(e => e.to === nx); return ex && { x: ex.x + ex.w / 2, y: ex.y + ex.h / 2 };
 }
 // peta besar ada di systems/explore.js (kabut, ikon, harta, zoom)
