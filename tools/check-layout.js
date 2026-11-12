@@ -32,6 +32,13 @@ for (const [id, M] of Object.entries(MAPS)) {
   if (M.indoor) continue;
   const objs = (M.objs || []).map(([t, x, y, opt], i) => ({ t, x, y, i, ok: opt && opt.ok, b: box(t, x, y) }));
   const tag = o => `${id}: '${o.t}' (${o.x}, ${o.y})`;
+  // kandang (M.ranch): area pagar tidak boleh menumpuk gambar objek, jalan, atau NPC
+  const visH = t => { const k = OBJ[t] && OBJ[t].key, f = k && path.join(root, 'assets/img', k.replace(/^i_/, '') + '.png'); try { const b = fs.readFileSync(f); return b.readUInt32BE(20); } catch (_) { const c = OBJ[t] && OBJ[t].col; return Math.min(120, Math.max(28, (c && c[0] || 20) * 1.4)); } };
+  if (M.ranch) { const R = M.ranch, rb = { x1: R.x, y1: R.y - 14, x2: R.x + R.w, y2: R.y + R.h + 6 };
+    for (const o of objs) { const c = OBJ[o.t] && OBJ[o.t].col, w = c && c[0] ? c[0] : 20, vis = { x1: o.x - w / 2, x2: o.x + w / 2, y1: o.y - visH(o.t), y2: o.y + 2 }; if (hit(rb, vis)) issues.push(`${id}: kandang menumpuk '${o.t}' (${o.x}, ${o.y})`); }
+    for (const s of M.paths || []) if (boxSegDist(rb, s) < (s[4] || 12) / 2 + 2) issues.push(`${id}: kandang menutup jalan (${s.slice(0, 4).join(',')})`);
+    for (const a of M.animals || []) if (a[1] > rb.x1 - 8 && a[1] < rb.x2 + 8 && a[2] > rb.y1 - 8 && a[2] < rb.y2 + 8) issues.push(`${id}: hewan ${a[0]} di pagar kandang`);
+    for (const n of M.npcs || []) if (n.x > rb.x1 - 8 && n.x < rb.x2 + 8 && n.y > rb.y1 - 8 && n.y < rb.y2 + 8) issues.push(`${id}: NPC ${n.id} berdiri di kandang`); }
   for (const o of objs) {
     if (!OBJ[o.t]) { issues.push(`${tag(o)} tidak terdaftar di OBJ`); continue; }
     if (SKIP_TYPES.includes(o.t)) continue;

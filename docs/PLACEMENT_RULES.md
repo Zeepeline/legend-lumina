@@ -65,3 +65,8 @@ Tanda `ok` tanpa alasan, atau dengan alasan terlalu pendek, akan ditolak pemerik
 1. `node tools/check-layout.js` → 0 masalah.
 2. Lihat screenshot area itu (tes Playwright atau browser), jangan hanya percaya angka koordinat.
 3. Catat singkat di bagian Status `AGENTS.md`, maksimal 1 baris per fitur. Jangan menulis paragraf panjang.
+
+
+## Area berpagar (kandang, kebun)
+
+Area seperti `ranch` di data peta diperiksa `check-layout.js`: pagarnya tidak boleh menumpuk **gambar** objek (tinggi dibaca dari PNG asli), menutup jalan, atau berisi NPC/hewan. Contoh kesalahan nyata: kandang pertama menumpuk atap rumah dan pohon jeruk karena hanya kotak tabrakan yang dicek.

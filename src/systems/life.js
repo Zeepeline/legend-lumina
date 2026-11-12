@@ -2989,19 +2989,17 @@ Object.assign(World.prototype, {
     });
     this.updGarden(true);
   },
-  plotState(i) { const p = S.garden[i]; if (!p) return 'empty'; return gameHours() - p.t >= (p.fast ? 3 : 6) ? 'ripe' : 'grow'; },
+  plotState(i) { const p = S.garden[i]; if (!p) return 'empty'; return gameHours() - p.t >= plotHours(p) ? 'ripe' : 'grow'; },
   updGarden(force) { this.gT = (this.gT || 0) - this.dt; if (!force && this.gT > 0) return; this.gT = 1; this.garden.forEach((g, i) => { const st = this.plotState(i); g.spr.forEach(s => { s.setVisible(st !== 'empty'); s.setTexture(st === 'ripe' ? 'ripe' : 'sprout'); }); }); },
   async tendPlot(i) {
     const st = this.plotState(i);
     if (st === 'empty') {
-      if (!has('seed')) return talk(null, ['Petak kebun ini kosong. Beli Benih Sayur di kios Bu Sari untuk menanam.']);
-      addItem('seed', -1); S.garden[i] = { t: gameHours(), fast: this.weather === 'rain' }; sfx('ok'); this.updGarden(true);
-      return talk(null, ['Kamu menanam benih.' + (this.weather === 'rain' ? ' Hujan membuatnya tumbuh dua kali lebih cepat!' : ' Panen sekitar 6 jam lagi (lihat jam di kanan atas).')]);
+      return this.plantPlot(i);
     }
-    if (st === 'grow') { const left = Math.max(1, Math.ceil((S.garden[i].fast ? 3 : 6) - (gameHours() - S.garden[i].t))); return talk(null, [`Tunasnya tumbuh subur. Panen sekitar ${left} jam lagi.`]); }
-    S.garden[i] = null; addItem('veg', 3); S.st.harvest++; sfx('chest'); this.updGarden(true); updHud();
+    if (st === 'grow') { const left = Math.max(1, Math.ceil(plotHours(S.garden[i]) - (gameHours() - S.garden[i].t))); return talk(null, [`Tunasnya tumbuh subur. Panen sekitar ${left} jam lagi.`]); }
+    const SD = SEEDS[S.garden[i].seed || 'seed']; S.garden[i] = null; addItem(SD.out, SD.n); S.st.harvest++; sfx('chest'); this.updGarden(true); updHud();
     const g = this.M.gardens[i]; this.sparkle(g[0] + g[2] / 2, g[1] + g[3] / 2, 'dotg', 16);
-    await talk(null, ['Panen! Dapat Sayur Segar x3.']); achCheck(this);
+    await talk(null, [`Panen! Dapat ${ITEMS[SD.out].n} x${SD.n}.`]); achCheck(this);
   },
   spawnPuzzle() {
     const P = this.M.gate;

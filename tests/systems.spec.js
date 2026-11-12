@@ -29,7 +29,7 @@ test('memancing & berkebun', async ({ page }) => {
   await h.press(page, 'a', 1, 400); await h.flush(page);
   const st = await h.S(page); expect((st.inv.fish || 0) + (st.inv.gfish || 0) + (st.inv.oldboot || 0)).toBe(1);
   await h.goto(page, 'village', 400, 530, 'down');
-  await h.press(page, 'a', 1, 300); await h.flush(page);
+  await h.press(page, 'a', 1, 400); await h.press(page, 'a', 1, 400); await h.flush(page); // buka menu benih → tanam
   await h.G(page, () => window.__game.S.time += 7); await page.waitForTimeout(1300);
   await h.press(page, 'a', 1, 300); await h.flush(page);
   expect((await h.S(page)).inv.veg).toBe(3);

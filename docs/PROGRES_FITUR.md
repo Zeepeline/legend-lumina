@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 50 | 3 | 0 | 947 |
+| 54 | 4 | 0 | 942 |
 
 ## Selesai
 
@@ -69,6 +69,11 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 497 | Dapur rumah (Tungku → masak) | `systems/home.js` | 7 |
 | 498 | Bengkel rumah (Meja Kerajinan) | `systems/home.js` | 7 |
 | 674 | Papan arah kayu di 4 persimpangan (Padang Angin, Hutan Lumina) | `world/maps/meadow.js`, `forest.js` | 7 |
+| 47 | Peternakan: Kandang Arka di desa (ikut rumah), beli ayam/domba/sapi, maks 6 | `systems/ranch.js`, `world/maps/village.js` (`ranch`) | 8 |
+| 514 | Kandang ayam: telur harian | `systems/ranch.js` | 8 |
+| 515 | Kandang sapi: susu harian (item baru Susu Segar) | `systems/ranch.js` | 8 |
+| 519 | Kasih sayang: elus tiap hari, ♥ ≥ 6 → hasil ×2 | `systems/ranch.js` (`tendStock`) | 8 |
+| 505 | Irigasi per petak (250 G): tumbuh 2× lebih cepat | `systems/ranch.js` (`plantPlot`, `plotHours`) | 8 |
 
 ## Sebagian
 
@@ -77,6 +82,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 74 | Ukuran (4) & transparansi (3) tombol | Geser posisi tombol sendiri |
 | 89 | Animasi terkena (penyok) & jatuh saat kalah | Frame gambar khusus Arka (butuh aset) |
 | 492 | Perluasan rumah: batas perabot 6 → 10 → 14 | Kamar/dapur/gudang sebagai ruangan baru |
+| 48 | 3 jenis benih (sayur, beri, daun obat) + irigasi | Petak kebun tambahan (desa sudah padat; butuh lahan baru) |
 
 ## Sudah ada sebelum daftar dibuat (tidak dihitung ulang)
 
@@ -92,7 +98,7 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~5~~ | ✅ selesai | — |
 | ~~6~~ | ✅ selesai (674 papan arah pindah ke gelombang 7: perlu penempatan di data peta) | — |
 | ~~7~~ | ✅ selesai | — |
-| 8 | 47, 514, 515, 519, 48, 505 | Peternakan & kebun lebih luas |
+| ~~8~~ | ✅ selesai | — |
 | 9 | 51, 571–576, 583 | Mancing mendalam & akuarium |
 | 10 | 49, 714–718, 701–704 | Musim & kalender |
 | 11+ | sisanya per kategori, P1/P2 dulu | — |

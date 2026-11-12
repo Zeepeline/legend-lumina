@@ -141,7 +141,7 @@ Object.assign(World.prototype, {
       });
       if (m === 0) {
         // Diskon harga bila keakraban penuh (3 hati)
-        const items = ['potion', 'hipotion', 'antidote', 'ether', 'seed', 'rod', 'lockpick'];
+        const items = ['potion', 'hipotion', 'antidote', 'ether', 'seed', 'seed_b', 'seed_h', 'feed', 'rod', 'lockpick'];
         await buyMenu('Kios Bu Sari', items);
       } else if (m === 1) await sellMenu();
       else if (m === 2) {
