@@ -183,6 +183,14 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #mini{position:absolute;left:6px;top:58px;width:72px;height:72px;border:1px solid #e8c050;border-radius:6px;background:rgba(20,16,30,.55);z-index:30;pointer-events:auto;image-rendering:pixelated}
 /* ukuran & transparansi tombol (#74) */
 #pad .btn{scale:var(--bs,1);opacity:var(--ba,1)}
+/* penanda bahaya dari luar layar */
+.danger{position:absolute;pointer-events:none;z-index:25;opacity:0}
+.danger.left{left:0;top:0;bottom:0;width:26px;background:linear-gradient(90deg,rgba(255,40,30,.7),transparent)}
+.danger.right{right:0;top:0;bottom:0;width:26px;background:linear-gradient(270deg,rgba(255,40,30,.7),transparent)}
+.danger.top{top:0;left:0;right:0;height:26px;background:linear-gradient(180deg,rgba(255,40,30,.7),transparent)}
+.danger.bottom{bottom:0;left:0;right:0;height:26px;background:linear-gradient(0deg,rgba(255,40,30,.7),transparent)}
+.danger.on{animation:dg .6s ease-out}
+@keyframes dg{0%{opacity:1}100%{opacity:0}}
 </style>
 </head>
 <body>
@@ -4906,7 +4914,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.7.0';
+const GAME_VERSION = '1.8.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
@@ -5816,6 +5824,7 @@ class World extends Phaser.Scene {
     const e = { D, type, spr: s, sc: D.scale || 1, hp: D.hp, max: D.hp, st: 'idle', t: rnd(.2, 1.2), home: { x, y }, ph: rnd(0, 6), shootT: rnd(1, 2.5), flash: 0, kb: 0, cd: 0, boss: BOSS_AI.includes(D.ai), sh: this.add.image(x, y, D.scale ? 'shadowb' : 'shadow').setAlpha(.22) };
     if (D.fly) e.sh.setScale(.7);
     if (D.ai === 'ghost') { e.phT = rnd(2, 3.5); s.setAlpha(.9); }
+    if (!e.boss && !G.title && !this.M.indoor && D.ai !== 'turret' && Math.random() < ELITE_RATE) this.makeElite(e);
     this.enemies.push(e); return e;
   }
   camShake(ms, k) { if (OPT.shake) this.cameras.main.shake(ms, k); }
@@ -5860,7 +5869,7 @@ class World extends Phaser.Scene {
     }
     for (const o of this.npcs) this.updNpc(o, dt, locked);
     for (const c of this.critters) this.updCritter(c, dt);
-    for (const e of this.enemies) if (e.hp > 0) this.updEnemy(e, dt, locked);
+    for (const e of this.enemies) if (e.hp > 0) { this.updEnemy(e, dt, locked); this.updFeel(e, dt, locked); }
     this.enemies = this.enemies.filter(e => e.hp > 0);
     this.updShots(dt, locked);
     this.updPicks(dt);
@@ -5978,9 +5987,13 @@ Object.assign(World.prototype, {
     const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword', W = WEAPON_STYLE[wt];
     pl.atkCd = W.cd; pl.atkT = W.lock; sfx(wt === 'bow' ? 'jump' : 'swing');
     if (wt === 'bow') return this.shootArrow();
+    // kombo 3 pukulan (#2): ketuk beruntun, pukulan ke-3 lebih kuat & mendorong jauh
+    pl.combo = this.t - (pl.lastAtk || -9) < W.cd + .45 ? (pl.combo || 0) % 3 + 1 : 1; pl.lastAtk = this.t;
+    const fin = pl.combo === 3, cMul = fin ? 1.6 : pl.combo === 2 ? 1.1 : 1, cKb = fin ? 1.9 : 1;
+    if (fin) { pl.atkCd += .18; this.time.delayedCall(40, () => sfx('crit')); popWorld(pl.x, pl.y - 30, 'KOMBO!', 'crit'); }
     const [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx), ox = pl.x + dx * 3, oy = pl.y - 9 + dy * 2;
     if (wt !== 'spear') {
-      const sl = this.add.sprite(ox, oy, 'slash').setOrigin(4 / 28, .5).setRotation(ang).setDepth(pl.y + (dy < 0 ? -2 : 3)).setFlipY(dx < 0).setScale(W.fxs);
+      const sl = this.add.sprite(ox, oy, 'slash').setOrigin(4 / 28, .5).setRotation(ang).setDepth(pl.y + (dy < 0 ? -2 : 3)).setFlipY((dx < 0) !== (pl.combo === 2)).setScale(W.fxs * (fin ? 1.35 : 1)); if (fin) sl.setTint(0xffe08a);
       sl.play('slash'); sl.once('animationcomplete', () => sl.destroy());
     }
     const tier = { wsword: 0 }[S.eq.wpn] ?? 1;
@@ -5997,7 +6010,7 @@ Object.assign(World.prototype, {
           if (e.hp <= 0 || hit.has(e)) continue; const ey = e.spr.y - e.D.r * e.sc * .8 - (e.D.fly ? 6 : 0);
           if (Math.hypot(e.spr.x - hx, ey - hy) < r + e.D.r * e.sc) {
             hit.add(e); const crit = Math.random() < W.crit; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1;
-            this.hitEnemy(e, st.atk * W.mul, crit, (e.spr.x - pl.x) / n * W.kb, (e.spr.y - pl.y) / n * W.kb);
+            this.hitEnemy(e, st.atk * W.mul * cMul, crit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
             const frz = (ITEMS[S.eq.wpn] || {}).frz; if (frz && Math.random() < frz) this.freezeEnemy(e, 1.2);
           }
         }
@@ -6087,6 +6100,8 @@ Object.assign(World.prototype, {
     for (let i = 0; i < nc; i++) this.drop(x, y, 'coin', Math.ceil(g / nc));
     if (e.D.drop && Math.random() < e.D.drop[1]) this.drop(x, y, 'item', e.D.drop[0]);
     if (Math.random() < (e.boss ? 1 : .07)) this.drop(x, y, 'item', 'potion');
+    if (e.elite) { this.drop(x, y, 'item', ELITE_LOOT[ri(0, ELITE_LOOT.length - 1)]); popWorld(x, y - 30, 'Elit tumbang!', 'crit'); S.elites = (S.elites || 0) + 1; }
+    if (e.mk) e.mk.destroy(); if (e.aura) e.aura.destroy();
     S.kills[e.type] = (S.kills[e.type] || 0) + 1;
     this.gainExp(e.D.exp, x, y);
     if (e.boss) this.bossDown(e); else achCheck(this);
@@ -6129,7 +6144,7 @@ Object.assign(World.prototype, {
     const dmg = Math.max(1, Math.round((atk * rnd(.85, 1.15) - stat().def * .6) * DIFF[OPT.diff].dmg));
     S.hp = Math.max(0, S.hp - dmg); popWorld(pl.x, pl.y - 28, '-' + dmg, 'hurt'); sfx('hurt'); this.hitStop(.06, 40); if (S.hp > 0) this.inflict(fx);
     pl.inv = 1; const dx = pl.x - sx, dy = pl.y - sy, n = Math.hypot(dx, dy) || 1; pl.kb = .14; pl.kbx = dx / n * 170; pl.kby = dy / n * 170;
-    pl.setTintFill(0xff4a4a); this.time.delayedCall(90, () => pl.clearTint());
+    pl.setTintFill(0xff4a4a); this.time.delayedCall(90, () => pl.clearTint()); this.dangerFrom(sx, sy); this.hurtAnim();
     this.camShake(120, .006); updHud();
     if (S.hp <= 0) this.defeat();
   },
@@ -12631,6 +12646,70 @@ function applyPadOpt() { const r = document.documentElement.style; r.setProperty
 applyPadOpt();
 // simpan saat halaman ditutup/dimuat ulang (#910)
 window.addEventListener('pagehide', () => { const g = window.__game && window.__game.sc; if (g && !G.title && g.pl && !g.pl.dead) saveGame(g); });
+
+'use strict';
+// Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),
+// penanda bahaya (#14), animasi terkena (#89 sebagian), meteran waspada (#120), musuh menghindar (#146)
+const ELITE_RATE = .06, ELITE_LOOT = ['shard', 'hipotion', 'ether'];
+const DODGERS = ['fly', 'lunge', 'ghost'];
+function markOver(sc, e, txt, col) {
+  if (e.mk) e.mk.destroy();
+  const s = e.spr, t = sc.add.text(s.x, s.y - s.displayHeight - 8, txt, { fontFamily: 'monospace', fontSize: '13px', fontStyle: 'bold', color: col, stroke: '#1a0e08', strokeThickness: 3 }).setOrigin(.5, 1).setDepth(9000);
+  e.mk = t; t.setScale(.4); sc.tweens.add({ targets: t, scale: 1, duration: 120, ease: 'Back.easeOut' });
+  sc.time.delayedCall(650, () => { if (e.mk === t) e.mk = null; sc.tweens.add({ targets: t, alpha: 0, y: t.y - 6, duration: 200, onComplete: () => t.destroy() }); });
+}
+function dangerEdge(side) {
+  const id = 'dg_' + side; let d = document.getElementById(id);
+  if (!d) { d = document.createElement('div'); d.id = id; d.className = 'danger ' + side; UI.appendChild(d); }
+  d.classList.remove('on'); void d.offsetWidth; d.classList.add('on');
+}
+Object.assign(World.prototype, {
+  makeElite(e) {
+    e.elite = true; e.hp = e.max = Math.round(e.max * 2.2);
+    e.D = Object.assign({}, e.D, { atk: Math.round(e.D.atk * 1.3), exp: e.D.exp * 3, gold: (e.D.gold || [1, 2]).map(g => g * 3), name: (e.D.name || '') + ' Elit' });
+    e.sc *= 1.15; e.spr.setScale(e.sc); e.eT = 3;
+    e.aura = this.add.ellipse(e.spr.x, e.spr.y, 26 * e.sc, 10 * e.sc, 0xffd84a, .35).setDepth(e.spr.y - 1);
+    this.tweens.add({ targets: e.aura, alpha: .1, scaleX: 1.3, scaleY: 1.3, duration: 600, yoyo: true, repeat: -1 });
+  },
+  // dipanggil tiap frame sesudah updEnemy
+  updFeel(e, dt, locked) {
+    const s = e.spr; if (locked || e.hp <= 0) return;
+    if (e.mk) e.mk.setPosition(s.x, s.y - s.displayHeight - 8 - (e.D.fly ? 10 : 0));
+    if (e.aura) e.aura.setPosition(s.x, s.y).setDepth(s.y - 1);
+    if (e.boss) return;
+    const pl = this.pl, d = Math.hypot(pl.x - s.x, pl.y - s.y);
+    // meteran waspada: ? saat curiga, ! saat mengejar
+    if (!e.alert && d < 165 && d >= 120) { e.alert = 1; markOver(this, e, '?', '#fff3c0'); }
+    else if (e.alert !== 2 && d < 120 && !pl.dead) { e.alert = 2; markOver(this, e, '!', '#ff5a3a'); sfx('jump'); }
+    else if (e.alert && d > 230) e.alert = 0;
+    // ancang-ancang: tanda ! + kedip setiap kali musuh mulai bersiap menyerang
+    const wind = ['wind', 'swind', 'cwind', 'throw'].includes(e.st);
+    if (wind && !e.wasWind) { markOver(this, e, '!', '#ffd84a'); this.tweens.add({ targets: s, scaleX: e.sc * 1.12, duration: 80, yoyo: true, repeat: 1 }); }
+    e.wasWind = wind;
+    if (e.D.ai === 'shoot' && e.alert === 2 && e.shootT < .35 && !e.shootWarn) { e.shootWarn = 1; markOver(this, e, '!', '#ffd84a'); }
+    if (e.shootT > .5) e.shootWarn = 0;
+    // pola tambahan musuh elit: lingkaran peluru
+    if (e.elite && e.alert === 2) { e.eT -= dt; if (e.eT <= .5 && !e.eW) { e.eW = 1; markOver(this, e, '!!', '#ffd84a'); } if (e.eT <= 0) { e.eT = rnd(3.5, 5); e.eW = 0; this.eShoot(e, 'seed', [0, 1, 2, 3, 4, 5, 6, 7].map(i => i * Math.PI / 4), Math.round(e.D.atk * .7), true); } }
+    // musuh gesit menghindar dari bola api/panah
+    if (DODGERS.includes(e.D.ai) && (e.dodgeCd = (e.dodgeCd || 0) - dt) <= 0) {
+      for (const p of this.shots) {
+        if (!p.mine) continue; const rx = s.x - p.gx, ry = s.y - p.gy, ahead = (rx * p.vx + ry * p.vy) / Math.hypot(p.vx, p.vy);
+        if (ahead > 0 && ahead < 55 && Math.abs(rx * p.vy - ry * p.vx) / Math.hypot(p.vx, p.vy) < 14) {
+          e.dodgeCd = 2.5; if (Math.random() < .45) { const n = Math.hypot(p.vx, p.vy), side = Math.random() < .5 ? 1 : -1; e.kb = .16; e.kbx = -p.vy / n * 190 * side; e.kby = p.vx / n * 190 * side; popWorld(s.x, s.y - 22, 'menghindar!', 'xp'); this.puff(s.x, s.y); }
+          break;
+        }
+      }
+    }
+  },
+  // penanda bahaya: serangan dari luar layar
+  dangerFrom(sx, sy) {
+    const v = this.cameras.main.worldView; if (v.contains(sx, sy)) return;
+    const pl = this.pl, dx = sx - pl.x, dy = sy - pl.y;
+    dangerEdge(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'bottom' : 'top'));
+  },
+  // animasi terkena pukul pada Arka
+  hurtAnim() { const pl = this.pl; this.tweens.add({ targets: pl, scaleX: 1.15, scaleY: .85, duration: 70, yoyo: true }); },
+});
 
 'use strict';
 // Percakapan NPC, toko, bengkel, penginapan

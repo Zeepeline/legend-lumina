@@ -484,6 +484,7 @@ class World extends Phaser.Scene {
     const e = { D, type, spr: s, sc: D.scale || 1, hp: D.hp, max: D.hp, st: 'idle', t: rnd(.2, 1.2), home: { x, y }, ph: rnd(0, 6), shootT: rnd(1, 2.5), flash: 0, kb: 0, cd: 0, boss: BOSS_AI.includes(D.ai), sh: this.add.image(x, y, D.scale ? 'shadowb' : 'shadow').setAlpha(.22) };
     if (D.fly) e.sh.setScale(.7);
     if (D.ai === 'ghost') { e.phT = rnd(2, 3.5); s.setAlpha(.9); }
+    if (!e.boss && !G.title && !this.M.indoor && D.ai !== 'turret' && Math.random() < ELITE_RATE) this.makeElite(e);
     this.enemies.push(e); return e;
   }
   camShake(ms, k) { if (OPT.shake) this.cameras.main.shake(ms, k); }
@@ -528,7 +529,7 @@ class World extends Phaser.Scene {
     }
     for (const o of this.npcs) this.updNpc(o, dt, locked);
     for (const c of this.critters) this.updCritter(c, dt);
-    for (const e of this.enemies) if (e.hp > 0) this.updEnemy(e, dt, locked);
+    for (const e of this.enemies) if (e.hp > 0) { this.updEnemy(e, dt, locked); this.updFeel(e, dt, locked); }
     this.enemies = this.enemies.filter(e => e.hp > 0);
     this.updShots(dt, locked);
     this.updPicks(dt);

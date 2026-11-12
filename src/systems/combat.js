@@ -14,9 +14,13 @@ Object.assign(World.prototype, {
     const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword', W = WEAPON_STYLE[wt];
     pl.atkCd = W.cd; pl.atkT = W.lock; sfx(wt === 'bow' ? 'jump' : 'swing');
     if (wt === 'bow') return this.shootArrow();
+    // kombo 3 pukulan (#2): ketuk beruntun, pukulan ke-3 lebih kuat & mendorong jauh
+    pl.combo = this.t - (pl.lastAtk || -9) < W.cd + .45 ? (pl.combo || 0) % 3 + 1 : 1; pl.lastAtk = this.t;
+    const fin = pl.combo === 3, cMul = fin ? 1.6 : pl.combo === 2 ? 1.1 : 1, cKb = fin ? 1.9 : 1;
+    if (fin) { pl.atkCd += .18; this.time.delayedCall(40, () => sfx('crit')); popWorld(pl.x, pl.y - 30, 'KOMBO!', 'crit'); }
     const [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx), ox = pl.x + dx * 3, oy = pl.y - 9 + dy * 2;
     if (wt !== 'spear') {
-      const sl = this.add.sprite(ox, oy, 'slash').setOrigin(4 / 28, .5).setRotation(ang).setDepth(pl.y + (dy < 0 ? -2 : 3)).setFlipY(dx < 0).setScale(W.fxs);
+      const sl = this.add.sprite(ox, oy, 'slash').setOrigin(4 / 28, .5).setRotation(ang).setDepth(pl.y + (dy < 0 ? -2 : 3)).setFlipY((dx < 0) !== (pl.combo === 2)).setScale(W.fxs * (fin ? 1.35 : 1)); if (fin) sl.setTint(0xffe08a);
       sl.play('slash'); sl.once('animationcomplete', () => sl.destroy());
     }
     const tier = { wsword: 0 }[S.eq.wpn] ?? 1;
@@ -33,7 +37,7 @@ Object.assign(World.prototype, {
           if (e.hp <= 0 || hit.has(e)) continue; const ey = e.spr.y - e.D.r * e.sc * .8 - (e.D.fly ? 6 : 0);
           if (Math.hypot(e.spr.x - hx, ey - hy) < r + e.D.r * e.sc) {
             hit.add(e); const crit = Math.random() < W.crit; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1;
-            this.hitEnemy(e, st.atk * W.mul, crit, (e.spr.x - pl.x) / n * W.kb, (e.spr.y - pl.y) / n * W.kb);
+            this.hitEnemy(e, st.atk * W.mul * cMul, crit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
             const frz = (ITEMS[S.eq.wpn] || {}).frz; if (frz && Math.random() < frz) this.freezeEnemy(e, 1.2);
           }
         }
@@ -123,6 +127,8 @@ Object.assign(World.prototype, {
     for (let i = 0; i < nc; i++) this.drop(x, y, 'coin', Math.ceil(g / nc));
     if (e.D.drop && Math.random() < e.D.drop[1]) this.drop(x, y, 'item', e.D.drop[0]);
     if (Math.random() < (e.boss ? 1 : .07)) this.drop(x, y, 'item', 'potion');
+    if (e.elite) { this.drop(x, y, 'item', ELITE_LOOT[ri(0, ELITE_LOOT.length - 1)]); popWorld(x, y - 30, 'Elit tumbang!', 'crit'); S.elites = (S.elites || 0) + 1; }
+    if (e.mk) e.mk.destroy(); if (e.aura) e.aura.destroy();
     S.kills[e.type] = (S.kills[e.type] || 0) + 1;
     this.gainExp(e.D.exp, x, y);
     if (e.boss) this.bossDown(e); else achCheck(this);
@@ -165,7 +171,7 @@ Object.assign(World.prototype, {
     const dmg = Math.max(1, Math.round((atk * rnd(.85, 1.15) - stat().def * .6) * DIFF[OPT.diff].dmg));
     S.hp = Math.max(0, S.hp - dmg); popWorld(pl.x, pl.y - 28, '-' + dmg, 'hurt'); sfx('hurt'); this.hitStop(.06, 40); if (S.hp > 0) this.inflict(fx);
     pl.inv = 1; const dx = pl.x - sx, dy = pl.y - sy, n = Math.hypot(dx, dy) || 1; pl.kb = .14; pl.kbx = dx / n * 170; pl.kby = dy / n * 170;
-    pl.setTintFill(0xff4a4a); this.time.delayedCall(90, () => pl.clearTint());
+    pl.setTintFill(0xff4a4a); this.time.delayedCall(90, () => pl.clearTint()); this.dangerFrom(sx, sy); this.hurtAnim();
     this.camShake(120, .006); updHud();
     if (S.hp <= 0) this.defeat();
   },

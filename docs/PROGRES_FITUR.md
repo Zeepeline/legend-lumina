@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 17 | 1 | 0 | 982 |
+| 23 | 2 | 0 | 975 |
 
 ## Selesai
 
@@ -36,12 +36,19 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 880 | Riwayat dialog (60 terakhir) di MENU | `ui/widgets.js` (`DLG_LOG`), `ui/menus.js` (`openDlgLog`) | 2 |
 | 909 | Simpan cepat (sudah ada di MENU, dicatat) | `ui/menus.js` | 2 |
 | 910 | Simpan saat halaman ditutup | `systems/qol.js` (`pagehide`) | 2 |
+| 1 | Ancang-ancang: tanda "!" + kedip sebelum musuh menyerang/menembak | `systems/feel.js` (`updFeel`) | 3 |
+| 2 | Kombo pedang 3 pukulan (ke-3 ×1,6 dan dorongan ×1,9) | `systems/combat.js` (`attack`) | 3 |
+| 4 | Musuh elit (6%): HP ×2,2, aura emas, peluru melingkar, hadiah langka | `systems/feel.js` (`makeElite`), `scene/world.js` | 3 |
+| 14 | Penanda bahaya merah di tepi layar saat diserang dari luar layar | `systems/feel.js` (`dangerFrom`), `styles.css` | 3 |
+| 120 | Meteran waspada musuh "?" lalu "!" | `systems/feel.js` | 3 |
+| 146 | Musuh gesit (terbang/menerjang/hantu) menghindari bola api & panah | `systems/feel.js` | 3 |
 
 ## Sebagian
 
 | No | Sudah | Belum |
 |---|---|---|
 | 74 | Ukuran (4) & transparansi (3) tombol | Geser posisi tombol sendiri |
+| 89 | Animasi terkena (penyok) & jatuh saat kalah | Frame gambar khusus Arka (butuh aset) |
 
 ## Sudah ada sebelum daftar dibuat (tidak dihitung ulang)
 
@@ -52,7 +59,7 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | Gelombang | Isi (nomor) | Tema |
 |---|---|---|
 | ~~2~~ | ✅ selesai | — |
-| 3 | 1, 2, 4, 14, 89, 120, 146 | Rasa bertarung: ancang-ancang, kombo, musuh elit, penanda bahaya |
+| ~~3~~ | ✅ selesai | — |
 | 4 | 86, 87, 911, 915, 919, 88 | Musik per wilayah & dinamis, suara jarak, langkah kaki |
 | 5 | 16, 26, 30, 29, 407, 411, 412 | Poin atribut, meja kerajinan, slot alat, bom, panah, umpan |
 | 6 | 61, 63, 66, 665, 674, 675, 678, 679, 680 | Kabut peta, rahasia, peta harta, penanda dan zoom peta |

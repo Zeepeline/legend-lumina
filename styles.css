@@ -165,3 +165,11 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #mini{position:absolute;left:6px;top:58px;width:72px;height:72px;border:1px solid #e8c050;border-radius:6px;background:rgba(20,16,30,.55);z-index:30;pointer-events:auto;image-rendering:pixelated}
 /* ukuran & transparansi tombol (#74) */
 #pad .btn{scale:var(--bs,1);opacity:var(--ba,1)}
+/* penanda bahaya dari luar layar */
+.danger{position:absolute;pointer-events:none;z-index:25;opacity:0}
+.danger.left{left:0;top:0;bottom:0;width:26px;background:linear-gradient(90deg,rgba(255,40,30,.7),transparent)}
+.danger.right{right:0;top:0;bottom:0;width:26px;background:linear-gradient(270deg,rgba(255,40,30,.7),transparent)}
+.danger.top{top:0;left:0;right:0;height:26px;background:linear-gradient(180deg,rgba(255,40,30,.7),transparent)}
+.danger.bottom{bottom:0;left:0;right:0;height:26px;background:linear-gradient(0deg,rgba(255,40,30,.7),transparent)}
+.danger.on{animation:dg .6s ease-out}
+@keyframes dg{0%{opacity:1}100%{opacity:0}}
