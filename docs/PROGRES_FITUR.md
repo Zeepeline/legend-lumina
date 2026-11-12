@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 29 | 2 | 0 | 969 |
+| 36 | 2 | 0 | 962 |
 
 ## Selesai
 
@@ -48,6 +48,13 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 911 | Lagu desa/kota versi malam yang lembut | `systems/sound.js` | 4 |
 | 915 | Lagu kemenangan setelah boss (sudah ada, dicatat) | `core/audio.js` | 4 |
 | 919 | Suara jauh-dekat + kiri/kanan untuk suara musuh | `systems/sound.js` (`sfxAt`) | 4 |
+| 16 | Poin atribut: 3/level untuk Kekuatan, Sihir, Ketahanan, Kelincahan (save lama dapat poin susulan) | `systems/craft.js` (`ATTR`, `openAttr`) | 5 |
+| 26 | Kerajinan di MENU: ramuan, penawar, bom, asap, jaring, panah, umpan | `systems/craft.js` (`CRAFT`, `openCraft`) | 5 |
+| 29 | Bom asap & jaring | `systems/craft.js` (`useTool`) | 5 |
+| 30 | 2 tombol alat cepat (R/F di keyboard), bisa diatur | `systems/craft.js` (`openToolSlots`, `updToolBtns`) | 5 |
+| 407 | Bom api (meledak + membakar) | `systems/craft.js` | 5 |
+| 411 | Panah Tajam buatan (×1,6, menembus) | `systems/combat.js` (`shootArrow`) | 5 |
+| 412 | Umpan pancing (ikan langka lebih sering) | `systems/life.js` (`fish`) | 5 |
 
 ## Sebagian
 
@@ -67,7 +74,7 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~2~~ | ✅ selesai | — |
 | ~~3~~ | ✅ selesai | — |
 | ~~4~~ | ✅ selesai | — |
-| 5 | 16, 26, 30, 29, 407, 411, 412 | Poin atribut, meja kerajinan, slot alat, bom, panah, umpan |
+| ~~5~~ | ✅ selesai | — |
 | 6 | 61, 63, 66, 665, 674, 675, 678, 679, 680 | Kabut peta, rahasia, peta harta, penanda dan zoom peta |
 | 7 | 46, 492, 493, 497, 498, 32 | Rumah Arka & perabot |
 | 8 | 47, 514, 515, 519, 48, 505 | Peternakan & kebun lebih luas |

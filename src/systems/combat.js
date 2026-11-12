@@ -36,7 +36,7 @@ Object.assign(World.prototype, {
         for (const e of this.enemies) {
           if (e.hp <= 0 || hit.has(e)) continue; const ey = e.spr.y - e.D.r * e.sc * .8 - (e.D.fly ? 6 : 0);
           if (Math.hypot(e.spr.x - hx, ey - hy) < r + e.D.r * e.sc) {
-            hit.add(e); const crit = Math.random() < W.crit; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1;
+            hit.add(e); const crit = Math.random() < W.crit + (st.crit || 0); const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1;
             this.hitEnemy(e, st.atk * W.mul * cMul, crit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
             const frz = (ITEMS[S.eq.wpn] || {}).frz; if (frz && Math.random() < frz) this.freezeEnemy(e, 1.2);
           }
@@ -52,7 +52,8 @@ Object.assign(World.prototype, {
     const b = this.sword.setTexture('wbow').setVisible(true).setPosition(pl.x + dx * 6, pl.y - 9 + dy * 4).setRotation(a).setFlipY(false).clearTint().setDepth(pl.y + (dy < 0 ? -3 : 4));
     this.time.delayedCall(180, () => b.setVisible(false));
     const s = this.add.image(pl.x + dx * 8, pl.y - 9 + dy * 6, 'arrow').setRotation(a);
-    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 270, vy: dy * 270, life: .7, kind: 'arrow', mine: 1, dmg: st.atk * .8 });
+    const sharp = has('sarrow'); if (sharp) { addItem('sarrow', -1); s.setTint(0xffe08a); }
+    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 270, vy: dy * 270, life: .7, kind: 'arrow', mine: 1, dmg: st.atk * .8 * (sharp ? 1.6 : 1), pierce: sharp });
   },
   // sihir: arah dari tarikan tombol / arah gerak / musuh terdekat / arah hadap
   aimAngle() {
@@ -84,7 +85,7 @@ Object.assign(World.prototype, {
     this.useItem(id);
   },
   useItem(id) {
-    const it = ITEMS[id], st = stat();
+    const it = ITEMS[id], st = stat(); if (it.tool) return this.useTool(id);
     if (it.hp) { if (S.hp >= st.maxhp && !it.buff) { sfx('buzz'); return false; } const h = Math.min(it.hp, st.maxhp - S.hp); S.hp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h, 'heal'); }
     if (it.mp) { if (S.mp >= st.maxmp && !it.buff) { sfx('buzz'); return false; } const h = Math.min(it.mp, st.maxmp - S.mp); S.mp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h + ' MP', 'mpc'); }
     if (it.buff) { for (const [k, sec] of it.buff) S.buff[k] = Math.max(S.buff[k] || 0, sec); popWorld(this.pl.x, this.pl.y - 40, it.buff.map(([k]) => BUFF[k].n).join(' & ') + '!', 'xp'); updStatusHud(this); }
@@ -155,7 +156,7 @@ Object.assign(World.prototype, {
   },
   gainExp(n, x, y) {
     S.exp += n; popWorld(x, y - 22, '+' + n + ' EXP', 'xp');
-    let up = false; while (S.exp >= need(S.lv)) { S.exp -= need(S.lv); S.lv++; up = true; }
+    let up = false; while (S.exp >= need(S.lv)) { S.exp -= need(S.lv); S.lv++; up = true; } if (up) { attrInit(); this.time.delayedCall(3600, () => popWorld(this.pl.x, this.pl.y - 36, '+3 poin atribut (MENU)', 'xp')); }
     if (up) {
       const old = S.lv - 1; let k = 0; for (const J of []) if (S.lv >= J.lv && !S.flags['sk' + J.lv]) { S.flags['sk' + J.lv] = 1; this.time.delayedCall(1800 + k++ * 2200, () => { banner(J.n, 'JURUS BARU', false, 2000); popWorld(this.pl.x, this.pl.y - 36, J.d, 'xp'); }); }
       const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; sfx('lvl'); banner('LEVEL ' + S.lv + '!', 'NAIK LEVEL', true, 1600); this.time.delayedCall(1700, () => levelUpDetail(old));
@@ -197,7 +198,7 @@ Object.assign(World.prototype, {
       if (p.spin) p.s.rotation += dt * 14;
       let dead = p.life <= 0;
       if (!dead && this.physics.overlapRect(p.gx - 2, p.gy - 3, 4, 4, false, true).length) dead = true;
-      if (!dead && p.mine) for (const e of this.enemies) { if (e.hp > 0 && Math.hypot(e.spr.x - p.gx, e.spr.y - e.D.r * e.sc * .7 - (e.D.fly ? 6 : 0) - (p.gy - 4)) < e.D.r * e.sc + 6) { const n = Math.hypot(p.vx, p.vy); this.hitEnemy(e, p.dmg, false, p.vx / n, p.vy / n); if (p.kind === 'fire') this.burnEnemy(e, p.dmg * .2, 2); dead = true; break; } }
+      if (!dead && p.mine) for (const e of this.enemies) { if (e.hp > 0 && !(p.hitSet && p.hitSet.has(e)) && Math.hypot(e.spr.x - p.gx, e.spr.y - e.D.r * e.sc * .7 - (e.D.fly ? 6 : 0) - (p.gy - 4)) < e.D.r * e.sc + 6) { const n = Math.hypot(p.vx, p.vy); this.hitEnemy(e, p.dmg, false, p.vx / n, p.vy / n); if (p.kind === 'fire') this.burnEnemy(e, p.dmg * .2, 2); if (p.pierce) { (p.hitSet = p.hitSet || new Set()).add(e); continue; } dead = true; break; } }
       if (!dead && p.enemy && Math.hypot(this.pl.x - p.gx, this.pl.y - 4 - p.gy) < 8) { this.hurtPlayer(p.dmg, p.gx - p.vx, p.gy - p.vy, p.fx); dead = true; }
       if (dead) { p.dead = true; p.s.destroy(); if (p.kind === 'fire') this.sparkle(p.gx, p.gy - 8, 'doto', 8); }
     }

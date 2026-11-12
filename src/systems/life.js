@@ -2951,7 +2951,8 @@ Object.assign(World.prototype, {
     if (hit) {
       const isNightTime = isNight();
       const isRain = this.weather === 'rain';
-      const r = Math.random();
+      const baited = has('bait'); if (baited) { addItem('bait', -1); popWorld(this.pl.x, this.pl.y - 34, 'umpan dipakai', 'xp'); }
+      const r = Math.random() * (baited ? .55 : 1);
       // Ikan langka keluar saat malam atau hujan
       let id = 'fish';
       if (isNightTime && r < 0.25) id = 'moonfish'; // Ikan Rembulan

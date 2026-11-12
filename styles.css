@@ -173,3 +173,8 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 .danger.bottom{bottom:0;left:0;right:0;height:26px;background:linear-gradient(0deg,rgba(255,40,30,.7),transparent)}
 .danger.on{animation:dg .6s ease-out}
 @keyframes dg{0%{opacity:1}100%{opacity:0}}
+/* slot alat cepat (#30) */
+.btn.tool{width:40px;height:40px;font-size:10px;background:radial-gradient(circle at 35% 30%,#d8c8a8,#7a5a3a)}
+.btn.tool img{width:18px;height:18px;image-rendering:pixelated}.btn.tool small{margin-top:0;font-size:8px}.btn.tool.empty{filter:grayscale(1) brightness(.7)}
+#bX1{right:182px;top:46px}#bX2{right:182px;top:96px}
+@media (orientation:landscape){ body.touch #bX1{right:178px;top:auto;bottom:30px} body.touch #bX2{right:178px;top:auto;bottom:78px} }

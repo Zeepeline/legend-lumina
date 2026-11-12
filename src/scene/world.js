@@ -10,7 +10,7 @@ class World extends Phaser.Scene {
     const M = this.M = MAPS[data.map || 'village'];
     if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
-    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.qArrow = null; this.qStar = null; this.qGoal = null; this.iHint = null; this.eBar = null; this.miniFor = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
+    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.qArrow = null; this.qStar = null; this.qGoal = null; this.iHint = null; this.eBar = null; this.miniFor = null; if (!G.title) { attrInit(); updToolBtns(); } this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
     this.walls = this.physics.add.staticGroup();
@@ -591,7 +591,7 @@ class World extends Phaser.Scene {
       const k = Input.q.shift();
       if (UIH) { UIH(k.startsWith('j') ? k.slice(1) : k); continue; }
       if (G.lock > 0 || this.trans || this.pl?.dead || G.title) { Input.castAng = null; continue; }
-      if (k === 'a') this.actionA(); else if (k === 'b') this.magic(); else if (k === 'dash') this.dash(); else if (k === 'nova') this.nova(); else if (k === 'item') this.drink(); else if (k === 'menu') mainMenu(this); else if (k === 'map') openMap(this); else if (k === 'bag') openBag(this);
+      if (k === 'a') this.actionA(); else if (k === 'b') this.magic(); else if (k === 'dash') this.dash(); else if (k === 'nova') this.nova(); else if (k === 'item') this.drink(); else if (k === 'tool1') this.useSlot(0); else if (k === 'tool2') this.useSlot(1); else if (k === 'menu') mainMenu(this); else if (k === 'map') openMap(this); else if (k === 'bag') openBag(this);
     }
   }
   front(dist = 12) { const [dx, dy] = DIRV[this.pl.dir]; return { x: this.pl.x + dx * dist, y: this.pl.y - 3 + dy * dist }; }

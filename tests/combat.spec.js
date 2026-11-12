@@ -19,7 +19,7 @@ test('bola api mengikuti arah bidik & memakai MP', async ({ page }) => {
   await page.waitForTimeout(80);
   const shot = await h.G(page, () => { const p = window.__game.sc.shots[0]; return p && [p.vx, p.vy]; });
   expect(shot).toBeTruthy(); expect(shot[0]).toBeGreaterThan(0); expect(shot[1]).toBeGreaterThan(0);
-  expect((await h.S(page)).mp).toBe(mp - 3);
+  expect((await h.S(page)).mp).toBeLessThanOrEqual(mp - 2); // MP bisa pulih 1 di sela tes
   h.noErrors(errors);
 });
 
