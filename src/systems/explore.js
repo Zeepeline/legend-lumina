@@ -35,6 +35,10 @@ Object.assign(World.prototype, {
       if (objs.some(o => Math.hypot(o[1] - x, o[2] - y) < 40)) continue;
       if (this.physics.overlapRect(x - 16, y - 16, 32, 32, false, true).length) continue;
       if (this.npcs.some(n => Math.hypot(n.spr.x - x, n.spr.y - y) < 40)) continue;
+      // jauhi peti, kolam pancing, dan semua benda interaktif lain agar tidak saling menghalangi tombol aksi
+      if ((M.chests || []).some(c => Math.hypot(c.x - x, c.y - y) < 70)) continue;
+      if ((M.fish || []).some(f => Math.hypot(f[0] - x, f[1] - y) < 60)) continue;
+      if (this.inter.some(i => i.rect ? x > i.rect[0] - 40 && x < i.rect[0] + i.rect[2] + 40 && y > i.rect[1] - 40 && y < i.rect[1] + i.rect[3] + 40 : Math.hypot(i.x - x, i.y - y) < 60)) continue;
       return { x: Math.round(x), y: Math.round(y) };
     }
     return null;

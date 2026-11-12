@@ -50,7 +50,8 @@ test('teka-teki batu membuka gerbang & kunci membuka peti', async ({ page }) => 
   expect((await h.S(page)).inv.key).toBe(1);
   const gold = (await h.S(page)).gold;
   await h.goto(page, 'forest', 1060, 876, 'up');
-  await h.G(page, () => window.__game.sc.enemies.forEach(e => e.spr.setPosition(3000, 3000)));
+  // singkirkan musuh & taruh Arka tepat di depan peti sesaat sebelum menekan (monster bisa mendorong Arka)
+  await h.G(page, () => { const sc = window.__game.sc; sc.enemies.forEach(e => { e.hp = 0; e.spr.setPosition(3000, 3000); }); sc.pl.setPosition(1060, 876); sc.pl.dir = 'up'; sc.pl.inv = 9; });
   await h.press(page, 'a', 1, 600); await h.flush(page); await page.waitForTimeout(800); await h.flush(page);
   expect((await h.S(page)).gold).toBe(gold + 150);
   h.noErrors(errors);

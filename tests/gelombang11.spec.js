@@ -23,7 +23,7 @@ test('gelombang 11: tangkis, elemen, kunci target, tas, notifikasi', async ({ pa
   expect(r.parried).toBe(true); expect(r.hurt).toBe(true); expect(r.weak).toBeGreaterThan(1.4); expect(r.aimRight).toBe(true); expect(r.locked).toBe(true);
   expect(r.toast).toBe('+3'); expect(r.rar[0]).toBe(0); expect(r.rar[2]).toBe(3);
   // tas: urutkan
-  await h.press(page, 'bag', 1, 300); await h.press(page, 'dash', 1, 200);
+  await h.press(page, 'bag', 1, 300); await h.press(page, 'item', 1, 200); // OBAT = urutkan (DASH = kunci barang, #374)
   expect(await h.G(page, () => document.querySelector('#bagw .srt').textContent)).toContain('nilai');
   await h.press(page, 'b', 1, 200);
   h.noErrors(errors);

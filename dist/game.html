@@ -5154,11 +5154,9 @@ const ITEMS = {
   baxe: { n: 'Kapak Perang', k: 'wpn', wt: 'axe', atk: 15, d: 'Serang +15. Lambat, ayunan lebar, pukulan berat.' },
   hbow: { n: 'Busur Pemburu', k: 'wpn', wt: 'bow', atk: 2, price: 90, d: 'Serang +2. Tembak panah jarak jauh tanpa MP.' },
   fspear: { n: 'Tombak Beku', k: 'wpn', wt: 'spear', atk: 28, frz: .25, d: 'Serang +28. Tusukan kadang membekukan musuh. Harta Kryos.' },
-  herb: { n: 'Daun Obat', k: 'mat', sell: 3, d: 'Tumbuh di tepi jalan setapak. Bahan masakan & obat.' },
   berry: { n: 'Buah Beri', k: 'use', hp: 15, sell: 2, d: 'Pulihkan 15 HP. Manis dan sedikit asam.' },
   apple: { n: 'Apel Segar', k: 'use', hp: 20, sell: 4, d: 'Buah apel merah manis dan renyah. Pulihkan 20 HP.' },
   orange: { n: 'Jeruk Manis', k: 'use', hp: 20, mp: 5, sell: 4, d: 'Buah jeruk kaya sari buah. Pulihkan 20 HP & 5 MP.' },
-  honey: { n: 'Madu Liar', k: 'use', hp: 35, mp: 15, sell: 16, d: 'Madu murni manis berkhasiat dari sarang lebah pohon. Pulihkan 35 HP & 15 MP.' },
   aurelring: { n: 'Cincin Aurel', k: 'acc', atk: 6, def: 4, d: 'Cincin kerajaan kuno dari reruntuhan. Serang +6, Tahan +4.' },
   akey: { n: 'Kunci Arsip', k: 'key', d: 'Kunci Arsip Akademi dari Guru Lestari.' },
   bracelet: { n: 'Gelang Daun', k: 'acc', def: 2, regen: 1, d: 'Gelang kecil dari kuil dengan ukiran daun. Hangat saat dipakai.' },
@@ -5181,7 +5179,6 @@ const ITEMS = {
   mush: { n: 'Jamur Hutan', k: 'mat', sell: 4, d: 'Jamur payung cokelat gurih dari bawah naungan pohon rindang.' },
   gmush: { n: 'Jamur Pendar', k: 'mat', sell: 10, d: 'Jamur langka bercahaya biru dingin dari ceruk gua lembap.' },
   f_mush: { n: 'Sup Jamur Hutan', k: 'use', hp: 55, buff: [['def', 180]], sell: 15, d: 'Sup kental hangat beraroma jamur hutan. Pulihkan 55 HP & Tahan +25% selama 3 menit.' },
-  oldboot: { n: 'Sepatu Butut', k: 'mat', sell: 1, d: 'Hasil pancingan yang kurang beruntung.' },
   egg: { n: 'Telur Segar', k: 'use', hp: 20, sell: 5, d: 'Telur segar dari ternak yang senang. Pulihkan 20 HP.' },
   wool: { n: 'Bulu Domba', k: 'mat', sell: 12, d: 'Gumpalan wol putih yang halus dan hangat. Bahan bernilai.' },
   f_egg: { n: 'Telur Rebus Herbal', k: 'use', hp: 55, mp: 12, sell: 14, d: 'Masakan sederhana bernutrisi. Pulihkan 55 HP & 12 MP.' },
@@ -5212,7 +5209,6 @@ const ITEMS = {
   fossil_ammonite: { n: "Fosil Amonit Purba", k: "use", hp: 20, mp: 35, buff: [["def", 180]], price: 60, sell: 35, d: "Fosil cangkang spiral samudra purba Rawa Senja. Koleksi langka bernilai tinggi. Pulihkan 20 HP, 35 MP (DEF 3 mnt)." },
   mini_trophy: { n: "Piala Martil Emas", k: "use", hp: 25, mp: 25, buff: [["atk", 180]], price: 45, sell: 25, d: "Piala martil tembaga berkilau juara pukul gong Pasar Lumina. Beri semangat tempur (ATK 3 mnt)." },
   owl_feather: { n: "Bulu Burung Hantu", k: "use", hp: 20, mp: 35, buff: [["atk", 180]], price: 35, sell: 18, d: "Bulu halus cokelat keemasan burung hantu bijak Hutan Dalam. Pulihkan 20 HP, 35 MP & fokus tajam (ATK 3 mnt)." },
-  amethyst_gem: { n: "Kristal Kecubung Gua", k: "use", hp: 20, mp: 45, buff: [["def", 180]], price: 50, sell: 30, d: "Permata kristal ungu berkilau dari rongga batu geoda Gua Batu. Pulihkan 20 HP, 45 MP & energi mistis (DEF 3 mnt)." },
   brass_cog: { n: "Roda Gigi Kuningan", k: "use", hp: 20, mp: 35, buff: [["spd", 180]], price: 40, sell: 20, d: "Roda gerigi presisi buatan Akademi Lumina. Pulihkan 20 HP, 35 MP & langkah fokus presisi (spd 3 mnt)." },
   river_prawn: { n: "Udang Kali Segar", k: "use", hp: 25, mp: 15, price: 15, sell: 8, d: "Udang air tawar manis dari bawah batu kali Jalur Sungai Senja. Pulihkan 25 HP, 15 MP & bahan bakar nikmat." },
   grilled_prawn: { n: "Udang Bakar Madu", k: "use", hp: 45, mp: 25, buff: [["atk", 150]], price: 35, sell: 18, d: "Udang kali bakar oles madu gurih di atas bara api. Pulihkan 45 HP, 25 MP & stamina tempur (ATK 2.5 mnt)." },
@@ -14108,6 +14104,10 @@ Object.assign(World.prototype, {
       if (objs.some(o => Math.hypot(o[1] - x, o[2] - y) < 40)) continue;
       if (this.physics.overlapRect(x - 16, y - 16, 32, 32, false, true).length) continue;
       if (this.npcs.some(n => Math.hypot(n.spr.x - x, n.spr.y - y) < 40)) continue;
+      // jauhi peti, kolam pancing, dan semua benda interaktif lain agar tidak saling menghalangi tombol aksi
+      if ((M.chests || []).some(c => Math.hypot(c.x - x, c.y - y) < 70)) continue;
+      if ((M.fish || []).some(f => Math.hypot(f[0] - x, f[1] - y) < 60)) continue;
+      if (this.inter.some(i => i.rect ? x > i.rect[0] - 40 && x < i.rect[0] + i.rect[2] + 40 && y > i.rect[1] - 40 && y < i.rect[1] + i.rect[3] + 40 : Math.hypot(i.x - x, i.y - y) < 60)) continue;
       return { x: Math.round(x), y: Math.round(y) };
     }
     return null;

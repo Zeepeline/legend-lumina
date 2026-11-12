@@ -23,7 +23,7 @@ test('teleport, kode save, upgrade, masak', async ({ page }, info) => {
   const innId = await h.G(page, () => window.__game.sc.npcs[0].n.id);
   await h.faceNpc(page, innId); await h.press(page, 'a', 1, 400);
   await h.press(page, 'down', 1, 150); await h.press(page, 'a', 1, 300); // Masak
-  await h.press(page, 'a', 1, 400); await h.flush(page);                   // Ikan Bakar
+  await h.press(page, 'a', 1, 400); await h.press(page, 'a', 1, 400); await h.flush(page); // Ikan Bakar → porsi: 1 piring (#388)
   await h.press(page, 'b', 1, 300); await h.flush(page);
   expect((await h.S(page)).inv.f_fish).toBe(1);
   await h.G(page, () => window.__game.sc.useItem('f_fish'));
