@@ -10,6 +10,7 @@ async function mainMenu(sc) {
     ['Tantangan Harian', 'Aksi harian bertarung & berpetualang', () => openDailyFeats()],
     ['Statistik & Gelar', 'Rekap petualangan & bonus gelar', () => openStatsAndTitles()],
     ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Buku Ikan', 'Catatan & habitat fauna air', () => openFishLog(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()], ['Riwayat', 'Baca ulang percakapan terakhir', () => openDlgLog()],
+    ['Kamera Foto', 'Abadikan momen petualangan indah', () => openPhotoMode(sc)],
     ['Simpan', 'Simpan permainan', async () => { const ok = saveGame(sc); sfx(ok ? 'save' : 'buzz'); await say(ok ? 'Permainan tersimpan.' : 'Gagal menyimpan.'); }],
     ['Pengaturan', 'Suara, getar, layar', () => openSettings()], ['Tutup', 'Kembali bermain', null]];
   for (; ;) {
@@ -32,7 +33,8 @@ async function openSettings() {
     ['Kesulitan', () => DIFF[OPT.diff].n, () => { OPT.diff = (OPT.diff + 1) % 3; }, 'Santai: musuh lebih lemah · Sulit: lebih kuat'],
     ['Kecepatan teks', () => ['Lambat', 'Normal', 'Cepat', 'Instan'][OPT.txt], () => { OPT.txt = (OPT.txt + 1) % 4; }, 'Tahan tombol A/B saat dialog untuk mempercepat'],
     ['Ukuran huruf', () => ['Kecil', 'Sedang', 'Besar', 'Sangat besar'][OPT.font], () => { OPT.font = (OPT.font + 1) % 4; applyFont(); }, 'Ukuran teks dialog, menu, dan tas'],
-    ['Hemat baterai', () => onoff(OPT.lite), () => { OPT.lite = !OPT.lite; applyLite(); }, '30 FPS & partikel musim dimatikan'],
+    ['Hemat baterai', () => onoff(OPT.lite), () => { OPT.lite = !OPT.lite; applyLite(); applyScreenFilter(); }, '30 FPS & partikel musim dimatikan'],
+    ['Filter Layar', () => ['Standar', 'Hangat', 'Vinyet', 'Retro CRT'][OPT.filter || 0], () => { OPT.filter = ((OPT.filter || 0) + 1) % 4; applyScreenFilter(); }, 'Gaya visual atmosferik layar'],
     ['Mode Buta Warna', () => onoff(OPT.colorblind), () => { OPT.colorblind = !OPT.colorblind; }, 'Kontras tinggi & label teks penjelas damage'],
     ['Notifikasi barang', () => onoff(OPT.toast), () => { OPT.toast = !OPT.toast; }, 'Pesan kecil saat mendapat barang'],
     ['Musik dinamis', () => onoff(OPT.dynMus), () => { OPT.dynMus = !OPT.dynMus; }, 'Musik berubah saat bertarung'],
@@ -150,5 +152,73 @@ async function openDebugMenu() {
       await say('Semua kunci dan alat petualangan ditambahkan ke tas!');
     }
   }
+  G.lock--;
+}
+
+// ---------------- MODE KAMERA FOTO & SNAPSHOT (#55) ----------------
+async function openPhotoMode(sc) {
+  if (G.lock > 0) return;
+  G.lock++; sfx('ok');
+
+  const hud = document.getElementById('hud');
+  const pad = document.getElementById('pad');
+  if (hud) hud.style.display = 'none';
+  if (pad) pad.style.display = 'none';
+
+  const overlay = document.createElement('div');
+  overlay.id = 'photo-mode-ui';
+  Object.assign(overlay.style, {
+    position: 'absolute', top: '0', left: '0', width: '100%', height: '100%',
+    boxSizing: 'border-box', border: '2px solid rgba(255,255,255,0.4)',
+    pointerEvents: 'none', zIndex: '99998'
+  });
+
+  const bar = document.createElement('div');
+  Object.assign(bar.style, {
+    position: 'absolute', bottom: '16px', left: '50%', transform: 'translateX(-50%)',
+    background: 'rgba(20,20,30,0.85)', padding: '6px 14px', borderRadius: '20px',
+    display: 'flex', gap: '10px', pointerEvents: 'auto', border: '1px solid rgba(255,255,255,0.2)'
+  });
+
+  bar.innerHTML = `
+    <button id="btn-snap" style="background:#ffcc00;border:none;border-radius:12px;padding:4px 12px;font-weight:bold;cursor:pointer;">📸 Jepret</button>
+    <button id="btn-exit-photo" style="background:#555;color:#fff;border:none;border-radius:12px;padding:4px 12px;cursor:pointer;">✕ Keluar</button>
+  `;
+  overlay.appendChild(bar);
+  document.body.appendChild(overlay);
+
+  await new Promise(resolve => {
+    const btnSnap = bar.querySelector('#btn-snap');
+    const btnExit = bar.querySelector('#btn-exit-photo');
+
+    btnSnap.onclick = async () => {
+      sfx('save');
+      overlay.style.display = 'none';
+      if (sc && sc.cameras) sc.cameras.main.flash(180, 255, 255, 255);
+      await sleep(150);
+
+      const canvas = document.querySelector('canvas');
+      if (canvas) {
+        try {
+          const dataUrl = canvas.toDataURL('image/png');
+          const a = document.createElement('a');
+          a.download = `lumina-photo-${Date.now()}.png`;
+          a.href = dataUrl;
+          a.click();
+        } catch (_) {}
+      }
+      overlay.style.display = 'block';
+      popWorld(sc.pl.x, sc.pl.y - 24, '📸 Foto Terabadikan!', 'heal');
+    };
+
+    btnExit.onclick = () => {
+      sfx('back');
+      resolve();
+    };
+  });
+
+  overlay.remove();
+  if (hud) hud.style.display = '';
+  if (pad) pad.style.display = '';
   G.lock--;
 }

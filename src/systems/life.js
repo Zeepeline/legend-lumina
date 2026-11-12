@@ -3035,6 +3035,23 @@ Object.assign(World.prototype, {
     if (Math.hypot(pl.x - p.x, pl.y - p.y) > 15) { p.x += (tx - p.x) * .22; p.y += (ty - p.y) * .22; if (!p.anims.isPlaying) p.play('cat2_mv'); p.flipX = tx > p.x; }
     else { p.anims.stop(); p.setFrame(0); }
     this.digT -= dt; if (this.digT <= 0) { this.digT = rnd(40, 70); this.petDig(); }
+
+    // Fitur #58: Anjing Pelacak Harta ("Kuro")
+    if (S.petDog) {
+      if (!this.dogBarkT) this.dogBarkT = 0;
+      this.dogBarkT -= dt;
+      if (this.dogBarkT <= 0) {
+        this.dogBarkT = 5.0;
+        // Cari peti, rahasia, atau titik galian terdekat
+        const nearestChest = (this.M.chests || []).find(c => !S.flags[c.id] && Math.hypot(c.x - pl.x, c.y - pl.y) < 130);
+        const nearestSecret = (this.secrets || []).find(s => Math.hypot(s.x - pl.x, s.y - pl.y) < 130);
+        if (nearestChest || nearestSecret) {
+          sfx('step');
+          popWorld(p.x, p.y - 20, '🐕 Guk! Guk! (Harta Dekat!)', 'gold');
+          this.sparkle(p.x, p.y - 6, 'spark', 10);
+        }
+      }
+    }
   },
   petDig() {
     const p = this.pet; popWorld(p.x, p.y - 18, 'Meong!', 'gold'); this.sparkle(p.x, p.y - 4, 'doto', 8); this.puff(p.x, p.y);

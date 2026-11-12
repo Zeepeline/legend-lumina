@@ -63,6 +63,15 @@ Object.assign(World.prototype, {
         if (S.stage === 1) {
           await T('Arka! Tetua mengutusmu? Bagus.', 'Raja Goblin menyegel Kuil Kristal dengan sihir. Segelnya terbuat dari 3 kepingan.', 'Kepingan itu dibagikan ke anak buahnya: Kepala Goblin di perkemahan timur, Ratu Jamur di kebun jamur barat daya, dan Ular Raksasa di sarang tenggara.', 'Kalahkan mereka, ambil ketiga Pecahan Segel, lalu buka segel di gerbang kuil.', 'Mereka kuat. Latih dirimu melawan monster kecil dulu dan tempa senjata di bengkel Pak Besi.');
           S.stage = 2; updHud(); banner('Rebut 3 Pecahan Segel', 'MISI BARU', false, 2200);
+        } else if (S.stage >= 2 && !S.petDog) {
+          const adopt = await ask('Kuro, anjing pemburuku yang setia, sangat menyukaimu! Mau mengajaknya berpetualang mencari harta karun?', nm, 'Ajak Kuro', 'Nanti Saja');
+          if (adopt) {
+            S.petDog = true;
+            S.pet = true;
+            sfx('chest');
+            updHud();
+            await say('Guk! Guk! Kuro menggoyangkan ekornya dengan gembira dan siap mendampingimu mencari peti harta dan rahasia alam!');
+          }
         } else await T(S.stage === 2 ? `Pecahan segel: ${S.inv.seal || 0}/3. Cek PETA, tanda ☠ menunjukkan tempat para pemimpin monster.` : S.stage >= 4 ? 'Kamu mengalahkan Raja Goblin?! Luar biasa!' : 'Gerbang kuil ada di ujung selatan. Semoga berhasil!');
         break;
       case 'girl':
@@ -155,7 +164,7 @@ Object.assign(World.prototype, {
       });
       if (m === 0) {
         // Diskon harga bila keakraban penuh (3 hati)
-        const items = ['potion', 'hipotion', 'antidote', 'ether', 'seed', 'seed_b', 'seed_h', 'feed', 'rod', 'lockpick'];
+        const items = ['potion', 'hipotion', 'antidote', 'ether', 'seed', 'seed_b', 'seed_h', 'seed_flower', 'leather_pouch', 'feed', 'rod', 'lockpick'];
         await buyMenu('Kios Bu Sari', items);
       } else if (m === 1) await sellMenu();
       else if (m === 2) {

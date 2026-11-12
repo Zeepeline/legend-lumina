@@ -13,7 +13,12 @@ Object.assign(ICONS_DEF, {
   seed_h: ['blob', { C: '#5fbf68', L: '#a8e8a0', D: '#2a7a3a', E: '#1a4a20' }],
   feed: ['blob', { C: '#d8b860', L: '#f8e0a0', D: '#9a7a30', E: '#6a5020' }],
 });
-const SEEDS = { seed: { out: 'veg', n: 3, h: 6 }, seed_b: { out: 'berry', n: 4, h: 8 }, seed_h: { out: 'herb', n: 4, h: 5 } };
+const SEEDS = {
+  seed: { out: 'veg', n: 3, h: 6 },
+  seed_b: { out: 'berry', n: 4, h: 8 },
+  seed_h: { out: 'herb', n: 4, h: 5 },
+  seed_flower: { out: 'flower_bouquet', n: 1, h: 5 }
+};
 const STOCK = {
   hen: { n: 'Ayam', p: 80, out: 'egg', tex: 'chick0', snd: 'Petok!' },
   sheep: { n: 'Domba', p: 150, out: 'wool', tex: 'rn_sheep', snd: 'Mbeee~' },

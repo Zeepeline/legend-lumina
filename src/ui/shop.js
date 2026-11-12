@@ -100,9 +100,13 @@ async function sellMenu() {
     const mats = Object.keys(S.inv).filter(id => ITEMS[id].sell && S.inv[id] > 0);
     if (!mats.length) { await say('Kamu tidak punya barang untuk dijual. Kalahkan monster, memancing, atau berkebun dulu.'); return; }
     
+    // Fitur #31: Bonus Jual Toko +5% jika memiliki Kantong Tas Kulit (leather_pouch)
+    const pouchBonus = has('leather_pouch') ? 1.05 : 1.0;
+    const getItemSell = id => Math.round((ITEMS[id].sell || 1) * pouchBonus);
+
     // Fitur #36: Jual Cepat Barang Sampah (monster drops biasa yang tidak dikunci)
     const junkList = mats.filter(id => ITEMS[id].junk && !S.locked?.[id]);
-    const junkTotal = junkList.reduce((acc, id) => acc + ITEMS[id].sell * S.inv[id], 0);
+    const junkTotal = junkList.reduce((acc, id) => acc + getItemSell(id) * S.inv[id], 0);
 
     const items = [];
     if (junkList.length > 0) {
@@ -112,7 +116,7 @@ async function sellMenu() {
       const isLocked = S.locked && S.locked[id];
       return {
         t: (isLocked ? '🔒 ' : '') + icon(id) + ITEMS[id].n + ' x' + S.inv[id],
-        r: isLocked ? '(Terkunci)' : ITEMS[id].sell + ' G',
+        r: isLocked ? '(Terkunci)' : getItemSell(id) + ' G',
         dis: isLocked
       };
     }));
@@ -165,11 +169,12 @@ async function sellMenu() {
     }
 
     addItem(id, -1);
-    S.gold += ITEMS[id].sell;
+    const earned = getItemSell(id);
+    S.gold += earned;
     S.st = S.st || {};
-    S.st.goldEarned = (S.st.goldEarned || 0) + ITEMS[id].sell;
+    S.st.goldEarned = (S.st.goldEarned || 0) + earned;
     S.buyback = S.buyback || [];
-    S.buyback.unshift({ id, n: 1, price: ITEMS[id].sell });
+    S.buyback.unshift({ id, n: 1, price: earned });
     if (S.buyback.length > 8) S.buyback.pop();
     sfx('coin');
     updHud();
@@ -214,10 +219,39 @@ async function cookMenu(title = 'Dapur Bu Rina', chef = 'Bu Rina') {
     }
 
     for (const [k, n] of Object.entries(R.need)) addItem(k, -(n * cookCount));
+    
+    // Mini-game Seni Memasak Kualitas Bintang Tiga (#50)
+    let starQuality = false;
+    const mini = await choose({
+      head: '🍳 Kualitas Masakan · Sentuhan Chef',
+      x: 35, y: 40, w: 230,
+      items: [
+        { t: '⭐ Timing Tepat! (Bakar Sempurna)' },
+        { t: 'Masak Santai Biasa' }
+      ],
+      foot: () => 'Kualitas Bintang ⭐⭐⭐ memperpanjang durasi buff dan pemulihan!'
+    });
+    if (mini === 0) {
+      starQuality = true;
+      sfx('crit');
+      await sleep(200);
+    }
+
     addItem(R.id, cookCount); sfx('fire'); await sleep(300); sfx('chest');
     S.st = S.st || {}; S.st.cooked = (S.st.cooked || 0) + cookCount;
     updHud();
-    await say(`Harum sekali! ${ITEMS[R.id].n} (x${cookCount}) siap disajikan. Makan dari TAS saat dibutuhkan.`, chef);
+    if (starQuality) {
+      // Masakan Bintang 3: beri buff instan atau bonus tambahan
+      if (ITEMS[R.id].buff) {
+        for (const [bKey, sec] of ITEMS[R.id].buff) {
+          S.buff = S.buff || {};
+          S.buff[bKey] = Math.max(S.buff[bKey] || 0, Math.floor(sec * 1.5));
+        }
+      }
+      await say(`LUAR BIASA! Masakan matang dengan KUALITAS BINTANG TIGA [⭐⭐⭐]! Aroma rempah meresap sempurna dan stamina terpompa lebih lama!`, chef);
+    } else {
+      await say(`Harum sekali! ${ITEMS[R.id].n} (x${cookCount}) siap disajikan. Makan dari TAS saat dibutuhkan.`, chef);
+    }
   }
 }
 // ---------------- UPGRADE (bengkel) ----------------

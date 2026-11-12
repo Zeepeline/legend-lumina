@@ -146,6 +146,13 @@ const ITEMS = {
   // Fitur #410: Petasan Pengalih Perhatian
   firecracker: { n: 'Petasan Pengalih', k: 'use', tool: 1, price: 18, sell: 8, d: 'Lempar ke titik tertentu. Meletup-letup menarik perhatian seluruh musuh di sekitar selama 4 detik.', src: 'Kerajinan: Spora Jamur + Buah Beri' },
 
+  // Fitur #31: Kantong Tas Kulit
+  leather_pouch: { n: 'Kantong Tas Kulit Sapi', k: 'key', price: 120, sell: 60, d: 'Kantong kulit sapi halus pelindung barang. Menjaga isi tas rapi & beri bonus +5% nilai jual di toko.', src: 'Toko Bu Sari / Penginapan' },
+
+  // Fitur #502: Benih & Buket Bunga
+  seed_flower: { n: 'Benih Bunga Lumina', k: 'mat', price: 8, sell: 3, d: 'Benih aneka bunga krisan dan aster cerah untuk ditanam di kebun rumah.', src: 'Toko desa' },
+  flower_bouquet: { n: 'Buket Bunga Segar', k: 'use', hp: 30, mp: 30, price: 35, sell: 20, d: 'Rangkaian bunga aster mekar harum penenang pikiran. Hadiah manis untuk sahabat.', src: 'Kebun bunga rumah Arka' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },
@@ -170,7 +177,10 @@ const ICON_OF = {
   bug_dragonfly: 'bfly_blue',
   bug_firefly: 'firefly_item',
   fbomb: 'bomb',
-  firecracker: 'bomb'
+  firecracker: 'bomb',
+  leather_pouch: 'pelt',
+  seed_flower: 'seed',
+  flower_bouquet: 'frostflower'
 };
 // Masak di penginapan (Bu Rina)
 const COOK = [

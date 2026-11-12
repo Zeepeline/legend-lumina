@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 108 | 5 | 0 | 887 |
+| 115 | 5 | 0 | 880 |
 
 ## Selesai
 
@@ -156,6 +156,13 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 65 | Teka-teki pilar runa kuno (pilar elemen Api-Es-Cahaya di Reruntuhan Aurel berhadiah peti) | `world/maps/wild.js`, `systems/story.js` (`interactRunePillar`) | 19 |
 | 410 | Petasan pengalih perhatian musuh (alat lempar letupan penarik perhatian musuh selama 4 dtk) | `data/items.js` (`firecracker`), `systems/craft.js` | 19 |
 | 77 | Mode aksesibilitas buta warna (kontras tinggi & label teks damage [KRIT!] [LEMAH!]) | `ui/menus.js`, `systems/combat.js`, `systems/polish.js` | 19 |
+| 20 | Kemampuan jelajah: mendorong batu besar (dorong batu purba membuka ceruk gua rahasia) | `world/maps/cave.js`, `systems/life.js` (`updBoulder`) | 20 |
+| 58 | Peliharaan anjing pelacak harta (anjing Kuro setia menggonggong mendekati rahasia & peti) | `npc/dialog.js`, `systems/life.js` (`updPet`) | 20 |
+| 55 | Mode kamera foto & snapshot (mode jepret foto lanskap petualangan bebas HUD) | `ui/menus.js` (`openPhotoMode`) | 20 |
+| 50 | Seni memasak: kualitas bintang tiga (timing ketukan masak hasilkan bonus buff +50% & HP/MP) | `ui/shop.js` (`cookMenu`) | 20 |
+| 31 | Kantong tas kulit sapi (item penata tas & bonus +5% nilai jual di toko) | `data/items.js` (`leather_pouch`), `ui/shop.js` | 20 |
+| 93 | Filter efek layar opsional (opsi atmosferik: Standar / Hangat / Vinyet / Retro CRT) | `ui/menus.js`, `systems/polish.js` (`applyScreenFilter`) | 20 |
+| 502 | Petak kebun bunga rumah & buket wangi (tanam benih aster di kebun, panen buket segar) | `systems/ranch.js`, `data/items.js` (`seed_flower`) | 20 |
 
 ## Sebagian
 
@@ -193,7 +200,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~17~~ | ✅ selesai: 199, 198, 346, 54, 499, 72, 98 | Kejutan Liar, Relik Teleport Saku & Koleksi Alam |
 | ~~18~~ | ✅ selesai: 12, 42, 408, 68, 84, 7, 95 | Rematch Boss, Brankas Desa, Bom Es & Cuaca Ekstrem |
 | ~~19~~ | ✅ selesai: 21, 500, 53, 43, 65, 410, 77 | Lemari Pakaian, Tamu Rumah, Tebang Pohon & Pilar Runa |
-| 20+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~20~~ | ✅ selesai: 20, 58, 55, 50, 31, 93, 502 | Mendorong Batu, Anjing Kuro, Kamera, Masak Bintang & Kebun Bunga |
+| 21+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 

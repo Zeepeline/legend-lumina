@@ -80,7 +80,38 @@ addItem = function (id, n = 1) { _addItem(id, n); if (n > 0) { (S.got = S.got ||
 // ---- ukuran huruf & hemat baterai ----
 function applyFont() { document.documentElement.style.setProperty('--fz', [.9, 1, 1.15, 1.3][OPT.font != null ? OPT.font : 1]); }
 function applyLite() { const g = window.__game && window.__game.game; const L = g && g.loop; if (L) { L.fpsLimit = OPT.lite ? 30 : 0; L._limitRate = OPT.lite ? 1000 / 30 : 0; } }
+
+// Filter Efek Layar Opsional (#93): [0: Standar, 1: Hangat Nostalgia, 2: Vinyet Bioskop, 3: Retro CRT]
+function applyScreenFilter() {
+  let f = document.getElementById('screen-filter-overlay');
+  if (!f) {
+    f = document.createElement('div');
+    f.id = 'screen-filter-overlay';
+    Object.assign(f.style, {
+      position: 'absolute', top: '0', left: '0', width: '100%', height: '100%',
+      pointerEvents: 'none', zIndex: '99999'
+    });
+    document.body.appendChild(f);
+  }
+  const mode = OPT.lite ? 0 : (OPT.filter || 0);
+  if (mode === 1) { // Hangat
+    f.style.background = 'rgba(255, 190, 70, 0.12)';
+    f.style.mixBlendMode = 'color-burn';
+    f.style.boxShadow = 'none';
+  } else if (mode === 2) { // Vinyet
+    f.style.background = 'none';
+    f.style.boxShadow = 'inset 0 0 70px rgba(0, 0, 0, 0.65)';
+  } else if (mode === 3) { // Retro CRT
+    f.style.background = 'repeating-linear-gradient(0deg, rgba(0,0,0,0.18), rgba(0,0,0,0.18) 1px, transparent 1px, transparent 2px)';
+    f.style.boxShadow = 'inset 0 0 40px rgba(0,0,0,0.4)';
+  } else {
+    f.style.background = 'none';
+    f.style.boxShadow = 'none';
+  }
+}
+
 applyFont();
+applyScreenFilter();
 Object.assign(World.prototype, {
-  initPolish() { this.initLock(); applyLite(); if (OPT.lite) { if (this.seaP) this.seaP.setVisible(false); } },
+  initPolish() { this.initLock(); applyLite(); applyScreenFilter(); if (OPT.lite) { if (this.seaP) this.seaP.setVisible(false); } },
 });
