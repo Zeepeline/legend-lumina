@@ -17,6 +17,7 @@ function gLayer(M, ox, oy) { return { M, ox, oy, cols: Math.ceil(M.w / GT), rows
 Object.assign(World.prototype, {
   initGround(data) {
     const M = this.M; this.gImgs = new Map(); this.gL = []; this.gStream = !M.indoor && !G.title && !window.STREAM_OFF; // STREAM_OFF: hanya untuk tes perbandingan
+    if (glOn(M)) { this.gStream = false; this.cameras.main.setBackgroundColor('rgba(0,0,0,0)'); return; } // tanah digambar lapisan bersama GL
     if (!this.gStream) { if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M)); this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6); return; }
     this.gL.push(gLayer(M, 0, 0));
     // potongan di sekitar titik masuk dibuat langsung agar layar pertama sudah lengkap

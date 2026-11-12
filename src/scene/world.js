@@ -106,7 +106,7 @@ class World extends Phaser.Scene {
     // partikel suasana
     const amb = this.weather === 'rain' ? null : { forest: ['leaf', 0xffffff, 900], meadow: ['petal', 0xffffff, 700], village: ['petal', 0xffffff, 1600], cave: ['dot', 0xb8a8ff, 500], swamp: ['dot', 0xa0ffc0, 600], snow: ['dot', 0xffffff, 220] }[M.id];
     const motes = M.id === 'cave' || M.id === 'swamp';
-    if (amb && !G.title) this.add.particles(0, 0, amb[0], { x: { min: -20, max: VW + 20 }, y: motes ? { min: 0, max: VH } : -8, lifespan: 6000, speedY: motes ? { min: -6, max: 6 } : { min: 14, max: 28 }, speedX: { min: -14, max: 6 }, rotate: { min: 0, max: 360 }, alpha: motes ? { start: .7, end: 0 } : 1, tint: amb[1], frequency: amb[2] }).setScrollFactor(0).setDepth(1.9e5); if (!M.indoor && this.initWilds) this.initWilds();
+    if (amb && !G.title) this.add.particles(0, 0, amb[0], { x: { min: -20, max: VW + 20 }, y: motes ? { min: 0, max: VH } : -8, lifespan: 6000, speedY: motes ? { min: -6, max: 6 } : { min: 14, max: 28 }, speedX: { min: -14, max: 6 }, rotate: { min: 0, max: 360 }, alpha: motes ? { start: .7, end: 0 } : 1, tint: amb[1], frequency: amb[2] }).setScrollFactor(0).setDepth(1.9e5);
     this.fxObjs = this.children.list.filter(o => !before.has(o));
   }
   dropActiveFx() { for (const o of this.fxObjs || []) if (o.active) o.destroy(); this.fxObjs = []; this.dark = this.night = this.pet = null; this.glows = null; }

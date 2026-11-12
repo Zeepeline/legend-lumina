@@ -36,6 +36,11 @@ Saran implementasi: hapus clamp kamera antar wilayah (batas kamera = batas benua
 - Tes menu (`bab4`, `belajar`) disesuaikan dengan submenu baru (Jelajah/Karakter/…).
 - Sisa: perbatasan dengan jenis tanah SAMA masih bisa terlihat garis tipis (tekstur rumput memakai koordinat lokal); jalan setapak putus di garis wilayah.
 
+## 1c. Update v1.27.5 (lapisan tanah bersama)
+- **Scene `GL`** (`systems/groundlayer.js`, selalu paling bawah): menggambar tanah semua wilayah luar ruang yang dimuat + hutan pengisi (`wilds.js`) dalam koordinat GLOBAL. Scene `World` luar ruang tidak lagi menggambar tanahnya (`glOn(M)` di `initGround`), jadi tajuk pohon yang menjorok melewati perbatasan tidak tertimpa tanah wilayah sebelah.
+- **Garis gelap 1–3 px** di perbatasan: dulu kamera wilayah pasif disinkron di `update` (sebelum `camStep`) sehingga tertinggal 1 frame. Sekarang `syncCams()` dipanggil di akhir `camStep` (prototipe dibungkus di groundlayer.js).
+- Sisa: benda dari wilayah berbeda tidak saling diurutkan kedalamannya (scene terpisah); hanya terasa tepat di garis perbatasan.
+
 ## 2. Yang SUDAH selesai
 | Tahap | Isi | File utama |
 |---|---|---|

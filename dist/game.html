@@ -5845,7 +5845,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.27.4';
+const GAME_VERSION = '1.27.5';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
@@ -6622,7 +6622,7 @@ class World extends Phaser.Scene {
     // partikel suasana
     const amb = this.weather === 'rain' ? null : { forest: ['leaf', 0xffffff, 900], meadow: ['petal', 0xffffff, 700], village: ['petal', 0xffffff, 1600], cave: ['dot', 0xb8a8ff, 500], swamp: ['dot', 0xa0ffc0, 600], snow: ['dot', 0xffffff, 220] }[M.id];
     const motes = M.id === 'cave' || M.id === 'swamp';
-    if (amb && !G.title) this.add.particles(0, 0, amb[0], { x: { min: -20, max: VW + 20 }, y: motes ? { min: 0, max: VH } : -8, lifespan: 6000, speedY: motes ? { min: -6, max: 6 } : { min: 14, max: 28 }, speedX: { min: -14, max: 6 }, rotate: { min: 0, max: 360 }, alpha: motes ? { start: .7, end: 0 } : 1, tint: amb[1], frequency: amb[2] }).setScrollFactor(0).setDepth(1.9e5); if (!M.indoor && this.initWilds) this.initWilds();
+    if (amb && !G.title) this.add.particles(0, 0, amb[0], { x: { min: -20, max: VW + 20 }, y: motes ? { min: 0, max: VH } : -8, lifespan: 6000, speedY: motes ? { min: -6, max: 6 } : { min: 14, max: 28 }, speedX: { min: -14, max: 6 }, rotate: { min: 0, max: 360 }, alpha: motes ? { start: .7, end: 0 } : 1, tint: amb[1], frequency: amb[2] }).setScrollFactor(0).setDepth(1.9e5);
     this.fxObjs = this.children.list.filter(o => !before.has(o));
   }
   dropActiveFx() { for (const o of this.fxObjs || []) if (o.active) o.destroy(); this.fxObjs = []; this.dark = this.night = this.pet = null; this.glows = null; }
@@ -16371,6 +16371,7 @@ function gLayer(M, ox, oy) { return { M, ox, oy, cols: Math.ceil(M.w / GT), rows
 Object.assign(World.prototype, {
   initGround(data) {
     const M = this.M; this.gImgs = new Map(); this.gL = []; this.gStream = !M.indoor && !G.title && !window.STREAM_OFF; // STREAM_OFF: hanya untuk tes perbandingan
+    if (glOn(M)) { this.gStream = false; this.cameras.main.setBackgroundColor('rgba(0,0,0,0)'); return; } // tanah digambar lapisan bersama GL
     if (!this.gStream) { if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M)); this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6); return; }
     this.gL.push(gLayer(M, 0, 0));
     // potongan di sekitar titik masuk dibuat langsung agar layar pertama sudah lengkap
@@ -16516,9 +16517,7 @@ Object.assign(World.prototype, {
       if (want.length && REG.size < REG_MAX) this.addRegion(want[0]); // satu per giliran agar tidak tersendat
       this.regBounds();
     }
-    // kamera wilayah pasif mengikuti kamera aktif (posisi global sama)
-    const cam = this.cameras.main;
-    for (const s of REG.values()) { if (!s.sys || !s.cameras) continue; const [dx, dy] = relXY(this, s); s.cameras.main.setScroll(cam.scrollX + dx, cam.scrollY + dy); }
+    /* kamera wilayah pasif & lapisan tanah diselaraskan di syncCams (setelah camStep), lihat systems/groundlayer.js */
   },
   addRegion(id) {
     const key = 'R' + (++regSeq) + '_' + id, sc = new World(); sc.sys.settings.key = key;
@@ -16566,10 +16565,56 @@ const _gotoRegion = World.prototype.goto;
 World.prototype.goto = function () { if (!this.passive) removeRegions(this); return _gotoRegion.apply(this, arguments); };
 
 'use strict';
-// Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Dibuat di wilayah aktif saja
-// (ikut makeActiveFx/dropActiveFx). Celah dihitung sekali dari WORLD_POS (kompresi koordinat), digambar dengan
-// tekstur kanopi yang menyambung di koordinat global + deretan pohon sungguhan di tepi celah agar menyatu dengan wilayah.
-const WILD_MARGIN = 1600, WILD_NEAR = 2600, WILD_TILE = 256;
+// Lapisan tanah bersama (scene 'GL', selalu paling bawah): tanah SEMUA wilayah luar ruang yang dimuat + hutan pengisi celah,
+// dalam koordinat GLOBAL (WORLD_POS). Scene World (aktif & pasif) tidak menggambar tanahnya sendiri, jadi tajuk pohon yang
+// menjorok melewati perbatasan tidak lagi tertimpa tanah wilayah sebelah. Kamera GL & wilayah pasif diselaraskan SETELAH
+// camStep wilayah aktif (syncCams), sehingga tidak ada celah 1–3 px (garis gelap) saat bergerak.
+class GroundLayer extends Phaser.Scene {
+  constructor() { super({ key: 'GL' }); }
+  create() {
+    this.t = 0; this.gImgs = new Map(); this.gL = []; this.gStream = true; this.gIds = ''; this.wild = new Map(); this.wildT = 0;
+    this.cameras.main.setBackgroundColor('#2f4a2a');
+  }
+  update(time, dl) {
+    const dt = Math.min(dl, 100) / 1000, A = G.scene; this.t += dt;
+    const on = !!(A && A.sys && A.M && glOn(A.M));
+    this.cameras.main.setVisible(on); if (!on) return;
+    const ids = [A.M.id, ...REG.keys()].filter(id => MAPS[id] && WORLD_POS[id]);
+    if (ids.join() !== this.gIds) { this.gIds = ids.join(); this.gL = ids.map(id => gLayer(MAPS[id], WORLD_POS[id][0], WORLD_POS[id][1])); }
+    this.updGround();
+    if ((this.wildT -= dt) <= 0) { this.wildT = .4; this.updWilds(); }
+  }
+}
+for (const k of ['gFillView', 'gNeed', 'gEnsure', 'updGround']) GroundLayer.prototype[k] = World.prototype[k];
+// wilayah ini memakai lapisan tanah bersama?
+function glOn(M) { return regionsOn() && !M.indoor && !G.title && !window.STREAM_OFF && !!WORLD_POS[M.id] && M.ground !== 'room'; }
+Object.assign(World.prototype, {
+  glScene() {
+    let gl = this.scene.get('GL');
+    if (!gl) { this.scene.add('GL', GroundLayer, true); gl = this.scene.get('GL'); }
+    return gl;
+  },
+  // dipanggil di akhir camStep wilayah aktif: semua kamera lain mengikuti posisi kamera yang sudah final untuk frame ini
+  syncCams() {
+    if (this.passive || this !== G.scene || !this.cameras) return;
+    const cam = this.cameras.main;
+    for (const s of REG.values()) { if (!s.sys || !s.cameras) continue; const [dx, dy] = relXY(this, s); s.cameras.main.setScroll(cam.scrollX + dx, cam.scrollY + dy); }
+    if (!glOn(this.M)) return;
+    const gl = this.glScene(), P = WORLD_POS[this.M.id]; if (!gl || !gl.cameras) return;
+    gl.cameras.main.setScroll(cam.scrollX + P[0], cam.scrollY + P[1]);
+    if (this.scene.manager.getIndex('GL') !== 0) this.scene.manager.sendToBack('GL');
+  },
+});
+{ // camStep (scene/world.js) dibungkus: sinkron kamera setelah kamera aktif bergerak
+  const camStep0 = World.prototype.camStep;
+  World.prototype.camStep = function () { camStep0.apply(this, arguments); this.syncCams(); };
+}
+
+'use strict';
+// Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Digambar di lapisan tanah
+// bersama (scene GL, koordinat global; systems/groundlayer.js), hanya celah di dekat kamera (dibuat/dibuang tiap 0,4 s).
+// Celah dihitung sekali dari WORLD_POS (kompresi koordinat): tekstur kanopi + deretan pohon sungguhan di tepi celah.
+const WILD_MARGIN = 1600, WILD_NEAR = 900, WILD_TILE = 256;
 let WILD_RECTS = null;
 function outdoorRects() {
   return Object.entries(WORLD_POS).filter(([id]) => MAPS[id] && !MAPS[id].indoor && MAPS[id].ground !== 'room')
@@ -16603,7 +16648,7 @@ function wildRects() {
   return out;
 }
 function wildTreeKeys(sc) { return ['treeAd', 'treeBd', 'pined'].map(t => OBJ[t] && OBJ[t].key).filter(k => k && sc.textures.exists(k)); }
-Object.assign(World.prototype, {
+Object.assign(GroundLayer.prototype, {
   wildCanopyTex() {
     if (this.textures.exists('wildcanopy')) return 'wildcanopy';
     const T = WILD_TILE, [c, x] = mk(T, T), keys = wildTreeKeys(this);
@@ -16620,26 +16665,33 @@ Object.assign(World.prototype, {
     this.textures.addCanvas('wildcanopy', c);
     return 'wildcanopy';
   },
-  initWilds() {
-    if (this.M.indoor || !WORLD_POS[this.M.id]) return;
-    const [PX, PY] = WORLD_POS[this.M.id], M = this.M, key = this.wildCanopyTex(), R = outdoorRects(), keys = wildTreeKeys(this);
-    const near = r => r[2] > PX - WILD_NEAR && r[0] < PX + M.w + WILD_NEAR && r[3] > PY - WILD_NEAR && r[1] < PY + M.h + WILD_NEAR;
-    for (const r of wildRects().filter(near)) {
-      const ts = this.add.tileSprite(r[0] - PX, r[1] - PY, r[2] - r[0], r[3] - r[1], key).setOrigin(0).setDepth(-1.1e6);
-      ts.tilePositionX = r[0]; ts.tilePositionY = r[1]; // pola menyambung di koordinat global
-      if (!keys.length) continue;
-      // deretan pohon di tepi celah yang bersentuhan dengan wilayah
-      const edge = (x0, y0, x1, y1, ox, oy) => {
-        const L = Math.hypot(x1 - x0, y1 - y0), n = Math.floor(L / 26);
-        for (let i = 0; i <= n; i++) {
-          const gx = x0 + (x1 - x0) * i / Math.max(1, n), gy = y0 + (y1 - y0) * i / Math.max(1, n);
-          if (!inRegion(R, gx - ox * 3, gy - oy * 3)) continue;
-          const j = hash(Math.round(gx), Math.round(gy), 73), tx = gx + ox * (10 + j * 8), ty = gy + oy * (10 + j * 8) + (oy < 0 ? 0 : 22);
-          this.add.image(Math.round(tx - PX), Math.round(ty - PY), keys[Math.floor(j * 97) % keys.length]).setOrigin(.5, 1).setDepth(ty - PY);
-        }
-      };
-      edge(r[0], r[1], r[2], r[1], 0, 1); edge(r[0], r[3], r[2], r[3], 0, -1); edge(r[0], r[1], r[0], r[3], 1, 0); edge(r[2], r[1], r[2], r[3], -1, 0);
-    }
+  // buat isi celah yang dekat kamera, buang yang jauh
+  updWilds() {
+    const v = this.cameras.main.worldView, R = wildRects();
+    R.forEach((r, ri) => {
+      const near = r[2] > v.x - WILD_NEAR && r[0] < v.right + WILD_NEAR && r[3] > v.y - WILD_NEAR && r[1] < v.bottom + WILD_NEAR;
+      const has = this.wild.get(ri);
+      if (near && !has) this.wild.set(ri, this.makeWild(r));
+      else if (!near && has) { for (const o of has) o.destroy(); this.wild.delete(ri); }
+    });
+  },
+  makeWild(r) {
+    const out = [], key = this.wildCanopyTex(), R = outdoorRects(), keys = wildTreeKeys(this);
+    const ts = this.add.tileSprite(r[0], r[1], r[2] - r[0], r[3] - r[1], key).setOrigin(0).setDepth(-1.1e6);
+    ts.tilePositionX = r[0]; ts.tilePositionY = r[1]; out.push(ts); // pola menyambung di koordinat global
+    if (!keys.length) return out;
+    // deretan pohon di tepi celah yang bersentuhan dengan wilayah
+    const edge = (x0, y0, x1, y1, ox, oy) => {
+      const L = Math.hypot(x1 - x0, y1 - y0), n = Math.floor(L / 26);
+      for (let i = 0; i <= n; i++) {
+        const gx = x0 + (x1 - x0) * i / Math.max(1, n), gy = y0 + (y1 - y0) * i / Math.max(1, n);
+        if (!inRegion(R, gx - ox * 3, gy - oy * 3)) continue;
+        const j = hash(Math.round(gx), Math.round(gy), 73), tx = gx + ox * (10 + j * 8), ty = gy + oy * (10 + j * 8) + (oy < 0 ? 0 : 22);
+        out.push(this.add.image(Math.round(tx), Math.round(ty), keys[Math.floor(j * 97) % keys.length]).setOrigin(.5, 1).setDepth(ty));
+      }
+    };
+    edge(r[0], r[1], r[2], r[1], 0, 1); edge(r[0], r[3], r[2], r[3], 0, -1); edge(r[0], r[1], r[0], r[3], 1, 0); edge(r[2], r[1], r[2], r[3], -1, 0);
+    return out;
   },
 });
 

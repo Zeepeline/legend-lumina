@@ -45,9 +45,7 @@ Object.assign(World.prototype, {
       if (want.length && REG.size < REG_MAX) this.addRegion(want[0]); // satu per giliran agar tidak tersendat
       this.regBounds();
     }
-    // kamera wilayah pasif mengikuti kamera aktif (posisi global sama)
-    const cam = this.cameras.main;
-    for (const s of REG.values()) { if (!s.sys || !s.cameras) continue; const [dx, dy] = relXY(this, s); s.cameras.main.setScroll(cam.scrollX + dx, cam.scrollY + dy); }
+    /* kamera wilayah pasif & lapisan tanah diselaraskan di syncCams (setelah camStep), lihat systems/groundlayer.js */
   },
   addRegion(id) {
     const key = 'R' + (++regSeq) + '_' + id, sc = new World(); sc.sys.settings.key = key;

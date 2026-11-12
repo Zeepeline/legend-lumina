@@ -1,8 +1,8 @@
 'use strict';
-// Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Dibuat di wilayah aktif saja
-// (ikut makeActiveFx/dropActiveFx). Celah dihitung sekali dari WORLD_POS (kompresi koordinat), digambar dengan
-// tekstur kanopi yang menyambung di koordinat global + deretan pohon sungguhan di tepi celah agar menyatu dengan wilayah.
-const WILD_MARGIN = 1600, WILD_NEAR = 2600, WILD_TILE = 256;
+// Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Digambar di lapisan tanah
+// bersama (scene GL, koordinat global; systems/groundlayer.js), hanya celah di dekat kamera (dibuat/dibuang tiap 0,4 s).
+// Celah dihitung sekali dari WORLD_POS (kompresi koordinat): tekstur kanopi + deretan pohon sungguhan di tepi celah.
+const WILD_MARGIN = 1600, WILD_NEAR = 900, WILD_TILE = 256;
 let WILD_RECTS = null;
 function outdoorRects() {
   return Object.entries(WORLD_POS).filter(([id]) => MAPS[id] && !MAPS[id].indoor && MAPS[id].ground !== 'room')
@@ -36,7 +36,7 @@ function wildRects() {
   return out;
 }
 function wildTreeKeys(sc) { return ['treeAd', 'treeBd', 'pined'].map(t => OBJ[t] && OBJ[t].key).filter(k => k && sc.textures.exists(k)); }
-Object.assign(World.prototype, {
+Object.assign(GroundLayer.prototype, {
   wildCanopyTex() {
     if (this.textures.exists('wildcanopy')) return 'wildcanopy';
     const T = WILD_TILE, [c, x] = mk(T, T), keys = wildTreeKeys(this);
@@ -53,25 +53,32 @@ Object.assign(World.prototype, {
     this.textures.addCanvas('wildcanopy', c);
     return 'wildcanopy';
   },
-  initWilds() {
-    if (this.M.indoor || !WORLD_POS[this.M.id]) return;
-    const [PX, PY] = WORLD_POS[this.M.id], M = this.M, key = this.wildCanopyTex(), R = outdoorRects(), keys = wildTreeKeys(this);
-    const near = r => r[2] > PX - WILD_NEAR && r[0] < PX + M.w + WILD_NEAR && r[3] > PY - WILD_NEAR && r[1] < PY + M.h + WILD_NEAR;
-    for (const r of wildRects().filter(near)) {
-      const ts = this.add.tileSprite(r[0] - PX, r[1] - PY, r[2] - r[0], r[3] - r[1], key).setOrigin(0).setDepth(-1.1e6);
-      ts.tilePositionX = r[0]; ts.tilePositionY = r[1]; // pola menyambung di koordinat global
-      if (!keys.length) continue;
-      // deretan pohon di tepi celah yang bersentuhan dengan wilayah
-      const edge = (x0, y0, x1, y1, ox, oy) => {
-        const L = Math.hypot(x1 - x0, y1 - y0), n = Math.floor(L / 26);
-        for (let i = 0; i <= n; i++) {
-          const gx = x0 + (x1 - x0) * i / Math.max(1, n), gy = y0 + (y1 - y0) * i / Math.max(1, n);
-          if (!inRegion(R, gx - ox * 3, gy - oy * 3)) continue;
-          const j = hash(Math.round(gx), Math.round(gy), 73), tx = gx + ox * (10 + j * 8), ty = gy + oy * (10 + j * 8) + (oy < 0 ? 0 : 22);
-          this.add.image(Math.round(tx - PX), Math.round(ty - PY), keys[Math.floor(j * 97) % keys.length]).setOrigin(.5, 1).setDepth(ty - PY);
-        }
-      };
-      edge(r[0], r[1], r[2], r[1], 0, 1); edge(r[0], r[3], r[2], r[3], 0, -1); edge(r[0], r[1], r[0], r[3], 1, 0); edge(r[2], r[1], r[2], r[3], -1, 0);
-    }
+  // buat isi celah yang dekat kamera, buang yang jauh
+  updWilds() {
+    const v = this.cameras.main.worldView, R = wildRects();
+    R.forEach((r, ri) => {
+      const near = r[2] > v.x - WILD_NEAR && r[0] < v.right + WILD_NEAR && r[3] > v.y - WILD_NEAR && r[1] < v.bottom + WILD_NEAR;
+      const has = this.wild.get(ri);
+      if (near && !has) this.wild.set(ri, this.makeWild(r));
+      else if (!near && has) { for (const o of has) o.destroy(); this.wild.delete(ri); }
+    });
+  },
+  makeWild(r) {
+    const out = [], key = this.wildCanopyTex(), R = outdoorRects(), keys = wildTreeKeys(this);
+    const ts = this.add.tileSprite(r[0], r[1], r[2] - r[0], r[3] - r[1], key).setOrigin(0).setDepth(-1.1e6);
+    ts.tilePositionX = r[0]; ts.tilePositionY = r[1]; out.push(ts); // pola menyambung di koordinat global
+    if (!keys.length) return out;
+    // deretan pohon di tepi celah yang bersentuhan dengan wilayah
+    const edge = (x0, y0, x1, y1, ox, oy) => {
+      const L = Math.hypot(x1 - x0, y1 - y0), n = Math.floor(L / 26);
+      for (let i = 0; i <= n; i++) {
+        const gx = x0 + (x1 - x0) * i / Math.max(1, n), gy = y0 + (y1 - y0) * i / Math.max(1, n);
+        if (!inRegion(R, gx - ox * 3, gy - oy * 3)) continue;
+        const j = hash(Math.round(gx), Math.round(gy), 73), tx = gx + ox * (10 + j * 8), ty = gy + oy * (10 + j * 8) + (oy < 0 ? 0 : 22);
+        out.push(this.add.image(Math.round(tx), Math.round(ty), keys[Math.floor(j * 97) % keys.length]).setOrigin(.5, 1).setDepth(ty));
+      }
+    };
+    edge(r[0], r[1], r[2], r[1], 0, 1); edge(r[0], r[3], r[2], r[3], 0, -1); edge(r[0], r[1], r[0], r[3], 1, 0); edge(r[2], r[1], r[2], r[3], -1, 0);
+    return out;
   },
 });
