@@ -1,6 +1,6 @@
 // Service worker: simpan semua file game agar bisa dimainkan offline.
 // Naikkan VERSI setiap rilis besar agar cache lama dibuang.
-const VERSI = 'lumina-v24';
+const VERSI = 'lumina-v25';
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSI).then(c => c.addAll(['./', 'index.html', 'styles.css', 'manifest.webmanifest'])).then(() => self.skipWaiting()));
 });

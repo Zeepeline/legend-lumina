@@ -49,7 +49,7 @@ class World extends Phaser.Scene {
     for (const a of M.animals || []) this.spawnCritter(a);
     for (let i = 0; i < (M.butterflies || 0); i++) this.spawnFly(i);
     for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2]);
-    this.initSecrets(); this.spawnHome(); this.spawnRanch(); this.spawnSeason();
+    this.initSecrets(); this.spawnHome(); this.spawnRanch(); this.spawnSeason(); this.initPolish();
     if (!G.title && isNight() && (M.id === 'forest' || M.id === 'meadow')) for (let i = 0; i < 4; i++) { const P = M.paths[(i * 3 + 2) % M.paths.length]; this.spawnEnemy('wisp', (P[0] + P[2]) / 2 + rnd(-30, 30), (P[1] + P[3]) / 2 + rnd(-20, 20)); }
     // pemain
     const pl = this.pl = this.physics.add.sprite(data.x || S.x, data.y || S.y, 'ch_hero', (data.dir === 'left' || data.dir === 'right' ? 'side' : data.dir || 'down') + '0').setOrigin(.5, 1);
@@ -519,7 +519,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt);
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       if (this.boulder) this.updBoulder(dt);
@@ -593,7 +593,7 @@ class World extends Phaser.Scene {
       if (UIH) { UIH(k.startsWith('j') ? k.slice(1) : k); continue; }
       if (G.lock > 0 || this.trans || this.pl?.dead || G.title) { Input.castAng = null; continue; }
       if (this.carry && this.carryKey(k)) continue;
-      if (k === 'a') this.actionA(); else if (k === 'b') this.magic(); else if (k === 'dash') this.dash(); else if (k === 'nova') this.nova(); else if (k === 'item') this.drink(); else if (k === 'tool1') this.useSlot(0); else if (k === 'tool2') this.useSlot(1); else if (k === 'menu') mainMenu(this); else if (k === 'map') openMap(this); else if (k === 'bag') openBag(this);
+      if (k === 'a') this.actionA(); else if (k === 'b') this.magic(); else if (k === 'dash') this.dash(); else if (k === 'nova') this.nova(); else if (k === 'item') this.drink(); else if (k === 'lock') this.cycleLock(); else if (k === 'tool1') this.useSlot(0); else if (k === 'tool2') this.useSlot(1); else if (k === 'menu') mainMenu(this); else if (k === 'map') openMap(this); else if (k === 'bag') openBag(this);
     }
   }
   front(dist = 12) { const [dx, dy] = DIRV[this.pl.dir]; return { x: this.pl.x + dx * dist, y: this.pl.y - 3 + dy * dist }; }

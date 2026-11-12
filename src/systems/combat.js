@@ -198,6 +198,7 @@ Object.assign(World.prototype, {
       if (p.spin) p.s.rotation += dt * 14;
       let dead = p.life <= 0;
       if (!dead && this.physics.overlapRect(p.gx - 2, p.gy - 3, 4, 4, false, true).length) dead = true;
+      this._curShot = p;
       if (!dead && p.mine) for (const e of this.enemies) { if (e.hp > 0 && !(p.hitSet && p.hitSet.has(e)) && Math.hypot(e.spr.x - p.gx, e.spr.y - e.D.r * e.sc * .7 - (e.D.fly ? 6 : 0) - (p.gy - 4)) < e.D.r * e.sc + 6) { const n = Math.hypot(p.vx, p.vy); this.hitEnemy(e, p.dmg, false, p.vx / n, p.vy / n); if (p.kind === 'fire') this.burnEnemy(e, p.dmg * .2, 2); if (p.pierce) { (p.hitSet = p.hitSet || new Set()).add(e); continue; } dead = true; break; } }
       if (!dead && p.enemy && Math.hypot(this.pl.x - p.gx, this.pl.y - 4 - p.gy) < 8) { this.hurtPlayer(p.dmg, p.gx - p.vx, p.gy - p.vy, p.fx); dead = true; }
       if (dead) { p.dead = true; p.s.destroy(); if (p.kind === 'fire') this.sparkle(p.gx, p.gy - 8, 'doto', 8); }

@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 72 | 5 | 0 | 923 |
+| 80 | 5 | 0 | 915 |
 
 ## Selesai
 
@@ -92,6 +92,14 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 716 | Gugur: daun jingga berguguran | `systems/season.js` | 10 |
 | 717 | Dingin: salju turun di desa & alam, tanaman lambat, monster lebih ganas | `systems/season.js` | 10 |
 | — | Tidur di penginapan/ranjang rumah melompat ke pagi (07.00) | `systems/season.js` (`sleepToMorning`) | 10 |
+| 99 | Hemat baterai: 30 FPS & partikel musim mati | `systems/polish.js` (`applyLite`) | 11 |
+| 3 | Tangkis: serang ≤0,18 dtk sebelum kena pukul → musuh terpental, pukulan berikut kritis | `systems/polish.js` | 11 |
+| 5 | Kelemahan elemen: es lemah api, api lemah es, tanaman lemah api (LEMAH! berwarna) | `systems/polish.js` (`ELEM`, `WEAK`) | 11 |
+| 6 | Kunci target: ketuk musuh / tombol T; sihir & panah membidik otomatis | `systems/polish.js` (`setLock`, `updLock`) | 11 |
+| 35 | Urutkan tas: jenis / nilai / baru / nama (DASH atau ketuk label) | `ui/bag.js` (`BAG_SORT`) | 11 |
+| 37 | Warna kelangkaan: biru langka, ungu epik, jingga legendaris | `systems/polish.js` (`rarity`) | 11 |
+| 76 | Ukuran huruf 4 tingkat | `systems/polish.js` (`applyFont`), `styles.css` | 11 |
+| 81 | Notifikasi barang bertumpuk di pojok kiri bawah | `systems/polish.js` (`toastItem`) | 11 |
 
 ## Sebagian
 
@@ -120,7 +128,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~8~~ | ✅ selesai | — |
 | ~~9~~ | ✅ selesai | — |
 | ~~10~~ | ✅ selesai | — |
-| 11+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~11~~ | ✅ selesai: 99, 3, 5, 6, 35, 37, 76, 81 | — |
+| 12+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 

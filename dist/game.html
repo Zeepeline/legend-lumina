@@ -213,6 +213,17 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 .bc .fic{height:22px;display:flex;align-items:center;justify-content:center;font-size:14px}.bc .fic img{width:20px;height:20px;image-rendering:pixelated}
 .bc .fx{font-size:8px;color:#7a5a3a;margin-top:1px}.bc .fh{font-size:7px;line-height:1.25;color:#8a7a6a;margin-top:2px}
 #hDate{position:absolute;left:5px;top:50px;font-size:8px;color:#fff3c0;text-shadow:0 1px 0 #000,0 0 3px #000;pointer-events:none;white-space:nowrap}
+/* kelangkaan (#37) */
+.r1{color:#2a7ad8}.r2{color:#9a3ad8}.r3{color:#d8801a;font-weight:700}
+#bagw .srt{white-space:nowrap;font-size:8px;color:#8a6a4a;margin-left:auto;margin-right:6px;padding:1px 4px;border:1px solid #c8a878;border-radius:3px;cursor:pointer;pointer-events:auto}
+/* notifikasi barang (#81) */
+#toasts{position:absolute;left:6px;bottom:6px;display:flex;flex-direction:column;gap:2px;z-index:2;pointer-events:none}
+.toast{display:flex;align-items:center;gap:3px;background:rgba(30,20,12,.82);border:1px solid rgba(255,230,180,.4);border-radius:4px;padding:1px 6px 1px 3px;font-size:9px;color:#fff;animation:tipin .25s ease}
+.toast img{width:12px;height:12px;image-rendering:pixelated}.toast b{color:#8dff9f}.toast.r1 span{color:#9ac8ff}.toast.r2 span{color:#d8a8ff}.toast.r3 span{color:#ffc860}
+/* ukuran huruf (#76) */
+.win .tx,.win .ops,.win .mf,.win .bd,.win .bl,.win .jb,.win .qr{zoom:var(--fz,1)}
+#bagw .gold{white-space:nowrap}
+#ui:has(.win) #toasts,body:has(.win) #toasts{display:none}
 </style>
 </head>
 <body>
@@ -362,7 +373,7 @@ function sfx(n) {
 // Input.held: arah dari keyboard; Input.joy: vektor analog dari joystick; Input.q: tombol yang ditekan
 const Input = { held: [], joy: { x: 0, y: 0, on: false }, q: [], keys: {}, aim: { on: false, x: 0, y: 0 }, castAng: null, padAxes: { x: 0, y: 0 } };
 function press(k) { auInit(); Input.q.push(k); }
-const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', KeyZ: 'a', Space: 'a', Enter: 'a', KeyJ: 'a', KeyX: 'b', KeyK: 'b', Backspace: 'back', KeyQ: 'item', KeyE: 'item', KeyL: 'item', Escape: 'menu', KeyC: 'nova', ShiftLeft: 'dash', ShiftRight: 'dash', KeyV: 'dash', KeyM: 'map', Tab: 'map', KeyP: 'map', KeyI: 'bag', KeyB: 'bag', KeyR: 'tool1', KeyF: 'tool2' };
+const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', KeyZ: 'a', Space: 'a', Enter: 'a', KeyJ: 'a', KeyX: 'b', KeyK: 'b', Backspace: 'back', KeyQ: 'item', KeyE: 'item', KeyL: 'item', Escape: 'menu', KeyC: 'nova', ShiftLeft: 'dash', ShiftRight: 'dash', KeyV: 'dash', KeyM: 'map', Tab: 'map', KeyP: 'map', KeyI: 'bag', KeyB: 'bag', KeyR: 'tool1', KeyF: 'tool2', KeyT: 'lock' };
 const ISDIR = { up: 1, down: 1, left: 1, right: 1 };
 addEventListener('keydown', e => {
   const k = KEYMAP[e.code]; if (!k) return; e.preventDefault();
@@ -4942,8 +4953,8 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.15.0';
-const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
+const GAME_VERSION = '1.16.0';
+const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true, font: 1, lite: false, toast: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
 function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {} }; }
@@ -5417,7 +5428,7 @@ class World extends Phaser.Scene {
     for (const a of M.animals || []) this.spawnCritter(a);
     for (let i = 0; i < (M.butterflies || 0); i++) this.spawnFly(i);
     for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2]);
-    this.initSecrets(); this.spawnHome(); this.spawnRanch(); this.spawnSeason();
+    this.initSecrets(); this.spawnHome(); this.spawnRanch(); this.spawnSeason(); this.initPolish();
     if (!G.title && isNight() && (M.id === 'forest' || M.id === 'meadow')) for (let i = 0; i < 4; i++) { const P = M.paths[(i * 3 + 2) % M.paths.length]; this.spawnEnemy('wisp', (P[0] + P[2]) / 2 + rnd(-30, 30), (P[1] + P[3]) / 2 + rnd(-20, 20)); }
     // pemain
     const pl = this.pl = this.physics.add.sprite(data.x || S.x, data.y || S.y, 'ch_hero', (data.dir === 'left' || data.dir === 'right' ? 'side' : data.dir || 'down') + '0').setOrigin(.5, 1);
@@ -5887,7 +5898,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt);
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       if (this.boulder) this.updBoulder(dt);
@@ -5961,7 +5972,7 @@ class World extends Phaser.Scene {
       if (UIH) { UIH(k.startsWith('j') ? k.slice(1) : k); continue; }
       if (G.lock > 0 || this.trans || this.pl?.dead || G.title) { Input.castAng = null; continue; }
       if (this.carry && this.carryKey(k)) continue;
-      if (k === 'a') this.actionA(); else if (k === 'b') this.magic(); else if (k === 'dash') this.dash(); else if (k === 'nova') this.nova(); else if (k === 'item') this.drink(); else if (k === 'tool1') this.useSlot(0); else if (k === 'tool2') this.useSlot(1); else if (k === 'menu') mainMenu(this); else if (k === 'map') openMap(this); else if (k === 'bag') openBag(this);
+      if (k === 'a') this.actionA(); else if (k === 'b') this.magic(); else if (k === 'dash') this.dash(); else if (k === 'nova') this.nova(); else if (k === 'item') this.drink(); else if (k === 'lock') this.cycleLock(); else if (k === 'tool1') this.useSlot(0); else if (k === 'tool2') this.useSlot(1); else if (k === 'menu') mainMenu(this); else if (k === 'map') openMap(this); else if (k === 'bag') openBag(this);
     }
   }
   front(dist = 12) { const [dx, dy] = DIRV[this.pl.dir]; return { x: this.pl.x + dx * dist, y: this.pl.y - 3 + dy * dist }; }
@@ -6201,6 +6212,7 @@ Object.assign(World.prototype, {
       if (p.spin) p.s.rotation += dt * 14;
       let dead = p.life <= 0;
       if (!dead && this.physics.overlapRect(p.gx - 2, p.gy - 3, 4, 4, false, true).length) dead = true;
+      this._curShot = p;
       if (!dead && p.mine) for (const e of this.enemies) { if (e.hp > 0 && !(p.hitSet && p.hitSet.has(e)) && Math.hypot(e.spr.x - p.gx, e.spr.y - e.D.r * e.sc * .7 - (e.D.fly ? 6 : 0) - (p.gy - 4)) < e.D.r * e.sc + 6) { const n = Math.hypot(p.vx, p.vy); this.hitEnemy(e, p.dmg, false, p.vx / n, p.vy / n); if (p.kind === 'fire') this.burnEnemy(e, p.dmg * .2, 2); if (p.pierce) { (p.hitSet = p.hitSet || new Set()).add(e); continue; } dead = true; break; } }
       if (!dead && p.enemy && Math.hypot(this.pl.x - p.gx, this.pl.y - 4 - p.gy) < 8) { this.hurtPlayer(p.dmg, p.gx - p.vx, p.gy - p.vy, p.fx); dead = true; }
       if (dead) { p.dead = true; p.s.destroy(); if (p.kind === 'fire') this.sparkle(p.gx, p.gy - 8, 'doto', 8); }
@@ -13543,6 +13555,85 @@ Object.assign(World.prototype, {
 });
 
 'use strict';
+// Gelombang 11: hemat baterai (#99), tangkis (#3), kelemahan elemen (#5), kunci target (#6),
+// warna kelangkaan (#37), notifikasi barang (#81), ukuran huruf (#76). Urutkan tas (#35) di ui/bag.js
+// ---- elemen musuh ----
+const ELEM = { slimei: 'ice', wolfs: 'ice', golemi: 'ice', kryos: 'ice', slimef: 'fire', salam: 'fire', plant: 'nature', shroom: 'nature', ghost: 'spirit', wisp: 'spirit' };
+const WEAK = { ice: { fire: 1.7, ice: .5 }, fire: { ice: 1.7, fire: .5 }, nature: { fire: 1.5 }, spirit: { holy: 1.8 } };
+const ELEM_COL = { fire: '#ff8a3a', ice: '#8ad8ff', holy: '#ffe88a' };
+const _hitEnemy = World.prototype.hitEnemy;
+World.prototype.hitEnemy = function (e, base, crit, nx, ny) {
+  const el = this.curElem || (this._inShots && this._curShot && this._curShot.kind === 'fire' ? 'fire' : null), k = el && WEAK[ELEM[e.type]] ? WEAK[ELEM[e.type]][el] || 1 : 1;
+  if (this.pl.parryCrit > 0 && !el) { crit = true; this.pl.parryCrit = 0; }
+  if (k !== 1 && e.hp > 0) popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 14, k > 1 ? 'LEMAH!' : 'tahan', k > 1 ? ELEM_COL[el] || '#ffe66b' : '#a8a8b8');
+  return _hitEnemy.call(this, e, base * k, crit, nx, ny);
+};
+// sumber elemen: bola api = api (proyektil ditandai _curShot di updShots), nova = es, bom = api
+const _updShots = World.prototype.updShots;
+World.prototype.updShots = function (dt, locked) { this._inShots = true; try { return _updShots.call(this, dt, locked); } finally { this._inShots = false; this._curShot = null; } };
+// nova es
+const _nova = World.prototype.nova;
+World.prototype.nova = function () { this.curElem = 'ice'; try { return _nova.apply(this, arguments); } finally { this.time.delayedCall(400, () => { this.curElem = null; }); } };
+const _useTool = World.prototype.useTool;
+World.prototype.useTool = function (id) { if (ITEMS[id].tool === 'bomb') this.time.delayedCall(600, () => { this.curElem = 'fire'; this.time.delayedCall(200, () => { this.curElem = null; }); }); return _useTool.call(this, id); };
+// ---- tangkis: serang tepat sebelum terkena pukulan jarak dekat ----
+const PARRY_WIN = .18;
+const _attack = World.prototype.attack;
+World.prototype.attack = function () { if (this.pl.atkCd <= 0) this.pl.swingT = this.t; return _attack.apply(this, arguments); };
+const _hurtPlayer = World.prototype.hurtPlayer;
+World.prototype.hurtPlayer = function (atk, sx, sy, fx) {
+  const pl = this.pl;
+  if (pl.swingT != null && this.t - pl.swingT < PARRY_WIN && pl.inv <= 0 && !pl.dead && !G.lock) {
+    const e = this.enemies.filter(e => e.hp > 0 && !e.boss).sort((a, b) => Math.hypot(a.spr.x - sx, a.spr.y - sy) - Math.hypot(b.spr.x - sx, b.spr.y - sy))[0];
+    if (e && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 60) {
+      pl.swingT = null; pl.inv = .4; pl.parryCrit = 1.5; S.parries = (S.parries || 0) + 1;
+      e.kb = .2; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1; e.kbx = (e.spr.x - pl.x) / n * 200; e.kby = (e.spr.y - pl.y) / n * 200; e.st = 'rec'; e.t = 1;
+      sfx('crit'); this.hitStop(.12, 30); this.sparkle((pl.x + e.spr.x) / 2, (pl.y + e.spr.y) / 2 - 10, 'doto', 10); popWorld(pl.x, pl.y - 34, 'TANGKIS!', 'crit'); return;
+    }
+  }
+  return _hurtPlayer.apply(this, arguments);
+};
+// ---- kunci target: ketuk musuh di layar (atau tombol T) ----
+Object.assign(World.prototype, {
+  initLock() {
+    this.lockE = null; if (this.lockR) this.lockR.destroy();
+    this.lockR = this.add.graphics().setDepth(9500).setVisible(false);
+    if (!this._lockIn) { this._lockIn = 1; this.input.on('pointerdown', p => { if (G.lock || G.title) return; const w = this.cameras.main.getWorldPoint(p.x, p.y); const e = this.enemies.filter(e => e.hp > 0).find(e => Math.hypot(e.spr.x - w.x, e.spr.y - e.spr.displayHeight / 2 - w.y) < 18); if (e) this.setLock(e === this.lockE ? null : e); }); }
+  },
+  setLock(e) { this.lockE = e; sfx(e ? 'cur' : 'back'); if (e) popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 8, 'terkunci', 'xp'); },
+  cycleLock() { const L = this.enemies.filter(e => e.hp > 0 && Math.hypot(e.spr.x - this.pl.x, e.spr.y - this.pl.y) < 200).sort((a, b) => Math.hypot(a.spr.x - this.pl.x, a.spr.y - this.pl.y) - Math.hypot(b.spr.x - this.pl.x, b.spr.y - this.pl.y)); if (!L.length) return this.setLock(null); const i = L.indexOf(this.lockE); this.setLock(i === L.length - 1 ? null : L[i + 1]); },
+  updLock() {
+    const e = this.lockE, g = this.lockR; if (!g) return;
+    if (!e || e.hp <= 0 || !e.spr.active || Math.hypot(e.spr.x - this.pl.x, e.spr.y - this.pl.y) > 260) { if (e) this.lockE = null; g.setVisible(false); return; }
+    const r = 9 + Math.sin(this.t * 6) * 1.5, x = e.spr.x, y = e.spr.y - e.spr.displayHeight / 2;
+    g.clear().setVisible(true).lineStyle(1.5, 0xff5a3a, .95); for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + this.t; g.beginPath(); g.arc(x, y, r, a, a + .9); g.strokePath(); }
+  },
+});
+const _aim = World.prototype.aimAngle;
+World.prototype.aimAngle = function () { const e = this.lockE; if (e && e.hp > 0 && Input.castAng == null) { const pl = this.pl; return Math.atan2(e.spr.y - e.D.r * e.sc * .6 - (pl.y - 6), e.spr.x - pl.x); } return _aim.call(this); };
+// ---- kelangkaan barang ----
+const RARE_N = ['', 'Langka', 'Epik', 'Legendaris'];
+function rarity(id) { const it = ITEMS[id] || {}; if (/^leg_/.test(id) || ['csword', 'aurelring', 'cshield', 'fspear'].includes(id)) return 3; const v = it.price || (it.sell || 0) * 2; return v >= 90 ? 2 : v >= 35 ? 1 : 0; }
+// ---- notifikasi barang bertumpuk ----
+const TOAST = {};
+function toastItem(id, n) {
+  if (G.title || !ITEMS[id] || n <= 0) return; let box = document.getElementById('toasts'); if (!box) { box = document.createElement('div'); box.id = 'toasts'; UI.appendChild(box); }
+  const t = TOAST[id]; if (t && t.e.isConnected) { t.n += n; t.e.querySelector('b').textContent = '+' + t.n; clearTimeout(t.tm); t.tm = setTimeout(() => t.e.remove(), 2200); return; }
+  const e = document.createElement('div'); e.className = 'toast r' + rarity(id); e.innerHTML = `${icon(id)}<span>${ITEMS[id].n}</span><b>+${n}</b>`; box.appendChild(e);
+  while (box.children.length > 4) box.firstChild.remove();
+  TOAST[id] = { e, n, tm: setTimeout(() => e.remove(), 2200) };
+}
+const _addItem = addItem;
+addItem = function (id, n = 1) { _addItem(id, n); if (n > 0) { (S.got = S.got || {})[id] = Date.now(); if (OPT.toast !== false) toastItem(id, n); } };
+// ---- ukuran huruf & hemat baterai ----
+function applyFont() { document.documentElement.style.setProperty('--fz', [.9, 1, 1.15, 1.3][OPT.font != null ? OPT.font : 1]); }
+function applyLite() { const g = window.__game && window.__game.game; const L = g && g.loop; if (L) { L.fpsLimit = OPT.lite ? 30 : 0; L._limitRate = OPT.lite ? 1000 / 30 : 0; } }
+applyFont();
+Object.assign(World.prototype, {
+  initPolish() { this.initLock(); applyLite(); if (OPT.lite) { if (this.seaP) this.seaP.setVisible(false); } },
+});
+
+'use strict';
 // Percakapan NPC, toko, bengkel, penginapan
 Object.assign(World.prototype, {
   npcHasQuest(id) {
@@ -13854,18 +13945,20 @@ async function upgradeMenu() {
 // Tas (inventaris) & buku misi
 // ---------------- TAS (INVENTARIS) ----------------
 const BAG_TABS = [['use', 'Pakai'], ['eq', 'Perlengkapan'], ['mat', 'Bahan'], ['key', 'Penting']];
+let BAG_SORT = 0;
 async function openBag(sc) {
   G.lock++; sfx('ok');
   const w = win('act', ''); w.id = 'bagw'; let tab = 0, sel = 0;
-  function list() { const k = BAG_TABS[tab][0]; return Object.keys(S.inv).filter(id => S.inv[id] > 0 && (k === 'eq' ? ['wpn', 'arm', 'acc'].includes(ITEMS[id].k) : ITEMS[id].k === k)); }
+  function list() { const k = BAG_TABS[tab][0], L = Object.keys(S.inv).filter(id => S.inv[id] > 0 && (k === 'eq' ? ['wpn', 'arm', 'acc'].includes(ITEMS[id].k) : ITEMS[id].k === k)); const val = id => ITEMS[id].price || (ITEMS[id].sell || 0) * 2, got = id => (S.got && S.got[id]) || 0; return BAG_SORT === 1 ? L.sort((a, b) => val(b) - val(a)) : BAG_SORT === 2 ? L.sort((a, b) => got(b) - got(a)) : BAG_SORT === 3 ? L.sort((a, b) => ITEMS[a].n.localeCompare(ITEMS[b].n)) : L; }
   function isEq(id) { return Object.values(S.eq).includes(id); }
   function draw() {
     const L = list(); sel = clamp(sel, 0, Math.max(0, L.length - 1)); const st = stat();
-    w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="gold">${S.gold} G</span></div>
-     <div class="bb"><div class="bl">${L.length ? L.map((id, i) => `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span>${itemName(id)}</span><b>${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`).join('') : '<div class="empty">Kosong</div>'}</div>
+    w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span><span class="gold">${S.gold} G</span></div>
+     <div class="bb"><div class="bl">${L.length ? L.map((id, i) => `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}</span><b>${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`).join('') : '<div class="empty">Kosong</div>'}</div>
      <div class="bs"><div class="mh">Arka · Lv ${S.lv}</div>${['wpn', 'arm', 'acc'].map(s => `<div class="eqs">${S.eq[s] ? icon(S.eq[s]) + itemName(S.eq[s]) : '<i>(kosong)</i>'}</div>`).join('')}
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b><br>HP <b>${S.hp}/${st.maxhp}</b></div></div></div>
-     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · B tutup'}</div>`;
+     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · DASH urutkan · B tutup'}</div>`;
+    const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); const i = +e.dataset.i; if (i === sel) act(); else { sel = i; sfx('cur'); draw(); } });
     const s2 = w.querySelector('.bi.sel'); if (s2) s2.scrollIntoView({ block: 'nearest' });
@@ -13895,6 +13988,7 @@ async function openBag(sc) {
       if (k === 'left' || k === 'right') { tab = (tab + (k === 'left' ? 3 : 1)) % 4; sel = 0; sfx('cur'); draw(); }
       else if (k === 'up' || k === 'down') { const n = list().length; if (n) { sel = (sel + (k === 'up' ? n - 1 : 1)) % n; sfx('cur'); draw(); } }
       else if (k === 'a') act();
+      else if (k === 'dash' || k === 'item') { BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); }
       else if (['b', 'menu', 'back', 'bag'].includes(k)) { w.remove(); UIH = prev; sfx('back'); res(); }
     };
     UIH = h;
@@ -14003,6 +14097,9 @@ async function openSettings() {
     ['Layar penuh', () => onoff(fs()), async () => { try { fs() ? await document.exitFullscreen() : await document.documentElement.requestFullscreen(); } catch (_) { } await sleep(150); }, 'Sembunyikan bilah browser'],
     ['Kesulitan', () => DIFF[OPT.diff].n, () => { OPT.diff = (OPT.diff + 1) % 3; }, 'Santai: musuh lebih lemah · Sulit: lebih kuat'],
     ['Kecepatan teks', () => ['Lambat', 'Normal', 'Cepat', 'Instan'][OPT.txt], () => { OPT.txt = (OPT.txt + 1) % 4; }, 'Tahan tombol A/B saat dialog untuk mempercepat'],
+    ['Ukuran huruf', () => ['Kecil', 'Sedang', 'Besar', 'Sangat besar'][OPT.font], () => { OPT.font = (OPT.font + 1) % 4; applyFont(); }, 'Ukuran teks dialog, menu, dan tas'],
+    ['Hemat baterai', () => onoff(OPT.lite), () => { OPT.lite = !OPT.lite; applyLite(); }, '30 FPS & partikel musim dimatikan'],
+    ['Notifikasi barang', () => onoff(OPT.toast), () => { OPT.toast = !OPT.toast; }, 'Pesan kecil saat mendapat barang'],
     ['Musik dinamis', () => onoff(OPT.dynMus), () => { OPT.dynMus = !OPT.dynMus; }, 'Musik berubah saat bertarung'],
     ['Suara langkah', () => onoff(OPT.steps), () => { OPT.steps = !OPT.steps; }, 'Bunyi langkah sesuai jenis tanah'],
     ['Peta mini', () => onoff(OPT.mini), () => { OPT.mini = !OPT.mini; }, 'Peta kecil di pojok kiri atas (ketuk untuk peta besar)'],

@@ -4,7 +4,7 @@
 // Input.held: arah dari keyboard; Input.joy: vektor analog dari joystick; Input.q: tombol yang ditekan
 const Input = { held: [], joy: { x: 0, y: 0, on: false }, q: [], keys: {}, aim: { on: false, x: 0, y: 0 }, castAng: null, padAxes: { x: 0, y: 0 } };
 function press(k) { auInit(); Input.q.push(k); }
-const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', KeyZ: 'a', Space: 'a', Enter: 'a', KeyJ: 'a', KeyX: 'b', KeyK: 'b', Backspace: 'back', KeyQ: 'item', KeyE: 'item', KeyL: 'item', Escape: 'menu', KeyC: 'nova', ShiftLeft: 'dash', ShiftRight: 'dash', KeyV: 'dash', KeyM: 'map', Tab: 'map', KeyP: 'map', KeyI: 'bag', KeyB: 'bag', KeyR: 'tool1', KeyF: 'tool2' };
+const KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', KeyZ: 'a', Space: 'a', Enter: 'a', KeyJ: 'a', KeyX: 'b', KeyK: 'b', Backspace: 'back', KeyQ: 'item', KeyE: 'item', KeyL: 'item', Escape: 'menu', KeyC: 'nova', ShiftLeft: 'dash', ShiftRight: 'dash', KeyV: 'dash', KeyM: 'map', Tab: 'map', KeyP: 'map', KeyI: 'bag', KeyB: 'bag', KeyR: 'tool1', KeyF: 'tool2', KeyT: 'lock' };
 const ISDIR = { up: 1, down: 1, left: 1, right: 1 };
 addEventListener('keydown', e => {
   const k = KEYMAP[e.code]; if (!k) return; e.preventDefault();

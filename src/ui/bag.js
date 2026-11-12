@@ -2,18 +2,20 @@
 // Tas (inventaris) & buku misi
 // ---------------- TAS (INVENTARIS) ----------------
 const BAG_TABS = [['use', 'Pakai'], ['eq', 'Perlengkapan'], ['mat', 'Bahan'], ['key', 'Penting']];
+let BAG_SORT = 0;
 async function openBag(sc) {
   G.lock++; sfx('ok');
   const w = win('act', ''); w.id = 'bagw'; let tab = 0, sel = 0;
-  function list() { const k = BAG_TABS[tab][0]; return Object.keys(S.inv).filter(id => S.inv[id] > 0 && (k === 'eq' ? ['wpn', 'arm', 'acc'].includes(ITEMS[id].k) : ITEMS[id].k === k)); }
+  function list() { const k = BAG_TABS[tab][0], L = Object.keys(S.inv).filter(id => S.inv[id] > 0 && (k === 'eq' ? ['wpn', 'arm', 'acc'].includes(ITEMS[id].k) : ITEMS[id].k === k)); const val = id => ITEMS[id].price || (ITEMS[id].sell || 0) * 2, got = id => (S.got && S.got[id]) || 0; return BAG_SORT === 1 ? L.sort((a, b) => val(b) - val(a)) : BAG_SORT === 2 ? L.sort((a, b) => got(b) - got(a)) : BAG_SORT === 3 ? L.sort((a, b) => ITEMS[a].n.localeCompare(ITEMS[b].n)) : L; }
   function isEq(id) { return Object.values(S.eq).includes(id); }
   function draw() {
     const L = list(); sel = clamp(sel, 0, Math.max(0, L.length - 1)); const st = stat();
-    w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="gold">${S.gold} G</span></div>
-     <div class="bb"><div class="bl">${L.length ? L.map((id, i) => `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span>${itemName(id)}</span><b>${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`).join('') : '<div class="empty">Kosong</div>'}</div>
+    w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span><span class="gold">${S.gold} G</span></div>
+     <div class="bb"><div class="bl">${L.length ? L.map((id, i) => `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}</span><b>${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`).join('') : '<div class="empty">Kosong</div>'}</div>
      <div class="bs"><div class="mh">Arka · Lv ${S.lv}</div>${['wpn', 'arm', 'acc'].map(s => `<div class="eqs">${S.eq[s] ? icon(S.eq[s]) + itemName(S.eq[s]) : '<i>(kosong)</i>'}</div>`).join('')}
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b><br>HP <b>${S.hp}/${st.maxhp}</b></div></div></div>
-     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · B tutup'}</div>`;
+     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · DASH urutkan · B tutup'}</div>`;
+    const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); const i = +e.dataset.i; if (i === sel) act(); else { sel = i; sfx('cur'); draw(); } });
     const s2 = w.querySelector('.bi.sel'); if (s2) s2.scrollIntoView({ block: 'nearest' });
@@ -43,6 +45,7 @@ async function openBag(sc) {
       if (k === 'left' || k === 'right') { tab = (tab + (k === 'left' ? 3 : 1)) % 4; sel = 0; sfx('cur'); draw(); }
       else if (k === 'up' || k === 'down') { const n = list().length; if (n) { sel = (sel + (k === 'up' ? n - 1 : 1)) % n; sfx('cur'); draw(); } }
       else if (k === 'a') act();
+      else if (k === 'dash' || k === 'item') { BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); }
       else if (['b', 'menu', 'back', 'bag'].includes(k)) { w.remove(); UIH = prev; sfx('back'); res(); }
     };
     UIH = h;

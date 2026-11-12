@@ -195,3 +195,14 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 .bc .fic{height:22px;display:flex;align-items:center;justify-content:center;font-size:14px}.bc .fic img{width:20px;height:20px;image-rendering:pixelated}
 .bc .fx{font-size:8px;color:#7a5a3a;margin-top:1px}.bc .fh{font-size:7px;line-height:1.25;color:#8a7a6a;margin-top:2px}
 #hDate{position:absolute;left:5px;top:50px;font-size:8px;color:#fff3c0;text-shadow:0 1px 0 #000,0 0 3px #000;pointer-events:none;white-space:nowrap}
+/* kelangkaan (#37) */
+.r1{color:#2a7ad8}.r2{color:#9a3ad8}.r3{color:#d8801a;font-weight:700}
+#bagw .srt{white-space:nowrap;font-size:8px;color:#8a6a4a;margin-left:auto;margin-right:6px;padding:1px 4px;border:1px solid #c8a878;border-radius:3px;cursor:pointer;pointer-events:auto}
+/* notifikasi barang (#81) */
+#toasts{position:absolute;left:6px;bottom:6px;display:flex;flex-direction:column;gap:2px;z-index:2;pointer-events:none}
+.toast{display:flex;align-items:center;gap:3px;background:rgba(30,20,12,.82);border:1px solid rgba(255,230,180,.4);border-radius:4px;padding:1px 6px 1px 3px;font-size:9px;color:#fff;animation:tipin .25s ease}
+.toast img{width:12px;height:12px;image-rendering:pixelated}.toast b{color:#8dff9f}.toast.r1 span{color:#9ac8ff}.toast.r2 span{color:#d8a8ff}.toast.r3 span{color:#ffc860}
+/* ukuran huruf (#76) */
+.win .tx,.win .ops,.win .mf,.win .bd,.win .bl,.win .jb,.win .qr{zoom:var(--fz,1)}
+#bagw .gold{white-space:nowrap}
+#ui:has(.win) #toasts,body:has(.win) #toasts{display:none}
