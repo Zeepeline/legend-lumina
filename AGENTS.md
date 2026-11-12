@@ -46,6 +46,7 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `systems/explore.js` | kabut peta (`S.fog`), rahasia per wilayah liar (`freeSpot` mengikuti aturan penempatan), peta harta (`S.tmap`), peta besar `openMapNew` (zoom, ikon) |
 | `systems/ranch.js` | Kandang Arka (`S.farm`, `STOCK`, `M.ranch` di data peta), benih (`SEEDS`), irigasi |
 | `systems/fishing.js` | mancing: `FISH` (lokasi/jam/cuaca/legendaris), `tugGame` tarik-ulur, rekor ukuran, Buku Ikan `openFishLogNew`, akuarium (`FCAT.tank`) |
+| `systems/season.js` | kalender & musim (`season()`, `dayName()`, 7 hari/musim), jam toko (`shopShut`, membungkus `buyMenu`/`upgradeMenu`), lapisan warna & partikel musim, `sleepToMorning` |
 | `systems/home.js` | Rumah Arka (`S.home`, peta `home`): beli rumah, katalog `FCAT`, tata perabot bebas (`startCarry`/`carryKey`), peti `openBox`, perluasan |
 | `systems/status.js` | efek status `STATUS` (racun/terbakar/dingin) pemain & musuh; sumber = `fx` di `ENEMY`/`PROJ` |
 | `systems/travel.js` | teleport: `WARPS` (posisi patung per peta), aktif di `S.warps` |

@@ -220,7 +220,7 @@ Object.assign(World.prototype, {
     const ok = m === 0;
     if (ok) {
       if (S.gold < 10) { sfx('buzz'); await say('Maaf, uangmu belum cukup.', 'Bu Rina'); }
-      else { S.gold -= 10; await fadeTo(1); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Selamat pagi! Tidurmu nyenyak? Permainan sudah tersimpan.', 'Bu Rina'); }
+      else { S.gold -= 10; await fadeTo(1); sleepToMorning(); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Selamat pagi! Tidurmu nyenyak? Permainan sudah tersimpan.', 'Bu Rina'); }
     }
     G.lock--;
   },

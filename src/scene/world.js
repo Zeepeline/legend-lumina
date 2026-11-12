@@ -49,7 +49,7 @@ class World extends Phaser.Scene {
     for (const a of M.animals || []) this.spawnCritter(a);
     for (let i = 0; i < (M.butterflies || 0); i++) this.spawnFly(i);
     for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2]);
-    this.initSecrets(); this.spawnHome(); this.spawnRanch();
+    this.initSecrets(); this.spawnHome(); this.spawnRanch(); this.spawnSeason();
     if (!G.title && isNight() && (M.id === 'forest' || M.id === 'meadow')) for (let i = 0; i < 4; i++) { const P = M.paths[(i * 3 + 2) % M.paths.length]; this.spawnEnemy('wisp', (P[0] + P[2]) / 2 + rnd(-30, 30), (P[1] + P[3]) / 2 + rnd(-20, 20)); }
     // pemain
     const pl = this.pl = this.physics.add.sprite(data.x || S.x, data.y || S.y, 'ch_hero', (data.dir === 'left' || data.dir === 'right' ? 'side' : data.dir || 'down') + '0').setOrigin(.5, 1);
@@ -519,7 +519,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt);
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt);
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       if (this.boulder) this.updBoulder(dt);

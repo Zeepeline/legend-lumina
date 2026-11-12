@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 62 | 4 | 0 | 934 |
+| 72 | 5 | 0 | 923 |
 
 ## Selesai
 
@@ -82,6 +82,16 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 576 | 3 ikan legendaris (hutan, rawa, sungai), butuh umpan & waktu tepat | `systems/fishing.js` | 9 |
 | 583 | Akuarium di Rumah Arka (pajang 4 ikan, berenang) | `systems/fishing.js` (`FCAT.tank`) | 9 |
 | 574 | Ikan musim dingin (lubang es Puncak Beku, sudah ada, dicatat) | `systems/life.js` (`fishIceHole`) | 9 |
+| 701 | Kalender: hari, tanggal, musim, tahun (HUD kiri atas) | `systems/season.js` (`dateTxt`) | 10 |
+| 702 | Nama hari Senin–Minggu | `systems/season.js` | 10 |
+| 703 | Bengkel libur hari Minggu | `systems/season.js` (`shopShut`) | 10 |
+| 704 | Toko buka 08.00–18.00 | `systems/season.js` (`wrapShops`) | 10 |
+| 49 | 4 musim × 7 hari mengubah warna dunia, kebun, ikan, monster | `systems/season.js` (`SEASONS`) | 10 |
+| 714 | Semi: kelopak bunga berjatuhan, benih tumbuh lebih cepat | `systems/season.js` | 10 |
+| 715 | Panas: ikan +15% lebih besar | `systems/season.js` | 10 |
+| 716 | Gugur: daun jingga berguguran | `systems/season.js` | 10 |
+| 717 | Dingin: salju turun di desa & alam, tanaman lambat, monster lebih ganas | `systems/season.js` | 10 |
+| — | Tidur di penginapan/ranjang rumah melompat ke pagi (07.00) | `systems/season.js` (`sleepToMorning`) | 10 |
 
 ## Sebagian
 
@@ -90,6 +100,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 74 | Ukuran (4) & transparansi (3) tombol | Geser posisi tombol sendiri |
 | 89 | Animasi terkena (penyok) & jatuh saat kalah | Frame gambar khusus Arka (butuh aset) |
 | 492 | Perluasan rumah: batas perabot 6 → 10 → 14 | Kamar/dapur/gudang sebagai ruangan baru |
+| 718 | Warna seluruh dunia berganti per musim | Daun pohon berganti gambar (butuh aset pohon musiman) |
 | 48 | 3 jenis benih (sayur, beri, daun obat) + irigasi | Petak kebun tambahan (desa sudah padat; butuh lahan baru) |
 
 ## Sudah ada sebelum daftar dibuat (tidak dihitung ulang)
@@ -108,7 +119,7 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~7~~ | ✅ selesai | — |
 | ~~8~~ | ✅ selesai | — |
 | ~~9~~ | ✅ selesai | — |
-| 10 | 49, 714–718, 701–704 | Musim & kalender |
+| ~~10~~ | ✅ selesai | — |
 | 11+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan

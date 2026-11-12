@@ -38,7 +38,7 @@ Object.assign(World.prototype, {
   async useFurn(o) {
     const a = FCAT[o.f.t].act; G.lock++;
     try {
-      if (a === 'sleep') { await fadeTo(1); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Tidur di ranjang sendiri memang paling nyenyak. Permainan tersimpan.', 'Rumah'); }
+      if (a === 'sleep') { await fadeTo(1); sleepToMorning(); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Tidur di ranjang sendiri memang paling nyenyak. Permainan tersimpan.', 'Rumah'); }
       else if (a === 'cook') await cookMenu('Dapur Rumah Arka', 'Arka');
       else if (a === 'craft') await openCraft(this);
       else if (a === 'box') await openBox();
