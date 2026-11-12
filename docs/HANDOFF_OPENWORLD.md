@@ -17,6 +17,16 @@ Pilihan user yang sudah dikunci:
 - Tumpang tindih: **geser & beri jarak** (sudah via `WORLD_POS`).
 - Gerak: **stamina & lari cepat, memanjat tebing, meluncur (glider)**. Berenang **TIDAK** dipilih.
 
+### DEFINISI SELESAI (ditegaskan user 12 Nov, dengan screenshot)
+User melihat kamera **berhenti di tepi wilayah** (karakter tidak di tengah layar, di balik tepi ada dinding pohon). Itu yang TIDAK diinginkan. Target:
+1. **Kamera SELALU berpusat pada karakter**, di mana pun. Clamp kamera (`camB` di `camStep`) hanya boleh terjadi di tepi benua, dan sebaiknya tidak terasa (laut/gunung tetap terlihat di balik tepi).
+2. Tidak ada "ujung peta" yang terasa di antara wilayah: berjalan dari Desa Lumina ke arah mana pun langsung masuk alam liar / wilayah lain, tanpa dinding pohon kotak, tanpa layar hitam, tanpa banner pindah peta yang mengganggu (boleh toast kecil nama wilayah).
+3. Area di sekitar wilayah yang belum "punya isi" tetap harus tergambar (tanah + pohon alam liar), bukan latar kosong/hitam.
+Saran implementasi: hapus clamp kamera antar wilayah (batas kamera = batas benua), muat wilayah tetangga lebih awal (`REG_LOAD` ≥ setengah lebar layar + margin), dan isi celah dengan wilayah alam liar prosedural (lihat Langkah 2).
+
+### Bug kecil yang terlihat di screenshot
+- HUD emas menampilkan pecahan panjang (`6640.7407867…`). Bulatkan saat menambah emas (`S.gold = Math.round(...)`, cari sumber pengali — kemungkinan bonus atribut/buff di `craft.js`/`polish.js`) dan tampilkan `Math.floor(S.gold)` di `updHud`.
+
 ## 2. Yang SUDAH selesai
 | Tahap | Isi | File utama |
 |---|---|---|
