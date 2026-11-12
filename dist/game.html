@@ -175,6 +175,14 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 .bark::after{content:'';position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid #6e4222}
 @keyframes barkPop{0%{opacity:0;transform:translate(-50%,-90%) scale(.7)}100%{opacity:1;transform:translate(-50%,-100%) scale(1)}}
 
+/* tips tutorial */
+#tip{position:absolute;left:50%;top:70px;transform:translateX(-50%);width:min(86%,330px);background:rgba(28,20,36,.9);border:1px solid #e8c050;border-radius:8px;color:#fff;font-size:11px;line-height:1.35;padding:6px 9px;z-index:60;pointer-events:auto;box-shadow:0 3px 10px rgba(0,0,0,.4);animation:tipin .3s ease}
+#tip b{color:#ffd84a}#tip small{display:block;font-size:8px;color:#b8a8c8;margin-top:2px}#tip.off{opacity:0;transition:opacity .3s}
+@keyframes tipin{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}
+/* peta mini */
+#mini{position:absolute;left:6px;top:58px;width:72px;height:72px;border:1px solid #e8c050;border-radius:6px;background:rgba(20,16,30,.55);z-index:30;pointer-events:auto;image-rendering:pixelated}
+/* ukuran & transparansi tombol (#74) */
+#pad .btn{scale:var(--bs,1);opacity:var(--ba,1)}
 </style>
 </head>
 <body>
@@ -4778,9 +4786,11 @@ function shake() { if (!OPT.shake) return; SCREEN.classList.remove('shake'); voi
 // ---- dialog ----
 // Catatan: say(teks, nama) & choose({ head, items }). Format lama/salah dari agent lain juga diterima agar layar tidak membeku:
 //   say('Nama', ['baris', ...])  → dialog beberapa baris;  choose('Judul', ['opsi', ...])  → menu
+const DLG_LOG = []; // riwayat dialog (fitur #880)
 function say(text, name) {
   if (Array.isArray(name)) return talk(text, name);
   if (Array.isArray(text)) return talk(name || null, text);
+  DLG_LOG.push({ name: name || '', text: String(text) }); if (DLG_LOG.length > 60) DLG_LOG.shift();
   return new Promise(res => {
     const prev = UIH;
     const w = win('dlg act', (name ? `<div class="nm">${name}</div>` : '') + '<div class="tx"></div><div class="more">▼</div>');
@@ -4883,18 +4893,24 @@ function autoSaveIcon() { let e = $('autosv'); if (!e) { e = document.createElem
 // =====================================================================
 //  GAME (Phaser 3): data, status, inventaris, misi, scene dunia
 // =====================================================================
-const SAVE_KEY = 'legenda_lumina_arpg_v2';
+const SAVE_BASE = 'legenda_lumina_arpg_v2';
+const slotKey = i => i ? SAVE_BASE + '_s' + i : SAVE_BASE;
+let SAVE_SLOT = (() => { try { return +localStorage.getItem('legenda_lumina_slot') || 0; } catch (_) { return 0; } })();
+let SAVE_KEY = slotKey(SAVE_SLOT);
+function setSlot(i) { SAVE_SLOT = i; SAVE_KEY = slotKey(i); try { localStorage.setItem('legenda_lumina_slot', i); } catch (_) { } }
+// ringkasan slot untuk layar pilih slot (fitur #79)
+function slotInfo(i) { const s = readSaveRaw(slotKey(i)); if (!s) return null; const m = MAPS[s.map]; return { lv: s.lv, map: m ? m.name : s.map, gold: s.gold, when: s.savedAt ? new Date(s.savedAt).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '' }; }
 const DIRV = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] };
 let S = null;
 // Pengaturan perangkat (bukan bagian save game): musik/efek 0-4, getar, goyang layar
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.6.0';
-const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
+const GAME_VERSION = '1.7.0';
+const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {} }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {} }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -4914,7 +4930,7 @@ function hasSave() { return !!readSaveRaw(); }
 function saveGame(sc) {
   try {
     if (sc && sc.pl) { S.x = Math.round(sc.pl.x); S.y = Math.round(sc.pl.y); S.dir = sc.pl.dir; S.map = sc.M.id; }
-    S.ver = GAME_VERSION; const data = JSON.stringify(S);
+    S.ver = GAME_VERSION; S.savedAt = Date.now(); const data = JSON.stringify(S);
     // cadangan bergilir (fitur #963): simpan salinan lama paling lama tiap 5 menit, maksimal 3
     try { const now = Date.now(), last = +localStorage.getItem(SAVE_KEY + '_bkt') || 0, old = localStorage.getItem(SAVE_KEY);
       if (old && now - last > 300000) { for (let i = 2; i > 0; i--) { const v = localStorage.getItem(SAVE_KEY + '_bk' + (i - 1)); if (v) localStorage.setItem(SAVE_KEY + '_bk' + i, v); } localStorage.setItem(SAVE_KEY + '_bk0', old); localStorage.setItem(SAVE_KEY + '_bkt', now); } } catch (_) { }
@@ -4922,11 +4938,11 @@ function saveGame(sc) {
   } catch (_) { return false; }
 }
 // Pemulihan (fitur #964): bila save utama rusak, pakai cadangan terbaru yang masih utuh
-function readSaveRaw() {
-  for (const k of [SAVE_KEY, SAVE_KEY + '_bk0', SAVE_KEY + '_bk1', SAVE_KEY + '_bk2']) { try { const s = JSON.parse(localStorage.getItem(k)); if (s && s.lv) { if (k !== SAVE_KEY) console.warn('Save utama rusak, memakai cadangan', k); return s; } } catch (_) { } }
+function readSaveRaw(K = SAVE_KEY) {
+  for (const k of [K, K + '_bk0', K + '_bk1', K + '_bk2']) { try { const s = JSON.parse(localStorage.getItem(k)); if (s && s.lv) { if (k !== K) console.warn('Save utama rusak, memakai cadangan', k); return s; } } catch (_) { } }
   return null;
 }
-function loadSave() { try { const s = readSaveRaw(); if (s && s.lv) { S = Object.assign(newState(), s); if (!MAPS[S.map]) S.map = 'village'; if (!s.learn) { if (S.stage >= 1 || S.lv > 1) S.learn.fire = 1; if (S.lv >= 2) S.learn.dash = 1; if (S.lv >= 3) S.learn.spin = 1; if (S.lv >= 5) S.learn.nova = 1; S.spell = S.learn.fire ? 'fire' : null; } return true; } } catch (_) { } return false; }
+function loadSave() { try { const s = readSaveRaw(); if (s && s.lv) { S = Object.assign(newState(), s); if (!MAPS[S.map]) S.map = 'village'; if (!s.tipsDone && (S.stage > 1 || S.lv > 2)) S.tipsDone = { all: 1 }; if (!s.learn) { if (S.stage >= 1 || S.lv > 1) S.learn.fire = 1; if (S.lv >= 2) S.learn.dash = 1; if (S.lv >= 3) S.learn.spin = 1; if (S.lv >= 5) S.learn.nova = 1; S.spell = S.learn.fire ? 'fire' : null; } return true; } } catch (_) { } return false; }
 
 'use strict';
 // Data item & resep tempa
@@ -5326,7 +5342,7 @@ class World extends Phaser.Scene {
     const M = this.M = MAPS[data.map || 'village'];
     if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
-    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.qArrow = null; this.qStar = null; this.qGoal = null; this.iHint = null; this.eBar = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
+    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.qArrow = null; this.qStar = null; this.qGoal = null; this.iHint = null; this.eBar = null; this.miniFor = null; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
     this.walls = this.physics.add.staticGroup();
@@ -5833,7 +5849,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars();
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt);
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       if (this.boulder) this.updBoulder(dt);
@@ -12559,6 +12575,62 @@ document.addEventListener('visibilitychange', () => {
   const g = window.__game && window.__game.sc; if (!g || !g.scene) return;
   try { if (document.hidden) { g.scene.pause(); if (AU.ctx) AU.ctx.suspend(); if (!G.title) saveGame(g); } else { g.scene.resume(); if (AU.ctx) AU.ctx.resume(); } } catch (_) { }
 });
+// ---------------- TUTORIAL BERTAHAP (#73) ----------------
+// Tips muncul sekali saat situasinya terjadi (bukan rentetan di awal). Bisa dimatikan di Pengaturan.
+const TIPS = [
+  { id: 'gerak', when: sc => S.stage === 0, txt: 'Geser <b>joystick kiri</b> (atau WASD/panah) untuk berjalan.' },
+  { id: 'bicara', when: sc => sc.iHint && sc.iHint.visible && sc.iHint.text === '💬', txt: 'Tombol aksi berubah jadi <b>BICARA</b> saat dekat orang. Tekan untuk berbicara.' },
+  { id: 'misi', when: sc => S.stage >= 1, txt: 'Kartu <b>★ MISI</b> di kanan atas menunjukkan tujuan. Ikuti <b>panah kuning</b> di tepi layar. Ketuk kartunya untuk Jurnal.' },
+  { id: 'serang', when: sc => sc.enemies.some(e => e.hp > 0 && Math.hypot(e.spr.x - sc.pl.x, e.spr.y - sc.pl.y) < 150), txt: 'Ada monster! Tekan <b>⚔ SERANG</b>. Jaga jarak dan pukul saat ia lengah.' },
+  { id: 'sihir', when: sc => S.learn && S.learn.fire, txt: 'Ketuk <b>SIHIR</b> untuk bola api. <b>Tarik</b> tombolnya untuk membidik sendiri.' },
+  { id: 'obat', when: sc => S.hp < stat().maxhp * .45, txt: 'HP menipis! Tekan <b>♥ OBAT</b> untuk minum ramuan.' },
+  { id: 'tas', when: sc => Object.keys(S.inv).length > 6, txt: 'Barangmu bertambah. Buka <b>TAS</b> untuk memakai perlengkapan dan melihat bahan.' },
+  { id: 'peta', when: sc => Object.keys(S.seen || {}).length >= 2, txt: 'Buka <b>PETA</b> untuk melihat wilayah, jalan keluar, dan tujuan misi.' },
+  { id: 'simpan', when: sc => sc.t > 120, txt: 'Permainan <b>tersimpan otomatis</b> (ikon 💾). Kamu juga bisa menyimpan di MENU.' },
+];
+function showTip(html) {
+  let e = document.getElementById('tip'); if (e) e.remove();
+  e = document.createElement('div'); e.id = 'tip'; e.innerHTML = '💡 ' + html + '<small>ketuk untuk tutup</small>'; UI.appendChild(e);
+  const close = () => { e.classList.add('off'); setTimeout(() => e.remove(), 300); }; e.onpointerdown = ev => { ev.stopPropagation(); close(); }; setTimeout(close, 7000);
+}
+Object.assign(World.prototype, {
+  updTips(dt) {
+    if (G.title || G.lock || !OPT.tips || !S.tipsDone || S.tipsDone.all || this.M.indoor && S.stage > 0) return;
+    this.tipT = (this.tipT || 2) - dt; if (this.tipT > 0) return; this.tipT = 1;
+    if (document.getElementById('tip')) return;
+    const T = TIPS.find(t => !S.tipsDone[t.id] && t.when(this)); if (!T) return;
+    S.tipsDone[T.id] = 1; showTip(T.txt); this.tipT = 9;
+  },
+  // ---------------- PETA MINI (#82) ----------------
+  updMinimap(dt) {
+    const M = this.M; let c = document.getElementById('mini');
+    if (!OPT.mini || G.title || M.indoor) { if (c) c.style.display = 'none'; return; }
+    if (!c) { c = document.createElement('canvas'); c.id = 'mini'; c.width = 96; c.height = 96; UI.appendChild(c); c.onpointerdown = ev => { ev.stopPropagation(); if (!G.lock) openMap(this); }; }
+    c.style.display = '';
+    this.miniT = (this.miniT || 0) - dt; if (this.miniT > 0) return; this.miniT = .25;
+    const W = 96, k = W / Math.max(M.w, M.h), ox = (W - M.w * k) / 2, oy = (W - M.h * k) / 2, x = c.getContext('2d');
+    if (this.miniFor !== M.id) { // lapisan diam: tanah, jalan, air, tembok, pintu keluar
+      this.miniFor = M.id; const b = document.createElement('canvas'); b.width = b.height = W; const y = b.getContext('2d');
+      y.fillStyle = M.ground === 'snow' ? '#dfe8f0' : M.ground === 'cave' ? '#4a4458' : M.ground === 'swamp' ? '#4e6a48' : '#6a9a4e'; y.fillRect(ox, oy, M.w * k, M.h * k);
+      y.strokeStyle = M.ground === 'village' ? '#d8cdb8' : '#c8a870'; y.lineCap = 'round';
+      for (const [x1, y1, x2, y2, w] of M.paths || []) { y.lineWidth = Math.max(1.5, (w || 12) * k * 1.4); y.beginPath(); y.moveTo(ox + x1 * k, oy + y1 * k); y.lineTo(ox + x2 * k, oy + y2 * k); y.stroke(); }
+      y.fillStyle = '#4aa6e0'; for (const [px, py, rx, ry] of M.ponds || []) { y.beginPath(); y.ellipse(ox + px * k, oy + py * k, rx * k, ry * k, 0, 0, 7); y.fill(); }
+      y.fillStyle = 'rgba(30,24,40,.55)'; for (const [wx, wy, ww, wh] of M.walls || []) y.fillRect(ox + wx * k, oy + wy * k, Math.max(1, ww * k), Math.max(1, wh * k));
+      y.fillStyle = '#ffd84a'; for (const e of M.exits || []) y.fillRect(ox + e.x * k - 1, oy + e.y * k - 1, Math.max(3, e.w * k), Math.max(3, e.h * k));
+      this.miniBase = b;
+    }
+    x.clearRect(0, 0, W, W); x.drawImage(this.miniBase, 0, 0);
+    x.fillStyle = '#fff3c0'; for (const n of this.npcs) if (n.spr.visible) x.fillRect(ox + n.spr.x * k - 1, oy + n.spr.y * k - 1, 2, 2);
+    x.fillStyle = '#e84a3a'; for (const e of this.enemies) if (e.hp > 0 && Math.hypot(e.spr.x - this.pl.x, e.spr.y - this.pl.y) < 260) x.fillRect(ox + e.spr.x * k - 1, oy + e.spr.y * k - 1, 2, 2);
+    const q = this.qGoal; if (q) { x.fillStyle = '#ffd84a'; x.font = '9px sans-serif'; x.fillText('★', ox + q.x * k - 4, oy + q.y * k + 3); }
+    const px = ox + this.pl.x * k, py = oy + this.pl.y * k; x.fillStyle = '#ffffff'; x.strokeStyle = '#2a1c14'; x.lineWidth = 1.5; x.beginPath(); x.arc(px, py, 2.6, 0, 7); x.fill(); x.stroke();
+  },
+});
+// ukuran & transparansi tombol layar (#74 sebagian)
+function applyPadOpt() { const r = document.documentElement.style; r.setProperty('--bs', [.85, 1, 1.15, 1.3][OPT.btnSize != null ? OPT.btnSize : 1]); r.setProperty('--ba', [1, .75, .5][OPT.btnAlpha || 0]); }
+applyPadOpt();
+// simpan saat halaman ditutup/dimuat ulang (#910)
+window.addEventListener('pagehide', () => { const g = window.__game && window.__game.sc; if (g && !G.title && g.pl && !g.pl.dead) saveGame(g); });
 
 'use strict';
 // Percakapan NPC, toko, bengkel, penginapan
@@ -13015,7 +13087,7 @@ async function openMap(sc) {
 async function mainMenu(sc) {
   G.lock++; sfx('ok'); let sel = 0;
   const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Jurnal', 'Tujuan, misteri & catatan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
-    ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Buku Ikan', 'Catatan & habitat fauna air', () => openFishLog(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()],
+    ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Buku Ikan', 'Catatan & habitat fauna air', () => openFishLog(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()], ['Riwayat', 'Baca ulang percakapan terakhir', () => openDlgLog()],
     ['Simpan', 'Simpan permainan', async () => { const ok = saveGame(sc); sfx(ok ? 'save' : 'buzz'); await say(ok ? 'Permainan tersimpan.' : 'Gagal menyimpan.'); }],
     ['Pengaturan', 'Suara, getar, layar', () => openSettings()], ['Tutup', 'Kembali bermain', null]];
   for (; ;) {
@@ -13037,6 +13109,10 @@ async function openSettings() {
     ['Layar penuh', () => onoff(fs()), async () => { try { fs() ? await document.exitFullscreen() : await document.documentElement.requestFullscreen(); } catch (_) { } await sleep(150); }, 'Sembunyikan bilah browser'],
     ['Kesulitan', () => DIFF[OPT.diff].n, () => { OPT.diff = (OPT.diff + 1) % 3; }, 'Santai: musuh lebih lemah · Sulit: lebih kuat'],
     ['Kecepatan teks', () => ['Lambat', 'Normal', 'Cepat', 'Instan'][OPT.txt], () => { OPT.txt = (OPT.txt + 1) % 4; }, 'Tahan tombol A/B saat dialog untuk mempercepat'],
+    ['Peta mini', () => onoff(OPT.mini), () => { OPT.mini = !OPT.mini; }, 'Peta kecil di pojok kiri atas (ketuk untuk peta besar)'],
+    ['Tips tutorial', () => onoff(OPT.tips), () => { OPT.tips = !OPT.tips; }, 'Petunjuk singkat saat situasi baru'],
+    ['Ukuran tombol', () => ['Kecil', 'Normal', 'Besar', 'Sangat besar'][OPT.btnSize], () => { OPT.btnSize = (OPT.btnSize + 1) % 4; applyPadOpt(); }, 'Ukuran tombol layar sentuh'],
+    ['Transparansi tombol', () => ['Penuh', 'Sedikit', 'Banyak'][OPT.btnAlpha], () => { OPT.btnAlpha = (OPT.btnAlpha + 1) % 3; applyPadOpt(); }, 'Supaya tombol tidak menutupi layar'],
     ['Bilah HP musuh', () => onoff(OPT.hpbar), () => { OPT.hpbar = !OPT.hpbar; }, 'Bilah HP kecil di atas musuh'],
     ['Ekspor save', () => null, async () => { saveGame(G.scene); await codeDialog('out'); }, 'Salin kode save ke perangkat lain'],
     ['Impor save', () => null, async () => { if (await codeDialog('in')) { await say('Save berhasil dimuat. Game akan dibuka ulang.'); location.reload(); } }, 'Muat progres dari kode save'],
@@ -13095,6 +13171,21 @@ async function openAch() {
   Object.assign(w.style, { left: '14px', right: '14px', top: '10px', bottom: '34px', overflow: 'auto' });
   await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 6 }); w.remove();
 }
+// ---------------- RIWAYAT DIALOG (#880) ----------------
+async function openDlgLog() {
+  const w = win('menu jrn', `<div class="bt"><span class="tb on">Riwayat Dialog</span><span class="gold">B: tutup</span></div><div class="jb">${DLG_LOG.length ? DLG_LOG.slice().reverse().map(d => `<div class="qr">${d.name ? `<b>${d.name}</b><br>` : ''}${d.text.replace(/</g, '&lt;')}</div>`).join('') : '<i>Belum ada percakapan.</i>'}</div>`);
+  Object.assign(w.style, { left: '12px', right: '12px', top: '14px', bottom: '14px' });
+  G.lock++; await new Promise(res => { const prev = UIH; UIH = k => { if (k === 'up' || k === 'down') w.querySelector('.jb').scrollTop += k === 'up' ? -50 : 50; else if (['a', 'b', 'menu', 'back'].includes(k)) { UIH = prev; res(); } }; });
+  w.remove(); G.lock--;
+}
+// ---------------- PILIH SLOT (#79) ----------------
+async function chooseSlot(mode) {
+  const items = [0, 1, 2].map(i => { const f = slotInfo(i); return { t: `Slot ${i + 1}${i === SAVE_SLOT ? ' ★' : ''}`, r: f ? `Lv ${f.lv} · ${f.map}` : '(kosong)', dis: mode === 'load' && !f }; });
+  const r = await choose({ head: mode === 'load' ? 'Muat dari slot' : 'Mulai baru di slot', items: [...items, { t: 'Batal' }], x: 30, y: 60, w: 240, foot: i => { if (i > 2) return ''; const f = slotInfo(i); return f ? `${f.gold} G · tersimpan ${f.when}` : 'Slot kosong'; } });
+  if (r < 0 || r > 2) return -1;
+  if (mode === 'new' && slotInfo(r) && !(await ask(`Slot ${r + 1} sudah berisi. Timpa dengan permainan baru?`))) return -1;
+  return r;
+}
 
 'use strict';
 // Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)
@@ -13137,7 +13228,10 @@ async function titleScreen() {
   const t = document.createElement('div'); t.id = 'title';
   t.innerHTML = `<div class="logo"><small>LEGENDA</small>LUMINA</div><div class="sub">— ACTION RPG —</div><div class="hint">versi ${GAME_VERSION}</div>`;
   UI.appendChild(t); showHud(false);
-  const r = await choose({ items: [{ t: 'Mulai Baru' }, { t: 'Lanjutkan', dis: !hasSave() }, { t: 'Impor Kode' }], start: hasSave() ? 1 : 0, cancel: false, style: { left: '50%', transform: 'translateX(-50%)', bottom: '30px', width: '110px' } });
+  const anySlot = [0, 1, 2].some(i => slotInfo(i));
+  const r = await choose({ items: [{ t: 'Mulai Baru' }, { t: 'Lanjutkan', dis: !hasSave() }, { t: 'Impor Kode' }, { t: 'Pilih Slot', dis: !anySlot }], start: hasSave() ? 1 : 0, cancel: false, style: { left: '50%', transform: 'translateX(-50%)', bottom: '30px', width: '110px' } });
+  if (r === 3) { const s = await chooseSlot('load'); if (s >= 0) setSlot(s); t.remove(); return titleScreen(); }
+  if (r === 0 && [0, 1, 2].some(i => slotInfo(i))) { const s = await chooseSlot('new'); if (s < 0) { t.remove(); return titleScreen(); } setSlot(s); }
   if (r === 2) { t.remove(); if (await codeDialog('in')) { location.reload(); return; } return titleScreen(); }
   auInit(); t.remove(); await fadeTo(1);
   if (r === 1 && loadSave()) { G.title = false; G.scene.scene.restart({ map: S.map, x: S.x, y: S.y, dir: S.dir }); }

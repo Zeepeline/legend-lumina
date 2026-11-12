@@ -4,7 +4,7 @@
 async function mainMenu(sc) {
   G.lock++; sfx('ok'); let sel = 0;
   const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Jurnal', 'Tujuan, misteri & catatan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
-    ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Buku Ikan', 'Catatan & habitat fauna air', () => openFishLog(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()],
+    ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Buku Ikan', 'Catatan & habitat fauna air', () => openFishLog(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()], ['Riwayat', 'Baca ulang percakapan terakhir', () => openDlgLog()],
     ['Simpan', 'Simpan permainan', async () => { const ok = saveGame(sc); sfx(ok ? 'save' : 'buzz'); await say(ok ? 'Permainan tersimpan.' : 'Gagal menyimpan.'); }],
     ['Pengaturan', 'Suara, getar, layar', () => openSettings()], ['Tutup', 'Kembali bermain', null]];
   for (; ;) {
@@ -26,6 +26,10 @@ async function openSettings() {
     ['Layar penuh', () => onoff(fs()), async () => { try { fs() ? await document.exitFullscreen() : await document.documentElement.requestFullscreen(); } catch (_) { } await sleep(150); }, 'Sembunyikan bilah browser'],
     ['Kesulitan', () => DIFF[OPT.diff].n, () => { OPT.diff = (OPT.diff + 1) % 3; }, 'Santai: musuh lebih lemah · Sulit: lebih kuat'],
     ['Kecepatan teks', () => ['Lambat', 'Normal', 'Cepat', 'Instan'][OPT.txt], () => { OPT.txt = (OPT.txt + 1) % 4; }, 'Tahan tombol A/B saat dialog untuk mempercepat'],
+    ['Peta mini', () => onoff(OPT.mini), () => { OPT.mini = !OPT.mini; }, 'Peta kecil di pojok kiri atas (ketuk untuk peta besar)'],
+    ['Tips tutorial', () => onoff(OPT.tips), () => { OPT.tips = !OPT.tips; }, 'Petunjuk singkat saat situasi baru'],
+    ['Ukuran tombol', () => ['Kecil', 'Normal', 'Besar', 'Sangat besar'][OPT.btnSize], () => { OPT.btnSize = (OPT.btnSize + 1) % 4; applyPadOpt(); }, 'Ukuran tombol layar sentuh'],
+    ['Transparansi tombol', () => ['Penuh', 'Sedikit', 'Banyak'][OPT.btnAlpha], () => { OPT.btnAlpha = (OPT.btnAlpha + 1) % 3; applyPadOpt(); }, 'Supaya tombol tidak menutupi layar'],
     ['Bilah HP musuh', () => onoff(OPT.hpbar), () => { OPT.hpbar = !OPT.hpbar; }, 'Bilah HP kecil di atas musuh'],
     ['Ekspor save', () => null, async () => { saveGame(G.scene); await codeDialog('out'); }, 'Salin kode save ke perangkat lain'],
     ['Impor save', () => null, async () => { if (await codeDialog('in')) { await say('Save berhasil dimuat. Game akan dibuka ulang.'); location.reload(); } }, 'Muat progres dari kode save'],
@@ -83,4 +87,19 @@ async function openAch() {
   const w = win('menu', `<div class="mh">Pencapaian · ${ACH.filter(A => S.ach[A.id]).length}/${ACH.length}</div>` + ACH.map(A => `<div class="qr${S.ach[A.id] ? '' : ' done'}"><b>${S.ach[A.id] ? '★' : '☆'} ${A.n}</b> · ${A.d}<br>Hadiah: ${A.gift[0] === 'gold' ? A.gift[1] + ' G' : ITEMS[A.gift[0]].n + ' x' + A.gift[1]}</div>`).join(''));
   Object.assign(w.style, { left: '14px', right: '14px', top: '10px', bottom: '34px', overflow: 'auto' });
   await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 6 }); w.remove();
+}
+// ---------------- RIWAYAT DIALOG (#880) ----------------
+async function openDlgLog() {
+  const w = win('menu jrn', `<div class="bt"><span class="tb on">Riwayat Dialog</span><span class="gold">B: tutup</span></div><div class="jb">${DLG_LOG.length ? DLG_LOG.slice().reverse().map(d => `<div class="qr">${d.name ? `<b>${d.name}</b><br>` : ''}${d.text.replace(/</g, '&lt;')}</div>`).join('') : '<i>Belum ada percakapan.</i>'}</div>`);
+  Object.assign(w.style, { left: '12px', right: '12px', top: '14px', bottom: '14px' });
+  G.lock++; await new Promise(res => { const prev = UIH; UIH = k => { if (k === 'up' || k === 'down') w.querySelector('.jb').scrollTop += k === 'up' ? -50 : 50; else if (['a', 'b', 'menu', 'back'].includes(k)) { UIH = prev; res(); } }; });
+  w.remove(); G.lock--;
+}
+// ---------------- PILIH SLOT (#79) ----------------
+async function chooseSlot(mode) {
+  const items = [0, 1, 2].map(i => { const f = slotInfo(i); return { t: `Slot ${i + 1}${i === SAVE_SLOT ? ' ★' : ''}`, r: f ? `Lv ${f.lv} · ${f.map}` : '(kosong)', dis: mode === 'load' && !f }; });
+  const r = await choose({ head: mode === 'load' ? 'Muat dari slot' : 'Mulai baru di slot', items: [...items, { t: 'Batal' }], x: 30, y: 60, w: 240, foot: i => { if (i > 2) return ''; const f = slotInfo(i); return f ? `${f.gold} G · tersimpan ${f.when}` : 'Slot kosong'; } });
+  if (r < 0 || r > 2) return -1;
+  if (mode === 'new' && slotInfo(r) && !(await ask(`Slot ${r + 1} sudah berisi. Timpa dengan permainan baru?`))) return -1;
+  return r;
 }

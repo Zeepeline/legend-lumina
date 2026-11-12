@@ -12,9 +12,11 @@ function shake() { if (!OPT.shake) return; SCREEN.classList.remove('shake'); voi
 // ---- dialog ----
 // Catatan: say(teks, nama) & choose({ head, items }). Format lama/salah dari agent lain juga diterima agar layar tidak membeku:
 //   say('Nama', ['baris', ...])  → dialog beberapa baris;  choose('Judul', ['opsi', ...])  → menu
+const DLG_LOG = []; // riwayat dialog (fitur #880)
 function say(text, name) {
   if (Array.isArray(name)) return talk(text, name);
   if (Array.isArray(text)) return talk(name || null, text);
+  DLG_LOG.push({ name: name || '', text: String(text) }); if (DLG_LOG.length > 60) DLG_LOG.shift();
   return new Promise(res => {
     const prev = UIH;
     const w = win('dlg act', (name ? `<div class="nm">${name}</div>` : '') + '<div class="tx"></div><div class="more">▼</div>');

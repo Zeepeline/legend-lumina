@@ -17,12 +17,12 @@ test('senjata, status, pengaturan, bab 3', async ({ page }) => {
   await h.G(page, () => { window.__game.S.inv.antidote = 1; window.__game.sc.useItem('antidote'); });
   expect(await h.G(page, () => Object.keys(window.__game.sc.pst).length)).toBe(0);
   // pengaturan
-  await h.press(page, 'menu', 1, 300); await h.press(page, 'down', 7, 120); await h.press(page, 'a', 1, 300);
+  await h.press(page, 'menu', 1, 300); await h.press(page, 'down', 9, 120); await h.press(page, 'a', 1, 300);
   expect(await h.G(page, () => document.body.innerText.includes('PENGATURAN'))).toBe(true);
   await h.press(page, 'a', 1, 200); await h.press(page, 'b', 1, 200); await h.press(page, 'b', 1, 200);
   expect(await h.G(page, () => JSON.parse(localStorage.getItem('legenda_lumina_opt')).mus)).toBe(4);
   // bab 3
-  await h.G(page, () => { const S = window.__game.S; S.lv = 30; S.stage = 9; });
+  await h.G(page, () => { const S = window.__game.S; S.lv = 30; S.stage = 9; }); await h.learnAll(page);
   await h.goto(page, 'village', 512, 360, 'up'); await h.talkTo(page, 'elder');
   expect((await h.S(page)).stage).toBe(10);
   await h.goto(page, 'meadow', 600, 120, 'up'); await h.hold(page, 'up', 1500);

@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 11 | 0 | 0 | 989 |
+| 17 | 1 | 0 | 982 |
 
 ## Selesai
 
@@ -30,6 +30,18 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 904 | Bilah HP kecil di atas musuh (bisa dimatikan) | `systems/qol.js` | 1 |
 | 960 | Nomor versi di layar judul | `ui/title.js`, `GAME_VERSION` | 1 |
 | 963–964 | Cadangan save bergilir (3) + pemulihan save rusak | `core/state.js` (`readSaveRaw`) | 1 |
+| 73 | Tutorial bertahap: tips muncul sekali saat situasinya terjadi (bisa dimatikan) | `systems/qol.js` (`TIPS`, `updTips`) | 2 |
+| 79 | 3 slot simpan (pilih slot di judul, konfirmasi timpa) | `core/state.js` (`setSlot`, `slotInfo`), `ui/menus.js` (`chooseSlot`) | 2 |
+| 82 | Peta mini di kiri atas (ketuk = peta besar) | `systems/qol.js` (`updMinimap`) | 2 |
+| 880 | Riwayat dialog (60 terakhir) di MENU | `ui/widgets.js` (`DLG_LOG`), `ui/menus.js` (`openDlgLog`) | 2 |
+| 909 | Simpan cepat (sudah ada di MENU, dicatat) | `ui/menus.js` | 2 |
+| 910 | Simpan saat halaman ditutup | `systems/qol.js` (`pagehide`) | 2 |
+
+## Sebagian
+
+| No | Sudah | Belum |
+|---|---|---|
+| 74 | Ukuran (4) & transparansi (3) tombol | Geser posisi tombol sendiri |
 
 ## Sudah ada sebelum daftar dibuat (tidak dihitung ulang)
 
@@ -39,7 +51,7 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 
 | Gelombang | Isi (nomor) | Tema |
 |---|---|---|
-| 2 | 73, 79, 82, 74, 909, 910, 880 | Tutorial, 3 slot simpan, peta mini, tombol bisa diatur, riwayat dialog |
+| ~~2~~ | ✅ selesai | — |
 | 3 | 1, 2, 4, 14, 89, 120, 146 | Rasa bertarung: ancang-ancang, kombo, musuh elit, penanda bahaya |
 | 4 | 86, 87, 911, 915, 919, 88 | Musik per wilayah & dinamis, suara jarak, langkah kaki |
 | 5 | 16, 26, 30, 29, 407, 411, 412 | Poin atribut, meja kerajinan, slot alat, bom, panah, umpan |
