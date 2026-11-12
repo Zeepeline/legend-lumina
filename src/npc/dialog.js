@@ -15,6 +15,10 @@ Object.assign(World.prototype, {
     // Fitur Hadiah & Hubungan NPC (Affinity/Gift)
     S.rel = S.rel || {};
     const relLv = S.rel[id] || 0;
+    if (id === 'kembara') {
+      await talkKangKembara();
+      return;
+    }
     if (!(await this.learnTalk(id, T, gain)) && !(await this.ch5Talk(id, nm, T, gain)) && !(await this.storyTalk(id, nm, T, gain, o.n))) switch (id) {
       case 'elder':
         if (S.stage === 0) {

@@ -27,10 +27,74 @@ async function sellMenu() {
   for (; ;) {
     const mats = Object.keys(S.inv).filter(id => ITEMS[id].sell && S.inv[id] > 0);
     if (!mats.length) { await say('Kamu tidak punya barang untuk dijual. Kalahkan monster, memancing, atau berkebun dulu.'); return; }
-    const r = await choose({ head: 'Jual bahan · ' + S.gold + ' G', x: 46, y: 26, w: 196, start: Math.min(sel, mats.length), items: [...mats.map(id => ({ t: icon(id) + ITEMS[id].n + ' x' + S.inv[id], r: ITEMS[id].sell + ' G' })), { t: 'Kembali' }],
-      foot: i => i < mats.length ? ITEMS[mats[i]].d + ' (ingat: bahan dipakai untuk tempa)' : '' });
-    if (r < 0 || r === mats.length) return; sel = r; const id = mats[r];
-    addItem(id, -1); S.gold += ITEMS[id].sell; sfx('coin'); updHud();
+    
+    // Fitur #36: Jual Cepat Barang Sampah (monster drops biasa yang tidak dikunci)
+    const junkList = mats.filter(id => ITEMS[id].junk && !S.locked?.[id]);
+    const junkTotal = junkList.reduce((acc, id) => acc + ITEMS[id].sell * S.inv[id], 0);
+
+    const items = [];
+    if (junkList.length > 0) {
+      items.push({ t: `⚡ Jual Semua Sampah (${junkList.length} jenis)`, r: `+${junkTotal} G` });
+    }
+    items.push(...mats.map(id => {
+      const isLocked = S.locked && S.locked[id];
+      return {
+        t: (isLocked ? '🔒 ' : '') + icon(id) + ITEMS[id].n + ' x' + S.inv[id],
+        r: isLocked ? '(Terkunci)' : ITEMS[id].sell + ' G',
+        dis: isLocked
+      };
+    }));
+    items.push({ t: 'Kembali' });
+
+    const r = await choose({
+      head: 'Jual bahan · ' + S.gold + ' G',
+      x: 46, y: 26, w: 210,
+      start: Math.min(sel, items.length - 1),
+      items,
+      foot: i => {
+        if (junkList.length > 0 && i === 0) return 'Jual cepat semua drop monster biasa yang tidak terkunci.';
+        const actualIdx = junkList.length > 0 ? i - 1 : i;
+        if (actualIdx >= 0 && actualIdx < mats.length) {
+          const id = mats[actualIdx];
+          return ITEMS[id].d + (S.locked?.[id] ? ' <span style="color:#ff8a8a">(Terkunci di Tas)</span>' : '');
+        }
+        return '';
+      }
+    });
+
+    if (r < 0 || r === items.length - 1) return;
+    sel = r;
+
+    if (junkList.length > 0 && r === 0) {
+      // Eksekusi Jual Semua Sampah
+      if (await ask(`Jual semua sampah (${junkList.length} jenis) seharga ${junkTotal} G?`)) {
+        for (const id of junkList) {
+          delete S.inv[id];
+        }
+        S.gold += junkTotal;
+        S.st = S.st || {};
+        S.st.goldEarned = (S.st.goldEarned || 0) + junkTotal;
+        sfx('coin');
+        updHud();
+        await say(`Berhasil menjual semua barang sampah! Kamu mendapatkan ${junkTotal} G.`);
+      }
+      continue;
+    }
+
+    const actualIdx = junkList.length > 0 ? r - 1 : r;
+    const id = mats[actualIdx];
+    if (S.locked && S.locked[id]) {
+      sfx('buzz');
+      await say('Barang ini sedang dikunci di tas. Buka kuncinya di TAS terlebih dahulu bila ingin menjual.');
+      continue;
+    }
+
+    addItem(id, -1);
+    S.gold += ITEMS[id].sell;
+    S.st = S.st || {};
+    S.st.goldEarned = (S.st.goldEarned || 0) + ITEMS[id].sell;
+    sfx('coin');
+    updHud();
   }
 }
 async function forgeMenu() {

@@ -131,6 +131,10 @@ Object.assign(World.prototype, {
     if (e.elite) { this.drop(x, y, 'item', ELITE_LOOT[ri(0, ELITE_LOOT.length - 1)]); popWorld(x, y - 30, 'Elit tumbang!', 'crit'); S.elites = (S.elites || 0) + 1; if (!S.tmap && Math.random() < .25) this.giveTreasureMap(); }
     if (e.mk) e.mk.destroy(); if (e.aura) e.aura.destroy();
     S.kills[e.type] = (S.kills[e.type] || 0) + 1;
+    // Rekap statistik kill (Fitur #25 & #18)
+    S.st = S.st || {}; S.st.kills = (S.st.kills || 0) + 1;
+    if (e.boss) S.st.bosses = (S.st.bosses || 0) + 1;
+    if (typeof checkTitles === 'function') checkTitles();
     this.gainExp(e.D.exp, x, y);
     if (e.boss) this.bossDown(e); else achCheck(this);
   },

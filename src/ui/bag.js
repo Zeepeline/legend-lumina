@@ -11,10 +11,13 @@ async function openBag(sc) {
   function draw() {
     const L = list(); sel = clamp(sel, 0, Math.max(0, L.length - 1)); const st = stat();
     w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span><span class="gold">${S.gold} G</span></div>
-     <div class="bb"><div class="bl">${L.length ? L.map((id, i) => `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}</span><b>${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`).join('') : '<div class="empty">Kosong</div>'}</div>
-     <div class="bs"><div class="mh">Arka · Lv ${S.lv}</div>${['wpn', 'arm', 'acc'].map(s => `<div class="eqs">${S.eq[s] ? icon(S.eq[s]) + itemName(S.eq[s]) : '<i>(kosong)</i>'}</div>`).join('')}
-     <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b><br>HP <b>${S.hp}/${st.maxhp}</b></div></div></div>
-     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · DASH urutkan · B tutup'}</div>`;
+     <div class="bb"><div class="bl">${L.length ? L.map((id, i) => {
+       const isLck = S.locked && S.locked[id];
+       return `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}</span><b>${isLck ? '🔒 ' : ''}${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`;
+     }).join('') : '<div class="empty">Kosong</div>'}</div>
+     <div class="bs"><div class="mh">Arka · Lv ${S.lv} (${S.title || 'Petualang'})</div>${['wpn', 'arm', 'acc'].map(s => `<div class="eqs">${S.eq[s] ? icon(S.eq[s]) + itemName(S.eq[s]) : '<i>(kosong)</i>'}</div>`).join('')}
+     <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b></div></div></div>
+     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · DASH urutkan · Kunci/Buka: tahan A/ketuk gembok · B tutup'}</div>`;
     const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); const i = +e.dataset.i; if (i === sel) act(); else { sel = i; sfx('cur'); draw(); } });
@@ -28,6 +31,19 @@ async function openBag(sc) {
     return ' ' + ['atk', 'def', 'mag'].map(k => { const d = v(it, id, k) - v(cur, S.eq[slot], k); return d ? `<span style="color:${d > 0 ? '#3a9a3a' : '#c83a3a'}">${{ atk: 'Serang', def: 'Tahan', mag: 'Sihir' }[k]} ${d > 0 ? '▲+' : '▼'}${d}</span>` : ''; }).filter(Boolean).join(' ');
   }
   function hint(id) { const k = ITEMS[id].k; return k === 'use' ? ' <span class="y">[A: pakai]</span>' : ['wpn', 'arm', 'acc'].includes(k) ? (isEq(id) ? ' <span class="y">[A: lepas]</span>' : ' <span class="y">[A: pasang]</span>') : ''; }
+  function toggleLock(id) {
+    S.locked = S.locked || {};
+    if (S.locked[id]) {
+      delete S.locked[id];
+      sfx('back');
+      if (typeof toastItem === 'function') toastItem(null, `Kunci dibuka: ${ITEMS[id].n}`);
+    } else {
+      S.locked[id] = true;
+      sfx('ok');
+      if (typeof toastItem === 'function') toastItem(null, `🔒 Dikunci: ${ITEMS[id].n} (kebal dari jual)`);
+    }
+    draw();
+  }
   function act() {
     const L = list(); if (!L.length) return; const id = L[sel], it = ITEMS[id];
     if (it.k === 'use') { if (!sc.useItem(id)) sfx('buzz'); }
@@ -45,7 +61,12 @@ async function openBag(sc) {
       if (k === 'left' || k === 'right') { tab = (tab + (k === 'left' ? 3 : 1)) % 4; sel = 0; sfx('cur'); draw(); }
       else if (k === 'up' || k === 'down') { const n = list().length; if (n) { sel = (sel + (k === 'up' ? n - 1 : 1)) % n; sfx('cur'); draw(); } }
       else if (k === 'a') act();
-      else if (k === 'dash' || k === 'item') { BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); }
+      else if (k === 'dash') {
+        // Tekan DASH untuk mengunci / membuka kunci item (Fitur #374)
+        const L = list();
+        if (L.length && L[sel]) toggleLock(L[sel]);
+      }
+      else if (k === 'item') { BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); }
       else if (['b', 'menu', 'back', 'bag'].includes(k)) { w.remove(); UIH = prev; sfx('back'); res(); }
     };
     UIH = h;

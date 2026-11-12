@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 80 | 5 | 0 | 915 |
+| 87 | 5 | 0 | 908 |
 
 ## Selesai
 
@@ -100,6 +100,13 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 37 | Warna kelangkaan: biru langka, ungu epik, jingga legendaris | `systems/polish.js` (`rarity`) | 11 |
 | 76 | Ukuran huruf 4 tingkat | `systems/polish.js` (`applyFont`), `styles.css` | 11 |
 | 81 | Notifikasi barang bertumpuk di pojok kiri bawah | `systems/polish.js` (`toastItem`) | 11 |
+| 45 | Papan permintaan barang: 3 tugas harian warga di desa (rotasi per hari) | `systems/economy.js` (`openNoticeBoard`) | 12 |
+| 39 | Pedagang keliling berjadwal (Kang Kembara) berganti lokasi & barang langka per hari | `systems/economy.js` (`isMerchantHere`) | 12 |
+| 374 | Kunci item di tas (🔒 kebal dari aksi jual) via tombol DASH | `ui/bag.js` (`toggleLock`) | 12 |
+| 36 | Jual cepat barang sampah (⚡ jual semua drop monster biasa) di toko | `ui/shop.js` (`sellMenu`) | 12 |
+| 28 | Buku resep di MENU: katalog resep tempa, masak & kerajinan beserta status bahan | `systems/economy.js` (`openRecipeBook`) | 12 |
+| 18 | Sistem gelar pemain: terbuka dari pencapaian & beri bonus pasif status | `systems/economy.js` (`TITLES`, `checkTitles`) | 12 |
+| 25 | Layar rekap statistik petualangan (waktu main, monster, bos, langkah, koin) | `systems/economy.js` (`openStatsAndTitles`) | 12 |
 
 ## Sebagian
 
@@ -129,7 +136,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~9~~ | ✅ selesai | — |
 | ~~10~~ | ✅ selesai | — |
 | ~~11~~ | ✅ selesai: 99, 3, 5, 6, 35, 37, 76, 81 | — |
-| 12+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~12~~ | ✅ selesai: 45, 39, 374, 36, 28, 18, 25 | Ekonomi Desa, Karakter & Kenyamanan Tas |
+| 13+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 

@@ -46,6 +46,18 @@ class World extends Phaser.Scene {
     if (M.mochi && S.side.mochi === 1) this.spawnMochi();
     if (M.id === 'village' && S.side.mochi === 3 && !S.pet) this.spawnCritter(['cat', 586, 300, 2]);
     for (const n of M.npcs || []) this.spawnNpc(n);
+    // Pedagang Keliling (Kang Kembara) muncul sesuai jadwal hari (fitur #39)
+    if (typeof isMerchantHere === 'function' && isMerchantHere(M.id)) {
+      const posMap = {
+        village: { x: 740, y: 460, dir: 'left' },
+        meadow: { x: 480, y: 360, dir: 'down' },
+        lake: { x: 380, y: 520, dir: 'up' },
+        forest: { x: 520, y: 480, dir: 'down' },
+        city: { x: 420, y: 350, dir: 'right' }
+      };
+      const pos = posMap[M.id] || { x: 300, y: 300, dir: 'down' };
+      this.spawnNpc({ id: 'kembara', ch: 'hunter', name: 'Kang Kembara', x: pos.x, y: pos.y, dir: pos.dir, wander: 12 });
+    }
     for (const a of M.animals || []) this.spawnCritter(a);
     for (let i = 0; i < (M.butterflies || 0); i++) this.spawnFly(i);
     for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2]);
@@ -402,7 +414,8 @@ class World extends Phaser.Scene {
       this.inter.push({
         x, y: y + 4, r: 18,
         fn: async () => {
-          await this.bountyBoard();
+          if (typeof openNoticeBoard === 'function') await openNoticeBoard();
+          else await this.bountyBoard();
         }
       });
     }
@@ -514,6 +527,8 @@ class World extends Phaser.Scene {
           if (pl.atkT > 0) { pl.anims.stop(); pl.setFrame(sd + '3'); }
           else { if (pl.anims.currentAnim?.key !== k || !pl.anims.isPlaying) pl.play(k, true); pl.anims.timeScale = (.6 + m * .5) * stat().spd; }
           this.dustT -= dt; if (this.dustT <= 0 && m > .6) { this.dustT = .28; this.puff(pl.x - v.x * 4, pl.y - 1); }
+          // Akumulasi statistik langkah kaki (Fitur #25)
+          S.st = S.st || {}; S.st.steps = (S.st.steps || 0) + 1;
         } else { pl.anims.stop(); pl.setFrame(sd + (pl.atkT > 0 ? '3' : '0')); pl.flipX = pl.dir === 'left'; }
       }
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
@@ -522,6 +537,8 @@ class World extends Phaser.Scene {
     this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
+      // Akumulasi waktu bermain riil (Fitur #25)
+      S.st = S.st || {}; S.st.playTime = (S.st.playTime || 0) + dt;
       if (this.boulder) this.updBoulder(dt);
       if (this.pet) this.updPet(dt);
       if (this.garden) this.updGarden();
