@@ -39,6 +39,8 @@ const ENEMY = {
   bounty_wolf: { name: 'Taring Perak', tex: 'wolfs', hp: 320, atk: 28, def: 10, spd: 88, exp: 280, gold: [180, 220], r: 10, ai: 'lunge', side: 1, scale: 1.4, drop: ['pelt', 1], isBounty: true },
   bounty_frog: { name: 'Raja Rawa Toksin', tex: 'frog', hp: 380, atk: 26, def: 12, spd: 58, exp: 320, gold: [220, 260], r: 11, ai: 'hop', scale: 1.6, drop: ['scale', 1], fx: ['poison', 6, .7], isBounty: true },
   bounty_gargoyle: { name: 'Gargoyle Merah', tex: 'batc', hp: 360, atk: 30, def: 14, spd: 76, exp: 350, gold: [250, 300], r: 10, ai: 'fly', fly: 1, scale: 1.5, drop: ['shard', 1], fx: ['burn', 4, .6], isBounty: true },
+  // Raja Slime Membelah Diri (#197)
+  king_slime: { name: 'Raja Slime Mahkota', tex: 'slime', hp: 130, atk: 11, def: 4, spd: 46, exp: 60, gold: [45, 80], r: 12, ai: 'hop', scale: 1.65, drop: ['amethyst_gem', .4] },
 };
 const PROJ = { spore: { key: 'spore', spd: 72, fx: ['poison', 4, .5] }, seed: { key: 'seed', spd: 84 }, bone: { key: 'bone', spd: 96, spin: 1 }, rock: { key: 'rockshot', spd: 110, spin: 1 }, venom: { key: 'venom', spd: 96, fx: ['poison', 5, .6] }, ice: { key: 'icebolt', spd: 112, fx: ['chill', 3, .7] } };
 const BOSS_AI = ['boss', 'gboss', 'qboss', 'sboss', 'wboss', 'dboss'];

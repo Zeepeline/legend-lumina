@@ -4,7 +4,7 @@
 async function mainMenu(sc) {
   G.lock++; sfx('ok'); let sel = 0;
   const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Jurnal', 'Tujuan, misteri & catatan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
-    ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Atribut', 'Bagikan poin naik level', () => openAttr()], ['Kerajinan', 'Buat ramuan, bom, panah, umpan', () => openCraft(sc)],
+    ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Pohon Bakat', 'Keahlian Pedang, Sihir & Jelajah', () => openTalentTree()], ['Atribut', 'Bagikan poin naik level', () => openAttr()], ['Kerajinan', 'Buat ramuan, bom, panah, umpan', () => openCraft(sc)],
     ['Buku Resep', 'Katalog resep tempa, kerajinan & masakan', () => openRecipeBook()],
     ['Ensiklopedia', 'Katalog flora, fauna, mineral & kemajuan dunia', () => openEncyclopedia()],
     ['Tantangan Harian', 'Aksi harian bertarung & berpetualang', () => openDailyFeats()],
@@ -221,4 +221,120 @@ async function openPhotoMode(sc) {
   if (hud) hud.style.display = '';
   if (pad) pad.style.display = '';
   G.lock--;
+}
+
+// ---------------- POHON BAKAT KEAHLIAN ARKA (#17) ----------------
+const TALENT_DEFS = {
+  war: {
+    n: 'Pendekar Pedang', ic: '⚔',
+    nodes: [
+      { id: 'w1', n: 'Tebasan Lebar', d: 'Radius ayunan pedang bertambah luas (+10%/+20%/+30%).' },
+      { id: 'w2', n: 'Fokus Tajam', d: 'Peluang serangan kritikal bertambah (+4%/+8%/+12%).' },
+      { id: 'w3', n: 'Refleks Ksatria', d: 'Jendela waktu tangkisan (parry) lebih fleksibel (+0.04s/+0.08s).' }
+    ]
+  },
+  mag: {
+    n: 'Penyihir Bijak', ic: '✨',
+    nodes: [
+      { id: 'm1', n: 'Aliran Mana', d: 'Konsumsi MP sihir bola api dan jurus berkurang 1 MP.' },
+      { id: 'm2', n: 'Ledakan Mistik', d: 'Kerusakan sihir sihir cahaya & es meningkat (+2/+4/+6 Mag).' },
+      { id: 'm3', n: 'Pancaran Jiwa', d: 'Regenerasi pasif MP alami saat bertualang (+1/+2 MP/dtk).' }
+    ]
+  },
+  exp: {
+    n: 'Penjelajah Alam', ic: '🌿',
+    nodes: [
+      { id: 'e1', n: 'Langkah Ringan', d: 'Kecepatan jalan & lari Arka bertambah (+6%/+12%/+18%).' },
+      { id: 'e2', n: 'Mata Harta', d: 'Peluang drop item langka dan koin monster meningkat tajam.' },
+      { id: 'e3', n: 'Langkah Kebal', d: 'Kebal efek perlambatan lumpur rawa dan duri alam.' }
+    ]
+  }
+};
+
+function getTalentPoints() {
+  const total = Math.max(0, Math.floor(S.lv / 2));
+  S.talents = S.talents || { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] };
+  let spent = 0;
+  for (const cat in S.talents) {
+    for (const v of S.talents[cat]) spent += v;
+  }
+  return { total, spent, free: Math.max(0, total - spent) };
+}
+
+async function openTalentTree() {
+  G.lock++; sfx('cur');
+  S.talents = S.talents || { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] };
+  const cats = ['war', 'mag', 'exp'];
+  let catIdx = 0;
+
+  try {
+    for (;;) {
+      const tp = getTalentPoints();
+      const cKey = cats[catIdx];
+      const C = TALENT_DEFS[cKey];
+      const curVals = S.talents[cKey] || [0, 0, 0];
+
+      const items = C.nodes.map((node, i) => {
+        const lv = curVals[i] || 0;
+        const maxed = lv >= 3;
+        return {
+          t: `${lv > 0 ? '★ ' : '• '}${node.n}`,
+          r: `${'★'.repeat(lv)}${'☆'.repeat(3 - lv)} (${lv}/3)`,
+          dis: maxed || tp.free <= 0,
+          node, i
+        };
+      });
+
+      items.push({ t: `🔄 Beralih: ${TALENT_DEFS[cats[(catIdx + 1) % 3]].n}` });
+      items.push({ t: '↩ Reset Poin Bakat (50 G)' });
+      items.push({ t: 'Tutup' });
+
+      const r = await choose({
+        head: `POHON BAKAT · ${C.ic} ${C.n} (Poin: ${tp.free})`,
+        x: 14, y: 20, w: 280,
+        items,
+        foot: (idx) => {
+          if (idx < 3) {
+            const nd = C.nodes[idx];
+            return `<b>${nd.n}</b>: ${nd.d}<br>Tingkat saat ini: ${curVals[idx]}/3. Memerlukan 1 Poin Bakat.`;
+          }
+          if (idx === 3) return 'Beralih melihat cabang keahlian lainnya.';
+          if (idx === 4) return 'Setel ulang seluruh alokasi bakat ke 0 dan kembalikan poin bakat.';
+          return 'Tutup pohon bakat.';
+        }
+      });
+
+      if (r < 0 || r === items.length - 1) break;
+
+      if (r < 3) {
+        if (tp.free > 0 && curVals[r] < 3) {
+          curVals[r]++;
+          sfx('lvl');
+          popWorld(G.scene.pl.x, G.scene.pl.y - 20, `${C.nodes[r].n} Naik!`, 'crit');
+          updHud();
+        } else {
+          sfx('buzz');
+        }
+      } else if (r === 3) {
+        catIdx = (catIdx + 1) % 3;
+        sfx('cur');
+      } else if (r === 4) {
+        if (S.gold < 50) {
+          sfx('buzz');
+          await say('Uangmu belum cukup untuk mereset poin bakat (butuh 50 G).');
+        } else {
+          const ok = await ask('Reset semua poin bakat dengan biaya 50 G?');
+          if (ok) {
+            S.gold -= 50;
+            S.talents = { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] };
+            sfx('heal');
+            updHud();
+            await say('Seluruh poin bakat berhasil dikembalikan!');
+          }
+        }
+      }
+    }
+  } finally {
+    G.lock--;
+  }
 }

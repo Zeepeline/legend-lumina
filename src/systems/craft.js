@@ -32,6 +32,7 @@ const CRAFT = [
   { id: 'bait', n: 3, need: { berry: 1, jelly: 1 } },
   { id: 'iron_bar', n: 1, need: { ore: 3 } },
   { id: 'crystal_bar', n: 1, need: { shard: 3 } },
+  { id: 'candle', n: 2, need: { wool: 1, berry: 2 } },
 ];
 const ATTR = [['str', 'Kekuatan', '+1 serangan'], ['int', 'Sihir', '+2 kekuatan sihir'], ['vit', 'Ketahanan', '+5 HP maks & +0,5 pertahanan'], ['agi', 'Kelincahan', '+1% kecepatan & +1% kritikal']];
 function attrInit() {
@@ -129,6 +130,45 @@ Object.assign(World.prototype, {
           popWorld(512, 360, 'Tiba di Depan Rumah Arka!', 'heal');
         }
       });
+      return true;
+    }
+    // Lilin Sarang Lebah (#425)
+    if (id === 'candle') {
+      S.buff = S.buff || {};
+      S.buff.light = 300;
+      sfx('heal');
+      popWorld(pl.x, pl.y - 28, '🕯 Aura Lilin Menyala Terang!', 'heal');
+      this.sparkle(pl.x, pl.y - 10, 'doty', 14);
+      updHud();
+      return true;
+    }
+    // Kotak Bekal Perjalanan (#438)
+    if (id === 'lunchbox') {
+      S.bento = S.bento || [];
+      if (!S.bento.length) {
+        // Coba isi bekal otomatis dari tas jika ada makanan (stew, bread, pie, herb)
+        const candidates = ['stew', 'applepie', 'honeybread', 'herb'];
+        const found = candidates.find(c => has(c));
+        if (found) {
+          addItem(found, -1);
+          S.bento.push(found);
+          sfx('ok');
+          popWorld(pl.x, pl.y - 28, `Bekal Diisi: ${ITEMS[found]?.n}!`, 'heal');
+        } else {
+          popWorld(pl.x, pl.y - 28, 'Bekal Kosong! Masak dulu.', 'hurt');
+          sfx('buzz');
+          return false;
+        }
+      } else {
+        const food = S.bento.shift();
+        sfx('heal');
+        const st = stat();
+        S.hp = Math.min(st.maxhp, S.hp + 60);
+        S.mp = Math.min(st.maxmp, S.mp + 20);
+        popWorld(pl.x, pl.y - 28, `🍱 Santap ${ITEMS[food]?.n || 'Bekal'}! +60 HP +20 MP`, 'heal');
+        updHud();
+        return true;
+      }
       return true;
     }
     const kind = ITEMS[id].tool, a = this.aimAngle(), dx = Math.cos(a), dy = Math.sin(a), st = stat();

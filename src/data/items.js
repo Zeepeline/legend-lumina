@@ -157,6 +157,16 @@ const ITEMS = {
   iron_bar: { n: 'Batangan Besi', k: 'mat', price: 60, sell: 35, d: 'Batangan besi murni hasil peleburan bijih di tungku. Bahan tempa zirah kokoh.', src: 'Peleburan: 3 Bijih Batu di tungku' },
   crystal_bar: { n: 'Batangan Kristal', k: 'mat', price: 80, sell: 48, d: 'Batangan kristal biru toska yang berkilau sejuk. Bahan pedang dan pusaka sakti.', src: 'Peleburan: 3 Pecahan Kristal di tungku' },
 
+  // Fitur #438: Kotak Bekal Perjalanan
+  lunchbox: { n: 'Kotak Bekal Perjalanan', k: 'use', tool: 1, price: 60, sell: 30, d: 'Kotak bekal kayu. Menyimpan hingga 3 hidangan masakan siap makan untuk pemulihan instan di tengah pertarungan.', src: 'Toko desa / Penginapan' },
+
+  // Fitur #425: Lilin Sarang Lebah Penerang Gua
+  candle: { n: 'Lilin Sarang Lebah', k: 'use', tool: 1, price: 16, sell: 8, d: 'Lilin lebah alami beraroma madu. Nyalakan untuk memancarkan aura cahaya terang 2,2× lipat di gua dan malam hari selama 5 menit.', src: 'Kerajinan: Madu Hutan + Bulu Domba' },
+
+  // Ikan Danau Dalam (#56)
+  lake_catfish: { n: 'Ikan Patin Raksasa', k: 'mat', price: 70, sell: 45, d: 'Ikan patin kumis panjang bertubuh licin dari palung terdalam Danau Cermin.', src: 'Mancing perahu Danau Cermin' },
+  moon_fish: { n: 'Ikan Rembulan', k: 'mat', price: 90, sell: 60, d: 'Ikan bersisik perak memantulkan sinar rembulan malam di tengah danau tenang.', src: 'Mancing perahu malam Danau Cermin' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },

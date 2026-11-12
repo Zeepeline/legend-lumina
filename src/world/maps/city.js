@@ -104,6 +104,7 @@ MAPS.kbawah = {
   doors: [[160, 330, 'Rumah petak. Terdengar batuk dari dalam.'], [560, 330, 'Rumah petak kosong. Pemiliknya pindah ke Lembah Besi... lalu kembali lagi.']],
   npcs: [{ id: 'lestari', ch: 'lestari', name: 'Guru Lestari', x: 560, y: 600, dir: 'down' },
     { id: 'arena_master', ch: 'guard', name: 'Pengawas Gelanggang', x: 700, y: 700, dir: 'down' },
+    { id: 'night_merchant', ch: 'merchant', name: 'Pedagang Pasar Malam', x: 500, y: 640, dir: 'down' },
     ...citizens([['kb1', 'child', 'Anak Kota Bawah', 650, 680, 'bawah'], ['kb2', 'farmer', 'Mantan Penambang', 300, 560, 'bawah'], ['kb3', 'woman', 'Ibu Kota Bawah', 900, 560, 'bawah'], ['kb4', 'child', 'Anak Kota Bawah', 450, 700, 'bawah']])],
   animals: [['cat', 700, 600, 0], ['cat', 380, 520, 1]],
   trees: { n: 80, min: 30, types: [['bushG1', .5], ['rock', .5]] },

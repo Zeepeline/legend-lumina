@@ -13,12 +13,19 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 150 | 5 | 0 | 845 |
+| 157 | 5 | 0 | 838 |
 
 ## Selesai
 
 | No | Fitur | File utama | Gelombang |
 |---|---|---|---|
+| 17 | Pohon bakat keahlian Arka (3 cabang: Pendekar Pedang, Penyihir Bijak, Penjelajah Alam) | `ui/menus.js` (`openTalentTree`), `core/state.js` (`S.talents`) | 22 |
+| 197 | Musuh Raja Slime membelah diri (Mahkota emas meletus pecah menjadi 3 slime kecil) | `data/enemies.js` (`king_slime`), `systems/combat.js` | 22 |
+| 438 | Kotak bekal perjalanan (bento simpan 3 masakan untuk santap instan darurat) | `data/items.js` (`lunchbox`), `systems/craft.js` (`useTool`) | 22 |
+| 460 | Pasar malam eksotis Kota Lumina (kios malam jam 19.00-05.00 jual barang langka & permata) | `world/maps/city.js`, `npc/dialog.js` (`talkNightMerchant`) | 22 |
+| 425 | Lilin sarang lebah penerang gua (resep lilin madu pendaran cahaya 2,2× lipat 5 menit) | `data/items.js` (`candle`), `systems/craft.js` (`CRAFT`, `useTool`) | 22 |
+| 38 | Tren harga pasar mingguan (rotasi 3 pekan: Pekan Ikan +40%, Alam +50%, Logam +35%) | `ui/shop.js` (`sellMenu`, `getTrendMul`) | 22 |
+| 56 | Perahu nelayan & mancing danau dalam (dayung ke pulau tengah & pancing ikan patin raksasa / rembulan) | `world/maps/lake.js` (`dockboat`), `scene/world.js`, `data/items.js` | 22 |
 | 11 | Pertarungan gelombang di arena Kota Lumina (3 gelombang musuh bertahap berhadiah 250 G & Gelar Juara) | `world/maps/city.js`, `npc/dialog.js` (`startCityArena`) | 21 |
 | 241 | Papan buronan monster langka Kota Lumina (Taring Perak, Raja Rawa, Gargoyle Merah) | `systems/economy.js` (`openCityBounties`), `data/enemies.js`, `world/maps/city.js` | 21 |
 | 420 | Peleburan batangan logam di tungku kerajinan (Batangan Besi & Batangan Kristal) | `systems/craft.js` (`CRAFT`), `data/items.js` (`iron_bar`, `crystal_bar`) | 21 |
@@ -209,7 +216,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~19~~ | ✅ selesai: 21, 500, 53, 43, 65, 410, 77 | Lemari Pakaian, Tamu Rumah, Tebang Pohon & Pilar Runa |
 | ~~20~~ | ✅ selesai: 20, 58, 55, 50, 31, 93, 502 | Mendorong Batu, Anjing Kuro, Kamera, Masak Bintang & Kebun Bunga |
 | ~~21~~ | ✅ selesai: 11, 241, 420, 496, 208, 495, 83 | Arena Gelombang, Papan Buronan, Batang Logam, Buff Bugar, Tengkorak Bangkit & Landscape Lebar |
-| 22+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~22~~ | ✅ selesai: 17, 197, 438, 460, 425, 38, 56 | Pohon Bakat Arka, Raja Slime Pecah, Kotak Bekal, Pasar Malam, Lilin Sarang Lebah, Tren Pasar Mingguan, & Perahu Danau Dalam |
+| 23+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 

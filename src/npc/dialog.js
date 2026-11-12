@@ -138,6 +138,9 @@ Object.assign(World.prototype, {
       case 'arena_master':
         await this.talkArenaMaster();
         break;
+      case 'night_merchant':
+        await this.talkNightMerchant();
+        break;
       case 'joko':
         if (S.side.joko === 0) { await T('Selamat datang di Padang Angin! Kincirku menggiling gandum untuk desa.', 'Babi hutan akan menyeruduk lurus. Minggir ke samping, biar mereka menabrak batu!', 'Bisa bawakan 3 Taring Babi? Akan kutukar dengan sepatu ajaib.', 'Ini bekal dulu.'); S.side.joko = 1; addItem('potion', 2); await gain(['Dapat Ramuan x2!', 'Misi sampingan: Bawa 3 Taring Babi ke Pak Joko.']); }
         else if (S.side.joko === 1 && has('tusk', 3)) { await T('Taring bagus! Ini Sepatu Angin, larimu akan secepat angin padang.'); addItem('tusk', -3); addItem('boots'); S.side.joko = 2; await gain(['Dapat Sepatu Angin! (Pasang di TAS)']); }
@@ -350,5 +353,19 @@ Object.assign(World.prototype, {
     updHud();
     playBGM(bgmFor(this.M));
     await say('LUAR BIASA! Seluruh penonton bersorak! Kamu menaklukkan 3 gelombang arena!\nKamu menerima 250 G, 300 EXP, dan gelar: Juara Gelanggang!', 'Pengawas Gelanggang');
+  },
+  async talkNightMerchant() {
+    const isNight = S.time >= 19 || S.time < 5;
+    if (!isNight) {
+      await say('Ssst... Kios kami baru buka saat malam tiba (jam 19.00 - 05.00). Datanglah nanti saat lentera menyala!', 'Pedagang Pasar Malam');
+      return;
+    }
+    G.lock++;
+    try {
+      const items = ['amethyst_gem', 'fbomb', 'candle', 'lunchbox', 'seed_flower', 'leather_pouch'];
+      await buyMenu('Pasar Malam Eksotis Lumina', items);
+    } finally {
+      G.lock--;
+    }
   },
 });

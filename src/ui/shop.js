@@ -102,11 +102,26 @@ async function sellMenu() {
     
     // Fitur #31: Bonus Jual Toko +5% jika memiliki Kantong Tas Kulit (leather_pouch)
     const pouchBonus = has('leather_pouch') ? 1.05 : 1.0;
-    const getItemSell = id => Math.round((ITEMS[id].sell || 1) * pouchBonus);
+    // Fitur #38: Tren Harga Pasar Mingguan (Weekly Trends)
+    const weekIdx = Math.floor((S.day || 1) / 7) % 3;
+    // 0: Ikan +40%, 1: Hasil Alam +50%, 2: Logam/Permata +35%
+    const isFish = id => ['fish', 'gfish', 'lake_pearl', 'lake_catfish', 'moon_fish'].includes(id);
+    const isNature = id => ['herb', 'berry', 'veg', 'spore', 'honey', 'flower_bouquet'].includes(id);
+    const isMineral = id => ['ore', 'iron', 'shard', 'amethyst_gem', 'iron_bar', 'crystal_bar'].includes(id);
+    const getTrendMul = id => {
+      if (weekIdx === 0 && isFish(id)) return 1.4;
+      if (weekIdx === 1 && isNature(id)) return 1.5;
+      if (weekIdx === 2 && isMineral(id)) return 1.35;
+      return 1.0;
+    };
+    const getItemSell = id => Math.round((ITEMS[id].sell || 1) * pouchBonus * getTrendMul(id));
 
     // Fitur #36: Jual Cepat Barang Sampah (monster drops biasa yang tidak dikunci)
     const junkList = mats.filter(id => ITEMS[id].junk && !S.locked?.[id]);
     const junkTotal = junkList.reduce((acc, id) => acc + getItemSell(id) * S.inv[id], 0);
+
+    const trendNames = ['Pekan Ikan Segar (+40%)', 'Pekan Hasil Alam (+50%)', 'Pekan Logam & Permata (+35%)'];
+    const curTrend = trendNames[weekIdx];
 
     const items = [];
     if (junkList.length > 0) {
@@ -114,16 +129,17 @@ async function sellMenu() {
     }
     items.push(...mats.map(id => {
       const isLocked = S.locked && S.locked[id];
+      const isHot = getTrendMul(id) > 1.0;
       return {
-        t: (isLocked ? '🔒 ' : '') + icon(id) + ITEMS[id].n + ' x' + S.inv[id],
-        r: isLocked ? '(Terkunci)' : getItemSell(id) + ' G',
+        t: (isLocked ? '🔒 ' : (isHot ? '🔥 ' : '')) + icon(id) + ITEMS[id].n + ' x' + S.inv[id],
+        r: isLocked ? '(Terkunci)' : (getItemSell(id) + ' G' + (isHot ? ' ↑' : '')),
         dis: isLocked
       };
     }));
     items.push({ t: 'Kembali' });
 
     const r = await choose({
-      head: 'Jual bahan · ' + S.gold + ' G',
+      head: `Jual bahan · ${S.gold} G · ${curTrend}`,
       x: 46, y: 26, w: 210,
       start: Math.min(sel, items.length - 1),
       items,

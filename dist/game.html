@@ -4512,6 +4512,7 @@ MAPS.meadow = {
     { id: 'domba', ch: 'child', name: 'Domba Padang', x: 280, y: 220, dir: 'down', wander: 18 }],
   patok: [560, 652],
   enemies: [
+    ['king_slime', 700, 260],
     ['bounty_wolf', 800, 720],
     ['bee', 500, 300], ['bee', 560, 330], ['boar', 640, 420], ['slimer', 700, 500], ['plant', 560, 540],
     ['wolf', 900, 420], ['bee', 960, 380], ['boar', 1000, 560], ['plant', 1120, 600], ['slimer', 1060, 660],
@@ -4733,6 +4734,7 @@ MAPS.kbawah = {
   doors: [[160, 330, 'Rumah petak. Terdengar batuk dari dalam.'], [560, 330, 'Rumah petak kosong. Pemiliknya pindah ke Lembah Besi... lalu kembali lagi.']],
   npcs: [{ id: 'lestari', ch: 'lestari', name: 'Guru Lestari', x: 560, y: 600, dir: 'down' },
     { id: 'arena_master', ch: 'guard', name: 'Pengawas Gelanggang', x: 700, y: 700, dir: 'down' },
+    { id: 'night_merchant', ch: 'merchant', name: 'Pedagang Pasar Malam', x: 500, y: 640, dir: 'down' },
     ...citizens([['kb1', 'child', 'Anak Kota Bawah', 650, 680, 'bawah'], ['kb2', 'farmer', 'Mantan Penambang', 300, 560, 'bawah'], ['kb3', 'woman', 'Ibu Kota Bawah', 900, 560, 'bawah'], ['kb4', 'child', 'Anak Kota Bawah', 450, 700, 'bawah']])],
   animals: [['cat', 700, 600, 0], ['cat', 380, 520, 1]],
   trees: { n: 80, min: 30, types: [['bushG1', .5], ['rock', .5]] },
@@ -4998,11 +5000,11 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.21.0';
+const GAME_VERSION = '1.22.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, trees: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, petDog: false, flowerPlots: [null, null], warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, bountiesDone: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {}, bank: { gold: 0, day: 1 }, records: {}, outfit: 'default', runePillars: {}, homeStyle: { floor: 'wood', wall: 'wood' }, arenaRank: 0 }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, trees: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, petDog: false, flowerPlots: [null, null], warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, bountiesDone: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {}, bank: { gold: 0, day: 1 }, records: {}, outfit: 'default', runePillars: {}, homeStyle: { floor: 'wood', wall: 'wood' }, arenaRank: 0, talents: { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] }, bento: [] }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -5035,14 +5037,18 @@ function stat() {
   if (curWpn && S.socket && S.socket[curWpn] === 'ore') {
     gemAtk += 3;
   }
+  // Bonus Bakat Keahlian Arka (#17)
+  const T = S.talents || { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] };
+  const talSpd = (T.exp[0] || 0) * 0.06; // Langkah Ringan: +6% / +12% / +18%
+  const talMag = (T.mag[1] || 0) * 2;    // Ledakan Mistik: +2 / +4 / +6 Mag
   return {
     maxhp: 34 + l * 8 + tHp + sHp,
     maxmp: 12 + l * 2,
     atk: Math.round((6 + l * 2 + eqv('atk') + tAtk + sAtk + gemAtk) * (buffOn('atk') ? BUFF.atk.mul : 1)),
     def: Math.round((1 + l + eqv('def') + tDef + sDef) * (buffOn('def') ? BUFF.def.mul : 1)),
-    mag: 9 + l * 3 + eqv('mag') + sMag,
-    spd: Math.round(((1 + eqv('spd') + tSpd + sSpd) * (buffOn('spd') ? BUFF.spd.mul : 1)) * 100) / 100,
-    regen: eqv('regen') + sRegen
+    mag: 9 + l * 3 + eqv('mag') + sMag + talMag,
+    spd: Math.round(((1 + eqv('spd') + tSpd + sSpd + talSpd) * (buffOn('spd') ? BUFF.spd.mul : 1)) * 100) / 100,
+    regen: eqv('regen') + sRegen + (T.mag[2] || 0) // Pancaran Jiwa: regen MP
   };
 }
 function need(lv) { return 12 * lv + 6 * (lv - 1) * (lv - 1); }
@@ -5268,6 +5274,16 @@ const ITEMS = {
   iron_bar: { n: 'Batangan Besi', k: 'mat', price: 60, sell: 35, d: 'Batangan besi murni hasil peleburan bijih di tungku. Bahan tempa zirah kokoh.', src: 'Peleburan: 3 Bijih Batu di tungku' },
   crystal_bar: { n: 'Batangan Kristal', k: 'mat', price: 80, sell: 48, d: 'Batangan kristal biru toska yang berkilau sejuk. Bahan pedang dan pusaka sakti.', src: 'Peleburan: 3 Pecahan Kristal di tungku' },
 
+  // Fitur #438: Kotak Bekal Perjalanan
+  lunchbox: { n: 'Kotak Bekal Perjalanan', k: 'use', tool: 1, price: 60, sell: 30, d: 'Kotak bekal kayu. Menyimpan hingga 3 hidangan masakan siap makan untuk pemulihan instan di tengah pertarungan.', src: 'Toko desa / Penginapan' },
+
+  // Fitur #425: Lilin Sarang Lebah Penerang Gua
+  candle: { n: 'Lilin Sarang Lebah', k: 'use', tool: 1, price: 16, sell: 8, d: 'Lilin lebah alami beraroma madu. Nyalakan untuk memancarkan aura cahaya terang 2,2× lipat di gua dan malam hari selama 5 menit.', src: 'Kerajinan: Madu Hutan + Bulu Domba' },
+
+  // Ikan Danau Dalam (#56)
+  lake_catfish: { n: 'Ikan Patin Raksasa', k: 'mat', price: 70, sell: 45, d: 'Ikan patin kumis panjang bertubuh licin dari palung terdalam Danau Cermin.', src: 'Mancing perahu Danau Cermin' },
+  moon_fish: { n: 'Ikan Rembulan', k: 'mat', price: 90, sell: 60, d: 'Ikan bersisik perak memantulkan sinar rembulan malam di tengah danau tenang.', src: 'Mancing perahu malam Danau Cermin' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },
@@ -5404,6 +5420,8 @@ const ENEMY = {
   bounty_wolf: { name: 'Taring Perak', tex: 'wolfs', hp: 320, atk: 28, def: 10, spd: 88, exp: 280, gold: [180, 220], r: 10, ai: 'lunge', side: 1, scale: 1.4, drop: ['pelt', 1], isBounty: true },
   bounty_frog: { name: 'Raja Rawa Toksin', tex: 'frog', hp: 380, atk: 26, def: 12, spd: 58, exp: 320, gold: [220, 260], r: 11, ai: 'hop', scale: 1.6, drop: ['scale', 1], fx: ['poison', 6, .7], isBounty: true },
   bounty_gargoyle: { name: 'Gargoyle Merah', tex: 'batc', hp: 360, atk: 30, def: 14, spd: 76, exp: 350, gold: [250, 300], r: 10, ai: 'fly', fly: 1, scale: 1.5, drop: ['shard', 1], fx: ['burn', 4, .6], isBounty: true },
+  // Raja Slime Membelah Diri (#197)
+  king_slime: { name: 'Raja Slime Mahkota', tex: 'slime', hp: 130, atk: 11, def: 4, spd: 46, exp: 60, gold: [45, 80], r: 12, ai: 'hop', scale: 1.65, drop: ['amethyst_gem', .4] },
 };
 const PROJ = { spore: { key: 'spore', spd: 72, fx: ['poison', 4, .5] }, seed: { key: 'seed', spd: 84 }, bone: { key: 'bone', spd: 96, spin: 1 }, rock: { key: 'rockshot', spd: 110, spin: 1 }, venom: { key: 'venom', spd: 96, fx: ['poison', 5, .6] }, ice: { key: 'icebolt', spd: 112, fx: ['chill', 3, .7] } };
 const BOSS_AI = ['boss', 'gboss', 'qboss', 'sboss', 'wboss', 'dboss'];
@@ -6265,6 +6283,55 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'dockboat') {
+      this.inter.push({
+        x, y: y + 4, r: 24,
+        fn: async () => {
+          if (this.onBoat) {
+            this.onBoat = false;
+            sfx('ok');
+            popWorld(this.pl.x, this.pl.y - 20, 'Turun dari Perahu', 'heal');
+            await say('Kamu menambatkan perahu di dermaga dan kembali ke daratan.');
+          } else {
+            const ok = await ask('Naiki perahu dayung untuk menjelajahi danau dalam?');
+            if (ok) {
+              this.onBoat = true;
+              sfx('swim');
+              popWorld(this.pl.x, this.pl.y - 20, 'Menaiki Perahu Dayung!', 'heal');
+              const act = await choose({
+                head: 'Perahu Dayung Danau Cermin',
+                items: [
+                  { t: '🎣 Mancing di Danau Dalam' },
+                  { t: '⛵ Dayung ke Pulau Kuil Tengah' },
+                  { t: 'Tetap di Perahu' }
+                ]
+              });
+              if (act === 0) {
+                // Mancing Danau Dalam
+                G.lock++;
+                sfx('cast');
+                popWorld(this.pl.x, this.pl.y - 24, 'Melempar Kail ke Palung Dalam...', 'heal');
+                await sleep(1500);
+                const isNight = S.time >= 19 || S.time < 5;
+                const caught = isNight ? (Math.random() < 0.6 ? 'moon_fish' : 'lake_catfish') : (Math.random() < 0.6 ? 'lake_catfish' : 'fish');
+                addItem(caught, 1);
+                sfx('fanfare');
+                banner(`MENDAPAT ${ITEMS[caught].n}!`, 'TANGKAPAN DANAU DALAM', true, 2200);
+                popWorld(this.pl.x, this.pl.y - 24, `+1 ${ITEMS[caught].n}!`, 'gold');
+                updHud();
+                G.lock--;
+              } else if (act === 1) {
+                // Dayung ke pulau tengah
+                sfx('swim');
+                this.pl.setPosition(560, 560);
+                popWorld(560, 540, 'Tiba di Pulau Kuil Tengah!', 'heal');
+                this.onBoat = false;
+              }
+            }
+          }
+        }
+      });
+    }
     if (type === 'fountain') {
       this.add.particles(x, y - 66, 'dot', { lifespan: 650, speedX: { min: -22, max: 22 }, speedY: { min: -26, max: -8 }, gravityY: 90, alpha: { start: .8, end: 0 }, frequency: 110, tint: 0xd8f6ff }).setDepth(y + 1);
       this.inter.push({
@@ -6794,6 +6861,16 @@ Object.assign(World.prototype, {
     }
     if (typeof checkTitles === 'function') checkTitles();
     this.gainExp(Math.round(e.D.exp * expMultiplier), x, y);
+    // Raja Slime Membelah Diri (#197)
+    if (e.type === 'king_slime') {
+      sfxAt('magic', x, y, this);
+      popWorld(x, y - 24, '💧 MEMBELAH DIRI!', 'crit');
+      this.time.delayedCall(200, () => {
+        this.addEnemy('slime', x - 16, y - 10);
+        this.addEnemy('slime', x + 16, y - 10);
+        this.addEnemy('slime', x, y + 14);
+      });
+    }
     if (e.boss) this.bossDown(e); else achCheck(this);
   },
   drop(x, y, kind, val) {
@@ -13766,6 +13843,7 @@ const CRAFT = [
   { id: 'bait', n: 3, need: { berry: 1, jelly: 1 } },
   { id: 'iron_bar', n: 1, need: { ore: 3 } },
   { id: 'crystal_bar', n: 1, need: { shard: 3 } },
+  { id: 'candle', n: 2, need: { wool: 1, berry: 2 } },
 ];
 const ATTR = [['str', 'Kekuatan', '+1 serangan'], ['int', 'Sihir', '+2 kekuatan sihir'], ['vit', 'Ketahanan', '+5 HP maks & +0,5 pertahanan'], ['agi', 'Kelincahan', '+1% kecepatan & +1% kritikal']];
 function attrInit() {
@@ -13863,6 +13941,45 @@ Object.assign(World.prototype, {
           popWorld(512, 360, 'Tiba di Depan Rumah Arka!', 'heal');
         }
       });
+      return true;
+    }
+    // Lilin Sarang Lebah (#425)
+    if (id === 'candle') {
+      S.buff = S.buff || {};
+      S.buff.light = 300;
+      sfx('heal');
+      popWorld(pl.x, pl.y - 28, '🕯 Aura Lilin Menyala Terang!', 'heal');
+      this.sparkle(pl.x, pl.y - 10, 'doty', 14);
+      updHud();
+      return true;
+    }
+    // Kotak Bekal Perjalanan (#438)
+    if (id === 'lunchbox') {
+      S.bento = S.bento || [];
+      if (!S.bento.length) {
+        // Coba isi bekal otomatis dari tas jika ada makanan (stew, bread, pie, herb)
+        const candidates = ['stew', 'applepie', 'honeybread', 'herb'];
+        const found = candidates.find(c => has(c));
+        if (found) {
+          addItem(found, -1);
+          S.bento.push(found);
+          sfx('ok');
+          popWorld(pl.x, pl.y - 28, `Bekal Diisi: ${ITEMS[found]?.n}!`, 'heal');
+        } else {
+          popWorld(pl.x, pl.y - 28, 'Bekal Kosong! Masak dulu.', 'hurt');
+          sfx('buzz');
+          return false;
+        }
+      } else {
+        const food = S.bento.shift();
+        sfx('heal');
+        const st = stat();
+        S.hp = Math.min(st.maxhp, S.hp + 60);
+        S.mp = Math.min(st.maxmp, S.mp + 20);
+        popWorld(pl.x, pl.y - 28, `🍱 Santap ${ITEMS[food]?.n || 'Bekal'}! +60 HP +20 MP`, 'heal');
+        updHud();
+        return true;
+      }
       return true;
     }
     const kind = ITEMS[id].tool, a = this.aimAngle(), dx = Math.cos(a), dy = Math.sin(a), st = stat();
@@ -15918,6 +16035,9 @@ Object.assign(World.prototype, {
       case 'arena_master':
         await this.talkArenaMaster();
         break;
+      case 'night_merchant':
+        await this.talkNightMerchant();
+        break;
       case 'joko':
         if (S.side.joko === 0) { await T('Selamat datang di Padang Angin! Kincirku menggiling gandum untuk desa.', 'Babi hutan akan menyeruduk lurus. Minggir ke samping, biar mereka menabrak batu!', 'Bisa bawakan 3 Taring Babi? Akan kutukar dengan sepatu ajaib.', 'Ini bekal dulu.'); S.side.joko = 1; addItem('potion', 2); await gain(['Dapat Ramuan x2!', 'Misi sampingan: Bawa 3 Taring Babi ke Pak Joko.']); }
         else if (S.side.joko === 1 && has('tusk', 3)) { await T('Taring bagus! Ini Sepatu Angin, larimu akan secepat angin padang.'); addItem('tusk', -3); addItem('boots'); S.side.joko = 2; await gain(['Dapat Sepatu Angin! (Pasang di TAS)']); }
@@ -16131,6 +16251,20 @@ Object.assign(World.prototype, {
     playBGM(bgmFor(this.M));
     await say('LUAR BIASA! Seluruh penonton bersorak! Kamu menaklukkan 3 gelombang arena!\nKamu menerima 250 G, 300 EXP, dan gelar: Juara Gelanggang!', 'Pengawas Gelanggang');
   },
+  async talkNightMerchant() {
+    const isNight = S.time >= 19 || S.time < 5;
+    if (!isNight) {
+      await say('Ssst... Kios kami baru buka saat malam tiba (jam 19.00 - 05.00). Datanglah nanti saat lentera menyala!', 'Pedagang Pasar Malam');
+      return;
+    }
+    G.lock++;
+    try {
+      const items = ['amethyst_gem', 'fbomb', 'candle', 'lunchbox', 'seed_flower', 'leather_pouch'];
+      await buyMenu('Pasar Malam Eksotis Lumina', items);
+    } finally {
+      G.lock--;
+    }
+  },
 });
 
 'use strict';
@@ -16237,11 +16371,26 @@ async function sellMenu() {
     
     // Fitur #31: Bonus Jual Toko +5% jika memiliki Kantong Tas Kulit (leather_pouch)
     const pouchBonus = has('leather_pouch') ? 1.05 : 1.0;
-    const getItemSell = id => Math.round((ITEMS[id].sell || 1) * pouchBonus);
+    // Fitur #38: Tren Harga Pasar Mingguan (Weekly Trends)
+    const weekIdx = Math.floor((S.day || 1) / 7) % 3;
+    // 0: Ikan +40%, 1: Hasil Alam +50%, 2: Logam/Permata +35%
+    const isFish = id => ['fish', 'gfish', 'lake_pearl', 'lake_catfish', 'moon_fish'].includes(id);
+    const isNature = id => ['herb', 'berry', 'veg', 'spore', 'honey', 'flower_bouquet'].includes(id);
+    const isMineral = id => ['ore', 'iron', 'shard', 'amethyst_gem', 'iron_bar', 'crystal_bar'].includes(id);
+    const getTrendMul = id => {
+      if (weekIdx === 0 && isFish(id)) return 1.4;
+      if (weekIdx === 1 && isNature(id)) return 1.5;
+      if (weekIdx === 2 && isMineral(id)) return 1.35;
+      return 1.0;
+    };
+    const getItemSell = id => Math.round((ITEMS[id].sell || 1) * pouchBonus * getTrendMul(id));
 
     // Fitur #36: Jual Cepat Barang Sampah (monster drops biasa yang tidak dikunci)
     const junkList = mats.filter(id => ITEMS[id].junk && !S.locked?.[id]);
     const junkTotal = junkList.reduce((acc, id) => acc + getItemSell(id) * S.inv[id], 0);
+
+    const trendNames = ['Pekan Ikan Segar (+40%)', 'Pekan Hasil Alam (+50%)', 'Pekan Logam & Permata (+35%)'];
+    const curTrend = trendNames[weekIdx];
 
     const items = [];
     if (junkList.length > 0) {
@@ -16249,16 +16398,17 @@ async function sellMenu() {
     }
     items.push(...mats.map(id => {
       const isLocked = S.locked && S.locked[id];
+      const isHot = getTrendMul(id) > 1.0;
       return {
-        t: (isLocked ? '🔒 ' : '') + icon(id) + ITEMS[id].n + ' x' + S.inv[id],
-        r: isLocked ? '(Terkunci)' : getItemSell(id) + ' G',
+        t: (isLocked ? '🔒 ' : (isHot ? '🔥 ' : '')) + icon(id) + ITEMS[id].n + ' x' + S.inv[id],
+        r: isLocked ? '(Terkunci)' : (getItemSell(id) + ' G' + (isHot ? ' ↑' : '')),
         dis: isLocked
       };
     }));
     items.push({ t: 'Kembali' });
 
     const r = await choose({
-      head: 'Jual bahan · ' + S.gold + ' G',
+      head: `Jual bahan · ${S.gold} G · ${curTrend}`,
       x: 46, y: 26, w: 210,
       start: Math.min(sel, items.length - 1),
       items,
@@ -16826,7 +16976,7 @@ function openMap(sc) { return openMapNew(sc); }
 async function mainMenu(sc) {
   G.lock++; sfx('ok'); let sel = 0;
   const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Jurnal', 'Tujuan, misteri & catatan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
-    ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Atribut', 'Bagikan poin naik level', () => openAttr()], ['Kerajinan', 'Buat ramuan, bom, panah, umpan', () => openCraft(sc)],
+    ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Pohon Bakat', 'Keahlian Pedang, Sihir & Jelajah', () => openTalentTree()], ['Atribut', 'Bagikan poin naik level', () => openAttr()], ['Kerajinan', 'Buat ramuan, bom, panah, umpan', () => openCraft(sc)],
     ['Buku Resep', 'Katalog resep tempa, kerajinan & masakan', () => openRecipeBook()],
     ['Ensiklopedia', 'Katalog flora, fauna, mineral & kemajuan dunia', () => openEncyclopedia()],
     ['Tantangan Harian', 'Aksi harian bertarung & berpetualang', () => openDailyFeats()],
@@ -17043,6 +17193,122 @@ async function openPhotoMode(sc) {
   if (hud) hud.style.display = '';
   if (pad) pad.style.display = '';
   G.lock--;
+}
+
+// ---------------- POHON BAKAT KEAHLIAN ARKA (#17) ----------------
+const TALENT_DEFS = {
+  war: {
+    n: 'Pendekar Pedang', ic: '⚔',
+    nodes: [
+      { id: 'w1', n: 'Tebasan Lebar', d: 'Radius ayunan pedang bertambah luas (+10%/+20%/+30%).' },
+      { id: 'w2', n: 'Fokus Tajam', d: 'Peluang serangan kritikal bertambah (+4%/+8%/+12%).' },
+      { id: 'w3', n: 'Refleks Ksatria', d: 'Jendela waktu tangkisan (parry) lebih fleksibel (+0.04s/+0.08s).' }
+    ]
+  },
+  mag: {
+    n: 'Penyihir Bijak', ic: '✨',
+    nodes: [
+      { id: 'm1', n: 'Aliran Mana', d: 'Konsumsi MP sihir bola api dan jurus berkurang 1 MP.' },
+      { id: 'm2', n: 'Ledakan Mistik', d: 'Kerusakan sihir sihir cahaya & es meningkat (+2/+4/+6 Mag).' },
+      { id: 'm3', n: 'Pancaran Jiwa', d: 'Regenerasi pasif MP alami saat bertualang (+1/+2 MP/dtk).' }
+    ]
+  },
+  exp: {
+    n: 'Penjelajah Alam', ic: '🌿',
+    nodes: [
+      { id: 'e1', n: 'Langkah Ringan', d: 'Kecepatan jalan & lari Arka bertambah (+6%/+12%/+18%).' },
+      { id: 'e2', n: 'Mata Harta', d: 'Peluang drop item langka dan koin monster meningkat tajam.' },
+      { id: 'e3', n: 'Langkah Kebal', d: 'Kebal efek perlambatan lumpur rawa dan duri alam.' }
+    ]
+  }
+};
+
+function getTalentPoints() {
+  const total = Math.max(0, Math.floor(S.lv / 2));
+  S.talents = S.talents || { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] };
+  let spent = 0;
+  for (const cat in S.talents) {
+    for (const v of S.talents[cat]) spent += v;
+  }
+  return { total, spent, free: Math.max(0, total - spent) };
+}
+
+async function openTalentTree() {
+  G.lock++; sfx('cur');
+  S.talents = S.talents || { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] };
+  const cats = ['war', 'mag', 'exp'];
+  let catIdx = 0;
+
+  try {
+    for (;;) {
+      const tp = getTalentPoints();
+      const cKey = cats[catIdx];
+      const C = TALENT_DEFS[cKey];
+      const curVals = S.talents[cKey] || [0, 0, 0];
+
+      const items = C.nodes.map((node, i) => {
+        const lv = curVals[i] || 0;
+        const maxed = lv >= 3;
+        return {
+          t: `${lv > 0 ? '★ ' : '• '}${node.n}`,
+          r: `${'★'.repeat(lv)}${'☆'.repeat(3 - lv)} (${lv}/3)`,
+          dis: maxed || tp.free <= 0,
+          node, i
+        };
+      });
+
+      items.push({ t: `🔄 Beralih: ${TALENT_DEFS[cats[(catIdx + 1) % 3]].n}` });
+      items.push({ t: '↩ Reset Poin Bakat (50 G)' });
+      items.push({ t: 'Tutup' });
+
+      const r = await choose({
+        head: `POHON BAKAT · ${C.ic} ${C.n} (Poin: ${tp.free})`,
+        x: 14, y: 20, w: 280,
+        items,
+        foot: (idx) => {
+          if (idx < 3) {
+            const nd = C.nodes[idx];
+            return `<b>${nd.n}</b>: ${nd.d}<br>Tingkat saat ini: ${curVals[idx]}/3. Memerlukan 1 Poin Bakat.`;
+          }
+          if (idx === 3) return 'Beralih melihat cabang keahlian lainnya.';
+          if (idx === 4) return 'Setel ulang seluruh alokasi bakat ke 0 dan kembalikan poin bakat.';
+          return 'Tutup pohon bakat.';
+        }
+      });
+
+      if (r < 0 || r === items.length - 1) break;
+
+      if (r < 3) {
+        if (tp.free > 0 && curVals[r] < 3) {
+          curVals[r]++;
+          sfx('lvl');
+          popWorld(G.scene.pl.x, G.scene.pl.y - 20, `${C.nodes[r].n} Naik!`, 'crit');
+          updHud();
+        } else {
+          sfx('buzz');
+        }
+      } else if (r === 3) {
+        catIdx = (catIdx + 1) % 3;
+        sfx('cur');
+      } else if (r === 4) {
+        if (S.gold < 50) {
+          sfx('buzz');
+          await say('Uangmu belum cukup untuk mereset poin bakat (butuh 50 G).');
+        } else {
+          const ok = await ask('Reset semua poin bakat dengan biaya 50 G?');
+          if (ok) {
+            S.gold -= 50;
+            S.talents = { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] };
+            sfx('heal');
+            updHud();
+            await say('Seluruh poin bakat berhasil dikembalikan!');
+          }
+        }
+      }
+    }
+  } finally {
+    G.lock--;
+  }
 }
 
 'use strict';

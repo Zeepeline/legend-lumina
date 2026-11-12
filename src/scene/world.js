@@ -637,6 +637,55 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'dockboat') {
+      this.inter.push({
+        x, y: y + 4, r: 24,
+        fn: async () => {
+          if (this.onBoat) {
+            this.onBoat = false;
+            sfx('ok');
+            popWorld(this.pl.x, this.pl.y - 20, 'Turun dari Perahu', 'heal');
+            await say('Kamu menambatkan perahu di dermaga dan kembali ke daratan.');
+          } else {
+            const ok = await ask('Naiki perahu dayung untuk menjelajahi danau dalam?');
+            if (ok) {
+              this.onBoat = true;
+              sfx('swim');
+              popWorld(this.pl.x, this.pl.y - 20, 'Menaiki Perahu Dayung!', 'heal');
+              const act = await choose({
+                head: 'Perahu Dayung Danau Cermin',
+                items: [
+                  { t: '🎣 Mancing di Danau Dalam' },
+                  { t: '⛵ Dayung ke Pulau Kuil Tengah' },
+                  { t: 'Tetap di Perahu' }
+                ]
+              });
+              if (act === 0) {
+                // Mancing Danau Dalam
+                G.lock++;
+                sfx('cast');
+                popWorld(this.pl.x, this.pl.y - 24, 'Melempar Kail ke Palung Dalam...', 'heal');
+                await sleep(1500);
+                const isNight = S.time >= 19 || S.time < 5;
+                const caught = isNight ? (Math.random() < 0.6 ? 'moon_fish' : 'lake_catfish') : (Math.random() < 0.6 ? 'lake_catfish' : 'fish');
+                addItem(caught, 1);
+                sfx('fanfare');
+                banner(`MENDAPAT ${ITEMS[caught].n}!`, 'TANGKAPAN DANAU DALAM', true, 2200);
+                popWorld(this.pl.x, this.pl.y - 24, `+1 ${ITEMS[caught].n}!`, 'gold');
+                updHud();
+                G.lock--;
+              } else if (act === 1) {
+                // Dayung ke pulau tengah
+                sfx('swim');
+                this.pl.setPosition(560, 560);
+                popWorld(560, 540, 'Tiba di Pulau Kuil Tengah!', 'heal');
+                this.onBoat = false;
+              }
+            }
+          }
+        }
+      });
+    }
     if (type === 'fountain') {
       this.add.particles(x, y - 66, 'dot', { lifespan: 650, speedX: { min: -22, max: 22 }, speedY: { min: -26, max: -8 }, gravityY: 90, alpha: { start: .8, end: 0 }, frequency: 110, tint: 0xd8f6ff }).setDepth(y + 1);
       this.inter.push({

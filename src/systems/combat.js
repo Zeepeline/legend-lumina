@@ -222,6 +222,16 @@ Object.assign(World.prototype, {
     }
     if (typeof checkTitles === 'function') checkTitles();
     this.gainExp(Math.round(e.D.exp * expMultiplier), x, y);
+    // Raja Slime Membelah Diri (#197)
+    if (e.type === 'king_slime') {
+      sfxAt('magic', x, y, this);
+      popWorld(x, y - 24, '💧 MEMBELAH DIRI!', 'crit');
+      this.time.delayedCall(200, () => {
+        this.addEnemy('slime', x - 16, y - 10);
+        this.addEnemy('slime', x + 16, y - 10);
+        this.addEnemy('slime', x, y + 14);
+      });
+    }
     if (e.boss) this.bossDown(e); else achCheck(this);
   },
   drop(x, y, kind, val) {
