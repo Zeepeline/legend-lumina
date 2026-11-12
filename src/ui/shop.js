@@ -8,18 +8,74 @@ async function buyMenu(title, list) {
   // Diskon keakraban bila pedagang berteman akrab
   const discount = (title.includes('Sari') && (S.rel?.merchant >= 3)) ? 0.8 : 1;
   for (; ;) {
+    const hasBuyback = S.buyback && S.buyback.length > 0;
     const r = await choose({ head: title + ' · ' + S.gold + ' G' + (discount < 1 ? ' (Diskon 20%)' : ''), x: 46, y: 30, w: 196, start: sel,
-      items: [...list.map(id => {
-        const it = ITEMS[id], eq = it.k !== 'use' && it.k !== 'mat';
-        const finalPrice = Math.max(1, Math.round(it.price * discount));
-        return { t: icon(id) + it.n + (eq ? ownedEq(id) : ` (${S.inv[id] || 0})`), r: finalPrice + ' G', dis: eq && has(id) };
-      }), { t: 'Kembali' }],
-      foot: i => i < list.length ? ITEMS[list[i]].d : 'Uangmu: ' + S.gold + ' G' });
-    if (r < 0 || r === list.length) return; sel = r; const id = list[r], it = ITEMS[id];
+      items: [
+        ...(hasBuyback ? [{ t: `↺ Beli Kembali (${S.buyback.length})`, r: 'riwayat' }] : []),
+        ...list.map(id => {
+          const it = ITEMS[id], eq = it.k !== 'use' && it.k !== 'mat';
+          const finalPrice = Math.max(1, Math.round(it.price * discount));
+          return { t: icon(id) + it.n + (eq ? ownedEq(id) : ` (${S.inv[id] || 0})`), r: finalPrice + ' G', dis: eq && has(id) };
+        }),
+        { t: 'Kembali' }
+      ],
+      foot: i => {
+        if (hasBuyback && i === 0) return 'Beli kembali barang yang baru saja kamu jual dengan harga yang sama.';
+        const actualIdx = hasBuyback ? i - 1 : i;
+        return actualIdx < list.length ? ITEMS[list[actualIdx]].d : 'Uangmu: ' + S.gold + ' G';
+      }
+    });
+    if (r < 0 || r === (hasBuyback ? list.length + 1 : list.length)) return;
+    sel = r;
+
+    // Fitur #462: Beli Kembali Barang Toko
+    if (hasBuyback && r === 0) {
+      await buybackMenu();
+      continue;
+    }
+
+    const actualIdx = hasBuyback ? r - 1 : r;
+    const id = list[actualIdx], it = ITEMS[id];
     const finalPrice = Math.max(1, Math.round(it.price * discount));
     if (S.gold < finalPrice) { sfx('buzz'); await say('Uangnya kurang.'); continue; }
     S.gold -= finalPrice; addItem(id); sfx('coin'); updHud();
     if (['wpn', 'arm', 'acc'].includes(it.k)) { const sl = it.k; if (await ask(`${it.n} dibeli! Langsung pasang?`)) { S.eq[sl] = id; sfx('ok'); updHud(); } }
+  }
+}
+
+async function buybackMenu() {
+  for (;;) {
+    if (!S.buyback || !S.buyback.length) {
+      await say('Tidak ada barang dalam daftar beli kembali.');
+      return;
+    }
+    const items = S.buyback.map(b => ({
+      t: icon(b.id) + ITEMS[b.id].n + ' x' + b.n,
+      r: (b.price * b.n) + ' G'
+    }));
+    items.push({ t: 'Kembali' });
+
+    const r = await choose({
+      head: 'Beli Kembali · ' + S.gold + ' G',
+      x: 40, y: 30, w: 210,
+      items,
+      foot: i => i < S.buyback.length ? ITEMS[S.buyback[i].id].d : 'Beli kembali barang yang sebelumnya terjual.'
+    });
+
+    if (r < 0 || r === S.buyback.length) return;
+    const b = S.buyback[r];
+    const cost = b.price * b.n;
+    if (S.gold < cost) {
+      sfx('buzz');
+      await say('Uangmu tidak cukup untuk membeli kembali barang ini.');
+      continue;
+    }
+    S.gold -= cost;
+    addItem(b.id, b.n);
+    S.buyback.splice(r, 1);
+    sfx('coin');
+    updHud();
+    await say(`Berhasil membeli kembali ${ITEMS[b.id].n} x${b.n}!`);
   }
 }
 async function sellMenu() {
@@ -68,9 +124,12 @@ async function sellMenu() {
     if (junkList.length > 0 && r === 0) {
       // Eksekusi Jual Semua Sampah
       if (await ask(`Jual semua sampah (${junkList.length} jenis) seharga ${junkTotal} G?`)) {
+        S.buyback = S.buyback || [];
         for (const id of junkList) {
+          S.buyback.unshift({ id, n: S.inv[id], price: ITEMS[id].sell });
           delete S.inv[id];
         }
+        if (S.buyback.length > 8) S.buyback = S.buyback.slice(0, 8);
         S.gold += junkTotal;
         S.st = S.st || {};
         S.st.goldEarned = (S.st.goldEarned || 0) + junkTotal;
@@ -93,6 +152,9 @@ async function sellMenu() {
     S.gold += ITEMS[id].sell;
     S.st = S.st || {};
     S.st.goldEarned = (S.st.goldEarned || 0) + ITEMS[id].sell;
+    S.buyback = S.buyback || [];
+    S.buyback.unshift({ id, n: 1, price: ITEMS[id].sell });
+    if (S.buyback.length > 8) S.buyback.pop();
     sfx('coin');
     updHud();
   }
@@ -121,8 +183,25 @@ async function cookMenu(title = 'Dapur Bu Rina', chef = 'Bu Rina') {
       foot: i => { if (i >= COOK.length) return ''; const R = COOK[i]; return ITEMS[R.id].d + '<br>Bahan: ' + Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
     if (r < 0 || r === COOK.length) return; sel = r; const R = COOK[r];
     if (!can(R)) { sfx('buzz'); await say('Bahannya belum cukup. Ikan dari memancing, sayur dari kebun/alam liar.', chef); continue; }
-    for (const [k, n] of Object.entries(R.need)) addItem(k, -n); addItem(R.id); sfx('fire'); await sleep(300); sfx('chest'); updHud();
-    await say(`Harum sekali! ${ITEMS[R.id].n} siap dimasak. Makan dari TAS saat dibutuhkan.`, chef);
+
+    // Fitur #388: Buat Banyak Sekaligus (Batch Cooking)
+    const maxBatch = Math.min(...Object.entries(R.need).map(([k, n]) => Math.floor((S.inv[k] || 0) / n)));
+    let cookCount = 1;
+    if (maxBatch > 1) {
+      const opts = [{ t: 'Masak 1 piring', n: 1 }];
+      if (maxBatch >= 5) opts.push({ t: 'Masak 5 piring', n: 5 });
+      opts.push({ t: 'Masak Maksimal ' + maxBatch + ' piring', n: maxBatch });
+      opts.push({ t: 'Batal', n: 0 });
+      const cRes = await choose({ head: 'Porsi Masakan · ' + ITEMS[R.id].n, x: 40, y: 50, w: 220, items: opts });
+      if (cRes < 0 || opts[cRes].n === 0) continue;
+      cookCount = opts[cRes].n;
+    }
+
+    for (const [k, n] of Object.entries(R.need)) addItem(k, -(n * cookCount));
+    addItem(R.id, cookCount); sfx('fire'); await sleep(300); sfx('chest');
+    S.st = S.st || {}; S.st.cooked = (S.st.cooked || 0) + cookCount;
+    updHud();
+    await say(`Harum sekali! ${ITEMS[R.id].n} (x${cookCount}) siap disajikan. Makan dari TAS saat dibutuhkan.`, chef);
   }
 }
 // ---------------- UPGRADE (bengkel) ----------------

@@ -4957,7 +4957,7 @@ const GAME_VERSION = '1.17.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true, font: 1, lite: false, toast: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, playTime: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {} }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, playTime: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {} }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -4973,14 +4973,25 @@ function stat() {
   const l = S.lv;
   const tBonus = (typeof TITLES !== 'undefined' && S.title && TITLES[S.title]) || {};
   const tAtk = tBonus.atk || 0, tDef = tBonus.def || 0, tHp = tBonus.maxhp || 0, tSpd = tBonus.spd || 0;
+  // Bonus Set Perlengkapan (#22)
+  const sets = typeof activeSets === 'function' ? activeSets() : [];
+  let sAtk = 0, sDef = 0, sHp = 0, sSpd = 0, sMag = 0, sRegen = 0;
+  for (const set of sets) {
+    if (set.atk) sAtk += set.atk;
+    if (set.def) sDef += set.def;
+    if (set.maxhp) sHp += set.maxhp;
+    if (set.spd) sSpd += set.spd;
+    if (set.mag) sMag += set.mag;
+    if (set.regen) sRegen += set.regen;
+  }
   return {
-    maxhp: 34 + l * 8 + tHp,
+    maxhp: 34 + l * 8 + tHp + sHp,
     maxmp: 12 + l * 2,
-    atk: Math.round((6 + l * 2 + eqv('atk') + tAtk) * (buffOn('atk') ? BUFF.atk.mul : 1)),
-    def: Math.round((1 + l + eqv('def') + tDef) * (buffOn('def') ? BUFF.def.mul : 1)),
-    mag: 9 + l * 3 + eqv('mag'),
-    spd: Math.round(((1 + eqv('spd') + tSpd) * (buffOn('spd') ? BUFF.spd.mul : 1)) * 100) / 100,
-    regen: eqv('regen')
+    atk: Math.round((6 + l * 2 + eqv('atk') + tAtk + sAtk) * (buffOn('atk') ? BUFF.atk.mul : 1)),
+    def: Math.round((1 + l + eqv('def') + tDef + sDef) * (buffOn('def') ? BUFF.def.mul : 1)),
+    mag: 9 + l * 3 + eqv('mag') + sMag,
+    spd: Math.round(((1 + eqv('spd') + tSpd + sSpd) * (buffOn('spd') ? BUFF.spd.mul : 1)) * 100) / 100,
+    regen: eqv('regen') + sRegen
   };
 }
 function need(lv) { return 12 * lv + 6 * (lv - 1) * (lv - 1); }
@@ -5012,6 +5023,9 @@ function loadSave() {
       S.titles = S.titles || ['Petualang Pemula'];
       S.title = S.title || 'Petualang Pemula';
       S.boardDone = S.boardDone || {};
+      S.loadouts = S.loadouts || [null, null, null];
+      S.buyback = S.buyback || [];
+      S.pins = S.pins || {};
       if (!MAPS[S.map]) S.map = 'village';
       if (!s.tipsDone && (S.stage > 1 || S.lv > 2)) S.tipsDone = { all: 1 };
       if (!s.learn) {
@@ -5165,6 +5179,53 @@ const RECIPES = [
   { id: 'stonearm', gold: 180, need: { ore: 4 } },
   { id: 'csword', gold: 260, need: { shard: 4, ecto: 3 } },
 ];
+// ---------------- SET PERLENGKAPAN (#22) ----------------
+const SETS = {
+  pemula: {
+    n: 'Set Pemula',
+    items: ['wsword', 'cloth'],
+    d: 'Max HP +20, Kecepatan lari +6%',
+    maxhp: 20, spd: 0.06
+  },
+  pemburu: {
+    n: 'Set Pemburu Rimba',
+    items: ['hbow', 'leather'],
+    d: 'Serang +4, Lari +8%, Peluang tembus panah',
+    atk: 4, spd: 0.08
+  },
+  prajurit: {
+    n: 'Set Prajurit Besi',
+    items: ['isword', 'chain'],
+    altWpn: 'ispear',
+    d: 'Tahan +5, Kombo pukulan ke-3 mendorong musuh 2× lipat',
+    def: 5
+  },
+  kristal: {
+    n: 'Set Kristal Purba',
+    items: ['csword', 'cshield'],
+    altWpn: 'fspear',
+    d: 'Sihir +8, Pemulihan MP alami bertambah',
+    mag: 8, regen: 1
+  },
+  aurel: {
+    n: 'Set Bangsawan Aurel',
+    items: ['ssword', 'stonearm', 'aurelring'],
+    altWpn: 'baxe',
+    d: 'Serang +8, Tahan +6, Daya hancur kritis tinggi',
+    atk: 8, def: 6
+  }
+};
+function activeSets() {
+  if (!S || !S.eq) return [];
+  const eqItems = [S.eq.wpn, S.eq.arm, S.eq.acc].filter(Boolean);
+  const matched = [];
+  for (const k in SETS) {
+    const s = SETS[k];
+    const match = s.items.every(id => eqItems.includes(id) || (id === s.items[0] && s.altWpn && eqItems.includes(s.altWpn)));
+    if (match) matched.push(s);
+  }
+  return matched;
+}
 
 'use strict';
 // Data musuh & proyektil
@@ -6106,7 +6167,22 @@ Object.assign(World.prototype, {
           if (e.hp <= 0 || hit.has(e)) continue; const ey = e.spr.y - e.D.r * e.sc * .8 - (e.D.fly ? 6 : 0);
           if (Math.hypot(e.spr.x - hx, ey - hy) < r + e.D.r * e.sc) {
             hit.add(e); const crit = Math.random() < W.crit + (st.crit || 0); const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1;
-            this.hitEnemy(e, st.atk * W.mul * cMul, crit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
+            // Deteksi Serangan dari Belakang / Backstab (#13)
+            let isBackstab = false;
+            if (e.dir && pl.dir) {
+              const eDirV = DIRV[e.dir] || [0, 1], plDirV = DIRV[pl.dir] || [0, 1];
+              // Menghadap ke arah yang hampir sama (musuh membelakangi Arka)
+              if (eDirV[0] === plDirV[0] && eDirV[1] === plDirV[1]) {
+                isBackstab = true;
+              }
+            }
+            const finalCrit = crit || isBackstab;
+            const finalDmg = st.atk * W.mul * cMul * (isBackstab ? 1.8 : 1);
+            if (isBackstab && e.hp > 0) {
+              popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 16, 'PUNGGUNG!', 'crit');
+              sfx('crit');
+            }
+            this.hitEnemy(e, finalDmg, finalCrit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
             const frz = (ITEMS[S.eq.wpn] || {}).frz; if (frz && Math.random() < frz) this.freezeEnemy(e, 1.2);
           }
         }
@@ -6193,7 +6269,10 @@ Object.assign(World.prototype, {
     for (let i = 0; i < 4; i++) this.time.delayedCall(i * 40, () => this.puff(x + rnd(-8, 8), y - rnd(0, 10)));
     this.tweens.killTweensOf(e.spr);
     this.tweens.add({ targets: e.spr, alpha: 0, scaleX: e.sc * 1.4, scaleY: e.sc * .3, duration: 260, onComplete: () => { e.spr.destroy(); e.sh.destroy(); } });
-    const g = ri(...e.D.gold); const nc = Math.min(6, Math.max(1, Math.ceil(g / 3)));
+    const isNight = e.nightVariant || (S.time >= 19 || S.time < 5);
+    const goldMultiplier = isNight ? 1.35 : 1;
+    const expMultiplier = isNight ? 1.3 : 1;
+    const g = Math.round(ri(...e.D.gold) * goldMultiplier); const nc = Math.min(6, Math.max(1, Math.ceil(g / 3)));
     for (let i = 0; i < nc; i++) this.drop(x, y, 'coin', Math.ceil(g / nc));
     if (e.D.drop && Math.random() < e.D.drop[1]) this.drop(x, y, 'item', e.D.drop[0]);
     if (Math.random() < (e.boss ? 1 : .07)) this.drop(x, y, 'item', 'potion');
@@ -6204,7 +6283,7 @@ Object.assign(World.prototype, {
     S.st = S.st || {}; S.st.kills = (S.st.kills || 0) + 1;
     if (e.boss) S.st.bosses = (S.st.bosses || 0) + 1;
     if (typeof checkTitles === 'function') checkTitles();
-    this.gainExp(e.D.exp, x, y);
+    this.gainExp(Math.round(e.D.exp * expMultiplier), x, y);
     if (e.boss) this.bossDown(e); else achCheck(this);
   },
   drop(x, y, kind, val) {
@@ -12979,8 +13058,23 @@ async function openCraft(sc) {
     if (r === CRAFT.length) { await openToolSlots(); continue; }
     sel = r; const R = CRAFT[r];
     if (!canCraft(R)) { sfx('buzz'); continue; }
-    for (const [k, n] of Object.entries(R.need)) addItem(k, -n);
-    addItem(R.id, R.n); sfx('chest'); S.crafted = (S.crafted || 0) + R.n;
+
+    // Fitur #388: Buat Banyak Sekaligus (Batch Crafting)
+    const maxBatch = Math.min(...Object.entries(R.need).map(([k, n]) => Math.floor((S.inv[k] || 0) / n)));
+    let makeCount = 1;
+    if (maxBatch > 1) {
+      const opts = [{ t: 'Buat 1x (' + R.n + ' barang)', n: 1 }];
+      if (maxBatch >= 5) opts.push({ t: 'Buat 5x (' + (R.n * 5) + ' barang)', n: 5 });
+      opts.push({ t: 'Buat Maksimal ' + maxBatch + 'x (' + (R.n * maxBatch) + ' barang)', n: maxBatch });
+      opts.push({ t: 'Batal', n: 0 });
+      const bRes = await choose({ head: 'Jumlah Produksi · ' + ITEMS[R.id].n, x: 40, y: 50, w: 220, items: opts });
+      if (bRes < 0 || opts[bRes].n === 0) continue;
+      makeCount = opts[bRes].n;
+    }
+
+    for (const [k, n] of Object.entries(R.need)) addItem(k, -(n * makeCount));
+    addItem(R.id, R.n * makeCount); sfx('chest'); S.crafted = (S.crafted || 0) + (R.n * makeCount);
+    S.st = S.st || {}; S.st.crafted = (S.st.crafted || 0) + (R.n * makeCount);
     if (ITEMS[R.id].tool || R.id === 'potion') { S.tools = S.tools || [null, null]; if (!S.tools.includes(R.id)) { const i = S.tools.indexOf(null); if (i >= 0) S.tools[i] = R.id; } }
     updToolBtns();
   }
@@ -13159,6 +13253,20 @@ async function openMapNew(sc) {
     for (const ex of M.exits || []) { const X = clamp(ex.x + ex.w / 2, 30 / s, M.w - 30 / s), Y = clamp(ex.y + ex.h / 2, 8 / s, M.h - 8 / s); const e = document.createElement('div'); e.className = 'mk mx'; e.style.left = X * s + 'px'; e.style.top = Y * s + 'px'; e.innerHTML = '➜ ' + (S.seen[ex.to] ? ex.label : '???'); wrap.appendChild(e); }
     if (S.tmap && S.tmap.map === M.id) { const e = document.createElement('div'); e.className = 'mk mt'; e.style.left = S.tmap.x * s + 'px'; e.style.top = S.tmap.y * s + 'px'; e.textContent = '✖'; wrap.appendChild(e); }
     if (q) { const e = document.createElement('div'); e.className = 'mk mq'; e.style.left = q.x * s + 'px'; e.style.top = (q.y - 6) * s + 'px'; e.textContent = '★'; wrap.appendChild(e); }
+    // Render Custom Pins (#62)
+    S.pins = S.pins || {};
+    const curPins = S.pins[M.id] || [];
+    for (let pi = 0; pi < curPins.length; pi++) {
+      const pin = curPins[pi];
+      const pe = document.createElement('div');
+      pe.className = 'mk';
+      pe.style.left = (pin.x * s) + 'px';
+      pe.style.top = (pin.y * s) + 'px';
+      pe.style.fontSize = '12px';
+      pe.style.transform = 'translate(-50%, -100%)';
+      pe.textContent = '📍';
+      wrap.appendChild(pe);
+    }
     mk2('me', sc.pl.x, sc.pl.y - 4);
     box.style.justifyContent = box.style.alignItems = z > 1 ? 'flex-start' : 'center'; box.style.overflow = z > 1 ? 'auto' : 'hidden';
     if (z > 1) { box.scrollLeft = sc.pl.x * s - box.clientWidth / 2; box.scrollTop = sc.pl.y * s - box.clientHeight / 2; }
@@ -13169,11 +13277,42 @@ async function openMapNew(sc) {
   box.addEventListener('wheel', e => { e.preventDefault(); zoom(e.deltaY < 0 ? 1 : -1); }, { passive: false });
   // cubit untuk zoom & geser saat diperbesar (tidak menutup peta)
   const pts = new Map(); let pd = 0, moved = false;
-  box.addEventListener('pointerdown', e => { e.stopPropagation(); pts.set(e.pointerId, [e.clientX, e.clientY]); moved = false; if (pts.size === 2) { const [a, b] = [...pts.values()]; pd = Math.hypot(a[0] - b[0], a[1] - b[1]); } });
+  box.addEventListener('pointerdown', e => {
+    e.stopPropagation();
+    pts.set(e.pointerId, [e.clientX, e.clientY]);
+    moved = false;
+    if (pts.size === 2) { const [a, b] = [...pts.values()]; pd = Math.hypot(a[0] - b[0], a[1] - b[1]); }
+  });
   box.addEventListener('pointermove', e => { const p = pts.get(e.pointerId); if (!p) return;
     if (pts.size === 2) { p[0] = e.clientX; p[1] = e.clientY; const [a, b] = [...pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (Math.abs(d - pd) > 40) { zoom(d > pd ? 1 : -1); pd = d; } moved = true; }
     else if (z > 1) { box.scrollLeft -= e.clientX - p[0]; box.scrollTop -= e.clientY - p[1]; p[0] = e.clientX; p[1] = e.clientY; if (Math.abs(e.movementX) + Math.abs(e.movementY) > 1) moved = true; } });
-  const up = e => { const had = pts.delete(e.pointerId); if (had && !pts.size && !moved && z === 1) press('tap'); };
+  const up = e => {
+    const had = pts.delete(e.pointerId);
+    if (had && !pts.size && !moved) {
+      // Fitur #62: Taruh / Hapus Pin Penanda Pribadi (📍)
+      const rect = wrap.getBoundingClientRect();
+      const s = s0 * z;
+      const clickX = (e.clientX - rect.left) / s;
+      const clickY = (e.clientY - rect.top) / s;
+      if (clickX >= 0 && clickX <= M.w && clickY >= 0 && clickY <= M.h) {
+        S.pins = S.pins || {};
+        S.pins[M.id] = S.pins[M.id] || [];
+        const existIdx = S.pins[M.id].findIndex(p => Math.hypot(p.x - clickX, p.y - clickY) < 30 / s);
+        if (existIdx >= 0) {
+          S.pins[M.id].splice(existIdx, 1);
+          sfx('back');
+          draw();
+          return;
+        } else if (S.pins[M.id].length < 5) {
+          S.pins[M.id].push({ x: Math.round(clickX), y: Math.round(clickY) });
+          sfx('ok');
+          draw();
+          return;
+        }
+      }
+      if (z === 1) press('tap');
+    }
+  };
   box.addEventListener('pointerup', up); box.addEventListener('pointercancel', e => pts.delete(e.pointerId));
   await new Promise(res => { const prev = UIH; const h = k => { if (['a', 'b', 'menu', 'map', 'back', 'tap', 'item', 'bag'].includes(k)) { w.remove(); UIH = prev; sfx('back'); res(); } else if (k === 'up') zoom(1); else if (k === 'down') zoom(-1); }; h.tap = true; UIH = h;
     w.addEventListener('pointerdown', e => { e.stopPropagation(); press('tap'); }); });
@@ -14243,18 +14382,74 @@ async function buyMenu(title, list) {
   // Diskon keakraban bila pedagang berteman akrab
   const discount = (title.includes('Sari') && (S.rel?.merchant >= 3)) ? 0.8 : 1;
   for (; ;) {
+    const hasBuyback = S.buyback && S.buyback.length > 0;
     const r = await choose({ head: title + ' · ' + S.gold + ' G' + (discount < 1 ? ' (Diskon 20%)' : ''), x: 46, y: 30, w: 196, start: sel,
-      items: [...list.map(id => {
-        const it = ITEMS[id], eq = it.k !== 'use' && it.k !== 'mat';
-        const finalPrice = Math.max(1, Math.round(it.price * discount));
-        return { t: icon(id) + it.n + (eq ? ownedEq(id) : ` (${S.inv[id] || 0})`), r: finalPrice + ' G', dis: eq && has(id) };
-      }), { t: 'Kembali' }],
-      foot: i => i < list.length ? ITEMS[list[i]].d : 'Uangmu: ' + S.gold + ' G' });
-    if (r < 0 || r === list.length) return; sel = r; const id = list[r], it = ITEMS[id];
+      items: [
+        ...(hasBuyback ? [{ t: `↺ Beli Kembali (${S.buyback.length})`, r: 'riwayat' }] : []),
+        ...list.map(id => {
+          const it = ITEMS[id], eq = it.k !== 'use' && it.k !== 'mat';
+          const finalPrice = Math.max(1, Math.round(it.price * discount));
+          return { t: icon(id) + it.n + (eq ? ownedEq(id) : ` (${S.inv[id] || 0})`), r: finalPrice + ' G', dis: eq && has(id) };
+        }),
+        { t: 'Kembali' }
+      ],
+      foot: i => {
+        if (hasBuyback && i === 0) return 'Beli kembali barang yang baru saja kamu jual dengan harga yang sama.';
+        const actualIdx = hasBuyback ? i - 1 : i;
+        return actualIdx < list.length ? ITEMS[list[actualIdx]].d : 'Uangmu: ' + S.gold + ' G';
+      }
+    });
+    if (r < 0 || r === (hasBuyback ? list.length + 1 : list.length)) return;
+    sel = r;
+
+    // Fitur #462: Beli Kembali Barang Toko
+    if (hasBuyback && r === 0) {
+      await buybackMenu();
+      continue;
+    }
+
+    const actualIdx = hasBuyback ? r - 1 : r;
+    const id = list[actualIdx], it = ITEMS[id];
     const finalPrice = Math.max(1, Math.round(it.price * discount));
     if (S.gold < finalPrice) { sfx('buzz'); await say('Uangnya kurang.'); continue; }
     S.gold -= finalPrice; addItem(id); sfx('coin'); updHud();
     if (['wpn', 'arm', 'acc'].includes(it.k)) { const sl = it.k; if (await ask(`${it.n} dibeli! Langsung pasang?`)) { S.eq[sl] = id; sfx('ok'); updHud(); } }
+  }
+}
+
+async function buybackMenu() {
+  for (;;) {
+    if (!S.buyback || !S.buyback.length) {
+      await say('Tidak ada barang dalam daftar beli kembali.');
+      return;
+    }
+    const items = S.buyback.map(b => ({
+      t: icon(b.id) + ITEMS[b.id].n + ' x' + b.n,
+      r: (b.price * b.n) + ' G'
+    }));
+    items.push({ t: 'Kembali' });
+
+    const r = await choose({
+      head: 'Beli Kembali · ' + S.gold + ' G',
+      x: 40, y: 30, w: 210,
+      items,
+      foot: i => i < S.buyback.length ? ITEMS[S.buyback[i].id].d : 'Beli kembali barang yang sebelumnya terjual.'
+    });
+
+    if (r < 0 || r === S.buyback.length) return;
+    const b = S.buyback[r];
+    const cost = b.price * b.n;
+    if (S.gold < cost) {
+      sfx('buzz');
+      await say('Uangmu tidak cukup untuk membeli kembali barang ini.');
+      continue;
+    }
+    S.gold -= cost;
+    addItem(b.id, b.n);
+    S.buyback.splice(r, 1);
+    sfx('coin');
+    updHud();
+    await say(`Berhasil membeli kembali ${ITEMS[b.id].n} x${b.n}!`);
   }
 }
 async function sellMenu() {
@@ -14303,9 +14498,12 @@ async function sellMenu() {
     if (junkList.length > 0 && r === 0) {
       // Eksekusi Jual Semua Sampah
       if (await ask(`Jual semua sampah (${junkList.length} jenis) seharga ${junkTotal} G?`)) {
+        S.buyback = S.buyback || [];
         for (const id of junkList) {
+          S.buyback.unshift({ id, n: S.inv[id], price: ITEMS[id].sell });
           delete S.inv[id];
         }
+        if (S.buyback.length > 8) S.buyback = S.buyback.slice(0, 8);
         S.gold += junkTotal;
         S.st = S.st || {};
         S.st.goldEarned = (S.st.goldEarned || 0) + junkTotal;
@@ -14328,6 +14526,9 @@ async function sellMenu() {
     S.gold += ITEMS[id].sell;
     S.st = S.st || {};
     S.st.goldEarned = (S.st.goldEarned || 0) + ITEMS[id].sell;
+    S.buyback = S.buyback || [];
+    S.buyback.unshift({ id, n: 1, price: ITEMS[id].sell });
+    if (S.buyback.length > 8) S.buyback.pop();
     sfx('coin');
     updHud();
   }
@@ -14356,8 +14557,25 @@ async function cookMenu(title = 'Dapur Bu Rina', chef = 'Bu Rina') {
       foot: i => { if (i >= COOK.length) return ''; const R = COOK[i]; return ITEMS[R.id].d + '<br>Bahan: ' + Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
     if (r < 0 || r === COOK.length) return; sel = r; const R = COOK[r];
     if (!can(R)) { sfx('buzz'); await say('Bahannya belum cukup. Ikan dari memancing, sayur dari kebun/alam liar.', chef); continue; }
-    for (const [k, n] of Object.entries(R.need)) addItem(k, -n); addItem(R.id); sfx('fire'); await sleep(300); sfx('chest'); updHud();
-    await say(`Harum sekali! ${ITEMS[R.id].n} siap dimasak. Makan dari TAS saat dibutuhkan.`, chef);
+
+    // Fitur #388: Buat Banyak Sekaligus (Batch Cooking)
+    const maxBatch = Math.min(...Object.entries(R.need).map(([k, n]) => Math.floor((S.inv[k] || 0) / n)));
+    let cookCount = 1;
+    if (maxBatch > 1) {
+      const opts = [{ t: 'Masak 1 piring', n: 1 }];
+      if (maxBatch >= 5) opts.push({ t: 'Masak 5 piring', n: 5 });
+      opts.push({ t: 'Masak Maksimal ' + maxBatch + ' piring', n: maxBatch });
+      opts.push({ t: 'Batal', n: 0 });
+      const cRes = await choose({ head: 'Porsi Masakan · ' + ITEMS[R.id].n, x: 40, y: 50, w: 220, items: opts });
+      if (cRes < 0 || opts[cRes].n === 0) continue;
+      cookCount = opts[cRes].n;
+    }
+
+    for (const [k, n] of Object.entries(R.need)) addItem(k, -(n * cookCount));
+    addItem(R.id, cookCount); sfx('fire'); await sleep(300); sfx('chest');
+    S.st = S.st || {}; S.st.cooked = (S.st.cooked || 0) + cookCount;
+    updHud();
+    await say(`Harum sekali! ${ITEMS[R.id].n} (x${cookCount}) siap disajikan. Makan dari TAS saat dibutuhkan.`, chef);
   }
 }
 // ---------------- UPGRADE (bengkel) ----------------
@@ -14389,17 +14607,27 @@ async function openBag(sc) {
   function isEq(id) { return Object.values(S.eq).includes(id); }
   function draw() {
     const L = list(); sel = clamp(sel, 0, Math.max(0, L.length - 1)); const st = stat();
+    const activeS = typeof activeSets === 'function' ? activeSets() : [];
+    const setsBadge = activeS.length ? `<div style="font-size:9px;color:#ffe066;margin-top:2px;">★ ${activeS.map(s => s.n).join(', ')}</div>` : '';
+    const loadoutBtns = [0, 1, 2].map(i => {
+      const lo = S.loadouts && S.loadouts[i];
+      return `<span class="lo-btn${lo ? ' has' : ''}" data-lo="${i}" style="display:inline-block;padding:1px 5px;margin:0 2px;background:${lo ? '#4a7a3a' : '#3a3a48'};color:#fff;border-radius:3px;font-size:9px;cursor:pointer;">${i + 1}${lo ? '✓' : ''}</span>`;
+    }).join('');
+
     w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span><span class="gold">${S.gold} G</span></div>
      <div class="bb"><div class="bl">${L.length ? L.map((id, i) => {
        const isLck = S.locked && S.locked[id];
        return `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}</span><b>${isLck ? '🔒 ' : ''}${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`;
      }).join('') : '<div class="empty">Kosong</div>'}</div>
      <div class="bs"><div class="mh">Arka · Lv ${S.lv} (${S.title || 'Petualang'})</div>${['wpn', 'arm', 'acc'].map(s => `<div class="eqs">${S.eq[s] ? icon(S.eq[s]) + itemName(S.eq[s]) : '<i>(kosong)</i>'}</div>`).join('')}
+     <div style="margin:4px 0 2px;font-size:9px;color:#a8a8b8;">Preset: ${loadoutBtns}</div>
+     ${setsBadge}
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b></div></div></div>
-     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · DASH urutkan · Kunci/Buka: tahan A/ketuk gembok · B tutup'}</div>`;
+     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · B tutup'}</div>`;
     const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); const i = +e.dataset.i; if (i === sel) act(); else { sel = i; sfx('cur'); draw(); } });
+    w.querySelectorAll('.lo-btn').forEach(e => e.onpointerdown = async ev => { ev.stopPropagation(); await handleLoadout(+e.dataset.lo); });
     const s2 = w.querySelector('.bi.sel'); if (s2) s2.scrollIntoView({ block: 'nearest' });
   }
   // Perbandingan dengan yang sedang dipakai (fitur #34): ▲ hijau lebih baik, ▼ merah lebih buruk
@@ -14410,6 +14638,48 @@ async function openBag(sc) {
     return ' ' + ['atk', 'def', 'mag'].map(k => { const d = v(it, id, k) - v(cur, S.eq[slot], k); return d ? `<span style="color:${d > 0 ? '#3a9a3a' : '#c83a3a'}">${{ atk: 'Serang', def: 'Tahan', mag: 'Sihir' }[k]} ${d > 0 ? '▲+' : '▼'}${d}</span>` : ''; }).filter(Boolean).join(' ');
   }
   function hint(id) { const k = ITEMS[id].k; return k === 'use' ? ' <span class="y">[A: pakai]</span>' : ['wpn', 'arm', 'acc'].includes(k) ? (isEq(id) ? ' <span class="y">[A: lepas]</span>' : ' <span class="y">[A: pasang]</span>') : ''; }
+  async function handleLoadout(slotIdx) {
+    S.loadouts = S.loadouts || [null, null, null];
+    const current = S.loadouts[slotIdx];
+    if (!current) {
+      // Simpan perlengkapan saat ini
+      S.loadouts[slotIdx] = { wpn: S.eq.wpn, arm: S.eq.arm, acc: S.eq.acc };
+      sfx('ok');
+      if (typeof toastItem === 'function') toastItem(null, `Preset ${slotIdx + 1} disimpan!`);
+    } else {
+      // Pasang atau perbarui
+      const r = await choose({
+        head: `PRESET ${slotIdx + 1}`,
+        x: 40, y: 50, w: 200,
+        items: [
+          { t: 'Gunakan Perlengkapan Ini' },
+          { t: 'Perbarui dengan yang Dipakai' },
+          { t: 'Kosongkan Slot Preset' },
+          { t: 'Batal' }
+        ],
+        foot: () => `Senjata: ${ITEMS[current.wpn]?.n || '-'} · Zirah: ${ITEMS[current.arm]?.n || '-'} · Aks: ${ITEMS[current.acc]?.n || '-'}`
+      });
+      if (r === 0) {
+        // Pasang jika punya barangnya
+        for (const k of ['wpn', 'arm', 'acc']) {
+          const id = current[k];
+          if (id && has(id)) S.eq[k] = id;
+          else if (!id) S.eq[k] = null;
+        }
+        sfx('ok');
+        updHud();
+        if (typeof toastItem === 'function') toastItem(null, `Preset ${slotIdx + 1} terpasang!`);
+      } else if (r === 1) {
+        S.loadouts[slotIdx] = { wpn: S.eq.wpn, arm: S.eq.arm, acc: S.eq.acc };
+        sfx('ok');
+        if (typeof toastItem === 'function') toastItem(null, `Preset ${slotIdx + 1} diperbarui!`);
+      } else if (r === 2) {
+        S.loadouts[slotIdx] = null;
+        sfx('back');
+      }
+    }
+    draw();
+  }
   function toggleLock(id) {
     S.locked = S.locked || {};
     if (S.locked[id]) {

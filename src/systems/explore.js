@@ -120,6 +120,20 @@ async function openMapNew(sc) {
     for (const ex of M.exits || []) { const X = clamp(ex.x + ex.w / 2, 30 / s, M.w - 30 / s), Y = clamp(ex.y + ex.h / 2, 8 / s, M.h - 8 / s); const e = document.createElement('div'); e.className = 'mk mx'; e.style.left = X * s + 'px'; e.style.top = Y * s + 'px'; e.innerHTML = '➜ ' + (S.seen[ex.to] ? ex.label : '???'); wrap.appendChild(e); }
     if (S.tmap && S.tmap.map === M.id) { const e = document.createElement('div'); e.className = 'mk mt'; e.style.left = S.tmap.x * s + 'px'; e.style.top = S.tmap.y * s + 'px'; e.textContent = '✖'; wrap.appendChild(e); }
     if (q) { const e = document.createElement('div'); e.className = 'mk mq'; e.style.left = q.x * s + 'px'; e.style.top = (q.y - 6) * s + 'px'; e.textContent = '★'; wrap.appendChild(e); }
+    // Render Custom Pins (#62)
+    S.pins = S.pins || {};
+    const curPins = S.pins[M.id] || [];
+    for (let pi = 0; pi < curPins.length; pi++) {
+      const pin = curPins[pi];
+      const pe = document.createElement('div');
+      pe.className = 'mk';
+      pe.style.left = (pin.x * s) + 'px';
+      pe.style.top = (pin.y * s) + 'px';
+      pe.style.fontSize = '12px';
+      pe.style.transform = 'translate(-50%, -100%)';
+      pe.textContent = '📍';
+      wrap.appendChild(pe);
+    }
     mk2('me', sc.pl.x, sc.pl.y - 4);
     box.style.justifyContent = box.style.alignItems = z > 1 ? 'flex-start' : 'center'; box.style.overflow = z > 1 ? 'auto' : 'hidden';
     if (z > 1) { box.scrollLeft = sc.pl.x * s - box.clientWidth / 2; box.scrollTop = sc.pl.y * s - box.clientHeight / 2; }
@@ -130,11 +144,42 @@ async function openMapNew(sc) {
   box.addEventListener('wheel', e => { e.preventDefault(); zoom(e.deltaY < 0 ? 1 : -1); }, { passive: false });
   // cubit untuk zoom & geser saat diperbesar (tidak menutup peta)
   const pts = new Map(); let pd = 0, moved = false;
-  box.addEventListener('pointerdown', e => { e.stopPropagation(); pts.set(e.pointerId, [e.clientX, e.clientY]); moved = false; if (pts.size === 2) { const [a, b] = [...pts.values()]; pd = Math.hypot(a[0] - b[0], a[1] - b[1]); } });
+  box.addEventListener('pointerdown', e => {
+    e.stopPropagation();
+    pts.set(e.pointerId, [e.clientX, e.clientY]);
+    moved = false;
+    if (pts.size === 2) { const [a, b] = [...pts.values()]; pd = Math.hypot(a[0] - b[0], a[1] - b[1]); }
+  });
   box.addEventListener('pointermove', e => { const p = pts.get(e.pointerId); if (!p) return;
     if (pts.size === 2) { p[0] = e.clientX; p[1] = e.clientY; const [a, b] = [...pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (Math.abs(d - pd) > 40) { zoom(d > pd ? 1 : -1); pd = d; } moved = true; }
     else if (z > 1) { box.scrollLeft -= e.clientX - p[0]; box.scrollTop -= e.clientY - p[1]; p[0] = e.clientX; p[1] = e.clientY; if (Math.abs(e.movementX) + Math.abs(e.movementY) > 1) moved = true; } });
-  const up = e => { const had = pts.delete(e.pointerId); if (had && !pts.size && !moved && z === 1) press('tap'); };
+  const up = e => {
+    const had = pts.delete(e.pointerId);
+    if (had && !pts.size && !moved) {
+      // Fitur #62: Taruh / Hapus Pin Penanda Pribadi (📍)
+      const rect = wrap.getBoundingClientRect();
+      const s = s0 * z;
+      const clickX = (e.clientX - rect.left) / s;
+      const clickY = (e.clientY - rect.top) / s;
+      if (clickX >= 0 && clickX <= M.w && clickY >= 0 && clickY <= M.h) {
+        S.pins = S.pins || {};
+        S.pins[M.id] = S.pins[M.id] || [];
+        const existIdx = S.pins[M.id].findIndex(p => Math.hypot(p.x - clickX, p.y - clickY) < 30 / s);
+        if (existIdx >= 0) {
+          S.pins[M.id].splice(existIdx, 1);
+          sfx('back');
+          draw();
+          return;
+        } else if (S.pins[M.id].length < 5) {
+          S.pins[M.id].push({ x: Math.round(clickX), y: Math.round(clickY) });
+          sfx('ok');
+          draw();
+          return;
+        }
+      }
+      if (z === 1) press('tap');
+    }
+  };
   box.addEventListener('pointerup', up); box.addEventListener('pointercancel', e => pts.delete(e.pointerId));
   await new Promise(res => { const prev = UIH; const h = k => { if (['a', 'b', 'menu', 'map', 'back', 'tap', 'item', 'bag'].includes(k)) { w.remove(); UIH = prev; sfx('back'); res(); } else if (k === 'up') zoom(1); else if (k === 'down') zoom(-1); }; h.tap = true; UIH = h;
     w.addEventListener('pointerdown', e => { e.stopPropagation(); press('tap'); }); });

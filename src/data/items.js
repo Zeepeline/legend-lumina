@@ -136,3 +136,50 @@ const RECIPES = [
   { id: 'stonearm', gold: 180, need: { ore: 4 } },
   { id: 'csword', gold: 260, need: { shard: 4, ecto: 3 } },
 ];
+// ---------------- SET PERLENGKAPAN (#22) ----------------
+const SETS = {
+  pemula: {
+    n: 'Set Pemula',
+    items: ['wsword', 'cloth'],
+    d: 'Max HP +20, Kecepatan lari +6%',
+    maxhp: 20, spd: 0.06
+  },
+  pemburu: {
+    n: 'Set Pemburu Rimba',
+    items: ['hbow', 'leather'],
+    d: 'Serang +4, Lari +8%, Peluang tembus panah',
+    atk: 4, spd: 0.08
+  },
+  prajurit: {
+    n: 'Set Prajurit Besi',
+    items: ['isword', 'chain'],
+    altWpn: 'ispear',
+    d: 'Tahan +5, Kombo pukulan ke-3 mendorong musuh 2× lipat',
+    def: 5
+  },
+  kristal: {
+    n: 'Set Kristal Purba',
+    items: ['csword', 'cshield'],
+    altWpn: 'fspear',
+    d: 'Sihir +8, Pemulihan MP alami bertambah',
+    mag: 8, regen: 1
+  },
+  aurel: {
+    n: 'Set Bangsawan Aurel',
+    items: ['ssword', 'stonearm', 'aurelring'],
+    altWpn: 'baxe',
+    d: 'Serang +8, Tahan +6, Daya hancur kritis tinggi',
+    atk: 8, def: 6
+  }
+};
+function activeSets() {
+  if (!S || !S.eq) return [];
+  const eqItems = [S.eq.wpn, S.eq.arm, S.eq.acc].filter(Boolean);
+  const matched = [];
+  for (const k in SETS) {
+    const s = SETS[k];
+    const match = s.items.every(id => eqItems.includes(id) || (id === s.items[0] && s.altWpn && eqItems.includes(s.altWpn)));
+    if (match) matched.push(s);
+  }
+  return matched;
+}

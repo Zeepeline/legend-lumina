@@ -65,8 +65,23 @@ async function openCraft(sc) {
     if (r === CRAFT.length) { await openToolSlots(); continue; }
     sel = r; const R = CRAFT[r];
     if (!canCraft(R)) { sfx('buzz'); continue; }
-    for (const [k, n] of Object.entries(R.need)) addItem(k, -n);
-    addItem(R.id, R.n); sfx('chest'); S.crafted = (S.crafted || 0) + R.n;
+
+    // Fitur #388: Buat Banyak Sekaligus (Batch Crafting)
+    const maxBatch = Math.min(...Object.entries(R.need).map(([k, n]) => Math.floor((S.inv[k] || 0) / n)));
+    let makeCount = 1;
+    if (maxBatch > 1) {
+      const opts = [{ t: 'Buat 1x (' + R.n + ' barang)', n: 1 }];
+      if (maxBatch >= 5) opts.push({ t: 'Buat 5x (' + (R.n * 5) + ' barang)', n: 5 });
+      opts.push({ t: 'Buat Maksimal ' + maxBatch + 'x (' + (R.n * maxBatch) + ' barang)', n: maxBatch });
+      opts.push({ t: 'Batal', n: 0 });
+      const bRes = await choose({ head: 'Jumlah Produksi · ' + ITEMS[R.id].n, x: 40, y: 50, w: 220, items: opts });
+      if (bRes < 0 || opts[bRes].n === 0) continue;
+      makeCount = opts[bRes].n;
+    }
+
+    for (const [k, n] of Object.entries(R.need)) addItem(k, -(n * makeCount));
+    addItem(R.id, R.n * makeCount); sfx('chest'); S.crafted = (S.crafted || 0) + (R.n * makeCount);
+    S.st = S.st || {}; S.st.crafted = (S.st.crafted || 0) + (R.n * makeCount);
     if (ITEMS[R.id].tool || R.id === 'potion') { S.tools = S.tools || [null, null]; if (!S.tools.includes(R.id)) { const i = S.tools.indexOf(null); if (i >= 0) S.tools[i] = R.id; } }
     updToolBtns();
   }

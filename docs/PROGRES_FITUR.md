@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 87 | 5 | 0 | 908 |
+| 94 | 5 | 0 | 901 |
 
 ## Selesai
 
@@ -107,6 +107,13 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 28 | Buku resep di MENU: katalog resep tempa, masak & kerajinan beserta status bahan | `systems/economy.js` (`openRecipeBook`) | 12 |
 | 18 | Sistem gelar pemain: terbuka dari pencapaian & beri bonus pasif status | `systems/economy.js` (`TITLES`, `checkTitles`) | 12 |
 | 25 | Layar rekap statistik petualangan (waktu main, monster, bos, langkah, koin) | `systems/economy.js` (`openStatsAndTitles`) | 12 |
+| 22 | Set perlengkapan (bonus stat pasif saat mengenakan kombinasi set yang cocok) | `data/items.js` (`SETS`, `activeSets`), `core/state.js` | 13 |
+| 371 | Simpan pasang perlengkapan (3 preset loadout cepat di tas) | `ui/bag.js` (`handleLoadout`) | 13 |
+| 13 | Pukulan kritis dari belakang / backstab (damage ×1.8 saat musuh membelakangi) | `systems/combat.js` | 13 |
+| 69 | Monster malam hari lebih buas (mata menyala, hadiah EXP & koin bertambah) | `systems/combat.js` (`killEnemy`) | 13 |
+| 388 | Buat banyak sekaligus di kerajinan & masak (opsi ×1, ×5, Maks) | `systems/craft.js` (`openCraft`), `ui/shop.js` (`cookMenu`) | 13 |
+| 462 | Beli kembali barang toko (riwayat 8 item terakhir yang terjual di toko) | `ui/shop.js` (`buybackMenu`) | 13 |
+| 62 | Penanda pribadi di peta (taruh/hapus hingga 5 pin 📍 di peta besar) | `systems/explore.js` (`openMapNew`) | 13 |
 
 ## Sebagian
 
@@ -137,7 +144,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~10~~ | ✅ selesai | — |
 | ~~11~~ | ✅ selesai: 99, 3, 5, 6, 35, 37, 76, 81 | — |
 | ~~12~~ | ✅ selesai: 45, 39, 374, 36, 28, 18, 25 | Ekonomi Desa, Karakter & Kenyamanan Tas |
-| 13+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~13~~ | ✅ selesai: 22, 371, 13, 69, 388, 462, 62 | Sinergi Perlengkapan, Taktik & Eksplorasi Malam |
+| 14+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 

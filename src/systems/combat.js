@@ -37,7 +37,22 @@ Object.assign(World.prototype, {
           if (e.hp <= 0 || hit.has(e)) continue; const ey = e.spr.y - e.D.r * e.sc * .8 - (e.D.fly ? 6 : 0);
           if (Math.hypot(e.spr.x - hx, ey - hy) < r + e.D.r * e.sc) {
             hit.add(e); const crit = Math.random() < W.crit + (st.crit || 0); const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1;
-            this.hitEnemy(e, st.atk * W.mul * cMul, crit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
+            // Deteksi Serangan dari Belakang / Backstab (#13)
+            let isBackstab = false;
+            if (e.dir && pl.dir) {
+              const eDirV = DIRV[e.dir] || [0, 1], plDirV = DIRV[pl.dir] || [0, 1];
+              // Menghadap ke arah yang hampir sama (musuh membelakangi Arka)
+              if (eDirV[0] === plDirV[0] && eDirV[1] === plDirV[1]) {
+                isBackstab = true;
+              }
+            }
+            const finalCrit = crit || isBackstab;
+            const finalDmg = st.atk * W.mul * cMul * (isBackstab ? 1.8 : 1);
+            if (isBackstab && e.hp > 0) {
+              popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 16, 'PUNGGUNG!', 'crit');
+              sfx('crit');
+            }
+            this.hitEnemy(e, finalDmg, finalCrit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
             const frz = (ITEMS[S.eq.wpn] || {}).frz; if (frz && Math.random() < frz) this.freezeEnemy(e, 1.2);
           }
         }
@@ -124,7 +139,10 @@ Object.assign(World.prototype, {
     for (let i = 0; i < 4; i++) this.time.delayedCall(i * 40, () => this.puff(x + rnd(-8, 8), y - rnd(0, 10)));
     this.tweens.killTweensOf(e.spr);
     this.tweens.add({ targets: e.spr, alpha: 0, scaleX: e.sc * 1.4, scaleY: e.sc * .3, duration: 260, onComplete: () => { e.spr.destroy(); e.sh.destroy(); } });
-    const g = ri(...e.D.gold); const nc = Math.min(6, Math.max(1, Math.ceil(g / 3)));
+    const isNight = e.nightVariant || (S.time >= 19 || S.time < 5);
+    const goldMultiplier = isNight ? 1.35 : 1;
+    const expMultiplier = isNight ? 1.3 : 1;
+    const g = Math.round(ri(...e.D.gold) * goldMultiplier); const nc = Math.min(6, Math.max(1, Math.ceil(g / 3)));
     for (let i = 0; i < nc; i++) this.drop(x, y, 'coin', Math.ceil(g / nc));
     if (e.D.drop && Math.random() < e.D.drop[1]) this.drop(x, y, 'item', e.D.drop[0]);
     if (Math.random() < (e.boss ? 1 : .07)) this.drop(x, y, 'item', 'potion');
@@ -135,7 +153,7 @@ Object.assign(World.prototype, {
     S.st = S.st || {}; S.st.kills = (S.st.kills || 0) + 1;
     if (e.boss) S.st.bosses = (S.st.bosses || 0) + 1;
     if (typeof checkTitles === 'function') checkTitles();
-    this.gainExp(e.D.exp, x, y);
+    this.gainExp(Math.round(e.D.exp * expMultiplier), x, y);
     if (e.boss) this.bossDown(e); else achCheck(this);
   },
   drop(x, y, kind, val) {

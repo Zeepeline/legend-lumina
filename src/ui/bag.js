@@ -10,17 +10,27 @@ async function openBag(sc) {
   function isEq(id) { return Object.values(S.eq).includes(id); }
   function draw() {
     const L = list(); sel = clamp(sel, 0, Math.max(0, L.length - 1)); const st = stat();
+    const activeS = typeof activeSets === 'function' ? activeSets() : [];
+    const setsBadge = activeS.length ? `<div style="font-size:9px;color:#ffe066;margin-top:2px;">★ ${activeS.map(s => s.n).join(', ')}</div>` : '';
+    const loadoutBtns = [0, 1, 2].map(i => {
+      const lo = S.loadouts && S.loadouts[i];
+      return `<span class="lo-btn${lo ? ' has' : ''}" data-lo="${i}" style="display:inline-block;padding:1px 5px;margin:0 2px;background:${lo ? '#4a7a3a' : '#3a3a48'};color:#fff;border-radius:3px;font-size:9px;cursor:pointer;">${i + 1}${lo ? '✓' : ''}</span>`;
+    }).join('');
+
     w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span><span class="gold">${S.gold} G</span></div>
      <div class="bb"><div class="bl">${L.length ? L.map((id, i) => {
        const isLck = S.locked && S.locked[id];
        return `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}</span><b>${isLck ? '🔒 ' : ''}${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`;
      }).join('') : '<div class="empty">Kosong</div>'}</div>
      <div class="bs"><div class="mh">Arka · Lv ${S.lv} (${S.title || 'Petualang'})</div>${['wpn', 'arm', 'acc'].map(s => `<div class="eqs">${S.eq[s] ? icon(S.eq[s]) + itemName(S.eq[s]) : '<i>(kosong)</i>'}</div>`).join('')}
+     <div style="margin:4px 0 2px;font-size:9px;color:#a8a8b8;">Preset: ${loadoutBtns}</div>
+     ${setsBadge}
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b></div></div></div>
-     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · DASH urutkan · Kunci/Buka: tahan A/ketuk gembok · B tutup'}</div>`;
+     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · B tutup'}</div>`;
     const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); const i = +e.dataset.i; if (i === sel) act(); else { sel = i; sfx('cur'); draw(); } });
+    w.querySelectorAll('.lo-btn').forEach(e => e.onpointerdown = async ev => { ev.stopPropagation(); await handleLoadout(+e.dataset.lo); });
     const s2 = w.querySelector('.bi.sel'); if (s2) s2.scrollIntoView({ block: 'nearest' });
   }
   // Perbandingan dengan yang sedang dipakai (fitur #34): ▲ hijau lebih baik, ▼ merah lebih buruk
@@ -31,6 +41,48 @@ async function openBag(sc) {
     return ' ' + ['atk', 'def', 'mag'].map(k => { const d = v(it, id, k) - v(cur, S.eq[slot], k); return d ? `<span style="color:${d > 0 ? '#3a9a3a' : '#c83a3a'}">${{ atk: 'Serang', def: 'Tahan', mag: 'Sihir' }[k]} ${d > 0 ? '▲+' : '▼'}${d}</span>` : ''; }).filter(Boolean).join(' ');
   }
   function hint(id) { const k = ITEMS[id].k; return k === 'use' ? ' <span class="y">[A: pakai]</span>' : ['wpn', 'arm', 'acc'].includes(k) ? (isEq(id) ? ' <span class="y">[A: lepas]</span>' : ' <span class="y">[A: pasang]</span>') : ''; }
+  async function handleLoadout(slotIdx) {
+    S.loadouts = S.loadouts || [null, null, null];
+    const current = S.loadouts[slotIdx];
+    if (!current) {
+      // Simpan perlengkapan saat ini
+      S.loadouts[slotIdx] = { wpn: S.eq.wpn, arm: S.eq.arm, acc: S.eq.acc };
+      sfx('ok');
+      if (typeof toastItem === 'function') toastItem(null, `Preset ${slotIdx + 1} disimpan!`);
+    } else {
+      // Pasang atau perbarui
+      const r = await choose({
+        head: `PRESET ${slotIdx + 1}`,
+        x: 40, y: 50, w: 200,
+        items: [
+          { t: 'Gunakan Perlengkapan Ini' },
+          { t: 'Perbarui dengan yang Dipakai' },
+          { t: 'Kosongkan Slot Preset' },
+          { t: 'Batal' }
+        ],
+        foot: () => `Senjata: ${ITEMS[current.wpn]?.n || '-'} · Zirah: ${ITEMS[current.arm]?.n || '-'} · Aks: ${ITEMS[current.acc]?.n || '-'}`
+      });
+      if (r === 0) {
+        // Pasang jika punya barangnya
+        for (const k of ['wpn', 'arm', 'acc']) {
+          const id = current[k];
+          if (id && has(id)) S.eq[k] = id;
+          else if (!id) S.eq[k] = null;
+        }
+        sfx('ok');
+        updHud();
+        if (typeof toastItem === 'function') toastItem(null, `Preset ${slotIdx + 1} terpasang!`);
+      } else if (r === 1) {
+        S.loadouts[slotIdx] = { wpn: S.eq.wpn, arm: S.eq.arm, acc: S.eq.acc };
+        sfx('ok');
+        if (typeof toastItem === 'function') toastItem(null, `Preset ${slotIdx + 1} diperbarui!`);
+      } else if (r === 2) {
+        S.loadouts[slotIdx] = null;
+        sfx('back');
+      }
+    }
+    draw();
+  }
   function toggleLock(id) {
     S.locked = S.locked || {};
     if (S.locked[id]) {
