@@ -19,7 +19,8 @@ function say(text, name) {
     const prev = UIH;
     const w = win('dlg act', (name ? `<div class="nm">${name}</div>` : '') + '<div class="tx"></div><div class="more">▼</div>');
     const tx = w.querySelector('.tx'); let i = 0, done = false;
-    const tick = setInterval(() => { i += 1; tx.textContent = text.slice(0, i); if (i % 2 === 0 && text[i] && text[i] !== ' ') sfx('blip'); if (i >= text.length) finish(); }, 24);
+    const spd = [1, 2, 4, 999][OPT.txt != null ? OPT.txt : 1] || 2;
+    const tick = setInterval(() => { i += spd + (Input.keys && (Input.keys.a || Input.keys.b) ? 3 : 0); tx.textContent = text.slice(0, i); if (i % 4 < spd && text[i] && text[i] !== ' ' && spd < 4) sfx('blip'); if (i >= text.length) finish(); }, 24);
     function finish() { clearInterval(tick); tx.textContent = text; done = true; w.classList.add('done'); }
     const h = k => {
       if (k !== 'a' && k !== 'b' && k !== 'tap') return;

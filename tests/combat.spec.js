@@ -45,6 +45,8 @@ test('kalah saat boss → bangun di penginapan → boss muncul lagi', async ({ p
   await page.waitForTimeout(2500); await h.flush(page);
   await page.waitForFunction(() => window.__game.sc.enemies.some(e => e.boss));
   await h.G(page, () => { window.__game.S.hp = 1; window.__game.sc.hurtPlayer(999, 640, 900); });
+  await page.waitForFunction(() => document.body.innerText.includes('Coba lagi'), null, { timeout: 10_000 });
+  await h.press(page, 'down', 1, 200); await h.press(page, 'a', 1, 300); // pilih: bangun di penginapan
   await page.waitForFunction(() => window.__game.sc.M.id === 'inn', null, { timeout: 15_000 });
   await page.waitForTimeout(800); await h.flush(page);
   await h.goto(page, 'forest', 640, 990);

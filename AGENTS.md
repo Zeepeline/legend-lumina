@@ -39,6 +39,7 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `systems/skills.js` | dash, tebasan putar, nova es |
 | `systems/learn.js` | **sistem belajar jurus**: `JURUS` (aliran, guru, syarat, biaya, dialog latihan), `learnTalk()` (guru mengajar), `castSpell()` (Kabut Racun, Cahaya Pulih, Lentera Suci), penguasaan I–III (`tierOf`, `useJurus`, `MASTERY`). Jurus baru: tambah ke `JURUS` + efeknya |
 | `systems/ambient.js` | **suasana alam** per peta (`ENV`): burung/kelinci/tupai yang kabur, kupu-kupu, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, Daun Obat & Buah Beri di tepi jalan; juga **penunjuk misi** `updQuestGuide()` (panah di tepi layar / bintang di atas tujuan, dari `questTarget()` di `ui/map.js`). Kartu misi di `updHud()` (`ui/widgets.js`) |
+| `systems/qol.js` | kenyamanan: ikon interaksi & tombol kontekstual, bilah HP musuh, jeda otomatis, rincian naik level, coba lagi boss |
 | `systems/status.js` | efek status `STATUS` (racun/terbakar/dingin) pemain & musuh; sumber = `fx` di `ENEMY`/`PROJ` |
 | `systems/travel.js` | teleport: `WARPS` (posisi patung per peta), aktif di `S.warps` |
 | `systems/chapter4.js` | Bab 4 (investigasi tanpa boss), `storyTalk()` (dialog cerita yang menimpa dialog biasa), Desa Kincir, lentera & perahu Danau Cermin, kuil, prasasti (`readLore`) |
@@ -123,6 +124,8 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 - **NPC:** semua NPC beraktivitas sesuai peran & pulang saat malam (`npc/brain.js`).
 - **Sistem:** belajar 7 jurus dari 5 guru (penguasaan I–III), 4 gaya senjata, status, pancing, kebun, masak, upgrade, teleport, siang-malam & cuaca, suasana alam, puluhan objek interaktif (`systems/life.js`), penunjuk misi, simpan otomatis, ekspor/impor save, PWA, gamepad.
 - **Aset pemilik:** 21 potret NPC + hewan (`assets/img/npc_*`, `ani_*`), dekorasi Pixel 16. Gambar salah potong ada di `assets/raw/salah-potong/` (jangan dipakai).
+
+**Fitur 1–1000:** dikerjakan per gelombang, progres di `docs/PROGRES_FITUR.md` (wajib diperbarui tiap gelombang).
 
 **Berikutnya:** Bab 6 (Lembah Besi & Simpang Rantau, `docs/BENUA_LUMINA.md` bag. 7), perluas Desa Lumina, Balai Dewan & Pelabuhan Danau, sprite Arka 4 arah dari pemilik.
 

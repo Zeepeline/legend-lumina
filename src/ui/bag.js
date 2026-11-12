@@ -13,10 +13,17 @@ async function openBag(sc) {
      <div class="bb"><div class="bl">${L.length ? L.map((id, i) => `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span>${itemName(id)}</span><b>${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`).join('') : '<div class="empty">Kosong</div>'}</div>
      <div class="bs"><div class="mh">Arka · Lv ${S.lv}</div>${['wpn', 'arm', 'acc'].map(s => `<div class="eqs">${S.eq[s] ? icon(S.eq[s]) + itemName(S.eq[s]) : '<i>(kosong)</i>'}</div>`).join('')}
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b><br>HP <b>${S.hp}/${st.maxhp}</b></div></div></div>
-     <div class="bd">${L.length ? ITEMS[L[sel]].d + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · B tutup'}</div>`;
+     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · B tutup'}</div>`;
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); const i = +e.dataset.i; if (i === sel) act(); else { sel = i; sfx('cur'); draw(); } });
     const s2 = w.querySelector('.bi.sel'); if (s2) s2.scrollIntoView({ block: 'nearest' });
+  }
+  // Perbandingan dengan yang sedang dipakai (fitur #34): ▲ hijau lebih baik, ▼ merah lebih buruk
+  function cmp(id) {
+    const it = ITEMS[id], slot = it.k; if (!['wpn', 'arm', 'acc'].includes(slot) || isEq(id)) return '';
+    const cur = ITEMS[S.eq[slot]] || {}, up = id => (S.up && S.up[id]) || 0;
+    const v = (o, i, k) => (o[k] || 0) + (k === 'atk' && slot === 'wpn' ? UPG.wpn * up(i) : 0) + (k === 'def' && slot === 'arm' ? UPG.arm * up(i) : 0);
+    return ' ' + ['atk', 'def', 'mag'].map(k => { const d = v(it, id, k) - v(cur, S.eq[slot], k); return d ? `<span style="color:${d > 0 ? '#3a9a3a' : '#c83a3a'}">${{ atk: 'Serang', def: 'Tahan', mag: 'Sihir' }[k]} ${d > 0 ? '▲+' : '▼'}${d}</span>` : ''; }).filter(Boolean).join(' ');
   }
   function hint(id) { const k = ITEMS[id].k; return k === 'use' ? ' <span class="y">[A: pakai]</span>' : ['wpn', 'arm', 'acc'].includes(k) ? (isEq(id) ? ' <span class="y">[A: lepas]</span>' : ' <span class="y">[A: pasang]</span>') : ''; }
   function act() {

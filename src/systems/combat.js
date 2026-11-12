@@ -152,7 +152,7 @@ Object.assign(World.prototype, {
     let up = false; while (S.exp >= need(S.lv)) { S.exp -= need(S.lv); S.lv++; up = true; }
     if (up) {
       const old = S.lv - 1; let k = 0; for (const J of []) if (S.lv >= J.lv && !S.flags['sk' + J.lv]) { S.flags['sk' + J.lv] = 1; this.time.delayedCall(1800 + k++ * 2200, () => { banner(J.n, 'JURUS BARU', false, 2000); popWorld(this.pl.x, this.pl.y - 36, J.d, 'xp'); }); }
-      const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; sfx('lvl'); banner('LEVEL ' + S.lv + '!', 'NAIK LEVEL', true, 1600);
+      const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; sfx('lvl'); banner('LEVEL ' + S.lv + '!', 'NAIK LEVEL', true, 1600); this.time.delayedCall(1700, () => levelUpDetail(old));
       const pl = this.pl, g = this.add.graphics().setDepth(pl.y + 2), o = { r: 4 };
       this.tweens.add({ targets: o, r: 34, duration: 600, onUpdate: () => { g.clear(); g.lineStyle(2, 0xffe27a, 1 - o.r / 34).strokeEllipse(pl.x, pl.y - 2, o.r * 2, o.r); }, onComplete: () => g.destroy() });
       this.sparkle(pl.x, pl.y - 12, 'doto', 18);
@@ -162,7 +162,7 @@ Object.assign(World.prototype, {
   hurtPlayer(atk, sx, sy, fx) {
     const pl = this.pl; if (pl.inv > 0 || pl.dead || G.lock > 0 || UIH) return;
     if (pl.dashT > 0) return; if (this.night && isNight()) atk *= 1.15;
-    const dmg = Math.max(1, Math.round(atk * rnd(.85, 1.15) - stat().def * .6));
+    const dmg = Math.max(1, Math.round((atk * rnd(.85, 1.15) - stat().def * .6) * DIFF[OPT.diff].dmg));
     S.hp = Math.max(0, S.hp - dmg); popWorld(pl.x, pl.y - 28, '-' + dmg, 'hurt'); sfx('hurt'); this.hitStop(.06, 40); if (S.hp > 0) this.inflict(fx);
     pl.inv = 1; const dx = pl.x - sx, dy = pl.y - sy, n = Math.hypot(dx, dy) || 1; pl.kb = .14; pl.kbx = dx / n * 170; pl.kby = dy / n * 170;
     pl.setTintFill(0xff4a4a); this.time.delayedCall(90, () => pl.clearTint());
@@ -200,7 +200,11 @@ Object.assign(World.prototype, {
   async defeat() {
     const pl = this.pl; pl.dead = true; pl.setVelocity(0); G.lock++; playBGM('lose'); bossBar(null);
     this.tweens.add({ targets: pl, angle: 90, alpha: .4, duration: 500 });
-    await sleep(1300); await fadeTo(1);
+    await sleep(1300);
+    const B = this.curBoss;
+    if (B && B.zone !== undefined && this.bossOn) { G.lock--; const again = await this.retryBoss(); G.lock++;
+      if (again) { await fadeTo(1); const st0 = stat(); S.hp = st0.maxhp; S.mp = st0.maxmp; G.lock--; this.trans = true; const z = B.zone; this.scene.restart({ map: this.M.id, x: z ? z[0] + z[2] / 2 : this.pl.x, y: z ? z[1] + z[3] + 40 : this.pl.y + 60, dir: 'up' }); return; } }
+    await fadeTo(1);
     S.gold = Math.floor(S.gold / 2); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp;
     G.lock--; this.trans = true;
     this.scene.restart({ map: 'inn', x: 160, y: 200, dir: 'down', quiet: true, after: async () => { await sleep(400); await talk('Bu Rina', ['Syukurlah kamu sadar! Pemburu menemukanmu pingsan dan membawamu ke sini.', 'Separuh uangmu hilang entah ke mana... Musuh yang kamu lawan masih menunggu di sana. Siapkan ramuan dan perlengkapan yang lebih kuat, ya.']); } });
