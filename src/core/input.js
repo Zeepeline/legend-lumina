@@ -137,7 +137,8 @@ function layout() {
 
   // Penyesuaian Skala & Padding Tombol Virtual Kustom (#74)
   const padEl = document.getElementById('pad');
-  if (padEl && touch) {
+  // OPT dimuat belakangan (core/state.js): saat layout() pertama kali dipanggil OPT belum ada
+  if (padEl && touch && typeof OPT !== 'undefined') {
     const scales = [0.8, 1.0, 1.2, 1.4];
     const pads = [8, 16, 28];
     const btnScale = scales[OPT.btnScale || 1] || 1.0;
