@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 23 | 2 | 0 | 975 |
+| 29 | 2 | 0 | 969 |
 
 ## Selesai
 
@@ -42,6 +42,12 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 14 | Penanda bahaya merah di tepi layar saat diserang dari luar layar | `systems/feel.js` (`dangerFrom`), `styles.css` | 3 |
 | 120 | Meteran waspada musuh "?" lalu "!" | `systems/feel.js` | 3 |
 | 146 | Musuh gesit (terbang/menerjang/hantu) menghindari bola api & panah | `systems/feel.js` | 3 |
+| 86 | Lagu khas wilayah: salju, rawa, hutan, kota | `systems/sound.js` (`TRACKS`, `bgmFor`) | 4 |
+| 87 | Musik dinamis: lagu tarung saat dikejar musuh, memudar halus | `systems/sound.js` (`updSound`, `swapBGM`) | 4 |
+| 88 | Langkah kaki sesuai tanah (rumput, tanah, batu, salju, kayu, air) | `systems/sound.js` (`groundAt`, `stepSound`) | 4 |
+| 911 | Lagu desa/kota versi malam yang lembut | `systems/sound.js` | 4 |
+| 915 | Lagu kemenangan setelah boss (sudah ada, dicatat) | `core/audio.js` | 4 |
+| 919 | Suara jauh-dekat + kiri/kanan untuk suara musuh | `systems/sound.js` (`sfxAt`) | 4 |
 
 ## Sebagian
 
@@ -60,7 +66,7 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 |---|---|---|
 | ~~2~~ | ✅ selesai | — |
 | ~~3~~ | ✅ selesai | — |
-| 4 | 86, 87, 911, 915, 919, 88 | Musik per wilayah & dinamis, suara jarak, langkah kaki |
+| ~~4~~ | ✅ selesai | — |
 | 5 | 16, 26, 30, 29, 407, 411, 412 | Poin atribut, meja kerajinan, slot alat, bom, panah, umpan |
 | 6 | 61, 63, 66, 665, 674, 675, 678, 679, 680 | Kabut peta, rahasia, peta harta, penanda dan zoom peta |
 | 7 | 46, 492, 493, 497, 498, 32 | Rumah Arka & perabot |

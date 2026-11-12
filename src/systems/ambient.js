@@ -142,7 +142,7 @@ Object.assign(World.prototype, {
         } else if (!willRain && this.weather === 'rain') {
           this.weather = 'clear';
           banner('Hujan telah reda. Langit kembali cerah.', 'CUACA', false, 2000);
-          playBGM(this.M.bgm);
+          playBGM(bgmFor(this.M));
         }
       }
     }

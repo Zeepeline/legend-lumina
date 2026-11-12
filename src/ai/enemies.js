@@ -52,7 +52,7 @@ Object.assign(World.prototype, {
             e.st = 'chase'; s.setVelocity(dx / d * D.spd, dy / d * D.spd);
             if (d < (D.side ? 44 : 34) && e.t <= 0) { e.st = 'wind'; e.t = D.side ? .32 : .42; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); }
           } else wander(28);
-        } else if (e.st === 'wind') { if (e.t <= 0) { e.st = 'lunge'; e.t = .22; s.clearTint(); s.setVelocity(e.lx * 210, e.ly * 210); sfx('swing'); } }
+        } else if (e.st === 'wind') { if (e.t <= 0) { e.st = 'lunge'; e.t = .22; s.clearTint(); s.setVelocity(e.lx * 210, e.ly * 210); sfxAt('swing', s.x, s.y, this); } }
         else if (e.st === 'lunge') { if (e.t <= 0) { e.st = 'rec'; e.t = .55; s.setVelocity(0); } }
         else if (e.st === 'rec') { if (e.t <= 0) { e.st = 'chase'; e.t = .3; } }
         if (D.ch) this.charAnim(e); else s.flipX = (e.st === 'wind' ? e.lx : s.body.velocity.x) > 0; break;
@@ -61,7 +61,7 @@ Object.assign(World.prototype, {
           if (aggro && d < 140 && e.cd <= 0) { e.st = 'wind'; e.t = .6; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); s.flipX = dx > 0; }
           else if (aggro) s.setVelocity(dx / d * D.spd * .6, dy / d * D.spd * .6); else wander(D.spd * .5);
           if (s.body.velocity.x) s.flipX = s.body.velocity.x > 0;
-        } else if (e.st === 'wind') { s.x += Math.sin(this.t * 60) * .6; if (e.t <= 0) { e.st = 'run'; e.t = .9; s.clearTint(); s.setVelocity(e.lx * 220, e.ly * 220); sfx('roar'); } }
+        } else if (e.st === 'wind') { s.x += Math.sin(this.t * 60) * .6; if (e.t <= 0) { e.st = 'run'; e.t = .9; s.clearTint(); s.setVelocity(e.lx * 220, e.ly * 220); sfxAt('roar', s.x, s.y, this); } }
         else if (e.st === 'run') {
           s.anims.timeScale = 3; this.dustE = (this.dustE || 0) - dt; if (this.dustE <= 0) { this.dustE = .08; this.puff(s.x, s.y); }
           const b = s.body.blocked; if (b.left || b.right || b.up || b.down) { e.st = 'stun'; e.t = 1.2; s.setVelocity(0); this.camShake(100, .004); popWorld(s.x, s.y - 20, 'pusing!', 'xp'); }
@@ -71,7 +71,7 @@ Object.assign(World.prototype, {
       case 'golem':
         if (e.st === 'wind') { s.setVelocity(0); if (e.t <= 0) { e.st = 'rec'; e.t = .9; s.clearTint(); this.shockwave(s.x, s.y, 42, D.atk); } }
         else if (e.st === 'rec') { s.setVelocity(0); if (e.t <= 0) e.st = 'chase'; }
-        else { if (aggro) s.setVelocity(dx / d * D.spd, dy / d * D.spd); else wander(D.spd * .6); if (aggro && d < 36 && e.cd <= 0) { e.st = 'wind'; e.t = .65; e.cd = 2.2; s.setTint(0xffa07a); sfx('jump'); } }
+        else { if (aggro) s.setVelocity(dx / d * D.spd, dy / d * D.spd); else wander(D.spd * .6); if (aggro && d < 36 && e.cd <= 0) { e.st = 'wind'; e.t = .65; e.cd = 2.2; s.setTint(0xffa07a); sfxAt('jump', s.x, s.y, this); } }
         s.flipX = dx > 0; break;
       case 'boss': case 'gboss': this.updBoss(e, dt, dx, dy, d); break;
       case 'qboss': this.updQueen(e, dt, dx, dy, d); break;

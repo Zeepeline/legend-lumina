@@ -40,8 +40,8 @@ function auInit() {
   } catch (e) { AU.ctx = null; }
 }
 function tone(f, t, d, type, vol, dest) { if (!f) return; const o = AU.ctx.createOscillator(), gn = AU.ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(vol, t + .01); gn.gain.setValueAtTime(vol, t + Math.max(.012, d - .04)); gn.gain.linearRampToValueAtTime(0, t + d); o.connect(gn); gn.connect(dest); o.start(t); o.stop(t + d + .03); }
-function sweep(f0, f1, t, d, type, vol) { const o = AU.ctx.createOscillator(), gn = AU.ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + d); gn.gain.setValueAtTime(vol, t); gn.gain.linearRampToValueAtTime(0, t + d); o.connect(gn); gn.connect(AU.sfx); o.start(t); o.stop(t + d + .02); }
-function noise(t, d, freq, vol, f1) { const s = AU.ctx.createBufferSource(); s.buffer = AU.noise; const f = AU.ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(freq, t); if (f1) f.frequency.exponentialRampToValueAtTime(f1, t + d); f.Q.value = .9; const gn = AU.ctx.createGain(); gn.gain.setValueAtTime(vol, t); gn.gain.exponentialRampToValueAtTime(.001, t + d); s.connect(f); f.connect(gn); gn.connect(AU.sfx); s.start(t); s.stop(t + d + .02); }
+function sweep(f0, f1, t, d, type, vol) { const o = AU.ctx.createOscillator(), gn = AU.ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + d); gn.gain.setValueAtTime(vol, t); gn.gain.linearRampToValueAtTime(0, t + d); o.connect(gn); gn.connect(_sfxDest || AU.sfx); o.start(t); o.stop(t + d + .02); }
+function noise(t, d, freq, vol, f1) { const s = AU.ctx.createBufferSource(); s.buffer = AU.noise; const f = AU.ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(freq, t); if (f1) f.frequency.exponentialRampToValueAtTime(f1, t + d); f.Q.value = .9; const gn = AU.ctx.createGain(); gn.gain.setValueAtTime(vol, t); gn.gain.exponentialRampToValueAtTime(.001, t + d); s.connect(f); f.connect(gn); gn.connect(_sfxDest || AU.sfx); s.start(t); s.stop(t + d + .02); }
 function playBGM(name) {
   if (AU.cur === name && (AU.seq || !AU.ctx)) return;
   AU.cur = name; AU.seq = null; if (!AU.ctx || !name) return;
@@ -52,9 +52,9 @@ setInterval(() => {
   const q = AU.seq; if (!q || !AU.ctx) return; const sp = 60 / q.tr.bpm;
   for (const v of q.vs) { while (!v.done && v.t < AU.ctx.currentTime + .3) { const n = v.n[v.i]; const d = n.b * sp; tone(n.f, v.t, d * .9, v.type, v.vol, AU.music); v.t += d; v.i++; if (v.i >= v.n.length) { if (q.tr.loop) v.i = 0; else v.done = true; } } }
 }, 60);
-let _lastSfx = {};
+let _lastSfx = {}, _sfxDest = null;
 function sfx(n) {
-  if (!AU.ctx) return; const t = AU.ctx.currentTime, D = AU.sfx;
+  if (!AU.ctx) return; const t = AU.ctx.currentTime, D = _sfxDest || AU.sfx;
   if (_lastSfx[n] && t - _lastSfx[n] < .04) return; _lastSfx[n] = t;
   switch (n) {
     case 'cur': tone(990, t, .035, 'square', .16, D); break;

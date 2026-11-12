@@ -268,8 +268,8 @@ function auInit() {
   } catch (e) { AU.ctx = null; }
 }
 function tone(f, t, d, type, vol, dest) { if (!f) return; const o = AU.ctx.createOscillator(), gn = AU.ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(vol, t + .01); gn.gain.setValueAtTime(vol, t + Math.max(.012, d - .04)); gn.gain.linearRampToValueAtTime(0, t + d); o.connect(gn); gn.connect(dest); o.start(t); o.stop(t + d + .03); }
-function sweep(f0, f1, t, d, type, vol) { const o = AU.ctx.createOscillator(), gn = AU.ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + d); gn.gain.setValueAtTime(vol, t); gn.gain.linearRampToValueAtTime(0, t + d); o.connect(gn); gn.connect(AU.sfx); o.start(t); o.stop(t + d + .02); }
-function noise(t, d, freq, vol, f1) { const s = AU.ctx.createBufferSource(); s.buffer = AU.noise; const f = AU.ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(freq, t); if (f1) f.frequency.exponentialRampToValueAtTime(f1, t + d); f.Q.value = .9; const gn = AU.ctx.createGain(); gn.gain.setValueAtTime(vol, t); gn.gain.exponentialRampToValueAtTime(.001, t + d); s.connect(f); f.connect(gn); gn.connect(AU.sfx); s.start(t); s.stop(t + d + .02); }
+function sweep(f0, f1, t, d, type, vol) { const o = AU.ctx.createOscillator(), gn = AU.ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + d); gn.gain.setValueAtTime(vol, t); gn.gain.linearRampToValueAtTime(0, t + d); o.connect(gn); gn.connect(_sfxDest || AU.sfx); o.start(t); o.stop(t + d + .02); }
+function noise(t, d, freq, vol, f1) { const s = AU.ctx.createBufferSource(); s.buffer = AU.noise; const f = AU.ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(freq, t); if (f1) f.frequency.exponentialRampToValueAtTime(f1, t + d); f.Q.value = .9; const gn = AU.ctx.createGain(); gn.gain.setValueAtTime(vol, t); gn.gain.exponentialRampToValueAtTime(.001, t + d); s.connect(f); f.connect(gn); gn.connect(_sfxDest || AU.sfx); s.start(t); s.stop(t + d + .02); }
 function playBGM(name) {
   if (AU.cur === name && (AU.seq || !AU.ctx)) return;
   AU.cur = name; AU.seq = null; if (!AU.ctx || !name) return;
@@ -280,9 +280,9 @@ setInterval(() => {
   const q = AU.seq; if (!q || !AU.ctx) return; const sp = 60 / q.tr.bpm;
   for (const v of q.vs) { while (!v.done && v.t < AU.ctx.currentTime + .3) { const n = v.n[v.i]; const d = n.b * sp; tone(n.f, v.t, d * .9, v.type, v.vol, AU.music); v.t += d; v.i++; if (v.i >= v.n.length) { if (q.tr.loop) v.i = 0; else v.done = true; } } }
 }, 60);
-let _lastSfx = {};
+let _lastSfx = {}, _sfxDest = null;
 function sfx(n) {
-  if (!AU.ctx) return; const t = AU.ctx.currentTime, D = AU.sfx;
+  if (!AU.ctx) return; const t = AU.ctx.currentTime, D = _sfxDest || AU.sfx;
   if (_lastSfx[n] && t - _lastSfx[n] < .04) return; _lastSfx[n] = t;
   switch (n) {
     case 'cur': tone(990, t, .035, 'square', .16, D); break;
@@ -4914,8 +4914,8 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.8.0';
-const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
+const GAME_VERSION = '1.9.0';
+const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
 function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {} }; }
@@ -5419,7 +5419,7 @@ class World extends Phaser.Scene {
     this.events.on('postupdate', this.camStep, this);
     this.events.once('shutdown', () => this.events.off('postupdate', this.camStep, this));
     this.mpT = 0;
-    playBGM(G.title ? 'town' : this.weather === 'rain' ? null : M.bgm);
+    playBGM(G.title ? 'town' : this.weather === 'rain' ? null : bgmFor(M));
     if (!G.title) achCheck(this);
     FADE.style.opacity = 0;
     if (!G.title) { updHud(); showHud(true); if (!data.quiet) banner(M.name, M.id === 'village' ? 'SELAMAT DATANG DI' : 'MEMASUKI'); }
@@ -5858,7 +5858,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt);
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt);
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       if (this.boulder) this.updBoulder(dt);
@@ -6090,7 +6090,7 @@ Object.assign(World.prototype, {
     if (e.hp <= 0) this.killEnemy(e);
   },
   killEnemy(e) {
-    e.hp = 0; e.spr.body.enable = false; sfx('die');
+    e.hp = 0; e.spr.body.enable = false; sfxAt('die', e.spr.x, e.spr.y, this);
     const x = e.spr.x, y = e.spr.y;
     this.sparkle(x, y - 8, 'dot', 14);
     for (let i = 0; i < 4; i++) this.time.delayedCall(i * 40, () => this.puff(x + rnd(-8, 8), y - rnd(0, 10)));
@@ -6150,14 +6150,14 @@ Object.assign(World.prototype, {
   },
   eShoot(e, kind, angles, dmg, abs) {
     const P = PROJ[kind], s = e.spr, pl = this.pl, base = abs ? 0 : Math.atan2(pl.y - s.y, pl.x - s.x);
-    sfx('spore');
+    sfxAt('spore', s.x, s.y, this);
     for (const a of angles) {
       const sp = this.add.image(s.x, s.y - 8, P.key);
       this.shots.push({ s: sp, gx: s.x, gy: s.y, vx: Math.cos(base + a) * P.spd, vy: Math.sin(base + a) * P.spd, life: 2.6, kind, dmg, spin: P.spin, enemy: 1, fx: P.fx || e.D.fx });
     }
   },
   shockwave(x, y, R, atk) {
-    sfx('boom'); this.camShake(250, .012);
+    sfxAt('boom', x, y, this); this.camShake(250, .012);
     const g = this.add.graphics().setDepth(y - 1); const o = { r: 6 };
     this.tweens.add({ targets: o, r: R, duration: 300, onUpdate: () => { g.clear(); g.lineStyle(3, 0xfff0b0, 1 - o.r / R * .6).strokeEllipse(x, y, o.r * 2, o.r * 1.2); g.lineStyle(1, 0xffffff, .8).strokeEllipse(x, y, o.r * 1.6, o.r * .9); }, onComplete: () => g.destroy() });
     const p = this.add.particles(x, y, 'smoke', { lifespan: 600, speed: { min: 30, max: 70 }, angle: { min: 160, max: 380 }, scale: { start: .8, end: 1.6 }, alpha: { start: .6, end: 0 }, emitting: false, tint: 0xd8c8a0 }).setDepth(y + 1); p.explode(14); this.time.delayedCall(700, () => p.destroy());
@@ -6428,7 +6428,7 @@ Object.assign(World.prototype, {
         } else if (!willRain && this.weather === 'rain') {
           this.weather = 'clear';
           banner('Hujan telah reda. Langit kembali cerah.', 'CUACA', false, 2000);
-          playBGM(this.M.bgm);
+          playBGM(bgmFor(this.M));
         }
       }
     }
@@ -6931,7 +6931,7 @@ Object.assign(World.prototype, {
             e.st = 'chase'; s.setVelocity(dx / d * D.spd, dy / d * D.spd);
             if (d < (D.side ? 44 : 34) && e.t <= 0) { e.st = 'wind'; e.t = D.side ? .32 : .42; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); }
           } else wander(28);
-        } else if (e.st === 'wind') { if (e.t <= 0) { e.st = 'lunge'; e.t = .22; s.clearTint(); s.setVelocity(e.lx * 210, e.ly * 210); sfx('swing'); } }
+        } else if (e.st === 'wind') { if (e.t <= 0) { e.st = 'lunge'; e.t = .22; s.clearTint(); s.setVelocity(e.lx * 210, e.ly * 210); sfxAt('swing', s.x, s.y, this); } }
         else if (e.st === 'lunge') { if (e.t <= 0) { e.st = 'rec'; e.t = .55; s.setVelocity(0); } }
         else if (e.st === 'rec') { if (e.t <= 0) { e.st = 'chase'; e.t = .3; } }
         if (D.ch) this.charAnim(e); else s.flipX = (e.st === 'wind' ? e.lx : s.body.velocity.x) > 0; break;
@@ -6940,7 +6940,7 @@ Object.assign(World.prototype, {
           if (aggro && d < 140 && e.cd <= 0) { e.st = 'wind'; e.t = .6; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); s.flipX = dx > 0; }
           else if (aggro) s.setVelocity(dx / d * D.spd * .6, dy / d * D.spd * .6); else wander(D.spd * .5);
           if (s.body.velocity.x) s.flipX = s.body.velocity.x > 0;
-        } else if (e.st === 'wind') { s.x += Math.sin(this.t * 60) * .6; if (e.t <= 0) { e.st = 'run'; e.t = .9; s.clearTint(); s.setVelocity(e.lx * 220, e.ly * 220); sfx('roar'); } }
+        } else if (e.st === 'wind') { s.x += Math.sin(this.t * 60) * .6; if (e.t <= 0) { e.st = 'run'; e.t = .9; s.clearTint(); s.setVelocity(e.lx * 220, e.ly * 220); sfxAt('roar', s.x, s.y, this); } }
         else if (e.st === 'run') {
           s.anims.timeScale = 3; this.dustE = (this.dustE || 0) - dt; if (this.dustE <= 0) { this.dustE = .08; this.puff(s.x, s.y); }
           const b = s.body.blocked; if (b.left || b.right || b.up || b.down) { e.st = 'stun'; e.t = 1.2; s.setVelocity(0); this.camShake(100, .004); popWorld(s.x, s.y - 20, 'pusing!', 'xp'); }
@@ -6950,7 +6950,7 @@ Object.assign(World.prototype, {
       case 'golem':
         if (e.st === 'wind') { s.setVelocity(0); if (e.t <= 0) { e.st = 'rec'; e.t = .9; s.clearTint(); this.shockwave(s.x, s.y, 42, D.atk); } }
         else if (e.st === 'rec') { s.setVelocity(0); if (e.t <= 0) e.st = 'chase'; }
-        else { if (aggro) s.setVelocity(dx / d * D.spd, dy / d * D.spd); else wander(D.spd * .6); if (aggro && d < 36 && e.cd <= 0) { e.st = 'wind'; e.t = .65; e.cd = 2.2; s.setTint(0xffa07a); sfx('jump'); } }
+        else { if (aggro) s.setVelocity(dx / d * D.spd, dy / d * D.spd); else wander(D.spd * .6); if (aggro && d < 36 && e.cd <= 0) { e.st = 'wind'; e.t = .65; e.cd = 2.2; s.setTint(0xffa07a); sfxAt('jump', s.x, s.y, this); } }
         s.flipX = dx > 0; break;
       case 'boss': case 'gboss': this.updBoss(e, dt, dx, dy, d); break;
       case 'qboss': this.updQueen(e, dt, dx, dy, d); break;
@@ -7075,7 +7075,7 @@ Object.assign(World.prototype, {
     if (B.after === 'witch') { await say('Kau tidak mengerti... Dia di bawah akar... menjanjikan cahaya abadi...', 'Morgath'); learn('suara_morgath'); S.stage = 8; updHud(); const c = this.M.chests.find(c => c.needFlag === 'witch'); const sp = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'doto', 20); await say('Morgath lenyap bersama kabutnya... Rawa Senja mulai terang.'); await say('Sebuah peti muncul di tempat ia berdiri. Setelah itu, laporkan ke Tetua Bram.'); }
     if (B.after === 'dragon') { await say('Bukan... Morgath... yang membangunkanku... Bisikan dari bawah tanah... ia memanggil namamu, anak cahaya...', 'Kryos'); learn('suara_kryos'); S.stage = 13; updHud(); const c = this.M.chests.find(c => c.needFlag === 'dragon'); const sp = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'dot', 20); sp.setAlpha(0); this.tweens.add({ targets: sp, alpha: 1, duration: 600 }); await say('Kryos hancur menjadi serpihan es berkilau... Badai salju mereda.'); await say('Sebuah peti muncul di puncak. Setelah itu, laporkan ke Tetua Bram!'); }
     if (B.after === 'golemchest') { const c = this.M.chests.find(c => c.needFlag === 'golem'); const s = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'doto', 20); s.setAlpha(0); this.tweens.add({ targets: s, alpha: 1, duration: 600 }); await say('Sebuah peti harta muncul dari reruntuhan Golem Purba!'); }
-    this.bossOn = false; G.lock--; playBGM(this.M.bgm); achCheck(this); saveGame(this);
+    this.bossOn = false; G.lock--; playBGM(bgmFor(this.M)); achCheck(this); saveGame(this);
   },
 });
 
@@ -12712,6 +12712,104 @@ Object.assign(World.prototype, {
 });
 
 'use strict';
+// Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#911),
+// suara jauh-dekat (#919), langkah kaki sesuai tanah (#88)
+Object.assign(TRACKS, {
+  // salju: pelan, dingin, banyak ruang kosong
+  snow: { bpm: 76, loop: true, v: [
+    { s: 'B4:2 F#5:1 E5:1 D5:2 R:1 A4:1 B4:2 D5:1 E5:1 F#5:4 G5:2 F#5:1 E5:1 D5:2 R:1 B4:1 A4:2 F#4:1 A4:1 B4:4', type: 'triangle', vol: .7 },
+    { s: 'B2:4 G2:4 D3:4 A2:4 B2:4 G2:4 A2:4 F#2:4', type: 'sine', vol: .9 }] },
+  // rawa: berat, mengambang, nada miring
+  swamp: { bpm: 70, loop: true, v: [
+    { s: 'D4:1.5 F4:0.5 G#4:2 A4:1 G#4:1 F4:2 D4:2 R:2 C#4:1 D4:1 F4:1.5 E4:0.5 D4:4 R:2', type: 'triangle', vol: .7 },
+    { s: 'D2:3 D2:1 C#2:4 D2:3 D2:1 A1:4 D2:3 D2:1 C#2:4 A#1:4 A1:4', type: 'sawtooth', vol: .25 }] },
+  // kota: ramai, cepat, terang
+  city: { bpm: 132, loop: true, v: [
+    { s: 'C5:0.5 E5:0.5 G5:1 A5:0.5 G5:0.5 E5:1 F5:0.5 E5:0.5 D5:1 G4:1 C5:0.5 D5:0.5 E5:1 G5:1 C6:2 A5:0.5 G5:0.5 F5:1 E5:0.5 D5:0.5 C5:1 D5:1 E5:1 C5:2', type: 'square', vol: .28 },
+    { s: 'C3:1 G3:1 C3:1 G3:1 F2:1 C3:1 G2:1 D3:1 C3:1 G3:1 E3:1 G3:1 F2:1 C3:1 G2:1 C3:1', type: 'triangle', vol: .9 }] },
+  // hutan: sunyi dan sedikit mencekam
+  forest: { bpm: 88, loop: true, v: [
+    { s: 'A4:2 C5:1 B4:1 G#4:2 E4:2 A4:1 B4:1 C5:1 D5:1 E5:3 R:1 F5:1 E5:1 D5:1 C5:1 B4:2 G#4:2 A4:4', type: 'triangle', vol: .75 },
+    { s: 'A2:4 F2:4 E2:4 E2:4 A2:4 D2:4 E2:4 A2:4', type: 'triangle', vol: .8 }] },
+  // desa malam: versi lembut lagu desa
+  townN: { bpm: 80, loop: true, v: [
+    { s: 'E5:2 D5:1 C5:1 D5:2 G4:2 C5:3 D5:1 E5:4 F5:2 E5:1 D5:1 C5:2 A4:2 B4:3 C5:1 D5:4', type: 'sine', vol: .8 },
+    { s: 'C3:4 A2:4 F2:4 G2:4 C3:4 A2:4 F2:4 G2:4', type: 'sine', vol: .8 }] },
+  // pertarungan biasa
+  battle: { bpm: 150, loop: true, v: [
+    { s: 'A4:0.5 A4:0.5 C5:0.5 A4:0.5 D5:0.5 A4:0.5 E5:1 D5:0.5 C5:0.5 B4:0.5 G4:0.5 A4:2 A4:0.5 A4:0.5 C5:0.5 A4:0.5 E5:0.5 A4:0.5 G5:1 F5:0.5 E5:0.5 D5:0.5 B4:0.5 E5:2', type: 'square', vol: .3 },
+    { s: 'A2:0.5 A3:0.5 A2:0.5 A3:0.5 F2:0.5 F3:0.5 F2:0.5 F3:0.5 G2:0.5 G3:0.5 G2:0.5 G3:0.5 E2:0.5 E3:0.5 E2:0.5 E3:0.5 A2:0.5 A3:0.5 A2:0.5 A3:0.5 F2:0.5 F3:0.5 F2:0.5 F3:0.5 G2:0.5 G3:0.5 E2:0.5 E3:0.5 E2:1 E2:1', type: 'triangle', vol: .9 }] },
+});
+for (const k of ['snow', 'swamp', 'city', 'forest', 'townN', 'battle']) TRACKS[k].v.forEach(v => v.n = parseSeq(v.s));
+
+// lagu dasar sesuai peta & waktu
+function bgmFor(M) {
+  if (!M) return null; const id = M.id, night = typeof isNight === 'function' && isNight();
+  let b = M.bgm;
+  if (id === 'snow') b = 'snow'; else if (id === 'swamp') b = 'swamp';
+  else if (id === 'forest' || id === 'deepwood') b = 'forest';
+  else if (/^k/.test(id) && M.bgm === 'town') b = 'city';
+  if (night && (b === 'town' || b === 'city') && !M.indoor) b = 'townN';
+  return b;
+}
+// pergantian lagu dengan memudar
+function swapBGM(name) {
+  if (AU.cur === name) return;
+  if (!AU.ctx) return playBGM(name);
+  const g = AU.music.gain, v = .09 * OPT.mus / 3, t = AU.ctx.currentTime;
+  g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + .35);
+  setTimeout(() => { playBGM(name); const t2 = AU.ctx.currentTime; g.cancelScheduledValues(t2); g.setValueAtTime(0, t2); g.linearRampToValueAtTime(v, t2 + .6); }, 360);
+}
+// suara berjarak + arah kiri/kanan
+function sfxAt(n, x, y, sc) {
+  sc = sc || (window.__game && window.__game.sc); if (!AU.ctx || !sc || !sc.pl) return sfx(n);
+  const dx = x - sc.pl.x, d = Math.hypot(dx, y - sc.pl.y), k = Math.max(0, 1 - d / 420); if (k <= .03) return;
+  const g = AU.ctx.createGain(); g.gain.value = .25 + .75 * k * k;
+  let out = g; if (AU.ctx.createStereoPanner) { const p = AU.ctx.createStereoPanner(); p.pan.value = clamp(dx / 260, -.8, .8); g.connect(p); out = p; }
+  out.connect(AU.sfx); _sfxDest = g; try { sfx(n); } finally { _sfxDest = null; }
+  setTimeout(() => { try { out.disconnect(); g.disconnect(); } catch (_) { } }, 1500);
+}
+// bunyi langkah per jenis tanah
+function stepSound(kind) {
+  if (!AU.ctx || !OPT.steps) return; const t = AU.ctx.currentTime, D = AU.sfx;
+  switch (kind) {
+    case 'snow': noise(t, .07, 2600, .22, 1400); break;
+    case 'stone': noise(t, .025, 2200, .18); tone(180, t, .02, 'square', .05, D); break;
+    case 'wood': tone(140, t, .04, 'triangle', .35, D); noise(t, .02, 700, .1); break;
+    case 'water': noise(t, .09, 900, .25, 2400); break;
+    case 'dirt': noise(t, .04, 600, .2); break;
+    default: noise(t, .05, 1500, .14, 900); // rumput
+  }
+}
+function segD(px, py, x1, y1, x2, y2) { const vx = x2 - x1, vy = y2 - y1, l = vx * vx + vy * vy || 1, u = clamp(((px - x1) * vx + (py - y1) * vy) / l, 0, 1); return Math.hypot(px - x1 - vx * u, py - y1 - vy * u); }
+Object.assign(World.prototype, {
+  groundAt(x, y) {
+    const M = this.M;
+    if (M.indoor || M.ground === 'room') return 'wood';
+    for (const [px, py, rx, ry] of M.ponds || []) if (((x - px) / (rx + 6)) ** 2 + ((y - py) / (ry + 4)) ** 2 < 1) return 'water';
+    const onPath = (M.paths || []).some(([x1, y1, x2, y2, w]) => segD(x, y, x1, y1, x2, y2) < (w || 12) * .7);
+    if (M.ground === 'snow') return 'snow';
+    if (M.ground === 'cave') return 'stone';
+    if (onPath) return M.ground === 'village' ? 'stone' : 'dirt';
+    return M.ground === 'village' ? 'stone' : 'grass';
+  },
+  updSound(dt) {
+    if (G.title) return; const pl = this.pl;
+    // langkah
+    const v = pl.body ? Math.hypot(pl.body.velocity.x, pl.body.velocity.y) : 0;
+    if (v > 20 && !pl.dead && !G.lock) { this.stepT = (this.stepT || 0) - dt * (v / 90); if (this.stepT <= 0) { this.stepT = .36; stepSound(this.groundAt(pl.x, pl.y)); } } else this.stepT = .1;
+    // musik dinamis
+    this.bgmT = (this.bgmT || 0) - dt; if (this.bgmT > 0) return; this.bgmT = .5;
+    if (this.bossOn || this.trans || pl.dead || AU.cur === 'victory' || AU.cur === 'lose' || this.weather === 'rain') return;
+    if (!OPT.dynMus) return;
+    const fight = this.enemies.some(e => e.hp > 0 && !e.boss && e.alert === 2 && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 150);
+    if (fight) this.calmT = 4; else this.calmT = (this.calmT || 0) - .5;
+    const want = this.calmT > 0 ? 'battle' : bgmFor(this.M);
+    if (want && want !== AU.cur) swapBGM(want);
+  },
+});
+
+'use strict';
 // Percakapan NPC, toko, bengkel, penginapan
 Object.assign(World.prototype, {
   npcHasQuest(id) {
@@ -13188,6 +13286,8 @@ async function openSettings() {
     ['Layar penuh', () => onoff(fs()), async () => { try { fs() ? await document.exitFullscreen() : await document.documentElement.requestFullscreen(); } catch (_) { } await sleep(150); }, 'Sembunyikan bilah browser'],
     ['Kesulitan', () => DIFF[OPT.diff].n, () => { OPT.diff = (OPT.diff + 1) % 3; }, 'Santai: musuh lebih lemah · Sulit: lebih kuat'],
     ['Kecepatan teks', () => ['Lambat', 'Normal', 'Cepat', 'Instan'][OPT.txt], () => { OPT.txt = (OPT.txt + 1) % 4; }, 'Tahan tombol A/B saat dialog untuk mempercepat'],
+    ['Musik dinamis', () => onoff(OPT.dynMus), () => { OPT.dynMus = !OPT.dynMus; }, 'Musik berubah saat bertarung'],
+    ['Suara langkah', () => onoff(OPT.steps), () => { OPT.steps = !OPT.steps; }, 'Bunyi langkah sesuai jenis tanah'],
     ['Peta mini', () => onoff(OPT.mini), () => { OPT.mini = !OPT.mini; }, 'Peta kecil di pojok kiri atas (ketuk untuk peta besar)'],
     ['Tips tutorial', () => onoff(OPT.tips), () => { OPT.tips = !OPT.tips; }, 'Petunjuk singkat saat situasi baru'],
     ['Ukuran tombol', () => ['Kecil', 'Normal', 'Besar', 'Sangat besar'][OPT.btnSize], () => { OPT.btnSize = (OPT.btnSize + 1) % 4; applyPadOpt(); }, 'Ukuran tombol layar sentuh'],

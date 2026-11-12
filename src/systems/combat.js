@@ -117,7 +117,7 @@ Object.assign(World.prototype, {
     if (e.hp <= 0) this.killEnemy(e);
   },
   killEnemy(e) {
-    e.hp = 0; e.spr.body.enable = false; sfx('die');
+    e.hp = 0; e.spr.body.enable = false; sfxAt('die', e.spr.x, e.spr.y, this);
     const x = e.spr.x, y = e.spr.y;
     this.sparkle(x, y - 8, 'dot', 14);
     for (let i = 0; i < 4; i++) this.time.delayedCall(i * 40, () => this.puff(x + rnd(-8, 8), y - rnd(0, 10)));
@@ -177,14 +177,14 @@ Object.assign(World.prototype, {
   },
   eShoot(e, kind, angles, dmg, abs) {
     const P = PROJ[kind], s = e.spr, pl = this.pl, base = abs ? 0 : Math.atan2(pl.y - s.y, pl.x - s.x);
-    sfx('spore');
+    sfxAt('spore', s.x, s.y, this);
     for (const a of angles) {
       const sp = this.add.image(s.x, s.y - 8, P.key);
       this.shots.push({ s: sp, gx: s.x, gy: s.y, vx: Math.cos(base + a) * P.spd, vy: Math.sin(base + a) * P.spd, life: 2.6, kind, dmg, spin: P.spin, enemy: 1, fx: P.fx || e.D.fx });
     }
   },
   shockwave(x, y, R, atk) {
-    sfx('boom'); this.camShake(250, .012);
+    sfxAt('boom', x, y, this); this.camShake(250, .012);
     const g = this.add.graphics().setDepth(y - 1); const o = { r: 6 };
     this.tweens.add({ targets: o, r: R, duration: 300, onUpdate: () => { g.clear(); g.lineStyle(3, 0xfff0b0, 1 - o.r / R * .6).strokeEllipse(x, y, o.r * 2, o.r * 1.2); g.lineStyle(1, 0xffffff, .8).strokeEllipse(x, y, o.r * 1.6, o.r * .9); }, onComplete: () => g.destroy() });
     const p = this.add.particles(x, y, 'smoke', { lifespan: 600, speed: { min: 30, max: 70 }, angle: { min: 160, max: 380 }, scale: { start: .8, end: 1.6 }, alpha: { start: .6, end: 0 }, emitting: false, tint: 0xd8c8a0 }).setDepth(y + 1); p.explode(14); this.time.delayedCall(700, () => p.destroy());
