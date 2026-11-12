@@ -44,6 +44,7 @@ MAPS.meadow = {
     { id: 'domba', ch: 'child', name: 'Domba Padang', x: 280, y: 220, dir: 'down', wander: 18 }],
   patok: [560, 652],
   enemies: [
+    ['bounty_wolf', 800, 720],
     ['bee', 500, 300], ['bee', 560, 330], ['boar', 640, 420], ['slimer', 700, 500], ['plant', 560, 540],
     ['wolf', 900, 420], ['bee', 960, 380], ['boar', 1000, 560], ['plant', 1120, 600], ['slimer', 1060, 660],
     ['snake', 400, 760], ['boar', 260, 780], ['plant', 340, 920], ['bee', 200, 880],

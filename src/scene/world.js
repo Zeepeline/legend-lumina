@@ -588,6 +588,15 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'bounty_board') {
+      this.inter.push({
+        x, y: y + 4, r: 22,
+        fn: async () => {
+          if (typeof openCityBounties === 'function') await openCityBounties(this);
+          else await say('Papan Buronan Monster Langka Kota Lumina.');
+        }
+      });
+    }
     if (type === 'deadtree') {
       s.setTint(0x7a6552);
       s.chopHp = 3;

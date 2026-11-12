@@ -868,3 +868,48 @@ World.prototype.openDirectBarter = async function () {
   }
   G.lock--;
 };
+
+// ---------------- 12. PAPAN BURONAN MONSTER LANGKA (#241) ----------------
+const CITY_BOUNTIES = [
+  { id: 'bounty_wolf', name: 'Taring Perak', map: 'meadow', x: 800, y: 720, rew: 200, loc: 'Padang Angin (dekat pohon buah)', d: 'Serigala berbulu perak yang lincah dan ganas meneror kafilah pedagang.' },
+  { id: 'bounty_frog', name: 'Raja Rawa Toksin', map: 'swamp', x: 880, y: 380, rew: 250, loc: 'Rawa Senja (ceruk timur)', d: 'Katak raksasa purba penyembur lendir beracun pekat di kubangan rawa.' },
+  { id: 'bounty_gargoyle', name: 'Gargoyle Merah', map: 'cave', x: 600, y: 220, rew: 300, loc: 'Gua Batu (lorong kristal utara)', d: 'Monster bersayap api yang bersembunyi di langit-langit kegelapan gua.' }
+];
+
+async function openCityBounties(sc) {
+  G.lock++; sfx('cur');
+  S.bountiesDone = S.bountiesDone || {};
+  try {
+    for (;;) {
+      const items = CITY_BOUNTIES.map(b => {
+        const done = !!S.bountiesDone[b.id];
+        return {
+          t: (done ? '✓ ' : '⚔ ') + b.name,
+          r: done ? 'SELESAI' : `${b.rew} G`,
+          dis: done,
+          bounty: b
+        };
+      });
+      items.push({ t: 'Tutup' });
+
+      const r = await choose({
+        head: '📜 PAPAN BURONAN KOTA LUMINA',
+        x: 20, y: 30, w: 280,
+        items,
+        foot: (i) => {
+          if (i >= CITY_BOUNTIES.length) return 'Buru monster langka yang meresahkan jalan perdagangan.';
+          const b = CITY_BOUNTIES[i];
+          const done = !!S.bountiesDone[b.id];
+          return `<b>${b.name}:</b> ${b.d}<br>Lokasi: <i>${b.loc}</i> · Hadiah: <b>${b.rew} G</b> ${done ? '(Terklaim)' : ''}`;
+        }
+      });
+
+      if (r < 0 || r >= CITY_BOUNTIES.length) break;
+
+      const chosen = CITY_BOUNTIES[r];
+      await say(`[MAKLUMAT BURONAN]\nTarget: ${chosen.name}\nLokasi: ${chosen.loc}\nHadiah: ${chosen.rew} G\n\n"${chosen.d}"`, 'Gerbang Kota');
+    }
+  } finally {
+    G.lock--;
+  }
+}

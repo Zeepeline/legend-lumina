@@ -127,6 +127,13 @@ function layout() {
   const s = Math.max(.6, Math.min(aw / VW, ah / VH));
   const w = Math.floor(VW * s), h = Math.floor(VH * s);
   SCREEN.style.width = w + 'px'; SCREEN.style.height = h + 'px'; UISCALE = w / VW; UI.style.transform = `scale(${UISCALE})`;
+
+  // Mode Layar Lebar Responsif (#83): beri kelas 'wide-land' bila rasio layar lebar >= 1.5
+  if (land && (vw / vh) >= 1.5) {
+    document.body.classList.add('wide-land');
+  } else {
+    document.body.classList.remove('wide-land');
+  }
 }
 UI.style.height = VH + 'px';
 addEventListener('resize', layout); layout();

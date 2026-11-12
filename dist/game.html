@@ -149,6 +149,12 @@ body.touch #keys{display:none}
  body.touch #bT{left:18px;top:46px}
  body.touch #bD{right:122px;top:auto;bottom:96px;width:46px;height:46px}
 }
+/* Ergonomic Corner Layout untuk Landscape Layar Lebar (>= 1.5 ratio) (#83) */
+body.touch.wide-land #joy{left:32px;bottom:32px}
+body.touch.wide-land #bA{right:32px;bottom:78px}
+body.touch.wide-land #bB{right:126px;bottom:30px}
+body.touch.wide-land #bD{right:138px;bottom:106px}
+body.touch.wide-land #bI{right:36px;bottom:8px}
 .codew textarea{width:100%;height:88px;font:9px/1.25 monospace;border:1px solid #6e4222;border-radius:3px;background:#fffaf0;color:#3b2618;resize:none;word-break:break-all;user-select:text;-webkit-user-select:text}
 .codew .cbtn{display:flex;gap:8px;justify-content:center;margin-top:4px}
 .codew .cbtn .opt{padding:2px 12px;border:1px solid #6e4222;border-radius:3px;cursor:pointer}
@@ -496,6 +502,13 @@ function layout() {
   const s = Math.max(.6, Math.min(aw / VW, ah / VH));
   const w = Math.floor(VW * s), h = Math.floor(VH * s);
   SCREEN.style.width = w + 'px'; SCREEN.style.height = h + 'px'; UISCALE = w / VW; UI.style.transform = `scale(${UISCALE})`;
+
+  // Mode Layar Lebar Responsif (#83): beri kelas 'wide-land' bila rasio layar lebar >= 1.5
+  if (land && (vw / vh) >= 1.5) {
+    document.body.classList.add('wide-land');
+  } else {
+    document.body.classList.remove('wide-land');
+  }
 }
 UI.style.height = VH + 'px';
 addEventListener('resize', layout); layout();
@@ -4120,6 +4133,7 @@ const OBJ = {
   village_vault: { key: 'crate', col: [16, 10, 0], sh: [14, 3], fade: 1 },
   mirror_memory: { key: 'altar', col: [20, 12, 0], sh: [16, 4], fade: 1 },
   fame_board: { key: 'board', col: [16, 6, 0], sh: [10, 3] },
+  bounty_board: { key: 'board', col: [16, 6, 0], sh: [10, 3] },
   deadtree: { key: 'stump', col: [20, 10, 0], sh: [16, 4], fade: 1 },
   rune_pillar: { key: 'altar', col: [18, 12, 0], sh: [14, 4], fade: 1 },
   fence: { key: 'fence', col: [18, 4, 0] },
@@ -4498,6 +4512,7 @@ MAPS.meadow = {
     { id: 'domba', ch: 'child', name: 'Domba Padang', x: 280, y: 220, dir: 'down', wander: 18 }],
   patok: [560, 652],
   enemies: [
+    ['bounty_wolf', 800, 720],
     ['bee', 500, 300], ['bee', 560, 330], ['boar', 640, 420], ['slimer', 700, 500], ['plant', 560, 540],
     ['wolf', 900, 420], ['bee', 960, 380], ['boar', 1000, 560], ['plant', 1120, 600], ['slimer', 1060, 660],
     ['snake', 400, 760], ['boar', 260, 780], ['plant', 340, 920], ['bee', 200, 880],
@@ -4525,6 +4540,7 @@ MAPS.cave = {
   chests: [{ id: 'g1', x: 860, y: 800, item: 'potion3' }, { id: 'g2', x: 640, y: 100, item: 'key' }, { id: 'g3', x: 960, y: 420, item: 'shield', needFlag: 'golem' }, { id: 'g_torch', x: 420, y: 640, item: 'gold100', needFlag: 'cave_torches' }, { id: 'g_lock', x: 280, y: 420, item: 'gold200', locked: 1 }, { id: 'g_mimic', x: 920, y: 820, mimic: 1 }],
   exits: [{ x: 80, y: 880, w: 80, h: 40, to: 'meadow', tx: 1200, ty: 210, dir: 'down', label: 'Padang Angin' }],
   enemies: [
+    ['bounty_gargoyle', 600, 220],
     ['batc', 400, 680], ['skel', 460, 720], ['slimei', 360, 740], ['ghost', 300, 430], ['skel', 240, 450], ['batc', 340, 380],
     ['golem', 600, 300], ['ghost', 680, 330], ['slimei', 560, 260], ['skel', 640, 140], ['batc', 600, 100],
     ['skel', 820, 780], ['ghost', 900, 800], ['slimei', 860, 740], ['batc', 760, 760],
@@ -4549,7 +4565,7 @@ MAPS.swamp = {
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 450], [0, 510, 40, 450], [1240, 0, 40, 960], [0, 930, 1280, 30]],
   exits: [{ x: 0, y: 450, w: 12, h: 60, to: 'river', tx: 2540, ty: 480, dir: 'left', label: 'Jalur Sungai' }, { x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }],
   npcs: [{ id: 'hermit', ch: 'hermit', name: 'Pertapa Sura', x: 604, y: 130, dir: 'down' }],
-  enemies: [['frog', 520, 240], ['frog', 440, 330], ['wisp', 380, 420], ['slimep', 340, 480], ['frog', 260, 560], ['wisp', 420, 620],
+  enemies: [['bounty_frog', 880, 380], ['frog', 520, 240], ['frog', 440, 330], ['wisp', 380, 420], ['slimep', 340, 480], ['frog', 260, 560], ['wisp', 420, 620],
     ['frog', 760, 250], ['slimep', 860, 340], ['wisp', 920, 440], ['plant', 1000, 520], ['frog', 900, 620], ['wisp', 820, 680],
     ['slimep', 500, 680], ['ghost', 560, 760], ['snake', 760, 760], ['plant', 720, 560]],
   bosses: [{ type: 'witch', flag: 'witch', x: 640, y: 840, zone: [560, 772, 160, 130], need: 7, after: 'witch',
@@ -4649,7 +4665,7 @@ MAPS.kgate = {
   ponds: [[300, 470, 210, 70], [900, 470, 210, 70]],
   objs: [['gatehouse', 600, 404], ...[[60, 404], [192, 404], [324, 404], [876, 404], [1008, 404], [1140, 404]].map(([x, y]) => ['cwall', x, y]),
     ...lampRow(560, 560, 2, 80), ...lampRow(560, 720, 2, 80), ...lampRow(540, 250, 3, 60),
-    ['sign', 680, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\n↑ Masuk lewat gerbang di utara → Distrik Pasar.' }], ['crate', 260, 620], ['crate', 282, 616], ['barrel', 330, 630], ['crate', 880, 620], ['barrel', 930, 626],
+    ['sign', 680, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\n↑ Masuk lewat gerbang di utara → Distrik Pasar.' }], ['bounty_board', 720, 600], ['crate', 260, 620], ['crate', 282, 616], ['barrel', 330, 630], ['crate', 880, 620], ['barrel', 930, 626],
     ['houseB', 200, 230], ['houseC', 1000, 230], ['planter', 470, 300], ['planter', 730, 300],
     ['pigeons', 680, 520], ['pigeons', 420, 680],
     ['archerytarget', 340, 720]],
@@ -4716,6 +4732,7 @@ MAPS.kbawah = {
   exits: [{ x: 1188, y: 470, w: 12, h: 60, to: 'kpasar', tx: 60, ty: 620, dir: 'right', label: 'Distrik Pasar' }],
   doors: [[160, 330, 'Rumah petak. Terdengar batuk dari dalam.'], [560, 330, 'Rumah petak kosong. Pemiliknya pindah ke Lembah Besi... lalu kembali lagi.']],
   npcs: [{ id: 'lestari', ch: 'lestari', name: 'Guru Lestari', x: 560, y: 600, dir: 'down' },
+    { id: 'arena_master', ch: 'guard', name: 'Pengawas Gelanggang', x: 700, y: 700, dir: 'down' },
     ...citizens([['kb1', 'child', 'Anak Kota Bawah', 650, 680, 'bawah'], ['kb2', 'farmer', 'Mantan Penambang', 300, 560, 'bawah'], ['kb3', 'woman', 'Ibu Kota Bawah', 900, 560, 'bawah'], ['kb4', 'child', 'Anak Kota Bawah', 450, 700, 'bawah']])],
   animals: [['cat', 700, 600, 0], ['cat', 380, 520, 1]],
   trees: { n: 80, min: 30, types: [['bushG1', .5], ['rock', .5]] },
@@ -4981,11 +4998,11 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.20.0';
+const GAME_VERSION = '1.21.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, trees: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, petDog: false, flowerPlots: [null, null], warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {}, bank: { gold: 0, day: 1 }, records: {}, outfit: 'default', runePillars: {} }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, trees: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, petDog: false, flowerPlots: [null, null], warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, bountiesDone: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {}, bank: { gold: 0, day: 1 }, records: {}, outfit: 'default', runePillars: {}, homeStyle: { floor: 'wood', wall: 'wood' }, arenaRank: 0 }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -4995,7 +5012,7 @@ function eqv(k) {
 const UPG = { wpn: 3, arm: 2, max: 5 };
 const itemName = id => ITEMS[id].n + ((S.up && S.up[id]) ? ' +' + S.up[id] : '');
 // Bonus masakan aktif (S.buff[jenis] = sisa detik)
-const BUFF = { atk: { n: 'Kuat', ic: '⚔', mul: 1.2 }, def: { n: 'Kebal', ic: '🛡', mul: 1.25 }, warm: { n: 'Hangat', ic: '♨' }, spd: { n: 'Ringan', ic: '🍃', mul: 1.2 } };
+const BUFF = { atk: { n: 'Kuat', ic: '⚔', mul: 1.2 }, def: { n: 'Kebal', ic: '🛡', mul: 1.25 }, warm: { n: 'Hangat', ic: '♨' }, spd: { n: 'Ringan', ic: '🍃', mul: 1.2 }, rested: { n: 'Bugar', ic: '✨', mul: 1.05 } };
 const buffOn = k => S.buff && S.buff[k] > 0;
 function stat() {
   const l = S.lv;
@@ -5247,6 +5264,10 @@ const ITEMS = {
   seed_flower: { n: 'Benih Bunga Lumina', k: 'mat', price: 8, sell: 3, d: 'Benih aneka bunga krisan dan aster cerah untuk ditanam di kebun rumah.', src: 'Toko desa' },
   flower_bouquet: { n: 'Buket Bunga Segar', k: 'use', hp: 30, mp: 30, price: 35, sell: 20, d: 'Rangkaian bunga aster mekar harum penenang pikiran. Hadiah manis untuk sahabat.', src: 'Kebun bunga rumah Arka' },
 
+  // Fitur #420: Peleburan Logam
+  iron_bar: { n: 'Batangan Besi', k: 'mat', price: 60, sell: 35, d: 'Batangan besi murni hasil peleburan bijih di tungku. Bahan tempa zirah kokoh.', src: 'Peleburan: 3 Bijih Batu di tungku' },
+  crystal_bar: { n: 'Batangan Kristal', k: 'mat', price: 80, sell: 48, d: 'Batangan kristal biru toska yang berkilau sejuk. Bahan pedang dan pusaka sakti.', src: 'Peleburan: 3 Pecahan Kristal di tungku' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },
@@ -5274,7 +5295,9 @@ const ICON_OF = {
   firecracker: 'bomb',
   leather_pouch: 'pelt',
   seed_flower: 'seed',
-  flower_bouquet: 'frostflower'
+  flower_bouquet: 'frostflower',
+  iron_bar: 'iron',
+  crystal_bar: 'shard'
 };
 // Masak di penginapan (Bu Rina)
 const COOK = [
@@ -5377,6 +5400,10 @@ const ENEMY = {
   salam: { name: 'Salamander', tex: 'salam', hp: 84, atk: 26, def: 8, spd: 40, exp: 40, gold: [7, 12], r: 6, ai: 'walk', side: 1, drop: ['scale', .6], fx: ['burn', 4, .5] },
   golemi: { name: 'Golem Es', tex: 'golemi', hp: 190, atk: 32, def: 16, spd: 26, exp: 80, gold: [14, 24], r: 10, ai: 'golem', drop: ['shard', .6], fx: ['chill', 3, .6] },
   kryos: { name: 'Naga Es Kryos', tex: 'snakei', hp: 980, atk: 36, def: 16, spd: 62, exp: 800, gold: [400, 400], r: 13, ai: 'dboss', scale: 2.8, side: 1, fx: ['chill', 3, .7], adds: ['wolfs', 'golemi', 'wolfs'] },
+  // Buronan Monster Langka Kota Lumina (#241)
+  bounty_wolf: { name: 'Taring Perak', tex: 'wolfs', hp: 320, atk: 28, def: 10, spd: 88, exp: 280, gold: [180, 220], r: 10, ai: 'lunge', side: 1, scale: 1.4, drop: ['pelt', 1], isBounty: true },
+  bounty_frog: { name: 'Raja Rawa Toksin', tex: 'frog', hp: 380, atk: 26, def: 12, spd: 58, exp: 320, gold: [220, 260], r: 11, ai: 'hop', scale: 1.6, drop: ['scale', 1], fx: ['poison', 6, .7], isBounty: true },
+  bounty_gargoyle: { name: 'Gargoyle Merah', tex: 'batc', hp: 360, atk: 30, def: 14, spd: 76, exp: 350, gold: [250, 300], r: 10, ai: 'fly', fly: 1, scale: 1.5, drop: ['shard', 1], fx: ['burn', 4, .6], isBounty: true },
 };
 const PROJ = { spore: { key: 'spore', spd: 72, fx: ['poison', 4, .5] }, seed: { key: 'seed', spd: 84 }, bone: { key: 'bone', spd: 96, spin: 1 }, rock: { key: 'rockshot', spd: 110, spin: 1 }, venom: { key: 'venom', spd: 96, fx: ['poison', 5, .6] }, ice: { key: 'icebolt', spd: 112, fx: ['chill', 3, .7] } };
 const BOSS_AI = ['boss', 'gboss', 'qboss', 'sboss', 'wboss', 'dboss'];
@@ -6189,6 +6216,15 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'bounty_board') {
+      this.inter.push({
+        x, y: y + 4, r: 22,
+        fn: async () => {
+          if (typeof openCityBounties === 'function') await openCityBounties(this);
+          else await say('Papan Buronan Monster Langka Kota Lumina.');
+        }
+      });
+    }
     if (type === 'deadtree') {
       s.setTint(0x7a6552);
       s.chopHp = 3;
@@ -6705,6 +6741,29 @@ Object.assign(World.prototype, {
     if (e.hp <= 0) this.killEnemy(e);
   },
   killEnemy(e) {
+    // Mekanik Kerangka Bangkit Kembali (#208)
+    if (e.type === 'skel' && !e.hasReanimated && (!this.curElem || this.curElem !== 'fire')) {
+      e.hasReanimated = true;
+      e.reanimating = 3.5;
+      e.hp = 0;
+      e.spr.body.enable = false;
+      e.spr.setTint(0xcccccc);
+      sfxAt('hit', e.spr.x, e.spr.y, this);
+      popWorld(e.spr.x, e.spr.y - 16, '💀 Tulang Bergetar...', 'crit');
+      this.tweens.add({ targets: e.spr, scaleY: e.sc * 0.4, scaleX: e.sc * 1.3, duration: 200, yoyo: true, repeat: 6 });
+      this.time.delayedCall(3500, () => {
+        if (e.spr && e.spr.active && e.reanimating > 0) {
+          e.reanimating = 0;
+          e.hp = Math.floor(e.maxhp * 0.5);
+          e.spr.body.enable = true;
+          e.spr.clearTint();
+          sfxAt('magic', e.spr.x, e.spr.y, this);
+          this.sparkle(e.spr.x, e.spr.y - 10, 'spark', 12);
+          popWorld(e.spr.x, e.spr.y - 20, '💀 BANGKIT KEMBALI!', 'crit');
+        }
+      });
+      return;
+    }
     e.hp = 0; e.spr.body.enable = false; sfxAt('die', e.spr.x, e.spr.y, this);
     const x = e.spr.x, y = e.spr.y;
     this.sparkle(x, y - 8, 'dot', 14);
@@ -6724,6 +6783,15 @@ Object.assign(World.prototype, {
     // Rekap statistik kill (Fitur #25 & #18)
     S.st = S.st || {}; S.st.kills = (S.st.kills || 0) + 1;
     if (e.boss) S.st.bosses = (S.st.bosses || 0) + 1;
+    if (e.D && e.D.isBounty && !S.bountiesDone[e.type]) {
+      S.bountiesDone[e.type] = true;
+      const bData = (typeof CITY_BOUNTIES !== 'undefined') ? CITY_BOUNTIES.find(b => b.id === e.type) : null;
+      const rew = bData ? bData.rew : 200;
+      S.gold += rew;
+      sfx('fanfare');
+      banner(`${e.D.name} Tumbang!`, 'BURONAN DITAKLUKKAN', true, 2500);
+      popWorld(x, y - 36, `+${rew} G Hadiah Buronan!`, 'gold');
+    }
     if (typeof checkTitles === 'function') checkTitles();
     this.gainExp(Math.round(e.D.exp * expMultiplier), x, y);
     if (e.boss) this.bossDown(e); else achCheck(this);
@@ -13696,6 +13764,8 @@ const CRAFT = [
   { id: 'net', n: 1, need: { pelt: 1, wool: 1 } },
   { id: 'sarrow', n: 5, need: { feather: 1, bone: 1 } },
   { id: 'bait', n: 3, need: { berry: 1, jelly: 1 } },
+  { id: 'iron_bar', n: 1, need: { ore: 3 } },
+  { id: 'crystal_bar', n: 1, need: { shard: 3 } },
 ];
 const ATTR = [['str', 'Kekuatan', '+1 serangan'], ['int', 'Sihir', '+2 kekuatan sihir'], ['vit', 'Ketahanan', '+5 HP maks & +0,5 pertahanan'], ['agi', 'Kelincahan', '+1% kecepatan & +1% kritikal']];
 function attrInit() {
@@ -14077,6 +14147,7 @@ async function openMapNew(sc) {
 const HOME_PRICE = 250, HOME_CAP = [6, 10, 14], HOME_EXT = [0, 300, 600];
 const FCAT = {
   bed: { n: 'Ranjang', p: 60, w: 22, h: 36, act: 'sleep', d: 'Tidur memulihkan HP & MP lalu menyimpan permainan.' },
+  bed_cozy: { n: 'Ranjang Nyaman Mewah', p: 120, w: 24, h: 38, act: 'sleep', d: 'Tidur memberi efek Bugar (+15% EXP & +5% speed 10 mnt).' },
   table: { n: 'Meja', p: 30, w: 34, h: 22 },
   shelf: { n: 'Rak Buku', p: 40, w: 36, h: 28, wallOnly: 1 },
   rug: { n: 'Karpet', p: 25, w: 56, h: 34, flat: 1 },
@@ -14154,7 +14225,23 @@ Object.assign(World.prototype, {
   async useFurn(o) {
     const a = FCAT[o.f.t].act; G.lock++;
     try {
-      if (a === 'sleep') { await fadeTo(1); sleepToMorning(); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Tidur di ranjang sendiri memang paling nyenyak. Permainan tersimpan.', 'Rumah'); }
+      if (a === 'sleep') {
+        await fadeTo(1);
+        sleepToMorning();
+        const st = stat();
+        S.hp = st.maxhp;
+        S.mp = st.maxmp;
+        // Buff Ranjang Nyaman: "Bugar" (+15% EXP & +5% speed selama 10 menit) (#496)
+        S.buff = S.buff || {};
+        S.buff.rested = 600;
+        updHud();
+        sfx('heal');
+        await sleep(500);
+        await fadeTo(0);
+        saveGame(this);
+        sfx('save');
+        await say('Tidur di ranjang sendiri memang paling nyenyak. Tubuh terasa Bugar (+15% EXP 10 menit)! Permainan tersimpan.', 'Rumah');
+      }
       else if (a === 'cook') await cookMenu('Dapur Rumah Arka', 'Arka');
       else if (a === 'craft') await openCraft(this);
       else if (a === 'alchemy') await openAlchemyTable();
@@ -14205,15 +14292,48 @@ Object.assign(World.prototype, {
       for (; ;) {
         const cap = HOME_CAP[H.lv], next = HOME_EXT[H.lv + 1];
         const r = await choose({ head: `Rumah Arka · perabot ${H.items.length}/${cap}`, x: 30, y: 50, w: 250,
-          items: [{ t: 'Beli perabot' }, { t: 'Tata perabot', dis: !H.items.length }, { t: 'Simpan perabot ke gudang', dis: !H.items.length }, { t: next ? 'Perluas rumah' : 'Rumah sudah paling luas', r: next ? next + ' G' : '', dis: !next }, { t: 'Tutup' }],
-          foot: i => ['Perabot muncul di depanmu. A: taruh · DASH: putar · B: batal', 'Pilih perabot lalu pindahkan', 'Perabot kembali ke gudang (uang tidak kembali, bisa dipasang lagi)', 'Menambah batas perabot', ''][i] || '' });
+          items: [
+            { t: 'Beli perabot' },
+            { t: 'Tata perabot', dis: !H.items.length },
+            { t: 'Simpan perabot ke gudang', dis: !H.items.length },
+            { t: '🎨 Ganti Desain Lantai & Dinding' },
+            { t: next ? 'Perluas rumah' : 'Rumah sudah paling luas', r: next ? next + ' G' : '', dis: !next },
+            { t: 'Tutup' }
+          ],
+          foot: i => ['Perabot muncul di depanmu. A: taruh · DASH: putar · B: batal', 'Pilih perabot lalu pindahkan', 'Perabot kembali ke gudang (uang tidak kembali, bisa dipasang lagi)', 'Ubah suasana warna dinding dan jenis lantai', 'Menambah batas perabot', ''][i] || '' });
         if (r === 0) { const t = await this.pickCatalog(); if (t) { this.startCarry({ t, x: 0, y: 0, v: 0 }, true); return; } }
         else if (r === 1) { const o = await this.pickPlaced('Tata yang mana?'); if (o) { this.removeFurnSprite(o); H.items = H.items.filter(f => f !== o.f); this.startCarry(o.f, false); return; } }
         else if (r === 2) { const o = await this.pickPlaced('Simpan yang mana?'); if (o) { this.removeFurnSprite(o); H.items = H.items.filter(f => f !== o.f); H.store = H.store || {}; H.store[o.f.t] = (H.store[o.f.t] || 0) + 1; sfx('ok'); } }
-        else if (r === 3) { if (S.gold < next) { sfx('buzz'); await say('Uangmu belum cukup.', 'Tukang'); continue; } S.gold -= next; H.lv++; updHud(); sfx('chest'); await say(`Rumah diperluas! Sekarang muat ${HOME_CAP[H.lv]} perabot.`, 'Tukang'); }
+        else if (r === 3) { await this.chooseHomeStyle(); }
+        else if (r === 4) { if (S.gold < next) { sfx('buzz'); await say('Uangmu belum cukup.', 'Tukang'); continue; } S.gold -= next; H.lv++; updHud(); sfx('chest'); await say(`Rumah diperluas! Sekarang muat ${HOME_CAP[H.lv]} perabot.`, 'Tukang'); }
         else return;
       }
     } finally { G.lock--; }
+  },
+  async chooseHomeStyle() {
+    S.homeStyle = S.homeStyle || { floor: 'wood', wall: 'wood' };
+    const r = await choose({
+      head: 'Desain Interior Rumah Arka',
+      x: 35, y: 45, w: 230,
+      items: [
+        { t: 'Lantai: Papan Kayu Pinus' },
+        { t: 'Lantai: Karpet Merah Megah' },
+        { t: 'Lantai: Ubin Marmer Sejuk' },
+        { t: 'Dinding: Kayu Alami' },
+        { t: 'Dinding: Bata Putih Bersih' },
+        { t: 'Dinding: Wallpaper Sulur Daun' },
+        { t: 'Selesai' }
+      ]
+    });
+    if (r >= 0 && r < 3) {
+      S.homeStyle.floor = ['wood', 'red_carpet', 'marble'][r];
+      sfx('ok');
+      popWorld(this.pl.x, this.pl.y - 20, 'Lantai Diganti!', 'heal');
+    } else if (r >= 3 && r < 6) {
+      S.homeStyle.wall = ['wood', 'white_brick', 'leaf_pattern'][r - 3];
+      sfx('ok');
+      popWorld(this.pl.x, this.pl.y - 20, 'Dinding Diganti!', 'heal');
+    }
   },
   async pickCatalog() {
     const H = homeInit(), keys = Object.keys(FCAT), st = H.store || {};
@@ -15613,6 +15733,51 @@ World.prototype.openDirectBarter = async function () {
   G.lock--;
 };
 
+// ---------------- 12. PAPAN BURONAN MONSTER LANGKA (#241) ----------------
+const CITY_BOUNTIES = [
+  { id: 'bounty_wolf', name: 'Taring Perak', map: 'meadow', x: 800, y: 720, rew: 200, loc: 'Padang Angin (dekat pohon buah)', d: 'Serigala berbulu perak yang lincah dan ganas meneror kafilah pedagang.' },
+  { id: 'bounty_frog', name: 'Raja Rawa Toksin', map: 'swamp', x: 880, y: 380, rew: 250, loc: 'Rawa Senja (ceruk timur)', d: 'Katak raksasa purba penyembur lendir beracun pekat di kubangan rawa.' },
+  { id: 'bounty_gargoyle', name: 'Gargoyle Merah', map: 'cave', x: 600, y: 220, rew: 300, loc: 'Gua Batu (lorong kristal utara)', d: 'Monster bersayap api yang bersembunyi di langit-langit kegelapan gua.' }
+];
+
+async function openCityBounties(sc) {
+  G.lock++; sfx('cur');
+  S.bountiesDone = S.bountiesDone || {};
+  try {
+    for (;;) {
+      const items = CITY_BOUNTIES.map(b => {
+        const done = !!S.bountiesDone[b.id];
+        return {
+          t: (done ? '✓ ' : '⚔ ') + b.name,
+          r: done ? 'SELESAI' : `${b.rew} G`,
+          dis: done,
+          bounty: b
+        };
+      });
+      items.push({ t: 'Tutup' });
+
+      const r = await choose({
+        head: '📜 PAPAN BURONAN KOTA LUMINA',
+        x: 20, y: 30, w: 280,
+        items,
+        foot: (i) => {
+          if (i >= CITY_BOUNTIES.length) return 'Buru monster langka yang meresahkan jalan perdagangan.';
+          const b = CITY_BOUNTIES[i];
+          const done = !!S.bountiesDone[b.id];
+          return `<b>${b.name}:</b> ${b.d}<br>Lokasi: <i>${b.loc}</i> · Hadiah: <b>${b.rew} G</b> ${done ? '(Terklaim)' : ''}`;
+        }
+      });
+
+      if (r < 0 || r >= CITY_BOUNTIES.length) break;
+
+      const chosen = CITY_BOUNTIES[r];
+      await say(`[MAKLUMAT BURONAN]\nTarget: ${chosen.name}\nLokasi: ${chosen.loc}\nHadiah: ${chosen.rew} G\n\n"${chosen.d}"`, 'Gerbang Kota');
+    }
+  } finally {
+    G.lock--;
+  }
+}
+
 'use strict';
 // Percakapan NPC, toko, bengkel, penginapan
 Object.assign(World.prototype, {
@@ -15750,6 +15915,9 @@ Object.assign(World.prototype, {
       case 'temple_priest':
         await this.talkPriestElian(o);
         break;
+      case 'arena_master':
+        await this.talkArenaMaster();
+        break;
       case 'joko':
         if (S.side.joko === 0) { await T('Selamat datang di Padang Angin! Kincirku menggiling gandum untuk desa.', 'Babi hutan akan menyeruduk lurus. Minggir ke samping, biar mereka menabrak batu!', 'Bisa bawakan 3 Taring Babi? Akan kutukar dengan sepatu ajaib.', 'Ini bekal dulu.'); S.side.joko = 1; addItem('potion', 2); await gain(['Dapat Ramuan x2!', 'Misi sampingan: Bawa 3 Taring Babi ke Pak Joko.']); }
         else if (S.side.joko === 1 && has('tusk', 3)) { await T('Taring bagus! Ini Sepatu Angin, larimu akan secepat angin padang.'); addItem('tusk', -3); addItem('boots'); S.side.joko = 2; await gain(['Dapat Sepatu Angin! (Pasang di TAS)']); }
@@ -15861,6 +16029,107 @@ Object.assign(World.prototype, {
       else { S.gold -= 10; await fadeTo(1); sleepToMorning(); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Selamat pagi! Tidurmu nyenyak? Permainan sudah tersimpan.', 'Bu Rina'); }
     }
     G.lock--;
+  },
+  async talkArenaMaster() {
+    G.lock++;
+    try {
+      const rank = S.arenaRank || 0;
+      const rankTitles = ['Petarung Baru', 'Gladiator Kota', 'Juara Gelanggang'];
+      const rankTitle = rankTitles[Math.min(2, rank)];
+      const r = await choose({
+        head: `Gelanggang Tarung Kota Lumina (${rankTitle})`,
+        x: 40, y: 50, w: 230,
+        items: [
+          { t: '⚔ Mulai Ujian 3 Gelombang', r: 'Biaya 20 G' },
+          { t: 'Tanya Peraturan Gelanggang' },
+          { t: 'Kembali' }
+        ],
+        foot: i => ['Hadapi 3 gelombang musuh bertahap tanpa jeda!', 'Pelajari aturan dan hadiah gelanggang', ''][i] || ''
+      });
+      if (r === 0) {
+        if (S.gold < 20) {
+          sfx('buzz');
+          await say('Biaya pendaftaran gelanggang adalah 20 G. Kumpulkan uang dulu, kawan!', 'Pengawas Gelanggang');
+          return;
+        }
+        S.gold -= 20;
+        updHud();
+        await say('Bagus! Bersiaplah, pintu gelanggang ditutup! Kalahkan 3 gelombang monster!', 'Pengawas Gelanggang');
+        await this.startCityArena();
+      } else if (r === 1) {
+        await talk('Pengawas Gelanggang', [
+          'Di gelanggang ini, kamu akan menghadapi 3 gelombang monster tanpa istirahat.',
+          'Gelombang 1: Slime Merah & Tawon.\nGelombang 2: Serigala & Tengkorak.\nGelombang 3: Golem Kuat & Babi Hutan.',
+          'Jika berhasil bertahan dan menumbangkan semuanya, kamu berhak membawa pulang 250 G, Medali Gladiator, dan Gelar Juara Gelanggang!'
+        ]);
+      }
+    } finally {
+      G.lock--;
+    }
+  },
+  async startCityArena() {
+    banner('GELOMBANG 1 / 3', 'ARENA DIMULAI', true, 2000);
+    playBGM('boss');
+    sfx('warn');
+    const spawnEnemy = (type, x, y) => {
+      this.addEnemy(type, x, y);
+    };
+    
+    // Wave 1
+    spawnEnemy('slimer', 650, 640);
+    spawnEnemy('bee', 750, 640);
+    spawnEnemy('bee', 700, 760);
+
+    const waitWaveClear = () => new Promise(res => {
+      const timer = this.time.addEvent({
+        delay: 500,
+        loop: true,
+        callback: () => {
+          const alive = this.enemies.filter(e => e.hp > 0).length;
+          if (alive === 0 || this.pl.dead) {
+            timer.remove();
+            res(!this.pl.dead);
+          }
+        }
+      });
+    });
+
+    let ok = await waitWaveClear();
+    if (!ok) return;
+
+    // Wave 2
+    banner('GELOMBANG 2 / 3', 'ARENA BERLANJUT', true, 2000);
+    sfx('warn');
+    spawnEnemy('wolf', 620, 660);
+    spawnEnemy('wolf', 760, 660);
+    spawnEnemy('skel', 700, 780);
+
+    ok = await waitWaveClear();
+    if (!ok) return;
+
+    // Wave 3
+    banner('GELOMBANG 3 / 3', 'GELOMBANG TERAKHIR', true, 2200);
+    sfx('fanfare');
+    spawnEnemy('golem', 700, 680);
+    spawnEnemy('boar', 640, 740);
+    spawnEnemy('boar', 760, 740);
+
+    ok = await waitWaveClear();
+    if (!ok) return;
+
+    // Menang Arena!
+    S.arenaRank = Math.max(S.arenaRank || 0, 1);
+    S.gold += 250;
+    S.exp += 300;
+    S.titles = S.titles || [];
+    if (!S.titles.includes('Juara Gelanggang')) {
+      S.titles.push('Juara Gelanggang');
+    }
+    sfx('fanfare');
+    banner('ARENA BERHASIL DITAKLUKKAN!', 'JUARA GELANGGANG', true, 3000);
+    updHud();
+    playBGM(bgmFor(this.M));
+    await say('LUAR BIASA! Seluruh penonton bersorak! Kamu menaklukkan 3 gelombang arena!\nKamu menerima 250 G, 300 EXP, dan gelar: Juara Gelanggang!', 'Pengawas Gelanggang');
   },
 });
 

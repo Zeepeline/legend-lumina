@@ -4,6 +4,7 @@
 const HOME_PRICE = 250, HOME_CAP = [6, 10, 14], HOME_EXT = [0, 300, 600];
 const FCAT = {
   bed: { n: 'Ranjang', p: 60, w: 22, h: 36, act: 'sleep', d: 'Tidur memulihkan HP & MP lalu menyimpan permainan.' },
+  bed_cozy: { n: 'Ranjang Nyaman Mewah', p: 120, w: 24, h: 38, act: 'sleep', d: 'Tidur memberi efek Bugar (+15% EXP & +5% speed 10 mnt).' },
   table: { n: 'Meja', p: 30, w: 34, h: 22 },
   shelf: { n: 'Rak Buku', p: 40, w: 36, h: 28, wallOnly: 1 },
   rug: { n: 'Karpet', p: 25, w: 56, h: 34, flat: 1 },
@@ -81,7 +82,23 @@ Object.assign(World.prototype, {
   async useFurn(o) {
     const a = FCAT[o.f.t].act; G.lock++;
     try {
-      if (a === 'sleep') { await fadeTo(1); sleepToMorning(); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Tidur di ranjang sendiri memang paling nyenyak. Permainan tersimpan.', 'Rumah'); }
+      if (a === 'sleep') {
+        await fadeTo(1);
+        sleepToMorning();
+        const st = stat();
+        S.hp = st.maxhp;
+        S.mp = st.maxmp;
+        // Buff Ranjang Nyaman: "Bugar" (+15% EXP & +5% speed selama 10 menit) (#496)
+        S.buff = S.buff || {};
+        S.buff.rested = 600;
+        updHud();
+        sfx('heal');
+        await sleep(500);
+        await fadeTo(0);
+        saveGame(this);
+        sfx('save');
+        await say('Tidur di ranjang sendiri memang paling nyenyak. Tubuh terasa Bugar (+15% EXP 10 menit)! Permainan tersimpan.', 'Rumah');
+      }
       else if (a === 'cook') await cookMenu('Dapur Rumah Arka', 'Arka');
       else if (a === 'craft') await openCraft(this);
       else if (a === 'alchemy') await openAlchemyTable();
@@ -132,15 +149,48 @@ Object.assign(World.prototype, {
       for (; ;) {
         const cap = HOME_CAP[H.lv], next = HOME_EXT[H.lv + 1];
         const r = await choose({ head: `Rumah Arka · perabot ${H.items.length}/${cap}`, x: 30, y: 50, w: 250,
-          items: [{ t: 'Beli perabot' }, { t: 'Tata perabot', dis: !H.items.length }, { t: 'Simpan perabot ke gudang', dis: !H.items.length }, { t: next ? 'Perluas rumah' : 'Rumah sudah paling luas', r: next ? next + ' G' : '', dis: !next }, { t: 'Tutup' }],
-          foot: i => ['Perabot muncul di depanmu. A: taruh · DASH: putar · B: batal', 'Pilih perabot lalu pindahkan', 'Perabot kembali ke gudang (uang tidak kembali, bisa dipasang lagi)', 'Menambah batas perabot', ''][i] || '' });
+          items: [
+            { t: 'Beli perabot' },
+            { t: 'Tata perabot', dis: !H.items.length },
+            { t: 'Simpan perabot ke gudang', dis: !H.items.length },
+            { t: '🎨 Ganti Desain Lantai & Dinding' },
+            { t: next ? 'Perluas rumah' : 'Rumah sudah paling luas', r: next ? next + ' G' : '', dis: !next },
+            { t: 'Tutup' }
+          ],
+          foot: i => ['Perabot muncul di depanmu. A: taruh · DASH: putar · B: batal', 'Pilih perabot lalu pindahkan', 'Perabot kembali ke gudang (uang tidak kembali, bisa dipasang lagi)', 'Ubah suasana warna dinding dan jenis lantai', 'Menambah batas perabot', ''][i] || '' });
         if (r === 0) { const t = await this.pickCatalog(); if (t) { this.startCarry({ t, x: 0, y: 0, v: 0 }, true); return; } }
         else if (r === 1) { const o = await this.pickPlaced('Tata yang mana?'); if (o) { this.removeFurnSprite(o); H.items = H.items.filter(f => f !== o.f); this.startCarry(o.f, false); return; } }
         else if (r === 2) { const o = await this.pickPlaced('Simpan yang mana?'); if (o) { this.removeFurnSprite(o); H.items = H.items.filter(f => f !== o.f); H.store = H.store || {}; H.store[o.f.t] = (H.store[o.f.t] || 0) + 1; sfx('ok'); } }
-        else if (r === 3) { if (S.gold < next) { sfx('buzz'); await say('Uangmu belum cukup.', 'Tukang'); continue; } S.gold -= next; H.lv++; updHud(); sfx('chest'); await say(`Rumah diperluas! Sekarang muat ${HOME_CAP[H.lv]} perabot.`, 'Tukang'); }
+        else if (r === 3) { await this.chooseHomeStyle(); }
+        else if (r === 4) { if (S.gold < next) { sfx('buzz'); await say('Uangmu belum cukup.', 'Tukang'); continue; } S.gold -= next; H.lv++; updHud(); sfx('chest'); await say(`Rumah diperluas! Sekarang muat ${HOME_CAP[H.lv]} perabot.`, 'Tukang'); }
         else return;
       }
     } finally { G.lock--; }
+  },
+  async chooseHomeStyle() {
+    S.homeStyle = S.homeStyle || { floor: 'wood', wall: 'wood' };
+    const r = await choose({
+      head: 'Desain Interior Rumah Arka',
+      x: 35, y: 45, w: 230,
+      items: [
+        { t: 'Lantai: Papan Kayu Pinus' },
+        { t: 'Lantai: Karpet Merah Megah' },
+        { t: 'Lantai: Ubin Marmer Sejuk' },
+        { t: 'Dinding: Kayu Alami' },
+        { t: 'Dinding: Bata Putih Bersih' },
+        { t: 'Dinding: Wallpaper Sulur Daun' },
+        { t: 'Selesai' }
+      ]
+    });
+    if (r >= 0 && r < 3) {
+      S.homeStyle.floor = ['wood', 'red_carpet', 'marble'][r];
+      sfx('ok');
+      popWorld(this.pl.x, this.pl.y - 20, 'Lantai Diganti!', 'heal');
+    } else if (r >= 3 && r < 6) {
+      S.homeStyle.wall = ['wood', 'white_brick', 'leaf_pattern'][r - 3];
+      sfx('ok');
+      popWorld(this.pl.x, this.pl.y - 20, 'Dinding Diganti!', 'heal');
+    }
   },
   async pickCatalog() {
     const H = homeInit(), keys = Object.keys(FCAT), st = H.store || {};

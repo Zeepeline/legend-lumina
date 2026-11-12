@@ -153,6 +153,10 @@ const ITEMS = {
   seed_flower: { n: 'Benih Bunga Lumina', k: 'mat', price: 8, sell: 3, d: 'Benih aneka bunga krisan dan aster cerah untuk ditanam di kebun rumah.', src: 'Toko desa' },
   flower_bouquet: { n: 'Buket Bunga Segar', k: 'use', hp: 30, mp: 30, price: 35, sell: 20, d: 'Rangkaian bunga aster mekar harum penenang pikiran. Hadiah manis untuk sahabat.', src: 'Kebun bunga rumah Arka' },
 
+  // Fitur #420: Peleburan Logam
+  iron_bar: { n: 'Batangan Besi', k: 'mat', price: 60, sell: 35, d: 'Batangan besi murni hasil peleburan bijih di tungku. Bahan tempa zirah kokoh.', src: 'Peleburan: 3 Bijih Batu di tungku' },
+  crystal_bar: { n: 'Batangan Kristal', k: 'mat', price: 80, sell: 48, d: 'Batangan kristal biru toska yang berkilau sejuk. Bahan pedang dan pusaka sakti.', src: 'Peleburan: 3 Pecahan Kristal di tungku' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },
@@ -180,7 +184,9 @@ const ICON_OF = {
   firecracker: 'bomb',
   leather_pouch: 'pelt',
   seed_flower: 'seed',
-  flower_bouquet: 'frostflower'
+  flower_bouquet: 'frostflower',
+  iron_bar: 'iron',
+  crystal_bar: 'shard'
 };
 // Masak di penginapan (Bu Rina)
 const COOK = [

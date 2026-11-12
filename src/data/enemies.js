@@ -35,6 +35,10 @@ const ENEMY = {
   salam: { name: 'Salamander', tex: 'salam', hp: 84, atk: 26, def: 8, spd: 40, exp: 40, gold: [7, 12], r: 6, ai: 'walk', side: 1, drop: ['scale', .6], fx: ['burn', 4, .5] },
   golemi: { name: 'Golem Es', tex: 'golemi', hp: 190, atk: 32, def: 16, spd: 26, exp: 80, gold: [14, 24], r: 10, ai: 'golem', drop: ['shard', .6], fx: ['chill', 3, .6] },
   kryos: { name: 'Naga Es Kryos', tex: 'snakei', hp: 980, atk: 36, def: 16, spd: 62, exp: 800, gold: [400, 400], r: 13, ai: 'dboss', scale: 2.8, side: 1, fx: ['chill', 3, .7], adds: ['wolfs', 'golemi', 'wolfs'] },
+  // Buronan Monster Langka Kota Lumina (#241)
+  bounty_wolf: { name: 'Taring Perak', tex: 'wolfs', hp: 320, atk: 28, def: 10, spd: 88, exp: 280, gold: [180, 220], r: 10, ai: 'lunge', side: 1, scale: 1.4, drop: ['pelt', 1], isBounty: true },
+  bounty_frog: { name: 'Raja Rawa Toksin', tex: 'frog', hp: 380, atk: 26, def: 12, spd: 58, exp: 320, gold: [220, 260], r: 11, ai: 'hop', scale: 1.6, drop: ['scale', 1], fx: ['poison', 6, .7], isBounty: true },
+  bounty_gargoyle: { name: 'Gargoyle Merah', tex: 'batc', hp: 360, atk: 30, def: 14, spd: 76, exp: 350, gold: [250, 300], r: 10, ai: 'fly', fly: 1, scale: 1.5, drop: ['shard', 1], fx: ['burn', 4, .6], isBounty: true },
 };
 const PROJ = { spore: { key: 'spore', spd: 72, fx: ['poison', 4, .5] }, seed: { key: 'seed', spd: 84 }, bone: { key: 'bone', spd: 96, spin: 1 }, rock: { key: 'rockshot', spd: 110, spin: 1 }, venom: { key: 'venom', spd: 96, fx: ['poison', 5, .6] }, ice: { key: 'icebolt', spd: 112, fx: ['chill', 3, .7] } };
 const BOSS_AI = ['boss', 'gboss', 'qboss', 'sboss', 'wboss', 'dboss'];

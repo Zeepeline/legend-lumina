@@ -169,6 +169,29 @@ Object.assign(World.prototype, {
     if (e.hp <= 0) this.killEnemy(e);
   },
   killEnemy(e) {
+    // Mekanik Kerangka Bangkit Kembali (#208)
+    if (e.type === 'skel' && !e.hasReanimated && (!this.curElem || this.curElem !== 'fire')) {
+      e.hasReanimated = true;
+      e.reanimating = 3.5;
+      e.hp = 0;
+      e.spr.body.enable = false;
+      e.spr.setTint(0xcccccc);
+      sfxAt('hit', e.spr.x, e.spr.y, this);
+      popWorld(e.spr.x, e.spr.y - 16, '💀 Tulang Bergetar...', 'crit');
+      this.tweens.add({ targets: e.spr, scaleY: e.sc * 0.4, scaleX: e.sc * 1.3, duration: 200, yoyo: true, repeat: 6 });
+      this.time.delayedCall(3500, () => {
+        if (e.spr && e.spr.active && e.reanimating > 0) {
+          e.reanimating = 0;
+          e.hp = Math.floor(e.maxhp * 0.5);
+          e.spr.body.enable = true;
+          e.spr.clearTint();
+          sfxAt('magic', e.spr.x, e.spr.y, this);
+          this.sparkle(e.spr.x, e.spr.y - 10, 'spark', 12);
+          popWorld(e.spr.x, e.spr.y - 20, '💀 BANGKIT KEMBALI!', 'crit');
+        }
+      });
+      return;
+    }
     e.hp = 0; e.spr.body.enable = false; sfxAt('die', e.spr.x, e.spr.y, this);
     const x = e.spr.x, y = e.spr.y;
     this.sparkle(x, y - 8, 'dot', 14);
@@ -188,6 +211,15 @@ Object.assign(World.prototype, {
     // Rekap statistik kill (Fitur #25 & #18)
     S.st = S.st || {}; S.st.kills = (S.st.kills || 0) + 1;
     if (e.boss) S.st.bosses = (S.st.bosses || 0) + 1;
+    if (e.D && e.D.isBounty && !S.bountiesDone[e.type]) {
+      S.bountiesDone[e.type] = true;
+      const bData = (typeof CITY_BOUNTIES !== 'undefined') ? CITY_BOUNTIES.find(b => b.id === e.type) : null;
+      const rew = bData ? bData.rew : 200;
+      S.gold += rew;
+      sfx('fanfare');
+      banner(`${e.D.name} Tumbang!`, 'BURONAN DITAKLUKKAN', true, 2500);
+      popWorld(x, y - 36, `+${rew} G Hadiah Buronan!`, 'gold');
+    }
     if (typeof checkTitles === 'function') checkTitles();
     this.gainExp(Math.round(e.D.exp * expMultiplier), x, y);
     if (e.boss) this.bossDown(e); else achCheck(this);

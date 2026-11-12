@@ -13,12 +13,19 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 115 | 5 | 0 | 880 |
+| 150 | 5 | 0 | 845 |
 
 ## Selesai
 
 | No | Fitur | File utama | Gelombang |
 |---|---|---|---|
+| 11 | Pertarungan gelombang di arena Kota Lumina (3 gelombang musuh bertahap berhadiah 250 G & Gelar Juara) | `world/maps/city.js`, `npc/dialog.js` (`startCityArena`) | 21 |
+| 241 | Papan buronan monster langka Kota Lumina (Taring Perak, Raja Rawa, Gargoyle Merah) | `systems/economy.js` (`openCityBounties`), `data/enemies.js`, `world/maps/city.js` | 21 |
+| 420 | Peleburan batangan logam di tungku kerajinan (Batangan Besi & Batangan Kristal) | `systems/craft.js` (`CRAFT`), `data/items.js` (`iron_bar`, `crystal_bar`) | 21 |
+| 496 | Ranjang nyaman & buff tidur "Bugar" (durasi 10 menit +15% EXP & +5% speed) | `systems/home.js` (`bed_cozy`), `core/state.js` (`BUFF.rested`) | 21 |
+| 208 | Mekanik kerangka bangkit kembali (tengkorak runtuh bergetar & bangkit jika tak dibakar) | `systems/combat.js` (`hitEnemy`) | 21 |
+| 495 | Kustomisasi lantai & dinding interior rumah Arka (papan perabot 📋: pilihan motif ubin & dinding) | `systems/home.js` (`chooseHomeStyle`), `core/state.js` (`S.homeStyle`) | 21 |
+| 83 | Mode landscape responsif layar lebar (tata letak kontrol sudut ergonomis rasio >= 1.5) | `core/input.js` (`layout`), `styles.css` (`wide-land`) | 21 |
 | 15 | Tingkat kesulitan (Santai/Normal/Sulit) | `core/state.js` (`DIFF`), `ui/menus.js` | 1 |
 | 34 | Perbandingan perlengkapan ▲▼ di tas | `ui/bag.js` (`cmp`) | 1 |
 | 75 | Kecepatan teks (4 tingkat) + tahan untuk mempercepat | `ui/widgets.js` (`say`) | 1 |
@@ -201,7 +208,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~18~~ | ✅ selesai: 12, 42, 408, 68, 84, 7, 95 | Rematch Boss, Brankas Desa, Bom Es & Cuaca Ekstrem |
 | ~~19~~ | ✅ selesai: 21, 500, 53, 43, 65, 410, 77 | Lemari Pakaian, Tamu Rumah, Tebang Pohon & Pilar Runa |
 | ~~20~~ | ✅ selesai: 20, 58, 55, 50, 31, 93, 502 | Mendorong Batu, Anjing Kuro, Kamera, Masak Bintang & Kebun Bunga |
-| 21+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~21~~ | ✅ selesai: 11, 241, 420, 496, 208, 495, 83 | Arena Gelombang, Papan Buronan, Batang Logam, Buff Bugar, Tengkorak Bangkit & Landscape Lebar |
+| 22+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 

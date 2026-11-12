@@ -17,6 +17,7 @@ MAPS.cave = {
   chests: [{ id: 'g1', x: 860, y: 800, item: 'potion3' }, { id: 'g2', x: 640, y: 100, item: 'key' }, { id: 'g3', x: 960, y: 420, item: 'shield', needFlag: 'golem' }, { id: 'g_torch', x: 420, y: 640, item: 'gold100', needFlag: 'cave_torches' }, { id: 'g_lock', x: 280, y: 420, item: 'gold200', locked: 1 }, { id: 'g_mimic', x: 920, y: 820, mimic: 1 }],
   exits: [{ x: 80, y: 880, w: 80, h: 40, to: 'meadow', tx: 1200, ty: 210, dir: 'down', label: 'Padang Angin' }],
   enemies: [
+    ['bounty_gargoyle', 600, 220],
     ['batc', 400, 680], ['skel', 460, 720], ['slimei', 360, 740], ['ghost', 300, 430], ['skel', 240, 450], ['batc', 340, 380],
     ['golem', 600, 300], ['ghost', 680, 330], ['slimei', 560, 260], ['skel', 640, 140], ['batc', 600, 100],
     ['skel', 820, 780], ['ghost', 900, 800], ['slimei', 860, 740], ['batc', 760, 760],

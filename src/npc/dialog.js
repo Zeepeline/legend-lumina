@@ -135,6 +135,9 @@ Object.assign(World.prototype, {
       case 'temple_priest':
         await this.talkPriestElian(o);
         break;
+      case 'arena_master':
+        await this.talkArenaMaster();
+        break;
       case 'joko':
         if (S.side.joko === 0) { await T('Selamat datang di Padang Angin! Kincirku menggiling gandum untuk desa.', 'Babi hutan akan menyeruduk lurus. Minggir ke samping, biar mereka menabrak batu!', 'Bisa bawakan 3 Taring Babi? Akan kutukar dengan sepatu ajaib.', 'Ini bekal dulu.'); S.side.joko = 1; addItem('potion', 2); await gain(['Dapat Ramuan x2!', 'Misi sampingan: Bawa 3 Taring Babi ke Pak Joko.']); }
         else if (S.side.joko === 1 && has('tusk', 3)) { await T('Taring bagus! Ini Sepatu Angin, larimu akan secepat angin padang.'); addItem('tusk', -3); addItem('boots'); S.side.joko = 2; await gain(['Dapat Sepatu Angin! (Pasang di TAS)']); }
@@ -246,5 +249,106 @@ Object.assign(World.prototype, {
       else { S.gold -= 10; await fadeTo(1); sleepToMorning(); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Selamat pagi! Tidurmu nyenyak? Permainan sudah tersimpan.', 'Bu Rina'); }
     }
     G.lock--;
+  },
+  async talkArenaMaster() {
+    G.lock++;
+    try {
+      const rank = S.arenaRank || 0;
+      const rankTitles = ['Petarung Baru', 'Gladiator Kota', 'Juara Gelanggang'];
+      const rankTitle = rankTitles[Math.min(2, rank)];
+      const r = await choose({
+        head: `Gelanggang Tarung Kota Lumina (${rankTitle})`,
+        x: 40, y: 50, w: 230,
+        items: [
+          { t: '⚔ Mulai Ujian 3 Gelombang', r: 'Biaya 20 G' },
+          { t: 'Tanya Peraturan Gelanggang' },
+          { t: 'Kembali' }
+        ],
+        foot: i => ['Hadapi 3 gelombang musuh bertahap tanpa jeda!', 'Pelajari aturan dan hadiah gelanggang', ''][i] || ''
+      });
+      if (r === 0) {
+        if (S.gold < 20) {
+          sfx('buzz');
+          await say('Biaya pendaftaran gelanggang adalah 20 G. Kumpulkan uang dulu, kawan!', 'Pengawas Gelanggang');
+          return;
+        }
+        S.gold -= 20;
+        updHud();
+        await say('Bagus! Bersiaplah, pintu gelanggang ditutup! Kalahkan 3 gelombang monster!', 'Pengawas Gelanggang');
+        await this.startCityArena();
+      } else if (r === 1) {
+        await talk('Pengawas Gelanggang', [
+          'Di gelanggang ini, kamu akan menghadapi 3 gelombang monster tanpa istirahat.',
+          'Gelombang 1: Slime Merah & Tawon.\nGelombang 2: Serigala & Tengkorak.\nGelombang 3: Golem Kuat & Babi Hutan.',
+          'Jika berhasil bertahan dan menumbangkan semuanya, kamu berhak membawa pulang 250 G, Medali Gladiator, dan Gelar Juara Gelanggang!'
+        ]);
+      }
+    } finally {
+      G.lock--;
+    }
+  },
+  async startCityArena() {
+    banner('GELOMBANG 1 / 3', 'ARENA DIMULAI', true, 2000);
+    playBGM('boss');
+    sfx('warn');
+    const spawnEnemy = (type, x, y) => {
+      this.addEnemy(type, x, y);
+    };
+    
+    // Wave 1
+    spawnEnemy('slimer', 650, 640);
+    spawnEnemy('bee', 750, 640);
+    spawnEnemy('bee', 700, 760);
+
+    const waitWaveClear = () => new Promise(res => {
+      const timer = this.time.addEvent({
+        delay: 500,
+        loop: true,
+        callback: () => {
+          const alive = this.enemies.filter(e => e.hp > 0).length;
+          if (alive === 0 || this.pl.dead) {
+            timer.remove();
+            res(!this.pl.dead);
+          }
+        }
+      });
+    });
+
+    let ok = await waitWaveClear();
+    if (!ok) return;
+
+    // Wave 2
+    banner('GELOMBANG 2 / 3', 'ARENA BERLANJUT', true, 2000);
+    sfx('warn');
+    spawnEnemy('wolf', 620, 660);
+    spawnEnemy('wolf', 760, 660);
+    spawnEnemy('skel', 700, 780);
+
+    ok = await waitWaveClear();
+    if (!ok) return;
+
+    // Wave 3
+    banner('GELOMBANG 3 / 3', 'GELOMBANG TERAKHIR', true, 2200);
+    sfx('fanfare');
+    spawnEnemy('golem', 700, 680);
+    spawnEnemy('boar', 640, 740);
+    spawnEnemy('boar', 760, 740);
+
+    ok = await waitWaveClear();
+    if (!ok) return;
+
+    // Menang Arena!
+    S.arenaRank = Math.max(S.arenaRank || 0, 1);
+    S.gold += 250;
+    S.exp += 300;
+    S.titles = S.titles || [];
+    if (!S.titles.includes('Juara Gelanggang')) {
+      S.titles.push('Juara Gelanggang');
+    }
+    sfx('fanfare');
+    banner('ARENA BERHASIL DITAKLUKKAN!', 'JUARA GELANGGANG', true, 3000);
+    updHud();
+    playBGM(bgmFor(this.M));
+    await say('LUAR BIASA! Seluruh penonton bersorak! Kamu menaklukkan 3 gelombang arena!\nKamu menerima 250 G, 300 EXP, dan gelar: Juara Gelanggang!', 'Pengawas Gelanggang');
   },
 });

@@ -30,6 +30,8 @@ const CRAFT = [
   { id: 'net', n: 1, need: { pelt: 1, wool: 1 } },
   { id: 'sarrow', n: 5, need: { feather: 1, bone: 1 } },
   { id: 'bait', n: 3, need: { berry: 1, jelly: 1 } },
+  { id: 'iron_bar', n: 1, need: { ore: 3 } },
+  { id: 'crystal_bar', n: 1, need: { shard: 3 } },
 ];
 const ATTR = [['str', 'Kekuatan', '+1 serangan'], ['int', 'Sihir', '+2 kekuatan sihir'], ['vit', 'Ketahanan', '+5 HP maks & +0,5 pertahanan'], ['agi', 'Kelincahan', '+1% kecepatan & +1% kritikal']];
 function attrInit() {

@@ -130,6 +130,7 @@ const OBJ = {
   village_vault: { key: 'crate', col: [16, 10, 0], sh: [14, 3], fade: 1 },
   mirror_memory: { key: 'altar', col: [20, 12, 0], sh: [16, 4], fade: 1 },
   fame_board: { key: 'board', col: [16, 6, 0], sh: [10, 3] },
+  bounty_board: { key: 'board', col: [16, 6, 0], sh: [10, 3] },
   deadtree: { key: 'stump', col: [20, 10, 0], sh: [16, 4], fade: 1 },
   rune_pillar: { key: 'altar', col: [18, 12, 0], sh: [14, 4], fade: 1 },
   fence: { key: 'fence', col: [18, 4, 0] },
