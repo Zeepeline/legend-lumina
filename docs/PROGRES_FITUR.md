@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 94 | 5 | 0 | 901 |
+| 101 | 5 | 0 | 894 |
 
 ## Selesai
 
@@ -142,6 +142,13 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 499 | Rak pajangan trofi di rumah Arka (pajangan piala, fosil, permata & ikan legendaris) | `systems/home.js` (`useTrophyShelf`) | 17 |
 | 72 | Kompas mata angin & arah di HUD (orientasi mata angin U/S/T/B di bilah status) | `ui/widgets.js` (`updHud`) | 17 |
 | 98 | Mode pengembang / menu debug (ketuk versi 5x untuk QA, teleport peta, dan alat) | `ui/title.js`, `ui/menus.js` (`openDebugMenu`) | 17 |
+| 12 | Boss rematch di Kuil Ingatan (uji tanding boss versi lebih kuat, catat rekor waktu tercepat) | `world/maps/interiors.js`, `systems/economy.js` (`openMemoryTrials`) | 18 |
+| 42 | Brankas desa & bunga simpanan (titip/tarik emas di balai desa, bunga 2% per hari) | `world/maps/interiors.js`, `systems/economy.js` (`openVillageVault`) | 18 |
+| 408 | Bom es kerajinan (resep pecahan kristal + air stalaktit, ledakan beku area 45 px) | `data/items.js` (`fbomb`), `systems/craft.js` | 18 |
+| 68 | Cuaca ekstrem: sambaran petir di padang/rawa & badai salju memperlambat langkah | `systems/ambient.js`, `systems/status.js` | 18 |
+| 84 | Pencarian cepat di tas (filter instan kata kunci ramuan, panah, ikan, bom, dll.) | `ui/bag.js` (`BAG_SEARCH`) | 18 |
+| 7 | Serangan menukik musuh terbang (manuver swoop tajam kelelawar, bisa ditangkis hingga jatuh) | `ai/enemies.js` (`fly`), `systems/polish.js` | 18 |
+| 95 | Papan rekor petualang / Hall of Fame (papan prestasi rekor ikan, waktu rematch, langkah) | `world/maps/village.js`, `systems/economy.js` (`openHallOfFame`) | 18 |
 
 ## Sebagian
 
@@ -177,7 +184,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~15~~ | ✅ selesai: 70, 485, 372, 44, 376, 90, 94 | Eksplorasi Pintas, Kotak Surat Rumah & Alur Tempur |
 | ~~16~~ | ✅ selesai: 71, 27, 33, 373, 67, 9, 92 | Ensiklopedia Benua, Alkimia Eksperimen & Relik Legendaris |
 | ~~17~~ | ✅ selesai: 199, 198, 346, 54, 499, 72, 98 | Kejutan Liar, Relik Teleport Saku & Koleksi Alam |
-| 18+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~18~~ | ✅ selesai: 12, 42, 408, 68, 84, 7, 95 | Rematch Boss, Brankas Desa, Bom Es & Cuaca Ekstrem |
+| 19+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 

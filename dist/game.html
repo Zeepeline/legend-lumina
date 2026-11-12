@@ -4117,6 +4117,9 @@ const OBJ = {
   brokenbridge: { key: 'log', col: [28, 10, 0], sh: [16, 4] },
   scenicbench: { key: 'i_bench', col: [42, 8, 2], sh: [22, 3] },
   alchemytable: { key: 'fieldoven', col: [20, 10, 0], sh: [12, 3] },
+  village_vault: { key: 'crate', col: [16, 10, 0], sh: [14, 3], fade: 1 },
+  mirror_memory: { key: 'altar', col: [20, 12, 0], sh: [16, 4], fade: 1 },
+  fame_board: { key: 'board', col: [16, 6, 0], sh: [10, 3] },
   fence: { key: 'fence', col: [18, 4, 0] },
   lamp: { key: 'lamp', col: [6, 4, 0], sh: [5, 2] },
   rock: { key: 'rock', col: [16, 6, 0], sh: [9, 2] },
@@ -4343,6 +4346,7 @@ MAPS.village = {
     
     ['apple1', 290, 376], ['orange1', 362, 410], ['apple2', 300, 464], ['bench', 420, 458], ['bushP', 448, 424], ['bushW', 250, 414],
     ['cart', 740, 604],
+    ['fame_board', 450, 458],
     ['crateCart', 750, 470], ['barrelNew', 630, 440], ['barrelNew', 798, 410],
     ['benchWood', 480, 460], 
     ['lampPost', 390, 266], ['lampPost', 634, 266],
@@ -4789,6 +4793,7 @@ MAPS.inn = makeRoom('inn', 'Penginapan Daun Emas', [752, 238], {
 MAPS.elderhome = makeRoom('elderhome', 'Rumah Pohon Tetua', [513, 306], {
   wallc: '#d8c49a', furn: [['rug', 132, 140, 1], ['shelf', 64, 52, 0], ['shelf', 104, 52, 3], ['shelf', 220, 52, 5], ['table', 76, 130], ['bed', 238, 100, 1], ['stove', 176, 50]], windows: [146],
   chests: [{ id: 'e1', x: 230, y: 216, item: 'ether2' }],
+  objs: [['village_vault', 68, 206]],
   doors: [
     [82, 78, 'Buku tua: "...Morgath, murid yang terusir dari desa, mempelajari sihir segel di Rawa Senja..."'],
     [122, 78, 'Catatan Tetua: "Kristal Lumina meredup setiap kali kabut rawa menebal. Apakah ada hubungannya?"'],
@@ -4804,7 +4809,7 @@ MAPS.linahome = makeRoom('linahome', 'Rumah Lina', [272, 238], {
 });
 MAPS.temple = makeRoom('temple', 'Kuil Penjaga Cahaya', [0, 0], {
   wallc: '#b4bfd2', floor: ['#6e7890', '#9aa4b8', '#a8b2c4', '#828ca2'], ground: 'room', bgm: 'cave', furn: [['rug', 132, 150, 1]], windows: [],
-  objs: [['altar', 160, 140], ['templekoipond', 88, 190], ['birdbath', 230, 190]],
+  objs: [['altar', 160, 140], ['mirror_memory', 84, 136], ['templekoipond', 88, 190], ['birdbath', 230, 190]],
   exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'lake', tx: 936, ty: 530, dir: 'down', label: 'Danau Cermin' }],
   reliefs: [[86, 70, 'kuil_relief'], [234, 70, 'kuil_aurel']], sealDoor: [160, 74],
   npcs: [{ id: 'temple_priest', ch: 'priest', name: 'Pendeta Elian', x: 200, y: 136, dir: 'left', reach: 30 }],
@@ -4969,11 +4974,11 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.17.0';
+const GAME_VERSION = '1.18.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true, font: 1, lite: false, toast: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {} }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {}, bank: { gold: 0, day: 1 }, records: {} }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -5222,6 +5227,9 @@ const ITEMS = {
   bug_dragonfly: { n: 'Capung Rawa Zamrud', k: 'mat', sell: 22, d: 'Capung bersayap bening dengan tubuh hijau zamrud berkilau dari rawa.', src: 'Ditangkap dengan jaring di tepi rawa senja' },
   bug_firefly: { n: 'Kunang Malam Pendar', k: 'mat', sell: 25, d: 'Serangga malam bercahaya sejuk penuntun pengelana di kegelapan.', src: 'Ditangkap dengan jaring saat malam hari' },
 
+  // Fitur #408: Bom Es Kerajinan
+  fbomb: { n: 'Bom Es', k: 'use', tool: 1, price: 28, sell: 14, d: 'Lempar ke depan. Meledak membekukan seluruh musuh dalam radius 45 px selama 2,5 detik.', src: 'Kerajinan: Pecahan Kristal + Air Murni Stalaktit' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },
@@ -5244,7 +5252,8 @@ const ICON_OF = {
   bug_beetle: 'bfly_gold',
   bug_butterfly: 'bfly_gold',
   bug_dragonfly: 'bfly_blue',
-  bug_firefly: 'firefly_item'
+  bug_firefly: 'firefly_item',
+  fbomb: 'bomb'
 };
 // Masak di penginapan (Bu Rina)
 const COOK = [
@@ -6130,6 +6139,35 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'village_vault') {
+      s.setTint(0x9aa8b8);
+      this.inter.push({
+        x, y: y + 4, r: 24,
+        fn: async () => {
+          if (typeof openVillageVault === 'function') await openVillageVault(this);
+          else await say('Brankas besi kokoh Balai Desa Lumina.');
+        }
+      });
+    }
+    if (type === 'mirror_memory') {
+      s.setTint(0x88ccff);
+      this.inter.push({
+        x, y: y + 4, r: 24,
+        fn: async () => {
+          if (typeof openMemoryTrials === 'function') await openMemoryTrials(this);
+          else await say('Cermin Ingatan memancarkan pantulan masa lalu.');
+        }
+      });
+    }
+    if (type === 'fame_board') {
+      this.inter.push({
+        x, y: y + 4, r: 22,
+        fn: async () => {
+          if (typeof openHallOfFame === 'function') await openHallOfFame();
+          else await say('Papan Rekor Petualang Benua Lumina.');
+        }
+      });
+    }
     if (type === 'fountain') {
       this.add.particles(x, y - 66, 'dot', { lifespan: 650, speedX: { min: -22, max: 22 }, speedY: { min: -26, max: -8 }, gravityY: 90, alpha: { start: .8, end: 0 }, frequency: 110, tint: 0xd8f6ff }).setDepth(y + 1);
       this.inter.push({
@@ -6948,6 +6986,49 @@ Object.assign(World.prototype, {
         }
       }
     }
+    // Cuaca Ekstrem: Sambaran Petir di Padang Angin & Rawa Senja (#68)
+    if (!this.M.indoor && !G.lock && !G.title && (this.M.id === 'meadow' || this.M.id === 'swamp')) {
+      this._stormT = (this._stormT || 0) + dt;
+      if (this._stormT > 8) { // Tiap 8 detik ada peluang sambaran badai
+        this._stormT = 0;
+        if (Math.random() < 0.35) {
+          const lx = clamp(pl.x + rnd(-110, 110), 50, this.M.w - 50);
+          const ly = clamp(pl.y + rnd(-90, 90), 50, this.M.h - 50);
+          // Tanda bahaya sambaran petir di tanah selama 1 detik
+          const mark = this.add.circle(lx, ly, 22, 0xffeb3b, 0.45).setDepth(ly - 1);
+          this.tweens.add({ targets: mark, scaleX: 1.3, scaleY: 1.3, alpha: 0.8, yoyo: true, repeat: 2, duration: 250 });
+          this.time.delayedCall(1000, () => {
+            mark.destroy();
+            // Sambaran petir!
+            this.cameras.main.flash(80, 255, 255, 255);
+            sfx('boom');
+            this.camShake(180, 0.008);
+            this.sparkle(lx, ly - 10, 'spark', 24);
+            popWorld(lx, ly - 22, '⚡ SAMBARAN PETIR!', 'crit');
+            // Efek sambaran mengenai sekitar radius 34 px
+            if (Math.hypot(pl.x - lx, pl.y - ly) < 34) {
+              this.hurtPlayer(18, lx, ly);
+            }
+            for (const e of this.enemies) {
+              if (e.hp > 0 && Math.hypot(e.spr.x - lx, e.spr.y - ly) < 40) {
+                this.hitEnemy(e, 45, false, 0, 0);
+                this.burnEnemy(e, 5, 2);
+              }
+            }
+          });
+        }
+      }
+    }
+    // Badai Salju Tebal di Puncak Beku (#68): memperlambat langkah Arka bila tidak berstatus hangat
+    if (this.M.id === 'snow' && !G.lock) {
+      if (typeof buffOn === 'function' && !buffOn('warm')) {
+        pl.snowSlow = true;
+      } else {
+        pl.snowSlow = false;
+      }
+    } else if (pl.snowSlow) {
+      pl.snowSlow = false;
+    }
   },
   ambOff() { const v = this.cameras.main.worldView, M = this.M, side = Math.floor(Math.random() * 4); return [clamp(side === 0 ? v.x - 60 : side === 1 ? v.right + 60 : rnd(v.x, v.right), 40, M.w - 40), clamp(side === 2 ? v.y - 60 : side === 3 ? v.bottom + 60 : rnd(v.y, v.bottom), 60, M.h - 40)]; },
   ripple(x, y) { const g = this.add.graphics().setDepth(y), o = { r: 2 }; this.tweens.add({ targets: o, r: 12, duration: 600, onUpdate: () => { g.clear(); g.lineStyle(1, 0xffffff, .8 - o.r / 15).strokeEllipse(x, y, o.r * 2, o.r); }, onComplete: () => g.destroy() }); },
@@ -6994,7 +7075,11 @@ Object.assign(World.prototype, {
     updStatusHud(this);
   },
   cure(k) { if (k) delete this.pst[k]; else this.pst = {}; this.pl.clearTint(); updStatusHud(this); },
-  speedMul() { return this.pst.chill > 0 ? STATUS.chill.slow : 1; },
+  speedMul() {
+    let mul = this.pst.chill > 0 ? STATUS.chill.slow : 1;
+    if (this.pl && this.pl.snowSlow) mul *= 0.75; // Salju tebal memperlambat langkah (#68)
+    return mul;
+  },
   updStatus(dt) {
     const pl = this.pl; let any = null;
     for (const k in S.buff) { if (S.buff[k] > 0) { S.buff[k] -= dt; if (S.buff[k] <= 0) { delete S.buff[k]; popWorld(pl.x, pl.y - 38, 'Efek ' + BUFF[k].n + ' habis', 'xp'); updStatusHud(this); updHud(); } } }
@@ -7451,6 +7536,45 @@ Object.assign(World.prototype, {
         }
         s.anims.timeScale = e.st === 'hop' ? 2 : .8; break;
       case 'fly': {
+        // Serangan Menukik Musuh Terbang (#7)
+        if (aggro && d >= 40 && d <= 95 && !e.swoopCooldown && e.st !== 'swoop' && e.st !== 'recover') {
+          if (!e.swoopPrep) {
+            e.swoopPrep = 0.25; // ancang-ancang sekejap
+            s.setVelocity(0, -15);
+            this.sparkle(s.x, s.y - 8, 'spark', 4);
+          } else {
+            e.swoopPrep -= dt;
+            if (e.swoopPrep <= 0) {
+              e.swoopPrep = 0;
+              e.st = 'swoop';
+              e.swoopT = 0.55;
+              e.swoopTx = pl.x;
+              e.swoopTy = pl.y;
+              sfx('swing');
+              this.tweens.add({ targets: s, scaleY: sc * 1.3, scaleX: sc * 0.8, duration: 120, yoyo: true });
+            }
+          }
+        }
+        if (e.st === 'swoop') {
+          e.swoopT -= dt;
+          const svx = e.swoopTx - s.x, svy = e.swoopTy - s.y, svl = Math.hypot(svx, svy) || 1;
+          s.setVelocity((svx / svl) * D.spd * 2.2, (svy / svl) * D.spd * 2.2);
+          s.flipX = svx > 0;
+          if (e.swoopT <= 0 || svl < 14) {
+            e.st = 'recover';
+            e.swoopT = 0.4;
+            e.swoopCooldown = 2.5; // jeda antar-menukik
+            s.setVelocity(0, -D.spd * 0.8);
+          }
+          break;
+        }
+        if (e.st === 'recover') {
+          e.swoopT -= dt;
+          s.setVelocity(0, -D.spd * 0.6);
+          if (e.swoopT <= 0) e.st = null;
+          break;
+        }
+        if (e.swoopCooldown > 0) e.swoopCooldown -= dt;
         e.ph += dt * 5; let tx, ty;
         if (aggro) { tx = pl.x + Math.cos(e.ph * .6) * 22; ty = pl.y - 6 + Math.sin(e.ph * .9) * 16; } else { tx = e.home.x + Math.cos(e.ph * .3) * 40; ty = e.home.y + Math.sin(e.ph * .45) * 26; }
         const vx = tx - s.x, vy = ty - s.y, vl = Math.hypot(vx, vy) || 1; const sp = aggro ? D.spd : D.spd * .6;
@@ -13412,6 +13536,7 @@ const CRAFT = [
   { id: 'potion', n: 1, need: { herb: 3 } },
   { id: 'antidote', n: 1, need: { herb: 1, berry: 1 } },
   { id: 'bomb', n: 1, need: { ore: 1, spore: 1 } },
+  { id: 'fbomb', n: 1, need: { shard: 1, cave_water: 1 } },
   { id: 'smoke', n: 2, need: { spore: 1, herb: 1 } },
   { id: 'net', n: 1, need: { pelt: 1, wool: 1 } },
   { id: 'sarrow', n: 5, need: { feather: 1, bone: 1 } },
@@ -13522,9 +13647,10 @@ Object.assign(World.prototype, {
       for (const e of this.enemies) if (e.hp > 0 && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 95) { this.freezeEnemy(e, 2.5); e.alert = 0; }
       popWorld(pl.x, pl.y - 34, 'asap!', 'xp'); return true;
     }
-    // bom & jaring: terbang melengkung ke titik tujuan
-    const R = kind === 'bomb' ? 80 : 110, tx = pl.x + dx * R, ty = pl.y + dy * R;
-    const o = this.add.image(pl.x, pl.y - 10, kind === 'bomb' ? 'dot' : 'spark').setTint(kind === 'bomb' ? 0x3a2a2a : 0xe8dcc0).setScale(kind === 'bomb' ? 3 : 1.4).setDepth(pl.y + 20);
+    // bom & jaring & bom es: terbang melengkung ke titik tujuan
+    const isBomb = kind === 'bomb' || kind === 'fbomb' || id === 'fbomb';
+    const R = isBomb ? 80 : 110, tx = pl.x + dx * R, ty = pl.y + dy * R;
+    const o = this.add.image(pl.x, pl.y - 10, isBomb ? 'dot' : 'spark').setTint(id === 'fbomb' ? 0x66ccff : (kind === 'bomb' ? 0x3a2a2a : 0xe8dcc0)).setScale(isBomb ? 3 : 1.4).setDepth(pl.y + 20);
     sfx('swing');
     const p = { t: 0 };
     this.tweens.add({ targets: p, t: 1, duration: 420, onUpdate: () => { o.setPosition(pl.x + (tx - pl.x) * p.t, pl.y - 10 + (ty - pl.y) * p.t - Math.sin(p.t * Math.PI) * 30); o.rotation += .3;
@@ -13546,7 +13672,26 @@ Object.assign(World.prototype, {
           if (e) { e.netted = 1; this.freezeEnemy(e, 3); popWorld(e.spr.x, e.spr.y - 24, 'terjerat!', 'mpc'); p.hit = 1; this.tweens.killTweensOf(p); o.destroy(); this.time.delayedCall(3000, () => e.netted = 0); }
         } },
       onComplete: () => {
-        o.destroy(); if (kind !== 'bomb') return;
+        o.destroy();
+        if (id === 'fbomb' || kind === 'fbomb') {
+          // Ledakan Bom Es (#408)
+          this.time.delayedCall(200, () => {
+            sfxAt('magic', tx, ty, this);
+            this.camShake(120, .005);
+            this.sparkle(tx, ty - 6, 'spark', 24);
+            popWorld(tx, ty - 20, '❄ BEKU!', 'mpc');
+            for (let i = 0; i < 8; i++) this.puff(tx + rnd(-20, 20), ty + rnd(-15, 15));
+            for (const e of this.enemies) {
+              if (e.hp > 0 && Math.hypot(e.spr.x - tx, e.spr.y - ty) < 48) {
+                const n = Math.hypot(e.spr.x - tx, e.spr.y - ty) || 1;
+                this.hitEnemy(e, 10 + st.mag * 0.8, false, (e.spr.x - tx) / n, (e.spr.y - ty) / n);
+                this.freezeEnemy(e, 2.5);
+              }
+            }
+          });
+          return;
+        }
+        if (kind !== 'bomb') return;
         this.time.delayedCall(250, () => {
           sfxAt('boom', tx, ty, this); this.blastAt(tx, ty); this.camShake(160, .007); this.sparkle(tx, ty - 6, 'doto', 18); for (let i = 0; i < 6; i++) this.puff(tx + rnd(-16, 16), ty + rnd(-10, 10));
           for (const e of this.enemies) if (e.hp > 0 && Math.hypot(e.spr.x - tx, e.spr.y - ty) < 44) { const n = Math.hypot(e.spr.x - tx, e.spr.y - ty) || 1; this.hitEnemy(e, 18 + st.mag * 1.2, false, (e.spr.x - tx) / n, (e.spr.y - ty) / n); this.burnEnemy(e, Math.max(2, st.mag * .25), 2.5); }
@@ -14252,6 +14397,11 @@ World.prototype.hurtPlayer = function (atk, sx, sy, fx) {
     if (e && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 60) {
       pl.swingT = null; pl.inv = .4; pl.parryCrit = 1.5; S.parries = (S.parries || 0) + 1;
       e.kb = .2; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1; e.kbx = (e.spr.x - pl.x) / n * 200; e.kby = (e.spr.y - pl.y) / n * 200; e.st = 'rec'; e.t = 1;
+      if (e.D && e.D.ai === 'fly') {
+        // Jatuhkan musuh terbang saat ditangkis waktu menukik (#7)
+        this.freezeEnemy(e, 2);
+        popWorld(e.spr.x, e.spr.y - 20, 'JATUH TERSUNGKUR!', 'crit');
+      }
       sfx('crit'); this.hitStop(.12, 30); this.sparkle((pl.x + e.spr.x) / 2, (pl.y + e.spr.y) / 2 - 10, 'doto', 10); popWorld(pl.x, pl.y - 34, 'TANGKIS!', 'crit'); return;
     }
   }
@@ -14920,6 +15070,211 @@ async function openAlchemyTable() {
   G.lock--;
 }
 
+// ---------------- 8. BRANKAS DESA & BUNGA SIMPANAN (#42) ----------------
+async function openVillageVault(sc) {
+  if (G.lock > 0) return;
+  G.lock++; sfx('cur');
+  S.bank = S.bank || { gold: 0, day: S.day || 1 };
+
+  // Hitung akumulasi bunga simpanan (2% per hari game)
+  if ((S.day || 1) > (S.bank.day || 1)) {
+    const elapsedDays = Math.max(1, (S.day || 1) - (S.bank.day || 1));
+    let earnedTotal = 0;
+    for (let d = 0; d < elapsedDays; d++) {
+      const interest = Math.floor((S.bank.gold || 0) * 0.02);
+      if (interest > 0) {
+        S.bank.gold += interest;
+        earnedTotal += interest;
+      }
+    }
+    S.bank.day = S.day || 1;
+    if (earnedTotal > 0) {
+      sfx('coin');
+      await say(`Brankas Desa mencairkan bunga tabungan sebesar +${earnedTotal} G (${elapsedDays} hari simpanan)!`);
+    }
+  }
+
+  for (;;) {
+    const saldo = S.bank.gold || 0;
+    const estNextDay = Math.floor(saldo * 0.02);
+    const r = await choose({
+      head: `Brankas Desa Lumina · Saldo: ${saldo} G`,
+      x: 30, y: 30, w: 260,
+      items: [
+        { t: '💰 Setor Koin Emas (50 G)', dis: S.gold < 50 },
+        { t: '💰 Setor Koin Emas (100 G)', dis: S.gold < 100 },
+        { t: '💰 Setor Semua Koin Emas', dis: S.gold <= 0 },
+        { t: '💳 Tarik Koin (50 G)', dis: saldo < 50 },
+        { t: '💳 Tarik Koin (100 G)', dis: saldo < 100 },
+        { t: '💳 Tarik Semua Koin', dis: saldo <= 0 },
+        { t: 'Tutup' }
+      ],
+      foot: () => `Dompet: ${S.gold} G · Estimasi Bunga Harian (2%): +${estNextDay} G saat fajar.`
+    });
+
+    if (r < 0 || r === 6) break;
+
+    if (r === 0) { // Setor 50 G
+      S.gold -= 50; S.bank.gold += 50; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, '-50 G Simpan', 'gold');
+    } else if (r === 1) { // Setor 100 G
+      S.gold -= 100; S.bank.gold += 100; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, '-100 G Simpan', 'gold');
+    } else if (r === 2) { // Setor Semua
+      const all = S.gold; S.gold = 0; S.bank.gold += all; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, `-${all} G Simpan`, 'gold');
+    } else if (r === 3) { // Tarik 50 G
+      S.bank.gold -= 50; S.gold += 50; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, '+50 G Tarik', 'heal');
+    } else if (r === 4) { // Tarik 100 G
+      S.bank.gold -= 100; S.gold += 100; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, '+100 G Tarik', 'heal');
+    } else if (r === 5) { // Tarik Semua
+      const all = S.bank.gold; S.bank.gold = 0; S.gold += all; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, `+${all} G Tarik`, 'heal');
+    }
+    updHud();
+  }
+  G.lock--;
+}
+
+// ---------------- 9. PAPAN REKOR PETUALANG / HALL OF FAME (#95) ----------------
+async function openHallOfFame() {
+  if (G.lock > 0) return;
+  G.lock++; sfx('cur');
+
+  // Cari ikan terberat
+  let heaviestFish = '-';
+  let heaviestW = 0;
+  for (const [id, f] of Object.entries(S.fishLog || {})) {
+    if (f.w && f.w > heaviestW) {
+      heaviestW = f.w;
+      heaviestFish = `${ITEMS[id]?.n || id} (${f.w.toFixed(1)} kg · ${f.l.toFixed(0)} cm)`;
+    }
+  }
+
+  // Rekor boss rematch
+  const records = S.records || {};
+  const bossLines = [
+    `Ratu Jamur: ${records.squeen ? records.squeen.toFixed(1) + ' dtk' : '(Belum dicoba)'}`,
+    `Golem Purba: ${records.golemk ? records.golemk.toFixed(1) + ' dtk' : '(Belum dicoba)'}`,
+    `Naga Es Kryos: ${records.kryos ? records.kryos.toFixed(1) + ' dtk' : '(Belum dicoba)'}`
+  ];
+
+  const items = [
+    { t: '🐟 Ikan Terberat', r: heaviestFish },
+    { t: '⏱ Waktu Rematch Boss', r: records.squeen || records.golemk || records.kryos ? 'Tercatat' : '-' },
+    { t: '👣 Langkah Kaki Petualang', r: `${S.st?.steps || 0} langkah` },
+    { t: '⚔ Monster Ditaklukkan', r: `${S.st?.kills || 0} ekor` },
+    { t: '⛏ Batu Ditambang', r: `${S.st?.mined || 0} urat batu` },
+    { t: 'Tutup' }
+  ];
+
+  await choose({
+    head: '🏆 Papan Rekor Petualang Lumina',
+    x: 20, y: 25, w: 280,
+    items,
+    foot: i => {
+      if (i === 1) return bossLines.join(' · ');
+      if (i === 0) return 'Tangkapan ikan paling memukau dari seluruh perairan benua.';
+      return 'Pencapaian pribadi terbaik sepanjang perjalanan Arka.';
+    }
+  });
+
+  G.lock--;
+}
+
+// ---------------- 10. BOSS REMATCH DI KUIL INGATAN (#12) ----------------
+const MEMORY_BOSSES = [
+  { id: 'squeen', n: 'Kenangan Ratu Jamur', type: 'squeen', hpMul: 1.3, atkMul: 1.25, cond: () => S.flags?.mb_queen || S.stage >= 2, gold: 120, exp: 90 },
+  { id: 'golemk', n: 'Kenangan Golem Purba', type: 'golemk', hpMul: 1.35, atkMul: 1.3, cond: () => S.flags?.golem || S.stage >= 6, gold: 200, exp: 160 },
+  { id: 'kryos', n: 'Kenangan Naga Es Kryos', type: 'kryos', hpMul: 1.4, atkMul: 1.35, cond: () => S.flags?.dragon || S.stage >= 13, gold: 350, exp: 280 }
+];
+
+async function openMemoryTrials(sc) {
+  if (G.lock > 0) return;
+  G.lock++; sfx('cur');
+
+  const available = MEMORY_BOSSES.map(b => {
+    const unlocked = b.cond();
+    const best = S.records?.[b.id] ? ` [${S.records[b.id].toFixed(1)}s]` : '';
+    return {
+      t: (unlocked ? '🔮 ' : '🔒 ') + b.n + best,
+      r: unlocked ? 'Tersedia' : 'Terkunci',
+      dis: !unlocked,
+      boss: b
+    };
+  });
+  available.push({ t: 'Tutup' });
+
+  const r = await choose({
+    head: 'Cermin Ingatan · Kuil Suci',
+    x: 25, y: 30, w: 270,
+    items: available,
+    foot: i => i < MEMORY_BOSSES.length ? 'Tantang kembali kenangan boss masa lalu dalam wujud lebih kuat!' : 'Pantulan cermin suci merekam jejak musuh-musuh kuat.'
+  });
+
+  if (r < 0 || r >= MEMORY_BOSSES.length) {
+    G.lock--;
+    return;
+  }
+
+  const chosen = available[r].boss;
+  G.lock--;
+
+  // Mulai simulasi rematch
+  await say(`Cermin Ingatan bercahaya terang... Kenangan pertarungan melawan ${chosen.n} diwujudkan kembali di altar kuil!`);
+  startRematchBattle(sc, chosen);
+}
+
+function startRematchBattle(sc, target) {
+  if (sc.bossOn) return;
+  sc.bossOn = true;
+  playBGM('boss');
+  sc.rematchStart = Date.now();
+  sc.rematchTarget = target;
+
+  const bx = 160, by = 130;
+  const e = sc.spawnEnemy(target.type, bx, by);
+  e.rematch = true;
+  e.maxhp = Math.floor(e.maxhp * target.hpMul);
+  e.hp = e.maxhp;
+  e.D.atk = Math.floor(e.D.atk * target.atkMul);
+  sc.bossE = e;
+  bossBar(target.n, 1);
+  popWorld(bx, by - 24, '⚔ UJIAN DIMULAI!', 'crit');
+  sc.camShake(200, 0.008);
+
+  // Monitor kemenangan rematch
+  const timerCheck = sc.time.addEvent({
+    delay: 300,
+    loop: true,
+    callback: async () => {
+      if (e.hp <= 0 || !e.spr.active) {
+        timerCheck.remove();
+        sc.bossOn = false;
+        bossBar(null);
+        const elapsedSec = (Date.now() - sc.rematchStart) / 1000;
+        S.records = S.records || {};
+        const prev = S.records[target.id];
+        const isNewRecord = !prev || elapsedSec < prev;
+        if (isNewRecord) S.records[target.id] = elapsedSec;
+
+        playBGM('victory');
+        sfx('chest');
+        addItem('amethyst_gem', 1);
+        S.gold += target.gold;
+        if (typeof gainExp === 'function') gainExp(target.exp);
+        else S.exp = (S.exp || 0) + target.exp;
+        updHud();
+
+        await say(`LUAR BIASA! Kamu menaklukkan ${target.n} dalam waktu ${elapsedSec.toFixed(1)} detik! ${isNewRecord ? '⭐ REKOR TERBARU TERCATAT!' : ''}\nHadiah Ujian: +${target.gold} G, +${target.exp} EXP & 1 Permata Kecubung.`);
+        playBGM(bgmFor(sc.M));
+      }
+    }
+  });
+}
+
 'use strict';
 // Percakapan NPC, toko, bengkel, penginapan
 Object.assign(World.prototype, {
@@ -15514,10 +15869,20 @@ async function socketMenu() {
 // ---------------- TAS (INVENTARIS) ----------------
 const BAG_TABS = [['use', 'Pakai'], ['eq', 'Perlengkapan'], ['mat', 'Bahan'], ['key', 'Penting']];
 let BAG_SORT = 0;
+let BAG_SEARCH = '';
 async function openBag(sc) {
   G.lock++; sfx('ok');
   const w = win('act', ''); w.id = 'bagw'; let tab = 0, sel = 0;
-  function list() { const k = BAG_TABS[tab][0], L = Object.keys(S.inv).filter(id => S.inv[id] > 0 && (k === 'eq' ? ['wpn', 'arm', 'acc'].includes(ITEMS[id].k) : ITEMS[id].k === k)); const val = id => ITEMS[id].price || (ITEMS[id].sell || 0) * 2, got = id => (S.got && S.got[id]) || 0; return BAG_SORT === 1 ? L.sort((a, b) => val(b) - val(a)) : BAG_SORT === 2 ? L.sort((a, b) => got(b) - got(a)) : BAG_SORT === 3 ? L.sort((a, b) => ITEMS[a].n.localeCompare(ITEMS[b].n)) : L; }
+  function list() {
+    const k = BAG_TABS[tab][0];
+    let L = Object.keys(S.inv).filter(id => S.inv[id] > 0 && (k === 'eq' ? ['wpn', 'arm', 'acc'].includes(ITEMS[id].k) : ITEMS[id].k === k));
+    if (BAG_SEARCH) {
+      const q = BAG_SEARCH.toLowerCase().trim();
+      L = L.filter(id => ITEMS[id].n.toLowerCase().includes(q) || (ITEMS[id].d && ITEMS[id].d.toLowerCase().includes(q)));
+    }
+    const val = id => ITEMS[id].price || (ITEMS[id].sell || 0) * 2, got = id => (S.got && S.got[id]) || 0;
+    return BAG_SORT === 1 ? L.sort((a, b) => val(b) - val(a)) : BAG_SORT === 2 ? L.sort((a, b) => got(b) - got(a)) : BAG_SORT === 3 ? L.sort((a, b) => ITEMS[a].n.localeCompare(ITEMS[b].n)) : L;
+  }
   function isEq(id) { return Object.values(S.eq).includes(id); }
   function draw() {
     const L = list(); sel = clamp(sel, 0, Math.max(0, L.length - 1)); const st = stat();
@@ -15530,7 +15895,8 @@ async function openBag(sc) {
 
     const srcText = L.length && ITEMS[L[sel]].src ? `<br><span style="color:#8ae8ff;font-size:9px;">📍 Sumber: ${ITEMS[L[sel]].src}</span>` : '';
     const altWpnText = S.eq.altWpn ? `<br>Cadangan: <b>${ITEMS[S.eq.altWpn]?.n || '-'}</b> [Q]` : '';
-    w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span><span class="gold">${S.gold} G</span></div>
+    const searchBadge = BAG_SEARCH ? ` <span class="bag-clear-search" style="color:#ffcc00;cursor:pointer;font-size:9px;">[🔍 "${BAG_SEARCH}" ✕]</span>` : ` <span class="bag-do-search" style="color:#a8c8ff;cursor:pointer;font-size:9px;">[🔍 Cari]</span>`;
+    w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span>${searchBadge}<span class="gold">${S.gold} G</span></div>
      <div class="bb"><div class="bl">${L.length ? L.map((id, i) => {
        const isLck = S.locked && S.locked[id];
        const isNew = S.newItems && S.newItems[id];
@@ -15549,6 +15915,23 @@ async function openBag(sc) {
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b>${altWpnText}</div></div></div>
      <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) + srcText : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · [C] Pakai Terbaik · B tutup'}</div>`;
     const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
+    const sBtn = w.querySelector('.bag-do-search');
+    if (sBtn) sBtn.onpointerdown = async ev => {
+      ev.stopPropagation();
+      const filters = ['ram', 'ikan', 'panah', 'kristal', 'bom', 'batu', 'Semua'];
+      const c = await choose({
+        head: '🔍 Pencarian Cepat Tas',
+        x: 40, y: 50, w: 220,
+        items: filters.map(f => ({ t: f === 'Semua' ? 'Reset Pencarian' : `Filter: "${f}"` }))
+      });
+      if (c >= 0) {
+        BAG_SEARCH = filters[c] === 'Semua' ? '' : filters[c];
+        sfx('ok');
+        draw();
+      }
+    };
+    const cBtn = w.querySelector('.bag-clear-search');
+    if (cBtn) cBtn.onpointerdown = ev => { ev.stopPropagation(); BAG_SEARCH = ''; sfx('back'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => {
       ev.stopPropagation();

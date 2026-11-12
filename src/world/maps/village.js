@@ -28,6 +28,7 @@ MAPS.village = {
     
     ['apple1', 290, 376], ['orange1', 362, 410], ['apple2', 300, 464], ['bench', 420, 458], ['bushP', 448, 424], ['bushW', 250, 414],
     ['cart', 740, 604],
+    ['fame_board', 450, 458],
     ['crateCart', 750, 470], ['barrelNew', 630, 440], ['barrelNew', 798, 410],
     ['benchWood', 480, 460], 
     ['lampPost', 390, 266], ['lampPost', 634, 266],

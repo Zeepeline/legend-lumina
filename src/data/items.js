@@ -140,6 +140,9 @@ const ITEMS = {
   bug_dragonfly: { n: 'Capung Rawa Zamrud', k: 'mat', sell: 22, d: 'Capung bersayap bening dengan tubuh hijau zamrud berkilau dari rawa.', src: 'Ditangkap dengan jaring di tepi rawa senja' },
   bug_firefly: { n: 'Kunang Malam Pendar', k: 'mat', sell: 25, d: 'Serangga malam bercahaya sejuk penuntun pengelana di kegelapan.', src: 'Ditangkap dengan jaring saat malam hari' },
 
+  // Fitur #408: Bom Es Kerajinan
+  fbomb: { n: 'Bom Es', k: 'use', tool: 1, price: 28, sell: 14, d: 'Lempar ke depan. Meledak membekukan seluruh musuh dalam radius 45 px selama 2,5 detik.', src: 'Kerajinan: Pecahan Kristal + Air Murni Stalaktit' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },
@@ -162,7 +165,8 @@ const ICON_OF = {
   bug_beetle: 'bfly_gold',
   bug_butterfly: 'bfly_gold',
   bug_dragonfly: 'bfly_blue',
-  bug_firefly: 'firefly_item'
+  bug_firefly: 'firefly_item',
+  fbomb: 'bomb'
 };
 // Masak di penginapan (Bu Rina)
 const COOK = [

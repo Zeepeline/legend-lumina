@@ -146,6 +146,49 @@ Object.assign(World.prototype, {
         }
       }
     }
+    // Cuaca Ekstrem: Sambaran Petir di Padang Angin & Rawa Senja (#68)
+    if (!this.M.indoor && !G.lock && !G.title && (this.M.id === 'meadow' || this.M.id === 'swamp')) {
+      this._stormT = (this._stormT || 0) + dt;
+      if (this._stormT > 8) { // Tiap 8 detik ada peluang sambaran badai
+        this._stormT = 0;
+        if (Math.random() < 0.35) {
+          const lx = clamp(pl.x + rnd(-110, 110), 50, this.M.w - 50);
+          const ly = clamp(pl.y + rnd(-90, 90), 50, this.M.h - 50);
+          // Tanda bahaya sambaran petir di tanah selama 1 detik
+          const mark = this.add.circle(lx, ly, 22, 0xffeb3b, 0.45).setDepth(ly - 1);
+          this.tweens.add({ targets: mark, scaleX: 1.3, scaleY: 1.3, alpha: 0.8, yoyo: true, repeat: 2, duration: 250 });
+          this.time.delayedCall(1000, () => {
+            mark.destroy();
+            // Sambaran petir!
+            this.cameras.main.flash(80, 255, 255, 255);
+            sfx('boom');
+            this.camShake(180, 0.008);
+            this.sparkle(lx, ly - 10, 'spark', 24);
+            popWorld(lx, ly - 22, '⚡ SAMBARAN PETIR!', 'crit');
+            // Efek sambaran mengenai sekitar radius 34 px
+            if (Math.hypot(pl.x - lx, pl.y - ly) < 34) {
+              this.hurtPlayer(18, lx, ly);
+            }
+            for (const e of this.enemies) {
+              if (e.hp > 0 && Math.hypot(e.spr.x - lx, e.spr.y - ly) < 40) {
+                this.hitEnemy(e, 45, false, 0, 0);
+                this.burnEnemy(e, 5, 2);
+              }
+            }
+          });
+        }
+      }
+    }
+    // Badai Salju Tebal di Puncak Beku (#68): memperlambat langkah Arka bila tidak berstatus hangat
+    if (this.M.id === 'snow' && !G.lock) {
+      if (typeof buffOn === 'function' && !buffOn('warm')) {
+        pl.snowSlow = true;
+      } else {
+        pl.snowSlow = false;
+      }
+    } else if (pl.snowSlow) {
+      pl.snowSlow = false;
+    }
   },
   ambOff() { const v = this.cameras.main.worldView, M = this.M, side = Math.floor(Math.random() * 4); return [clamp(side === 0 ? v.x - 60 : side === 1 ? v.right + 60 : rnd(v.x, v.right), 40, M.w - 40), clamp(side === 2 ? v.y - 60 : side === 3 ? v.bottom + 60 : rnd(v.y, v.bottom), 60, M.h - 40)]; },
   ripple(x, y) { const g = this.add.graphics().setDepth(y), o = { r: 2 }; this.tweens.add({ targets: o, r: 12, duration: 600, onUpdate: () => { g.clear(); g.lineStyle(1, 0xffffff, .8 - o.r / 15).strokeEllipse(x, y, o.r * 2, o.r); }, onComplete: () => g.destroy() }); },

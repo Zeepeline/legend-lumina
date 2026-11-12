@@ -32,6 +32,11 @@ World.prototype.hurtPlayer = function (atk, sx, sy, fx) {
     if (e && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 60) {
       pl.swingT = null; pl.inv = .4; pl.parryCrit = 1.5; S.parries = (S.parries || 0) + 1;
       e.kb = .2; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1; e.kbx = (e.spr.x - pl.x) / n * 200; e.kby = (e.spr.y - pl.y) / n * 200; e.st = 'rec'; e.t = 1;
+      if (e.D && e.D.ai === 'fly') {
+        // Jatuhkan musuh terbang saat ditangkis waktu menukik (#7)
+        this.freezeEnemy(e, 2);
+        popWorld(e.spr.x, e.spr.y - 20, 'JATUH TERSUNGKUR!', 'crit');
+      }
       sfx('crit'); this.hitStop(.12, 30); this.sparkle((pl.x + e.spr.x) / 2, (pl.y + e.spr.y) / 2 - 10, 'doto', 10); popWorld(pl.x, pl.y - 34, 'TANGKIS!', 'crit'); return;
     }
   }

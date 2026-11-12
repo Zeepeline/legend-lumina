@@ -620,3 +620,208 @@ async function openAlchemyTable() {
   }
   G.lock--;
 }
+
+// ---------------- 8. BRANKAS DESA & BUNGA SIMPANAN (#42) ----------------
+async function openVillageVault(sc) {
+  if (G.lock > 0) return;
+  G.lock++; sfx('cur');
+  S.bank = S.bank || { gold: 0, day: S.day || 1 };
+
+  // Hitung akumulasi bunga simpanan (2% per hari game)
+  if ((S.day || 1) > (S.bank.day || 1)) {
+    const elapsedDays = Math.max(1, (S.day || 1) - (S.bank.day || 1));
+    let earnedTotal = 0;
+    for (let d = 0; d < elapsedDays; d++) {
+      const interest = Math.floor((S.bank.gold || 0) * 0.02);
+      if (interest > 0) {
+        S.bank.gold += interest;
+        earnedTotal += interest;
+      }
+    }
+    S.bank.day = S.day || 1;
+    if (earnedTotal > 0) {
+      sfx('coin');
+      await say(`Brankas Desa mencairkan bunga tabungan sebesar +${earnedTotal} G (${elapsedDays} hari simpanan)!`);
+    }
+  }
+
+  for (;;) {
+    const saldo = S.bank.gold || 0;
+    const estNextDay = Math.floor(saldo * 0.02);
+    const r = await choose({
+      head: `Brankas Desa Lumina · Saldo: ${saldo} G`,
+      x: 30, y: 30, w: 260,
+      items: [
+        { t: '💰 Setor Koin Emas (50 G)', dis: S.gold < 50 },
+        { t: '💰 Setor Koin Emas (100 G)', dis: S.gold < 100 },
+        { t: '💰 Setor Semua Koin Emas', dis: S.gold <= 0 },
+        { t: '💳 Tarik Koin (50 G)', dis: saldo < 50 },
+        { t: '💳 Tarik Koin (100 G)', dis: saldo < 100 },
+        { t: '💳 Tarik Semua Koin', dis: saldo <= 0 },
+        { t: 'Tutup' }
+      ],
+      foot: () => `Dompet: ${S.gold} G · Estimasi Bunga Harian (2%): +${estNextDay} G saat fajar.`
+    });
+
+    if (r < 0 || r === 6) break;
+
+    if (r === 0) { // Setor 50 G
+      S.gold -= 50; S.bank.gold += 50; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, '-50 G Simpan', 'gold');
+    } else if (r === 1) { // Setor 100 G
+      S.gold -= 100; S.bank.gold += 100; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, '-100 G Simpan', 'gold');
+    } else if (r === 2) { // Setor Semua
+      const all = S.gold; S.gold = 0; S.bank.gold += all; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, `-${all} G Simpan`, 'gold');
+    } else if (r === 3) { // Tarik 50 G
+      S.bank.gold -= 50; S.gold += 50; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, '+50 G Tarik', 'heal');
+    } else if (r === 4) { // Tarik 100 G
+      S.bank.gold -= 100; S.gold += 100; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, '+100 G Tarik', 'heal');
+    } else if (r === 5) { // Tarik Semua
+      const all = S.bank.gold; S.bank.gold = 0; S.gold += all; sfx('coin');
+      popWorld(S.x || 512, (S.y || 380) - 20, `+${all} G Tarik`, 'heal');
+    }
+    updHud();
+  }
+  G.lock--;
+}
+
+// ---------------- 9. PAPAN REKOR PETUALANG / HALL OF FAME (#95) ----------------
+async function openHallOfFame() {
+  if (G.lock > 0) return;
+  G.lock++; sfx('cur');
+
+  // Cari ikan terberat
+  let heaviestFish = '-';
+  let heaviestW = 0;
+  for (const [id, f] of Object.entries(S.fishLog || {})) {
+    if (f.w && f.w > heaviestW) {
+      heaviestW = f.w;
+      heaviestFish = `${ITEMS[id]?.n || id} (${f.w.toFixed(1)} kg · ${f.l.toFixed(0)} cm)`;
+    }
+  }
+
+  // Rekor boss rematch
+  const records = S.records || {};
+  const bossLines = [
+    `Ratu Jamur: ${records.squeen ? records.squeen.toFixed(1) + ' dtk' : '(Belum dicoba)'}`,
+    `Golem Purba: ${records.golemk ? records.golemk.toFixed(1) + ' dtk' : '(Belum dicoba)'}`,
+    `Naga Es Kryos: ${records.kryos ? records.kryos.toFixed(1) + ' dtk' : '(Belum dicoba)'}`
+  ];
+
+  const items = [
+    { t: '🐟 Ikan Terberat', r: heaviestFish },
+    { t: '⏱ Waktu Rematch Boss', r: records.squeen || records.golemk || records.kryos ? 'Tercatat' : '-' },
+    { t: '👣 Langkah Kaki Petualang', r: `${S.st?.steps || 0} langkah` },
+    { t: '⚔ Monster Ditaklukkan', r: `${S.st?.kills || 0} ekor` },
+    { t: '⛏ Batu Ditambang', r: `${S.st?.mined || 0} urat batu` },
+    { t: 'Tutup' }
+  ];
+
+  await choose({
+    head: '🏆 Papan Rekor Petualang Lumina',
+    x: 20, y: 25, w: 280,
+    items,
+    foot: i => {
+      if (i === 1) return bossLines.join(' · ');
+      if (i === 0) return 'Tangkapan ikan paling memukau dari seluruh perairan benua.';
+      return 'Pencapaian pribadi terbaik sepanjang perjalanan Arka.';
+    }
+  });
+
+  G.lock--;
+}
+
+// ---------------- 10. BOSS REMATCH DI KUIL INGATAN (#12) ----------------
+const MEMORY_BOSSES = [
+  { id: 'squeen', n: 'Kenangan Ratu Jamur', type: 'squeen', hpMul: 1.3, atkMul: 1.25, cond: () => S.flags?.mb_queen || S.stage >= 2, gold: 120, exp: 90 },
+  { id: 'golemk', n: 'Kenangan Golem Purba', type: 'golemk', hpMul: 1.35, atkMul: 1.3, cond: () => S.flags?.golem || S.stage >= 6, gold: 200, exp: 160 },
+  { id: 'kryos', n: 'Kenangan Naga Es Kryos', type: 'kryos', hpMul: 1.4, atkMul: 1.35, cond: () => S.flags?.dragon || S.stage >= 13, gold: 350, exp: 280 }
+];
+
+async function openMemoryTrials(sc) {
+  if (G.lock > 0) return;
+  G.lock++; sfx('cur');
+
+  const available = MEMORY_BOSSES.map(b => {
+    const unlocked = b.cond();
+    const best = S.records?.[b.id] ? ` [${S.records[b.id].toFixed(1)}s]` : '';
+    return {
+      t: (unlocked ? '🔮 ' : '🔒 ') + b.n + best,
+      r: unlocked ? 'Tersedia' : 'Terkunci',
+      dis: !unlocked,
+      boss: b
+    };
+  });
+  available.push({ t: 'Tutup' });
+
+  const r = await choose({
+    head: 'Cermin Ingatan · Kuil Suci',
+    x: 25, y: 30, w: 270,
+    items: available,
+    foot: i => i < MEMORY_BOSSES.length ? 'Tantang kembali kenangan boss masa lalu dalam wujud lebih kuat!' : 'Pantulan cermin suci merekam jejak musuh-musuh kuat.'
+  });
+
+  if (r < 0 || r >= MEMORY_BOSSES.length) {
+    G.lock--;
+    return;
+  }
+
+  const chosen = available[r].boss;
+  G.lock--;
+
+  // Mulai simulasi rematch
+  await say(`Cermin Ingatan bercahaya terang... Kenangan pertarungan melawan ${chosen.n} diwujudkan kembali di altar kuil!`);
+  startRematchBattle(sc, chosen);
+}
+
+function startRematchBattle(sc, target) {
+  if (sc.bossOn) return;
+  sc.bossOn = true;
+  playBGM('boss');
+  sc.rematchStart = Date.now();
+  sc.rematchTarget = target;
+
+  const bx = 160, by = 130;
+  const e = sc.spawnEnemy(target.type, bx, by);
+  e.rematch = true;
+  e.maxhp = Math.floor(e.maxhp * target.hpMul);
+  e.hp = e.maxhp;
+  e.D.atk = Math.floor(e.D.atk * target.atkMul);
+  sc.bossE = e;
+  bossBar(target.n, 1);
+  popWorld(bx, by - 24, '⚔ UJIAN DIMULAI!', 'crit');
+  sc.camShake(200, 0.008);
+
+  // Monitor kemenangan rematch
+  const timerCheck = sc.time.addEvent({
+    delay: 300,
+    loop: true,
+    callback: async () => {
+      if (e.hp <= 0 || !e.spr.active) {
+        timerCheck.remove();
+        sc.bossOn = false;
+        bossBar(null);
+        const elapsedSec = (Date.now() - sc.rematchStart) / 1000;
+        S.records = S.records || {};
+        const prev = S.records[target.id];
+        const isNewRecord = !prev || elapsedSec < prev;
+        if (isNewRecord) S.records[target.id] = elapsedSec;
+
+        playBGM('victory');
+        sfx('chest');
+        addItem('amethyst_gem', 1);
+        S.gold += target.gold;
+        if (typeof gainExp === 'function') gainExp(target.exp);
+        else S.exp = (S.exp || 0) + target.exp;
+        updHud();
+
+        await say(`LUAR BIASA! Kamu menaklukkan ${target.n} dalam waktu ${elapsedSec.toFixed(1)} detik! ${isNewRecord ? '⭐ REKOR TERBARU TERCATAT!' : ''}\nHadiah Ujian: +${target.gold} G, +${target.exp} EXP & 1 Permata Kecubung.`);
+        playBGM(bgmFor(sc.M));
+      }
+    }
+  });
+}

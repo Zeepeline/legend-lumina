@@ -24,6 +24,7 @@ const CRAFT = [
   { id: 'potion', n: 1, need: { herb: 3 } },
   { id: 'antidote', n: 1, need: { herb: 1, berry: 1 } },
   { id: 'bomb', n: 1, need: { ore: 1, spore: 1 } },
+  { id: 'fbomb', n: 1, need: { shard: 1, cave_water: 1 } },
   { id: 'smoke', n: 2, need: { spore: 1, herb: 1 } },
   { id: 'net', n: 1, need: { pelt: 1, wool: 1 } },
   { id: 'sarrow', n: 5, need: { feather: 1, bone: 1 } },
@@ -134,9 +135,10 @@ Object.assign(World.prototype, {
       for (const e of this.enemies) if (e.hp > 0 && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 95) { this.freezeEnemy(e, 2.5); e.alert = 0; }
       popWorld(pl.x, pl.y - 34, 'asap!', 'xp'); return true;
     }
-    // bom & jaring: terbang melengkung ke titik tujuan
-    const R = kind === 'bomb' ? 80 : 110, tx = pl.x + dx * R, ty = pl.y + dy * R;
-    const o = this.add.image(pl.x, pl.y - 10, kind === 'bomb' ? 'dot' : 'spark').setTint(kind === 'bomb' ? 0x3a2a2a : 0xe8dcc0).setScale(kind === 'bomb' ? 3 : 1.4).setDepth(pl.y + 20);
+    // bom & jaring & bom es: terbang melengkung ke titik tujuan
+    const isBomb = kind === 'bomb' || kind === 'fbomb' || id === 'fbomb';
+    const R = isBomb ? 80 : 110, tx = pl.x + dx * R, ty = pl.y + dy * R;
+    const o = this.add.image(pl.x, pl.y - 10, isBomb ? 'dot' : 'spark').setTint(id === 'fbomb' ? 0x66ccff : (kind === 'bomb' ? 0x3a2a2a : 0xe8dcc0)).setScale(isBomb ? 3 : 1.4).setDepth(pl.y + 20);
     sfx('swing');
     const p = { t: 0 };
     this.tweens.add({ targets: p, t: 1, duration: 420, onUpdate: () => { o.setPosition(pl.x + (tx - pl.x) * p.t, pl.y - 10 + (ty - pl.y) * p.t - Math.sin(p.t * Math.PI) * 30); o.rotation += .3;
@@ -158,7 +160,26 @@ Object.assign(World.prototype, {
           if (e) { e.netted = 1; this.freezeEnemy(e, 3); popWorld(e.spr.x, e.spr.y - 24, 'terjerat!', 'mpc'); p.hit = 1; this.tweens.killTweensOf(p); o.destroy(); this.time.delayedCall(3000, () => e.netted = 0); }
         } },
       onComplete: () => {
-        o.destroy(); if (kind !== 'bomb') return;
+        o.destroy();
+        if (id === 'fbomb' || kind === 'fbomb') {
+          // Ledakan Bom Es (#408)
+          this.time.delayedCall(200, () => {
+            sfxAt('magic', tx, ty, this);
+            this.camShake(120, .005);
+            this.sparkle(tx, ty - 6, 'spark', 24);
+            popWorld(tx, ty - 20, '❄ BEKU!', 'mpc');
+            for (let i = 0; i < 8; i++) this.puff(tx + rnd(-20, 20), ty + rnd(-15, 15));
+            for (const e of this.enemies) {
+              if (e.hp > 0 && Math.hypot(e.spr.x - tx, e.spr.y - ty) < 48) {
+                const n = Math.hypot(e.spr.x - tx, e.spr.y - ty) || 1;
+                this.hitEnemy(e, 10 + st.mag * 0.8, false, (e.spr.x - tx) / n, (e.spr.y - ty) / n);
+                this.freezeEnemy(e, 2.5);
+              }
+            }
+          });
+          return;
+        }
+        if (kind !== 'bomb') return;
         this.time.delayedCall(250, () => {
           sfxAt('boom', tx, ty, this); this.blastAt(tx, ty); this.camShake(160, .007); this.sparkle(tx, ty - 6, 'doto', 18); for (let i = 0; i < 6; i++) this.puff(tx + rnd(-16, 16), ty + rnd(-10, 10));
           for (const e of this.enemies) if (e.hp > 0 && Math.hypot(e.spr.x - tx, e.spr.y - ty) < 44) { const n = Math.hypot(e.spr.x - tx, e.spr.y - ty) || 1; this.hitEnemy(e, 18 + st.mag * 1.2, false, (e.spr.x - tx) / n, (e.spr.y - ty) / n); this.burnEnemy(e, Math.max(2, st.mag * .25), 2.5); }

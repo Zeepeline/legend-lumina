@@ -17,6 +17,7 @@ MAPS.inn = makeRoom('inn', 'Penginapan Daun Emas', [752, 238], {
 MAPS.elderhome = makeRoom('elderhome', 'Rumah Pohon Tetua', [513, 306], {
   wallc: '#d8c49a', furn: [['rug', 132, 140, 1], ['shelf', 64, 52, 0], ['shelf', 104, 52, 3], ['shelf', 220, 52, 5], ['table', 76, 130], ['bed', 238, 100, 1], ['stove', 176, 50]], windows: [146],
   chests: [{ id: 'e1', x: 230, y: 216, item: 'ether2' }],
+  objs: [['village_vault', 68, 206]],
   doors: [
     [82, 78, 'Buku tua: "...Morgath, murid yang terusir dari desa, mempelajari sihir segel di Rawa Senja..."'],
     [122, 78, 'Catatan Tetua: "Kristal Lumina meredup setiap kali kabut rawa menebal. Apakah ada hubungannya?"'],
@@ -32,7 +33,7 @@ MAPS.linahome = makeRoom('linahome', 'Rumah Lina', [272, 238], {
 });
 MAPS.temple = makeRoom('temple', 'Kuil Penjaga Cahaya', [0, 0], {
   wallc: '#b4bfd2', floor: ['#6e7890', '#9aa4b8', '#a8b2c4', '#828ca2'], ground: 'room', bgm: 'cave', furn: [['rug', 132, 150, 1]], windows: [],
-  objs: [['altar', 160, 140], ['templekoipond', 88, 190], ['birdbath', 230, 190]],
+  objs: [['altar', 160, 140], ['mirror_memory', 84, 136], ['templekoipond', 88, 190], ['birdbath', 230, 190]],
   exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'lake', tx: 936, ty: 530, dir: 'down', label: 'Danau Cermin' }],
   reliefs: [[86, 70, 'kuil_relief'], [234, 70, 'kuil_aurel']], sealDoor: [160, 74],
   npcs: [{ id: 'temple_priest', ch: 'priest', name: 'Pendeta Elian', x: 200, y: 136, dir: 'left', reach: 30 }],

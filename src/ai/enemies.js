@@ -56,6 +56,45 @@ Object.assign(World.prototype, {
         }
         s.anims.timeScale = e.st === 'hop' ? 2 : .8; break;
       case 'fly': {
+        // Serangan Menukik Musuh Terbang (#7)
+        if (aggro && d >= 40 && d <= 95 && !e.swoopCooldown && e.st !== 'swoop' && e.st !== 'recover') {
+          if (!e.swoopPrep) {
+            e.swoopPrep = 0.25; // ancang-ancang sekejap
+            s.setVelocity(0, -15);
+            this.sparkle(s.x, s.y - 8, 'spark', 4);
+          } else {
+            e.swoopPrep -= dt;
+            if (e.swoopPrep <= 0) {
+              e.swoopPrep = 0;
+              e.st = 'swoop';
+              e.swoopT = 0.55;
+              e.swoopTx = pl.x;
+              e.swoopTy = pl.y;
+              sfx('swing');
+              this.tweens.add({ targets: s, scaleY: sc * 1.3, scaleX: sc * 0.8, duration: 120, yoyo: true });
+            }
+          }
+        }
+        if (e.st === 'swoop') {
+          e.swoopT -= dt;
+          const svx = e.swoopTx - s.x, svy = e.swoopTy - s.y, svl = Math.hypot(svx, svy) || 1;
+          s.setVelocity((svx / svl) * D.spd * 2.2, (svy / svl) * D.spd * 2.2);
+          s.flipX = svx > 0;
+          if (e.swoopT <= 0 || svl < 14) {
+            e.st = 'recover';
+            e.swoopT = 0.4;
+            e.swoopCooldown = 2.5; // jeda antar-menukik
+            s.setVelocity(0, -D.spd * 0.8);
+          }
+          break;
+        }
+        if (e.st === 'recover') {
+          e.swoopT -= dt;
+          s.setVelocity(0, -D.spd * 0.6);
+          if (e.swoopT <= 0) e.st = null;
+          break;
+        }
+        if (e.swoopCooldown > 0) e.swoopCooldown -= dt;
         e.ph += dt * 5; let tx, ty;
         if (aggro) { tx = pl.x + Math.cos(e.ph * .6) * 22; ty = pl.y - 6 + Math.sin(e.ph * .9) * 16; } else { tx = e.home.x + Math.cos(e.ph * .3) * 40; ty = e.home.y + Math.sin(e.ph * .45) * 26; }
         const vx = tx - s.x, vy = ty - s.y, vl = Math.hypot(vx, vy) || 1; const sp = aggro ? D.spd : D.spd * .6;

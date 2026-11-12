@@ -19,7 +19,11 @@ Object.assign(World.prototype, {
     updStatusHud(this);
   },
   cure(k) { if (k) delete this.pst[k]; else this.pst = {}; this.pl.clearTint(); updStatusHud(this); },
-  speedMul() { return this.pst.chill > 0 ? STATUS.chill.slow : 1; },
+  speedMul() {
+    let mul = this.pst.chill > 0 ? STATUS.chill.slow : 1;
+    if (this.pl && this.pl.snowSlow) mul *= 0.75; // Salju tebal memperlambat langkah (#68)
+    return mul;
+  },
   updStatus(dt) {
     const pl = this.pl; let any = null;
     for (const k in S.buff) { if (S.buff[k] > 0) { S.buff[k] -= dt; if (S.buff[k] <= 0) { delete S.buff[k]; popWorld(pl.x, pl.y - 38, 'Efek ' + BUFF[k].n + ' habis', 'xp'); updStatusHud(this); updHud(); } } }

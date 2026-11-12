@@ -3,10 +3,20 @@
 // ---------------- TAS (INVENTARIS) ----------------
 const BAG_TABS = [['use', 'Pakai'], ['eq', 'Perlengkapan'], ['mat', 'Bahan'], ['key', 'Penting']];
 let BAG_SORT = 0;
+let BAG_SEARCH = '';
 async function openBag(sc) {
   G.lock++; sfx('ok');
   const w = win('act', ''); w.id = 'bagw'; let tab = 0, sel = 0;
-  function list() { const k = BAG_TABS[tab][0], L = Object.keys(S.inv).filter(id => S.inv[id] > 0 && (k === 'eq' ? ['wpn', 'arm', 'acc'].includes(ITEMS[id].k) : ITEMS[id].k === k)); const val = id => ITEMS[id].price || (ITEMS[id].sell || 0) * 2, got = id => (S.got && S.got[id]) || 0; return BAG_SORT === 1 ? L.sort((a, b) => val(b) - val(a)) : BAG_SORT === 2 ? L.sort((a, b) => got(b) - got(a)) : BAG_SORT === 3 ? L.sort((a, b) => ITEMS[a].n.localeCompare(ITEMS[b].n)) : L; }
+  function list() {
+    const k = BAG_TABS[tab][0];
+    let L = Object.keys(S.inv).filter(id => S.inv[id] > 0 && (k === 'eq' ? ['wpn', 'arm', 'acc'].includes(ITEMS[id].k) : ITEMS[id].k === k));
+    if (BAG_SEARCH) {
+      const q = BAG_SEARCH.toLowerCase().trim();
+      L = L.filter(id => ITEMS[id].n.toLowerCase().includes(q) || (ITEMS[id].d && ITEMS[id].d.toLowerCase().includes(q)));
+    }
+    const val = id => ITEMS[id].price || (ITEMS[id].sell || 0) * 2, got = id => (S.got && S.got[id]) || 0;
+    return BAG_SORT === 1 ? L.sort((a, b) => val(b) - val(a)) : BAG_SORT === 2 ? L.sort((a, b) => got(b) - got(a)) : BAG_SORT === 3 ? L.sort((a, b) => ITEMS[a].n.localeCompare(ITEMS[b].n)) : L;
+  }
   function isEq(id) { return Object.values(S.eq).includes(id); }
   function draw() {
     const L = list(); sel = clamp(sel, 0, Math.max(0, L.length - 1)); const st = stat();
@@ -19,7 +29,8 @@ async function openBag(sc) {
 
     const srcText = L.length && ITEMS[L[sel]].src ? `<br><span style="color:#8ae8ff;font-size:9px;">📍 Sumber: ${ITEMS[L[sel]].src}</span>` : '';
     const altWpnText = S.eq.altWpn ? `<br>Cadangan: <b>${ITEMS[S.eq.altWpn]?.n || '-'}</b> [Q]` : '';
-    w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span><span class="gold">${S.gold} G</span></div>
+    const searchBadge = BAG_SEARCH ? ` <span class="bag-clear-search" style="color:#ffcc00;cursor:pointer;font-size:9px;">[🔍 "${BAG_SEARCH}" ✕]</span>` : ` <span class="bag-do-search" style="color:#a8c8ff;cursor:pointer;font-size:9px;">[🔍 Cari]</span>`;
+    w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span>${searchBadge}<span class="gold">${S.gold} G</span></div>
      <div class="bb"><div class="bl">${L.length ? L.map((id, i) => {
        const isLck = S.locked && S.locked[id];
        const isNew = S.newItems && S.newItems[id];
@@ -38,6 +49,23 @@ async function openBag(sc) {
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b>${altWpnText}</div></div></div>
      <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) + srcText : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · [C] Pakai Terbaik · B tutup'}</div>`;
     const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
+    const sBtn = w.querySelector('.bag-do-search');
+    if (sBtn) sBtn.onpointerdown = async ev => {
+      ev.stopPropagation();
+      const filters = ['ram', 'ikan', 'panah', 'kristal', 'bom', 'batu', 'Semua'];
+      const c = await choose({
+        head: '🔍 Pencarian Cepat Tas',
+        x: 40, y: 50, w: 220,
+        items: filters.map(f => ({ t: f === 'Semua' ? 'Reset Pencarian' : `Filter: "${f}"` }))
+      });
+      if (c >= 0) {
+        BAG_SEARCH = filters[c] === 'Semua' ? '' : filters[c];
+        sfx('ok');
+        draw();
+      }
+    };
+    const cBtn = w.querySelector('.bag-clear-search');
+    if (cBtn) cBtn.onpointerdown = ev => { ev.stopPropagation(); BAG_SEARCH = ''; sfx('back'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => {
       ev.stopPropagation();

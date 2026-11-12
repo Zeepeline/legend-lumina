@@ -559,6 +559,35 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'village_vault') {
+      s.setTint(0x9aa8b8);
+      this.inter.push({
+        x, y: y + 4, r: 24,
+        fn: async () => {
+          if (typeof openVillageVault === 'function') await openVillageVault(this);
+          else await say('Brankas besi kokoh Balai Desa Lumina.');
+        }
+      });
+    }
+    if (type === 'mirror_memory') {
+      s.setTint(0x88ccff);
+      this.inter.push({
+        x, y: y + 4, r: 24,
+        fn: async () => {
+          if (typeof openMemoryTrials === 'function') await openMemoryTrials(this);
+          else await say('Cermin Ingatan memancarkan pantulan masa lalu.');
+        }
+      });
+    }
+    if (type === 'fame_board') {
+      this.inter.push({
+        x, y: y + 4, r: 22,
+        fn: async () => {
+          if (typeof openHallOfFame === 'function') await openHallOfFame();
+          else await say('Papan Rekor Petualang Benua Lumina.');
+        }
+      });
+    }
     if (type === 'fountain') {
       this.add.particles(x, y - 66, 'dot', { lifespan: 650, speedX: { min: -22, max: 22 }, speedY: { min: -26, max: -8 }, gravityY: 90, alpha: { start: .8, end: 0 }, frequency: 110, tint: 0xd8f6ff }).setDepth(y + 1);
       this.inter.push({
