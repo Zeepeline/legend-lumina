@@ -148,6 +148,8 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 **Fitur 1–1000:** dikerjakan per gelombang, progres di `docs/PROGRES_FITUR.md` (wajib diperbarui tiap gelombang).
 
+**Lanjutan open world:** baca `docs/HANDOFF_OPENWORLD.md` dulu.
+
 **Berikutnya:** Bab 6 (Lembah Besi & Simpang Rantau, `docs/BENUA_LUMINA.md` bag. 7), perluas Desa Lumina, Balai Dewan & Pelabuhan Danau, sprite Arka 4 arah dari pemilik.
 
 Catatan tes: **jalankan tes baru sebelum push** (beberapa tes gelombang 14–19 memanggil helper yang tidak ada atau `window.S`/`window.ITEMS`, jadi tidak pernah lulus). Variabel `const`/`let` global (`S`, `ITEMS`, `OPT`, `World`, `has`, …) **tidak** ada di `window`: tulis `S`, bukan `window.S`. Helper yang tersedia: `boot`, `newGame`, `loadGame`/`gotoGame`, `waitForGameReady`, `goto`, `press`, `flush`, `G`. Fungsi di `h.G(page, fn)` jangan mengembalikan objek Phaser (misal hasil `setPosition`), karena serialisasinya bisa macet; bungkus dengan `{ }`. Tes memblokir service worker (`playwright.config.js`).
