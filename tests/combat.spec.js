@@ -6,9 +6,9 @@ test('serangan pedang mengurangi HP musuh', async ({ page }) => {
   const errors = await h.boot(page); await h.newGame(page); await h.learnAll(page);
   await h.G(page, () => window.__game.S.stage = 2);
   await h.goto(page, 'forest', 300, 330, 'up');
-  const before = await h.G(page, () => { const sc = window.__game.sc; sc.enemies.forEach(e => e.spr.setPosition(3000, 3000)); const e = sc.enemies[0]; e.spr.setPosition(300, 312); e.t = 9; return e.hp; });
+  const before = await h.G(page, () => { const sc = window.__game.sc; sc.enemies.forEach(e => e.spr.setPosition(3000, 3000)); const e = sc.enemies[0]; window.__tE = e; e.spr.setPosition(300, 312); e.t = 9; return e.hp; });
   await h.press(page, 'a', 1, 400);
-  expect(await h.G(page, () => window.__game.sc.enemies[0].hp)).toBeLessThan(before);
+  expect(await h.G(page, () => window.__tE.hp)).toBeLessThan(before); // pegang musuh yang sama (urutan daftar bisa berubah)
   h.noErrors(errors);
 });
 

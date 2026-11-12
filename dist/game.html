@@ -5031,7 +5031,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.24.0';
+const GAME_VERSION = '1.25.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
@@ -5788,6 +5788,7 @@ class World extends Phaser.Scene {
     this.cx = clamp(pl.x - VW / 2, 0, M.w - VW); this.cy = clamp(pl.y - 12 - VH / 2, 0, M.h - VH);
     if (G.title) { pl.setVisible(false); pl.sh.setVisible(false); this.cx = 250; this.cy = 160; }
     cam.setScroll(Math.round(this.cx), Math.round(this.cy));
+    this.initOpen(data); // dunia terbuka: wilayah tetangga & batas kamera (systems/openworld.js)
     this.events.on('postupdate', this.camStep, this);
     this.cullL = []; this.time.delayedCall(0, () => this.initCull());
     this.events.once('shutdown', () => this.events.off('postupdate', this.camStep, this));
@@ -6518,7 +6519,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround();
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround(); this.updCross();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       // Akumulasi waktu bermain riil (Fitur #25)
@@ -6578,7 +6579,7 @@ class World extends Phaser.Scene {
       const tx = pl.x - VW / 2, ty = pl.y - 12 - VH / 2, k = Math.exp(-this.dt * 9);
       let ox = (this.cx - tx) * k, oy = (this.cy - ty) * k;
       if (Math.abs(ox) < .5) ox = 0; if (Math.abs(oy) < .5) oy = 0;
-      const sx = clamp(Math.round(pl.x) - VW / 2 + Math.round(ox), 0, M.w - VW), sy = clamp(Math.round(pl.y) - 12 - VH / 2 + Math.round(oy), 0, M.h - VH);
+      const B = this.camB || { x0: 0, y0: 0, x1: M.w, y1: M.h }, sx = clamp(Math.round(pl.x) - VW / 2 + Math.round(ox), B.x0, B.x1 - VW), sy = clamp(Math.round(pl.y) - 12 - VH / 2 + Math.round(oy), B.y0, B.y1 - VH);
       this.cx = tx + ox; this.cy = ty + oy;
       cam.setScroll(sx, sy);
     }
@@ -6671,7 +6672,7 @@ class World extends Phaser.Scene {
   }
   checkZones() {
     const pl = this.pl, M = this.M;
-    for (const ex of M.exits || []) if (pl.x > ex.x && pl.x < ex.x + ex.w && pl.y > ex.y && pl.y < ex.y + ex.h) {
+    for (const ex of M.exits || []) if (!this.owSeamless(ex) && pl.x > ex.x && pl.x < ex.x + ex.w && pl.y > ex.y && pl.y < ex.y + ex.h) {
       if (ex.to === 'forest' && S.stage === 0) { pl.y -= 6; this.guardStop(); return; }
       this.goto(ex.to, ex.tx, ex.ty, ex.dir); return;
     }
@@ -16076,25 +16077,29 @@ function groundOverview(M) {
   const x = c.getContext('2d'); x.fillStyle = (GROUND[M.ground] && GROUND[M.ground].g && GROUND[M.ground].g[0]) || '#6a9a4e'; x.fillRect(0, 0, c.width, c.height);
   return GOV[M.id] = { c, v: 0 };
 }
+// Lapisan tanah: wilayah aktif (offset 0,0) + wilayah tetangga di posisinya (systems/openworld.js)
+function gLayer(M, ox, oy) { return { M, ox, oy, cols: Math.ceil(M.w / GT), rows: Math.ceil(M.h / GT) }; }
 Object.assign(World.prototype, {
   initGround(data) {
-    const M = this.M; this.gImgs = new Map(); this.gStream = !M.indoor && !G.title && !window.STREAM_OFF; // STREAM_OFF: hanya untuk tes perbandingan
+    const M = this.M; this.gImgs = new Map(); this.gL = []; this.gStream = !M.indoor && !G.title && !window.STREAM_OFF; // STREAM_OFF: hanya untuk tes perbandingan
     if (!this.gStream) { if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M)); this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6); return; }
-    this.gCols = Math.ceil(M.w / GT); this.gRows = Math.ceil(M.h / GT);
-    // potongan di sekitar titik masuk dibuat langsung (tanpa jatah waktu) agar layar pertama sudah lengkap
-    const x = data.x || S.x, y = data.y || S.y;
-    for (const [i, j] of this.gNeed(x - VW / 2, y - VH / 2, 0)) this.gEnsure(i, j, true);
+    this.gL.push(gLayer(M, 0, 0));
+    // potongan di sekitar titik masuk dibuat langsung agar layar pertama sudah lengkap
+    const x = data.cam ? data.cam.x + VW / 2 : (data.x || S.x), y = data.cam ? data.cam.y + VH / 2 : (data.y || S.y);
+    this.gFillView(x - VW / 2, y - VH / 2);
   },
-  // daftar potongan yang dibutuhkan untuk tampilan ini, terdekat dulu
-  gNeed(vx, vy, ring) {
-    const i0 = Math.max(0, Math.floor(vx / GT) - ring), j0 = Math.max(0, Math.floor(vy / GT) - ring);
-    const i1 = Math.min(this.gCols - 1, Math.floor((vx + VW) / GT) + ring), j1 = Math.min(this.gRows - 1, Math.floor((vy + VH) / GT) + ring);
-    const cx = (vx + VW / 2) / GT, cy = (vy + VH / 2) / GT, L = [];
-    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) L.push([i, j, Math.hypot(i + .5 - cx, j + .5 - cy)]);
-    return L.sort((a, b) => a[2] - b[2]);
+  gFillView(vx, vy) { for (const L of this.gL) for (const [i, j] of this.gNeed(L, vx, vy, 0)) this.gEnsure(L, i, j, true); },
+  // daftar potongan lapisan L yang dibutuhkan untuk tampilan (koordinat wilayah aktif), terdekat dulu
+  gNeed(L, vx, vy, ring) {
+    const lx = vx - L.ox, ly = vy - L.oy;
+    const i0 = Math.max(0, Math.floor(lx / GT) - ring), j0 = Math.max(0, Math.floor(ly / GT) - ring);
+    const i1 = Math.min(L.cols - 1, Math.floor((lx + VW) / GT) + ring), j1 = Math.min(L.rows - 1, Math.floor((ly + VH) / GT) + ring);
+    const cx = (lx + VW / 2) / GT, cy = (ly + VH / 2) / GT, out = [];
+    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) out.push([i, j, Math.hypot(i + .5 - cx, j + .5 - cy)]);
+    return out.sort((a, b) => a[2] - b[2]);
   },
-  gEnsure(i, j, force) {
-    const M = this.M, k = gtKey(M, i, j);
+  gEnsure(L, i, j, force) {
+    const M = L.M, k = gtKey(M, i, j);
     if (!this.textures.exists(k)) {
       if (!force && this.gSpent >= GT_BUDGET) return false;
       const a = performance.now(), w = Math.min(GT, M.w - i * GT), h = Math.min(GT, M.h - j * GT);
@@ -16103,17 +16108,69 @@ Object.assign(World.prototype, {
       this.gSpent += performance.now() - a; this.gBaked = (this.gBaked || 0) + 1;
     }
     GTC.delete(k); GTC.set(k, this.t || 0);
-    if (!this.gImgs.has(k)) this.gImgs.set(k, this.add.image(i * GT, j * GT, k).setOrigin(0).setDepth(-1e6));
+    if (!this.gImgs.has(k)) this.gImgs.set(k, this.add.image(L.ox + i * GT, L.oy + j * GT, k).setOrigin(0).setDepth(-1e6));
     return true;
   },
   updGround() {
-    if (!this.gStream) return; this.gSpent = 0; const v = this.cameras.main.worldView;
-    const need = this.gNeed(v.x, v.y, GT_MARGIN), want = new Set();
-    for (const [i, j] of need) { want.add(gtKey(this.M, i, j)); const inView = i * GT < v.right && (i + 1) * GT > v.x && j * GT < v.bottom && (j + 1) * GT > v.y; this.gEnsure(i, j, inView); }
+    if (!this.gStream) return; this.gSpent = 0; const v = this.cameras.main.worldView, want = new Set();
+    for (const L of this.gL) {
+      if (v.right < L.ox - GT * GT_MARGIN || v.x > L.ox + L.M.w + GT * GT_MARGIN || v.bottom < L.oy - GT * GT_MARGIN || v.y > L.oy + L.M.h + GT * GT_MARGIN) continue;
+      for (const [i, j] of this.gNeed(L, v.x, v.y, GT_MARGIN)) {
+        want.add(gtKey(L.M, i, j)); const X = L.ox + i * GT, Y = L.oy + j * GT;
+        this.gEnsure(L, i, j, X < v.right && X + GT > v.x && Y < v.bottom && Y + GT > v.y);
+      }
+    }
     // gambar potongan jauh dilepas dari layar (teksturnya tetap disimpan sampai LRU penuh)
-    for (const [k, img] of this.gImgs) if (!want.has(k)) { const [, , i, j] = k.split(':'); if (Math.abs(i * GT + GT / 2 - (v.x + VW / 2)) > VW + GT * 3 || Math.abs(j * GT + GT / 2 - (v.y + VH / 2)) > VH + GT * 3) { img.destroy(); this.gImgs.delete(k); } }
+    for (const [k, img] of this.gImgs) if (!want.has(k)) { const X = img.x + GT / 2, Y = img.y + GT / 2; if (Math.abs(X - (v.x + VW / 2)) > VW + GT * 3 || Math.abs(Y - (v.y + VH / 2)) > VH + GT * 3) { img.destroy(); this.gImgs.delete(k); } }
     // LRU: buang tekstur tertua yang tidak sedang ditampilkan
     if (GTC.size > GT_MAX) for (const k of GTC.keys()) { if (GTC.size <= GT_MAX) break; if (this.gImgs.has(k)) continue; GTC.delete(k); if (this.textures.exists(k)) this.textures.remove(k); }
+  },
+});
+
+'use strict';
+// Dunia terbuka Tahap 1: wilayah tetangga digambar menempel di tepi wilayah aktif (tanah + objek),
+// kamera bebas melewati tepi, dan Arka menyeberang tanpa layar hitam. Setiap wilayah tetap memakai
+// koordinatnya sendiri, jadi skrip cerita & sistem per wilayah tetap jalan (lihat world/layout.js).
+const OW_BAND = 520; // objek wilayah tetangga digambar sampai sejauh ini dari tepi
+Object.assign(World.prototype, {
+  initOpen(data) {
+    const M = this.M; this.owN = []; this.owObjs = [];
+    this.camB = { x0: 0, y0: 0, x1: M.w, y1: M.h };
+    if (G.title || M.indoor || !NEIGH[M.id] || !this.gStream) return;
+    for (const n of NEIGH[M.id]) {
+      const B = MAPS[n.to]; this.owN.push(n);
+      this.gL.push(gLayer(B, n.ox, n.oy));
+      // batas kamera & dunia fisika diperluas ke arah tetangga (secukupnya untuk satu layar)
+      const r = { x0: n.ox, y0: n.oy, x1: n.ox + B.w, y1: n.oy + B.h };
+      if (n.side === 'E') this.camB.x1 = Math.max(this.camB.x1, Math.min(r.x1, M.w + VW));
+      if (n.side === 'W') this.camB.x0 = Math.min(this.camB.x0, Math.max(r.x0, -VW));
+      if (n.side === 'S') this.camB.y1 = Math.max(this.camB.y1, Math.min(r.y1, M.h + VH));
+      if (n.side === 'N') this.camB.y0 = Math.min(this.camB.y0, Math.max(r.y0, -VH));
+      // objek diam tetangga di dekat tepi (hanya gambar; tabrakan nyata ada setelah menyeberang)
+      for (const o of mapObjects(B)) {
+        const gx = o[1] + n.ox, gy = o[2] + n.oy, d = OBJ[o[0]]; if (!d || !this.textures.exists(d.key)) continue;
+        const dx = Math.max(0 - gx, gx - M.w, 0), dy = Math.max(0 - gy, gy - M.h, 0); if (Math.max(dx, dy) > OW_BAND) continue;
+        const s = this.add.image(gx, gy, d.key, 0).setOrigin(.5, 1).setDepth(gy); if (o[3] && o[3].flip) s.setFlipX(true);
+        this.owObjs.push(s);
+      }
+    }
+    const B = this.camB; this.physics.world.setBounds(B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0);
+    this.cameras.main.setBackgroundColor('#2f4a2a');
+    if (data.cam) { this.cx = data.cam.x; this.cy = data.cam.y; this.cameras.main.setScroll(Math.round(this.cx), Math.round(this.cy)); }
+    for (const L of this.gL) if (L.ox || L.oy) for (const [i, j] of this.gNeed(L, this.cx, this.cy, 0)) this.gEnsure(L, i, j, true);
+  },
+  // pintu tepi yang sudah mulus: tidak memakai transisi layar hitam lagi
+  owSeamless(ex) { return this.owN && this.owN.some(n => n.ex === ex); },
+  updCross() {
+    if (!this.owN || !this.owN.length || this.trans || G.lock || this.bossOn) return;
+    const pl = this.pl, M = this.M; if (pl.x >= 0 && pl.x <= M.w && pl.y >= 0 && pl.y <= M.h) return;
+    const n = this.owN.find(n => { const B = MAPS[n.to]; return pl.x >= n.ox && pl.x <= n.ox + B.w && pl.y >= n.oy && pl.y <= n.oy + B.h; });
+    if (!n) return;
+    if (n.to === 'forest' && S.stage === 0) { pl.setPosition(clamp(pl.x, 4, M.w - 4), clamp(pl.y, 4, M.h - 4)); this.guardStop(); return; }
+    // ganti wilayah aktif tanpa layar hitam: posisi & kamera dipindah ke koordinat wilayah baru
+    this.trans = true; const cam = this.cameras.main, x = Math.round(pl.x - n.ox), y = Math.round(pl.y - n.oy);
+    S.map = n.to; S.x = x; S.y = y; S.dir = pl.dir;
+    this.scene.restart({ map: n.to, x, y, dir: pl.dir, seamless: true, quiet: false, cam: { x: cam.scrollX - n.ox, y: cam.scrollY - n.oy } });
   },
 });
 
@@ -17705,6 +17762,28 @@ async function titleScreen() {
     } });
   }
 }
+
+'use strict';
+// Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar
+// di tepi peta (pintu A→B di tepi timur A disejajarkan dengan pintu B→A di tepi barat B, dst.).
+// Dipakai systems/openworld.js untuk menggambar wilayah tetangga & menyeberang tanpa layar hitam.
+function exitSide(M, e) { return e.x < 20 ? 'W' : e.x + e.w > M.w - 20 ? 'E' : e.y < 20 ? 'N' : e.y + e.h > M.h - 20 ? 'S' : null; }
+const OPP = { W: 'E', E: 'W', N: 'S', S: 'N' };
+const NEIGH = {}; // id → [{ to, side, ox, oy, ex }]
+(function buildNeighbors() {
+  for (const A of Object.values(MAPS)) {
+    if (A.indoor) continue; NEIGH[A.id] = [];
+    for (const ea of A.exits || []) {
+      const B = MAPS[ea.to], side = exitSide(A, ea); if (!B || B.indoor || !side) continue;
+      const eb = (B.exits || []).find(e => e.to === A.id && exitSide(B, e) === OPP[side]); if (!eb) continue;
+      const ca = [ea.x + ea.w / 2, ea.y + ea.h / 2], cb = [eb.x + eb.w / 2, eb.y + eb.h / 2];
+      let ox, oy;
+      if (side === 'E') { ox = A.w; oy = ca[1] - cb[1]; } else if (side === 'W') { ox = -B.w; oy = ca[1] - cb[1]; }
+      else if (side === 'N') { oy = -B.h; ox = ca[0] - cb[0]; } else { oy = A.h; ox = ca[0] - cb[0]; }
+      NEIGH[A.id].push({ to: B.id, side, ox: Math.round(ox), oy: Math.round(oy), ex: ea });
+    }
+  }
+})();
 
 'use strict';
 // Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py

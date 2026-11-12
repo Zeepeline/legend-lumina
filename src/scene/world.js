@@ -88,6 +88,7 @@ class World extends Phaser.Scene {
     this.cx = clamp(pl.x - VW / 2, 0, M.w - VW); this.cy = clamp(pl.y - 12 - VH / 2, 0, M.h - VH);
     if (G.title) { pl.setVisible(false); pl.sh.setVisible(false); this.cx = 250; this.cy = 160; }
     cam.setScroll(Math.round(this.cx), Math.round(this.cy));
+    this.initOpen(data); // dunia terbuka: wilayah tetangga & batas kamera (systems/openworld.js)
     this.events.on('postupdate', this.camStep, this);
     this.cullL = []; this.time.delayedCall(0, () => this.initCull());
     this.events.once('shutdown', () => this.events.off('postupdate', this.camStep, this));
@@ -818,7 +819,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround();
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround(); this.updCross();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       // Akumulasi waktu bermain riil (Fitur #25)
@@ -878,7 +879,7 @@ class World extends Phaser.Scene {
       const tx = pl.x - VW / 2, ty = pl.y - 12 - VH / 2, k = Math.exp(-this.dt * 9);
       let ox = (this.cx - tx) * k, oy = (this.cy - ty) * k;
       if (Math.abs(ox) < .5) ox = 0; if (Math.abs(oy) < .5) oy = 0;
-      const sx = clamp(Math.round(pl.x) - VW / 2 + Math.round(ox), 0, M.w - VW), sy = clamp(Math.round(pl.y) - 12 - VH / 2 + Math.round(oy), 0, M.h - VH);
+      const B = this.camB || { x0: 0, y0: 0, x1: M.w, y1: M.h }, sx = clamp(Math.round(pl.x) - VW / 2 + Math.round(ox), B.x0, B.x1 - VW), sy = clamp(Math.round(pl.y) - 12 - VH / 2 + Math.round(oy), B.y0, B.y1 - VH);
       this.cx = tx + ox; this.cy = ty + oy;
       cam.setScroll(sx, sy);
     }
@@ -971,7 +972,7 @@ class World extends Phaser.Scene {
   }
   checkZones() {
     const pl = this.pl, M = this.M;
-    for (const ex of M.exits || []) if (pl.x > ex.x && pl.x < ex.x + ex.w && pl.y > ex.y && pl.y < ex.y + ex.h) {
+    for (const ex of M.exits || []) if (!this.owSeamless(ex) && pl.x > ex.x && pl.x < ex.x + ex.w && pl.y > ex.y && pl.y < ex.y + ex.h) {
       if (ex.to === 'forest' && S.stage === 0) { pl.y -= 6; this.guardStop(); return; }
       this.goto(ex.to, ex.tx, ex.ty, ex.dir); return;
     }
