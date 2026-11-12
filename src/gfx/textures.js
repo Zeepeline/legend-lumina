@@ -87,5 +87,6 @@ function buildTextures(sc) {
     console.warn('Objek tanpa tekstur:', k, '→', o.key);
   }
   for (const k in CHARS) for (const d of ['down', 'up', 'side']) A.create({ key: k + '_' + d, frames: [1, 0, 2, 0].map(f => ({ key: 'ch_' + k, frame: d + f })), frameRate: 8, repeat: -1 });
+  if (typeof applyGptSwap === 'function') applyGptSwap(T);
   ICONS.coin = (() => { const s = artCoin(); const [c, x] = mk(10, 10); x.drawImage(s.c, 0, 0); return c.toDataURL(); })();
 }

@@ -33,6 +33,7 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `world/maps/*.js` | satu file per peta: jalan, objek, NPC, musuh, boss, peti, pintu keluar |
 | `world/ground.js` | generator tanah, tabrakan grid (gua/kolam), penyebar pohon |
 | `gfx/textures.js` | `IMG_LIST` (PNG di `assets/img`), `buildTextures()`: daftar semua tekstur & animasi |
+| `gfx/gptassets.js` | memasang aset GPT pemilik: `GPT_SWAP` (ganti tekstur objek lama), `GPT_LOOK` (NPC berwajah kembar dapat karakter sendiri) |
 | `gfx/bake.js` | bayangan objek dipanggang ke tekstur tanah |
 | `scene/world.js` | scene Phaser `World`: `create()` (bangun peta), `update()`, `camStep()` (kamera), `actionA()`, `checkZones()` |
 | `systems/combat.js` | `WEAPON_STYLE` (pedang/tombak/kapak/busur, dipilih lewat `ITEMS[..].wt`), serang, sihir, damage, `hitStop()`, drop, EXP, proyektil, kalah |
@@ -85,6 +86,7 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 ## Aturan penting (sering bikin bug)
 
 - **Objek baru:** buat fungsi `art<NamaObjek>()` (boleh pakai `mkC(w, h)`) lalu tambahkan entri di `OBJ`. Tekstur **didaftarkan otomatis** di `buildTextures` bila nama fungsinya cocok dengan `OBJ[..].key`. Item baru tanpa `ICONS_DEF` memakai ikon cadangan otomatis, tapi sebaiknya buat ikonnya.
+- **Aset GPT pemilik** (`nature/`, `new_builidng_gpt_1/`, `new_building_gpt_2/`, `new_characters_gpt_1/`): wajib lolos `docs/VALIDATION_RULES.md`. Siapkan lewat `python3 tools/prep_gpt_assets.py` (memakai `tools/clean_asset.py`: tepi tegas, potongan nyasar dibuang, garis hitam → garis berwarna). Tabel `SWAP` = tekstur lama yang diganti (ukuran disamakan agar tata letak tetap benar), `LOOK` = id NPC → karakter. Hasil dimuat `src/gfx/gptassets.js`. File multi-objek (mis. `bld_gpt2_026/027/036/052/056/060`, `nat_tree_054`) jangan dipakai sebelum dipotong ulang.
 - **Aset pemilik:** potret NPC `assets/img/npc_<ch>.png` (32×32, dari `assets/raw/extracted_pixel_assets/rpg_npcs`) otomatis menggantikan gambar kode untuk NPC dengan `ch` itu (`regPortrait`). Hewan `assets/img/ani_*.png` dipakai di `systems/ambient.js`. Aset buatan pemilik sendiri, aman dipakai.
 - **Sebelum push:** jalankan CI (Actions → CI → Run workflow) atau `npm test` lokal. Game sempat tidak bisa dibuka karena ikon yang hilang.
 
