@@ -196,6 +196,12 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 .btn.tool img{width:18px;height:18px;image-rendering:pixelated}.btn.tool small{margin-top:0;font-size:8px}.btn.tool.empty{filter:grayscale(1) brightness(.7)}
 #bX1{right:182px;top:46px}#bX2{right:182px;top:96px}
 @media (orientation:landscape){ body.touch #bX1{right:178px;top:auto;bottom:30px} body.touch #bX2{right:178px;top:auto;bottom:78px} }
+/* peta: zoom, ikon, harta */
+#mapw .zb b{display:inline-block;width:22px;height:18px;line-height:18px;text-align:center;margin-left:4px;background:#6e4222;color:#fff;border-radius:3px;pointer-events:auto;cursor:pointer;font-size:13px}
+#mapw .mi{font-size:9px;line-height:9px;text-shadow:0 0 2px #fff}
+#mapw .mt{font-size:12px;line-height:12px;color:#c8281e;font-weight:700;text-shadow:0 0 2px #fff,1px 1px 0 #fff}
+#mapw .mbox{touch-action:none}
+#quest .qd{color:#ffd84a;font-weight:700}
 </style>
 </head>
 <body>
@@ -4893,7 +4899,7 @@ function updHud() {
   const q = $('quest');
   const prog = { 2: [S.inv.seal || 0, 3], 11: [[0, 1, 2].filter(k => S.flags['torch' + k]).length, 3], 15: [['m_darto', 'm_sari', 'm_dodi'].filter(k => S.flags[k]).length, 3], 25: [(typeof ARSIP !== 'undefined' ? ARSIP : []).filter(k => S.lore[k]).length, 4] }[S.stage];
   const txt = STAGE_TXT[S.stage];
-  q.innerHTML = txt ? `<div class="qh">★ MISI UTAMA</div><div class="qt">${txt}${prog ? ` <span class="qp">${prog[0]}/${prog[1]}</span>` : ''}</div><div class="qf">ketuk: Jurnal</div>` : '';
+  q.innerHTML = txt ? `<div class="qh">★ MISI UTAMA</div><div class="qt">${txt}${prog ? ` <span class="qp">${prog[0]}/${prog[1]}</span>` : ''}</div><div class="qf">ketuk: Jurnal<span class="qd"></span></div>` : '';
   q.style.display = txt ? '' : 'none';
   if (!q._tap) { q._tap = 1; q.addEventListener('pointerdown', e => { e.stopPropagation(); if (!G.lock && !G.title) openQuests(); }); }
 }
@@ -4921,7 +4927,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.10.0';
+const GAME_VERSION = '1.11.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
@@ -5357,7 +5363,7 @@ class World extends Phaser.Scene {
     const M = this.M = MAPS[data.map || 'village'];
     if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
-    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.qArrow = null; this.qStar = null; this.qGoal = null; this.iHint = null; this.eBar = null; this.miniFor = null; if (!G.title) { attrInit(); updToolBtns(); } this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
+    this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.qArrow = null; this.qStar = null; this.qGoal = null; this.iHint = null; this.eBar = null; this.miniFor = null; if (!G.title) { attrInit(); updToolBtns(); } this.secrets = []; this.fogT = 0; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
     this.walls = this.physics.add.staticGroup();
@@ -5396,6 +5402,7 @@ class World extends Phaser.Scene {
     for (const a of M.animals || []) this.spawnCritter(a);
     for (let i = 0; i < (M.butterflies || 0); i++) this.spawnFly(i);
     for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2]);
+    this.initSecrets();
     if (!G.title && isNight() && (M.id === 'forest' || M.id === 'meadow')) for (let i = 0; i < 4; i++) { const P = M.paths[(i * 3 + 2) % M.paths.length]; this.spawnEnemy('wisp', (P[0] + P[2]) / 2 + rnd(-30, 30), (P[1] + P[3]) / 2 + rnd(-20, 20)); }
     // pemain
     const pl = this.pl = this.physics.add.sprite(data.x || S.x, data.y || S.y, 'ch_hero', (data.dir === 'left' || data.dir === 'right' ? 'side' : data.dir || 'down') + '0').setOrigin(.5, 1);
@@ -5865,7 +5872,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt);
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       if (this.boulder) this.updBoulder(dt);
@@ -6108,7 +6115,7 @@ Object.assign(World.prototype, {
     for (let i = 0; i < nc; i++) this.drop(x, y, 'coin', Math.ceil(g / nc));
     if (e.D.drop && Math.random() < e.D.drop[1]) this.drop(x, y, 'item', e.D.drop[0]);
     if (Math.random() < (e.boss ? 1 : .07)) this.drop(x, y, 'item', 'potion');
-    if (e.elite) { this.drop(x, y, 'item', ELITE_LOOT[ri(0, ELITE_LOOT.length - 1)]); popWorld(x, y - 30, 'Elit tumbang!', 'crit'); S.elites = (S.elites || 0) + 1; }
+    if (e.elite) { this.drop(x, y, 'item', ELITE_LOOT[ri(0, ELITE_LOOT.length - 1)]); popWorld(x, y - 30, 'Elit tumbang!', 'crit'); S.elites = (S.elites || 0) + 1; if (!S.tmap && Math.random() < .25) this.giveTreasureMap(); }
     if (e.mk) e.mk.destroy(); if (e.aura) e.aura.destroy();
     S.kills[e.type] = (S.kills[e.type] || 0) + 1;
     this.gainExp(e.D.exp, x, y);
@@ -6454,7 +6461,7 @@ function artQuestArrow(T) {
 Object.assign(World.prototype, {
   updQuestGuide(dt) {
     if (!this.qArrow) { this.qArrow = this.add.image(0, 0, 'qarrow').setScale(1.5).setScrollFactor(0).setDepth(2.1e5).setVisible(false); this.qStar = this.add.image(0, 0, 'qstar').setScale(1.3).setDepth(2.05e5).setVisible(false); this.qT = 0; }
-    this.qT -= dt; if (this.qT <= 0) { this.qT = .4; this.qGoal = G.title ? null : questTarget(this.M); }
+    this.qT -= dt; if (this.qT <= 0) { this.qT = .4; this.qGoal = G.title ? null : questTarget(this.M); const qd = document.querySelector('#quest .qd'); if (qd) qd.textContent = this.qGoal ? ' · ' + Math.round(Math.hypot(this.qGoal.x - this.pl.x, this.qGoal.y - this.pl.y) / 8) + ' m' : ''; }
     const q = this.qGoal, A = this.qArrow, St = this.qStar; if (!q || G.lock) { A.setVisible(false); St.setVisible(false); return; }
     const v = this.cameras.main.worldView, m = 26, inView = q.x > v.x + m && q.x < v.right - m && q.y > v.y + m && q.y < v.bottom - m;
     if (inView) { A.setVisible(false); St.setVisible(true).setPosition(q.x, q.y - 26 + Math.sin(this.t * 4) * 3); return; }
@@ -12619,6 +12626,7 @@ function showTip(html) {
 }
 Object.assign(World.prototype, {
   updTips(dt) {
+    if (G.lock) { const t = document.getElementById('tip'); if (t) t.remove(); }
     if (G.title || G.lock || !OPT.tips || !S.tipsDone || S.tipsDone.all || this.M.indoor && S.stage > 0) return;
     this.tipT = (this.tipT || 2) - dt; if (this.tipT > 0) return; this.tipT = 1;
     if (document.getElementById('tip')) return;
@@ -12628,7 +12636,7 @@ Object.assign(World.prototype, {
   // ---------------- PETA MINI (#82) ----------------
   updMinimap(dt) {
     const M = this.M; let c = document.getElementById('mini');
-    if (!OPT.mini || G.title || M.indoor) { if (c) c.style.display = 'none'; return; }
+    if (!OPT.mini || G.title || M.indoor || G.lock) { if (c) c.style.display = 'none'; return; }
     if (!c) { c = document.createElement('canvas'); c.id = 'mini'; c.width = 96; c.height = 96; UI.appendChild(c); c.onpointerdown = ev => { ev.stopPropagation(); if (!G.lock) openMap(this); }; }
     c.style.display = '';
     this.miniT = (this.miniT || 0) - dt; if (this.miniT > 0) return; this.miniT = .25;
@@ -12641,7 +12649,7 @@ Object.assign(World.prototype, {
       y.fillStyle = '#4aa6e0'; for (const [px, py, rx, ry] of M.ponds || []) { y.beginPath(); y.ellipse(ox + px * k, oy + py * k, rx * k, ry * k, 0, 0, 7); y.fill(); }
       y.fillStyle = 'rgba(30,24,40,.55)'; for (const [wx, wy, ww, wh] of M.walls || []) y.fillRect(ox + wx * k, oy + wy * k, Math.max(1, ww * k), Math.max(1, wh * k));
       y.fillStyle = '#ffd84a'; for (const e of M.exits || []) y.fillRect(ox + e.x * k - 1, oy + e.y * k - 1, Math.max(3, e.w * k), Math.max(3, e.h * k));
-      this.miniBase = b;
+      drawFog(y, M, k, ox, oy); this.miniBase = b;
     }
     x.clearRect(0, 0, W, W); x.drawImage(this.miniBase, 0, 0);
     x.fillStyle = '#fff3c0'; for (const n of this.npcs) if (n.spr.visible) x.fillRect(ox + n.spr.x * k - 1, oy + n.spr.y * k - 1, 2, 2);
@@ -12934,7 +12942,7 @@ Object.assign(World.prototype, {
       onComplete: () => {
         o.destroy(); if (kind !== 'bomb') return;
         this.time.delayedCall(250, () => {
-          sfxAt('boom', tx, ty, this); this.camShake(160, .007); this.sparkle(tx, ty - 6, 'doto', 18); for (let i = 0; i < 6; i++) this.puff(tx + rnd(-16, 16), ty + rnd(-10, 10));
+          sfxAt('boom', tx, ty, this); this.blastAt(tx, ty); this.camShake(160, .007); this.sparkle(tx, ty - 6, 'doto', 18); for (let i = 0; i < 6; i++) this.puff(tx + rnd(-16, 16), ty + rnd(-10, 10));
           for (const e of this.enemies) if (e.hp > 0 && Math.hypot(e.spr.x - tx, e.spr.y - ty) < 44) { const n = Math.hypot(e.spr.x - tx, e.spr.y - ty) || 1; this.hitEnemy(e, 18 + st.mag * 1.2, false, (e.spr.x - tx) / n, (e.spr.y - ty) / n); this.burnEnemy(e, Math.max(2, st.mag * .25), 2.5); }
           if (Math.hypot(pl.x - tx, pl.y - ty) < 30) this.hurtPlayer(6, tx, ty);
         });
@@ -12942,6 +12950,149 @@ Object.assign(World.prototype, {
     return true;
   },
 });
+
+'use strict';
+// Gelombang 6: kabut peta (#61), rahasia (#63), peta harta (#66), lubang galian (#665),
+// jarak ke tujuan (#675), zoom peta (#678), ikon NPC (#679) & toko (#680)
+const FOG_N = 20;
+const WILD = ['forest', 'deepwood', 'meadow', 'cave', 'swamp', 'snow', 'lake', 'river', 'road'];
+Object.assign(ITEMS, { tmap: { n: 'Peta Harta Sobek', k: 'key', d: 'Menunjuk tempat harta terkubur. Buka PETA: tandanya ✖. Gali di sana dengan tombol aksi.' } });
+Object.assign(ICONS_DEF, { tmap: ['seal', { Y: '#e8d8a8', R: '#a0481e', W: '#fff8e0' }] });
+const ROLE_ICON = { vendor: '🛒', smith: '⚒', inn: '🛏', cook: '🍲', elder: '📜', hunter: '🏹', hermit: '📖' };
+function hash32(s) { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; }
+function seeded(seed) { let a = seed; return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+// ---- kabut ----
+function fogOf(id) { S.fog = S.fog || {}; return S.fog[id] || (S.fog[id] = '0'.repeat(FOG_N * FOG_N)); }
+function fogSeen(M, x, y) { if (M.indoor || !WILD.includes(M.id) && !/^k/.test(M.id) && M.id !== 'village') return true; const f = fogOf(M.id), cx = clamp(Math.floor(x / M.w * FOG_N), 0, FOG_N - 1), cy = clamp(Math.floor(y / M.h * FOG_N), 0, FOG_N - 1); return f[cy * FOG_N + cx] === '1'; }
+function drawFog(ctx, M, k, ox = 0, oy = 0) {
+  if (M.indoor) return; const f = fogOf(M.id), cw = M.w / FOG_N * k, ch = M.h / FOG_N * k;
+  const W = Math.ceil(M.w * k), H = Math.ceil(M.h * k), c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  x.fillStyle = '#1c140e'; for (let i = 0; i < FOG_N * FOG_N; i++) if (f[i] !== '1') x.fillRect(Math.floor((i % FOG_N) * cw), Math.floor(Math.floor(i / FOG_N) * ch), Math.ceil(cw) + 1, Math.ceil(ch) + 1);
+  ctx.save(); ctx.globalAlpha = .86; ctx.drawImage(c, ox, oy); ctx.restore();
+}
+Object.assign(World.prototype, {
+  updFog(dt) {
+    const M = this.M; if (M.indoor || G.title) return; this.fogT = (this.fogT || 0) - dt; if (this.fogT > 0) return; this.fogT = .4;
+    const f = fogOf(M.id).split(''), cw = M.w / FOG_N, ch = M.h / FOG_N, R = 150; let ch2 = false;
+    for (let cy = 0; cy < FOG_N; cy++) for (let cx = 0; cx < FOG_N; cx++) { const i = cy * FOG_N + cx; if (f[i] === '1') continue; if (Math.hypot((cx + .5) * cw - this.pl.x, (cy + .5) * ch - this.pl.y) < R) { f[i] = '1'; ch2 = true; } }
+    if (ch2) { S.fog[M.id] = f.join(''); this.miniFor = null; }
+  },
+  // ---- tempat kosong yang aman untuk benda rahasia (sesuai PLACEMENT_RULES: tidak di jalan, air, tembok, pintu keluar, benda lain) ----
+  freeSpot(rng, tries = 200) {
+    const M = this.M, objs = mapObjects(M);
+    for (let t = 0; t < tries; t++) {
+      const x = 60 + rng() * (M.w - 120), y = 70 + rng() * (M.h - 130);
+      if (this.groundAt(x, y) === 'water') continue;
+      if ((M.paths || []).some(([x1, y1, x2, y2, w]) => segD(x, y, x1, y1, x2, y2) < (w || 12) + 18)) continue;
+      if ((M.exits || []).some(e => Math.hypot(e.x + e.w / 2 - x, e.y + e.h / 2 - y) < 110)) continue;
+      if (objs.some(o => Math.hypot(o[1] - x, o[2] - y) < 40)) continue;
+      if (this.physics.overlapRect(x - 16, y - 16, 32, 32, false, true).length) continue;
+      if (this.npcs.some(n => Math.hypot(n.spr.x - x, n.spr.y - y) < 40)) continue;
+      return { x: Math.round(x), y: Math.round(y) };
+    }
+    return null;
+  },
+  initSecrets() {
+    this.secrets = []; const M = this.M; if (G.title || M.indoor || !WILD.includes(M.id)) return this.initTreasure();
+    const rng = seeded(hash32('rahasia_' + M.id)), kinds = ['bush', ['cave', 'snow', 'swamp'].includes(M.id) ? 'crack' : 'bush', 'dig'];
+    kinds.forEach((kind, i) => {
+      const id = 'sec_' + M.id + '_' + i, p = this.freeSpot(rng); if (!p || S.flags[id]) return;
+      const sc = { id, kind, x: p.x, y: p.y };
+      if (kind === 'dig') { sc.spr = this.add.image(p.x, p.y - 2, 'spark').setDepth(p.y).setAlpha(.8); this.tweens.add({ targets: sc.spr, alpha: .15, scale: 1.6, duration: 700, yoyo: true, repeat: -1 }); this.inter.push(sc.it = { x: p.x, y: p.y, r: 16, fn: () => this.openSecret(sc) }); }
+      else { sc.spr = this.add.image(p.x, p.y, kind === 'bush' ? 'bushy' : 'rock').setOrigin(.5, 1).setDepth(p.y).setTint(kind === 'bush' ? 0x9a8a5a : 0x9890a0); if (kind === 'crack') sc.spr.setScale(1.3);
+        sc.wall = this.wall(p.x - 10, p.y - 10, 20, 9);
+        this.inter.push(sc.it = { x: p.x, y: p.y + 6, r: 16, fn: () => talk(null, [kind === 'bush' ? 'Semak kering yang rapuh... mungkin bisa dibakar.' : 'Batu ini retak-retak. Ledakan mungkin bisa memecahkannya.']) }); }
+      this.secrets.push(sc);
+    });
+    this.initTreasure();
+  },
+  initTreasure() {
+    const T = S.tmap; if (!T || T.map !== this.M.id) return;
+    this.inter.push(this.tIt = { x: T.x, y: T.y, r: 18, fn: () => this.digTreasure() });
+  },
+  async digTreasure() {
+    const T = S.tmap; if (!T) return; G.lock++; sfx('step'); for (let i = 0; i < 4; i++) { this.puff(T.x + rnd(-6, 6), T.y); await sleep(200); }
+    S.tmap = null; addItem('tmap', -1); this.inter = this.inter.filter(i => i !== this.tIt);
+    const g = ri(150, 300); S.gold += g; addItem('hipotion', 2); addItem('shard', 2); S.treasures = (S.treasures || 0) + 1; sfx('chest'); updHud(); G.lock--;
+    await say(`Kamu menemukan peti harta terkubur! Isinya ${g} G, 2 Ramuan Besar, dan 2 Pecahan Kristal.`, 'Harta');
+  },
+  async openSecret(sc) {
+    if (S.flags[sc.id]) return; S.flags[sc.id] = 1; this.inter = this.inter.filter(i => i !== sc.it);
+    if (sc.wall) { this.walls.remove(sc.wall, true, true); }
+    if (sc.kind === 'bush') { this.sparkle(sc.x, sc.y - 8, 'doto', 16); for (let i = 0; i < 5; i++) this.puff(sc.x + rnd(-8, 8), sc.y - rnd(0, 10)); }
+    else this.puff(sc.x, sc.y);
+    if (sc.spr) { this.tweens.killTweensOf(sc.spr); this.tweens.add({ targets: sc.spr, alpha: 0, duration: 300, onComplete: () => sc.spr.destroy() }); }
+    S.secrets = (S.secrets || 0) + 1; const first = S.secrets === 1;
+    const g = ri(25, 60) * (sc.kind === 'crack' ? 2 : 1); S.gold += g; this.drop(sc.x, sc.y, 'item', sc.kind === 'dig' ? ['berry', 'herb', 'ore', 'shard'][ri(0, 3)] : 'shard');
+    sfx('chest'); popWorld(sc.x, sc.y - 28, 'Rahasia ditemukan! +' + g + ' G', 'crit'); updHud();
+    if ((first || Math.random() < .3) && !S.tmap) this.giveTreasureMap();
+  },
+  giveTreasureMap() {
+    const pool = WILD.filter(id => S.seen[id] && MAPS[id]); const id = pool[ri(0, pool.length - 1)] || 'meadow', M = MAPS[id];
+    // titik harta dicari dengan aturan sederhana pada data peta (tanpa fisika peta lain)
+    const rng = seeded(hash32('harta_' + Date.now())); let p = null;
+    for (let t = 0; t < 300 && !p; t++) { const x = 70 + rng() * (M.w - 140), y = 80 + rng() * (M.h - 150);
+      if ((M.paths || []).some(([x1, y1, x2, y2, w]) => segD(x, y, x1, y1, x2, y2) < (w || 12) + 14)) continue;
+      if ((M.ponds || []).some(([px, py, rx, ry]) => ((x - px) / (rx + 20)) ** 2 + ((y - py) / (ry + 20)) ** 2 < 1)) continue;
+      if ((M.walls || []).some(([wx, wy, ww, wh]) => x > wx - 20 && x < wx + ww + 20 && y > wy - 20 && y < wy + wh + 20)) continue;
+      if (mapObjects(M).some(o => Math.hypot(o[1] - x, o[2] - y) < 46)) continue;
+      p = { x: Math.round(x), y: Math.round(y) }; }
+    if (!p) return; S.tmap = { map: id, x: p.x, y: p.y }; addItem('tmap', 1);
+    popWorld(this.pl.x, this.pl.y - 44, 'Peta Harta Sobek!', 'xp');
+    this.time.delayedCall(600, () => say(`Ada peta sobek terselip... Tandanya menunjuk ke ${M.name}. Lihat ✖ di PETA saat kamu di sana.`, 'Peta Harta'));
+    if (id === this.M.id) this.initTreasure();
+  },
+  // dipanggil tiap frame: bola api / ledakan membuka semak & batu retak
+  updSecrets() {
+    if (!this.secrets || !this.secrets.length) return;
+    for (const sc of this.secrets) {
+      if (S.flags[sc.id] || sc.kind === 'dig') continue;
+      if (sc.kind === 'bush' && this.shots.some(p => p.mine && p.kind === 'fire' && Math.hypot(p.gx - sc.x, p.gy - sc.y + 6) < 18)) { popWorld(sc.x, sc.y - 30, 'terbakar!', 'crit'); this.openSecret(sc); }
+    }
+  },
+  blastAt(x, y) { for (const sc of this.secrets || []) if (!S.flags[sc.id] && sc.kind !== 'dig' && Math.hypot(sc.x - x, sc.y - y) < 50) this.openSecret(sc); },
+});
+// ---- peta besar baru: kabut, ikon NPC/toko, harta, jarak, zoom ----
+async function openMapNew(sc) {
+  G.lock++; sfx('ok');
+  const M = sc.M, w = win('act', ''); w.id = 'mapw';
+  const boxW = VW - 30, boxH = VH - 86, s0 = Math.min(boxW / M.w, boxH / M.h); let z = 1;
+  const q = questTarget(M), dist = q ? Math.round(Math.hypot(q.x - sc.pl.x, q.y - sc.pl.y) / 8) : null;
+  w.innerHTML = `<div class="mh"><span>PETA · ${M.name}</span><span class="zb"><b data-z="-1">−</b><b data-z="1">+</b></span></div><div class="mbox"><div class="mwrap" style="position:relative"></div></div>
+   <div class="leg"><span>● Kamu</span><span style="color:#ffd84a">★ Tujuan${dist != null ? ' · ' + dist + ' m' : ''}</span><span>🛒 toko ⚒ bengkel 🛏 penginapan 📖 guru</span>${S.tmap && S.tmap.map === M.id ? '<span style="color:#a0481e">✖ harta</span>' : ''}</div>
+   <div class="world">Dunia: ${(M.indoor ? '[' + M.name + '] · ' : '') + WORLD.map(([id, n]) => id === M.id ? `<b style="color:#a0481e">[${n}]</b>` : S.seen[id] ? n : '???').join(' — ')}</div>`;
+  const box = w.querySelector('.mbox'), wrap = w.querySelector('.mwrap');
+  const draw = () => {
+    const s = s0 * z; wrap.innerHTML = ''; const base = buildMini(sc, M, s0), cv = document.createElement('canvas'); cv.width = Math.round(M.w * s); cv.height = Math.round(M.h * s);
+    const x = cv.getContext('2d'); x.drawImage(base, 0, 0, cv.width, cv.height); drawFog(x, M, s); wrap.appendChild(cv);
+    const mk2 = (cls, X, Y, html = '') => { if (!fogSeen(M, X, Y) && cls !== 'me') return; const e = document.createElement('div'); e.className = 'mk ' + cls; e.style.left = (X * s) + 'px'; e.style.top = (Y * s) + 'px'; e.innerHTML = html; wrap.appendChild(e); return e; };
+    const guru = new Set(Object.values(typeof LEARN !== 'undefined' ? LEARN : {}).map(L => L.guru));
+    for (const n of sc.npcs) { const id = n.n.id, ic = ROLE_ICON[NPC_ROLE[id]] || (guru.has(id) ? '📖' : null); if (ic) mk2('mi', n.spr.x, n.spr.y - 6, ic); else mk2('mn', n.spr.x, n.spr.y - 4); }
+    for (const c of M.chests || []) if (!S.flags[c.id] && (!c.needFlag || S.flags[c.needFlag])) mk2('mc', c.x, c.y - 4);
+    for (const B of M.bosses || []) if (!S.flags[B.flag] && S.stage >= B.need) mk2('mb', B.x, B.y - 10, '☠');
+    for (const ex of M.exits || []) { const X = clamp(ex.x + ex.w / 2, 30 / s, M.w - 30 / s), Y = clamp(ex.y + ex.h / 2, 8 / s, M.h - 8 / s); const e = document.createElement('div'); e.className = 'mk mx'; e.style.left = X * s + 'px'; e.style.top = Y * s + 'px'; e.innerHTML = '➜ ' + (S.seen[ex.to] ? ex.label : '???'); wrap.appendChild(e); }
+    if (S.tmap && S.tmap.map === M.id) { const e = document.createElement('div'); e.className = 'mk mt'; e.style.left = S.tmap.x * s + 'px'; e.style.top = S.tmap.y * s + 'px'; e.textContent = '✖'; wrap.appendChild(e); }
+    if (q) { const e = document.createElement('div'); e.className = 'mk mq'; e.style.left = q.x * s + 'px'; e.style.top = (q.y - 6) * s + 'px'; e.textContent = '★'; wrap.appendChild(e); }
+    mk2('me', sc.pl.x, sc.pl.y - 4);
+    box.style.justifyContent = box.style.alignItems = z > 1 ? 'flex-start' : 'center'; box.style.overflow = z > 1 ? 'auto' : 'hidden';
+    if (z > 1) { box.scrollLeft = sc.pl.x * s - box.clientWidth / 2; box.scrollTop = sc.pl.y * s - box.clientHeight / 2; }
+  };
+  draw();
+  const zoom = d => { const nz = clamp(z + d, 1, 3); if (nz !== z) { z = nz; sfx('cur'); draw(); } };
+  w.querySelectorAll('.zb b').forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); zoom(+b.dataset.z); }));
+  box.addEventListener('wheel', e => { e.preventDefault(); zoom(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+  // cubit untuk zoom & geser saat diperbesar (tidak menutup peta)
+  const pts = new Map(); let pd = 0, moved = false;
+  box.addEventListener('pointerdown', e => { e.stopPropagation(); pts.set(e.pointerId, [e.clientX, e.clientY]); moved = false; if (pts.size === 2) { const [a, b] = [...pts.values()]; pd = Math.hypot(a[0] - b[0], a[1] - b[1]); } });
+  box.addEventListener('pointermove', e => { const p = pts.get(e.pointerId); if (!p) return;
+    if (pts.size === 2) { p[0] = e.clientX; p[1] = e.clientY; const [a, b] = [...pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (Math.abs(d - pd) > 40) { zoom(d > pd ? 1 : -1); pd = d; } moved = true; }
+    else if (z > 1) { box.scrollLeft -= e.clientX - p[0]; box.scrollTop -= e.clientY - p[1]; p[0] = e.clientX; p[1] = e.clientY; if (Math.abs(e.movementX) + Math.abs(e.movementY) > 1) moved = true; } });
+  const up = e => { const had = pts.delete(e.pointerId); if (had && !pts.size && !moved && z === 1) press('tap'); };
+  box.addEventListener('pointerup', up); box.addEventListener('pointercancel', e => pts.delete(e.pointerId));
+  await new Promise(res => { const prev = UIH; const h = k => { if (['a', 'b', 'menu', 'map', 'back', 'tap', 'item', 'bag'].includes(k)) { w.remove(); UIH = prev; sfx('back'); res(); } else if (k === 'up') zoom(1); else if (k === 'down') zoom(-1); }; h.tap = true; UIH = h;
+    w.addEventListener('pointerdown', e => { e.stopPropagation(); press('tap'); }); });
+  G.lock--;
+}
 
 'use strict';
 // Percakapan NPC, toko, bengkel, penginapan
@@ -13373,24 +13524,8 @@ function questTarget(M) {
   if (!goal) return null; if (M.id === goal[0]) return { x: goal[1], y: goal[2] };
   const nx = routeNext(M.id, goal[0]); if (!nx) return null; const ex = (M.exits || []).find(e => e.to === nx); return ex && { x: ex.x + ex.w / 2, y: ex.y + ex.h / 2 };
 }
-async function openMap(sc) {
-  G.lock++; sfx('ok');
-  const M = sc.M, w = win('act', ''); w.id = 'mapw';
-  const boxW = VW - 30, boxH = VH - 74, s = Math.min(boxW / M.w, boxH / M.h);
-  w.innerHTML = `<div class="mh"><span>PETA · ${M.name}</span><span style="color:#8a6a4a;font-weight:400">tutup: tombol apa saja</span></div><div class="mbox"><div class="mwrap" style="position:relative"></div></div>
-   <div class="leg"><span><i style="width:6px;height:6px;border-radius:50%;background:#ffe23a;box-shadow:0 0 0 1px #3a1a00"></i>Kamu</span><span><i style="width:4px;height:4px;border-radius:50%;background:#7aff7a;box-shadow:0 0 0 1px #0a3a0a"></i>Penduduk</span><span><i style="width:5px;height:4px;background:#ffc83a;box-shadow:0 0 0 1px #4a2a00"></i>Peti</span><span style="color:#d02a2a">☠ Boss</span><span style="color:#c89a00">★ Tujuan misi</span></div>
-   <div class="world">Dunia: ${(M.indoor ? '[' + M.name + '] · ' : '') + WORLD.map(([id, n]) => id === M.id ? `<b style="color:#a0481e">[${n}]</b>` : S.seen[id] ? n : '???').join(' — ')}</div>`;
-  const wrap = w.querySelector('.mwrap'); const cv = buildMini(sc, M, s); wrap.appendChild(cv);
-  const mk2 = (cls, X, Y, html = '') => { const e = document.createElement('div'); e.className = 'mk ' + cls; e.style.left = (X * s) + 'px'; e.style.top = (Y * s) + 'px'; e.innerHTML = html; wrap.appendChild(e); return e; };
-  for (const n of sc.npcs) mk2('mn', n.spr.x, n.spr.y - 4);
-  for (const c of M.chests || []) if (!S.flags[c.id] && (!c.needFlag || S.flags[c.needFlag])) mk2('mc', c.x, c.y - 4);
-  for (const B of M.bosses || []) if (!S.flags[B.flag] && S.stage >= B.need) mk2('mb', B.x, B.y - 10, '☠');
-  for (const ex of M.exits || []) { const X = clamp(ex.x + ex.w / 2, 30 / s, M.w - 30 / s), Y = clamp(ex.y + ex.h / 2, 8 / s, M.h - 8 / s); mk2('mx', X, Y, '➜ ' + (S.seen[ex.to] ? ex.label : '???')); }
-  const q = questTarget(M); if (q) mk2('mq', q.x, q.y - 6, '★');
-  mk2('me', sc.pl.x, sc.pl.y - 4);
-  await new Promise(res => { const prev = UIH; const h = k => { if (['a', 'b', 'menu', 'map', 'back', 'tap', 'item', 'bag'].includes(k)) { w.remove(); UIH = prev; sfx('back'); res(); } }; h.tap = true; UIH = h; w.addEventListener('pointerdown', e => { e.stopPropagation(); press('tap'); }); });
-  G.lock--;
-}
+// peta besar ada di systems/explore.js (kabut, ikon, harta, zoom)
+function openMap(sc) { return openMapNew(sc); }
 
 'use strict';
 // Menu utama, jurus, bestiari, pencapaian

@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 36 | 2 | 0 | 962 |
+| 44 | 2 | 0 | 954 |
 
 ## Selesai
 
@@ -55,6 +55,14 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 407 | Bom api (meledak + membakar) | `systems/craft.js` | 5 |
 | 411 | Panah Tajam buatan (×1,6, menembus) | `systems/combat.js` (`shootArrow`) | 5 |
 | 412 | Umpan pancing (ikan langka lebih sering) | `systems/life.js` (`fish`) | 5 |
+| 61 | Kabut peta: terbuka sesuai area yang dilalui (peta besar & mini, tersimpan) | `systems/explore.js` (`updFog`, `drawFog`) | 6 |
+| 63 | Rahasia: semak kering (bakar/bom), batu retak (bom), 3 per wilayah liar | `systems/explore.js` (`initSecrets`, `freeSpot`) | 6 |
+| 66 | Peta harta sobek → ✖ di peta → gali harta besar | `systems/explore.js` (`giveTreasureMap`, `digTreasure`) | 6 |
+| 665 | Titik galian bercahaya | `systems/explore.js` | 6 |
+| 675 | Jarak ke tujuan (meter) di kartu misi & peta | `systems/ambient.js`, `systems/explore.js` | 6 |
+| 678 | Zoom peta: tombol −/+, roda tetikus, cubit, geser; ↑/↓ di keyboard | `systems/explore.js` (`openMapNew`) | 6 |
+| 679 | Ikon NPC di peta (guru 📖, pemburu 🏹, tetua 📜) | `systems/explore.js` (`ROLE_ICON`) | 6 |
+| 680 | Ikon toko di peta (🛒 toko, ⚒ bengkel, 🛏 penginapan) | `systems/explore.js` | 6 |
 
 ## Sebagian
 
@@ -75,7 +83,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~3~~ | ✅ selesai | — |
 | ~~4~~ | ✅ selesai | — |
 | ~~5~~ | ✅ selesai | — |
-| 6 | 61, 63, 66, 665, 674, 675, 678, 679, 680 | Kabut peta, rahasia, peta harta, penanda dan zoom peta |
+| ~~6~~ | ✅ selesai (674 papan arah pindah ke gelombang 7: perlu penempatan di data peta) | — |
+| 6b | 674 | Papan arah kayu di persimpangan |
 | 7 | 46, 492, 493, 497, 498, 32 | Rumah Arka & perabot |
 | 8 | 47, 514, 515, 519, 48, 505 | Peternakan & kebun lebih luas |
 | 9 | 51, 571–576, 583 | Mancing mendalam & akuarium |

@@ -30,21 +30,5 @@ function questTarget(M) {
   if (!goal) return null; if (M.id === goal[0]) return { x: goal[1], y: goal[2] };
   const nx = routeNext(M.id, goal[0]); if (!nx) return null; const ex = (M.exits || []).find(e => e.to === nx); return ex && { x: ex.x + ex.w / 2, y: ex.y + ex.h / 2 };
 }
-async function openMap(sc) {
-  G.lock++; sfx('ok');
-  const M = sc.M, w = win('act', ''); w.id = 'mapw';
-  const boxW = VW - 30, boxH = VH - 74, s = Math.min(boxW / M.w, boxH / M.h);
-  w.innerHTML = `<div class="mh"><span>PETA · ${M.name}</span><span style="color:#8a6a4a;font-weight:400">tutup: tombol apa saja</span></div><div class="mbox"><div class="mwrap" style="position:relative"></div></div>
-   <div class="leg"><span><i style="width:6px;height:6px;border-radius:50%;background:#ffe23a;box-shadow:0 0 0 1px #3a1a00"></i>Kamu</span><span><i style="width:4px;height:4px;border-radius:50%;background:#7aff7a;box-shadow:0 0 0 1px #0a3a0a"></i>Penduduk</span><span><i style="width:5px;height:4px;background:#ffc83a;box-shadow:0 0 0 1px #4a2a00"></i>Peti</span><span style="color:#d02a2a">☠ Boss</span><span style="color:#c89a00">★ Tujuan misi</span></div>
-   <div class="world">Dunia: ${(M.indoor ? '[' + M.name + '] · ' : '') + WORLD.map(([id, n]) => id === M.id ? `<b style="color:#a0481e">[${n}]</b>` : S.seen[id] ? n : '???').join(' — ')}</div>`;
-  const wrap = w.querySelector('.mwrap'); const cv = buildMini(sc, M, s); wrap.appendChild(cv);
-  const mk2 = (cls, X, Y, html = '') => { const e = document.createElement('div'); e.className = 'mk ' + cls; e.style.left = (X * s) + 'px'; e.style.top = (Y * s) + 'px'; e.innerHTML = html; wrap.appendChild(e); return e; };
-  for (const n of sc.npcs) mk2('mn', n.spr.x, n.spr.y - 4);
-  for (const c of M.chests || []) if (!S.flags[c.id] && (!c.needFlag || S.flags[c.needFlag])) mk2('mc', c.x, c.y - 4);
-  for (const B of M.bosses || []) if (!S.flags[B.flag] && S.stage >= B.need) mk2('mb', B.x, B.y - 10, '☠');
-  for (const ex of M.exits || []) { const X = clamp(ex.x + ex.w / 2, 30 / s, M.w - 30 / s), Y = clamp(ex.y + ex.h / 2, 8 / s, M.h - 8 / s); mk2('mx', X, Y, '➜ ' + (S.seen[ex.to] ? ex.label : '???')); }
-  const q = questTarget(M); if (q) mk2('mq', q.x, q.y - 6, '★');
-  mk2('me', sc.pl.x, sc.pl.y - 4);
-  await new Promise(res => { const prev = UIH; const h = k => { if (['a', 'b', 'menu', 'map', 'back', 'tap', 'item', 'bag'].includes(k)) { w.remove(); UIH = prev; sfx('back'); res(); } }; h.tap = true; UIH = h; w.addEventListener('pointerdown', e => { e.stopPropagation(); press('tap'); }); });
-  G.lock--;
-}
+// peta besar ada di systems/explore.js (kabut, ikon, harta, zoom)
+function openMap(sc) { return openMapNew(sc); }

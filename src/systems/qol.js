@@ -68,6 +68,7 @@ function showTip(html) {
 }
 Object.assign(World.prototype, {
   updTips(dt) {
+    if (G.lock) { const t = document.getElementById('tip'); if (t) t.remove(); }
     if (G.title || G.lock || !OPT.tips || !S.tipsDone || S.tipsDone.all || this.M.indoor && S.stage > 0) return;
     this.tipT = (this.tipT || 2) - dt; if (this.tipT > 0) return; this.tipT = 1;
     if (document.getElementById('tip')) return;
@@ -77,7 +78,7 @@ Object.assign(World.prototype, {
   // ---------------- PETA MINI (#82) ----------------
   updMinimap(dt) {
     const M = this.M; let c = document.getElementById('mini');
-    if (!OPT.mini || G.title || M.indoor) { if (c) c.style.display = 'none'; return; }
+    if (!OPT.mini || G.title || M.indoor || G.lock) { if (c) c.style.display = 'none'; return; }
     if (!c) { c = document.createElement('canvas'); c.id = 'mini'; c.width = 96; c.height = 96; UI.appendChild(c); c.onpointerdown = ev => { ev.stopPropagation(); if (!G.lock) openMap(this); }; }
     c.style.display = '';
     this.miniT = (this.miniT || 0) - dt; if (this.miniT > 0) return; this.miniT = .25;
@@ -90,7 +91,7 @@ Object.assign(World.prototype, {
       y.fillStyle = '#4aa6e0'; for (const [px, py, rx, ry] of M.ponds || []) { y.beginPath(); y.ellipse(ox + px * k, oy + py * k, rx * k, ry * k, 0, 0, 7); y.fill(); }
       y.fillStyle = 'rgba(30,24,40,.55)'; for (const [wx, wy, ww, wh] of M.walls || []) y.fillRect(ox + wx * k, oy + wy * k, Math.max(1, ww * k), Math.max(1, wh * k));
       y.fillStyle = '#ffd84a'; for (const e of M.exits || []) y.fillRect(ox + e.x * k - 1, oy + e.y * k - 1, Math.max(3, e.w * k), Math.max(3, e.h * k));
-      this.miniBase = b;
+      drawFog(y, M, k, ox, oy); this.miniBase = b;
     }
     x.clearRect(0, 0, W, W); x.drawImage(this.miniBase, 0, 0);
     x.fillStyle = '#fff3c0'; for (const n of this.npcs) if (n.spr.visible) x.fillRect(ox + n.spr.x * k - 1, oy + n.spr.y * k - 1, 2, 2);

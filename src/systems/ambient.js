@@ -160,7 +160,7 @@ function artQuestArrow(T) {
 Object.assign(World.prototype, {
   updQuestGuide(dt) {
     if (!this.qArrow) { this.qArrow = this.add.image(0, 0, 'qarrow').setScale(1.5).setScrollFactor(0).setDepth(2.1e5).setVisible(false); this.qStar = this.add.image(0, 0, 'qstar').setScale(1.3).setDepth(2.05e5).setVisible(false); this.qT = 0; }
-    this.qT -= dt; if (this.qT <= 0) { this.qT = .4; this.qGoal = G.title ? null : questTarget(this.M); }
+    this.qT -= dt; if (this.qT <= 0) { this.qT = .4; this.qGoal = G.title ? null : questTarget(this.M); const qd = document.querySelector('#quest .qd'); if (qd) qd.textContent = this.qGoal ? ' · ' + Math.round(Math.hypot(this.qGoal.x - this.pl.x, this.qGoal.y - this.pl.y) / 8) + ' m' : ''; }
     const q = this.qGoal, A = this.qArrow, St = this.qStar; if (!q || G.lock) { A.setVisible(false); St.setVisible(false); return; }
     const v = this.cameras.main.worldView, m = 26, inView = q.x > v.x + m && q.x < v.right - m && q.y > v.y + m && q.y < v.bottom - m;
     if (inView) { A.setVisible(false); St.setVisible(true).setPosition(q.x, q.y - 26 + Math.sin(this.t * 4) * 3); return; }

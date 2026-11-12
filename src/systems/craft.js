@@ -114,7 +114,7 @@ Object.assign(World.prototype, {
       onComplete: () => {
         o.destroy(); if (kind !== 'bomb') return;
         this.time.delayedCall(250, () => {
-          sfxAt('boom', tx, ty, this); this.camShake(160, .007); this.sparkle(tx, ty - 6, 'doto', 18); for (let i = 0; i < 6; i++) this.puff(tx + rnd(-16, 16), ty + rnd(-10, 10));
+          sfxAt('boom', tx, ty, this); this.blastAt(tx, ty); this.camShake(160, .007); this.sparkle(tx, ty - 6, 'doto', 18); for (let i = 0; i < 6; i++) this.puff(tx + rnd(-16, 16), ty + rnd(-10, 10));
           for (const e of this.enemies) if (e.hp > 0 && Math.hypot(e.spr.x - tx, e.spr.y - ty) < 44) { const n = Math.hypot(e.spr.x - tx, e.spr.y - ty) || 1; this.hitEnemy(e, 18 + st.mag * 1.2, false, (e.spr.x - tx) / n, (e.spr.y - ty) / n); this.burnEnemy(e, Math.max(2, st.mag * .25), 2.5); }
           if (Math.hypot(pl.x - tx, pl.y - ty) < 30) this.hurtPlayer(6, tx, ty);
         });

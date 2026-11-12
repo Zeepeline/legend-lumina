@@ -178,3 +178,9 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 .btn.tool img{width:18px;height:18px;image-rendering:pixelated}.btn.tool small{margin-top:0;font-size:8px}.btn.tool.empty{filter:grayscale(1) brightness(.7)}
 #bX1{right:182px;top:46px}#bX2{right:182px;top:96px}
 @media (orientation:landscape){ body.touch #bX1{right:178px;top:auto;bottom:30px} body.touch #bX2{right:178px;top:auto;bottom:78px} }
+/* peta: zoom, ikon, harta */
+#mapw .zb b{display:inline-block;width:22px;height:18px;line-height:18px;text-align:center;margin-left:4px;background:#6e4222;color:#fff;border-radius:3px;pointer-events:auto;cursor:pointer;font-size:13px}
+#mapw .mi{font-size:9px;line-height:9px;text-shadow:0 0 2px #fff}
+#mapw .mt{font-size:12px;line-height:12px;color:#c8281e;font-weight:700;text-shadow:0 0 2px #fff,1px 1px 0 #fff}
+#mapw .mbox{touch-action:none}
+#quest .qd{color:#ffd84a;font-weight:700}
