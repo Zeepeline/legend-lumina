@@ -4355,7 +4355,7 @@ MAPS.village = {
   ],
   animals: [['cat', 340, 300, 0], ['cat', 760, 300, 1], ['fox', 640, 600, 0], ['cat', 420, 520, 0], ['fox', 270, 600, 0]],
   doors: [[150, 232, 'Rumah Pak Darto. Pintunya terkunci.'], [272, 222, { to: 'linahome' }],
-    [752, 222, { to: 'inn' }], [874, 232, 'Rumah kosong. Pintunya berderit, tapi terkunci.'], [104, 480, 'Rumah Bu Lastri. Ada bau kue jahe...'],
+    [752, 222, { to: 'inn' }], [874, 232, { to: 'home' }], [104, 480, 'Rumah Bu Lastri. Ada bau kue jahe...'],
     [920, 480, 'Bengkel Pak Besi. Bau arang dan besi panas.'], [513, 286, { to: 'elderhome' }]],
   butterflies: 7,
 };
@@ -4374,7 +4374,7 @@ MAPS.forest = {
   ],
   discs: [[60, 730, 40], [1220, 530, 40], [1010, 320, 72], [180, 846, 58], [1030, 860, 62], [640, 1068, 92], [380, 440, 30], [640, 150, 34]],
   river: { y: 600, amp: 30, k: .009, w: 36, bridge: [380, 432] },
-  objs: [['stele', 556, 1004, { lore: 'prasasti_hutan' }], 
+  objs: [['stele', 556, 1004, { lore: 'prasasti_hutan' }], ['sign', 450, 300, { text: 'Papan arah: ↑ Desa Lumina · ← Hutan Dalam · → Jalur Sungai' }], ['sign', 350, 410, { text: 'Papan arah: ↑ Desa Lumina · ↙ Hutan Dalam' }], 
     ['shrine', 640, 1094], ['sign', 676, 120, { text: 'Kuil Kristal: ikuti jalan ke selatan.\nTimur: perkemahan goblin.\nTenggara: sarang ular.' }],
     ['sign', 440, 280, { text: 'SIMPANG TIGA HUTAN\n← Barat: Hutan Dalam (Berbahaya)\n→ Timur: Jalur Sungai Senja\n↑ Utara: Desa Lumina' }],
     ['campfire', 650, 180],
@@ -4429,6 +4429,8 @@ MAPS.meadow = {
   ponds: [[660, 730, 150, 82]],
   flowers: 1,
   objs: [
+    // papan arah di persimpangan (fitur #674)
+    ['sign', 488, 500, { text: 'Papan arah: ↑ Puncak Beku · → Gua Batu & Rawa Senja · ← Desa Lumina' }], ['sign', 812, 440, { text: 'Papan arah: ↗ Gua Batu · ↘ Rawa Senja · ← Desa Lumina' }],
     ['windmill', 300, 170], ['campfire', 380, 240], ['hay', 250, 220], ['hay', 352, 214], ['hay', 330, 240], ['fence', 230, 250], ['fence', 248, 250], ['fence', 340, 250], ['fence', 358, 250],
     ['houseA', 140, 252], ['houseB', 480, 246], ['crate', 214, 352], ['barrel', 232, 356], ['crate', 214, 396],
     ['sign', 420, 300, { text: 'DESA KINCIR\nLumbung gandum Benua Lumina.' }],
@@ -4927,7 +4929,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.11.0';
+const GAME_VERSION = '1.12.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
@@ -5402,7 +5404,7 @@ class World extends Phaser.Scene {
     for (const a of M.animals || []) this.spawnCritter(a);
     for (let i = 0; i < (M.butterflies || 0); i++) this.spawnFly(i);
     for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2]);
-    this.initSecrets();
+    this.initSecrets(); this.spawnHome();
     if (!G.title && isNight() && (M.id === 'forest' || M.id === 'meadow')) for (let i = 0; i < 4; i++) { const P = M.paths[(i * 3 + 2) % M.paths.length]; this.spawnEnemy('wisp', (P[0] + P[2]) / 2 + rnd(-30, 30), (P[1] + P[3]) / 2 + rnd(-20, 20)); }
     // pemain
     const pl = this.pl = this.physics.add.sprite(data.x || S.x, data.y || S.y, 'ch_hero', (data.dir === 'left' || data.dir === 'right' ? 'side' : data.dir || 'down') + '0').setOrigin(.5, 1);
@@ -5872,7 +5874,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets();
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       if (this.boulder) this.updBoulder(dt);
@@ -5945,6 +5947,7 @@ class World extends Phaser.Scene {
       const k = Input.q.shift();
       if (UIH) { UIH(k.startsWith('j') ? k.slice(1) : k); continue; }
       if (G.lock > 0 || this.trans || this.pl?.dead || G.title) { Input.castAng = null; continue; }
+      if (this.carry && this.carryKey(k)) continue;
       if (k === 'a') this.actionA(); else if (k === 'b') this.magic(); else if (k === 'dash') this.dash(); else if (k === 'nova') this.nova(); else if (k === 'item') this.drink(); else if (k === 'tool1') this.useSlot(0); else if (k === 'tool2') this.useSlot(1); else if (k === 'menu') mainMenu(this); else if (k === 'map') openMap(this); else if (k === 'bag') openBag(this);
     }
   }
@@ -7098,6 +7101,7 @@ Object.assign(World.prototype, {
 // Interior, memancing, kebun, teka-teki batu, Mochi
 Object.assign(World.prototype, {
   enterRoom(to, d) {
+    if (to === 'home' && !homeInit().owned) return this.buyHome();
     if (to === 'arsip' && !S.inv.akey) { if (!G.lock && !this._lockMsg) { this._lockMsg = 1; talk(null, ['Pintu Akademi tertutup. Penjaga menggeleng: "Arsip hanya untuk guru dan yang mendapat izin."']).then(() => { this.pl.y += 14; this._lockMsg = 0; }); } return; }
     this.goto(to, 160, 226, 'up');
   },
@@ -13092,6 +13096,132 @@ async function openMapNew(sc) {
   await new Promise(res => { const prev = UIH; const h = k => { if (['a', 'b', 'menu', 'map', 'back', 'tap', 'item', 'bag'].includes(k)) { w.remove(); UIH = prev; sfx('back'); res(); } else if (k === 'up') zoom(1); else if (k === 'down') zoom(-1); }; h.tap = true; UIH = h;
     w.addEventListener('pointerdown', e => { e.stopPropagation(); press('tap'); }); });
   G.lock--;
+}
+
+'use strict';
+// Gelombang 7: Rumah Arka (#46), peti penyimpanan (#32), perluasan (#492), tata perabot bebas (#493),
+// dapur rumah (#497), bengkel rumah (#498)
+const HOME_PRICE = 250, HOME_CAP = [6, 10, 14], HOME_EXT = [0, 300, 600];
+const FCAT = {
+  bed: { n: 'Ranjang', p: 60, w: 22, h: 36, act: 'sleep', d: 'Tidur memulihkan HP & MP lalu menyimpan permainan.' },
+  table: { n: 'Meja', p: 30, w: 34, h: 22 },
+  shelf: { n: 'Rak Buku', p: 40, w: 36, h: 28, wallOnly: 1 },
+  rug: { n: 'Karpet', p: 25, w: 56, h: 34, flat: 1 },
+  stove: { n: 'Tungku Dapur', p: 80, w: 30, h: 30, act: 'cook', d: 'Memasak di rumah sendiri.' },
+  craft: { n: 'Meja Kerajinan', p: 90, w: 26, h: 22, tex: 'crafttable', act: 'craft', d: 'Membuat barang dari bahan.' },
+  box: { n: 'Peti Penyimpanan', p: 50, w: 18, h: 16, tex: 'chest', act: 'box', d: 'Simpan barang agar tas lebih lega.' },
+  plant: { n: 'Pot Tanaman', p: 15, w: 28, h: 20, tex: 'i_planter' },
+};
+const ROOM_IN = { x: 58, y: 84, r: 262, b: 238 }, DOOR_LANE = { x: 128, y: 196, r: 192, b: 260 };
+MAPS.home = makeRoom('home', 'Rumah Arka', [874, 250], { wallc: '#ead6b6', furn: [], windows: [110, 190], npcs: [] });
+function homeInit() { if (!S.home) S.home = { owned: 0, lv: 0, items: [], box: {} }; return S.home; }
+function furnTex(sc, t, v) {
+  const C = FCAT[t]; if (C.tex) return C.tex; const key = 'hf_' + t + (v ? 1 : 0);
+  if (!sc.textures.exists(key)) { const [c, x] = mk(C.w + 2, C.h + 2); drawFurn(x, t, 1, 1, v); sc.textures.addCanvas(key, c); }
+  return key;
+}
+Object.assign(World.prototype, {
+  spawnHome() {
+    this.hf = []; this.carry = null; if (this.M.id !== 'home') return; const H = homeInit();
+    this.inter.push({ x: 160, y: 86, r: 18, fn: () => this.homeMenu() });
+    const b = this.add.text(160, 66, '📋', { fontSize: '12px' }).setOrigin(.5).setDepth(70);
+    for (const f of H.items) this.placeFurnSprite(f);
+  },
+  placeFurnSprite(f) {
+    const C = FCAT[f.t], s = this.add.image(f.x, f.y, furnTex(this, f.t, f.v)).setOrigin(0, 0).setDepth(C.flat ? -5e5 : f.y + C.h);
+    if (C.tex) { s.setOrigin(.5, 1).setPosition(f.x + C.w / 2, f.y + C.h); if (f.v) s.setFlipX(true); }
+    const o = { f, s, wall: C.flat ? null : this.wall(f.x, f.y + C.h * .4, C.w, C.h * .6) };
+    if (C.act) this.inter.push(o.it = { x: f.x + C.w / 2, y: f.y + C.h + 6, r: 16, fn: () => this.useFurn(o) });
+    this.hf.push(o); return o;
+  },
+  removeFurnSprite(o) { o.s.destroy(); if (o.wall) this.walls.remove(o.wall, true, true); if (o.it) this.inter = this.inter.filter(i => i !== o.it); this.hf = this.hf.filter(x => x !== o); },
+  async useFurn(o) {
+    const a = FCAT[o.f.t].act; G.lock++;
+    try {
+      if (a === 'sleep') { await fadeTo(1); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Tidur di ranjang sendiri memang paling nyenyak. Permainan tersimpan.', 'Rumah'); }
+      else if (a === 'cook') await cookMenu('Dapur Rumah Arka', 'Arka');
+      else if (a === 'craft') await openCraft(this);
+      else if (a === 'box') await openBox();
+    } finally { G.lock--; }
+  },
+  async homeMenu() {
+    const H = homeInit(); G.lock++;
+    try {
+      for (; ;) {
+        const cap = HOME_CAP[H.lv], next = HOME_EXT[H.lv + 1];
+        const r = await choose({ head: `Rumah Arka · perabot ${H.items.length}/${cap}`, x: 30, y: 50, w: 250,
+          items: [{ t: 'Beli perabot' }, { t: 'Tata perabot', dis: !H.items.length }, { t: 'Simpan perabot ke gudang', dis: !H.items.length }, { t: next ? 'Perluas rumah' : 'Rumah sudah paling luas', r: next ? next + ' G' : '', dis: !next }, { t: 'Tutup' }],
+          foot: i => ['Perabot muncul di depanmu. A: taruh · DASH: putar · B: batal', 'Pilih perabot lalu pindahkan', 'Perabot kembali ke gudang (uang tidak kembali, bisa dipasang lagi)', 'Menambah batas perabot', ''][i] || '' });
+        if (r === 0) { const t = await this.pickCatalog(); if (t) { this.startCarry({ t, x: 0, y: 0, v: 0 }, true); return; } }
+        else if (r === 1) { const o = await this.pickPlaced('Tata yang mana?'); if (o) { this.removeFurnSprite(o); H.items = H.items.filter(f => f !== o.f); this.startCarry(o.f, false); return; } }
+        else if (r === 2) { const o = await this.pickPlaced('Simpan yang mana?'); if (o) { this.removeFurnSprite(o); H.items = H.items.filter(f => f !== o.f); H.store = H.store || {}; H.store[o.f.t] = (H.store[o.f.t] || 0) + 1; sfx('ok'); } }
+        else if (r === 3) { if (S.gold < next) { sfx('buzz'); await say('Uangmu belum cukup.', 'Tukang'); continue; } S.gold -= next; H.lv++; updHud(); sfx('chest'); await say(`Rumah diperluas! Sekarang muat ${HOME_CAP[H.lv]} perabot.`, 'Tukang'); }
+        else return;
+      }
+    } finally { G.lock--; }
+  },
+  async pickCatalog() {
+    const H = homeInit(), keys = Object.keys(FCAT), st = H.store || {};
+    if (H.items.length >= HOME_CAP[H.lv]) { sfx('buzz'); await say('Rumah sudah penuh. Perluas rumah atau simpan perabot ke gudang.', 'Rumah'); return null; }
+    const r = await choose({ head: 'Katalog perabot · ' + S.gold + ' G', x: 24, y: 30, w: 270, items: [...keys.map(k => ({ t: FCAT[k].n, r: st[k] ? 'gudang ×' + st[k] : FCAT[k].p + ' G' })), { t: 'Kembali' }], foot: i => i < keys.length ? (FCAT[keys[i]].d || 'Hiasan rumah.') : '' });
+    if (r < 0 || r >= keys.length) return null; const k = keys[r];
+    if (st[k]) { st[k]--; if (!st[k]) delete st[k]; return k; }
+    if (S.gold < FCAT[k].p) { sfx('buzz'); await say('Uangmu belum cukup.', 'Rumah'); return null; }
+    S.gold -= FCAT[k].p; updHud(); sfx('chest'); return k;
+  },
+  async pickPlaced(head) {
+    const L = this.hf; const r = await choose({ head, x: 30, y: 50, w: 230, items: [...L.map(o => ({ t: FCAT[o.f.t].n })), { t: 'Batal' }] });
+    return r >= 0 && r < L.length ? L[r] : null;
+  },
+  startCarry(f, isNew) {
+    const C = FCAT[f.t], s = this.add.image(0, 0, furnTex(this, f.t, f.v)).setOrigin(0, 0).setAlpha(.75).setDepth(9e4);
+    this.carry = { f, s, isNew }; popWorld(this.pl.x, this.pl.y - 34, 'A: taruh · DASH: putar · B: batal', 'xp');
+  },
+  furnOk(f) {
+    const C = FCAT[f.t], r = { x: f.x, y: f.y, r: f.x + C.w, b: f.y + C.h };
+    if (r.x < ROOM_IN.x || r.r > ROOM_IN.r || r.y < ROOM_IN.y || r.b > ROOM_IN.b) return false;
+    if (C.wallOnly && r.y > ROOM_IN.y + 4) return false;
+    if (!C.flat && r.x < DOOR_LANE.r && r.r > DOOR_LANE.x && r.b > DOOR_LANE.y) return false;
+    if (!C.flat) { for (const o of this.hf) { const D = FCAT[o.f.t]; if (D.flat) continue; if (r.x < o.f.x + D.w && r.r > o.f.x && r.y < o.f.y + D.h && r.b > o.f.y) return false; }
+      const p = this.pl; if (p.x > r.x - 4 && p.x < r.r + 4 && p.y > r.y + C.h * .4 - 4 && p.y < r.b + 4) return false; }
+    if (r.x < 176 && r.r > 144 && r.y < 104) return false; // papan rumah
+    return true;
+  },
+  updCarry() {
+    const c = this.carry; if (!c) return; const C = FCAT[c.f.t], [dx, dy] = DIRV[this.pl.dir];
+    let x = this.pl.x + dx * (C.w / 2 + 14) - C.w / 2, y = this.pl.y + dy * (C.h / 2 + 12) - C.h + (dy < 0 ? 0 : 8);
+    if (C.wallOnly) y = ROOM_IN.y; x = Math.round(x / 4) * 4; y = Math.round(y / 4) * 4;
+    c.f.x = x; c.f.y = y; c.s.setPosition(x, y); c.ok = this.furnOk(c.f); c.s.setTint(c.ok ? 0xffffff : 0xff6a5a);
+  },
+  carryKey(k) {
+    const c = this.carry; if (!c) return false;
+    if (k === 'a') { if (!c.ok) { sfx('buzz'); popWorld(this.pl.x, this.pl.y - 30, 'Tidak muat di sini', 'hurt'); return true; } c.s.destroy(); this.carry = null; homeInit().items.push(c.f); this.placeFurnSprite(c.f); sfx('ok'); saveGame(this); return true; }
+    if (k === 'dash') { c.f.v = c.f.v ? 0 : 1; const C = FCAT[c.f.t]; if (C.tex) c.s.setFlipX(!!c.f.v); else c.s.setTexture(furnTex(this, c.f.t, c.f.v)); sfx('cur'); return true; }
+    if (k === 'b') { c.s.destroy(); this.carry = null; const H = homeInit(); if (c.isNew) { H.store = H.store || {}; H.store[c.f.t] = (H.store[c.f.t] || 0) + 1; popWorld(this.pl.x, this.pl.y - 30, 'disimpan ke gudang', 'xp'); } else { H.items.push(c.f); this.placeFurnSprite(c.f); } sfx('back'); return true; }
+    return false;
+  },
+});
+World.prototype.buyHome = async function () {
+  if (G.lock) return; G.lock++;
+  try {
+    await say('Rumah kosong ini sudah lama tak berpenghuni. Ada papan: "Dijual. Hubungi kepala desa."', 'Rumah Kosong');
+    const r = await choose({ head: 'Beli rumah ini?', x: 60, y: 70, w: 200, items: [{ t: 'Beli', r: HOME_PRICE + ' G' }, { t: 'Nanti saja' }] });
+    if (r !== 0) { this.pl.y += 10; return; }
+    if (S.gold < HOME_PRICE) { sfx('buzz'); await say(`Uangmu belum cukup (${S.gold}/${HOME_PRICE} G).`, 'Rumah Kosong'); this.pl.y += 10; return; }
+    S.gold -= HOME_PRICE; homeInit().owned = 1; updHud(); sfx('chest');
+    await say('Rumah ini sekarang milikmu! Masuk dan tata sesukamu lewat papan 📋 di dinding.', 'Rumah Arka');
+  } finally { G.lock--; }
+  if (homeInit().owned) this.goto('home', 160, 226, 'up');
+};
+async function openBox() {
+  const B = homeInit().box; let mode = 0;
+  for (; ;) {
+    const src = mode ? B : S.inv, ids = Object.keys(src).filter(id => src[id] > 0 && ITEMS[id] && ITEMS[id].k !== 'key' && !(mode === 0 && (S.eq.wpn === id || S.eq.arm === id || S.eq.acc === id)));
+    const r = await choose({ head: mode ? 'Peti · ambil barang' : 'Peti · simpan barang', x: 24, y: 30, w: 270,
+      items: [{ t: mode ? '⇄ Ganti ke: Simpan' : '⇄ Ganti ke: Ambil' }, ...ids.map(id => ({ t: icon(id) + ITEMS[id].n, r: 'x' + src[id] })), { t: 'Tutup' }], foot: () => 'A: pindahkan 1 · isi peti tidak hilang' });
+    if (r < 0 || r > ids.length) return; if (r === 0) { mode ^= 1; continue; }
+    const id = ids[r - 1]; if (mode) { B[id]--; if (!B[id]) delete B[id]; addItem(id, 1); } else { addItem(id, -1); B[id] = (B[id] || 0) + 1; } sfx('cur'); updHud();
+  }
 }
 
 'use strict';

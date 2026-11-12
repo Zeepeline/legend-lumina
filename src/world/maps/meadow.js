@@ -12,6 +12,8 @@ MAPS.meadow = {
   ponds: [[660, 730, 150, 82]],
   flowers: 1,
   objs: [
+    // papan arah di persimpangan (fitur #674)
+    ['sign', 488, 500, { text: 'Papan arah: ↑ Puncak Beku · → Gua Batu & Rawa Senja · ← Desa Lumina' }], ['sign', 812, 440, { text: 'Papan arah: ↗ Gua Batu · ↘ Rawa Senja · ← Desa Lumina' }],
     ['windmill', 300, 170], ['campfire', 380, 240], ['hay', 250, 220], ['hay', 352, 214], ['hay', 330, 240], ['fence', 230, 250], ['fence', 248, 250], ['fence', 340, 250], ['fence', 358, 250],
     ['houseA', 140, 252], ['houseB', 480, 246], ['crate', 214, 352], ['barrel', 232, 356], ['crate', 214, 396],
     ['sign', 420, 300, { text: 'DESA KINCIR\nLumbung gandum Benua Lumina.' }],

@@ -40,6 +40,11 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `systems/learn.js` | **sistem belajar jurus**: `JURUS` (aliran, guru, syarat, biaya, dialog latihan), `learnTalk()` (guru mengajar), `castSpell()` (Kabut Racun, Cahaya Pulih, Lentera Suci), penguasaan I–III (`tierOf`, `useJurus`, `MASTERY`). Jurus baru: tambah ke `JURUS` + efeknya |
 | `systems/ambient.js` | **suasana alam** per peta (`ENV`): burung/kelinci/tupai yang kabur, kupu-kupu, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, Daun Obat & Buah Beri di tepi jalan; juga **penunjuk misi** `updQuestGuide()` (panah di tepi layar / bintang di atas tujuan, dari `questTarget()` di `ui/map.js`). Kartu misi di `updHud()` (`ui/widgets.js`) |
 | `systems/qol.js` | kenyamanan: ikon interaksi & tombol kontekstual, bilah HP musuh, jeda otomatis, rincian naik level, coba lagi boss |
+| `systems/feel.js` | rasa bertarung: tanda "!" ancang-ancang & waspada, musuh elit (`makeElite`), penanda bahaya tepi layar, musuh menghindar (`updFeel`) |
+| `systems/sound.js` | lagu per wilayah & malam (`bgmFor`), musik tarung dinamis (`swapBGM`), suara jauh-dekat (`sfxAt`), langkah per tanah (`groundAt`) |
+| `systems/craft.js` | poin atribut (`S.attr`, `openAttr`, membungkus `stat()`), kerajinan (`CRAFT`), alat lempar (`useTool`), 2 slot alat (`S.tools`) |
+| `systems/explore.js` | kabut peta (`S.fog`), rahasia per wilayah liar (`freeSpot` mengikuti aturan penempatan), peta harta (`S.tmap`), peta besar `openMapNew` (zoom, ikon) |
+| `systems/home.js` | Rumah Arka (`S.home`, peta `home`): beli rumah, katalog `FCAT`, tata perabot bebas (`startCarry`/`carryKey`), peti `openBox`, perluasan |
 | `systems/status.js` | efek status `STATUS` (racun/terbakar/dingin) pemain & musuh; sumber = `fx` di `ENEMY`/`PROJ` |
 | `systems/travel.js` | teleport: `WARPS` (posisi patung per peta), aktif di `S.warps` |
 | `systems/chapter4.js` | Bab 4 (investigasi tanpa boss), `storyTalk()` (dialog cerita yang menimpa dialog biasa), Desa Kincir, lentera & perahu Danau Cermin, kuil, prasasti (`readLore`) |
@@ -122,7 +127,7 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 - **Dunia:** Desa Lumina, Hutan Lumina (+ Hutan Dalam, Reruntuhan Aurel, Jalur Sungai Senja), Padang Angin (+ Desa Kincir), Gua Batu, Rawa Senja, Puncak Beku, Danau Cermin, Jalan Raya Lama, Kota Lumina (Gerbang, Pasar, Akademi, Kota Bawah) + 6 interior.
 - **Cerita:** Bab 1–5 (stage 0–27; Bab 4 & 5 tanpa boss), jurnal 3 lapis tujuan + lore + misteri, foreshadowing sesuai `docs/SPOILER_ENDING.md`, 4 misi sampingan.
 - **NPC:** semua NPC beraktivitas sesuai peran & pulang saat malam (`npc/brain.js`).
-- **Sistem:** belajar 7 jurus dari 5 guru (penguasaan I–III), 4 gaya senjata, status, pancing, kebun, masak, upgrade, teleport, siang-malam & cuaca, suasana alam, puluhan objek interaktif (`systems/life.js`), penunjuk misi, simpan otomatis, ekspor/impor save, PWA, gamepad.
+- **Sistem:** belajar 7 jurus dari 5 guru (penguasaan I–III), 4 gaya senjata, status, pancing, kebun, masak, upgrade, teleport, siang-malam & cuaca, suasana alam, puluhan objek interaktif (`systems/life.js`), penunjuk misi, simpan otomatis, ekspor/impor save, PWA, gamepad. Gelombang 1–7 (lihat `docs/PROGRES_FITUR.md`): 3 slot simpan, peta mini & kabut, kombo & musuh elit, musik dinamis, atribut & kerajinan, rahasia & peta harta, Rumah Arka.
 - **Aset pemilik:** 21 potret NPC + hewan (`assets/img/npc_*`, `ani_*`), dekorasi Pixel 16. Gambar salah potong ada di `assets/raw/salah-potong/` (jangan dipakai).
 
 **Fitur 1–1000:** dikerjakan per gelombang, progres di `docs/PROGRES_FITUR.md` (wajib diperbarui tiap gelombang).

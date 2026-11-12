@@ -26,14 +26,16 @@ test('bola api mengikuti arah bidik & memakai MP', async ({ page }) => {
 test('jurus dash, nova es, tebasan putar', async ({ page }) => {
   const errors = await h.boot(page); await h.newGame(page); await h.learnAll(page);
   await h.G(page, () => { window.__game.S.lv = 6; window.__game.S.mp = 40; });
-  await h.press(page, 'dash', 1, 100);
-  expect(await h.G(page, () => window.__game.sc.pl.dashT > 0 || window.__game.sc.dashCd > 0)).toBe(true);
+  await h.G(page, () => { window.__game.sc.dashUsed = 0; const d = window.__game.sc.dash; window.__game.sc.dash = function () { this.dashUsed = 1; return d.call(this); }; });
+  for (let i = 0; i < 5 && !(await h.G(page, () => window.__game.sc.dashUsed)); i++) await h.press(page, 'dash', 1, 200);
+  expect(await h.G(page, () => window.__game.sc.dashUsed)).toBe(1);
   await page.waitForTimeout(600);
   await h.press(page, 'nova', 1, 300);
   expect((await h.S(page)).mp).toBeLessThanOrEqual(32);
-  await h.G(page, () => window.__game.Input.keys.a = true); await page.waitForTimeout(650);
+  const sp0 = await h.G(page, () => window.__game.S.mast.spin || 0);
+  await h.G(page, () => { window.__game.Input.keys.a = true; }); await page.waitForFunction(() => window.__game.sc.charged, null, { timeout: 8000 });
   await h.G(page, () => window.__game.Input.keys.a = false); await page.waitForTimeout(100);
-  expect(await h.G(page, () => window.__game.sc.pl.atkT > 0)).toBe(true);
+  expect(await h.G(page, () => window.__game.S.mast.spin || 0)).toBeGreaterThan(sp0); // tebasan putar keluar
   h.noErrors(errors);
 });
 

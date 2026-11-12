@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 44 | 2 | 0 | 954 |
+| 50 | 3 | 0 | 947 |
 
 ## Selesai
 
@@ -63,6 +63,12 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 678 | Zoom peta: tombol −/+, roda tetikus, cubit, geser; ↑/↓ di keyboard | `systems/explore.js` (`openMapNew`) | 6 |
 | 679 | Ikon NPC di peta (guru 📖, pemburu 🏹, tetua 📜) | `systems/explore.js` (`ROLE_ICON`) | 6 |
 | 680 | Ikon toko di peta (🛒 toko, ⚒ bengkel, 🛏 penginapan) | `systems/explore.js` | 6 |
+| 46 | Rumah Arka: rumah kosong di desa dibeli 250 G, ditata lewat papan 📋 | `systems/home.js`, `world/maps/village.js` | 7 |
+| 32 | Peti penyimpanan rumah (simpan/ambil barang) | `systems/home.js` (`openBox`) | 7 |
+| 493 | Tata perabot bebas: angkat, geser, putar, cek muat/tidak (merah) | `systems/home.js` (`startCarry`, `furnOk`) | 7 |
+| 497 | Dapur rumah (Tungku → masak) | `systems/home.js` | 7 |
+| 498 | Bengkel rumah (Meja Kerajinan) | `systems/home.js` | 7 |
+| 674 | Papan arah kayu di 4 persimpangan (Padang Angin, Hutan Lumina) | `world/maps/meadow.js`, `forest.js` | 7 |
 
 ## Sebagian
 
@@ -70,6 +76,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 |---|---|---|
 | 74 | Ukuran (4) & transparansi (3) tombol | Geser posisi tombol sendiri |
 | 89 | Animasi terkena (penyok) & jatuh saat kalah | Frame gambar khusus Arka (butuh aset) |
+| 492 | Perluasan rumah: batas perabot 6 → 10 → 14 | Kamar/dapur/gudang sebagai ruangan baru |
 
 ## Sudah ada sebelum daftar dibuat (tidak dihitung ulang)
 
@@ -84,8 +91,7 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~4~~ | ✅ selesai | — |
 | ~~5~~ | ✅ selesai | — |
 | ~~6~~ | ✅ selesai (674 papan arah pindah ke gelombang 7: perlu penempatan di data peta) | — |
-| 6b | 674 | Papan arah kayu di persimpangan |
-| 7 | 46, 492, 493, 497, 498, 32 | Rumah Arka & perabot |
+| ~~7~~ | ✅ selesai | — |
 | 8 | 47, 514, 515, 519, 48, 505 | Peternakan & kebun lebih luas |
 | 9 | 51, 571–576, 583 | Mancing mendalam & akuarium |
 | 10 | 49, 714–718, 701–704 | Musim & kalender |

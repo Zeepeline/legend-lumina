@@ -68,7 +68,7 @@ MAPS.village = {
   ],
   animals: [['cat', 340, 300, 0], ['cat', 760, 300, 1], ['fox', 640, 600, 0], ['cat', 420, 520, 0], ['fox', 270, 600, 0]],
   doors: [[150, 232, 'Rumah Pak Darto. Pintunya terkunci.'], [272, 222, { to: 'linahome' }],
-    [752, 222, { to: 'inn' }], [874, 232, 'Rumah kosong. Pintunya berderit, tapi terkunci.'], [104, 480, 'Rumah Bu Lastri. Ada bau kue jahe...'],
+    [752, 222, { to: 'inn' }], [874, 232, { to: 'home' }], [104, 480, 'Rumah Bu Lastri. Ada bau kue jahe...'],
     [920, 480, 'Bengkel Pak Besi. Bau arang dan besi panas.'], [513, 286, { to: 'elderhome' }]],
   butterflies: 7,
 };

@@ -2,6 +2,7 @@
 // Interior, memancing, kebun, teka-teki batu, Mochi
 Object.assign(World.prototype, {
   enterRoom(to, d) {
+    if (to === 'home' && !homeInit().owned) return this.buyHome();
     if (to === 'arsip' && !S.inv.akey) { if (!G.lock && !this._lockMsg) { this._lockMsg = 1; talk(null, ['Pintu Akademi tertutup. Penjaga menggeleng: "Arsip hanya untuk guru dan yang mendapat izin."']).then(() => { this.pl.y += 14; this._lockMsg = 0; }); } return; }
     this.goto(to, 160, 226, 'up');
   },

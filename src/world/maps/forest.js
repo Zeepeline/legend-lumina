@@ -12,7 +12,7 @@ MAPS.forest = {
   ],
   discs: [[60, 730, 40], [1220, 530, 40], [1010, 320, 72], [180, 846, 58], [1030, 860, 62], [640, 1068, 92], [380, 440, 30], [640, 150, 34]],
   river: { y: 600, amp: 30, k: .009, w: 36, bridge: [380, 432] },
-  objs: [['stele', 556, 1004, { lore: 'prasasti_hutan' }], 
+  objs: [['stele', 556, 1004, { lore: 'prasasti_hutan' }], ['sign', 450, 300, { text: 'Papan arah: ↑ Desa Lumina · ← Hutan Dalam · → Jalur Sungai' }], ['sign', 350, 410, { text: 'Papan arah: ↑ Desa Lumina · ↙ Hutan Dalam' }], 
     ['shrine', 640, 1094], ['sign', 676, 120, { text: 'Kuil Kristal: ikuti jalan ke selatan.\nTimur: perkemahan goblin.\nTenggara: sarang ular.' }],
     ['sign', 440, 280, { text: 'SIMPANG TIGA HUTAN\n← Barat: Hutan Dalam (Berbahaya)\n→ Timur: Jalur Sungai Senja\n↑ Utara: Desa Lumina' }],
     ['campfire', 650, 180],
