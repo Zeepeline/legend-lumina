@@ -7,7 +7,8 @@ Object.assign(World.prototype, {
   initOpen(data) {
     const M = this.M; this.owN = []; this.owObjs = [];
     this.camB = { x0: 0, y0: 0, x1: M.w, y1: M.h };
-    if (G.title || M.indoor || !NEIGH[M.id] || !this.gStream) return;
+    if (G.title || M.indoor || !NEIGH[M.id] || !this.gStream || this.passive) return;
+    if (regionsOn()) { this.owN = NEIGH[M.id].slice(); this.cameras.main.setBackgroundColor('rgba(0,0,0,0)'); this.regT = 0; return; } // wilayah tetangga dijalankan systems/regions.js
     for (const n of NEIGH[M.id]) {
       const B = MAPS[n.to]; this.owN.push(n);
       this.gL.push(gLayer(B, n.ox, n.oy));
@@ -34,7 +35,7 @@ Object.assign(World.prototype, {
   owSeamless(ex) { return this.owN && this.owN.some(n => n.ex === ex); },
   updCross() {
     if (!this.owN || !this.owN.length || this.trans || G.lock || this.bossOn) return;
-    const pl = this.pl, M = this.M; if (pl.x >= 0 && pl.x <= M.w && pl.y >= 0 && pl.y <= M.h) return;
+    const pl = this.pl, M = this.M, m = 6; if (pl.x >= -m && pl.x <= M.w + m && pl.y >= -m && pl.y <= M.h + m) return; // jarak aman: tidak memantul di garis batas
     const n = this.owN.find(n => { const B = MAPS[n.to]; return pl.x >= n.ox && pl.x <= n.ox + B.w && pl.y >= n.oy && pl.y <= n.oy + B.h; });
     const back = () => pl.setPosition(clamp(pl.x, 4, M.w - 4), clamp(pl.y, 4, M.h - 4));
     // hanya lewat celah pintu tepi (di luar itu ada pagar/rumah/pohon wilayah sebelah)
@@ -43,6 +44,8 @@ Object.assign(World.prototype, {
     // awal cerita: penjaga melarang ke hutan (juga lewat medan peralihan menuju hutan)
     const toForest = n.to === 'forest' || (MAPS[n.to].peralihan && MAPS[n.to].peralihan.includes('forest') && M.id === 'village');
     if (toForest && S.stage === 0) { back(); this.guardStop(); return; }
+    // wilayah tujuan sudah berjalan: serah-terima kendali (tanpa memuat ulang)
+    const R = REG.get(n.to); if (R && R.sys && R.pl) { this.owHandoff(R); return; }
     // ganti wilayah aktif tanpa layar hitam: posisi & kamera dipindah ke koordinat wilayah baru
     this.trans = true; const cam = this.cameras.main, x = Math.round(pl.x - n.ox), y = Math.round(pl.y - n.oy);
     S.map = n.to; S.x = x; S.y = y; S.dir = pl.dir;

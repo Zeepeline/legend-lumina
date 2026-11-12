@@ -40,7 +40,7 @@ Object.assign(World.prototype, {
     const E = this.envCfg = ENV[this.M.id]; if (!E || G.title) return;
     const A = this.anims; if (!A.exists('cr_bird_f')) { for (const k of ['cr_bird', 'cr_fly', 'cr_rabbit', 'cr_squirrel', 'cr_deer']) A.create({ key: k + '_f', frames: A.generateFrameNumbers ? [{ key: k, frame: 0 }, { key: k, frame: 1 }] : [], frameRate: k === 'cr_bird' ? 10 : k === 'cr_fly' ? 8 : 6, repeat: -1 }); }
     const M = this.M, cam = this.cameras.main;
-    const near = (r = 220) => [clamp(this.pl.x + rnd(-r, r), 40, M.w - 40), clamp(this.pl.y + rnd(-r, r), 60, M.h - 40)];
+    const near = (r = 220) => { const p = this.pl && this.pl.active ? this.pl : this.pl0; return [clamp(p.x + rnd(-r, r), 40, M.w - 40), clamp(p.y + rnd(-r, r), 60, M.h - 40)]; };
     this.ambNear = near;
     for (let i = 0; i < (E.bird || 0); i++) this.addBird(...near(260));
     for (let i = 0; i < (E.fly || 0); i++) this.addFly(...near(240));

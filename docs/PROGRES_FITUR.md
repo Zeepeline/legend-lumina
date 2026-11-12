@@ -228,6 +228,7 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~B~~ | ✅ Tanah per chunk 64 px (masuk wilayah Hutan Dalam 1,9 dtk → 0,19 dtk; memori tanah maks ±26 MB vs ±93 MB), bayangan diindeks (33,6 → 4,5 ms/potongan), tabrakan gua/kolam digabung vertikal. Atlas tidak dikerjakan: Phaser 3.80 sudah menggabungkan 16 tekstur per batch & culling menyisakan ±150 objek | — |
 | C1 | ✅ Tahap 1 dunia terbuka: 13 sambungan tepi (26 arah) tanpa layar hitam; wilayah tetangga terlihat di tepi; kamera menyambung | — |
 | C2 | ✅ Posisi global benua tanpa tumpang tindih (`WORLD_POS`), 7 medan peralihan otomatis (termasuk Dataran Senja 3.368 px), jalan & monster peralihan | Wilayah aktif masih berganti per scene (jeda singkat); tanah antarwilayah belum dibaur |
+| C2b | ✅ Wilayah sekitar berjalan bersamaan (NPC & monster tetangga hidup & terlihat), menyeberang = serah-terima tanpa memuat ulang | Wilayah baru dimuat saat didekati (jeda kecil ±0,1 dtk saat memuat); batas pohon & tepi dunia belum dibuka |
 | C3 | Stamina, lari cepat, memanjat tebing, meluncur | — |
 | C4 | Menara pandang, koleksi tersebar, teka-teki dunia | — |
 | ~~23~~ | ✅ selesai: 74, 169, 497, 418, 181/183, 442, 40 | Skala & Margin Tombol Kustom, Magnet Koin, Dapur Rumah, Pewarna Bunga, Goblin Taktis, Kurir Kilat, & Balai Lelang |

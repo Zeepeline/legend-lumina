@@ -6,9 +6,11 @@ class World extends Phaser.Scene {
   create(data) {
     if (!this.textures.exists('cat0')) buildTextures(this);
     if (!HUD) buildHud(ICONS);
-    G.scene = this;
+    const P = this.passive = !!data.passive; // wilayah pasif: berjalan di belakang wilayah aktif (systems/regions.js)
+    if (!P) G.scene = this;
     const M = this.M = MAPS[data.map || 'village'];
-    S.seen[M.id] = 1;
+    if (!P) S.seen[M.id] = 1;
+    this.pl0 = { x: data.x || S.x, y: data.y || S.y }; // titik masuk (dipakai sistem yang berjalan sebelum pemain dibuat)
     this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.qArrow = null; this.qStar = null; this.qGoal = null; this.iHint = null; this.eBar = null; this.miniFor = null; if (!G.title) { attrInit(); updToolBtns(); } this.secrets = []; this.fogT = 0; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.initGround(data); // tanah per chunk (systems/stream.js)
@@ -37,7 +39,7 @@ class World extends Phaser.Scene {
     if (WARPS[M.id]) this.spawnWarp();
     this.spawnCh4(); this.spawnCh5(); this.spawnAmbient();
     // simpan otomatis
-    if (!G.title) { this.time.delayedCall(1200, () => { if (!G.lock && !this.pl.dead) saveGame(this); }); this.time.addEvent({ delay: 45000, loop: true, callback: () => { if (!G.lock && !this.pl.dead && !this.curBoss && !this.trans) { saveGame(this); autoSaveIcon(); } } }); }
+    if (!G.title && !P) { this.time.delayedCall(1200, () => { if (!G.lock && !this.pl.dead) saveGame(this); }); this.time.addEvent({ delay: 45000, loop: true, callback: () => { if (this === G.scene && !G.lock && !this.pl.dead && !this.curBoss && !this.trans) { saveGame(this); autoSaveIcon(); } } }); }
     if (M.iceGate && S.stage < 12) this.spawnIceGate();
     for (const c of M.chests || []) if (!c.needFlag || S.flags[c.needFlag]) this.spawnChest(c);
     if (M.crystal) this.spawnCrystal();
@@ -60,7 +62,7 @@ class World extends Phaser.Scene {
     for (const a of M.animals || []) this.spawnCritter(a);
     for (let i = 0; i < (M.butterflies || 0); i++) this.spawnFly(i);
     for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2]);
-    this.initSecrets(); this.spawnHome(); this.spawnRanch(); this.spawnSeason(); this.initPolish();
+    this.initSecrets(); this.spawnHome(); this.spawnRanch(); if (!P) { this.spawnSeason(); this.initPolish(); }
     if (!G.title && isNight() && (M.id === 'forest' || M.id === 'meadow')) for (let i = 0; i < 4; i++) { const P = M.paths[(i * 3 + 2) % M.paths.length]; this.spawnEnemy('wisp', (P[0] + P[2]) / 2 + rnd(-30, 30), (P[1] + P[3]) / 2 + rnd(-20, 20)); }
     // pemain
     const pl = this.pl = this.physics.add.sprite(data.x || S.x, data.y || S.y, 'ch_hero', (data.dir === 'left' || data.dir === 'right' ? 'side' : data.dir || 'down') + '0').setOrigin(.5, 1);
@@ -72,16 +74,8 @@ class World extends Phaser.Scene {
     for (const e of this.enemies) if (e.D.ai === 'turret') this.physics.add.collider(pl, e.spr);
     this.sword = this.add.image(0, 0, 'sword0').setOrigin(.1, .5).setVisible(false);
     this.bars = this.add.graphics().setDepth(1e5);
-    if (M.dark) this.dark = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5);
-    else if (!M.indoor) { this.night = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5); this.glows = this.lights.filter(L => !L.small).map(L => this.add.image(L.x, L.y, L.big ? 'nlL' : 'nlW').setTint(0xffc870).setBlendMode(Phaser.BlendModes.ADD).setDepth(2.01e5).setAlpha(0)); }
-    if (S.pet && !M.indoor && !G.title) { this.pet = this.add.sprite(pl.x - 14, pl.y, 'cat2', 0).setOrigin(.5, 1); this.pet.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.18).setScale(.8, .7); } else this.pet = null;
     this.weather = M.id === 'swamp' ? 'fog' : (!M.indoor && !M.dark && !G.title && hash(S.day, M.w, Math.floor(S.time / 6)) < .25) ? 'rain' : 'clear';
-    if (this.weather === 'rain') this.add.particles(0, 0, 'rain', { x: { min: -40, max: VW + 40 }, y: -10, lifespan: 700, speedY: { min: 300, max: 360 }, speedX: { min: -70, max: -50 }, alpha: { start: .7, end: .3 }, frequency: 12, quantity: 2 }).setScrollFactor(0).setDepth(1.95e5);
-    if (this.weather === 'fog') this.add.particles(0, 0, 'fog', { x: { min: -60, max: VW + 60 }, y: { min: -20, max: VH + 20 }, lifespan: 9000, speedX: { min: 4, max: 12 }, scale: { start: 1.6, end: 2.4 }, alpha: { start: 0, end: .2, ease: 'Sine.inOut' }, frequency: 500 }).setScrollFactor(0).setDepth(1.95e5);
-    // partikel suasana
-    const amb = this.weather === 'rain' ? null : { forest: ['leaf', 0xffffff, 900], meadow: ['petal', 0xffffff, 700], village: ['petal', 0xffffff, 1600], cave: ['dot', 0xb8a8ff, 500], swamp: ['dot', 0xa0ffc0, 600], snow: ['dot', 0xffffff, 220] }[M.id];
-    const motes = M.id === 'cave' || M.id === 'swamp';
-    if (amb && !G.title) this.add.particles(0, 0, amb[0], { x: { min: -20, max: VW + 20 }, y: motes ? { min: 0, max: VH } : -8, lifespan: 6000, speedY: motes ? { min: -6, max: 6 } : { min: 14, max: 28 }, speedX: { min: -14, max: 6 }, rotate: { min: 0, max: 360 }, alpha: motes ? { start: .7, end: 0 } : 1, tint: amb[1], frequency: amb[2] }).setScrollFactor(0).setDepth(1.9e5);
+    if (!P) this.makeActiveFx();
     // kamera
     const cam = this.cameras.main; cam.setBounds(0, 0, M.w, M.h); cam.setRoundPixels(true);
     this.camFollow = !G.title;
@@ -93,12 +87,28 @@ class World extends Phaser.Scene {
     this.cullL = []; this.time.delayedCall(0, () => this.initCull());
     this.events.once('shutdown', () => this.events.off('postupdate', this.camStep, this));
     this.mpT = 0;
+    if (P) { this.initPassive(data); return; }
     playBGM(G.title ? 'town' : this.weather === 'rain' ? null : bgmFor(M));
     if (!G.title) achCheck(this);
     FADE.style.opacity = 0;
     if (!G.title) { updHud(); showHud(true); if (!data.quiet) banner(M.name, M.id === 'village' ? 'SELAMAT DATANG DI' : 'MEMASUKI'); }
     if (data.after) data.after(this);
   }
+  // efek layar milik wilayah aktif saja: lapisan gelap/malam, cuaca, partikel suasana, hewan peliharaan
+  makeActiveFx() {
+    const M = this.M, pl = this.pl, before = new Set(this.children.list);
+    if (M.dark) this.dark = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5);
+    else if (!M.indoor) { this.night = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5); this.glows = this.lights.filter(L => !L.small).map(L => this.add.image(L.x, L.y, L.big ? 'nlL' : 'nlW').setTint(0xffc870).setBlendMode(Phaser.BlendModes.ADD).setDepth(2.01e5).setAlpha(0)); }
+    if (S.pet && !M.indoor && !G.title) { this.pet = this.add.sprite(pl.x - 14, pl.y, 'cat2', 0).setOrigin(.5, 1); this.pet.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.18).setScale(.8, .7); } else this.pet = null;
+    if (this.weather === 'rain') this.add.particles(0, 0, 'rain', { x: { min: -40, max: VW + 40 }, y: -10, lifespan: 700, speedY: { min: 300, max: 360 }, speedX: { min: -70, max: -50 }, alpha: { start: .7, end: .3 }, frequency: 12, quantity: 2 }).setScrollFactor(0).setDepth(1.95e5);
+    if (this.weather === 'fog') this.add.particles(0, 0, 'fog', { x: { min: -60, max: VW + 60 }, y: { min: -20, max: VH + 20 }, lifespan: 9000, speedX: { min: 4, max: 12 }, scale: { start: 1.6, end: 2.4 }, alpha: { start: 0, end: .2, ease: 'Sine.inOut' }, frequency: 500 }).setScrollFactor(0).setDepth(1.95e5);
+    // partikel suasana
+    const amb = this.weather === 'rain' ? null : { forest: ['leaf', 0xffffff, 900], meadow: ['petal', 0xffffff, 700], village: ['petal', 0xffffff, 1600], cave: ['dot', 0xb8a8ff, 500], swamp: ['dot', 0xa0ffc0, 600], snow: ['dot', 0xffffff, 220] }[M.id];
+    const motes = M.id === 'cave' || M.id === 'swamp';
+    if (amb && !G.title) this.add.particles(0, 0, amb[0], { x: { min: -20, max: VW + 20 }, y: motes ? { min: 0, max: VH } : -8, lifespan: 6000, speedY: motes ? { min: -6, max: 6 } : { min: 14, max: 28 }, speedX: { min: -14, max: 6 }, rotate: { min: 0, max: 360 }, alpha: motes ? { start: .7, end: 0 } : 1, tint: amb[1], frequency: amb[2] }).setScrollFactor(0).setDepth(1.9e5);
+    this.fxObjs = this.children.list.filter(o => !before.has(o));
+  }
+  dropActiveFx() { for (const o of this.fxObjs || []) if (o.active) o.destroy(); this.fxObjs = []; this.dark = this.night = this.pet = null; this.glows = null; }
   wall(x, y, w, h) { const z = new Phaser.GameObjects.Zone(this, x + w / 2, y + h / 2, w, h); this.physics.add.existing(z, true); this.walls.add(z); return z; } // tidak masuk daftar tampilan (hemat pengurutan)
   shadow(x, y, rx, ry) { this.add.image(x + 1, y, 'shadowb').setDisplaySize(rx * 2.4, ry * 2.6).setAlpha(this.M.dark ? .5 : .32).setDepth(-9e5); }
   spawnObj(o) {
@@ -782,6 +792,7 @@ class World extends Phaser.Scene {
     // hit-stop: dunia membeku sesaat saat pukulan kena (lihat hitStop() di systems/combat.js)
     if (this.hsT > 0) { this.hsT -= Math.min(dms, 50) / 1000; if (this.hsT > 0) return; this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1; }
     const dt = this.dt = Math.min(dms, 50) / 1000; this.t += dt;
+    if (this.passive) return this.updPassive(dt);
     this.pump();
     const pl = this.pl;
     if (G.title) { this.cx = 250 + Math.sin(this.t * .12) * 200; this.cy = 150 + Math.sin(this.t * .09) * 60; }
@@ -819,7 +830,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround(); this.updCross();
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround(); this.updRegions(dt); this.updCross();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       // Akumulasi waktu bermain riil (Fitur #25)

@@ -5031,7 +5031,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.26.0';
+const GAME_VERSION = '1.27.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
@@ -5706,9 +5706,11 @@ class World extends Phaser.Scene {
   create(data) {
     if (!this.textures.exists('cat0')) buildTextures(this);
     if (!HUD) buildHud(ICONS);
-    G.scene = this;
+    const P = this.passive = !!data.passive; // wilayah pasif: berjalan di belakang wilayah aktif (systems/regions.js)
+    if (!P) G.scene = this;
     const M = this.M = MAPS[data.map || 'village'];
-    S.seen[M.id] = 1;
+    if (!P) S.seen[M.id] = 1;
+    this.pl0 = { x: data.x || S.x, y: data.y || S.y }; // titik masuk (dipakai sistem yang berjalan sebelum pemain dibuat)
     this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.qArrow = null; this.qStar = null; this.qGoal = null; this.iHint = null; this.eBar = null; this.miniFor = null; if (!G.title) { attrInit(); updToolBtns(); } this.secrets = []; this.fogT = 0; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
     this.initGround(data); // tanah per chunk (systems/stream.js)
@@ -5737,7 +5739,7 @@ class World extends Phaser.Scene {
     if (WARPS[M.id]) this.spawnWarp();
     this.spawnCh4(); this.spawnCh5(); this.spawnAmbient();
     // simpan otomatis
-    if (!G.title) { this.time.delayedCall(1200, () => { if (!G.lock && !this.pl.dead) saveGame(this); }); this.time.addEvent({ delay: 45000, loop: true, callback: () => { if (!G.lock && !this.pl.dead && !this.curBoss && !this.trans) { saveGame(this); autoSaveIcon(); } } }); }
+    if (!G.title && !P) { this.time.delayedCall(1200, () => { if (!G.lock && !this.pl.dead) saveGame(this); }); this.time.addEvent({ delay: 45000, loop: true, callback: () => { if (this === G.scene && !G.lock && !this.pl.dead && !this.curBoss && !this.trans) { saveGame(this); autoSaveIcon(); } } }); }
     if (M.iceGate && S.stage < 12) this.spawnIceGate();
     for (const c of M.chests || []) if (!c.needFlag || S.flags[c.needFlag]) this.spawnChest(c);
     if (M.crystal) this.spawnCrystal();
@@ -5760,7 +5762,7 @@ class World extends Phaser.Scene {
     for (const a of M.animals || []) this.spawnCritter(a);
     for (let i = 0; i < (M.butterflies || 0); i++) this.spawnFly(i);
     for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2]);
-    this.initSecrets(); this.spawnHome(); this.spawnRanch(); this.spawnSeason(); this.initPolish();
+    this.initSecrets(); this.spawnHome(); this.spawnRanch(); if (!P) { this.spawnSeason(); this.initPolish(); }
     if (!G.title && isNight() && (M.id === 'forest' || M.id === 'meadow')) for (let i = 0; i < 4; i++) { const P = M.paths[(i * 3 + 2) % M.paths.length]; this.spawnEnemy('wisp', (P[0] + P[2]) / 2 + rnd(-30, 30), (P[1] + P[3]) / 2 + rnd(-20, 20)); }
     // pemain
     const pl = this.pl = this.physics.add.sprite(data.x || S.x, data.y || S.y, 'ch_hero', (data.dir === 'left' || data.dir === 'right' ? 'side' : data.dir || 'down') + '0').setOrigin(.5, 1);
@@ -5772,16 +5774,8 @@ class World extends Phaser.Scene {
     for (const e of this.enemies) if (e.D.ai === 'turret') this.physics.add.collider(pl, e.spr);
     this.sword = this.add.image(0, 0, 'sword0').setOrigin(.1, .5).setVisible(false);
     this.bars = this.add.graphics().setDepth(1e5);
-    if (M.dark) this.dark = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5);
-    else if (!M.indoor) { this.night = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5); this.glows = this.lights.filter(L => !L.small).map(L => this.add.image(L.x, L.y, L.big ? 'nlL' : 'nlW').setTint(0xffc870).setBlendMode(Phaser.BlendModes.ADD).setDepth(2.01e5).setAlpha(0)); }
-    if (S.pet && !M.indoor && !G.title) { this.pet = this.add.sprite(pl.x - 14, pl.y, 'cat2', 0).setOrigin(.5, 1); this.pet.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.18).setScale(.8, .7); } else this.pet = null;
     this.weather = M.id === 'swamp' ? 'fog' : (!M.indoor && !M.dark && !G.title && hash(S.day, M.w, Math.floor(S.time / 6)) < .25) ? 'rain' : 'clear';
-    if (this.weather === 'rain') this.add.particles(0, 0, 'rain', { x: { min: -40, max: VW + 40 }, y: -10, lifespan: 700, speedY: { min: 300, max: 360 }, speedX: { min: -70, max: -50 }, alpha: { start: .7, end: .3 }, frequency: 12, quantity: 2 }).setScrollFactor(0).setDepth(1.95e5);
-    if (this.weather === 'fog') this.add.particles(0, 0, 'fog', { x: { min: -60, max: VW + 60 }, y: { min: -20, max: VH + 20 }, lifespan: 9000, speedX: { min: 4, max: 12 }, scale: { start: 1.6, end: 2.4 }, alpha: { start: 0, end: .2, ease: 'Sine.inOut' }, frequency: 500 }).setScrollFactor(0).setDepth(1.95e5);
-    // partikel suasana
-    const amb = this.weather === 'rain' ? null : { forest: ['leaf', 0xffffff, 900], meadow: ['petal', 0xffffff, 700], village: ['petal', 0xffffff, 1600], cave: ['dot', 0xb8a8ff, 500], swamp: ['dot', 0xa0ffc0, 600], snow: ['dot', 0xffffff, 220] }[M.id];
-    const motes = M.id === 'cave' || M.id === 'swamp';
-    if (amb && !G.title) this.add.particles(0, 0, amb[0], { x: { min: -20, max: VW + 20 }, y: motes ? { min: 0, max: VH } : -8, lifespan: 6000, speedY: motes ? { min: -6, max: 6 } : { min: 14, max: 28 }, speedX: { min: -14, max: 6 }, rotate: { min: 0, max: 360 }, alpha: motes ? { start: .7, end: 0 } : 1, tint: amb[1], frequency: amb[2] }).setScrollFactor(0).setDepth(1.9e5);
+    if (!P) this.makeActiveFx();
     // kamera
     const cam = this.cameras.main; cam.setBounds(0, 0, M.w, M.h); cam.setRoundPixels(true);
     this.camFollow = !G.title;
@@ -5793,12 +5787,28 @@ class World extends Phaser.Scene {
     this.cullL = []; this.time.delayedCall(0, () => this.initCull());
     this.events.once('shutdown', () => this.events.off('postupdate', this.camStep, this));
     this.mpT = 0;
+    if (P) { this.initPassive(data); return; }
     playBGM(G.title ? 'town' : this.weather === 'rain' ? null : bgmFor(M));
     if (!G.title) achCheck(this);
     FADE.style.opacity = 0;
     if (!G.title) { updHud(); showHud(true); if (!data.quiet) banner(M.name, M.id === 'village' ? 'SELAMAT DATANG DI' : 'MEMASUKI'); }
     if (data.after) data.after(this);
   }
+  // efek layar milik wilayah aktif saja: lapisan gelap/malam, cuaca, partikel suasana, hewan peliharaan
+  makeActiveFx() {
+    const M = this.M, pl = this.pl, before = new Set(this.children.list);
+    if (M.dark) this.dark = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5);
+    else if (!M.indoor) { this.night = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5); this.glows = this.lights.filter(L => !L.small).map(L => this.add.image(L.x, L.y, L.big ? 'nlL' : 'nlW').setTint(0xffc870).setBlendMode(Phaser.BlendModes.ADD).setDepth(2.01e5).setAlpha(0)); }
+    if (S.pet && !M.indoor && !G.title) { this.pet = this.add.sprite(pl.x - 14, pl.y, 'cat2', 0).setOrigin(.5, 1); this.pet.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.18).setScale(.8, .7); } else this.pet = null;
+    if (this.weather === 'rain') this.add.particles(0, 0, 'rain', { x: { min: -40, max: VW + 40 }, y: -10, lifespan: 700, speedY: { min: 300, max: 360 }, speedX: { min: -70, max: -50 }, alpha: { start: .7, end: .3 }, frequency: 12, quantity: 2 }).setScrollFactor(0).setDepth(1.95e5);
+    if (this.weather === 'fog') this.add.particles(0, 0, 'fog', { x: { min: -60, max: VW + 60 }, y: { min: -20, max: VH + 20 }, lifespan: 9000, speedX: { min: 4, max: 12 }, scale: { start: 1.6, end: 2.4 }, alpha: { start: 0, end: .2, ease: 'Sine.inOut' }, frequency: 500 }).setScrollFactor(0).setDepth(1.95e5);
+    // partikel suasana
+    const amb = this.weather === 'rain' ? null : { forest: ['leaf', 0xffffff, 900], meadow: ['petal', 0xffffff, 700], village: ['petal', 0xffffff, 1600], cave: ['dot', 0xb8a8ff, 500], swamp: ['dot', 0xa0ffc0, 600], snow: ['dot', 0xffffff, 220] }[M.id];
+    const motes = M.id === 'cave' || M.id === 'swamp';
+    if (amb && !G.title) this.add.particles(0, 0, amb[0], { x: { min: -20, max: VW + 20 }, y: motes ? { min: 0, max: VH } : -8, lifespan: 6000, speedY: motes ? { min: -6, max: 6 } : { min: 14, max: 28 }, speedX: { min: -14, max: 6 }, rotate: { min: 0, max: 360 }, alpha: motes ? { start: .7, end: 0 } : 1, tint: amb[1], frequency: amb[2] }).setScrollFactor(0).setDepth(1.9e5);
+    this.fxObjs = this.children.list.filter(o => !before.has(o));
+  }
+  dropActiveFx() { for (const o of this.fxObjs || []) if (o.active) o.destroy(); this.fxObjs = []; this.dark = this.night = this.pet = null; this.glows = null; }
   wall(x, y, w, h) { const z = new Phaser.GameObjects.Zone(this, x + w / 2, y + h / 2, w, h); this.physics.add.existing(z, true); this.walls.add(z); return z; } // tidak masuk daftar tampilan (hemat pengurutan)
   shadow(x, y, rx, ry) { this.add.image(x + 1, y, 'shadowb').setDisplaySize(rx * 2.4, ry * 2.6).setAlpha(this.M.dark ? .5 : .32).setDepth(-9e5); }
   spawnObj(o) {
@@ -6482,6 +6492,7 @@ class World extends Phaser.Scene {
     // hit-stop: dunia membeku sesaat saat pukulan kena (lihat hitStop() di systems/combat.js)
     if (this.hsT > 0) { this.hsT -= Math.min(dms, 50) / 1000; if (this.hsT > 0) return; this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1; }
     const dt = this.dt = Math.min(dms, 50) / 1000; this.t += dt;
+    if (this.passive) return this.updPassive(dt);
     this.pump();
     const pl = this.pl;
     if (G.title) { this.cx = 250 + Math.sin(this.t * .12) * 200; this.cy = 150 + Math.sin(this.t * .09) * 60; }
@@ -6519,7 +6530,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround(); this.updCross();
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround(); this.updRegions(dt); this.updCross();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       // Akumulasi waktu bermain riil (Fitur #25)
@@ -7157,7 +7168,7 @@ Object.assign(World.prototype, {
     const E = this.envCfg = ENV[this.M.id]; if (!E || G.title) return;
     const A = this.anims; if (!A.exists('cr_bird_f')) { for (const k of ['cr_bird', 'cr_fly', 'cr_rabbit', 'cr_squirrel', 'cr_deer']) A.create({ key: k + '_f', frames: A.generateFrameNumbers ? [{ key: k, frame: 0 }, { key: k, frame: 1 }] : [], frameRate: k === 'cr_bird' ? 10 : k === 'cr_fly' ? 8 : 6, repeat: -1 }); }
     const M = this.M, cam = this.cameras.main;
-    const near = (r = 220) => [clamp(this.pl.x + rnd(-r, r), 40, M.w - 40), clamp(this.pl.y + rnd(-r, r), 60, M.h - 40)];
+    const near = (r = 220) => { const p = this.pl && this.pl.active ? this.pl : this.pl0; return [clamp(p.x + rnd(-r, r), 40, M.w - 40), clamp(p.y + rnd(-r, r), 60, M.h - 40)]; };
     this.ambNear = near;
     for (let i = 0; i < (E.bird || 0); i++) this.addBird(...near(260));
     for (let i = 0; i < (E.fly || 0); i++) this.addFly(...near(240));
@@ -16136,7 +16147,8 @@ Object.assign(World.prototype, {
   initOpen(data) {
     const M = this.M; this.owN = []; this.owObjs = [];
     this.camB = { x0: 0, y0: 0, x1: M.w, y1: M.h };
-    if (G.title || M.indoor || !NEIGH[M.id] || !this.gStream) return;
+    if (G.title || M.indoor || !NEIGH[M.id] || !this.gStream || this.passive) return;
+    if (regionsOn()) { this.owN = NEIGH[M.id].slice(); this.cameras.main.setBackgroundColor('rgba(0,0,0,0)'); this.regT = 0; return; } // wilayah tetangga dijalankan systems/regions.js
     for (const n of NEIGH[M.id]) {
       const B = MAPS[n.to]; this.owN.push(n);
       this.gL.push(gLayer(B, n.ox, n.oy));
@@ -16163,7 +16175,7 @@ Object.assign(World.prototype, {
   owSeamless(ex) { return this.owN && this.owN.some(n => n.ex === ex); },
   updCross() {
     if (!this.owN || !this.owN.length || this.trans || G.lock || this.bossOn) return;
-    const pl = this.pl, M = this.M; if (pl.x >= 0 && pl.x <= M.w && pl.y >= 0 && pl.y <= M.h) return;
+    const pl = this.pl, M = this.M, m = 6; if (pl.x >= -m && pl.x <= M.w + m && pl.y >= -m && pl.y <= M.h + m) return; // jarak aman: tidak memantul di garis batas
     const n = this.owN.find(n => { const B = MAPS[n.to]; return pl.x >= n.ox && pl.x <= n.ox + B.w && pl.y >= n.oy && pl.y <= n.oy + B.h; });
     const back = () => pl.setPosition(clamp(pl.x, 4, M.w - 4), clamp(pl.y, 4, M.h - 4));
     // hanya lewat celah pintu tepi (di luar itu ada pagar/rumah/pohon wilayah sebelah)
@@ -16172,12 +16184,110 @@ Object.assign(World.prototype, {
     // awal cerita: penjaga melarang ke hutan (juga lewat medan peralihan menuju hutan)
     const toForest = n.to === 'forest' || (MAPS[n.to].peralihan && MAPS[n.to].peralihan.includes('forest') && M.id === 'village');
     if (toForest && S.stage === 0) { back(); this.guardStop(); return; }
+    // wilayah tujuan sudah berjalan: serah-terima kendali (tanpa memuat ulang)
+    const R = REG.get(n.to); if (R && R.sys && R.pl) { this.owHandoff(R); return; }
     // ganti wilayah aktif tanpa layar hitam: posisi & kamera dipindah ke koordinat wilayah baru
     this.trans = true; const cam = this.cameras.main, x = Math.round(pl.x - n.ox), y = Math.round(pl.y - n.oy);
     S.map = n.to; S.x = x; S.y = y; S.dir = pl.dir;
     this.scene.restart({ map: n.to, x, y, dir: pl.dir, seamless: true, quiet: false, cam: { x: cam.scrollX - n.ox, y: cam.scrollY - n.oy } });
   },
 });
+
+'use strict';
+// Dunia satu peta (langkah 1): wilayah di sekitar Arka berjalan BERSAMAAN sebagai scene World pasif
+// (NPC, monster, hewan hidup; kamera diselaraskan dengan WORLD_POS). Hanya wilayah aktif (G.scene) yang
+// memegang pemain, input, HUD, musik, waktu & efek layar. Menyeberang = serah-terima kendali ke wilayah
+// yang sudah berjalan, tanpa memuat ulang. Tiap wilayah tetap memakai koordinat lokalnya (skrip cerita aman).
+const REG_LOAD = 640, REG_KEEP = 1100, REG_MAX = 5;
+const REG = new Map(); // id peta → scene pasif
+let regSeq = 0;
+function regionsOn() { return !window.REGIONS_OFF; }
+function wposOf(id) { return WORLD_POS[id]; }
+function relXY(from, to) { const a = wposOf(from.M.id), b = wposOf(to.M.id); return [a[0] - b[0], a[1] - b[1]]; } // titik di `from` → koordinat `to`
+function removeRegions(except) { for (const [id, s] of REG) { if (s === except) continue; REG.delete(id); try { s.scene.remove(); } catch (_) { } } }
+Object.assign(World.prototype, {
+  // ---- wilayah pasif ----
+  initPassive(data) {
+    const pl = this.pl; pl.ghost = true; pl.setVisible(false); pl.sh.setVisible(false); pl.body.enable = false;
+    this.camFollow = false; const cam = this.cameras.main; cam.removeBounds(); cam.transparent = true; cam.setBackgroundColor('rgba(0,0,0,0)');
+    if (data.cam) { this.cx = data.cam.x; this.cy = data.cam.y; cam.setScroll(Math.round(this.cx), Math.round(this.cy)); }
+    this.scene.sendToBack();
+  },
+  updPassive(dt) {
+    const A = G.scene; if (!A || A === this || !A.pl || !A.M || !wposOf(A.M.id)) return;
+    const [dx, dy] = relXY(A, this), pl = this.pl, ap = A.pl;
+    pl.x = ap.x + dx; pl.y = ap.y + dy; pl.dead = ap.dead; pl.inv = ap.inv; pl.dir = ap.dir;
+    const locked = !!UIH || G.lock > 0 || A.trans || G.title;
+    for (const o of this.npcs) this.updNpc(o, dt, locked);
+    for (const c of this.critters) this.updCritter(c, dt);
+    for (const e of this.enemies) if (e.hp > 0) { this.updEnemy(e, dt, locked); this.updFeel(e, dt, locked); }
+    this.enemies = this.enemies.filter(e => e.hp > 0);
+    this.updShots(dt, locked); this.updPicks(dt);
+    this.bars.clear();
+    for (const e of this.enemies) if (!e.boss && e.hp > 0 && e.hp < e.max) { const w = 16, x = Math.round(e.spr.x - w / 2), y = Math.round(e.spr.y - e.spr.displayHeight - 4 - (e.D.fly ? 10 : 0)); this.bars.fillStyle(0x1a0a0a, .85).fillRect(x - 1, y - 1, w + 2, 4); this.bars.fillStyle(0xff5a4a, 1).fillRect(x, y, Math.ceil(w * e.hp / e.max), 2); }
+    if (this.garden) this.updGarden();
+    this.updRanch(dt); this.updGround(); this.updCull();
+  },
+  // ---- wilayah aktif: muat/buang wilayah di sekitar & selaraskan kamera ----
+  updRegions(dt) {
+    if (!regionsOn() || this.passive || G.title || this.M.indoor || !wposOf(this.M.id)) return;
+    this.regT = (this.regT || 0) - dt;
+    if (this.regT <= 0) {
+      this.regT = .3; const P = wposOf(this.M.id), gx = P[0] + this.pl.x, gy = P[1] + this.pl.y;
+      const dist = id => { const W = wposOf(id), M = MAPS[id]; return Math.hypot(Math.max(W[0] - gx, 0, gx - W[0] - M.w), Math.max(W[1] - gy, 0, gy - W[1] - M.h)); };
+      for (const [id, s] of REG) if (id === this.M.id || dist(id) > REG_KEEP || !s.sys) { REG.delete(id); if (s !== this) try { s.scene.remove(); } catch (_) { } }
+      const want = Object.keys(WORLD_POS).filter(id => id !== this.M.id && MAPS[id] && !MAPS[id].indoor && !REG.has(id) && dist(id) < REG_LOAD).sort((a, b) => dist(a) - dist(b));
+      if (want.length && REG.size < REG_MAX) this.addRegion(want[0]); // satu per giliran agar tidak tersendat
+      this.regBounds();
+    }
+    // kamera wilayah pasif mengikuti kamera aktif (posisi global sama)
+    const cam = this.cameras.main;
+    for (const s of REG.values()) { if (!s.sys || !s.cameras) continue; const [dx, dy] = relXY(this, s); s.cameras.main.setScroll(cam.scrollX + dx, cam.scrollY + dy); }
+  },
+  addRegion(id) {
+    const key = 'R' + (++regSeq) + '_' + id, sc = new World(); sc.sys.settings.key = key;
+    const [dx, dy] = relXY(this, { M: MAPS[id] }), cam = this.cameras.main;
+    this.scene.add(key, sc, true, { map: id, passive: true, x: this.pl.x + dx, y: this.pl.y + dy, dir: 'down', cam: { x: cam.scrollX + dx, y: cam.scrollY + dy }, quiet: true });
+    REG.set(id, sc);
+  },
+  // batas kamera & dunia fisika = gabungan wilayah aktif + wilayah yang termuat (koordinat lokal aktif)
+  regBounds() {
+    const M = this.M, b = { x0: 0, y0: 0, x1: M.w, y1: M.h };
+    for (const s of REG.values()) { if (!s.M) continue; const [dx, dy] = relXY(s, this); b.x0 = Math.min(b.x0, dx); b.y0 = Math.min(b.y0, dy); b.x1 = Math.max(b.x1, dx + s.M.w); b.y1 = Math.max(b.y1, dy + s.M.h); }
+    this.camB = b; this.physics.world.setBounds(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0);
+  },
+  // ---- serah-terima kendali ke wilayah yang sudah berjalan ----
+  owHandoff(B) {
+    const A = this, cam = A.cameras.main, [dx, dy] = relXY(A, B), ap = A.pl, bp = B.pl;
+    // pemain pindah ke B
+    bp.setPosition(ap.x + dx, ap.y + dy); bp.dir = ap.dir; bp.flipX = ap.flipX; bp.ghost = false; bp.setVisible(true); bp.sh.setVisible(true); bp.body.enable = true;
+    for (const k of ['atkCd', 'atkT', 'inv', 'kb', 'kbx', 'kby', 'dashT', 'dvx', 'dvy', 'dead']) bp[k] = ap[k];
+    bp.setVelocity(ap.body.velocity.x, ap.body.velocity.y); if (ap.anims.currentAnim) bp.play(ap.anims.currentAnim.key, true); else bp.setFrame(ap.frame.name);
+    // A menjadi pasif
+    ap.ghost = true; ap.setVisible(false); ap.sh.setVisible(false); ap.setVelocity(0); ap.body.enable = false;
+    A.dropActiveFx(); for (const k of ['seaOv', 'seaW', 'seaP']) if (A[k]) { A[k].destroy(); A[k] = null; }
+    if (A.iHint) A.iHint.setVisible(false); if (A.qArrow) { A.qArrow.setVisible(false); A.qStar.setVisible(false); } if (A.lockR) A.lockR.setVisible(false); A.aimG.clear();
+    A.passive = true; A.camFollow = false; A.cameras.main.removeBounds(); A.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
+    // B menjadi aktif
+    REG.delete(B.M.id); REG.set(A.M.id, A);
+    B.passive = false; G.scene = B; B.trans = false; B.mpT = 0; B.owN = (NEIGH[B.M.id] || []).slice(); // sambungan mulus wilayah baru
+    S.map = B.M.id; S.seen[B.M.id] = 1; S.x = Math.round(bp.x); S.y = Math.round(bp.y); S.dir = bp.dir;
+    B.makeActiveFx(); B.spawnSeason(); B.initPolish();
+    B.camFollow = true; B.cx = cam.scrollX + dx; B.cy = cam.scrollY + dy; B.cameras.main.setScroll(Math.round(B.cx), Math.round(B.cy));
+    B.scene.bringToTop(); B.regT = 0; B.regBounds();
+    if (B.weather !== 'rain') playBGM(bgmFor(B.M)); banner(B.M.name, 'MEMASUKI'); updHud(); achCheck(B);
+  },
+});
+// serangan monster wilayah pasif mengenai Arka di wilayah aktif
+const _hurtRegion = World.prototype.hurtPlayer;
+World.prototype.hurtPlayer = function (atk, sx, sy, fx) {
+  if (!this.passive) return _hurtRegion.apply(this, arguments);
+  const A = G.scene; if (!A || A === this || !A.M || !wposOf(A.M.id)) return; const [dx, dy] = relXY(this, A);
+  return A.hurtPlayer(atk, sx + dx, sy + dy, fx);
+};
+// wilayah aktif dimulai ulang (pintu rumah, gua, teleport, kalah): wilayah pasif dibuang
+const _gotoRegion = World.prototype.goto;
+World.prototype.goto = function () { if (!this.passive) removeRegions(this); return _gotoRegion.apply(this, arguments); };
 
 'use strict';
 // Percakapan NPC, toko, bengkel, penginapan
