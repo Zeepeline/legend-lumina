@@ -95,7 +95,7 @@ Object.assign(OBJ_SPAWN, {
         if (s.minedHp <= 0) {
           this.puff(x, y - 8);
           sfx('crit');
-          addItem('ore', rnd(1, 2));
+          addItem('ore', ri(1, 2));
           addItem('shard', 1);
           if (Math.random() < 0.35) addItem('amethyst_gem', 1);
           S.st = S.st || {}; S.st.mined = (S.st.mined || 0) + 1;
@@ -163,7 +163,7 @@ Object.assign(OBJ_SPAWN, {
         if (s.chopHp <= 0) {
           sfx('boom');
           this.camShake(100, 0.005);
-          addItem('log', rnd(3, 4));
+          addItem('log', ri(3, 4));
           S.st = S.st || {}; S.st.trees = (S.st.trees || 0) + 1;
           popWorld(x, y - 20, '+Kayu Gelondong!', 'gold');
           updHud();
@@ -205,6 +205,62 @@ Object.assign(OBJ_SPAWN, {
   },
   lamp(s, x, y, opt, d, type) {
     this.lights.push({ x, y: y - 24, big: 1 });
+  },
+  viewpoint(s, x, y, opt, d, type) {
+    this.lights.push({ x, y: y - 10 });
+    this.inter.push({
+      x, y: y + 2, r: 24,
+      fn: async () => {
+        G.lock++;
+        sfx('bell');
+        this.sparkle(x, y - 12, 'spark', 14);
+        const vid = opt?.id || (this.M.id + '_' + x + '_' + y);
+        S.viewpoints = S.viewpoints || {};
+        const isNew = !S.viewpoints[vid];
+        S.viewpoints[vid] = 1;
+        const name = opt?.name || ('Puncak ' + this.M.name);
+        // Buka kabut peta di sekitar viewpoint
+        if (typeof fogOf === 'function') {
+          const f = fogOf(this.M.id).split(''), cw = this.M.w / 20, ch = this.M.h / 20;
+          for (let cy = 0; cy < 20; cy++) for (let cx = 0; cx < 20; cx++) {
+            if (Math.hypot((cx + .5) * cw - x, (cy + .5) * ch - y) < 360) f[cy * 20 + cx] = '1';
+          }
+          S.fog[this.M.id] = f.join(''); this.miniFor = null;
+        }
+        if (isNew) {
+          S.exp += 35;
+          banner(name, 'TITIK PANDANG DITEMUKAN', true, 2000);
+          popWorld(x, y - 28, '+35 EXP · Panorama Terbuka!', 'crit');
+          sfx('save');
+          updHud();
+          await sleep(1200);
+        }
+        await say(`Kamu berdiri di ${name}. Hamparan benua Lumina terbentang luas sejauh mata memandang. Peta area ini terbuka jelas!`, 'Titik Pandang');
+        G.lock--;
+      }
+    });
+  },
+  lumina_shard(s, x, y, opt, d, type) {
+    const sid = opt?.id || (this.M.id + '_shard_' + x + '_' + y);
+    if (S.shards && S.shards[sid]) { s.destroy(); return; }
+    this.lights.push({ x, y: y - 8, big: 1 });
+    s.y -= 8;
+    this.tweens.add({ targets: s, y: s.y - 6, duration: 1200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    this.inter.push({
+      x, y, r: 18,
+      fn: async () => {
+        if (S.shards && S.shards[sid]) return;
+        S.shards = S.shards || {};
+        S.shards[sid] = 1;
+        sfx('spark');
+        this.sparkle(x, y - 8, 'spark', 16);
+        s.destroy();
+        const total = Object.keys(S.shards).length;
+        gainExp(this, 50);
+        banner(`PECAHAN LUMINA (${total})!`, '+50 EXP · Kristal Langka Ditemukan', true, 1600);
+        updHud();
+      }
+    });
   },
 });
 OBJ_SPAWN.stele = OBJ_SPAWN.sign;

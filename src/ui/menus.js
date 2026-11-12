@@ -1,18 +1,51 @@
 'use strict';
 // Menu utama, jurus, bestiari, pencapaian
 // ---------------- MENU UTAMA ----------------
+async function subMenu(head, list, w = 136) {
+  let s = 0;
+  for (; ;) {
+    const r = await choose({ head, x: 20, y: 28, w, start: s, items: list.map(([t]) => ({ t })), foot: i => list[i][1] });
+    if (r < 0 || !list[r][2]) break; s = r; await list[r][2]();
+  }
+}
 async function mainMenu(sc) {
   G.lock++; sfx('ok'); let sel = 0;
-  const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Jurnal', 'Tujuan, misteri & catatan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
-    ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Pohon Bakat', 'Keahlian Pedang, Sihir & Jelajah', () => openTalentTree()], ['Atribut', 'Bagikan poin naik level', () => openAttr()], ['Kerajinan', 'Buat ramuan, bom, panah, umpan', () => openCraft(sc)],
-    ['Buku Resep', 'Katalog resep tempa, kerajinan & masakan', () => openRecipeBook()],
-    ['Ensiklopedia', 'Katalog flora, fauna, mineral & kemajuan dunia', () => openEncyclopedia()],
-    ['Tantangan Harian', 'Aksi harian bertarung & berpetualang', () => openDailyFeats()],
-    ['Statistik & Gelar', 'Rekap petualangan & bonus gelar', () => openStatsAndTitles()],
-    ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Buku Ikan', 'Catatan & habitat fauna air', () => openFishLog(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()], ['Riwayat', 'Baca ulang percakapan terakhir', () => openDlgLog()],
-    ['Kamera Foto', 'Abadikan momen petualangan indah', () => openPhotoMode(sc)],
-    ['Simpan', 'Simpan permainan', async () => { const ok = saveGame(sc); sfx(ok ? 'save' : 'buzz'); await say(ok ? 'Permainan tersimpan.' : 'Gagal menyimpan.'); }],
-    ['Pengaturan', 'Suara, getar, layar', () => openSettings()], ['Tutup', 'Kembali bermain', null]];
+  const acts = [
+    ['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)],
+    ['Jelajah', 'Jurnal misi, peta area & riwayat percakapan', () => subMenu('JELAJAH', [
+      ['Jurnal', 'Tujuan, misteri & catatan', () => openQuests()],
+      ['Peta', 'Peta area ini', () => openMap(sc)],
+      ['Riwayat Dialog', 'Baca ulang percakapan terakhir', () => openDlgLog()],
+      ['Kembali', 'Kembali ke menu utama', null]
+    ])],
+    ['Karakter', 'Atribut, jurus sihir & pohon bakat', () => subMenu('KARAKTER', [
+      ['Atribut', 'Bagikan poin naik level', () => openAttr()],
+      ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()],
+      ['Pohon Bakat', 'Keahlian Pedang, Sihir & Jelajah', () => openTalentTree()],
+      ['Kembali', 'Kembali ke menu utama', null]
+    ])],
+    ['Kerajinan', 'Buat ramuan, bom, panah, umpan', () => openCraft(sc)],
+    ['Koleksi', 'Buku monster, ikan, resep, ensiklopedia & gelar', () => subMenu('KOLEKSI', [
+      ['Bestiari', 'Buku monster yang pernah dihadapi', () => openBestiary(sc)],
+      ['Buku Ikan', 'Catatan & habitat fauna air', () => openFishLog(sc)],
+      ['Buku Resep', 'Katalog resep tempa, kerajinan & masakan', () => openRecipeBook()],
+      ['Ensiklopedia', 'Katalog flora, fauna, mineral & kemajuan', () => openEncyclopedia()],
+      ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()],
+      ['Statistik & Gelar', 'Rekap petualangan & bonus gelar', () => openStatsAndTitles()],
+      ['Kembali', 'Kembali ke menu utama', null]
+    ], 148)],
+    ['Fitur', 'Tantangan harian & kamera foto', () => subMenu('FITUR', [
+      ['Tantangan Harian', 'Aksi harian bertarung & berpetualang', () => openDailyFeats()],
+      ['Kamera Foto', 'Abadikan momen petualangan indah', () => openPhotoMode(sc)],
+      ['Kembali', 'Kembali ke menu utama', null]
+    ])],
+    ['Simpan', 'Simpan permainan sekarang', async () => {
+      const ok = saveGame(sc); sfx(ok ? 'save' : 'buzz');
+      await say(ok ? 'Permainan tersimpan.' : 'Gagal menyimpan.');
+    }],
+    ['Pengaturan', 'Suara, getar, layar & kontrol', () => openSettings()],
+    ['Tutup', 'Kembali bermain', null]
+  ];
   for (; ;) {
     const r = await choose({ head: 'MENU', x: 8, y: 22, w: 120, start: sel, items: acts.map(([t]) => ({ t })), foot: i => acts[i][1] });
     if (r < 0 || !acts[r][2]) break; sel = r; await acts[r][2]();

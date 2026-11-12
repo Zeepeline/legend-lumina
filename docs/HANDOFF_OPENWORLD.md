@@ -61,14 +61,15 @@ Saran implementasi: hapus clamp kamera antar wilayah (batas kamera = batas benua
 - Blend tanah di perbatasan (dither/transisi tile di `stream.js`: `genGround`/`gLayer`).
 - Sebar pembuatan region lintas frame (sekarang ada hitch ~100ms saat region dimuat) — mis. buat objek bertahap per frame di `addRegion`/`create` untuk scene pasif.
 
-### Tahap 3 — Gerak (pilihan user)
-- Stamina + sprint (bar di HUD, regen saat diam).
-- Panjat tebing (tile tebing jadi climbable, kuras stamina).
-- Glider dari tempat tinggi (kuras stamina, jatuh kalau habis).
+### Tahap 3 — Gerak (pilihan user) [SELESAI v1.27.3]
+- Stamina + sprint (bar di HUD, konsumsi stamina saat dash/sprint, regen otomatis).
+- Panjat tebing (deteksi tebing/dinding, konsumsi 20 sta/s, lepas saat habis).
+- Glider dari tempat tinggi (art sayap glider kustom, melayang lembut 105 px/s, kuras stamina).
 - **Tidak ada berenang.** Air tetap penghalang.
 
-### Tahap 4 — Konten eksplorasi
-- Viewpoint (buka peta), koleksi tersebar (ala oculus), puzzle kecil. Ikuti `PLACEMENT_RULES`.
+### Tahap 4 — Konten eksplorasi [SELESAI v1.27.3]
+- Viewpoint (titik pandang panorama di bukit/puncak tebing, buka kabut 360px di peta + reward EXP).
+- Lumina Shard (kristal oculus bercahaya terapung di lokasi tebing sulit, butuh kombinasi panjat/glider, simpan progres di `S.shards`).
 
 ## 4. Gotcha teknis (sudah pernah bikin bug)
 - Script **global klasik**, urutan muat di `index.html`. Mixin `Object.assign(World.prototype, {...})`. Jangan override fungsi dari file yang dimuat belakangan — pakai delegate (contoh: `openMapNew`, `openFishLogNew`). `const/let` global **tidak** ada di `window`.

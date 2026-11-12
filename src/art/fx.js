@@ -74,6 +74,19 @@ function artRoot() { const [c, x] = mk(70, 34); const R = '#3a2a2a', L = '#5a403
   for (let i = 0; i < 70; i++) { const y = 20 - Math.sin(i / 70 * Math.PI) * 16, t = 7 - Math.abs(i - 35) / 8; fr(x, R, i, y, 1, t + 6); fr(x, L, i, y, 1, 2); fr(x, D, i, y + t + 4, 1, 2); }
   fr(x, R, 0, 22, 8, 12); fr(x, R, 62, 22, 8, 12); return outline(c, '#140c10'); }
 function artLight(r) { const s = r * 2, [c, x] = mk(s, s); const g = x.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.45, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, s, s); return c; }
+function artGlider() {
+  const [c, x] = mk(36, 16);
+  // Bentuk sayap glider kayu & kain Lumina
+  fr(x, '#6a4224', 16, 10, 4, 6); // tiang tengah
+  fr(x, '#8a5a32', 2, 8, 32, 2); // rusuk sayap horizontal
+  // kain sayap segitiga melengkung
+  x.fillStyle = '#e8d8a8';
+  x.beginPath(); x.moveTo(18, 2); x.lineTo(34, 10); x.lineTo(24, 14); x.lineTo(18, 11); x.lineTo(12, 14); x.lineTo(2, 10); x.closePath(); x.fill();
+  x.strokeStyle = '#c89a5a'; x.lineWidth = 1;
+  x.beginPath(); x.moveTo(18, 3); x.lineTo(28, 11); x.moveTo(18, 3); x.lineTo(8, 11); x.stroke();
+  fr(x, '#4ab0d8', 15, 6, 6, 3); // lambang Lumina di tengah kain
+  return outline(c, '#2a1c14');
+}
 function artRain() { const [c, x] = mk(2, 7); fr(x, '#d8ecff', 1, 0, 1, 3); fr(x, '#d8ecff', 0, 3, 1, 4); return c; }
 // bayangan karakter lembut (gradasi, bukan elips keras)
 function artShadowSoft(w, h) { const [c, x] = mk(w, h); x.save(); x.scale(1, h / w); const g = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2); g.addColorStop(0, 'rgba(10,30,20,.85)'); g.addColorStop(.6, 'rgba(10,30,20,.5)'); g.addColorStop(1, 'rgba(10,30,20,0)'); x.fillStyle = g; x.fillRect(0, 0, w, w); x.restore(); return c; }

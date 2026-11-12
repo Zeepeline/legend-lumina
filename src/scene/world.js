@@ -18,7 +18,7 @@ class World extends Phaser.Scene {
     this.shG = this.add.graphics().setDepth(-9e5);
     this.aimG = this.add.graphics().setDepth(9e4);
     this.fades = []; this.inter = []; this.npcs = []; this.enemies = []; this.shots = []; this.picks = []; this.critters = []; this.lights = []; this.bushes = [];
-    for (const r of M.walls || []) this.wall(...r);
+    for (const r of mapWalls(M)) this.wall(...r);
     for (const r of blockRects(M)) this.wall(...r);
     if (M.river) { const R = M.river; for (let x = 0; x < M.w; x += 8) { if (x + 8 > R.bridge[0] + 4 && x < R.bridge[1] - 4) continue; const ry = riverY(R, x + 4); this.wall(x, ry - R.w / 2 - 1, 8, R.w + 2); } }
     if (M.ring) { const R = M.ring; for (let a = 0; a < 360; a += 4) { if (Math.abs(a - 270) < R.gap - 2) continue; const t = a * Math.PI / 180; this.wall(R.cx + Math.cos(t) * R.r - 6, R.cy + Math.sin(t) * R.r * .8 - 8, 12, 10); } }
@@ -66,7 +66,8 @@ class World extends Phaser.Scene {
     if (!G.title && isNight() && (M.id === 'forest' || M.id === 'meadow')) for (let i = 0; i < 4; i++) { const P = M.paths[(i * 3 + 2) % M.paths.length]; this.spawnEnemy('wisp', (P[0] + P[2]) / 2 + rnd(-30, 30), (P[1] + P[3]) / 2 + rnd(-20, 20)); }
     // pemain
     const pl = this.pl = this.physics.add.sprite(data.x || S.x, data.y || S.y, 'ch_hero', (data.dir === 'left' || data.dir === 'right' ? 'side' : data.dir || 'down') + '0').setOrigin(.5, 1);
-    pl.body.setSize(10, 6).setOffset(5, CH_FH - 7); pl.setCollideWorldBounds(true);
+    pl.body.setSize(10, 6).setOffset(5, CH_FH - 7);
+    if (M.indoor) pl.setCollideWorldBounds(true);
     pl.dir = data.dir || 'down'; pl.flipX = pl.dir === 'left'; pl.atkCd = 0; pl.atkT = 0; pl.inv = 0; pl.kb = 0; pl.dead = false;
     pl.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.25);
     this.physics.add.collider(pl, this.walls);
@@ -219,9 +220,13 @@ class World extends Phaser.Scene {
       if (pl.kb > 0) { pl.kb -= dt; pl.setVelocity(pl.kbx, pl.kby); }
       else if (locked) { pl.setVelocity(0); pl.anims.stop(); pl.setFrame(sd + '0'); }
       else {
-        const v = Input.vec(), m = Math.hypot(v.x, v.y), sp = (pl.atkT > 0 ? 26 : this.holdA > .45 ? 50 : 86) * stat().spd * this.speedMul();
+        const v = Input.vec(), m = Math.hypot(v.x, v.y), isShift = !!(Input.keys?.dash && S.sta > 0);
+        const climbing = this.tryClimb(v, m, dt), gliding = !climbing && this.tryGlide(v, m, dt);
+        const sprintMul = isShift && m > .15 && !climbing && !gliding ? 1.55 : 1;
+        if (!climbing && !gliding) this.updStamina(dt, isShift, m > .15);
+        const sp = (pl.atkT > 0 ? 26 : this.holdA > .45 ? 50 : 86) * stat().spd * this.speedMul() * sprintMul;
         if (pl.dashT > 0) { pl.dashT -= dt; pl.setVelocity(pl.dvx, pl.dvy); this.ghostT = (this.ghostT || 0) - dt; if (this.ghostT <= 0) { this.ghostT = .03; const g = this.add.image(pl.x, pl.y, pl.texture.key, pl.frame.name).setOrigin(.5, 1).setFlipX(pl.flipX).setTint(0x9ad8ff).setAlpha(.6).setDepth(pl.y - 1); this.tweens.add({ targets: g, alpha: 0, duration: 220, onComplete: () => g.destroy() }); } }
-        else pl.setVelocity(v.x * sp, v.y * sp);
+        else if (!climbing && !gliding) pl.setVelocity(v.x * sp, v.y * sp);
         if (m > .3 && v.y < -.5) for (const d of this.doors) if (Math.abs(pl.x - d.x) < 10 && pl.y < d.y + 15 && pl.y > d.y - 4) { this.enterRoom(d.to, [d.x, d.y]); break; }
         if (m > .15) {
           if (pl.atkT <= 0) pl.dir = Math.abs(v.x) > Math.abs(v.y) * 1.05 ? (v.x > 0 ? 'right' : 'left') : (v.y > 0 ? 'down' : 'up');
@@ -355,32 +360,6 @@ class World extends Phaser.Scene {
       if (this.carry && this.carryKey(k)) continue;
       if (k === 'a') this.actionA(); else if (k === 'b') this.magic(); else if (k === 'dash') this.dash(); else if (k === 'nova') this.nova(); else if (k === 'item') this.drink(); else if (k === 'swap') this.swapWeapon(); else if (k === 'lock') this.cycleLock(); else if (k === 'tool1') this.useSlot(0); else if (k === 'tool2') this.useSlot(1); else if (k === 'menu') mainMenu(this); else if (k === 'map') openMap(this); else if (k === 'bag') openBag(this);
     }
-  }
-  swapWeapon() {
-    if (!S.eq.altWpn) {
-      // Cari senjata lain di inv jika altWpn belum disetel
-      const otherWpn = Object.keys(S.inv).find(id => ITEMS[id] && ITEMS[id].k === 'wpn' && id !== S.eq.wpn);
-      if (otherWpn) {
-        S.eq.altWpn = otherWpn;
-      } else {
-        popWorld(this.pl.x, this.pl.y - 28, 'Tidak ada senjata cadangan', 'mpc');
-        sfx('buzz');
-        return;
-      }
-    }
-    const cur = S.eq.wpn;
-    const next = S.eq.altWpn;
-    if (!has(next)) {
-      popWorld(this.pl.x, this.pl.y - 28, 'Senjata cadangan tidak ada', 'mpc');
-      sfx('buzz');
-      return;
-    }
-    S.eq.wpn = next;
-    S.eq.altWpn = cur;
-    sfx('ok');
-    this.sparkle(this.pl.x, this.pl.y - 12, 'spark', 6);
-    popWorld(this.pl.x, this.pl.y - 28, '⇄ ' + ITEMS[next].n, 'gold');
-    updHud();
   }
   front(dist = 12) { const [dx, dy] = DIRV[this.pl.dir]; return { x: this.pl.x + dx * dist, y: this.pl.y - 3 + dy * dist }; }
   actionA() {

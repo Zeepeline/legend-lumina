@@ -39,6 +39,8 @@ function genGround(M, rect) {
   if (M.ground === 'room') return genRoom(M);
   const W = M.w, H = M.h, [RX, RY, RW, RH] = rect || [0, 0, W, H], img = new ImageData(RW, RH), D = img.data, sd = makeSD(M, rect), GP = GROUND[M.ground];
   const Gc = GP.g.map(h2r), glow = M.glow, cave = GP.path === 'cave';
+  const isSnowTrans = M.id === 'pl_meadow_snow', snowGc = GROUND.snow.g.map(h2r);
+  const isForestTrans = M.id === 'pl_village_forest', forestGc = GROUND.forest.g.map(h2r);
   const STONE = ['#eae2d6', '#ddd4c9', '#f1ebe1', '#d2c8bd'].map(h2r), MORT = h2r('#b5b8a2'), MORT2 = h2r('#9ea38a');
   const CSTONE = ['#5a5466', '#524c5e', '#625c6e', '#4a4456'].map(h2r), CMORT = h2r('#2a2630');
   const DIRT = ['#c9a46e', '#ba9460', '#d8b47e', '#ad8656'].map(h2r);
@@ -87,6 +89,22 @@ function genGround(M, rect) {
     if (glow) { const g = Math.max(0, 1 - Math.hypot(x - glow[0], (y - glow[1]) * 1.3) / glow[2]); f = g * g * .16; }
     if (d < 2.2) { put(i, EDGE, f * .5); continue; }
     if (d < 4 && hash(x, y, 4) > .5) k = Math.max(0, k - 1);
+    if (isSnowTrans) {
+      const frostF = clamp((1 - (y / Math.max(1, H))) * 1.3 - (vnoise(x, y, 14, 7) * .4 - .2), 0, 1);
+      if (frostF > 0) {
+        const mc = Gc[k], sc = snowGc[k];
+        put(i, [Math.round(mc[0] + (sc[0] - mc[0]) * frostF), Math.round(mc[1] + (sc[1] - mc[1]) * frostF), Math.round(mc[2] + (sc[2] - mc[2]) * frostF)], f);
+        continue;
+      }
+    }
+    if (isForestTrans) {
+      const transF = clamp((y / Math.max(1, H)) * 1.25 - (vnoise(x, y, 14, 8) * .35 - .15), 0, 1);
+      if (transF > 0) {
+        const vc = Gc[k], fc = forestGc[k];
+        put(i, [Math.round(vc[0] + (fc[0] - vc[0]) * transF), Math.round(vc[1] + (fc[1] - vc[1]) * transF), Math.round(vc[2] + (fc[2] - vc[2]) * transF)], f);
+        continue;
+      }
+    }
     put(i, Gc[k], f);
   }
   const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);
@@ -170,16 +188,31 @@ function scatter(M, spec) {
   function ok2(x, y) { for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < 20) return false; for (const ex of M.exits || []) if (x > ex.x - 30 && x < ex.x + ex.w + 30 && y > ex.y - 30 && y < ex.y + ex.h + 50) return false; return true; }
   return out;
 }
-function borderTrees(M) {
-  const out = [], b = M.border; let n = 0;
-  const inGap = (g, v) => g && v > g[0] - 14 && v < g[1] + 14;
-  const T = b.types || ['pined', 'pine', 'round'], tp = (k, s2) => T[Math.floor(hash(k, 9, s2) * T.length)];
-  for (let y = 34; y <= b.top + 6; y += 18) for (let x = 8 + ((y / 18) % 2) * 14; x < M.w; x += 30) { if (inGap(b.gapT, x)) continue; n++; out.push([tp(n, 41), x + Math.round((hash(n, 2, 41) - .5) * 10), y + Math.round(hash(n, 3, 41) * 6)]); }
-  for (let y = b.top + 20; y < M.h + 40; y += 24) {
-    for (const x of [14, 36]) { if (inGap(b.gapL, y)) continue; n++; out.push([tp(n, 42), x + Math.round((hash(n, 2, 42) - .5) * 8), y]); }
-    for (const x of [M.w - 36, M.w - 14]) { if (inGap(b.gapR, y)) continue; n++; out.push([tp(n, 42), x + Math.round((hash(n, 2, 42) - .5) * 8), y]); }
+function openSides(M) {
+  if (!M.id || M.indoor || typeof WORLD_POS === 'undefined' || !WORLD_POS[M.id]) return {};
+  const P = WORLD_POS[M.id], sides = {};
+  for (const [id, Q] of Object.entries(WORLD_POS)) {
+    if (id === M.id) continue; const B = typeof MAPS !== 'undefined' && MAPS[id]; if (!B || B.indoor) continue;
+    const overlapY = Q[1] < P[1] + M.h && Q[1] + B.h > P[1], overlapX = Q[0] < P[0] + M.w && Q[0] + B.w > P[0];
+    if (overlapY && Math.abs(Q[0] - (P[0] + M.w)) < 10) sides.E = true;
+    if (overlapY && Math.abs((Q[0] + B.w) - P[0]) < 10) sides.W = true;
+    if (overlapX && Math.abs(Q[1] - (P[1] + M.h)) < 10) sides.S = true;
+    if (overlapX && Math.abs((Q[1] + B.h) - P[1]) < 10) sides.N = true;
   }
-  for (let y = b.bottom + 16; y < M.h + 50; y += 20) for (let x = 50 + ((y / 20) % 2) * 14; x < M.w - 40; x += 28) {
+  return sides;
+}
+function borderTrees(M) {
+  const out = [], b = M.border; if (!b) return out; let n = 0;
+  const open = openSides(M), inGap = (g, v) => g && v > g[0] - 14 && v < g[1] + 14;
+  const T = b.types || ['pined', 'pine', 'round'], tp = (k, s2) => T[Math.floor(hash(k, 9, s2) * T.length)];
+  if (!open.N) for (let y = 34; y <= b.top + 6; y += 18) for (let x = 8 + ((y / 18) % 2) * 14; x < M.w; x += 30) {
+    if (inGap(b.gapT, x)) continue; n++; out.push([tp(n, 41), x + Math.round((hash(n, 2, 41) - .5) * 10), y + Math.round(hash(n, 3, 41) * 6)]);
+  }
+  for (let y = b.top + 20; y < M.h + 40; y += 24) {
+    if (!open.W) for (const x of [14, 36]) { if (inGap(b.gapL, y)) continue; n++; out.push([tp(n, 42), x + Math.round((hash(n, 2, 42) - .5) * 8), y]); }
+    if (!open.E) for (const x of [M.w - 36, M.w - 14]) { if (inGap(b.gapR, y)) continue; n++; out.push([tp(n, 42), x + Math.round((hash(n, 2, 42) - .5) * 8), y]); }
+  }
+  if (!open.S) for (let y = b.bottom + 16; y < M.h + 50; y += 20) for (let x = 50 + ((y / 20) % 2) * 14; x < M.w - 40; x += 28) {
     if (inGap(b.gap, x)) continue; n++; out.push([tp(n, 43), x, y]);
   }
   return out;
@@ -192,4 +225,16 @@ function ringObjects(M) {
 function mapObjects(M) {
   if (!M._list) M._list = [...M.objs, ...ringObjects(M), ...(M.border ? borderTrees(M) : []), ...(M.trees ? scatter(M, M.trees) : []), ...(M.decor ? scatter(M, M.decor) : [])];
   return M._list;
+}
+function mapWalls(M) {
+  if (!M.walls) return [];
+  if (M.indoor) return M.walls;
+  const open = openSides(M);
+  return M.walls.filter(([x, y, w, h]) => {
+    if (open.N && y <= 10 && h <= 70) return false;
+    if (open.S && y + h >= M.h - 10 && h <= 70) return false;
+    if (open.W && x <= 10 && w <= 70) return false;
+    if (open.E && x + w >= M.w - 10 && w <= 70) return false;
+    return true;
+  });
 }

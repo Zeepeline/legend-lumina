@@ -35,8 +35,15 @@ function plEnemies(A, B, paths) {
     const vert = sa === 'N' || sa === 'S', top = vert ? (sa === 'S' ? PA[1] + A.h : PB[1] + B.h) : 0, bot = vert ? (sa === 'S' ? PB[1] : PA[1]) : 0;
     const left = vert ? 0 : (sa === 'E' ? PA[0] + A.w : PB[0] + B.w), right = vert ? 0 : (sa === 'E' ? PB[0] : PA[0]);
     let X, Y, W, H;
-    if (vert) { X = Math.min(ga[0], gb[0]) - PAD; W = Math.abs(ga[0] - gb[0]) + PAD * 2; Y = top; H = bot - top; }
-    else { Y = Math.min(ga[1], gb[1]) - PAD; H = Math.abs(ga[1] - gb[1]) + PAD * 2; X = left; W = right - left; }
+    if (vert) {
+      let minX = Math.min(PA[0], PB[0]);
+      if (a === 'village' && b === 'forest') minX = Math.max(minX, 3000);
+      const maxX = Math.max(PA[0] + A.w, PB[0] + B.w);
+      X = minX; W = maxX - minX; Y = top; H = bot - top;
+    } else {
+      const minY = Math.min(PA[1], PB[1]), maxY = Math.max(PA[1] + A.h, PB[1] + B.h);
+      Y = minY; H = maxY - minY; X = left; W = right - left;
+    }
     const id = 'pl_' + a + '_' + b, la = [ga[0] - X, ga[1] - Y], lb = [gb[0] - X, gb[1] - Y];
     // pintu peralihan: di tepi yang menempel ke A dan ke B
     const door = (p, side, to, txy) => side === 'N' ? { x: p[0] - GAPW / 2, y: 0, w: GAPW, h: 12, to, tx: txy[0], ty: txy[1], dir: 'up', label: MAPS[to].name } : side === 'S' ? { x: p[0] - GAPW / 2, y: H - 12, w: GAPW, h: 12, to, tx: txy[0], ty: txy[1], dir: 'down', label: MAPS[to].name } : side === 'W' ? { x: 0, y: p[1] - GAPW / 2, w: 12, h: GAPW, to, tx: txy[0], ty: txy[1], dir: 'left', label: MAPS[to].name } : { x: W - 12, y: p[1] - GAPW / 2, w: 12, h: GAPW, to, tx: txy[0], ty: txy[1], dir: 'right', label: MAPS[to].name };
@@ -49,7 +56,8 @@ function plEnemies(A, B, paths) {
     const topX = sideA === 'N' ? la[0] : lb[0], botX = sideA === 'N' ? lb[0] : la[0]; // pintu atas/bawah (A bisa di atas atau di bawah)
     const border = vert ? { top: 40, bottom: H - 40, gapT: [topX - 40, topX + 40], gap: [botX - 40, botX + 40], types: ground === 'forest' ? ['pined', 'pine', 'round'] : ['treeAd', 'treeBd', 'treeA'] }
       : { top: 40, bottom: H - 40, gapL: sideA === 'W' ? [la[1] - 40, la[1] + 40] : [lb[1] - 40, lb[1] + 40], gapR: sideA === 'E' ? [la[1] - 40, la[1] + 40] : [lb[1] - 40, lb[1] + 40], types: ground === 'forest' ? ['pined', 'pine', 'round'] : ['treeAd', 'treeBd', 'treeA'] };
-    const TT = { meadow: [['treeA', .2], ['treeB', .15], ['bushG2', .2], ['bushG1', .15], ['rock', .2], ['apple1', .05], ['stump', .05]], forest: [['treeAd', .3], ['treeBd', .25], ['pined', .2], ['bushG2', .1], ['stump', .05], ['rock', .1]], swamp: [['bushG1', .35], ['rock', .25], ['stump', .2], ['treeBd', .2]] }[ground];
+    let TT = { meadow: [['treeA', .2], ['treeB', .15], ['bushG2', .2], ['bushG1', .15], ['rock', .2], ['apple1', .05], ['stump', .05]], forest: [['treeAd', .3], ['treeBd', .25], ['pined', .2], ['bushG2', .1], ['stump', .05], ['rock', .1]], swamp: [['bushG1', .35], ['rock', .25], ['stump', .2], ['treeBd', .2]] }[ground];
+    if (id === 'pl_meadow_snow') TT = [['treeA', .15], ['treeSn', .25], ['rock', .25], ['bushW', .15], ['bushG2', .1], ['stump', .1]];
     MAPS[id] = { id, name, w: Math.round(W), h: Math.round(H), ground, bgm: A.bgm, scale: Math.max(A.scale || 1, B.scale || 1), peralihan: [a, b],
       paths, discs: [], objs: [], npcs: [], enemies: plEnemies(A, B, paths), exits, border, trees: { n: Math.round(W * H / (ground === 'forest' ? 2600 : 4600)), min: 30, types: TT } };
     WORLD_POS[id] = [Math.round(X), Math.round(Y)];
@@ -71,6 +79,34 @@ const NEIGH = {}; // id → [{ to, side, ox, oy, ex }]
       else if (side === 'N') { oy = -B.h; ox = ca[0] - cb[0]; } else { oy = A.h; ox = ca[0] - cb[0]; }
       if (WORLD_POS[A.id] && WORLD_POS[B.id]) { ox = WORLD_POS[B.id][0] - WORLD_POS[A.id][0]; oy = WORLD_POS[B.id][1] - WORLD_POS[A.id][1]; }
       NEIGH[A.id].push({ to: B.id, side, ox: Math.round(ox), oy: Math.round(oy), ex: ea });
+    }
+    // Tambahkan tetangga outdoor yang menempel di WORLD_POS meskipun tanpa pasangan exit
+    const PA = WORLD_POS[A.id];
+    if (PA) {
+      const has = new Set(NEIGH[A.id].map(n => n.to));
+      for (const [bid, PB] of Object.entries(WORLD_POS)) {
+        if (bid === A.id || has.has(bid)) continue;
+        const B = MAPS[bid]; if (!B || B.indoor) continue;
+        const ox = PB[0] - PA[0], oy = PB[1] - PA[1];
+        if (ox < A.w + 10 && ox + B.w > -10 && oy < A.h + 10 && oy + B.h > -10) {
+          let side = null;
+          if (Math.abs(ox + B.w) < 10) side = 'W';
+          else if (Math.abs(ox - A.w) < 10) side = 'E';
+          else if (Math.abs(oy + B.h) < 10) side = 'N';
+          else if (Math.abs(oy - A.h) < 10) side = 'S';
+          if (side) {
+            const overlapX0 = Math.max(0, ox), overlapX1 = Math.min(A.w, ox + B.w);
+            const overlapY0 = Math.max(0, oy), overlapY1 = Math.min(A.h, oy + B.h);
+            const cx = (overlapX0 + overlapX1) / 2, cy = (overlapY0 + overlapY1) / 2;
+            const ex = side === 'E' ? { x: A.w - 12, y: cy - 20, w: 12, h: 40 }
+              : side === 'W' ? { x: 0, y: cy - 20, w: 12, h: 40 }
+              : side === 'S' ? { x: cx - 20, y: A.h - 12, w: 40, h: 12 }
+              : { x: cx - 20, y: 0, w: 40, h: 12 };
+            NEIGH[A.id].push({ to: bid, side, ox: Math.round(ox), oy: Math.round(oy), ex });
+            has.add(bid);
+          }
+        }
+      }
     }
   }
 })();

@@ -24,6 +24,8 @@ MAPS.forest = {
     ['mush', 860, 800], ['mush', 140, 760], ['bushy', 600, 236], ['bushv', 460, 360], ['bushy', 800, 700], ['bushv', 280, 700],
     ['rock', 1080, 900], ['log', 980, 880], ['mush', 1050, 820],
     ['deadtree', 280, 240], ['deadtree', 880, 360],
+    ['viewpoint', 1010, 260, { id: 'vp_forest', name: 'Tebing Pengawas Hutan' }],
+    ['lumina_shard', 1010, 210, { id: 'ls_forest_cliff' }],
   ],
   chests: [{ id: 'c1', x: 1060, y: 300, item: 'iron' }, { id: 'c2', x: 180, y: 852, item: 'ether2' }, { id: 'c3', x: 676, y: 156, item: 'potion2' }, { id: 'c4', x: 1060, y: 852, item: 'gold150', lock: 1 }],
   crystal: { x: 640, y: 1076 },

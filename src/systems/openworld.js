@@ -38,9 +38,7 @@ Object.assign(World.prototype, {
     const pl = this.pl, M = this.M, m = 6; if (pl.x >= -m && pl.x <= M.w + m && pl.y >= -m && pl.y <= M.h + m) return; // jarak aman: tidak memantul di garis batas
     const n = this.owN.find(n => { const B = MAPS[n.to]; return pl.x >= n.ox && pl.x <= n.ox + B.w && pl.y >= n.oy && pl.y <= n.oy + B.h; });
     const back = () => pl.setPosition(clamp(pl.x, 4, M.w - 4), clamp(pl.y, 4, M.h - 4));
-    // hanya lewat celah pintu tepi (di luar itu ada pagar/rumah/pohon wilayah sebelah)
-    const e = n.ex, along = n.side === 'E' || n.side === 'W' ? pl.y : pl.x, lo = n.side === 'E' || n.side === 'W' ? e.y : e.x, hi = lo + (n.side === 'E' || n.side === 'W' ? e.h : e.w);
-    if (along < lo - 18 || along > hi + 18) { back(); return; }
+    if (!n) { back(); return; }
     // awal cerita: penjaga melarang ke hutan (juga lewat medan peralihan menuju hutan)
     const toForest = n.to === 'forest' || (MAPS[n.to].peralihan && MAPS[n.to].peralihan.includes('forest') && M.id === 'village');
     if (toForest && S.stage === 0) { back(); this.guardStop(); return; }

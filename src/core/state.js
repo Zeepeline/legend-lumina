@@ -16,11 +16,11 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.27.2';
+const GAME_VERSION = '1.27.3';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, trees: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, petDog: false, flowerPlots: [null, null], warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, bountiesDone: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {}, bank: { gold: 0, day: 1 }, records: {}, outfit: 'default', runePillars: {}, homeStyle: { floor: 'wood', wall: 'wood' }, arenaRank: 0, talents: { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] }, bento: [], courierTimer: null, auctionWon: {} }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, sta: 100, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, trees: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, petDog: false, flowerPlots: [null, null], warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, bountiesDone: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {}, shards: {}, bank: { gold: 0, day: 1 }, records: {}, outfit: 'default', runePillars: {}, homeStyle: { floor: 'wood', wall: 'wood' }, arenaRank: 0, talents: { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] }, bento: [], courierTimer: null, auctionWon: {} }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -60,6 +60,7 @@ function stat() {
   return {
     maxhp: 34 + l * 8 + tHp + sHp,
     maxmp: 12 + l * 2,
+    maxsta: 100 + (T.exp[1] || 0) * 15,
     atk: Math.round((6 + l * 2 + eqv('atk') + tAtk + sAtk + gemAtk) * (buffOn('atk') ? BUFF.atk.mul : 1)),
     def: Math.round((1 + l + eqv('def') + tDef + sDef) * (buffOn('def') ? BUFF.def.mul : 1)),
     mag: 9 + l * 3 + eqv('mag') + sMag + talMag,
@@ -115,6 +116,7 @@ function loadSave() {
       S.spent = S.spent || { village: 0, city: 0 };
       S.alchemyRecipes = S.alchemyRecipes || {};
       S.viewpoints = S.viewpoints || {};
+      S.shards = S.shards || {};
       if (!S.eq.altWpn) S.eq.altWpn = null;
       if (!MAPS[S.map]) S.map = 'village';
       if (!s.tipsDone && (S.stage > 1 || S.lv > 2)) S.tipsDone = { all: 1 };

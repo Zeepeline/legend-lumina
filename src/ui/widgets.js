@@ -44,7 +44,12 @@ function choose(o, items) {
     const prev = UIH;
     const w = win('menu act', (o.head ? `<div class="mh">${o.head}</div>` : '') + '<div class="ops"></div>' + (o.foot ? '<div class="mf"></div>' : ''));
     Object.assign(w.style, o.style || {});
-    if (o.x != null) w.style.left = o.x + 'px'; if (o.y != null) w.style.top = o.y + 'px'; if (o.w) w.style.width = o.w + 'px';
+    const maxW = Math.min(276, o.w || 260);
+    const leftX = o.x != null ? clamp(o.x, 6, 282 - maxW) : null;
+    const topY = o.y != null ? clamp(o.y, 6, 180) : null;
+    if (leftX != null) w.style.left = leftX + 'px'; if (topY != null) w.style.top = topY + 'px';
+    if (o.w) w.style.width = maxW + 'px';
+    w.style.maxWidth = 'calc(100% - 12px)';
     if (o.right != null) w.style.right = o.right + 'px'; if (o.bottom != null) w.style.bottom = o.bottom + 'px';
     const ops = w.querySelector('.ops'), mf = w.querySelector('.mf');
     let sel = Math.max(0, o.start || 0);
@@ -52,7 +57,11 @@ function choose(o, items) {
       const e = document.createElement('div'); e.className = 'opt' + (it.dis ? ' dis' : ''); e.innerHTML = `<b style="font-weight:400">${it.t}</b>` + (it.r != null ? `<span>${it.r}</span>` : '');
       e.addEventListener('pointerdown', ev => { ev.stopPropagation(); sel = i; draw(); pick(); }); ops.appendChild(e); return e;
     });
-    function draw() { els.forEach((e, i) => e.classList.toggle('sel', i === sel)); if (mf) mf.innerHTML = (o.foot && o.foot(sel)) || ''; }
+    function draw() {
+      els.forEach((e, i) => e.classList.toggle('sel', i === sel));
+      if (els[sel]) els[sel].scrollIntoView({ block: 'nearest' });
+      if (mf) mf.innerHTML = (o.foot && o.foot(sel)) || '';
+    }
     function pick() { const it = o.items[sel]; if (it.dis) { sfx('buzz'); return; } sfx('ok'); close(sel); }
     function close(v) { w.remove(); UIH = prev; res(v); }
     const h = k => {
@@ -88,7 +97,7 @@ let HUD = null;
 function buildHud(icons) {
   HUD = document.createElement('div');
   HUD.innerHTML = `<div id="hud"><div class="lv">LV<b id="hLv">1</b></div><div class="bars">
-   <div class="bar hp" id="hHp"><i></i><span></span></div><div class="bar mp" id="hMp"><i></i><span></span></div><div class="bar xp" id="hXp"><i></i></div></div></div>
+   <div class="bar hp" id="hHp"><i></i><span></span></div><div class="bar mp" id="hMp"><i></i><span></span></div><div class="bar sta" id="hSta" style="height:4px"><i></i></div><div class="bar xp" id="hXp"><i></i></div></div></div>
    <div id="hDate"></div><div id="hud2"><span id="hClock">☀</span><span id="hCompass" style="font-size:9px;color:#ffe27a;margin:0 2px;">🧭 U</span><span><img src="${icons.coin}"><b id="hGold">0</b></span><span class="pt"><img src="${icons.potion}"><b id="hPot">0</b></span></div>
    <div id="fps-meter" style="display:${OPT.fps ? 'block' : 'none'};position:absolute;top:28px;left:4px;font-size:9px;color:#a0f080;background:rgba(0,0,0,0.55);padding:2px 5px;border-radius:3px;z-index:9000;pointer-events:none;font-family:monospace;">60 FPS</div>
    <div id="quest"></div><div id="boss"><span id="bName"></span><div class="bar"><i id="bHp"></i></div></div>`;
@@ -99,8 +108,9 @@ function updHud() {
   $('hLv').textContent = S.lv;
   const hp = $('hHp'); hp.firstChild.style.width = (S.hp / st.maxhp * 100) + '%'; hp.lastChild.textContent = S.hp + '/' + st.maxhp; hp.classList.toggle('low', S.hp <= st.maxhp * .3);
   const mp = $('hMp'); mp.firstChild.style.width = (S.mp / st.maxmp * 100) + '%'; mp.lastChild.textContent = S.mp + '/' + st.maxmp;
+  const sta = $('hSta'); if (sta) { const curSta = S.sta != null ? S.sta : st.maxsta; sta.firstChild.style.width = (curSta / st.maxsta * 100) + '%'; }
   $('hXp').firstChild.style.width = (S.exp / need(S.lv) * 100) + '%';
-  $('hGold').textContent = S.gold; $('hPot').textContent = (S.inv.potion || 0) + (S.inv.hipotion || 0);
+  $('hGold').textContent = Math.floor(S.gold || 0); $('hPot').textContent = (S.inv.potion || 0) + (S.inv.hipotion || 0);
   const compEl = $('hCompass');
   if (compEl && G.scene?.pl) {
     const cardMap = { up: 'U', down: 'S', left: 'B', right: 'T' };

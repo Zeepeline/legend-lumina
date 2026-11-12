@@ -39,9 +39,14 @@ Object.assign(World.prototype, {
 function levelUpDetail(oldLv) {
   const lv = S.lv; S.lv = oldLv; const a = stat(); S.lv = lv; const b = stat();
   const rows = [['HP Maks', 'maxhp'], ['MP Maks', 'maxmp'], ['Serang', 'atk'], ['Tahan', 'def'], ['Sihir', 'mag']].filter(([, k]) => b[k] !== a[k]).map(([n, k]) => `${n} ${a[k]} → <b>${b[k]}</b> <span style="color:#7ad05a">+${b[k] - a[k]}</span>`);
+  const mini = document.getElementById('mini'); if (mini) mini.style.display = 'none';
   const w = win('menu lvpop', `<div class="mh">LEVEL ${lv}!</div>` + rows.map(r => `<div class="qr">${r}</div>`).join(''));
-  Object.assign(w.style, { left: '50%', top: '30%', transform: 'translateX(-50%)', minWidth: '170px', pointerEvents: 'none' });
-  setTimeout(() => { w.style.transition = 'opacity .5s'; w.style.opacity = 0; setTimeout(() => w.remove(), 600); }, 2600);
+  Object.assign(w.style, { left: '50%', top: '24%', transform: 'translateX(-50%)', minWidth: '140px', maxWidth: '200px', zIndex: '60', pointerEvents: 'none' });
+  setTimeout(() => {
+    w.style.transition = 'opacity .5s';
+    w.style.opacity = 0;
+    setTimeout(() => { w.remove(); if (mini && OPT.mini) mini.style.display = ''; }, 600);
+  }, 2600);
 }
 // jeda otomatis saat aplikasi/tab disembunyikan (#877)
 document.addEventListener('visibilitychange', () => {
@@ -78,7 +83,8 @@ Object.assign(World.prototype, {
   // ---------------- PETA MINI (#82) ----------------
   updMinimap(dt) {
     const M = this.M; let c = document.getElementById('mini');
-    if (!OPT.mini || G.title || M.indoor || G.lock) { if (c) c.style.display = 'none'; return; }
+    const hasModal = document.querySelector('.win, .dlg') != null;
+    if (!OPT.mini || G.title || M.indoor || G.lock || hasModal) { if (c) c.style.display = 'none'; return; }
     if (!c) { c = document.createElement('canvas'); c.id = 'mini'; c.width = 96; c.height = 96; UI.appendChild(c); c.onpointerdown = ev => { ev.stopPropagation(); if (!G.lock) openMap(this); }; }
     c.style.display = '';
     this.miniT = (this.miniT || 0) - dt; if (this.miniT > 0) return; this.miniT = .25;
@@ -98,6 +104,84 @@ Object.assign(World.prototype, {
     x.fillStyle = '#e84a3a'; for (const e of this.enemies) if (e.hp > 0 && Math.hypot(e.spr.x - this.pl.x, e.spr.y - this.pl.y) < 260) x.fillRect(ox + e.spr.x * k - 1, oy + e.spr.y * k - 1, 2, 2);
     const q = this.qGoal; if (q) { x.fillStyle = '#ffd84a'; x.font = '9px sans-serif'; x.fillText('★', ox + q.x * k - 4, oy + q.y * k + 3); }
     const px = ox + this.pl.x * k, py = oy + this.pl.y * k; x.fillStyle = '#ffffff'; x.strokeStyle = '#2a1c14'; x.lineWidth = 1.5; x.beginPath(); x.arc(px, py, 2.6, 0, 7); x.fill(); x.stroke();
+  },
+  swapWeapon() {
+    if (!S.eq.altWpn) {
+      const otherWpn = Object.keys(S.inv).find(id => ITEMS[id] && ITEMS[id].k === 'wpn' && id !== S.eq.wpn);
+      if (otherWpn) S.eq.altWpn = otherWpn;
+      else { popWorld(this.pl.x, this.pl.y - 28, 'Tidak ada senjata cadangan', 'mpc'); sfx('buzz'); return; }
+    }
+    const cur = S.eq.wpn, next = S.eq.altWpn;
+    if (!has(next)) { popWorld(this.pl.x, this.pl.y - 28, 'Senjata cadangan tidak ada', 'mpc'); sfx('buzz'); return; }
+    S.eq.wpn = next; S.eq.altWpn = cur; sfx('ok'); this.sparkle(this.pl.x, this.pl.y - 12, 'spark', 6);
+    popWorld(this.pl.x, this.pl.y - 28, '⇄ ' + ITEMS[next].n, 'gold'); updHud();
+  },
+  updStamina(dt, isSprinting, isMoving) {
+    const st = stat(), maxSta = st.maxsta || 100;
+    if (S.sta == null) S.sta = maxSta;
+    if (isSprinting && isMoving) {
+      S.sta = Math.max(0, S.sta - dt * 24);
+      if (Math.random() < .2) this.puff(this.pl.x - this.pl.body.velocity.x * .05, this.pl.y - 2);
+    } else {
+      const regenRate = isMoving ? 16 : 28;
+      S.sta = Math.min(maxSta, S.sta + dt * regenRate);
+    }
+  },
+  tryClimb(v, m, dt) {
+    const pl = this.pl;
+    if (this.M.indoor || !pl || pl.dead || S.sta <= 0) { pl.isClimbing = false; return false; }
+    // Cek tebing di depan karakter (batu alam atau dinding tebing luar ruang)
+    const fx = pl.x + (v.x || 0) * 12, fy = pl.y + (v.y || (pl.dir === 'up' ? -1 : 1)) * 10;
+    const isNearCliff = this.walls.getChildren().some(w => {
+      const b = w.body;
+      return b && Math.abs(pl.x - (b.x + b.width / 2)) < b.width / 2 + 10 && Math.abs(pl.y - (b.y + b.height / 2)) < b.height / 2 + 10;
+    });
+    if (isNearCliff && (Input.keys?.dash || Input.keys?.up) && S.sta > 5) {
+      pl.isClimbing = true;
+      S.sta = Math.max(0, S.sta - dt * 20);
+      pl.setVelocity(v.x * 45, (v.y || -0.6) * 45);
+      pl.setTint(0xffeedd);
+      if (Math.random() < .15) this.sparkle(pl.x, pl.y - 10, 'spark', 2);
+      if (S.sta <= 0) {
+        pl.isClimbing = false;
+        pl.clearTint();
+        popWorld(pl.x, pl.y - 28, 'Stamina Habis!', 'mpc');
+        sfx('buzz');
+      }
+      return true;
+    }
+    if (pl.isClimbing) { pl.isClimbing = false; pl.clearTint(); }
+    return false;
+  },
+  tryGlide(v, m, dt) {
+    const pl = this.pl;
+    if (this.M.indoor || !pl || pl.dead) { this.stopGlide(); return false; }
+    // Meluncur aktif bila menahan tombol dash di udara / setelah panjat atau saat gliding
+    const wantGlide = (Input.keys?.dash || Input.keys?.b) && S.sta > 0 && !pl.isClimbing;
+    if (wantGlide && (pl.isGliding || (m > .1 && pl.body.velocity.y > 20))) {
+      pl.isGliding = true;
+      S.sta = Math.max(0, S.sta - dt * 14);
+      pl.setVelocity(v.x * 105, 32); // kecepatan meluncur horizontal lincah, turun perlahan
+      if (!this.gliderSpr) {
+        this.gliderSpr = this.add.image(pl.x, pl.y - 26, 'glider').setOrigin(.5, .5).setDepth(pl.y + 10);
+        sfx('dash');
+      } else {
+        this.gliderSpr.setPosition(pl.x, pl.y - 26).setDepth(pl.y + 10).setFlipX(pl.flipX);
+      }
+      if (Math.random() < .2) this.puff(pl.x - (v.x || 0) * 8, pl.y - 12);
+      if (S.sta <= 0) {
+        this.stopGlide();
+        popWorld(pl.x, pl.y - 28, 'Glider Terlipat!', 'mpc');
+        sfx('buzz');
+      }
+      return true;
+    }
+    if (pl.isGliding) this.stopGlide();
+    return false;
+  },
+  stopGlide() {
+    const pl = this.pl; if (pl) pl.isGliding = false;
+    if (this.gliderSpr) { this.gliderSpr.destroy(); this.gliderSpr = null; }
   },
 });
 // ukuran & transparansi tombol layar (#74 sebagian)
