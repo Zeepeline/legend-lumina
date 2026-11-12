@@ -52,6 +52,7 @@ MAPS.kinn = makeRoom('kinn', 'Penginapan Seribu Lentera', [560, 300], {
 });
 MAPS.arsip = makeRoom('arsip', 'Arsip Akademi Cahaya', [0, 0], {
   wallc: '#8a7a6a', floor: ['#5a4a3a', '#7a6248', '#84694e', '#6a5440'], bgm: 'cave', furn: [['rug', 132, 150, 1], ['table', 143, 140], ['shelf', 64, 52, 0], ['shelf', 104, 52, 3], ['shelf', 176, 52, 5], ['shelf', 216, 52, 1]], windows: [],
+  objs: [['alchemytable', 230, 190]],
   exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'kakademi', tx: 700, ty: 400, dir: 'down', label: 'Distrik Akademi' }],
   loreSpots: [[64, 84, 'arsip_selene'], [104, 84, 'arsip_rongga'], [176, 84, 'arsip_bram'], [216, 84, 'arsip_morgath']],
 });

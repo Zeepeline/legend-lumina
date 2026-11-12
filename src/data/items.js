@@ -117,13 +117,39 @@ const ITEMS = {
   stew: { n: 'Sup Ikan', k: 'use', hp: 100, mp: 10, d: 'Masakan Bu Wulan. HP +100, MP +10.' },
   medal: { n: 'Medali Pemburu', k: 'acc', atk: 4, mag: 4, d: 'Serang +4, Sihir +4. Hadiah bestiari lengkap.' },
   mring: { n: 'Cincin Bulan', k: 'acc', mag: 12, regen: 1, d: 'Sihir +12 dan HP pulih perlahan.' },
+  // 5 Senjata Legendaris Tersembunyi (#33)
+  leg_sun: { n: 'Pedang Surya Aurel', k: 'wpn', atk: 24, mag: 8, d: 'Pusaka legendaris raja-raja Aurel kuno. Tebasan melontarkan lidah api suci berkobar.', src: 'Peti rahasia di Reruntuhan Aurel Hutan Dalam' },
+  leg_shadow: { n: 'Busur Bayangan Senja', k: 'wpn', wt: 'bow', atk: 16, d: 'Busur mitis teranyam dari serat bayangan rawa purba. Anak panah menembus segala dinding & rintangan.', src: 'Peti tersembunyi pulau tengah Rawa Senja' },
+  leg_quake: { n: 'Kapak Gempa Gua', k: 'wpn', wt: 'axe', atk: 26, d: 'Kapak raksasa berpahat batu magma purba. Setiap ayunan memicu gelombang kejut getaran bumi.', src: 'Ceruk tersembunyi di balik dinding retak Gua Batu' },
+  leg_frost: { n: 'Tombak Glasier Abadi', k: 'wpn', wt: 'spear', atk: 25, frz: 0.5, d: 'Tombak es glasier abadi yang tidak pernah meleleh. Peluang 50% membekukan musuh seketika.', src: 'Gua es glasier Puncak Beku' },
+  leg_moon: { n: 'Belati Rembulan Danau', k: 'wpn', atk: 20, spd: 0.15, d: 'Belati lengkung perak bercahaya rembulan. Saat malam tiba, setiap serangan selalu dipastikan kritikal!', src: 'Kuil air di dasar Danau Cermin' },
+
+  // Hasil Ramuan Alkimia Eksperimen (#27)
+  elixir_life: { n: 'Eliksir Pemulih Agung', k: 'use', hp: 70, mp: 30, price: 40, sell: 20, d: 'Ramuan alkimia murni perpaduan madu dan herba langka. Pulihkan 70 HP & 30 MP seketika.', src: 'Alkimia: Daun Obat + Madu Liar' },
+  potion_agility: { n: 'Ramuan Kelincahan Ksatria', k: 'use', buff: [['spd', 180]], price: 35, sell: 18, d: 'Cairan hijau zamrud berenergi kilat. Kecepatan gerak bertambah +30% selama 3 menit.', src: 'Alkimia: Daun Obat + Lumut Zamrud Gua + Minyak Semir Kulit' },
+  potion_frostcloak: { n: 'Ramuan Jubah Es', k: 'use', buff: [['warm', 300]], price: 45, sell: 22, d: 'Menyelubungi tubuh dengan perlindungan es. Kebal suhu dingin ekstrim selama 5 menit.', src: 'Alkimia: Pecahan Kristal + Bunga Salju Abadi + Lumut Es Kristal' },
+  potion_nightvision: { n: 'Ramuan Penglihatan Malam', k: 'use', mp: 25, buff: [['def', 180]], price: 35, sell: 18, d: 'Pendaran spora gua memancarkan cahaya terang di tempat gelap & gua selama 3 menit.', src: 'Alkimia: Jamur Pendar + Air Murni Stalaktit' },
+  potion_failed: { n: 'Campuran Aneh', k: 'use', hp: 5, price: 2, sell: 1, d: 'Hasil eksperimen alkimia yang gagal. Baunya aneh, namun memulihkan 5 HP.', src: 'Alkimia racikan sembarangan' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },
   seal: { n: 'Pecahan Segel', k: 'key', d: 'Kunci segel kuil kristal. Kumpulkan 3.' },
   mochi: { n: 'Mochi', k: 'key', d: 'Kucing putih milik Lina. Ia mendengkur.' },
 };
-const ICON_OF = { stonearm: 'chain' };
+const ICON_OF = {
+  stonearm: 'chain',
+  leg_sun: 'csword',
+  leg_shadow: 'hbow',
+  leg_quake: 'baxe',
+  leg_frost: 'fspear',
+  leg_moon: 'isword',
+  elixir_life: 'potion',
+  potion_agility: 'potion',
+  potion_frostcloak: 'potion',
+  potion_nightvision: 'potion',
+  potion_failed: 'potion'
+};
 // Masak di penginapan (Bu Rina)
 const COOK = [
   { id: 'f_fish', need: { fish: 1 } }, { id: 'f_soup', need: { veg: 2 } }, { id: 'f_ginger', need: { veg: 1, fish: 1 } },

@@ -36,7 +36,7 @@ async function openBag(sc) {
      <div style="margin:4px 0 2px;font-size:9px;color:#a8a8b8;">Preset: ${loadoutBtns}</div>
      ${setsBadge}
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b>${altWpnText}</div></div></div>
-     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) + srcText : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · B tutup'}</div>`;
+     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) + srcText : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · [C] Pakai Terbaik · B tutup'}</div>`;
     const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => {
@@ -114,6 +114,35 @@ async function openBag(sc) {
     }
     draw();
   }
+  function autoEquipBest() {
+    const inv = S.inv || {};
+    const wpns = Object.keys(inv).filter(id => ITEMS[id] && ITEMS[id].k === 'wpn');
+    const arms = Object.keys(inv).filter(id => ITEMS[id] && ITEMS[id].k === 'arm');
+    const accs = Object.keys(inv).filter(id => ITEMS[id] && ITEMS[id].k === 'acc');
+
+    const score = id => {
+      const it = ITEMS[id] || {};
+      const u = (S.up && S.up[id]) || 0;
+      return (it.atk || 0) * 2 + u * UPG.wpn * 2 + (it.def || 0) * 2 + u * UPG.arm * 2 + (it.mag || 0) * 1.5 + ((it.spd || 0) * 40);
+    };
+
+    let bestWpn = S.eq.wpn;
+    for (const w of wpns) if (score(w) > score(bestWpn)) bestWpn = w;
+
+    let bestArm = S.eq.arm;
+    for (const a of arms) if (score(a) > score(bestArm)) bestArm = a;
+
+    let bestAcc = S.eq.acc;
+    for (const ac of accs) if (!bestAcc || score(ac) > score(bestAcc)) bestAcc = ac;
+
+    S.eq.wpn = bestWpn;
+    S.eq.arm = bestArm;
+    S.eq.acc = bestAcc;
+    sfx('chest');
+    updHud();
+    if (typeof toastItem === 'function') toastItem(null, `⚡ Perlengkapan terbaik dipasang!`);
+    draw();
+  }
   function act() {
     const L = list(); if (!L.length) return; const id = L[sel], it = ITEMS[id];
     if (it.k === 'use') { if (!sc.useItem(id)) sfx('buzz'); }
@@ -146,6 +175,10 @@ async function openBag(sc) {
           }
           draw();
         }
+      }
+      else if (k === 'nova') {
+        // Tombol C / Nova / Klik shortcut untuk Pasang Terbaik (#373)
+        autoEquipBest();
       }
       else if (k === 'dash') {
         // Tekan DASH untuk mengunci / membuka kunci item (Fitur #374)

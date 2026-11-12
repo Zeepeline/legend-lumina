@@ -8,6 +8,27 @@ Object.assign(World.prototype, {
     if (e.kb > 0) { e.kb -= dt; s.setVelocity(e.kbx, e.kby); return; }
     if (locked) { s.setVelocity(0); return; }
     if (this.enemyStatus(e, dt)) return;
+
+    // Panggilan Bala Bantuan Musuh Terdesak (#9)
+    if (!e.calledBackup && !e.boss && (e.type === 'goblin' || e.type === 'wolf' || e.type === 'boar') && e.hp < e.max * 0.35 && aggro) {
+      e.calledBackup = true;
+      e.st = 'calling';
+      s.setVelocity(0);
+      popWorld(s.x, s.y - 20, 'BAHAYA! MENGGELAR BANTUAN!', 'crit');
+      sfxAt('crit', s.x, s.y, this);
+      this.time.delayedCall(450, () => {
+        if (e.hp > 0 && this.enemies.length < 12) {
+          const spawnX = clamp(s.x + rnd(-80, 80), 40, this.M.w - 40);
+          const spawnY = clamp(s.y + rnd(-80, 80), 40, this.M.h - 40);
+          this.puff(spawnX, spawnY);
+          this.spawnEnemy(e.type, spawnX, spawnY);
+          popWorld(spawnX, spawnY - 14, '+Bala Bantuan!', 'crit');
+        }
+        e.st = 'idle';
+      });
+      return;
+    }
+
     const dx = pl.x - s.x, dy = pl.y - s.y, d = Math.hypot(dx, dy) || 1;
     const aggro = !pl.dead && d < (e.boss ? 420 : 120);
     const hx = e.home.x - s.x, hy = e.home.y - s.y, hd = Math.hypot(hx, hy) || 1;

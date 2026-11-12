@@ -10,6 +10,7 @@ const FCAT = {
   stove: { n: 'Tungku Dapur', p: 80, w: 30, h: 30, act: 'cook', d: 'Memasak di rumah sendiri.' },
   craft: { n: 'Meja Kerajinan', p: 90, w: 26, h: 22, tex: 'crafttable', act: 'craft', d: 'Membuat barang dari bahan.' },
   box: { n: 'Peti Penyimpanan', p: 50, w: 18, h: 16, tex: 'chest', act: 'box', d: 'Simpan barang agar tas lebih lega.' },
+  alchemy: { n: 'Meja Alkimia', p: 100, w: 26, h: 22, tex: 'fieldoven', act: 'alchemy', d: 'Meracik ramuan eksperimen di rumah.' },
   plant: { n: 'Pot Tanaman', p: 15, w: 28, h: 20, tex: 'i_planter' },
 };
 const ROOM_IN = { x: 58, y: 84, r: 262, b: 238 }, DOOR_LANE = { x: 128, y: 196, r: 192, b: 260 };
@@ -41,6 +42,7 @@ Object.assign(World.prototype, {
       if (a === 'sleep') { await fadeTo(1); sleepToMorning(); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Tidur di ranjang sendiri memang paling nyenyak. Permainan tersimpan.', 'Rumah'); }
       else if (a === 'cook') await cookMenu('Dapur Rumah Arka', 'Arka');
       else if (a === 'craft') await openCraft(this);
+      else if (a === 'alchemy') await openAlchemyTable();
       else if (a === 'box') await openBox();
     } finally { G.lock--; }
   },

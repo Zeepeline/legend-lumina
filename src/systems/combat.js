@@ -46,6 +46,11 @@ Object.assign(World.prototype, {
                 isBackstab = true;
               }
             }
+            // Belati Rembulan Danau (selalu kritikal saat malam)
+            const isNightTime = S.time >= 19 || S.time < 5;
+            if (curWpnId === 'leg_moon' && isNightTime) {
+              isBackstab = true;
+            }
             const finalCrit = crit || isBackstab;
             const finalDmg = st.atk * W.mul * cMul * (isBackstab ? 1.8 : 1);
             if (isBackstab && e.hp > 0) {
@@ -57,6 +62,14 @@ Object.assign(World.prototype, {
             // Efek Permata Senjata (#23)
             const curWpnId = S.eq?.wpn;
             const curGem = curWpnId && S.socket && S.socket[curWpnId];
+            // Efek Senjata Legendaris (#33)
+            if (curWpnId === 'leg_sun') {
+              this.sparkle(e.spr.x, e.spr.y - 10, 'doto', 6);
+              if (typeof applyStatus === 'function') applyStatus(e, 'burn', 3);
+            } else if (curWpnId === 'leg_quake') {
+              this.camShake(100, .005);
+              sfx('boom');
+            }
             if (curGem === 'shard' && Math.random() < 0.25) {
               this.freezeEnemy(e, 1.2);
             } else if (curGem === 'spore' && typeof applyStatus === 'function') {
@@ -81,7 +94,9 @@ Object.assign(World.prototype, {
     this.time.delayedCall(180, () => b.setVisible(false));
     const s = this.add.image(pl.x + dx * 8, pl.y - 9 + dy * 6, 'arrow').setRotation(a);
     const sharp = has('sarrow'); if (sharp) { addItem('sarrow', -1); s.setTint(0xffe08a); }
-    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 270, vy: dy * 270, life: .7, kind: 'arrow', mine: 1, dmg: st.atk * .8 * (sharp ? 1.6 : 1), pierce: sharp });
+    const isShadowBow = S.eq?.wpn === 'leg_shadow';
+    if (isShadowBow) s.setTint(0xc8a0ff);
+    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 270, vy: dy * 270, life: .7, kind: 'arrow', mine: 1, dmg: st.atk * .8 * (sharp ? 1.6 : 1), pierce: sharp || isShadowBow });
   },
   // sihir: arah dari tarikan tombol / arah gerak / musuh terdekat / arah hadap
   aimAngle() {

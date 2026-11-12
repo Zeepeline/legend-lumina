@@ -18,6 +18,7 @@ MAPS.meadow = {
     ['houseA', 140, 252], ['houseB', 480, 246], ['crate', 214, 352], ['barrel', 232, 356], ['crate', 214, 396],
     ['sign', 420, 300, { text: 'DESA KINCIR\nLumbung gandum Benua Lumina.' }],
     ['teatable', 430, 246],
+    ['scenicbench', 280, 860],
     ['cavemouth', 1200, 170],
     ['sign', 120, 300, { text: 'Padang Angin\nBarat: Desa Lumina · Timur laut: Gua Batu' }],
     ['sign', 1040, 960, { text: 'Selatan: RAWA SENJA\nBerbahaya! Hanya untuk petualang berpengalaman.' }],

@@ -414,6 +414,33 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'alchemytable') {
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          if (typeof openAlchemyTable === 'function') await openAlchemyTable();
+          else await say('Meja eksperimen alkimia.');
+        }
+      });
+    }
+    if (type === 'scenicbench') {
+      this.inter.push({
+        x, y: y + 2, r: 22,
+        fn: async () => {
+          G.lock++;
+          sfx('heal');
+          this.sparkle(x, y - 8, 'dotg', 10);
+          const st = stat();
+          S.hp = Math.min(st.maxhp, S.hp + 30);
+          S.mp = Math.min(st.maxmp, S.mp + 20);
+          S.viewpoints = S.viewpoints || {};
+          S.viewpoints[this.M.id] = true;
+          updHud();
+          await say(`Duduk santai di titik pemandangan alam yang indah. Angin bertiup sepoi-sepoi menyejukkan hati. (HP +30, MP +20).`);
+          G.lock--;
+        }
+      });
+    }
     if (type === 'mailbox') {
       this.inter.push({
         x, y: y + 2, r: 20,
@@ -732,7 +759,17 @@ class World extends Phaser.Scene {
       if (n + rain > .02) {
         const col = n > .05 ? lerpCol(0x40220c, 0x0a1238, clamp((n - .1) / .3, 0, 1)) : 0x1a2430;
         d.fill(col, 1); d.setAlpha(Math.min(.74, n + rain));
-        if (n > .12) { d.erase('nlS', Math.round(pl.x - sx - 38), Math.round(pl.y - 12 - sy - 38)); for (const L of this.lights) { const r = L.big ? 54 : L.small ? 38 : 18, k = L.big ? 'nlL' : L.small ? 'nlS' : 'nlW', X = L.x - sx, Y = L.y - sy; if (X > -60 && X < VW + 60 && Y > -60 && Y < VH + 60) d.erase(k, Math.round(X - r), Math.round(Y - r)); } for (const p of this.shots) if (p.kind === 'fire') d.erase('nlS', Math.round(p.gx - sx - 38), Math.round(p.gy - 9 - sy - 38)); for (const e of this.enemies) if (e.type === 'wisp') d.erase('nlS', Math.round(e.spr.x - sx - 38), Math.round(e.spr.y - 16 - sy - 38)); }
+        if (n > .12) {
+          const pulse = Math.sin(this.t * 3) * 3;
+          d.erase('nlS', Math.round(pl.x - sx - 38 - pulse / 2), Math.round(pl.y - 12 - sy - 38 - pulse / 2));
+          for (const L of this.lights) {
+            const r = (L.big ? 54 : L.small ? 38 : 18) + pulse;
+            const k = L.big ? 'nlL' : L.small ? 'nlS' : 'nlW', X = L.x - sx, Y = L.y - sy;
+            if (X > -60 && X < VW + 60 && Y > -60 && Y < VH + 60) d.erase(k, Math.round(X - r), Math.round(Y - r));
+          }
+          for (const p of this.shots) if (p.kind === 'fire') d.erase('nlS', Math.round(p.gx - sx - 38), Math.round(p.gy - 9 - sy - 38));
+          for (const e of this.enemies) if (e.type === 'wisp') d.erase('nlS', Math.round(e.spr.x - sx - 38), Math.round(e.spr.y - 16 - sy - 38));
+        }
       }
       if (this.glows) { const ga = clamp((n - .15) * 1.3, 0, .55); for (const g of this.glows) g.setAlpha(ga * (.9 + Math.sin(this.t * 3 + g.x) * .1)); }
       updClock();

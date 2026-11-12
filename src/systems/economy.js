@@ -464,3 +464,156 @@ async function openMailbox() {
   }
   G.lock--;
 }
+
+// ---------------- 6. ENSIKLOPEDIA BENUA LUMINA (#71) ----------------
+const CODEX_FLORA = ['herb', 'berry', 'apple', 'orange', 'honey', 'mush', 'gmush', 'frost_flower', 'river_orchid'];
+const CODEX_FAUNA = ['fish', 'gfish', 'moonfish', 'rainfish', 'egg', 'wool', 'river_prawn', 'canary_feather', 'sparrow_feather'];
+const CODEX_MINERAL = ['ore', 'shard', 'amethyst_gem', 'fossil_ammonite', 'obsidian', 'brass_cog', 'lake_pearl'];
+
+async function openEncyclopedia() {
+  if (G.lock > 0) return;
+  G.lock++; sfx('cur');
+
+  const totalItems = CODEX_FLORA.length + CODEX_FAUNA.length + CODEX_MINERAL.length + BEAST.length;
+  const foundFlora = CODEX_FLORA.filter(id => has(id) || S.seen?.[id] || (S.inv && S.inv[id])).length;
+  const foundFauna = CODEX_FAUNA.filter(id => has(id) || (S.fishLog && S.fishLog[id]) || (S.inv && S.inv[id])).length;
+  const foundMineral = CODEX_MINERAL.filter(id => has(id) || (S.inv && S.inv[id])).length;
+  const foundBeast = BEAST.filter(k => S.kills && S.kills[k] > 0).length;
+  const totalFound = foundFlora + foundFauna + foundMineral + foundBeast;
+  const pct = Math.round((totalFound / totalItems) * 100);
+
+  for (;;) {
+    const tabs = [
+      { t: `🌿 Flora (${foundFlora}/${CODEX_FLORA.length})`, list: CODEX_FLORA },
+      { t: `🐟 Fauna & Akuatik (${foundFauna}/${CODEX_FAUNA.length})`, list: CODEX_FAUNA },
+      { t: `💎 Mineral & Harta (${foundMineral}/${CODEX_MINERAL.length})`, list: CODEX_MINERAL },
+      { t: `👾 Bestiari (${foundBeast}/${BEAST.length})`, beast: true },
+      { t: 'Tutup' }
+    ];
+
+    const r = await choose({
+      head: `ENSIKLOPEDIA LUMINA · ${pct}% Selesai`,
+      x: 20, y: 20, w: 260,
+      items: tabs,
+      foot: () => `Koleksi Dunia: <b>${totalFound}/${totalItems} entri (${pct}%)</b> terungkap di Benua Lumina.`
+    });
+
+    if (r < 0 || r === tabs.length - 1) break;
+
+    const cat = tabs[r];
+    if (cat.beast) {
+      if (typeof openBestiary === 'function') await openBestiary(G.scene);
+      continue;
+    }
+
+    const items = cat.list.map(id => {
+      const it = ITEMS[id];
+      const discovered = has(id) || (S.inv && S.inv[id]) || (S.fishLog && S.fishLog[id]);
+      return {
+        t: discovered ? icon(id) + it.n : '❓ ????????',
+        r: discovered ? (it.src || 'Benua Lumina') : 'Belum ditemukan'
+      };
+    });
+    items.push({ t: 'Kembali' });
+
+    await choose({
+      head: cat.t,
+      x: 20, y: 20, w: 260,
+      items,
+      foot: i => {
+        if (i < cat.list.length) {
+          const id = cat.list[i];
+          const it = ITEMS[id];
+          const discovered = has(id) || (S.inv && S.inv[id]) || (S.fishLog && S.fishLog[id]);
+          return discovered ? `${it.d}<br>📍 <b>Lokasi:</b> ${it.src || 'Di alam liar'}` : 'Jelajahi sudut benua untuk menemukan entri ini.';
+        }
+        return '';
+      }
+    });
+  }
+  G.lock--;
+}
+
+// ---------------- 7. SISTEM ALKIMIA EKSPERIMEN (#27) ----------------
+const ALCHEMY_FORMULAS = [
+  { mats: ['herb', 'honey'], out: 'elixir_life', n: 1, name: 'Eliksir Pemulih Agung' },
+  { mats: ['herb', 'cave_moss', 'leather_polish'], out: 'potion_agility', n: 1, name: 'Ramuan Kelincahan' },
+  { mats: ['shard', 'frost_flower', 'frost_moss'], out: 'potion_frostcloak', n: 1, name: 'Ramuan Jubah Es' },
+  { mats: ['gmush', 'cave_water'], out: 'potion_nightvision', n: 1, name: 'Ramuan Penglihatan Malam' }
+];
+
+async function openAlchemyTable() {
+  if (G.lock > 0) return;
+  G.lock++; sfx('cur');
+  S.alchemyRecipes = S.alchemyRecipes || {};
+
+  for (;;) {
+    const mats = Object.keys(S.inv).filter(id => ITEMS[id] && (ITEMS[id].k === 'mat' || ITEMS[id].k === 'use') && S.inv[id] > 0);
+    if (mats.length < 2) {
+      await say('Kamu butuh sedikitnya 2 bahan herbal/mineral berbeda di tas untuk eksperimen alkimia.');
+      break;
+    }
+
+    const mItems = mats.map(id => ({
+      t: icon(id) + ITEMS[id].n + ' x' + S.inv[id],
+      r: ITEMS[id].src || 'Bahan Alkimia'
+    }));
+    mItems.push({ t: 'Batal' });
+
+    // Pilih Bahan 1
+    const r1 = await choose({
+      head: 'Meja Alkimia · Pilih Bahan Pertama',
+      x: 24, y: 24, w: 250,
+      items: mItems,
+      foot: i => i < mats.length ? ITEMS[mats[i]].d : 'Campurkan bahan bebas untuk menemukan ramuan ajaib baru.'
+    });
+    if (r1 < 0 || r1 === mats.length) break;
+    const mat1 = mats[r1];
+
+    // Pilih Bahan 2
+    const mItems2 = mats.filter(id => id !== mat1 || S.inv[id] >= 2).map(id => ({
+      t: icon(id) + ITEMS[id].n + ' x' + S.inv[id]
+    }));
+    mItems2.push({ t: 'Batal' });
+
+    const r2 = await choose({
+      head: `Alkimia · Campur dengan ${ITEMS[mat1].n}`,
+      x: 24, y: 24, w: 250,
+      items: mItems2,
+      foot: () => 'Pilih bahan kedua untuk diseduh ke dalam kuali alkimia.'
+    });
+    if (r2 < 0 || r2 >= mItems2.length - 1) continue;
+    const mat2 = mats.filter(id => id !== mat1 || S.inv[id] >= 2)[r2];
+
+    // Eksekusi Pencampuran
+    sfx('fire');
+    await sleep(250);
+    sfx('splash');
+    await sleep(250);
+
+    // Cari resep yang cocok
+    const chosen = [mat1, mat2].sort();
+    const match = ALCHEMY_FORMULAS.find(f => {
+      const fm = [...f.mats].sort();
+      return fm.length === 2 && fm[0] === chosen[0] && fm[1] === chosen[1];
+    });
+
+    addItem(mat1, -1);
+    addItem(mat2, -1);
+
+    if (match) {
+      addItem(match.out, match.n);
+      S.alchemyRecipes[match.out] = true;
+      sfx('chest');
+      popWorld(S.x || 512, (S.y || 380) - 20, `+${ITEMS[match.out].n}!`, 'heal');
+      await say(`BERHASIL! Formula bereaksi sempurna menghasilkan ${ITEMS[match.out].n}! Resep telah tersimpan di catatan.`);
+    } else {
+      addItem('potion_failed', 1);
+      sfx('buzz');
+      popWorld(S.x || 512, (S.y || 380) - 20, '+Campuran Aneh', 'mpc');
+      await say('BLUBB... Campuran mengeluarkan asap pekat berbau aneh. Kamu mendapatkan Campuran Aneh.');
+    }
+    updHud();
+  }
+  G.lock--;
+}

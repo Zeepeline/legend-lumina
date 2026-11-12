@@ -128,6 +128,13 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 376 | Info sumber & habitat item (panduan lokasi asal bahan di tooltip tas) | `data/items.js` (`src`), `ui/bag.js` | 15 |
 | 90 | Air beranimasi & percikan langkah (audio debur & percikan air di zona perairan dangkal) | `scene/world.js` | 15 |
 | 94 | Pencapaian ekstra & gelar baru (8 pencapaian baru & 6 gelar progresif di menu) | `data/quests.js` (`ACH`), `systems/economy.js` (`TITLES`) | 15 |
+| 71 | Ensiklopedia Benua Lumina (katalog koleksi flora, fauna, mineral, bestiari & % kelengkapan) | `systems/economy.js` (`openEncyclopedia`), `ui/menus.js` | 16 |
+| 27 | Alkimia & eksperimen ramuan (meracik 2 bahan bebas di meja alkimia rumah/akademi) | `systems/economy.js` (`openAlchemyTable`), `systems/home.js` | 16 |
+| 33 | 5 Senjata legendaris tersembunyi (Surya Aurel, Bayangan Senja, Gempa Gua, Glasier, Rembulan) | `data/items.js`, `systems/combat.js` | 16 |
+| 373 | Tombol "Pakai Terbaik" (evaluasi cerdas & otomatis memasang set perlengkapan terkuat) | `ui/bag.js` (`autoEquipBest`) | 16 |
+| 67 | Titik pemandangan indah (bangku santai di ketinggian untuk pemulihan & kabut terbuka) | `world/objects.js`, `world/maps/meadow.js`, `scene/world.js` | 16 |
+| 9 | Panggilan bantuan musuh terdesak (goblin/serigala/babi memanggil kawan saat sekarat) | `ai/enemies.js` | 16 |
+| 92 | Pendaran lentera malam dinamis (denyut sinar bernapas pada lampu & obor di kegelapan) | `scene/world.js` | 16 |
 
 ## Sebagian
 
@@ -161,7 +168,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~13~~ | ✅ selesai: 22, 371, 13, 69, 388, 462, 62 | Sinergi Perlengkapan, Taktik & Eksplorasi Malam |
 | ~~14~~ | ✅ selesai: 52, 23, 10, 8, 96, 375, 91 | Penambangan, Permata Soket, Flanking AI, & Interaksi Medan |
 | ~~15~~ | ✅ selesai: 70, 485, 372, 44, 376, 90, 94 | Eksplorasi Pintas, Kotak Surat Rumah & Alur Tempur |
-| 16+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~16~~ | ✅ selesai: 71, 27, 33, 373, 67, 9, 92 | Ensiklopedia Benua, Alkimia Eksperimen & Relik Legendaris |
+| 17+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 

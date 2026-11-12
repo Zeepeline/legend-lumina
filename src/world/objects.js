@@ -125,6 +125,8 @@ const OBJ = {
   bombbarrel: { key: 'barrel', col: [14, 6, 0], sh: [10, 3] },
   mailbox: { key: 'sign', col: [10, 6, 0], sh: [8, 2], fade: 1 },
   brokenbridge: { key: 'log', col: [28, 10, 0], sh: [16, 4] },
+  scenicbench: { key: 'i_bench', col: [42, 8, 2], sh: [22, 3] },
+  alchemytable: { key: 'fieldoven', col: [20, 10, 0], sh: [12, 3] },
   fence: { key: 'fence', col: [18, 4, 0] },
   lamp: { key: 'lamp', col: [6, 4, 0], sh: [5, 2] },
   rock: { key: 'rock', col: [16, 6, 0], sh: [9, 2] },

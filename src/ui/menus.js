@@ -6,6 +6,7 @@ async function mainMenu(sc) {
   const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Jurnal', 'Tujuan, misteri & catatan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
     ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Atribut', 'Bagikan poin naik level', () => openAttr()], ['Kerajinan', 'Buat ramuan, bom, panah, umpan', () => openCraft(sc)],
     ['Buku Resep', 'Katalog resep tempa, kerajinan & masakan', () => openRecipeBook()],
+    ['Ensiklopedia', 'Katalog flora, fauna, mineral & kemajuan dunia', () => openEncyclopedia()],
     ['Tantangan Harian', 'Aksi harian bertarung & berpetualang', () => openDailyFeats()],
     ['Statistik & Gelar', 'Rekap petualangan & bonus gelar', () => openStatsAndTitles()],
     ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Buku Ikan', 'Catatan & habitat fauna air', () => openFishLog(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()], ['Riwayat', 'Baca ulang percakapan terakhir', () => openDlgLog()],

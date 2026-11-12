@@ -4115,6 +4115,8 @@ const OBJ = {
   bombbarrel: { key: 'barrel', col: [14, 6, 0], sh: [10, 3] },
   mailbox: { key: 'sign', col: [10, 6, 0], sh: [8, 2], fade: 1 },
   brokenbridge: { key: 'log', col: [28, 10, 0], sh: [16, 4] },
+  scenicbench: { key: 'i_bench', col: [42, 8, 2], sh: [22, 3] },
+  alchemytable: { key: 'fieldoven', col: [20, 10, 0], sh: [12, 3] },
   fence: { key: 'fence', col: [18, 4, 0] },
   lamp: { key: 'lamp', col: [6, 4, 0], sh: [5, 2] },
   rock: { key: 'rock', col: [16, 6, 0], sh: [9, 2] },
@@ -4463,6 +4465,7 @@ MAPS.meadow = {
     ['houseA', 140, 252], ['houseB', 480, 246], ['crate', 214, 352], ['barrel', 232, 356], ['crate', 214, 396],
     ['sign', 420, 300, { text: 'DESA KINCIR\nLumbung gandum Benua Lumina.' }],
     ['teatable', 430, 246],
+    ['scenicbench', 280, 860],
     ['cavemouth', 1200, 170],
     ['sign', 120, 300, { text: 'Padang Angin\nBarat: Desa Lumina · Timur laut: Gua Batu' }],
     ['sign', 1040, 960, { text: 'Selatan: RAWA SENJA\nBerbahaya! Hanya untuk petualang berpengalaman.' }],
@@ -4821,6 +4824,7 @@ MAPS.kinn = makeRoom('kinn', 'Penginapan Seribu Lentera', [560, 300], {
 });
 MAPS.arsip = makeRoom('arsip', 'Arsip Akademi Cahaya', [0, 0], {
   wallc: '#8a7a6a', floor: ['#5a4a3a', '#7a6248', '#84694e', '#6a5440'], bgm: 'cave', furn: [['rug', 132, 150, 1], ['table', 143, 140], ['shelf', 64, 52, 0], ['shelf', 104, 52, 3], ['shelf', 176, 52, 5], ['shelf', 216, 52, 1]], windows: [],
+  objs: [['alchemytable', 230, 190]],
   exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'kakademi', tx: 700, ty: 400, dir: 'down', label: 'Distrik Akademi' }],
   loreSpots: [[64, 84, 'arsip_selene'], [104, 84, 'arsip_rongga'], [176, 84, 'arsip_bram'], [216, 84, 'arsip_morgath']],
 });
@@ -4963,7 +4967,7 @@ const GAME_VERSION = '1.17.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true, font: 1, lite: false, toast: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 } }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {} }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -5052,6 +5056,8 @@ function loadSave() {
       S.mail = S.mail || [];
       S.readMail = S.readMail || {};
       S.spent = S.spent || { village: 0, city: 0 };
+      S.alchemyRecipes = S.alchemyRecipes || {};
+      S.viewpoints = S.viewpoints || {};
       if (!S.eq.altWpn) S.eq.altWpn = null;
       if (!MAPS[S.map]) S.map = 'village';
       if (!s.tipsDone && (S.stage > 1 || S.lv > 2)) S.tipsDone = { all: 1 };
@@ -5187,13 +5193,39 @@ const ITEMS = {
   stew: { n: 'Sup Ikan', k: 'use', hp: 100, mp: 10, d: 'Masakan Bu Wulan. HP +100, MP +10.' },
   medal: { n: 'Medali Pemburu', k: 'acc', atk: 4, mag: 4, d: 'Serang +4, Sihir +4. Hadiah bestiari lengkap.' },
   mring: { n: 'Cincin Bulan', k: 'acc', mag: 12, regen: 1, d: 'Sihir +12 dan HP pulih perlahan.' },
+  // 5 Senjata Legendaris Tersembunyi (#33)
+  leg_sun: { n: 'Pedang Surya Aurel', k: 'wpn', atk: 24, mag: 8, d: 'Pusaka legendaris raja-raja Aurel kuno. Tebasan melontarkan lidah api suci berkobar.', src: 'Peti rahasia di Reruntuhan Aurel Hutan Dalam' },
+  leg_shadow: { n: 'Busur Bayangan Senja', k: 'wpn', wt: 'bow', atk: 16, d: 'Busur mitis teranyam dari serat bayangan rawa purba. Anak panah menembus segala dinding & rintangan.', src: 'Peti tersembunyi pulau tengah Rawa Senja' },
+  leg_quake: { n: 'Kapak Gempa Gua', k: 'wpn', wt: 'axe', atk: 26, d: 'Kapak raksasa berpahat batu magma purba. Setiap ayunan memicu gelombang kejut getaran bumi.', src: 'Ceruk tersembunyi di balik dinding retak Gua Batu' },
+  leg_frost: { n: 'Tombak Glasier Abadi', k: 'wpn', wt: 'spear', atk: 25, frz: 0.5, d: 'Tombak es glasier abadi yang tidak pernah meleleh. Peluang 50% membekukan musuh seketika.', src: 'Gua es glasier Puncak Beku' },
+  leg_moon: { n: 'Belati Rembulan Danau', k: 'wpn', atk: 20, spd: 0.15, d: 'Belati lengkung perak bercahaya rembulan. Saat malam tiba, setiap serangan selalu dipastikan kritikal!', src: 'Kuil air di dasar Danau Cermin' },
+
+  // Hasil Ramuan Alkimia Eksperimen (#27)
+  elixir_life: { n: 'Eliksir Pemulih Agung', k: 'use', hp: 70, mp: 30, price: 40, sell: 20, d: 'Ramuan alkimia murni perpaduan madu dan herba langka. Pulihkan 70 HP & 30 MP seketika.', src: 'Alkimia: Daun Obat + Madu Liar' },
+  potion_agility: { n: 'Ramuan Kelincahan Ksatria', k: 'use', buff: [['spd', 180]], price: 35, sell: 18, d: 'Cairan hijau zamrud berenergi kilat. Kecepatan gerak bertambah +30% selama 3 menit.', src: 'Alkimia: Daun Obat + Lumut Zamrud Gua + Minyak Semir Kulit' },
+  potion_frostcloak: { n: 'Ramuan Jubah Es', k: 'use', buff: [['warm', 300]], price: 45, sell: 22, d: 'Menyelubungi tubuh dengan perlindungan es. Kebal suhu dingin ekstrim selama 5 menit.', src: 'Alkimia: Pecahan Kristal + Bunga Salju Abadi + Lumut Es Kristal' },
+  potion_nightvision: { n: 'Ramuan Penglihatan Malam', k: 'use', mp: 25, buff: [['def', 180]], price: 35, sell: 18, d: 'Pendaran spora gua memancarkan cahaya terang di tempat gelap & gua selama 3 menit.', src: 'Alkimia: Jamur Pendar + Air Murni Stalaktit' },
+  potion_failed: { n: 'Campuran Aneh', k: 'use', hp: 5, price: 2, sell: 1, d: 'Hasil eksperimen alkimia yang gagal. Baunya aneh, namun memulihkan 5 HP.', src: 'Alkimia racikan sembarangan' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },
   seal: { n: 'Pecahan Segel', k: 'key', d: 'Kunci segel kuil kristal. Kumpulkan 3.' },
   mochi: { n: 'Mochi', k: 'key', d: 'Kucing putih milik Lina. Ia mendengkur.' },
 };
-const ICON_OF = { stonearm: 'chain' };
+const ICON_OF = {
+  stonearm: 'chain',
+  leg_sun: 'csword',
+  leg_shadow: 'hbow',
+  leg_quake: 'baxe',
+  leg_frost: 'fspear',
+  leg_moon: 'isword',
+  elixir_life: 'potion',
+  potion_agility: 'potion',
+  potion_frostcloak: 'potion',
+  potion_nightvision: 'potion',
+  potion_failed: 'potion'
+};
 // Masak di penginapan (Bu Rina)
 const COOK = [
   { id: 'f_fish', need: { fish: 1 } }, { id: 'f_soup', need: { veg: 2 } }, { id: 'f_ginger', need: { veg: 1, fish: 1 } },
@@ -5931,6 +5963,33 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'alchemytable') {
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          if (typeof openAlchemyTable === 'function') await openAlchemyTable();
+          else await say('Meja eksperimen alkimia.');
+        }
+      });
+    }
+    if (type === 'scenicbench') {
+      this.inter.push({
+        x, y: y + 2, r: 22,
+        fn: async () => {
+          G.lock++;
+          sfx('heal');
+          this.sparkle(x, y - 8, 'dotg', 10);
+          const st = stat();
+          S.hp = Math.min(st.maxhp, S.hp + 30);
+          S.mp = Math.min(st.maxmp, S.mp + 20);
+          S.viewpoints = S.viewpoints || {};
+          S.viewpoints[this.M.id] = true;
+          updHud();
+          await say(`Duduk santai di titik pemandangan alam yang indah. Angin bertiup sepoi-sepoi menyejukkan hati. (HP +30, MP +20).`);
+          G.lock--;
+        }
+      });
+    }
     if (type === 'mailbox') {
       this.inter.push({
         x, y: y + 2, r: 20,
@@ -6249,7 +6308,17 @@ class World extends Phaser.Scene {
       if (n + rain > .02) {
         const col = n > .05 ? lerpCol(0x40220c, 0x0a1238, clamp((n - .1) / .3, 0, 1)) : 0x1a2430;
         d.fill(col, 1); d.setAlpha(Math.min(.74, n + rain));
-        if (n > .12) { d.erase('nlS', Math.round(pl.x - sx - 38), Math.round(pl.y - 12 - sy - 38)); for (const L of this.lights) { const r = L.big ? 54 : L.small ? 38 : 18, k = L.big ? 'nlL' : L.small ? 'nlS' : 'nlW', X = L.x - sx, Y = L.y - sy; if (X > -60 && X < VW + 60 && Y > -60 && Y < VH + 60) d.erase(k, Math.round(X - r), Math.round(Y - r)); } for (const p of this.shots) if (p.kind === 'fire') d.erase('nlS', Math.round(p.gx - sx - 38), Math.round(p.gy - 9 - sy - 38)); for (const e of this.enemies) if (e.type === 'wisp') d.erase('nlS', Math.round(e.spr.x - sx - 38), Math.round(e.spr.y - 16 - sy - 38)); }
+        if (n > .12) {
+          const pulse = Math.sin(this.t * 3) * 3;
+          d.erase('nlS', Math.round(pl.x - sx - 38 - pulse / 2), Math.round(pl.y - 12 - sy - 38 - pulse / 2));
+          for (const L of this.lights) {
+            const r = (L.big ? 54 : L.small ? 38 : 18) + pulse;
+            const k = L.big ? 'nlL' : L.small ? 'nlS' : 'nlW', X = L.x - sx, Y = L.y - sy;
+            if (X > -60 && X < VW + 60 && Y > -60 && Y < VH + 60) d.erase(k, Math.round(X - r), Math.round(Y - r));
+          }
+          for (const p of this.shots) if (p.kind === 'fire') d.erase('nlS', Math.round(p.gx - sx - 38), Math.round(p.gy - 9 - sy - 38));
+          for (const e of this.enemies) if (e.type === 'wisp') d.erase('nlS', Math.round(e.spr.x - sx - 38), Math.round(e.spr.y - 16 - sy - 38));
+        }
       }
       if (this.glows) { const ga = clamp((n - .15) * 1.3, 0, .55); for (const g of this.glows) g.setAlpha(ga * (.9 + Math.sin(this.t * 3 + g.x) * .1)); }
       updClock();
@@ -6384,6 +6453,11 @@ Object.assign(World.prototype, {
                 isBackstab = true;
               }
             }
+            // Belati Rembulan Danau (selalu kritikal saat malam)
+            const isNightTime = S.time >= 19 || S.time < 5;
+            if (curWpnId === 'leg_moon' && isNightTime) {
+              isBackstab = true;
+            }
             const finalCrit = crit || isBackstab;
             const finalDmg = st.atk * W.mul * cMul * (isBackstab ? 1.8 : 1);
             if (isBackstab && e.hp > 0) {
@@ -6395,6 +6469,14 @@ Object.assign(World.prototype, {
             // Efek Permata Senjata (#23)
             const curWpnId = S.eq?.wpn;
             const curGem = curWpnId && S.socket && S.socket[curWpnId];
+            // Efek Senjata Legendaris (#33)
+            if (curWpnId === 'leg_sun') {
+              this.sparkle(e.spr.x, e.spr.y - 10, 'doto', 6);
+              if (typeof applyStatus === 'function') applyStatus(e, 'burn', 3);
+            } else if (curWpnId === 'leg_quake') {
+              this.camShake(100, .005);
+              sfx('boom');
+            }
             if (curGem === 'shard' && Math.random() < 0.25) {
               this.freezeEnemy(e, 1.2);
             } else if (curGem === 'spore' && typeof applyStatus === 'function') {
@@ -6419,7 +6501,9 @@ Object.assign(World.prototype, {
     this.time.delayedCall(180, () => b.setVisible(false));
     const s = this.add.image(pl.x + dx * 8, pl.y - 9 + dy * 6, 'arrow').setRotation(a);
     const sharp = has('sarrow'); if (sharp) { addItem('sarrow', -1); s.setTint(0xffe08a); }
-    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 270, vy: dy * 270, life: .7, kind: 'arrow', mine: 1, dmg: st.atk * .8 * (sharp ? 1.6 : 1), pierce: sharp });
+    const isShadowBow = S.eq?.wpn === 'leg_shadow';
+    if (isShadowBow) s.setTint(0xc8a0ff);
+    this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 270, vy: dy * 270, life: .7, kind: 'arrow', mine: 1, dmg: st.atk * .8 * (sharp ? 1.6 : 1), pierce: sharp || isShadowBow });
   },
   // sihir: arah dari tarikan tombol / arah gerak / musuh terdekat / arah hadap
   aimAngle() {
@@ -7289,6 +7373,27 @@ Object.assign(World.prototype, {
     if (e.kb > 0) { e.kb -= dt; s.setVelocity(e.kbx, e.kby); return; }
     if (locked) { s.setVelocity(0); return; }
     if (this.enemyStatus(e, dt)) return;
+
+    // Panggilan Bala Bantuan Musuh Terdesak (#9)
+    if (!e.calledBackup && !e.boss && (e.type === 'goblin' || e.type === 'wolf' || e.type === 'boar') && e.hp < e.max * 0.35 && aggro) {
+      e.calledBackup = true;
+      e.st = 'calling';
+      s.setVelocity(0);
+      popWorld(s.x, s.y - 20, 'BAHAYA! MENGGELAR BANTUAN!', 'crit');
+      sfxAt('crit', s.x, s.y, this);
+      this.time.delayedCall(450, () => {
+        if (e.hp > 0 && this.enemies.length < 12) {
+          const spawnX = clamp(s.x + rnd(-80, 80), 40, this.M.w - 40);
+          const spawnY = clamp(s.y + rnd(-80, 80), 40, this.M.h - 40);
+          this.puff(spawnX, spawnY);
+          this.spawnEnemy(e.type, spawnX, spawnY);
+          popWorld(spawnX, spawnY - 14, '+Bala Bantuan!', 'crit');
+        }
+        e.st = 'idle';
+      });
+      return;
+    }
+
     const dx = pl.x - s.x, dy = pl.y - s.y, d = Math.hypot(dx, dy) || 1;
     const aggro = !pl.dead && d < (e.boss ? 420 : 120);
     const hx = e.home.x - s.x, hy = e.home.y - s.y, hd = Math.hypot(hx, hy) || 1;
@@ -13562,6 +13667,7 @@ const FCAT = {
   stove: { n: 'Tungku Dapur', p: 80, w: 30, h: 30, act: 'cook', d: 'Memasak di rumah sendiri.' },
   craft: { n: 'Meja Kerajinan', p: 90, w: 26, h: 22, tex: 'crafttable', act: 'craft', d: 'Membuat barang dari bahan.' },
   box: { n: 'Peti Penyimpanan', p: 50, w: 18, h: 16, tex: 'chest', act: 'box', d: 'Simpan barang agar tas lebih lega.' },
+  alchemy: { n: 'Meja Alkimia', p: 100, w: 26, h: 22, tex: 'fieldoven', act: 'alchemy', d: 'Meracik ramuan eksperimen di rumah.' },
   plant: { n: 'Pot Tanaman', p: 15, w: 28, h: 20, tex: 'i_planter' },
 };
 const ROOM_IN = { x: 58, y: 84, r: 262, b: 238 }, DOOR_LANE = { x: 128, y: 196, r: 192, b: 260 };
@@ -13593,6 +13699,7 @@ Object.assign(World.prototype, {
       if (a === 'sleep') { await fadeTo(1); sleepToMorning(); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud(); sfx('heal'); await sleep(500); await fadeTo(0); saveGame(this); sfx('save'); await say('Tidur di ranjang sendiri memang paling nyenyak. Permainan tersimpan.', 'Rumah'); }
       else if (a === 'cook') await cookMenu('Dapur Rumah Arka', 'Arka');
       else if (a === 'craft') await openCraft(this);
+      else if (a === 'alchemy') await openAlchemyTable();
       else if (a === 'box') await openBox();
     } finally { G.lock--; }
   },
@@ -14529,6 +14636,159 @@ async function openMailbox() {
   G.lock--;
 }
 
+// ---------------- 6. ENSIKLOPEDIA BENUA LUMINA (#71) ----------------
+const CODEX_FLORA = ['herb', 'berry', 'apple', 'orange', 'honey', 'mush', 'gmush', 'frost_flower', 'river_orchid'];
+const CODEX_FAUNA = ['fish', 'gfish', 'moonfish', 'rainfish', 'egg', 'wool', 'river_prawn', 'canary_feather', 'sparrow_feather'];
+const CODEX_MINERAL = ['ore', 'shard', 'amethyst_gem', 'fossil_ammonite', 'obsidian', 'brass_cog', 'lake_pearl'];
+
+async function openEncyclopedia() {
+  if (G.lock > 0) return;
+  G.lock++; sfx('cur');
+
+  const totalItems = CODEX_FLORA.length + CODEX_FAUNA.length + CODEX_MINERAL.length + BEAST.length;
+  const foundFlora = CODEX_FLORA.filter(id => has(id) || S.seen?.[id] || (S.inv && S.inv[id])).length;
+  const foundFauna = CODEX_FAUNA.filter(id => has(id) || (S.fishLog && S.fishLog[id]) || (S.inv && S.inv[id])).length;
+  const foundMineral = CODEX_MINERAL.filter(id => has(id) || (S.inv && S.inv[id])).length;
+  const foundBeast = BEAST.filter(k => S.kills && S.kills[k] > 0).length;
+  const totalFound = foundFlora + foundFauna + foundMineral + foundBeast;
+  const pct = Math.round((totalFound / totalItems) * 100);
+
+  for (;;) {
+    const tabs = [
+      { t: `🌿 Flora (${foundFlora}/${CODEX_FLORA.length})`, list: CODEX_FLORA },
+      { t: `🐟 Fauna & Akuatik (${foundFauna}/${CODEX_FAUNA.length})`, list: CODEX_FAUNA },
+      { t: `💎 Mineral & Harta (${foundMineral}/${CODEX_MINERAL.length})`, list: CODEX_MINERAL },
+      { t: `👾 Bestiari (${foundBeast}/${BEAST.length})`, beast: true },
+      { t: 'Tutup' }
+    ];
+
+    const r = await choose({
+      head: `ENSIKLOPEDIA LUMINA · ${pct}% Selesai`,
+      x: 20, y: 20, w: 260,
+      items: tabs,
+      foot: () => `Koleksi Dunia: <b>${totalFound}/${totalItems} entri (${pct}%)</b> terungkap di Benua Lumina.`
+    });
+
+    if (r < 0 || r === tabs.length - 1) break;
+
+    const cat = tabs[r];
+    if (cat.beast) {
+      if (typeof openBestiary === 'function') await openBestiary(G.scene);
+      continue;
+    }
+
+    const items = cat.list.map(id => {
+      const it = ITEMS[id];
+      const discovered = has(id) || (S.inv && S.inv[id]) || (S.fishLog && S.fishLog[id]);
+      return {
+        t: discovered ? icon(id) + it.n : '❓ ????????',
+        r: discovered ? (it.src || 'Benua Lumina') : 'Belum ditemukan'
+      };
+    });
+    items.push({ t: 'Kembali' });
+
+    await choose({
+      head: cat.t,
+      x: 20, y: 20, w: 260,
+      items,
+      foot: i => {
+        if (i < cat.list.length) {
+          const id = cat.list[i];
+          const it = ITEMS[id];
+          const discovered = has(id) || (S.inv && S.inv[id]) || (S.fishLog && S.fishLog[id]);
+          return discovered ? `${it.d}<br>📍 <b>Lokasi:</b> ${it.src || 'Di alam liar'}` : 'Jelajahi sudut benua untuk menemukan entri ini.';
+        }
+        return '';
+      }
+    });
+  }
+  G.lock--;
+}
+
+// ---------------- 7. SISTEM ALKIMIA EKSPERIMEN (#27) ----------------
+const ALCHEMY_FORMULAS = [
+  { mats: ['herb', 'honey'], out: 'elixir_life', n: 1, name: 'Eliksir Pemulih Agung' },
+  { mats: ['herb', 'cave_moss', 'leather_polish'], out: 'potion_agility', n: 1, name: 'Ramuan Kelincahan' },
+  { mats: ['shard', 'frost_flower', 'frost_moss'], out: 'potion_frostcloak', n: 1, name: 'Ramuan Jubah Es' },
+  { mats: ['gmush', 'cave_water'], out: 'potion_nightvision', n: 1, name: 'Ramuan Penglihatan Malam' }
+];
+
+async function openAlchemyTable() {
+  if (G.lock > 0) return;
+  G.lock++; sfx('cur');
+  S.alchemyRecipes = S.alchemyRecipes || {};
+
+  for (;;) {
+    const mats = Object.keys(S.inv).filter(id => ITEMS[id] && (ITEMS[id].k === 'mat' || ITEMS[id].k === 'use') && S.inv[id] > 0);
+    if (mats.length < 2) {
+      await say('Kamu butuh sedikitnya 2 bahan herbal/mineral berbeda di tas untuk eksperimen alkimia.');
+      break;
+    }
+
+    const mItems = mats.map(id => ({
+      t: icon(id) + ITEMS[id].n + ' x' + S.inv[id],
+      r: ITEMS[id].src || 'Bahan Alkimia'
+    }));
+    mItems.push({ t: 'Batal' });
+
+    // Pilih Bahan 1
+    const r1 = await choose({
+      head: 'Meja Alkimia · Pilih Bahan Pertama',
+      x: 24, y: 24, w: 250,
+      items: mItems,
+      foot: i => i < mats.length ? ITEMS[mats[i]].d : 'Campurkan bahan bebas untuk menemukan ramuan ajaib baru.'
+    });
+    if (r1 < 0 || r1 === mats.length) break;
+    const mat1 = mats[r1];
+
+    // Pilih Bahan 2
+    const mItems2 = mats.filter(id => id !== mat1 || S.inv[id] >= 2).map(id => ({
+      t: icon(id) + ITEMS[id].n + ' x' + S.inv[id]
+    }));
+    mItems2.push({ t: 'Batal' });
+
+    const r2 = await choose({
+      head: `Alkimia · Campur dengan ${ITEMS[mat1].n}`,
+      x: 24, y: 24, w: 250,
+      items: mItems2,
+      foot: () => 'Pilih bahan kedua untuk diseduh ke dalam kuali alkimia.'
+    });
+    if (r2 < 0 || r2 >= mItems2.length - 1) continue;
+    const mat2 = mats.filter(id => id !== mat1 || S.inv[id] >= 2)[r2];
+
+    // Eksekusi Pencampuran
+    sfx('fire');
+    await sleep(250);
+    sfx('splash');
+    await sleep(250);
+
+    // Cari resep yang cocok
+    const chosen = [mat1, mat2].sort();
+    const match = ALCHEMY_FORMULAS.find(f => {
+      const fm = [...f.mats].sort();
+      return fm.length === 2 && fm[0] === chosen[0] && fm[1] === chosen[1];
+    });
+
+    addItem(mat1, -1);
+    addItem(mat2, -1);
+
+    if (match) {
+      addItem(match.out, match.n);
+      S.alchemyRecipes[match.out] = true;
+      sfx('chest');
+      popWorld(S.x || 512, (S.y || 380) - 20, `+${ITEMS[match.out].n}!`, 'heal');
+      await say(`BERHASIL! Formula bereaksi sempurna menghasilkan ${ITEMS[match.out].n}! Resep telah tersimpan di catatan.`);
+    } else {
+      addItem('potion_failed', 1);
+      sfx('buzz');
+      popWorld(S.x || 512, (S.y || 380) - 20, '+Campuran Aneh', 'mpc');
+      await say('BLUBB... Campuran mengeluarkan asap pekat berbau aneh. Kamu mendapatkan Campuran Aneh.');
+    }
+    updHud();
+  }
+  G.lock--;
+}
+
 'use strict';
 // Percakapan NPC, toko, bengkel, penginapan
 Object.assign(World.prototype, {
@@ -15156,7 +15416,7 @@ async function openBag(sc) {
      <div style="margin:4px 0 2px;font-size:9px;color:#a8a8b8;">Preset: ${loadoutBtns}</div>
      ${setsBadge}
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b>${altWpnText}</div></div></div>
-     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) + srcText : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · B tutup'}</div>`;
+     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) + srcText : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · [C] Pakai Terbaik · B tutup'}</div>`;
     const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => {
@@ -15234,6 +15494,35 @@ async function openBag(sc) {
     }
     draw();
   }
+  function autoEquipBest() {
+    const inv = S.inv || {};
+    const wpns = Object.keys(inv).filter(id => ITEMS[id] && ITEMS[id].k === 'wpn');
+    const arms = Object.keys(inv).filter(id => ITEMS[id] && ITEMS[id].k === 'arm');
+    const accs = Object.keys(inv).filter(id => ITEMS[id] && ITEMS[id].k === 'acc');
+
+    const score = id => {
+      const it = ITEMS[id] || {};
+      const u = (S.up && S.up[id]) || 0;
+      return (it.atk || 0) * 2 + u * UPG.wpn * 2 + (it.def || 0) * 2 + u * UPG.arm * 2 + (it.mag || 0) * 1.5 + ((it.spd || 0) * 40);
+    };
+
+    let bestWpn = S.eq.wpn;
+    for (const w of wpns) if (score(w) > score(bestWpn)) bestWpn = w;
+
+    let bestArm = S.eq.arm;
+    for (const a of arms) if (score(a) > score(bestArm)) bestArm = a;
+
+    let bestAcc = S.eq.acc;
+    for (const ac of accs) if (!bestAcc || score(ac) > score(bestAcc)) bestAcc = ac;
+
+    S.eq.wpn = bestWpn;
+    S.eq.arm = bestArm;
+    S.eq.acc = bestAcc;
+    sfx('chest');
+    updHud();
+    if (typeof toastItem === 'function') toastItem(null, `⚡ Perlengkapan terbaik dipasang!`);
+    draw();
+  }
   function act() {
     const L = list(); if (!L.length) return; const id = L[sel], it = ITEMS[id];
     if (it.k === 'use') { if (!sc.useItem(id)) sfx('buzz'); }
@@ -15266,6 +15555,10 @@ async function openBag(sc) {
           }
           draw();
         }
+      }
+      else if (k === 'nova') {
+        // Tombol C / Nova / Klik shortcut untuk Pasang Terbaik (#373)
+        autoEquipBest();
       }
       else if (k === 'dash') {
         // Tekan DASH untuk mengunci / membuka kunci item (Fitur #374)
@@ -15361,6 +15654,7 @@ async function mainMenu(sc) {
   const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Jurnal', 'Tujuan, misteri & catatan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
     ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Atribut', 'Bagikan poin naik level', () => openAttr()], ['Kerajinan', 'Buat ramuan, bom, panah, umpan', () => openCraft(sc)],
     ['Buku Resep', 'Katalog resep tempa, kerajinan & masakan', () => openRecipeBook()],
+    ['Ensiklopedia', 'Katalog flora, fauna, mineral & kemajuan dunia', () => openEncyclopedia()],
     ['Tantangan Harian', 'Aksi harian bertarung & berpetualang', () => openDailyFeats()],
     ['Statistik & Gelar', 'Rekap petualangan & bonus gelar', () => openStatsAndTitles()],
     ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Buku Ikan', 'Catatan & habitat fauna air', () => openFishLog(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()], ['Riwayat', 'Baca ulang percakapan terakhir', () => openDlgLog()],
