@@ -63,28 +63,8 @@ async function openBestiary(sc) {
   Object.assign(w.style, { left: '8px', right: '8px', top: '8px', bottom: '34px', overflow: 'auto' });
   await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 6 }); w.remove();
 }
-async function openFishLog(sc) {
-  S.fishLog = S.fishLog || {};
-  const entries = [
-    { id: 'fish', n: 'Ikan Sungai', h: 'Sungai tawar di siang/pagi hari', d: 'Ikan segar yang umum dijumpai di perairan Lumina.' },
-    { id: 'moonfish', n: 'Ikan Rembulan', h: 'Perairan tenang saat malam tiba', d: 'Memancarkan pendar biru lembut, memulihkan 45 MP.' },
-    { id: 'rainfish', n: 'Ikan Hujan', h: 'Hanya muncul saat hujan deras turun', d: 'Bersiik hijau giok berkilau saat basah, memulihkan 70 HP.' },
-    { id: 'gfish', n: 'Ikan Emas', h: 'Ikan langka di perairan jernih', d: 'Sangat langka dan berharga tinggi jika dijual ke pedagang.' },
-    { id: 'oldboot', n: 'Sepatu Usang', h: 'Sampah di dasar kolam/sungai', d: 'Barang rongsokan yang kadang tersangkut kail pancing.' }
-  ];
-  const caughtCount = entries.filter(e => (S.fishLog[e.id] || 0) > 0).length;
-  const w = win('menu', `<div class="mh">Buku Ikan · Koleksi ${caughtCount}/${entries.length}</div><div class="bgrid">` +
-    entries.map(e => {
-      const c = S.fishLog[e.id] || 0;
-      if (c > 0) {
-        return `<div class="bc"><div style="margin:4px auto;width:24px;height:24px;transform:scale(1.7);transform-origin:center">${icon(e.id)}</div><b>${e.n}</b><span>Tertangkap: ${c}×</span><div style="font-size:10px;color:#a0b8d0;margin-top:2px">${e.d}</div></div>`;
-      } else {
-        return `<div class="bc unk"><b>???</b><span style="color:#d8a050">Habitat:</span><div style="font-size:10px;color:#8090a8;margin-top:2px">${e.h}</div></div>`;
-      }
-    }).join('') + `</div><div class="mf">Gunakan pancingan di dekat air saat cuaca atau waktu yang tepat!</div>`);
-  Object.assign(w.style, { left: '8px', right: '8px', top: '8px', bottom: '34px', overflow: 'auto' });
-  await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 6 }); w.remove();
-}
+// Buku Ikan ada di systems/fishing.js (semua jenis, petunjuk, rekor)
+function openFishLog(sc) { return openFishLogNew(sc); }
 async function openAch() {
   const w = win('menu', `<div class="mh">Pencapaian · ${ACH.filter(A => S.ach[A.id]).length}/${ACH.length}</div>` + ACH.map(A => `<div class="qr${S.ach[A.id] ? '' : ' done'}"><b>${S.ach[A.id] ? '★' : '☆'} ${A.n}</b> · ${A.d}<br>Hadiah: ${A.gift[0] === 'gold' ? A.gift[1] + ' G' : ITEMS[A.gift[0]].n + ' x' + A.gift[1]}</div>`).join(''));
   Object.assign(w.style, { left: '14px', right: '14px', top: '10px', bottom: '34px', overflow: 'auto' });

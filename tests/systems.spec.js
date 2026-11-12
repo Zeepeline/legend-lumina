@@ -21,7 +21,7 @@ test('beli di toko & tempa di bengkel', async ({ page }) => {
 
 test('memancing & berkebun', async ({ page }) => {
   const errors = await h.boot(page); await h.newGame(page);
-  await h.G(page, () => { window.__game.S.inv.rod = 1; window.__game.S.inv.seed = 1; });
+  await h.G(page, () => { window.__game.S.inv.rod = 1; window.__game.S.inv.seed = 1; pickFish = () => FISH[0]; }); // ikan mudah tanpa tarik-ulur (diuji di gelombang9)
   await h.goto(page, 'forest', 446, 628, 'up');
   await h.G(page, () => window.__game.sc.enemies.forEach(e => e.spr.setPosition(3000, 3000)));
   await h.press(page, 'a', 1, 200);

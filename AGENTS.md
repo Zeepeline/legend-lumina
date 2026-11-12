@@ -44,6 +44,8 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `systems/sound.js` | lagu per wilayah & malam (`bgmFor`), musik tarung dinamis (`swapBGM`), suara jauh-dekat (`sfxAt`), langkah per tanah (`groundAt`) |
 | `systems/craft.js` | poin atribut (`S.attr`, `openAttr`, membungkus `stat()`), kerajinan (`CRAFT`), alat lempar (`useTool`), 2 slot alat (`S.tools`) |
 | `systems/explore.js` | kabut peta (`S.fog`), rahasia per wilayah liar (`freeSpot` mengikuti aturan penempatan), peta harta (`S.tmap`), peta besar `openMapNew` (zoom, ikon) |
+| `systems/ranch.js` | Kandang Arka (`S.farm`, `STOCK`, `M.ranch` di data peta), benih (`SEEDS`), irigasi |
+| `systems/fishing.js` | mancing: `FISH` (lokasi/jam/cuaca/legendaris), `tugGame` tarik-ulur, rekor ukuran, Buku Ikan `openFishLogNew`, akuarium (`FCAT.tank`) |
 | `systems/home.js` | Rumah Arka (`S.home`, peta `home`): beli rumah, katalog `FCAT`, tata perabot bebas (`startCarry`/`carryKey`), peti `openBox`, perluasan |
 | `systems/status.js` | efek status `STATUS` (racun/terbakar/dingin) pemain & musuh; sumber = `fx` di `ENEMY`/`PROJ` |
 | `systems/travel.js` | teleport: `WARPS` (posisi patung per peta), aktif di `S.warps` |
@@ -90,6 +92,7 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 - **Depth = y dasar sprite**, semua sprite `setOrigin(.5, 1)`.
 - **Kunci input saat UI terbuka:** `G.lock++`/`G.lock--` berpasangan. `UIH` adalah handler input UI aktif. `talk()` sudah mengunci sendiri.
 - **Bayangan objek** dipanggang ke tanah (`gfx/bake.js`). Objek baru di `OBJ` perlu properti `sh`.
+- **Jangan menimpa fungsi dari file yang dimuat belakangan** (mis. `openMap`, `openFishLog` di `ui/`, yang dimuat setelah `systems/`): dalam mode strict, satu `ReferenceError` menghentikan sisa file. Buat fungsi baru (`openMapNew`) lalu jadikan fungsi lama pendelegasi.
 - **`tone()` = audio, `toneC()` = warna.** Semua file berbagi scope global, jadi hindari nama fungsi ganda.
 - **Save** di `localStorage` (`legenda_lumina_arpg_v2`). Field baru di `S` wajib diberi default di `newState()`.
 - **Malam:** `RenderTexture` diisi alpha 1 lalu `setAlpha()`. Jangan pakai `fill(warna, alpha<1)` (tampilannya pudar saat ada `erase`).

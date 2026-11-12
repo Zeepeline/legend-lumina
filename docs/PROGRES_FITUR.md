@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 54 | 4 | 0 | 942 |
+| 62 | 4 | 0 | 934 |
 
 ## Selesai
 
@@ -74,6 +74,14 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 515 | Kandang sapi: susu harian (item baru Susu Segar) | `systems/ranch.js` | 8 |
 | 519 | Kasih sayang: elus tiap hari, ♥ ≥ 6 → hasil ×2 | `systems/ranch.js` (`tendStock`) | 8 |
 | 505 | Irigasi per petak (250 G): tumbuh 2× lebih cepat | `systems/ranch.js` (`plantPlot`, `plotHours`) | 8 |
+| 51 | Mancing lebih dalam: 11 jenis per lokasi/jam/cuaca, ikan raksasa | `systems/fishing.js` (`FISH`, `fishPool`) | 9 |
+| 571 | Tarik-ulur: tahan untuk menggulung, lepas saat tali merah | `systems/fishing.js` (`tugGame`) | 9 |
+| 572 | Ikan per jam (trout pagi, lele malam, belut senja, rembulan tengah malam) | `systems/fishing.js` | 9 |
+| 573 | Ikan per cuaca (hujan) | `systems/fishing.js` | 9 |
+| 575 | Ukuran ikan (cm) + rekor per jenis di Buku Ikan | `systems/fishing.js` (`logFish`) | 9 |
+| 576 | 3 ikan legendaris (hutan, rawa, sungai), butuh umpan & waktu tepat | `systems/fishing.js` | 9 |
+| 583 | Akuarium di Rumah Arka (pajang 4 ikan, berenang) | `systems/fishing.js` (`FCAT.tank`) | 9 |
+| 574 | Ikan musim dingin (lubang es Puncak Beku, sudah ada, dicatat) | `systems/life.js` (`fishIceHole`) | 9 |
 
 ## Sebagian
 
@@ -99,7 +107,7 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~6~~ | ✅ selesai (674 papan arah pindah ke gelombang 7: perlu penempatan di data peta) | — |
 | ~~7~~ | ✅ selesai | — |
 | ~~8~~ | ✅ selesai | — |
-| 9 | 51, 571–576, 583 | Mancing mendalam & akuarium |
+| ~~9~~ | ✅ selesai | — |
 | 10 | 49, 714–718, 701–704 | Musim & kalender |
 | 11+ | sisanya per kategori, P1/P2 dulu | — |
 

@@ -162,7 +162,7 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #tip b{color:#ffd84a}#tip small{display:block;font-size:8px;color:#b8a8c8;margin-top:2px}#tip.off{opacity:0;transition:opacity .3s}
 @keyframes tipin{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}
 /* peta mini */
-#mini{position:absolute;left:6px;top:58px;width:72px;height:72px;border:1px solid #e8c050;border-radius:6px;background:rgba(20,16,30,.55);z-index:30;pointer-events:auto;image-rendering:pixelated}
+#mini{position:absolute;left:6px;top:58px;width:72px;height:72px;border:1px solid #e8c050;border-radius:6px;background:rgba(20,16,30,.55);z-index:1;pointer-events:auto;image-rendering:pixelated}
 /* ukuran & transparansi tombol (#74) */
 #pad .btn{scale:var(--bs,1);opacity:var(--ba,1)}
 /* penanda bahaya dari luar layar */
@@ -184,3 +184,13 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #mapw .mt{font-size:12px;line-height:12px;color:#c8281e;font-weight:700;text-shadow:0 0 2px #fff,1px 1px 0 #fff}
 #mapw .mbox{touch-action:none}
 #quest .qd{color:#ffd84a;font-weight:700}
+/* mancing tarik-ulur */
+#tug{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);width:min(88%,330px);background:rgba(20,30,44,.92);border:1px solid #6ab0d8;border-radius:8px;padding:6px 9px;color:#fff;font-size:11px;z-index:70;pointer-events:auto}
+#tug .tg-h{font-weight:700;color:#9ad0f0;margin-bottom:4px}#tug .tg-h small{display:block;font-weight:400;font-size:8px;color:#a8b8c8}
+#tug .tg-row{display:flex;align-items:center;gap:6px;margin:3px 0}#tug .tg-row span{width:40px;font-size:9px}
+#tug .tg-bar{flex:1;height:9px;background:#0a141e;border-radius:5px;overflow:hidden;border:1px solid #2a4a6a}
+#tug .tg-t{display:block;height:100%;background:#ffd84a;transition:background .1s}#tug .tg-t.hot{background:#e84a3a}
+#tug .tg-p{display:block;height:100%;background:#5fbf68}
+#tug.pull{animation:tugshake .12s infinite}@keyframes tugshake{0%,100%{margin-left:0}50%{margin-left:2px}}
+.bc .fic{height:22px;display:flex;align-items:center;justify-content:center;font-size:14px}.bc .fic img{width:20px;height:20px;image-rendering:pixelated}
+.bc .fx{font-size:8px;color:#7a5a3a;margin-top:1px}.bc .fh{font-size:7px;line-height:1.25;color:#8a7a6a;margin-top:2px}
