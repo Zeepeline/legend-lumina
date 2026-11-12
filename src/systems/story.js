@@ -31,6 +31,21 @@ Object.assign(World.prototype, {
   },
   async openChest(c, spr) {
     if (S.flags[c.id]) return talk(null, ['Petinya sudah kosong.']);
+    // Peti Palsu / Mimic (#199)
+    if (c.mimic) {
+      G.lock++;
+      sfx('crit');
+      this.camShake(120, .006);
+      spr.setTint(0xff4a4a);
+      await sleep(200);
+      spr.destroy();
+      S.flags[c.id] = true;
+      this.spawnEnemy('mimic', c.x, c.y);
+      popWorld(c.x, c.y - 18, 'KRAKK! MIMIC!', 'crit');
+      await say('KRAAAKKK!! Peti itu membuka taring tajam dan melompat menyerangmu! Itu adalah Mimic!');
+      G.lock--;
+      return;
+    }
     if (c.lock) {
       if (!has('key')) return talk(null, ['Peti ini terkunci rapat. Lubang kuncinya berkarat... mungkin ada kunci tua di suatu tempat.']);
       addItem('key', -1);

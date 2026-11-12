@@ -112,6 +112,21 @@ Object.assign(World.prototype, {
   },
   useTool(id) {
     const pl = this.pl; if (pl.atkCd > 0) return false; pl.atkCd = .45;
+    if (id === 'hearthstone') {
+      G.lock++;
+      sfx('save');
+      popWorld(pl.x, pl.y - 28, 'Membaca Mantra Kepulangan...', 'mpc');
+      this.sparkle(pl.x, pl.y - 10, 'dot', 16);
+      this.time.delayedCall(1200, () => {
+        G.lock--;
+        if (!pl.dead && !this.trans) {
+          sfx('heal');
+          this.goto('village', 512, 380, 'down');
+          popWorld(512, 360, 'Tiba di Depan Rumah Arka!', 'heal');
+        }
+      });
+      return true;
+    }
     const kind = ITEMS[id].tool, a = this.aimAngle(), dx = Math.cos(a), dy = Math.sin(a), st = stat();
     addItem(id, -1); updHud(); updToolBtns();
     if (kind === 'smoke') {
@@ -125,7 +140,23 @@ Object.assign(World.prototype, {
     sfx('swing');
     const p = { t: 0 };
     this.tweens.add({ targets: p, t: 1, duration: 420, onUpdate: () => { o.setPosition(pl.x + (tx - pl.x) * p.t, pl.y - 10 + (ty - pl.y) * p.t - Math.sin(p.t * Math.PI) * 30); o.rotation += .3;
-        if (kind === 'net') { const e = this.enemies.find(e => e.hp > 0 && !e.netted && Math.hypot(e.spr.x - o.x, e.spr.y - 6 - o.y) < 16); if (e) { e.netted = 1; this.freezeEnemy(e, 3); popWorld(e.spr.x, e.spr.y - 24, 'terjerat!', 'mpc'); p.hit = 1; this.tweens.killTweensOf(p); o.destroy(); this.time.delayedCall(3000, () => e.netted = 0); } } },
+        if (kind === 'net') {
+          // Tangkap serangga liar (#54)
+          const bugs = ['bug_beetle', 'bug_butterfly', 'bug_dragonfly', 'bug_firefly'];
+          const hitCritter = this.critters.find(c => Math.hypot(c.s.x - o.x, c.s.y - o.y) < 22);
+          if (hitCritter) {
+            hitCritter.s.destroy();
+            this.critters = this.critters.filter(c => c !== hitCritter);
+            const gainedBug = bugs[ri(0, bugs.length - 1)];
+            addItem(gainedBug, 1);
+            sfx('ok');
+            popWorld(o.x, o.y - 18, `+1 ${ITEMS[gainedBug].n}!`, 'heal');
+            p.hit = 1; this.tweens.killTweensOf(p); o.destroy();
+            return;
+          }
+          const e = this.enemies.find(e => e.hp > 0 && !e.netted && Math.hypot(e.spr.x - o.x, e.spr.y - 6 - o.y) < 16);
+          if (e) { e.netted = 1; this.freezeEnemy(e, 3); popWorld(e.spr.x, e.spr.y - 24, 'terjerat!', 'mpc'); p.hit = 1; this.tweens.killTweensOf(p); o.destroy(); this.time.delayedCall(3000, () => e.netted = 0); }
+        } },
       onComplete: () => {
         o.destroy(); if (kind !== 'bomb') return;
         this.time.delayedCall(250, () => {

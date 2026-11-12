@@ -43,6 +43,7 @@ async function openSettings() {
     ['Bilah HP musuh', () => onoff(OPT.hpbar), () => { OPT.hpbar = !OPT.hpbar; }, 'Bilah HP kecil di atas musuh'],
     ['Ekspor save', () => null, async () => { saveGame(G.scene); await codeDialog('out'); }, 'Salin kode save ke perangkat lain'],
     ['Impor save', () => null, async () => { if (await codeDialog('in')) { await say('Save berhasil dimuat. Game akan dibuka ulang.'); location.reload(); } }, 'Muat progres dari kode save'],
+    ['Menu Debug', () => '🛠 QA', () => openDebugMenu(), 'Mode pengembang & pengujian cepat'],
     ['Kembali', () => null, null, 'Tutup pengaturan']];
   let sel = 0;
   for (; ;) {
@@ -92,4 +93,61 @@ async function chooseSlot(mode) {
   if (r < 0 || r > 2) return -1;
   if (mode === 'new' && slotInfo(r) && !(await ask(`Slot ${r + 1} sudah berisi. Timpa dengan permainan baru?`))) return -1;
   return r;
+}
+
+// ---------------- MENU PENGEMBANG / DEBUG (#98) ----------------
+async function openDebugMenu() {
+  G.lock++; sfx('ok');
+  for (;;) {
+    const opts = [
+      { t: '⚡ Pulihkan HP & MP Penuh' },
+      { t: '💰 Tambah 500 G' },
+      { t: '🗺 Buka Seluruh Kabut Peta' },
+      { t: '🚀 Teleport: Desa Lumina', map: 'village', x: 512, y: 384 },
+      { t: '🚀 Teleport: Hutan Lumina', map: 'forest', x: 640, y: 100 },
+      { t: '🚀 Teleport: Padang Angin', map: 'meadow', x: 300, y: 300 },
+      { t: '🚀 Teleport: Gua Batu', map: 'cave', x: 140, y: 800 },
+      { t: '🚀 Teleport: Rawa Senja', map: 'swamp', x: 640, y: 100 },
+      { t: '🚀 Teleport: Puncak Beku', map: 'snow', x: 640, y: 1100 },
+      { t: '🚀 Teleport: Danau Cermin', map: 'lake', x: 1000, y: 500 },
+      { t: '🚀 Teleport: Kota Lumina', map: 'kpasar', x: 560, y: 320 },
+      { t: '🎁 Beri Semua Kunci & Alat' },
+      { t: 'Tutup' }
+    ];
+
+    const r = await choose({
+      head: '🛠 MODE PENGEMBANG / DEBUG',
+      x: 20, y: 20, w: 260,
+      items: opts,
+      foot: () => 'Menu QA & Pengujian Fitur Cepat Antigravity.'
+    });
+
+    if (r < 0 || r === opts.length - 1) break;
+
+    const opt = opts[r];
+    if (r === 0) {
+      const st = stat();
+      S.hp = st.maxhp; S.mp = st.maxmp;
+      sfx('heal'); updHud();
+      await say('HP dan MP dipulihkan penuh!');
+    } else if (r === 1) {
+      S.gold += 500;
+      sfx('coin'); updHud();
+      await say('Berhasil menambahkan 500 G!');
+    } else if (r === 2) {
+      S.fog = S.fog || {};
+      for (const k in MAPS) S.fog[k] = [];
+      sfx('chest');
+      await say('Seluruh kabut wilayah dunia disingkap!');
+    } else if (opt.map) {
+      G.lock--;
+      if (G.scene) G.scene.goto(opt.map, opt.x, opt.y, 'down');
+      return;
+    } else if (r === 11) {
+      ['key', 'lockpick', 'hearthstone', 'bomb', 'net', 'smoke', 'bait'].forEach(id => addItem(id, 5));
+      sfx('chest'); updHud();
+      await say('Semua kunci dan alat petualangan ditambahkan ke tas!');
+    }
+  }
+  G.lock--;
 }

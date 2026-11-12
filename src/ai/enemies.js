@@ -35,6 +35,20 @@ Object.assign(World.prototype, {
     e.t -= dt; e.cd -= dt;
     const wander = (spd) => { if (e.t <= 0) { e.t = rnd(1, 2.4); const a = rnd(0, 6.28), go = Math.random() < .6; s.setVelocity(hd > 60 ? hx / hd * spd : go ? Math.cos(a) * spd * .7 : 0, hd > 60 ? hy / hd * spd : go ? Math.sin(a) * spd * .7 : 0); } };
     switch (D.ai) {
+      case 'flee': {
+        // AI Slime Emas: selalu kabur menjauh dari Arka
+        const fleeAng = Math.atan2(s.y - pl.y, s.x - pl.x);
+        s.setVelocity(Math.cos(fleeAng) * D.spd, Math.sin(fleeAng) * D.spd);
+        e.fleeT = (e.fleeT || 12) - dt;
+        if (e.fleeT <= 0 && e.hp > 0) {
+          e.hp = 0;
+          this.puff(s.x, s.y);
+          s.destroy();
+          e.sh.destroy();
+          popWorld(s.x, s.y - 12, 'Slime Emas Kabur!', 'mpc');
+        }
+        break;
+      }
       case 'hop':
         if (e.t <= 0) {
           if (e.st === 'hop') { e.st = 'idle'; e.t = rnd(.45, 1); s.setVelocity(0); this.tweens.add({ targets: s, scaleX: sc * 1.25, scaleY: sc * .78, duration: 70, yoyo: true }); }

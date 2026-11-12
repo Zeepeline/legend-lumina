@@ -4515,7 +4515,7 @@ MAPS.cave = {
     ['sign', 170, 760, { text: 'Gua Batu. Kristal ungu menerangi jalan.\nGolem Purba tidur di ruang timur.\nGerbang utara: dorong batu ke pelat bercahaya.' }],
   ],
   caveTorches: [[420, 680], [300, 400], [620, 280]],
-  chests: [{ id: 'g1', x: 860, y: 800, item: 'potion3' }, { id: 'g2', x: 640, y: 100, item: 'key' }, { id: 'g3', x: 960, y: 420, item: 'shield', needFlag: 'golem' }, { id: 'g_torch', x: 420, y: 640, item: 'gold100', needFlag: 'cave_torches' }, { id: 'g_lock', x: 280, y: 420, item: 'gold200', locked: 1 }],
+  chests: [{ id: 'g1', x: 860, y: 800, item: 'potion3' }, { id: 'g2', x: 640, y: 100, item: 'key' }, { id: 'g3', x: 960, y: 420, item: 'shield', needFlag: 'golem' }, { id: 'g_torch', x: 420, y: 640, item: 'gold100', needFlag: 'cave_torches' }, { id: 'g_lock', x: 280, y: 420, item: 'gold200', locked: 1 }, { id: 'g_mimic', x: 920, y: 820, mimic: 1 }],
   exits: [{ x: 80, y: 880, w: 80, h: 40, to: 'meadow', tx: 1200, ty: 210, dir: 'down', label: 'Padang Angin' }],
   enemies: [
     ['batc', 400, 680], ['skel', 460, 720], ['slimei', 360, 740], ['ghost', 300, 430], ['skel', 240, 450], ['batc', 340, 380],
@@ -4920,7 +4920,7 @@ function buildHud(icons) {
   HUD = document.createElement('div');
   HUD.innerHTML = `<div id="hud"><div class="lv">LV<b id="hLv">1</b></div><div class="bars">
    <div class="bar hp" id="hHp"><i></i><span></span></div><div class="bar mp" id="hMp"><i></i><span></span></div><div class="bar xp" id="hXp"><i></i></div></div></div>
-   <div id="hDate"></div><div id="hud2"><span id="hClock">☀</span><span><img src="${icons.coin}"><b id="hGold">0</b></span><span class="pt"><img src="${icons.potion}"><b id="hPot">0</b></span></div>
+   <div id="hDate"></div><div id="hud2"><span id="hClock">☀</span><span id="hCompass" style="font-size:9px;color:#ffe27a;margin:0 2px;">🧭 U</span><span><img src="${icons.coin}"><b id="hGold">0</b></span><span class="pt"><img src="${icons.potion}"><b id="hPot">0</b></span></div>
    <div id="fps-meter" style="display:${OPT.fps ? 'block' : 'none'};position:absolute;top:28px;left:4px;font-size:9px;color:#a0f080;background:rgba(0,0,0,0.55);padding:2px 5px;border-radius:3px;z-index:9000;pointer-events:none;font-family:monospace;">60 FPS</div>
    <div id="quest"></div><div id="boss"><span id="bName"></span><div class="bar"><i id="bHp"></i></div></div>`;
   UI.appendChild(HUD);
@@ -4932,6 +4932,12 @@ function updHud() {
   const mp = $('hMp'); mp.firstChild.style.width = (S.mp / st.maxmp * 100) + '%'; mp.lastChild.textContent = S.mp + '/' + st.maxmp;
   $('hXp').firstChild.style.width = (S.exp / need(S.lv) * 100) + '%';
   $('hGold').textContent = S.gold; $('hPot').textContent = (S.inv.potion || 0) + (S.inv.hipotion || 0);
+  const compEl = $('hCompass');
+  if (compEl && G.scene?.pl) {
+    const cardMap = { up: 'U', down: 'S', left: 'B', right: 'T' };
+    const cDir = cardMap[G.scene.pl.dir] || 'U';
+    compEl.textContent = `🧭 ${cDir}`;
+  }
   const q = $('quest');
   const prog = { 2: [S.inv.seal || 0, 3], 11: [[0, 1, 2].filter(k => S.flags['torch' + k]).length, 3], 15: [['m_darto', 'm_sari', 'm_dodi'].filter(k => S.flags[k]).length, 3], 25: [(typeof ARSIP !== 'undefined' ? ARSIP : []).filter(k => S.lore[k]).length, 4] }[S.stage];
   const txt = STAGE_TXT[S.stage];
@@ -5207,6 +5213,15 @@ const ITEMS = {
   potion_nightvision: { n: 'Ramuan Penglihatan Malam', k: 'use', mp: 25, buff: [['def', 180]], price: 35, sell: 18, d: 'Pendaran spora gua memancarkan cahaya terang di tempat gelap & gua selama 3 menit.', src: 'Alkimia: Jamur Pendar + Air Murni Stalaktit' },
   potion_failed: { n: 'Campuran Aneh', k: 'use', hp: 5, price: 2, sell: 1, d: 'Hasil eksperimen alkimia yang gagal. Baunya aneh, namun memulihkan 5 HP.', src: 'Alkimia racikan sembarangan' },
 
+  // Fitur #346: Jimat Kepulangan
+  hearthstone: { n: 'Jimat Kepulangan', k: 'tool', tool: 1, price: 80, sell: 40, d: 'Salurkan energi magis sejenak untuk kembali seketika ke depan Rumah Arka di Desa Lumina.', src: 'Toko desa / Hadiah pembelian Rumah Arka' },
+
+  // Fitur #54: Serangga Tangkapan
+  bug_beetle: { n: 'Kumbang Badak Kayu', k: 'mat', sell: 18, d: 'Kumbang cangkang keras bertanduk perkasa dari dahan pohon hutan rimba.', src: 'Ditangkap dengan jaring di pepohonan hutan' },
+  bug_butterfly: { n: 'Kupu Mentari Emas', k: 'mat', sell: 20, d: 'Kupu-kupu sayap emas berkilau hangat saat menghisap nektar bunga padang.', src: 'Ditangkap dengan jaring di padang bunga' },
+  bug_dragonfly: { n: 'Capung Rawa Zamrud', k: 'mat', sell: 22, d: 'Capung bersayap bening dengan tubuh hijau zamrud berkilau dari rawa.', src: 'Ditangkap dengan jaring di tepi rawa senja' },
+  bug_firefly: { n: 'Kunang Malam Pendar', k: 'mat', sell: 25, d: 'Serangga malam bercahaya sejuk penuntun pengelana di kegelapan.', src: 'Ditangkap dengan jaring saat malam hari' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },
@@ -5224,7 +5239,12 @@ const ICON_OF = {
   potion_agility: 'potion',
   potion_frostcloak: 'potion',
   potion_nightvision: 'potion',
-  potion_failed: 'potion'
+  potion_failed: 'potion',
+  hearthstone: 'mring',
+  bug_beetle: 'bfly_gold',
+  bug_butterfly: 'bfly_gold',
+  bug_dragonfly: 'bfly_blue',
+  bug_firefly: 'firefly_item'
 };
 // Masak di penginapan (Bu Rina)
 const COOK = [
@@ -5296,6 +5316,8 @@ function activeSets() {
 // ai: hop | fly | shoot | turret | lunge | walk | charge | ghost | golem | boss | qboss | sboss | gboss
 const ENEMY = {
   slime: { name: 'Slime', tex: 'slime', hp: 12, atk: 6, def: 1, spd: 40, exp: 4, gold: [1, 3], r: 7, ai: 'hop', drop: ['jelly', .5] },
+  gold_slime: { name: 'Slime Emas', tex: 'slime', hp: 20, atk: 0, def: 12, spd: 130, exp: 100, gold: [150, 250], r: 7, ai: 'flee', drop: ['amethyst_gem', 0.8] },
+  mimic: { name: 'Peti Mimic', tex: 'ch_goblin', hp: 60, atk: 15, def: 6, spd: 85, exp: 45, gold: [60, 100], r: 8, ai: 'lunge', ch: 1, drop: ['amethyst_gem', 0.6] },
   slimeb: { name: 'Slime Biru', tex: 'slimeb', hp: 24, atk: 9, def: 2, spd: 44, exp: 8, gold: [2, 5], r: 7, ai: 'hop', drop: ['jelly', .6] },
   slimer: { name: 'Slime Merah', tex: 'slimer', hp: 36, atk: 13, def: 3, spd: 50, exp: 13, gold: [3, 7], r: 7, ai: 'hop', drop: ['jelly', .6] },
   slimei: { name: 'Slime Es', tex: 'slimei', hp: 50, atk: 17, def: 6, spd: 46, exp: 22, gold: [5, 10], r: 7, ai: 'hop', drop: ['shard', .35], fx: ['chill', 3, .5] },
@@ -6173,6 +6195,10 @@ class World extends Phaser.Scene {
     this.critters.push({ s, fly: 1, ax: x, ay: y, ph: rnd(0, 6), sp: rnd(.4, .8) });
   }
   spawnEnemy(type, x, y) {
+    // Peluang 4% slime di alam liar menjadi Slime Emas (#198)
+    if (type === 'slime' && !this.M.indoor && Math.random() < 0.04) {
+      type = 'gold_slime';
+    }
     let D = ENEMY[type]; const K = (this.M.scale || 1) * DIFF[OPT.diff].hp;
     if (K !== 1 && BOSS_AI.includes(D.ai)) D = Object.assign({}, D, { hp: Math.round(D.hp * DIFF[OPT.diff].hp) });
     else if (K !== 1) D = Object.assign({}, D, { hp: Math.round(D.hp * K), atk: Math.round(D.atk * (1 + (K - 1) * .55)), def: Math.round((D.def || 0) * (1 + (K - 1) * .5)), exp: Math.round(D.exp * K * .9), gold: D.gold && D.gold.map(g => Math.round(g * (1 + (K - 1) * .5))) });
@@ -6185,6 +6211,10 @@ class World extends Phaser.Scene {
     if (D.ai === 'turret') s.setImmovable(true);
     if (!D.ch) { s.play(D.tex + '_mv'); s.anims.setProgress(Math.random()); } else s.anims.stop();
     const e = { D, type, spr: s, sc: D.scale || 1, hp: D.hp, max: D.hp, st: 'idle', t: rnd(.2, 1.2), home: { x, y }, ph: rnd(0, 6), shootT: rnd(1, 2.5), flash: 0, kb: 0, cd: 0, boss: BOSS_AI.includes(D.ai), sh: this.add.image(x, y, D.scale ? 'shadowb' : 'shadow').setAlpha(.22) };
+    if (type === 'gold_slime') {
+      s.setTint(0xffd700);
+      e.goldSlime = true;
+    }
     if (D.fly) e.sh.setScale(.7);
     if (D.ai === 'ghost') { e.phT = rnd(2, 3.5); s.setAlpha(.9); }
     if (!e.boss && !G.title && !this.M.indoor && D.ai !== 'turret' && Math.random() < ELITE_RATE) this.makeElite(e);
@@ -7400,6 +7430,20 @@ Object.assign(World.prototype, {
     e.t -= dt; e.cd -= dt;
     const wander = (spd) => { if (e.t <= 0) { e.t = rnd(1, 2.4); const a = rnd(0, 6.28), go = Math.random() < .6; s.setVelocity(hd > 60 ? hx / hd * spd : go ? Math.cos(a) * spd * .7 : 0, hd > 60 ? hy / hd * spd : go ? Math.sin(a) * spd * .7 : 0); } };
     switch (D.ai) {
+      case 'flee': {
+        // AI Slime Emas: selalu kabur menjauh dari Arka
+        const fleeAng = Math.atan2(s.y - pl.y, s.x - pl.x);
+        s.setVelocity(Math.cos(fleeAng) * D.spd, Math.sin(fleeAng) * D.spd);
+        e.fleeT = (e.fleeT || 12) - dt;
+        if (e.fleeT <= 0 && e.hp > 0) {
+          e.hp = 0;
+          this.puff(s.x, s.y);
+          s.destroy();
+          e.sh.destroy();
+          popWorld(s.x, s.y - 12, 'Slime Emas Kabur!', 'mpc');
+        }
+        break;
+      }
       case 'hop':
         if (e.t <= 0) {
           if (e.st === 'hop') { e.st = 'idle'; e.t = rnd(.45, 1); s.setVelocity(0); this.tweens.add({ targets: s, scaleX: sc * 1.25, scaleY: sc * .78, duration: 70, yoyo: true }); }
@@ -12841,6 +12885,21 @@ Object.assign(World.prototype, {
   },
   async openChest(c, spr) {
     if (S.flags[c.id]) return talk(null, ['Petinya sudah kosong.']);
+    // Peti Palsu / Mimic (#199)
+    if (c.mimic) {
+      G.lock++;
+      sfx('crit');
+      this.camShake(120, .006);
+      spr.setTint(0xff4a4a);
+      await sleep(200);
+      spr.destroy();
+      S.flags[c.id] = true;
+      this.spawnEnemy('mimic', c.x, c.y);
+      popWorld(c.x, c.y - 18, 'KRAKK! MIMIC!', 'crit');
+      await say('KRAAAKKK!! Peti itu membuka taring tajam dan melompat menyerangmu! Itu adalah Mimic!');
+      G.lock--;
+      return;
+    }
     if (c.lock) {
       if (!has('key')) return talk(null, ['Peti ini terkunci rapat. Lubang kuncinya berkarat... mungkin ada kunci tua di suatu tempat.']);
       addItem('key', -1);
@@ -13441,6 +13500,21 @@ Object.assign(World.prototype, {
   },
   useTool(id) {
     const pl = this.pl; if (pl.atkCd > 0) return false; pl.atkCd = .45;
+    if (id === 'hearthstone') {
+      G.lock++;
+      sfx('save');
+      popWorld(pl.x, pl.y - 28, 'Membaca Mantra Kepulangan...', 'mpc');
+      this.sparkle(pl.x, pl.y - 10, 'dot', 16);
+      this.time.delayedCall(1200, () => {
+        G.lock--;
+        if (!pl.dead && !this.trans) {
+          sfx('heal');
+          this.goto('village', 512, 380, 'down');
+          popWorld(512, 360, 'Tiba di Depan Rumah Arka!', 'heal');
+        }
+      });
+      return true;
+    }
     const kind = ITEMS[id].tool, a = this.aimAngle(), dx = Math.cos(a), dy = Math.sin(a), st = stat();
     addItem(id, -1); updHud(); updToolBtns();
     if (kind === 'smoke') {
@@ -13454,7 +13528,23 @@ Object.assign(World.prototype, {
     sfx('swing');
     const p = { t: 0 };
     this.tweens.add({ targets: p, t: 1, duration: 420, onUpdate: () => { o.setPosition(pl.x + (tx - pl.x) * p.t, pl.y - 10 + (ty - pl.y) * p.t - Math.sin(p.t * Math.PI) * 30); o.rotation += .3;
-        if (kind === 'net') { const e = this.enemies.find(e => e.hp > 0 && !e.netted && Math.hypot(e.spr.x - o.x, e.spr.y - 6 - o.y) < 16); if (e) { e.netted = 1; this.freezeEnemy(e, 3); popWorld(e.spr.x, e.spr.y - 24, 'terjerat!', 'mpc'); p.hit = 1; this.tweens.killTweensOf(p); o.destroy(); this.time.delayedCall(3000, () => e.netted = 0); } } },
+        if (kind === 'net') {
+          // Tangkap serangga liar (#54)
+          const bugs = ['bug_beetle', 'bug_butterfly', 'bug_dragonfly', 'bug_firefly'];
+          const hitCritter = this.critters.find(c => Math.hypot(c.s.x - o.x, c.s.y - o.y) < 22);
+          if (hitCritter) {
+            hitCritter.s.destroy();
+            this.critters = this.critters.filter(c => c !== hitCritter);
+            const gainedBug = bugs[ri(0, bugs.length - 1)];
+            addItem(gainedBug, 1);
+            sfx('ok');
+            popWorld(o.x, o.y - 18, `+1 ${ITEMS[gainedBug].n}!`, 'heal');
+            p.hit = 1; this.tweens.killTweensOf(p); o.destroy();
+            return;
+          }
+          const e = this.enemies.find(e => e.hp > 0 && !e.netted && Math.hypot(e.spr.x - o.x, e.spr.y - 6 - o.y) < 16);
+          if (e) { e.netted = 1; this.freezeEnemy(e, 3); popWorld(e.spr.x, e.spr.y - 24, 'terjerat!', 'mpc'); p.hit = 1; this.tweens.killTweensOf(p); o.destroy(); this.time.delayedCall(3000, () => e.netted = 0); }
+        } },
       onComplete: () => {
         o.destroy(); if (kind !== 'bomb') return;
         this.time.delayedCall(250, () => {
@@ -13668,6 +13758,7 @@ const FCAT = {
   craft: { n: 'Meja Kerajinan', p: 90, w: 26, h: 22, tex: 'crafttable', act: 'craft', d: 'Membuat barang dari bahan.' },
   box: { n: 'Peti Penyimpanan', p: 50, w: 18, h: 16, tex: 'chest', act: 'box', d: 'Simpan barang agar tas lebih lega.' },
   alchemy: { n: 'Meja Alkimia', p: 100, w: 26, h: 22, tex: 'fieldoven', act: 'alchemy', d: 'Meracik ramuan eksperimen di rumah.' },
+  trophy: { n: 'Rak Trofi Kayu', p: 90, w: 24, h: 22, tex: 'shelf', act: 'trophy', d: 'Pajang piala, fosil, atau permata legendaris.' },
   plant: { n: 'Pot Tanaman', p: 15, w: 28, h: 20, tex: 'i_planter' },
 };
 const ROOM_IN = { x: 58, y: 84, r: 262, b: 238 }, DOOR_LANE = { x: 128, y: 196, r: 192, b: 260 };
@@ -13700,8 +13791,45 @@ Object.assign(World.prototype, {
       else if (a === 'cook') await cookMenu('Dapur Rumah Arka', 'Arka');
       else if (a === 'craft') await openCraft(this);
       else if (a === 'alchemy') await openAlchemyTable();
+      else if (a === 'trophy') await this.useTrophyShelf(o);
       else if (a === 'box') await openBox();
     } finally { G.lock--; }
+  },
+  async useTrophyShelf(o) {
+    const H = homeInit();
+    H.trophies = H.trophies || {};
+    const cur = H.trophies[o.f.x + '_' + o.f.y];
+    if (cur) {
+      if (await ask(`Rak memajang: ${ITEMS[cur]?.n || cur}. Ambil kembali ke tas?`)) {
+        addItem(cur, 1);
+        delete H.trophies[o.f.x + '_' + o.f.y];
+        sfx('ok');
+        updHud();
+        await say(`Kamu mengambil kembali ${ITEMS[cur]?.n || cur} dari rak trofi.`);
+      }
+      return;
+    }
+    const TROPHY_CANDIDATES = ['mini_trophy', 'fossil_ammonite', 'lake_pearl', 'amethyst_gem', 'gfish', 'aurelring'];
+    const available = TROPHY_CANDIDATES.filter(id => has(id));
+    if (!available.length) {
+      await say('Kamu belum memiliki barang trofi koleksi di tas (Piala Martil, Fosil Amonit, Mutiara Danau, Permata Kecubung, atau Ikan Emas).');
+      return;
+    }
+    const items = available.map(id => ({ t: icon(id) + ITEMS[id].n, r: 'Punya x' + S.inv[id] }));
+    items.push({ t: 'Batal' });
+    const r = await choose({
+      head: 'Pilih Trofi untuk Dipajang',
+      x: 30, y: 50, w: 220,
+      items,
+      foot: () => 'Pajang kebanggaan petualanganmu di dinding rumah.'
+    });
+    if (r < 0 || r >= available.length) return;
+    const chosen = available[r];
+    addItem(chosen, -1);
+    H.trophies[o.f.x + '_' + o.f.y] = chosen;
+    sfx('chest');
+    updHud();
+    await say(`KLIK! ${ITEMS[chosen].n} berhasil dipajang anggun di atas rak trofi!`);
   },
   async homeMenu() {
     const H = homeInit(); G.lock++;
@@ -14639,24 +14767,27 @@ async function openMailbox() {
 // ---------------- 6. ENSIKLOPEDIA BENUA LUMINA (#71) ----------------
 const CODEX_FLORA = ['herb', 'berry', 'apple', 'orange', 'honey', 'mush', 'gmush', 'frost_flower', 'river_orchid'];
 const CODEX_FAUNA = ['fish', 'gfish', 'moonfish', 'rainfish', 'egg', 'wool', 'river_prawn', 'canary_feather', 'sparrow_feather'];
+const CODEX_BUGS = ['bug_beetle', 'bug_butterfly', 'bug_dragonfly', 'bug_firefly'];
 const CODEX_MINERAL = ['ore', 'shard', 'amethyst_gem', 'fossil_ammonite', 'obsidian', 'brass_cog', 'lake_pearl'];
 
 async function openEncyclopedia() {
   if (G.lock > 0) return;
   G.lock++; sfx('cur');
 
-  const totalItems = CODEX_FLORA.length + CODEX_FAUNA.length + CODEX_MINERAL.length + BEAST.length;
+  const totalItems = CODEX_FLORA.length + CODEX_FAUNA.length + CODEX_BUGS.length + CODEX_MINERAL.length + BEAST.length;
   const foundFlora = CODEX_FLORA.filter(id => has(id) || S.seen?.[id] || (S.inv && S.inv[id])).length;
   const foundFauna = CODEX_FAUNA.filter(id => has(id) || (S.fishLog && S.fishLog[id]) || (S.inv && S.inv[id])).length;
+  const foundBugs = CODEX_BUGS.filter(id => has(id) || (S.inv && S.inv[id])).length;
   const foundMineral = CODEX_MINERAL.filter(id => has(id) || (S.inv && S.inv[id])).length;
   const foundBeast = BEAST.filter(k => S.kills && S.kills[k] > 0).length;
-  const totalFound = foundFlora + foundFauna + foundMineral + foundBeast;
+  const totalFound = foundFlora + foundFauna + foundBugs + foundMineral + foundBeast;
   const pct = Math.round((totalFound / totalItems) * 100);
 
   for (;;) {
     const tabs = [
       { t: `🌿 Flora (${foundFlora}/${CODEX_FLORA.length})`, list: CODEX_FLORA },
       { t: `🐟 Fauna & Akuatik (${foundFauna}/${CODEX_FAUNA.length})`, list: CODEX_FAUNA },
+      { t: `🦋 Serangga Lumina (${foundBugs}/${CODEX_BUGS.length})`, list: CODEX_BUGS },
       { t: `💎 Mineral & Harta (${foundMineral}/${CODEX_MINERAL.length})`, list: CODEX_MINERAL },
       { t: `👾 Bestiari (${foundBeast}/${BEAST.length})`, beast: true },
       { t: 'Tutup' }
@@ -15691,6 +15822,7 @@ async function openSettings() {
     ['Bilah HP musuh', () => onoff(OPT.hpbar), () => { OPT.hpbar = !OPT.hpbar; }, 'Bilah HP kecil di atas musuh'],
     ['Ekspor save', () => null, async () => { saveGame(G.scene); await codeDialog('out'); }, 'Salin kode save ke perangkat lain'],
     ['Impor save', () => null, async () => { if (await codeDialog('in')) { await say('Save berhasil dimuat. Game akan dibuka ulang.'); location.reload(); } }, 'Muat progres dari kode save'],
+    ['Menu Debug', () => '🛠 QA', () => openDebugMenu(), 'Mode pengembang & pengujian cepat'],
     ['Kembali', () => null, null, 'Tutup pengaturan']];
   let sel = 0;
   for (; ;) {
@@ -15742,6 +15874,63 @@ async function chooseSlot(mode) {
   return r;
 }
 
+// ---------------- MENU PENGEMBANG / DEBUG (#98) ----------------
+async function openDebugMenu() {
+  G.lock++; sfx('ok');
+  for (;;) {
+    const opts = [
+      { t: '⚡ Pulihkan HP & MP Penuh' },
+      { t: '💰 Tambah 500 G' },
+      { t: '🗺 Buka Seluruh Kabut Peta' },
+      { t: '🚀 Teleport: Desa Lumina', map: 'village', x: 512, y: 384 },
+      { t: '🚀 Teleport: Hutan Lumina', map: 'forest', x: 640, y: 100 },
+      { t: '🚀 Teleport: Padang Angin', map: 'meadow', x: 300, y: 300 },
+      { t: '🚀 Teleport: Gua Batu', map: 'cave', x: 140, y: 800 },
+      { t: '🚀 Teleport: Rawa Senja', map: 'swamp', x: 640, y: 100 },
+      { t: '🚀 Teleport: Puncak Beku', map: 'snow', x: 640, y: 1100 },
+      { t: '🚀 Teleport: Danau Cermin', map: 'lake', x: 1000, y: 500 },
+      { t: '🚀 Teleport: Kota Lumina', map: 'kpasar', x: 560, y: 320 },
+      { t: '🎁 Beri Semua Kunci & Alat' },
+      { t: 'Tutup' }
+    ];
+
+    const r = await choose({
+      head: '🛠 MODE PENGEMBANG / DEBUG',
+      x: 20, y: 20, w: 260,
+      items: opts,
+      foot: () => 'Menu QA & Pengujian Fitur Cepat Antigravity.'
+    });
+
+    if (r < 0 || r === opts.length - 1) break;
+
+    const opt = opts[r];
+    if (r === 0) {
+      const st = stat();
+      S.hp = st.maxhp; S.mp = st.maxmp;
+      sfx('heal'); updHud();
+      await say('HP dan MP dipulihkan penuh!');
+    } else if (r === 1) {
+      S.gold += 500;
+      sfx('coin'); updHud();
+      await say('Berhasil menambahkan 500 G!');
+    } else if (r === 2) {
+      S.fog = S.fog || {};
+      for (const k in MAPS) S.fog[k] = [];
+      sfx('chest');
+      await say('Seluruh kabut wilayah dunia disingkap!');
+    } else if (opt.map) {
+      G.lock--;
+      if (G.scene) G.scene.goto(opt.map, opt.x, opt.y, 'down');
+      return;
+    } else if (r === 11) {
+      ['key', 'lockpick', 'hearthstone', 'bomb', 'net', 'smoke', 'bait'].forEach(id => addItem(id, 5));
+      sfx('chest'); updHud();
+      await say('Semua kunci dan alat petualangan ditambahkan ke tas!');
+    }
+  }
+  G.lock--;
+}
+
 'use strict';
 // Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)
 const CODE_TAG = 'LUMINA1:';
@@ -15781,8 +15970,19 @@ function codeDialog(mode) {
 // ---------------- LAYAR JUDUL ----------------
 async function titleScreen() {
   const t = document.createElement('div'); t.id = 'title';
-  t.innerHTML = `<div class="logo"><small>LEGENDA</small>LUMINA</div><div class="sub">— ACTION RPG —</div><div class="hint">versi ${GAME_VERSION}</div>`;
+  t.innerHTML = `<div class="logo"><small>LEGENDA</small>LUMINA</div><div class="sub">— ACTION RPG —</div><div class="hint" id="verClick">versi ${GAME_VERSION}</div>`;
   UI.appendChild(t); showHud(false);
+  let vClicks = 0;
+  const vc = t.querySelector('#verClick');
+  if (vc) vc.addEventListener('pointerdown', async e => {
+    e.stopPropagation();
+    vClicks++;
+    if (vClicks >= 5) {
+      vClicks = 0;
+      sfx('crit');
+      await openDebugMenu();
+    }
+  });
   const anySlot = [0, 1, 2].some(i => slotInfo(i));
   const r = await choose({ items: [{ t: 'Mulai Baru' }, { t: 'Lanjutkan', dis: !hasSave() }, { t: 'Impor Kode' }, { t: 'Pilih Slot', dis: !anySlot }], start: hasSave() ? 1 : 0, cancel: false, style: { left: '50%', transform: 'translateX(-50%)', bottom: '30px', width: '110px' } });
   if (r === 3) { const s = await chooseSlot('load'); if (s >= 0) setSlot(s); t.remove(); return titleScreen(); }

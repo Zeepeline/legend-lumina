@@ -468,24 +468,27 @@ async function openMailbox() {
 // ---------------- 6. ENSIKLOPEDIA BENUA LUMINA (#71) ----------------
 const CODEX_FLORA = ['herb', 'berry', 'apple', 'orange', 'honey', 'mush', 'gmush', 'frost_flower', 'river_orchid'];
 const CODEX_FAUNA = ['fish', 'gfish', 'moonfish', 'rainfish', 'egg', 'wool', 'river_prawn', 'canary_feather', 'sparrow_feather'];
+const CODEX_BUGS = ['bug_beetle', 'bug_butterfly', 'bug_dragonfly', 'bug_firefly'];
 const CODEX_MINERAL = ['ore', 'shard', 'amethyst_gem', 'fossil_ammonite', 'obsidian', 'brass_cog', 'lake_pearl'];
 
 async function openEncyclopedia() {
   if (G.lock > 0) return;
   G.lock++; sfx('cur');
 
-  const totalItems = CODEX_FLORA.length + CODEX_FAUNA.length + CODEX_MINERAL.length + BEAST.length;
+  const totalItems = CODEX_FLORA.length + CODEX_FAUNA.length + CODEX_BUGS.length + CODEX_MINERAL.length + BEAST.length;
   const foundFlora = CODEX_FLORA.filter(id => has(id) || S.seen?.[id] || (S.inv && S.inv[id])).length;
   const foundFauna = CODEX_FAUNA.filter(id => has(id) || (S.fishLog && S.fishLog[id]) || (S.inv && S.inv[id])).length;
+  const foundBugs = CODEX_BUGS.filter(id => has(id) || (S.inv && S.inv[id])).length;
   const foundMineral = CODEX_MINERAL.filter(id => has(id) || (S.inv && S.inv[id])).length;
   const foundBeast = BEAST.filter(k => S.kills && S.kills[k] > 0).length;
-  const totalFound = foundFlora + foundFauna + foundMineral + foundBeast;
+  const totalFound = foundFlora + foundFauna + foundBugs + foundMineral + foundBeast;
   const pct = Math.round((totalFound / totalItems) * 100);
 
   for (;;) {
     const tabs = [
       { t: `🌿 Flora (${foundFlora}/${CODEX_FLORA.length})`, list: CODEX_FLORA },
       { t: `🐟 Fauna & Akuatik (${foundFauna}/${CODEX_FAUNA.length})`, list: CODEX_FAUNA },
+      { t: `🦋 Serangga Lumina (${foundBugs}/${CODEX_BUGS.length})`, list: CODEX_BUGS },
       { t: `💎 Mineral & Harta (${foundMineral}/${CODEX_MINERAL.length})`, list: CODEX_MINERAL },
       { t: `👾 Bestiari (${foundBeast}/${BEAST.length})`, beast: true },
       { t: 'Tutup' }

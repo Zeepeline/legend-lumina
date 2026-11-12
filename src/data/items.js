@@ -131,6 +131,15 @@ const ITEMS = {
   potion_nightvision: { n: 'Ramuan Penglihatan Malam', k: 'use', mp: 25, buff: [['def', 180]], price: 35, sell: 18, d: 'Pendaran spora gua memancarkan cahaya terang di tempat gelap & gua selama 3 menit.', src: 'Alkimia: Jamur Pendar + Air Murni Stalaktit' },
   potion_failed: { n: 'Campuran Aneh', k: 'use', hp: 5, price: 2, sell: 1, d: 'Hasil eksperimen alkimia yang gagal. Baunya aneh, namun memulihkan 5 HP.', src: 'Alkimia racikan sembarangan' },
 
+  // Fitur #346: Jimat Kepulangan
+  hearthstone: { n: 'Jimat Kepulangan', k: 'tool', tool: 1, price: 80, sell: 40, d: 'Salurkan energi magis sejenak untuk kembali seketika ke depan Rumah Arka di Desa Lumina.', src: 'Toko desa / Hadiah pembelian Rumah Arka' },
+
+  // Fitur #54: Serangga Tangkapan
+  bug_beetle: { n: 'Kumbang Badak Kayu', k: 'mat', sell: 18, d: 'Kumbang cangkang keras bertanduk perkasa dari dahan pohon hutan rimba.', src: 'Ditangkap dengan jaring di pepohonan hutan' },
+  bug_butterfly: { n: 'Kupu Mentari Emas', k: 'mat', sell: 20, d: 'Kupu-kupu sayap emas berkilau hangat saat menghisap nektar bunga padang.', src: 'Ditangkap dengan jaring di padang bunga' },
+  bug_dragonfly: { n: 'Capung Rawa Zamrud', k: 'mat', sell: 22, d: 'Capung bersayap bening dengan tubuh hijau zamrud berkilau dari rawa.', src: 'Ditangkap dengan jaring di tepi rawa senja' },
+  bug_firefly: { n: 'Kunang Malam Pendar', k: 'mat', sell: 25, d: 'Serangga malam bercahaya sejuk penuntun pengelana di kegelapan.', src: 'Ditangkap dengan jaring saat malam hari' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },
@@ -148,7 +157,12 @@ const ICON_OF = {
   potion_agility: 'potion',
   potion_frostcloak: 'potion',
   potion_nightvision: 'potion',
-  potion_failed: 'potion'
+  potion_failed: 'potion',
+  hearthstone: 'mring',
+  bug_beetle: 'bfly_gold',
+  bug_butterfly: 'bfly_gold',
+  bug_dragonfly: 'bfly_blue',
+  bug_firefly: 'firefly_item'
 };
 // Masak di penginapan (Bu Rina)
 const COOK = [

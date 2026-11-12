@@ -11,6 +11,7 @@ const FCAT = {
   craft: { n: 'Meja Kerajinan', p: 90, w: 26, h: 22, tex: 'crafttable', act: 'craft', d: 'Membuat barang dari bahan.' },
   box: { n: 'Peti Penyimpanan', p: 50, w: 18, h: 16, tex: 'chest', act: 'box', d: 'Simpan barang agar tas lebih lega.' },
   alchemy: { n: 'Meja Alkimia', p: 100, w: 26, h: 22, tex: 'fieldoven', act: 'alchemy', d: 'Meracik ramuan eksperimen di rumah.' },
+  trophy: { n: 'Rak Trofi Kayu', p: 90, w: 24, h: 22, tex: 'shelf', act: 'trophy', d: 'Pajang piala, fosil, atau permata legendaris.' },
   plant: { n: 'Pot Tanaman', p: 15, w: 28, h: 20, tex: 'i_planter' },
 };
 const ROOM_IN = { x: 58, y: 84, r: 262, b: 238 }, DOOR_LANE = { x: 128, y: 196, r: 192, b: 260 };
@@ -43,8 +44,45 @@ Object.assign(World.prototype, {
       else if (a === 'cook') await cookMenu('Dapur Rumah Arka', 'Arka');
       else if (a === 'craft') await openCraft(this);
       else if (a === 'alchemy') await openAlchemyTable();
+      else if (a === 'trophy') await this.useTrophyShelf(o);
       else if (a === 'box') await openBox();
     } finally { G.lock--; }
+  },
+  async useTrophyShelf(o) {
+    const H = homeInit();
+    H.trophies = H.trophies || {};
+    const cur = H.trophies[o.f.x + '_' + o.f.y];
+    if (cur) {
+      if (await ask(`Rak memajang: ${ITEMS[cur]?.n || cur}. Ambil kembali ke tas?`)) {
+        addItem(cur, 1);
+        delete H.trophies[o.f.x + '_' + o.f.y];
+        sfx('ok');
+        updHud();
+        await say(`Kamu mengambil kembali ${ITEMS[cur]?.n || cur} dari rak trofi.`);
+      }
+      return;
+    }
+    const TROPHY_CANDIDATES = ['mini_trophy', 'fossil_ammonite', 'lake_pearl', 'amethyst_gem', 'gfish', 'aurelring'];
+    const available = TROPHY_CANDIDATES.filter(id => has(id));
+    if (!available.length) {
+      await say('Kamu belum memiliki barang trofi koleksi di tas (Piala Martil, Fosil Amonit, Mutiara Danau, Permata Kecubung, atau Ikan Emas).');
+      return;
+    }
+    const items = available.map(id => ({ t: icon(id) + ITEMS[id].n, r: 'Punya x' + S.inv[id] }));
+    items.push({ t: 'Batal' });
+    const r = await choose({
+      head: 'Pilih Trofi untuk Dipajang',
+      x: 30, y: 50, w: 220,
+      items,
+      foot: () => 'Pajang kebanggaan petualanganmu di dinding rumah.'
+    });
+    if (r < 0 || r >= available.length) return;
+    const chosen = available[r];
+    addItem(chosen, -1);
+    H.trophies[o.f.x + '_' + o.f.y] = chosen;
+    sfx('chest');
+    updHud();
+    await say(`KLIK! ${ITEMS[chosen].n} berhasil dipajang anggun di atas rak trofi!`);
   },
   async homeMenu() {
     const H = homeInit(); G.lock++;

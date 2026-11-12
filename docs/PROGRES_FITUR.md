@@ -135,6 +135,13 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 67 | Titik pemandangan indah (bangku santai di ketinggian untuk pemulihan & kabut terbuka) | `world/objects.js`, `world/maps/meadow.js`, `scene/world.js` | 16 |
 | 9 | Panggilan bantuan musuh terdesak (goblin/serigala/babi memanggil kawan saat sekarat) | `ai/enemies.js` | 16 |
 | 92 | Pendaran lentera malam dinamis (denyut sinar bernapas pada lampu & obor di kegelapan) | `scene/world.js` | 16 |
+| 199 | Peti palsu / Mimic penggigit (peti jebakan di gua/reruntuhan yang menyerang) | `data/enemies.js` (`mimic`), `systems/story.js` | 17 |
+| 198 | Slime emas langka (varian lincah bernilai 150-250 G & 100 EXP yang kabur) | `data/enemies.js` (`gold_slime`), `scene/world.js` | 17 |
+| 346 | Jimat kepulangan / batu teleport saku (teleportasi seketika ke depan Rumah Arka) | `data/items.js` (`hearthstone`), `systems/craft.js` | 17 |
+| 54 | Menangkap serangga & koleksi serangga (jaring serangga & tab Ensiklopedia) | `data/items.js`, `systems/craft.js`, `systems/economy.js` | 17 |
+| 499 | Rak pajangan trofi di rumah Arka (pajangan piala, fosil, permata & ikan legendaris) | `systems/home.js` (`useTrophyShelf`) | 17 |
+| 72 | Kompas mata angin & arah di HUD (orientasi mata angin U/S/T/B di bilah status) | `ui/widgets.js` (`updHud`) | 17 |
+| 98 | Mode pengembang / menu debug (ketuk versi 5x untuk QA, teleport peta, dan alat) | `ui/title.js`, `ui/menus.js` (`openDebugMenu`) | 17 |
 
 ## Sebagian
 
@@ -169,7 +176,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~14~~ | ✅ selesai: 52, 23, 10, 8, 96, 375, 91 | Penambangan, Permata Soket, Flanking AI, & Interaksi Medan |
 | ~~15~~ | ✅ selesai: 70, 485, 372, 44, 376, 90, 94 | Eksplorasi Pintas, Kotak Surat Rumah & Alur Tempur |
 | ~~16~~ | ✅ selesai: 71, 27, 33, 373, 67, 9, 92 | Ensiklopedia Benua, Alkimia Eksperimen & Relik Legendaris |
-| 17+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~17~~ | ✅ selesai: 199, 198, 346, 54, 499, 72, 98 | Kejutan Liar, Relik Teleport Saku & Koleksi Alam |
+| 18+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 
