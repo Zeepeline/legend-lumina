@@ -23,6 +23,7 @@ MAPS.forest = {
     ['rock', 520, 820], ['stump', 760, 900], ['rock', 520, 1050], ['rock', 760, 1060], ['mush', 300, 300], ['mush', 450, 700],
     ['mush', 860, 800], ['mush', 140, 760], ['bushy', 600, 236], ['bushv', 460, 360], ['bushy', 800, 700], ['bushv', 280, 700],
     ['rock', 1080, 900], ['log', 980, 880], ['mush', 1050, 820],
+    ['deadtree', 280, 240], ['deadtree', 880, 360],
   ],
   chests: [{ id: 'c1', x: 1060, y: 300, item: 'iron' }, { id: 'c2', x: 180, y: 852, item: 'ether2' }, { id: 'c3', x: 676, y: 156, item: 'potion2' }, { id: 'c4', x: 1060, y: 852, item: 'gold150', lock: 1 }],
   crystal: { x: 640, y: 1076 },

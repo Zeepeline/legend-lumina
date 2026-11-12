@@ -80,7 +80,17 @@ Object.assign(World.prototype, {
         if (S.side.darto === 0) { await T('Slime-slime itu mencuri sayurku tiap malam!', 'Bisa bawakan 5 Lendir Slime sebagai bukti kamu sudah mengusir mereka? Nanti kuberi imbalan.'); S.side.darto = 1; await talk(null, ['Misi sampingan: Kumpulkan 5 Lendir Slime untuk Pak Darto.']); }
         else if (S.side.darto === 1 && has('jelly', 5)) { await T('Wah, 5 Lendir Slime! Kebunku aman sekarang. Terima ini, jimat buatan nenekku.'); addItem('jelly', -5); addItem('amulet'); S.gold += 40; S.side.darto = 2; await gain(['Dapat Jimat Daun dan 40 G! (Pasang di TAS: HP pulih perlahan)']); }
         else if (S.side.darto === 1) await T(`Lendir Slime: ${S.inv.jelly || 0}/5. Slime banyak di jalan masuk hutan.`);
-        else await T(pick(['Panen wortel tahun ini bagus!', 'Slime melompat-lompat. Serang saat mereka diam!', 'Goblin dan serigala menerjang setelah berhenti sebentar. Menghindarlah ke samping!']));
+        else {
+          const act = await choose({
+            head: 'Pak Darto · Petani Desa',
+            items: [{ t: 'Obrolan Santai' }, { t: '🔄 Barter Hasil Alam' }]
+          });
+          if (act === 1) {
+            await this.openDirectBarter();
+          } else {
+            await T(pick(['Panen wortel tahun ini bagus!', 'Slime melompat-lompat. Serang saat mereka diam!', 'Goblin dan serigala menerjang setelah berhenti sebentar. Menghindarlah ke samping!']));
+          }
+        }
         break;
       case 'merchant': await this.shop(); break;
       case 'hermit':

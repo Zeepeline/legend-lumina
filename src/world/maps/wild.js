@@ -11,6 +11,10 @@ MAPS.deepwood = {
   objs: [
     // Reruntuhan Aurel (barat laut): cincin batu, kuil runtuh, prasasti
     ['shrine', 520, 400], ...ruinRing(520, 400, 170, 14), ['stele', 440, 330, { lore: 'aurel_gerbang' }], ['stele', 610, 470, { lore: 'aurel_istana' }],
+    ['rune_pillar', 480, 270, { elem: 'fire' }],
+    ['rune_pillar', 520, 250, { elem: 'ice' }],
+    ['rune_pillar', 560, 270, { elem: 'light' }],
+    ['stele', 520, 220, { text: 'TEKA-TEKI PILAR AUREL:\n"Kekuatan fajar menyala lebih dahulu (Api),\ndibekukan badai salju (Es),\nlalu disinari lentera suci abadi (Cahaya)."' }],
     ['root', 380, 520], ['root', 680, 300], ['root', 300, 380], ['root', 560, 560], ['root', 470, 250], ...ruinRing(520, 400, 95, 9),
     ['stalag', 360, 420], ['rock', 450, 470], ['rock', 600, 330], ['mush', 340, 470], ['mush', 700, 520], ['mush', 480, 300], ['bushG2', 410, 560], ['bushG2', 650, 250],
     // Pohon Tua raksasa (timur laut)

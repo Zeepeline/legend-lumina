@@ -33,6 +33,22 @@ Object.assign(World.prototype, {
     const aggro = !pl.dead && d < (e.boss ? 420 : 120);
     const hx = e.home.x - s.x, hy = e.home.y - s.y, hd = Math.hypot(hx, hy) || 1;
     e.t -= dt; e.cd -= dt;
+
+    // Musuh teralihkan oleh Petasan Pengalih (#410)
+    if (e.distracted > 0) {
+      e.distracted -= dt;
+      const dtx = (e.distractTx || s.x) - s.x;
+      const dty = (e.distractTy || s.y) - s.y;
+      const dtl = Math.hypot(dtx, dty) || 1;
+      s.flipX = dtx > 0;
+      if (dtl > 18) {
+        s.setVelocity((dtx / dtl) * D.spd * 0.7, (dty / dtl) * D.spd * 0.7);
+      } else {
+        s.setVelocity(0, 0);
+      }
+      return;
+    }
+
     const wander = (spd) => { if (e.t <= 0) { e.t = rnd(1, 2.4); const a = rnd(0, 6.28), go = Math.random() < .6; s.setVelocity(hd > 60 ? hx / hd * spd : go ? Math.cos(a) * spd * .7 : 0, hd > 60 ? hy / hd * spd : go ? Math.sin(a) * spd * .7 : 0); } };
     switch (D.ai) {
       case 'flee': {

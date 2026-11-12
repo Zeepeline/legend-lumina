@@ -143,6 +143,9 @@ const ITEMS = {
   // Fitur #408: Bom Es Kerajinan
   fbomb: { n: 'Bom Es', k: 'use', tool: 1, price: 28, sell: 14, d: 'Lempar ke depan. Meledak membekukan seluruh musuh dalam radius 45 px selama 2,5 detik.', src: 'Kerajinan: Pecahan Kristal + Air Murni Stalaktit' },
 
+  // Fitur #410: Petasan Pengalih Perhatian
+  firecracker: { n: 'Petasan Pengalih', k: 'use', tool: 1, price: 18, sell: 8, d: 'Lempar ke titik tertentu. Meletup-letup menarik perhatian seluruh musuh di sekitar selama 4 detik.', src: 'Kerajinan: Spora Jamur + Buah Beri' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },
@@ -166,7 +169,8 @@ const ICON_OF = {
   bug_butterfly: 'bfly_gold',
   bug_dragonfly: 'bfly_blue',
   bug_firefly: 'firefly_item',
-  fbomb: 'bomb'
+  fbomb: 'bomb',
+  firecracker: 'bomb'
 };
 // Masak di penginapan (Bu Rina)
 const COOK = [

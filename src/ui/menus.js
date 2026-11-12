@@ -33,6 +33,7 @@ async function openSettings() {
     ['Kecepatan teks', () => ['Lambat', 'Normal', 'Cepat', 'Instan'][OPT.txt], () => { OPT.txt = (OPT.txt + 1) % 4; }, 'Tahan tombol A/B saat dialog untuk mempercepat'],
     ['Ukuran huruf', () => ['Kecil', 'Sedang', 'Besar', 'Sangat besar'][OPT.font], () => { OPT.font = (OPT.font + 1) % 4; applyFont(); }, 'Ukuran teks dialog, menu, dan tas'],
     ['Hemat baterai', () => onoff(OPT.lite), () => { OPT.lite = !OPT.lite; applyLite(); }, '30 FPS & partikel musim dimatikan'],
+    ['Mode Buta Warna', () => onoff(OPT.colorblind), () => { OPT.colorblind = !OPT.colorblind; }, 'Kontras tinggi & label teks penjelas damage'],
     ['Notifikasi barang', () => onoff(OPT.toast), () => { OPT.toast = !OPT.toast; }, 'Pesan kecil saat mendapat barang'],
     ['Musik dinamis', () => onoff(OPT.dynMus), () => { OPT.dynMus = !OPT.dynMus; }, 'Musik berubah saat bertarung'],
     ['Suara langkah', () => onoff(OPT.steps), () => { OPT.steps = !OPT.steps; }, 'Bunyi langkah sesuai jenis tanah'],

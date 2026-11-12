@@ -588,6 +588,46 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'deadtree') {
+      s.setTint(0x7a6552);
+      s.chopHp = 3;
+      this.inter.push({
+        x, y: y + 2, r: 22,
+        fn: async () => {
+          G.lock++;
+          sfx('hit');
+          this.sparkle(x, y - 10, 'spark', 6);
+          this.puff(x + rnd(-8, 8), y - 6);
+          s.chopHp = (s.chopHp || 3) - 1;
+          this.tweens.add({ targets: s, angle: 6, duration: 60, yoyo: true, repeat: 2, onComplete: () => { s.angle = 0; } });
+          if (s.chopHp <= 0) {
+            sfx('boom');
+            this.camShake(100, 0.005);
+            addItem('log', rnd(3, 4));
+            S.st = S.st || {}; S.st.trees = (S.st.trees || 0) + 1;
+            popWorld(x, y - 20, '+Kayu Gelondong!', 'gold');
+            updHud();
+            s.destroy();
+            await say('KRAAAKKK! Pohon lapuk tumbang dan terbelah menjadi kayu gelondong melimpah.');
+          } else {
+            await say(`TEBAS! Ayunan kapak menancap ke batang lapuk (${s.chopHp}/3 tebasan).`);
+          }
+          G.lock--;
+        }
+      });
+    }
+    if (type === 'rune_pillar') {
+      const pElem = d.elem || 'fire'; // 'fire', 'ice', 'light'
+      const pColor = pElem === 'fire' ? 0xff6644 : pElem === 'ice' ? 0x66ccff : 0xffea00;
+      s.setTint(pColor);
+      this.inter.push({
+        x, y: y + 4, r: 22,
+        fn: async () => {
+          if (typeof interactRunePillar === 'function') await interactRunePillar(this, s, pElem, x, y);
+          else await say(`Pilar Runa Kuno berukir simbol ${pElem}.`);
+        }
+      });
+    }
     if (type === 'fountain') {
       this.add.particles(x, y - 66, 'dot', { lifespan: 650, speedX: { min: -22, max: 22 }, speedY: { min: -26, max: -8 }, gravityY: 90, alpha: { start: .8, end: 0 }, frequency: 110, tint: 0xd8f6ff }).setDepth(y + 1);
       this.inter.push({

@@ -12,11 +12,20 @@ const FCAT = {
   box: { n: 'Peti Penyimpanan', p: 50, w: 18, h: 16, tex: 'chest', act: 'box', d: 'Simpan barang agar tas lebih lega.' },
   alchemy: { n: 'Meja Alkimia', p: 100, w: 26, h: 22, tex: 'fieldoven', act: 'alchemy', d: 'Meracik ramuan eksperimen di rumah.' },
   trophy: { n: 'Rak Trofi Kayu', p: 90, w: 24, h: 22, tex: 'shelf', act: 'trophy', d: 'Pajang piala, fosil, atau permata legendaris.' },
+  wardrobe: { n: 'Lemari Pakaian', p: 80, w: 24, h: 32, tex: 'shelf', act: 'wardrobe', d: 'Ganti warna jubah Arka.' },
   plant: { n: 'Pot Tanaman', p: 15, w: 28, h: 20, tex: 'i_planter' },
 };
 const ROOM_IN = { x: 58, y: 84, r: 262, b: 238 }, DOOR_LANE = { x: 128, y: 196, r: 192, b: 260 };
 MAPS.home = makeRoom('home', 'Rumah Arka', [874, 250], { wallc: '#ead6b6', furn: [], windows: [110, 190], npcs: [] });
-function homeInit() { if (!S.home) S.home = { owned: 0, lv: 0, items: [], box: {} }; return S.home; }
+function homeInit() {
+  if (!S.home) S.home = { owned: 0, lv: 0, items: [], box: {} };
+  // Default ranjang & lemari pakaian untuk rumah
+  if (S.home.items && S.home.items.length === 0 && S.home.owned) {
+    S.home.items.push({ t: 'bed', x: 62, y: 90, v: 0 });
+    S.home.items.push({ t: 'wardrobe', x: 236, y: 86, v: 0 });
+  }
+  return S.home;
+}
 function furnTex(sc, t, v) {
   const C = FCAT[t]; if (C.tex) return C.tex; const key = 'hf_' + t + (v ? 1 : 0);
   if (!sc.textures.exists(key)) { const [c, x] = mk(C.w + 2, C.h + 2); drawFurn(x, t, 1, 1, v); sc.textures.addCanvas(key, c); }
@@ -28,6 +37,38 @@ Object.assign(World.prototype, {
     this.inter.push({ x: 160, y: 86, r: 18, fn: () => this.homeMenu() });
     const b = this.add.text(160, 66, '📋', { fontSize: '12px' }).setOrigin(.5).setDepth(70);
     for (const f of H.items) this.placeFurnSprite(f);
+
+    // Tamu Warga Berkunjung ke Rumah (#500)
+    // Sore hari antara jam 16:00 - 18:00
+    if (S.time >= 16 && S.time <= 18 && (S.side?.mochi >= 3 || S.flags?.bridge_fixed || S.stage >= 2)) {
+      const visitors = [
+        { id: 'lina', name: 'Lina', ch: 'girl', msg: 'Arka! Kebetulan lewat, aku mampir melihat rumahmu yang rapi ini. Mochi juga tampak senang sekali di sini!', gift: 'berry', n: 3 },
+        { id: 'rina', name: 'Bu Rina', ch: 'inn', msg: 'Sore Arka! Dapur penginapan baru saja masak sup hangat. Ini bekal makan malam untukmu, jangan lupa istirahat!', gift: 'stew', n: 1 },
+        { id: 'elder', name: 'Tetua Bram', ch: 'elder', msg: 'Arka, langkahmu menjaga ketenteraman desa sangat berarti bagi kami semua. Teruslah berjalan dengan dada tegak.', gift: 'tea', n: 1 }
+      ];
+      // Tampilkan 1 pengunjung sore jika beruntung
+      const v = visitors[Math.floor(Math.random() * visitors.length)];
+      const vx = 140, vy = 150;
+      this.spawnNpc({ id: 'guest_' + v.id, ch: v.ch, name: v.name + ' (Tamu Sore)', x: vx, y: vy, dir: 'down', wander: 0 });
+      this.inter.push({
+        x: vx, y: vy + 4, r: 20,
+        fn: async () => {
+          G.lock++;
+          sfx('talk');
+          await say(v.msg, v.name);
+          if (!this._guestGift) {
+            this._guestGift = true;
+            if (v.gift) {
+              addItem(v.gift, v.n);
+              sfx('chest');
+              popWorld(vx, vy - 20, `+${v.n} ${ITEMS[v.gift]?.n || v.gift}!`, 'heal');
+              await say(`${v.name} membawakan buah tangan: +${v.n} ${ITEMS[v.gift]?.n || v.gift}!`);
+            }
+          }
+          G.lock--;
+        }
+      });
+    }
   },
   placeFurnSprite(f) {
     const C = FCAT[f.t], s = this.add.image(f.x, f.y, furnTex(this, f.t, f.v)).setOrigin(0, 0).setDepth(C.flat ? -5e5 : f.y + C.h);
@@ -45,6 +86,7 @@ Object.assign(World.prototype, {
       else if (a === 'craft') await openCraft(this);
       else if (a === 'alchemy') await openAlchemyTable();
       else if (a === 'trophy') await this.useTrophyShelf(o);
+      else if (a === 'wardrobe') await this.useWardrobe();
       else if (a === 'box') await openBox();
     } finally { G.lock--; }
   },
@@ -141,6 +183,39 @@ Object.assign(World.prototype, {
     return false;
   },
 });
+World.prototype.useWardrobe = async function () {
+  const outfits = [
+    { id: 'default', n: 'Jubah Petualang (Biru Standar)', tint: 0xffffff },
+    { id: 'fire', n: 'Jubah Mentari (Merah Api)', tint: 0xff7777 },
+    { id: 'forest', n: 'Jubah Belantara (Hijau Hutan)', tint: 0x88ff88 },
+    { id: 'snow', n: 'Jubah Puncak (Putih Salju)', tint: 0xe0f7fa },
+    { id: 'shadow', n: 'Jubah Bayangan Senyap (Hitam Abu)', tint: 0x888899 }
+  ];
+
+  const items = outfits.map(o => ({
+    t: (S.outfit === o.id ? '✓ ' : '  ') + o.n,
+    r: S.outfit === o.id ? 'Dipakai' : ''
+  }));
+  items.push({ t: 'Tutup' });
+
+  const r = await choose({
+    head: 'Lemari Pakaian Arka · Warna Jubah',
+    x: 20, y: 25, w: 275,
+    items,
+    foot: () => 'Kustomisasi penampilan Arka murni kosmetik tanpa merubah stat!'
+  });
+
+  if (r >= 0 && r < outfits.length) {
+    S.outfit = outfits[r].id;
+    sfx('ok');
+    if (this.pl) {
+      this.pl.setTint(outfits[r].tint);
+    }
+    popWorld(this.pl.x, this.pl.y - 20, 'Penampilan Diperbarui!', 'heal');
+    saveGame(this);
+  }
+};
+
 World.prototype.buyHome = async function () {
   if (G.lock) return; G.lock++;
   try {

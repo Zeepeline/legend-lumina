@@ -9,7 +9,10 @@ const _hitEnemy = World.prototype.hitEnemy;
 World.prototype.hitEnemy = function (e, base, crit, nx, ny) {
   const el = this.curElem || (this._inShots && this._curShot && this._curShot.kind === 'fire' ? 'fire' : null), k = el && WEAK[ELEM[e.type]] ? WEAK[ELEM[e.type]][el] || 1 : 1;
   if (this.pl.parryCrit > 0 && !el) { crit = true; this.pl.parryCrit = 0; }
-  if (k !== 1 && e.hp > 0) popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 14, k > 1 ? 'LEMAH!' : 'tahan', k > 1 ? ELEM_COL[el] || '#ffe66b' : '#a8a8b8');
+  if (k !== 1 && e.hp > 0) {
+    const weakLabel = OPT.colorblind ? (k > 1 ? '[LEMAH!]' : '[KEBAL]') : (k > 1 ? 'LEMAH!' : 'tahan');
+    popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 14, weakLabel, k > 1 ? (OPT.colorblind ? '#00e5ff' : ELEM_COL[el] || '#ffe66b') : '#a8a8b8');
+  }
   return _hitEnemy.call(this, e, base * k, crit, nx, ny);
 };
 // sumber elemen: bola api = api (proyektil ditandai _curShot di updShots), nova = es, bom = api

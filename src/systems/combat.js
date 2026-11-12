@@ -145,7 +145,15 @@ Object.assign(World.prototype, {
     if (this.pl.dead || e.hp <= 0 || !e.spr.active) return;
     if (e.faded) { popWorld(e.spr.x, e.spr.y - 20, 'tembus!', 'mpc'); return; }
     const dmg = Math.max(1, Math.round(base * rnd(.9, 1.1) * (crit ? 1.7 : 1) - e.D.def * .5));
-    e.hp -= dmg; popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 2 - (e.D.fly ? 10 : 0), crit ? dmg + '!' : '' + dmg, crit ? 'crit' : '');
+    let label = '' + dmg;
+    let style = crit ? 'crit' : '';
+    if (OPT.colorblind) {
+      if (crit) label = `[KRIT!] ${dmg}`;
+      else label = `${dmg}`;
+    } else if (crit) {
+      label = dmg + '!';
+    }
+    e.hp -= dmg; popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 2 - (e.D.fly ? 10 : 0), label, style);
     sfx(crit ? 'crit' : 'hit'); if (crit) shake();
     const fatal = e.hp <= 0;
     this.hitStop(e.boss && fatal ? .22 : fatal || crit ? .085 : .045, crit || fatal ? 25 : 12);

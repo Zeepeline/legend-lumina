@@ -13,7 +13,7 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 101 | 5 | 0 | 894 |
+| 108 | 5 | 0 | 887 |
 
 ## Selesai
 
@@ -149,6 +149,13 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 84 | Pencarian cepat di tas (filter instan kata kunci ramuan, panah, ikan, bom, dll.) | `ui/bag.js` (`BAG_SEARCH`) | 18 |
 | 7 | Serangan menukik musuh terbang (manuver swoop tajam kelelawar, bisa ditangkis hingga jatuh) | `ai/enemies.js` (`fly`), `systems/polish.js` | 18 |
 | 95 | Papan rekor petualang / Hall of Fame (papan prestasi rekor ikan, waktu rematch, langkah) | `world/maps/village.js`, `systems/economy.js` (`openHallOfFame`) | 18 |
+| 21 | Lemari pakaian & warna jubah Arka (kustomisasi warna busana di kamar tidur rumah) | `systems/home.js` (`useWardrobe`), `core/state.js` | 19 |
+| 500 | Tamu warga berkunjung ke rumah (Lina/Bu Rina/Tetua bertamu sore hari membawa hidangan) | `systems/home.js` | 19 |
+| 53 | Menebang pohon lapuk & kayu gelondong (pohon tua lapuk di tepi hutan menghasilkan kayu) | `world/maps/forest.js`, `scene/world.js` | 19 |
+| 43 | Barter langsung dengan penduduk (tukar komoditas hasil alam langsung tanpa uang) | `npc/dialog.js`, `systems/economy.js` (`openDirectBarter`) | 19 |
+| 65 | Teka-teki pilar runa kuno (pilar elemen Api-Es-Cahaya di Reruntuhan Aurel berhadiah peti) | `world/maps/wild.js`, `systems/story.js` (`interactRunePillar`) | 19 |
+| 410 | Petasan pengalih perhatian musuh (alat lempar letupan penarik perhatian musuh selama 4 dtk) | `data/items.js` (`firecracker`), `systems/craft.js` | 19 |
+| 77 | Mode aksesibilitas buta warna (kontras tinggi & label teks damage [KRIT!] [LEMAH!]) | `ui/menus.js`, `systems/combat.js`, `systems/polish.js` | 19 |
 
 ## Sebagian
 
@@ -185,7 +192,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~16~~ | ✅ selesai: 71, 27, 33, 373, 67, 9, 92 | Ensiklopedia Benua, Alkimia Eksperimen & Relik Legendaris |
 | ~~17~~ | ✅ selesai: 199, 198, 346, 54, 499, 72, 98 | Kejutan Liar, Relik Teleport Saku & Koleksi Alam |
 | ~~18~~ | ✅ selesai: 12, 42, 408, 68, 84, 7, 95 | Rematch Boss, Brankas Desa, Bom Es & Cuaca Ekstrem |
-| 19+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~19~~ | ✅ selesai: 21, 500, 53, 43, 65, 410, 77 | Lemari Pakaian, Tamu Rumah, Tebang Pohon & Pilar Runa |
+| 20+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 

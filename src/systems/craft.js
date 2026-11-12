@@ -25,6 +25,7 @@ const CRAFT = [
   { id: 'antidote', n: 1, need: { herb: 1, berry: 1 } },
   { id: 'bomb', n: 1, need: { ore: 1, spore: 1 } },
   { id: 'fbomb', n: 1, need: { shard: 1, cave_water: 1 } },
+  { id: 'firecracker', n: 2, need: { spore: 1, berry: 1 } },
   { id: 'smoke', n: 2, need: { spore: 1, herb: 1 } },
   { id: 'net', n: 1, need: { pelt: 1, wool: 1 } },
   { id: 'sarrow', n: 5, need: { feather: 1, bone: 1 } },
@@ -161,6 +162,32 @@ Object.assign(World.prototype, {
         } },
       onComplete: () => {
         o.destroy();
+        if (id === 'firecracker') {
+          // Petasan Pengalih Perhatian (#410)
+          let pops = 0;
+          const popTimer = this.time.addEvent({
+            delay: 350,
+            repeat: 5,
+            callback: () => {
+              pops++;
+              sfxAt('boom', tx, ty, this);
+              this.sparkle(tx + rnd(-10, 10), ty + rnd(-10, 10), 'spark', 10);
+              popWorld(tx + rnd(-15, 15), ty - 15 - pops * 3, '💥 DOR!', 'crit');
+              // Alihkan perhatian semua musuh terdekat ke titik petasan
+              for (const e of this.enemies) {
+                if (e.hp > 0 && Math.hypot(e.spr.x - tx, e.spr.y - ty) < 110) {
+                  e.alert = 1;
+                  e.distracted = 4.0;
+                  e.distractTx = tx;
+                  e.distractTy = ty;
+                  const dx = tx - e.spr.x;
+                  e.spr.flipX = dx > 0;
+                }
+              }
+            }
+          });
+          return;
+        }
         if (id === 'fbomb' || kind === 'fbomb') {
           // Ledakan Bom Es (#408)
           this.time.delayedCall(200, () => {

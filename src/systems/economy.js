@@ -825,3 +825,46 @@ function startRematchBattle(sc, target) {
     }
   });
 }
+
+// ---------------- 11. BARTER LANGSUNG DENGAN PENDUDUK (#43) ----------------
+const BARTER_DEALS = [
+  { in: 'herb', inCount: 5, out: 'hipotion', outCount: 1, desc: '5 Daun Obat ➔ 1 Ramuan Besar' },
+  { in: 'jelly', inCount: 4, out: 'bait', outCount: 3, desc: '4 Lendir Slime ➔ 3 Umpan Pancing' },
+  { in: 'tusk', inCount: 3, out: 'sarrow', outCount: 10, desc: '3 Taring Babi ➔ 10 Panah Tajam' },
+  { in: 'log', inCount: 6, out: 'iron', outCount: 1, desc: '6 Kayu Gelondong ➔ 1 Pedang Besi Tempa' }
+];
+
+World.prototype.openDirectBarter = async function () {
+  G.lock++; sfx('cur');
+  for (;;) {
+    const items = BARTER_DEALS.map(d => {
+      const have = S.inv[d.in] || 0;
+      const can = have >= d.inCount;
+      return {
+        t: (can ? '🔄 ' : '🔒 ') + d.desc,
+        r: `${have}/${d.inCount}`,
+        dis: !can,
+        deal: d
+      };
+    });
+    items.push({ t: 'Tutup' });
+
+    const r = await choose({
+      head: '🔄 Barter Langsung Hasil Alam',
+      x: 20, y: 25, w: 280,
+      items,
+      foot: () => 'Tukar langsung hasil petualangan tanpa memerlukan koin uang!'
+    });
+
+    if (r < 0 || r >= BARTER_DEALS.length) break;
+
+    const chosen = BARTER_DEALS[r];
+    addItem(chosen.in, -chosen.inCount);
+    addItem(chosen.out, chosen.outCount);
+    sfx('chest');
+    popWorld(this.pl.x, this.pl.y - 20, `+${chosen.outCount} ${ITEMS[chosen.out]?.n || chosen.out}!`, 'heal');
+    await say(`Barter berhasil! Kamu menukar ${chosen.inCount} ${ITEMS[chosen.in]?.n} dan mendapatkan ${chosen.outCount} ${ITEMS[chosen.out]?.n}.`);
+    updHud();
+  }
+  G.lock--;
+};

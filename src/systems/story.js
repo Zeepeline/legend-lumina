@@ -76,3 +76,55 @@ Object.assign(World.prototype, {
     updHud(); await say(msg); G.lock--;
   },
 });
+
+// Teka-teki Pilar Runa Kuno Reruntuhan Aurel (#65)
+// Urutan aktivasi: Api -> Es -> Cahaya
+async function interactRunePillar(sc, spr, elem, x, y) {
+  if (G.lock > 0) return;
+  G.lock++;
+  S.runePillars = S.runePillars || { step: 0, lit: {}, solved: false };
+
+  if (S.runePillars.solved) {
+    G.lock--;
+    return say('Ketiga Pilar Runa telah menyala seimbang. Cahaya kuno telah terbangun.');
+  }
+
+  const expectedOrder = ['fire', 'ice', 'light'];
+  const curExpected = expectedOrder[S.runePillars.step || 0];
+
+  if (elem === curExpected) {
+    sfx('magic');
+    sc.sparkle(x, y - 10, 'spark', 14);
+    spr.setTint(0xffffff);
+    popWorld(x, y - 20, `✨ ${elem.toUpperCase()} AKTIF!`, 'heal');
+    S.runePillars.lit[elem] = true;
+    S.runePillars.step = (S.runePillars.step || 0) + 1;
+
+    if (S.runePillars.step >= 3) {
+      // Selesai teka-teki!
+      S.runePillars.solved = true;
+      sfx('save');
+      sc.cameras.main.flash(300, 255, 255, 230);
+      sc.camShake(180, 0.008);
+      // Munculkan peti harta kuno di tengah altar (520, 290)
+      const secretChest = { id: 'aurel_rune_chest', x: 520, y: 290, item: 'leg_sun' };
+      const sp = sc.spawnChest(secretChest);
+      sc.sparkle(520, 280, 'doto', 24);
+      sp.setAlpha(0);
+      sc.tweens.add({ targets: sp, alpha: 1, duration: 600 });
+      saveGame(sc);
+      await say('DENGG!! Gema lonceng kuno berdentang di reruntuhan Aurel! Sebuah peti pusaka agung muncul di tengah altar pilar!');
+    } else {
+      await say(`Pilar ${elem === 'fire' ? 'Api' : 'Es'} menyala terang memancarkan aura magis. Lanjutkan urutan berikutnya!`);
+    }
+  } else {
+    // Salah urutan: reset
+    sfx('buzz');
+    sc.camShake(100, 0.004);
+    popWorld(x, y - 20, 'URUTAN SALAH!', 'crit');
+    S.runePillars.step = 0;
+    S.runePillars.lit = {};
+    await say('ZZZT! Energi runa menolak getaran dan padam kembali! Perhatikan petunjuk prasasti kuno.');
+  }
+  G.lock--;
+}
