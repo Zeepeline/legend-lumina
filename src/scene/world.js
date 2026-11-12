@@ -90,6 +90,7 @@ class World extends Phaser.Scene {
     if (G.title) { pl.setVisible(false); pl.sh.setVisible(false); this.cx = 250; this.cy = 160; }
     cam.setScroll(Math.round(this.cx), Math.round(this.cy));
     this.events.on('postupdate', this.camStep, this);
+    this.cullL = []; this.time.delayedCall(0, () => this.initCull());
     this.events.once('shutdown', () => this.events.off('postupdate', this.camStep, this));
     this.mpT = 0;
     playBGM(G.title ? 'town' : this.weather === 'rain' ? null : bgmFor(M));
@@ -98,7 +99,7 @@ class World extends Phaser.Scene {
     if (!G.title) { updHud(); showHud(true); if (!data.quiet) banner(M.name, M.id === 'village' ? 'SELAMAT DATANG DI' : 'MEMASUKI'); }
     if (data.after) data.after(this);
   }
-  wall(x, y, w, h) { const z = this.add.zone(x + w / 2, y + h / 2, w, h); this.physics.add.existing(z, true); this.walls.add(z); return z; }
+  wall(x, y, w, h) { const z = new Phaser.GameObjects.Zone(this, x + w / 2, y + h / 2, w, h); this.physics.add.existing(z, true); this.walls.add(z); return z; } // tidak masuk daftar tampilan (hemat pengurutan)
   shadow(x, y, rx, ry) { this.add.image(x + 1, y, 'shadowb').setDisplaySize(rx * 2.4, ry * 2.6).setAlpha(this.M.dark ? .5 : .32).setDepth(-9e5); }
   spawnObj(o) {
     const [type, x, y, opt] = o; const d = OBJ[type];
@@ -818,7 +819,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock();
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       // Akumulasi waktu bermain riil (Fitur #25)

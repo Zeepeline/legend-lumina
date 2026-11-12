@@ -217,6 +217,9 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~20~~ | ✅ selesai: 20, 58, 55, 50, 31, 93, 502 | Mendorong Batu, Anjing Kuro, Kamera, Masak Bintang & Kebun Bunga |
 | ~~21~~ | ✅ selesai: 11, 241, 420, 496, 208, 495, 83 | Arena Gelombang, Papan Buronan, Batang Logam, Buff Bugar, Tengkorak Bangkit & Landscape Lebar |
 | ~~22~~ | ✅ selesai: 17, 197, 438, 460, 425, 38, 56 | Pohon Bakat Arka, Raja Slime Pecah, Kotak Bekal, Pasar Malam, Lilin Sarang Lebah, Tren Pasar Mingguan, & Perahu Danau Dalam |
+| ~~A~~ | ✅ Performa: culling, entitas jauh tidur, tembok di luar daftar tampilan (CPU/frame Hutan Dalam 14,7 → 5,8 ms) | — |
+| B | Tanah per chunk, atlas tekstur, tabrakan digabung | Fondasi dunia mulus |
+| C | Pindah wilayah tanpa layar hitam → dunia mulus penuh | — |
 | 23+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan

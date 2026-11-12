@@ -49,6 +49,7 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `systems/fishing.js` | mancing: `FISH` (lokasi/jam/cuaca/legendaris), `tugGame` tarik-ulur, rekor ukuran, Buku Ikan `openFishLogNew`, akuarium (`FCAT.tank`) |
 | `systems/season.js` | kalender & musim (`season()`, `dayName()`, 7 hari/musim), jam toko (`shopShut`, membungkus `buyMenu`/`upgradeMenu`), lapisan warna & partikel musim, `sleepToMorning` |
 | `systems/polish.js` | tangkis, elemen (`ELEM`/`WEAK`, `curElem`), kunci target (`lockE`), kelangkaan `rarity()`, notifikasi `toastItem` (membungkus `addItem`), ukuran huruf, hemat baterai |
+| `systems/perf.js` | performa: culling objek diam di luar layar (`cameraFilter`), sprite diam dikeluarkan dari updateList, musuh/hewan jauh tidur, NPC jauh diproses 4×/detik. Ukur dengan `PERF=1 npx playwright test tests/perf.spec.js` (CPU 4× lebih lambat) |
 | `systems/home.js` | Rumah Arka (`S.home`, peta `home`): beli rumah, katalog `FCAT`, tata perabot bebas (`startCarry`/`carryKey`), peti `openBox`, perluasan |
 | `systems/status.js` | efek status `STATUS` (racun/terbakar/dingin) pemain & musuh; sumber = `fx` di `ENEMY`/`PROJ` |
 | `systems/travel.js` | teleport: `WARPS` (posisi patung per peta), aktif di `S.warps` |
@@ -92,6 +93,7 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 - **Scene di-restart, bukan dibuat ulang.** `this.scene.restart()` memakai instance `World` yang sama. Properti per-peta (`this.boulder`, `this.garden`, `this.bossOn`, dll.) **harus di-reset di awal `create()`** (`scene/world.js`).
 - **Kamera manual** di `camStep()` (event `postupdate`), dibulatkan ke piksel agar layar tidak bergetar. Jangan pakai `startFollow`.
+- **Performa:** tembok (`wall()`) dibuat sebagai Zone di luar daftar tampilan. Objek dekorasi baru otomatis ikut culling; objek yang bergerak otomatis dikecualikan. Setelah perubahan besar, jalankan tes performa dan bandingkan `test-results/perf.json`.
 - **Fisika** arcade `fixedStep: false` (mulus di layar 90/120 Hz).
 - **Depth = y dasar sprite**, semua sprite `setOrigin(.5, 1)`.
 - **Kunci input saat UI terbuka:** `G.lock++`/`G.lock--` berpasangan. `UIH` adalah handler input UI aktif. `talk()` sudah mengunci sendiri.
