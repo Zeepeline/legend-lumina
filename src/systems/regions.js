@@ -59,7 +59,7 @@ Object.assign(World.prototype, {
   regBounds() {
     const M = this.M, b = { x0: 0, y0: 0, x1: M.w, y1: M.h };
     for (const s of REG.values()) { if (!s.M) continue; const [dx, dy] = relXY(s, this); b.x0 = Math.min(b.x0, dx); b.y0 = Math.min(b.y0, dy); b.x1 = Math.max(b.x1, dx + s.M.w); b.y1 = Math.max(b.y1, dy + s.M.h); }
-    this.camB = b; this.physics.world.setBounds(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0);
+    this.camB = b; this.cameras.main.setBounds(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0); this.physics.world.setBounds(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0);
   },
   // ---- serah-terima kendali ke wilayah yang sudah berjalan ----
   owHandoff(B) {

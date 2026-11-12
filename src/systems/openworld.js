@@ -26,7 +26,7 @@ Object.assign(World.prototype, {
         this.owObjs.push(s);
       }
     }
-    const B = this.camB; this.physics.world.setBounds(B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0);
+    const B = this.camB; this.cameras.main.setBounds(B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0); this.physics.world.setBounds(B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0);
     this.cameras.main.setBackgroundColor('#2f4a2a');
     if (data.cam) { this.cx = data.cam.x; this.cy = data.cam.y; this.cameras.main.setScroll(Math.round(this.cx), Math.round(this.cy)); }
     for (const L of this.gL) if (L.ox || L.oy) for (const [i, j] of this.gNeed(L, this.cx, this.cy, 0)) this.gEnsure(L, i, j, true);
