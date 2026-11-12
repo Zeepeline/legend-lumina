@@ -133,6 +133,27 @@ Object.assign(World.prototype, {
         s.setVelocity(0); e.shootT -= dt; s.flipX = dx > 0;
         if (aggro && e.shootT <= 0 && d < 160) { e.shootT = 2.4; this.eShoot(e, 'seed', [-.32, 0, .32], D.atk); this.tweens.add({ targets: s, scaleY: 1.15, duration: 100, yoyo: true }); }
         s.anims.timeScale = aggro ? 1.6 : .6; break;
+      case 'shaman': {
+        // Dukun Goblin (#183): Menjaga jarak dan memulihkan HP kawan
+        if (aggro && d < 65) s.setVelocity(-dx / d * D.spd, -dy / d * D.spd);
+        else if (aggro && d > 120) s.setVelocity(dx / d * D.spd, dy / d * D.spd);
+        else wander(D.spd * .4);
+        e.healT = (e.healT || 3.5) - dt;
+        if (e.healT <= 0) {
+          e.healT = 4.0;
+          const allies = this.enemies.filter(o => o.hp > 0 && Math.hypot(s.x - o.spr.x, s.y - o.spr.y) < 110);
+          if (allies.length > 0) {
+            sfxAt('heal', s.x, s.y, this);
+            this.sparkle(s.x, s.y - 12, 'dotg', 10);
+            for (const al of allies) {
+              al.hp = Math.min(al.max, al.hp + 15);
+              popWorld(al.spr.x, al.spr.y - 20, '+15 HP', 'heal');
+            }
+          }
+        }
+        if (D.ch) this.charAnim(e);
+        break;
+      }
       case 'walk':
         if (aggro) {
           // Musuh Berkelompok & Pengepungan (#8)

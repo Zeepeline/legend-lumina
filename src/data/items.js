@@ -163,6 +163,16 @@ const ITEMS = {
   lake_catfish: { n: 'Ikan Patin Raksasa', k: 'mat', price: 70, sell: 45, d: 'Ikan patin kumis panjang bertubuh licin dari palung terdalam Danau Cermin.', src: 'Mancing perahu Danau Cermin' },
   moon_fish: { n: 'Ikan Rembulan', k: 'mat', price: 90, sell: 60, d: 'Ikan bersisik perak memantulkan sinar rembulan malam di tengah danau tenang.', src: 'Mancing perahu malam Danau Cermin' },
 
+  // Pewarna Alami (#418)
+  dye_red: { n: 'Pewarna Merah Kelopak', k: 'mat', price: 40, sell: 25, d: 'Ekstrak merah merona dari kelopak bunga aster. Bahan pewarna jubah ksatria.', src: 'Kerajinan meja' },
+  dye_blue: { n: 'Pewarna Biru Anggrek', k: 'mat', price: 40, sell: 25, d: 'Ekstrak nila sejuk dari sari anggrek dan lumut. Bahan pewarna jubah mistik.', src: 'Kerajinan meja' },
+  dye_gold: { n: 'Pewarna Kuning Matahari', k: 'mat', price: 50, sell: 35, d: 'Sari pati kelopak krisan emas cerah bercahaya. Bahan pewarna jubah ningrat.', src: 'Kerajinan meja' },
+  dye_purple: { n: 'Pewarna Ungu Malam', k: 'mat', price: 50, sell: 35, d: 'Perasan buah beri malam pekat beraroma anggur. Bahan pewarna jubah penyihir.', src: 'Kerajinan meja' },
+
+  // Misi Kurir (#442) & Balai Lelang (#40)
+  courier_parcel: { n: 'Paket Kilat Bersegel', k: 'key', d: 'Paket penting pesanan kurir kilat. Antarkan ke penerima sebelum waktu habis!' },
+  antique_relic: { n: 'Artefak Kuno Aurel', k: 'key', price: 300, sell: 180, d: 'Peninggalan peradaban Aurel kuno bercorak relief surya. Menang lelang pasar!', src: 'Balai Lelang Pasar Lumina' },
+
   rod: { n: 'Pancing', k: 'key', price: 25, d: 'Untuk memancing di titik air berkilau.' },
   key: { n: 'Kunci Tua', k: 'key', d: 'Membuka peti terkunci di Hutan Lumina.' },
   lockpick: { n: 'Peniti Pembobol', k: 'use', price: 25, sell: 12, d: 'Kawat baja lentur untuk membuka gembok peti besi terkunci.' },

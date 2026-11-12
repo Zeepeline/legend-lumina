@@ -242,10 +242,18 @@ Object.assign(World.prototype, {
   },
   updPicks(dt) {
     const pl = this.pl;
+    // Magnet Rampasan Koin & Material Otomatis (#169)
+    // Radius magnet dasar 70 px
+    const magnetRadius = 70;
     for (const p of this.picks) {
       p.t -= dt; if (p.t > 0 || p.got) continue; const dx = pl.x - p.s.x, dy = pl.y - 4 - p.s.y, d = Math.hypot(dx, dy);
-      if (d < 38 && !pl.dead) { p.s.x += dx / d * Math.min(d, 170 * dt); p.s.y += dy / d * Math.min(d, 170 * dt); p.s.setDepth(p.s.y); }
-      if (d < 7) {
+      if (d < magnetRadius && !pl.dead) {
+        const pullSpeed = d < 38 ? 200 : 140;
+        p.s.x += dx / d * Math.min(d, pullSpeed * dt);
+        p.s.y += dy / d * Math.min(d, pullSpeed * dt);
+        p.s.setDepth(p.s.y);
+      }
+      if (d < 12) {
         p.got = true; p.s.destroy();
         if (p.kind === 'coin') { S.gold += p.val; sfx('coin'); popWorld(pl.x, pl.y - 30, '+' + p.val + 'G', 'gold'); }
         else { addItem(p.val); sfx('chest'); popWorld(pl.x, pl.y - 30, '+' + ITEMS[p.val].n, 'heal'); }

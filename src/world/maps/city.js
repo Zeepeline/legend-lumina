@@ -44,7 +44,7 @@ MAPS.kgate = {
   border: { top: 40, bottom: 860, left: 40, right: 1160, gap: [560, 640], gapT: [540, 660], types: ['treeA', 'treeB'] },
   exits: [{ x: 560, y: 888, w: 80, h: 12, to: 'road', tx: 450, ty: 60, dir: 'down', label: 'Jalan Raya Lama' },
     { x: 540, y: 0, w: 120, h: 12, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' }],
-  npcs: citizens([['gj1', 'guard', 'Penjaga Gerbang', 540, 450, 'gerbang', 0], ['gj2', 'guard', 'Penjaga Gerbang', 660, 450, 'gerbang', 0], ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'], ['gw2', 'farmer', 'Petani', 900, 700, 'warga']]),
+  npcs: citizens([['gj1', 'guard', 'Penjaga Gerbang', 540, 450, 'gerbang', 0], ['gj2', 'guard', 'Penjaga Gerbang', 660, 450, 'gerbang', 0], ['courier', 'boy', 'Budi Kurir Kilat', 380, 720, 'warga', 0], ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'], ['gw2', 'farmer', 'Petani', 900, 700, 'warga']]),
   trees: { n: 160, min: 30, types: [['treeA', .5], ['bushG1', .3], ['rock', .2]] },
 };
 
@@ -65,7 +65,9 @@ MAPS.kpasar = {
     { x: 760, y: 0, w: 80, h: 12, to: 'kakademi', tx: 700, ty: 960, dir: 'up', label: 'Distrik Akademi' },
     { x: 0, y: 590, w: 12, h: 60, to: 'kbawah', tx: 1150, ty: 500, dir: 'left', label: 'Kota Bawah' }],
   doors: [[560, 300, { to: 'kinn' }], [180, 300, 'Rumah penjahit. Pintunya terkunci.'], [1300, 300, 'Kantor Serikat Dagang cabang Kota Lumina. Penjaganya menatapmu tajam.'], [1040, 300, 'Toko buku. "Tutup sampai ujian Akademi selesai."']],
-  npcs: [{ id: 'kmerchant', ch: 'merchant', name: 'Pedagang Pasar', x: 640, y: 530, dir: 'down' }, { id: 'rudi', ch: 'child', name: 'Rudi', x: 980, y: 700, dir: 'left', wander: 20 },
+  npcs: [{ id: 'kmerchant', ch: 'merchant', name: 'Pedagang Pasar', x: 640, y: 530, dir: 'down' },
+    { id: 'auctioneer', ch: 'elder', name: 'Juru Lelang Bastian', x: 740, y: 380, dir: 'down' },
+    { id: 'rudi', ch: 'child', name: 'Rudi', x: 980, y: 700, dir: 'left', wander: 20 },
     ...citizens([['kp1', 'woman', 'Warga', 700, 760, 'warga'], ['kp2', 'farmer', 'Warga', 900, 470, 'warga'], ['kp3', 'merchant', 'Pedagang', 960, 530, 'pedagang', 0], ['kp4', 'girl', 'Gadis Kota', 520, 660, 'warga'],
       ['kp5', 'smith', 'Kuli Angkut', 1100, 880, 'pedagang'], ['kp6', 'joko', 'Pedagang Rempah', 640, 820, 'pedagang', 0], ['kp7', 'woman', 'Warga', 300, 640, 'warga'], ['kp8', 'guard', 'Penjaga Kota', 1480, 640, 'penjaga', 0]])],
   animals: [['cat', 760, 760, 0], ['cat', 1150, 520, 1]],

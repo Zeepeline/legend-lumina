@@ -134,6 +134,17 @@ function layout() {
   } else {
     document.body.classList.remove('wide-land');
   }
+
+  // Penyesuaian Skala & Padding Tombol Virtual Kustom (#74)
+  const padEl = document.getElementById('pad');
+  if (padEl && touch) {
+    const scales = [0.8, 1.0, 1.2, 1.4];
+    const pads = [8, 16, 28];
+    const btnScale = scales[OPT.btnScale || 1] || 1.0;
+    const btnPad = pads[OPT.btnPad || 1] || 16;
+    padEl.style.setProperty('--btn-scale', btnScale);
+    padEl.style.setProperty('--btn-pad', btnPad + 'px');
+  }
 }
 UI.style.height = VH + 'px';
 addEventListener('resize', layout); layout();

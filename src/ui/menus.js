@@ -42,6 +42,8 @@ async function openSettings() {
     ['Peta mini', () => onoff(OPT.mini), () => { OPT.mini = !OPT.mini; }, 'Peta kecil di pojok kiri atas (ketuk untuk peta besar)'],
     ['Tips tutorial', () => onoff(OPT.tips), () => { OPT.tips = !OPT.tips; }, 'Petunjuk singkat saat situasi baru'],
     ['Ukuran tombol', () => ['Kecil', 'Normal', 'Besar', 'Sangat besar'][OPT.btnSize], () => { OPT.btnSize = (OPT.btnSize + 1) % 4; applyPadOpt(); }, 'Ukuran tombol layar sentuh'],
+    ['Skala Tombol', () => ['80%', '100%', '120%', '140%'][OPT.btnScale || 1], () => { OPT.btnScale = ((OPT.btnScale || 1) + 1) % 4; if (typeof layout === 'function') layout(); }, 'Skala rasio ukuran tombol sentuh'],
+    ['Margin Sudut', () => ['Rapat (8px)', 'Normal (16px)', 'Lebar (28px)'][OPT.btnPad || 1], () => { OPT.btnPad = ((OPT.btnPad || 1) + 1) % 3; if (typeof layout === 'function') layout(); }, 'Jarak tombol sentuh dari sudut layar'],
     ['Transparansi tombol', () => ['Penuh', 'Sedikit', 'Banyak'][OPT.btnAlpha], () => { OPT.btnAlpha = (OPT.btnAlpha + 1) % 3; applyPadOpt(); }, 'Supaya tombol tidak menutupi layar'],
     ['Bilah HP musuh', () => onoff(OPT.hpbar), () => { OPT.hpbar = !OPT.hpbar; }, 'Bilah HP kecil di atas musuh'],
     ['Ekspor save', () => null, async () => { saveGame(G.scene); await codeDialog('out'); }, 'Salin kode save ke perangkat lain'],

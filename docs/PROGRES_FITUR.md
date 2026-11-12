@@ -13,12 +13,19 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 
 | Selesai | Sebagian | Dibatalkan | Sisa |
 |---|---|---|---|
-| 157 | 5 | 0 | 838 |
+| 164 | 5 | 0 | 831 |
 
 ## Selesai
 
 | No | Fitur | File utama | Gelombang |
 |---|---|---|---|
+| 74 | Penyesuaian tata letak, skala & margin tombol virtual kustom (skala 80%-140% & margin 8-28px) | `core/input.js` (`layout`), `ui/menus.js` (`openSettings`) | 23 |
+| 169 | Magnet koin emas & material jatuhan otomatis (tarikan halus radius 70 px) | `systems/combat.js` (`updPicks`) | 23 |
+| 497 | Dapur masak mandiri di rumah Arka (kompor terpasang di rumah untuk masak bekal & hidangan) | `systems/home.js` (`stove`), `world/maps/interior.js` | 23 |
+| 418 | Pewarna alami dari bunga & corak jubah baru (4 botol pewarna kelopak & opsi jubah celup di lemari) | `data/items.js`, `systems/craft.js`, `systems/home.js` (`useWardrobe`) | 23 |
+| 181/183 | Skuad taktis goblin: pemanah jarak jauh & dukun penyembuh | `data/enemies.js` (`goblin_archer`, `goblin_shaman`), `ai/enemies.js` | 23 |
+| 442 | Misi kurir ekspedisi kilat antar-kota (Budi Kurir Kilat di gerbang kota, antar paket dalam 180 dtk) | `world/maps/city.js`, `npc/dialog.js` (`talkCourier`) | 23 |
+| 40 | Balai lelang barang antik Kota Lumina (Juru Lelang Bastian di pasar, tawar-menawar ketukan palu) | `world/maps/city.js`, `npc/dialog.js` (`talkAuctioneer`) | 23 |
 | 17 | Pohon bakat keahlian Arka (3 cabang: Pendekar Pedang, Penyihir Bijak, Penjelajah Alam) | `ui/menus.js` (`openTalentTree`), `core/state.js` (`S.talents`) | 22 |
 | 197 | Musuh Raja Slime membelah diri (Mahkota emas meletus pecah menjadi 3 slime kecil) | `data/enemies.js` (`king_slime`), `systems/combat.js` | 22 |
 | 438 | Kotak bekal perjalanan (bento simpan 3 masakan untuk santap instan darurat) | `data/items.js` (`lunchbox`), `systems/craft.js` (`useTool`) | 22 |
@@ -220,7 +227,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~A~~ | ✅ Performa: culling, entitas jauh tidur, tembok di luar daftar tampilan (CPU/frame Hutan Dalam 14,7 → 5,8 ms) | — |
 | B | Tanah per chunk, atlas tekstur, tabrakan digabung | Fondasi dunia mulus |
 | C | Pindah wilayah tanpa layar hitam → dunia mulus penuh | — |
-| 23+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~23~~ | ✅ selesai: 74, 169, 497, 418, 181/183, 442, 40 | Skala & Margin Tombol Kustom, Magnet Koin, Dapur Rumah, Pewarna Bunga, Goblin Taktis, Kurir Kilat, & Balai Lelang |
+| 24+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 

@@ -21,6 +21,17 @@ Object.assign(World.prototype, {
     }
     if (!(await this.learnTalk(id, T, gain)) && !(await this.ch5Talk(id, nm, T, gain)) && !(await this.storyTalk(id, nm, T, gain, o.n))) switch (id) {
       case 'elder':
+        if (has('courier_parcel') && S.courierTimer?.target === 'elder') {
+          addItem('courier_parcel', -1);
+          delete S.courierTimer;
+          S.gold += 150;
+          sfx('fanfare');
+          banner('PENGIRIMAN SUKSES!', '+150 G', true, 2500);
+          popWorld(this.pl.x, this.pl.y - 20, '+150 G Hadiah Kurir!', 'gold');
+          updHud();
+          await T('Wah, paket kilat dari Gerbang Kota Lumina!', 'Tepat waktu sekali, Arka. Terima kasih banyak, ini imbalan kerja kerasmu sebagai kurir andalan!');
+          break;
+        }
         if (S.stage === 0) {
           await T('Ah, Arka. Syukurlah kamu datang.', 'Akhir-akhir ini cahaya Kristal Lumina di selatan hutan makin redup.', 'Pemburu Raka sedang menyelidiki hutan. Temui dia di pintu masuk hutan, di selatan desa.', 'Bawa ini. Dan belilah perlengkapan di desa sebelum pergi.');
           S.stage = 1; addItem('potion', 2); S.gold += 30; banner('Temui Pemburu Raka', 'MISI BARU', false, 2200); await sleep(1200); await this.learnTalk('elder', T, gain);
@@ -140,6 +151,12 @@ Object.assign(World.prototype, {
         break;
       case 'night_merchant':
         await this.talkNightMerchant();
+        break;
+      case 'courier':
+        await this.talkCourier();
+        break;
+      case 'auctioneer':
+        await this.talkAuctioneer();
         break;
       case 'joko':
         if (S.side.joko === 0) { await T('Selamat datang di Padang Angin! Kincirku menggiling gandum untuk desa.', 'Babi hutan akan menyeruduk lurus. Minggir ke samping, biar mereka menabrak batu!', 'Bisa bawakan 3 Taring Babi? Akan kutukar dengan sepatu ajaib.', 'Ini bekal dulu.'); S.side.joko = 1; addItem('potion', 2); await gain(['Dapat Ramuan x2!', 'Misi sampingan: Bawa 3 Taring Babi ke Pak Joko.']); }
@@ -364,6 +381,90 @@ Object.assign(World.prototype, {
     try {
       const items = ['amethyst_gem', 'fbomb', 'candle', 'lunchbox', 'seed_flower', 'leather_pouch'];
       await buyMenu('Pasar Malam Eksotis Lumina', items);
+    } finally {
+      G.lock--;
+    }
+  },
+  async talkCourier() {
+    G.lock++;
+    try {
+      if (has('courier_parcel')) {
+        await say('Kamu masih memegang paket kilat yang belum diantarkan! Segera kirimkan ke penerima sebelum waktu habis!', 'Budi Kurir Kilat');
+        return;
+      }
+      const r = await choose({
+        head: 'Loket Ekspedisi Kilat Lumina',
+        items: [
+          { t: '📦 Ambil Tugas Antar ke Tetua Bram (Desa)', r: 'Hadiah: 150 G' },
+          { t: 'Tanya Cara Kerja Kurir' },
+          { t: 'Tutup' }
+        ],
+        foot: i => ['Antar paket kilat dalam 180 detik ke Desa Lumina!', 'Pelajari sistem kurir kilat', ''][i] || ''
+      });
+      if (r === 0) {
+        addItem('courier_parcel', 1);
+        S.courierTimer = { target: 'elder', time: 180 };
+        sfx('chest');
+        updHud();
+        banner('MISI KURIR DIMULAI!', 'ANTAR KE TETUA BRAM', true, 2200);
+        await say('Terima kasih! Paket ini sangat mendesak. Bawa ke Tetua Bram di Desa Lumina secepatnya!', 'Budi Kurir Kilat');
+      } else if (r === 1) {
+        await talk('Budi Kurir Kilat', [
+          'Kami melayani pengantaran surat dan bahan berharga antarkota dan desa.',
+          'Waktu sangat berharga bagi seorang kurir! Pastikan kamu tiba di tempat penerima sebelum paket kedaluwarsa.',
+          'Selesaikan tugas dan kamu akan diberi imbalan koin melimpah!'
+        ]);
+      }
+    } finally {
+      G.lock--;
+    }
+  },
+  async talkAuctioneer() {
+    G.lock++;
+    try {
+      await say('Selamat datang di Balai Lelang Pasar Lumina! Hari ini kami melelang: Artefak Kuno Aurel bertatahkan emas!', 'Juru Lelang Bastian');
+      let bid = 120;
+      for (let round = 1; round <= 3; round++) {
+        const choice = await choose({
+          head: `LELANG ARTEFAK KUNO (Tawaran: ${bid} G)`,
+          items: [
+            { t: `Naikkan Tawaran +20 G (${bid + 20} G)` },
+            { t: `Naikkan Tawaran +50 G (${bid + 50} G)` },
+            { t: 'Mundur dari Lelang' }
+          ]
+        });
+        if (choice === 0) bid += 20;
+        else if (choice === 1) bid += 50;
+        else {
+          await say('Sayang sekali... Seorang kolektor kaya dari kota atas memenangkan artefak tersebut.', 'Juru Lelang Bastian');
+          return;
+        }
+
+        sfx('cur');
+        if (round < 3) {
+          const npcBids = ['Saudagar Kain menaikkan tawaran!', 'Kolektor Seni menaikkan tawaran!'];
+          bid += 30;
+          await say(`${npcBids[round - 1]} Tawaran sekarang: ${bid} G! Ada yang berani lebih tinggi?`, 'Juru Lelang Bastian');
+        }
+      }
+
+      // Ketukan palu ke-3!
+      sfx('save');
+      await say(`Tawaran ${bid} G! Satu... Dua... Tiga... TERJUAL kepada anak muda ini!`, 'Juru Lelang Bastian');
+      if (S.gold < bid) {
+        sfx('buzz');
+        await say('Waduh! Koinmu tidak mencukupi untuk menebus tawaran lelangmu!', 'Juru Lelang Bastian');
+      } else {
+        S.gold -= bid;
+        addItem('antique_relic', 1);
+        S.auctionWon = S.auctionWon || {};
+        S.auctionWon['antique_relic'] = true;
+        sfx('fanfare');
+        banner('MENANG LELANG!', 'ARTEFAK KUNO AUREL', true, 2600);
+        popWorld(this.pl.x, this.pl.y - 24, '+1 Artefak Kuno Aurel!', 'gold');
+        updHud();
+        await say('Selamat! Artefak Kuno peradaban Aurel kini resmi menjadi milikmu!', 'Juru Lelang Bastian');
+      }
     } finally {
       G.lock--;
     }

@@ -24,6 +24,7 @@ function homeInit() {
   if (S.home.items && S.home.items.length === 0 && S.home.owned) {
     S.home.items.push({ t: 'bed', x: 62, y: 90, v: 0 });
     S.home.items.push({ t: 'wardrobe', x: 236, y: 86, v: 0 });
+    S.home.items.push({ t: 'stove', x: 200, y: 160, v: 0 }); // Kompor Dapur Mandiri (#497)
   }
   return S.home;
 }
@@ -239,27 +240,45 @@ World.prototype.useWardrobe = async function () {
     { id: 'fire', n: 'Jubah Mentari (Merah Api)', tint: 0xff7777 },
     { id: 'forest', n: 'Jubah Belantara (Hijau Hutan)', tint: 0x88ff88 },
     { id: 'snow', n: 'Jubah Puncak (Putih Salju)', tint: 0xe0f7fa },
-    { id: 'shadow', n: 'Jubah Bayangan Senyap (Hitam Abu)', tint: 0x888899 }
+    { id: 'shadow', n: 'Jubah Bayangan Senyap (Hitam Abu)', tint: 0x888899 },
+    // Corak Jubah Baru dari Pewarna Bunga (#418)
+    { id: 'crimson', n: 'Jubah Ksatria Crimson (Merah)', tint: 0xff2244, needDye: 'dye_red' },
+    { id: 'orchid', n: 'Jubah Mistik Samudra (Biru)', tint: 0x3388ff, needDye: 'dye_blue' },
+    { id: 'royal_gold', n: 'Jubah Ningrat Emas (Kuning)', tint: 0xffdd33, needDye: 'dye_gold' },
+    { id: 'mystic_purple', n: 'Jubah Penyihir Ungu (Malam)', tint: 0xaa44ff, needDye: 'dye_purple' }
   ];
 
-  const items = outfits.map(o => ({
-    t: (S.outfit === o.id ? '✓ ' : '  ') + o.n,
-    r: S.outfit === o.id ? 'Dipakai' : ''
-  }));
+  const items = outfits.map(o => {
+    const isEquipped = S.outfit === o.id;
+    const canUse = !o.needDye || has(o.needDye) || S.unlockedOutfits?.[o.id];
+    return {
+      t: (isEquipped ? '✓ ' : '  ') + o.n,
+      r: isEquipped ? 'Dipakai' : (o.needDye && !S.unlockedOutfits?.[o.id] ? (has(o.needDye) ? 'Bisa Dicelup' : 'Butuh ' + ITEMS[o.needDye]?.n) : ''),
+      dis: !canUse
+    };
+  });
   items.push({ t: 'Tutup' });
 
   const r = await choose({
     head: 'Lemari Pakaian Arka · Warna Jubah',
     x: 20, y: 25, w: 275,
     items,
-    foot: () => 'Kustomisasi penampilan Arka murni kosmetik tanpa merubah stat!'
+    foot: (i) => i < outfits.length && outfits[i].needDye ? `Pewarna dari ekstrak bunga: ${ITEMS[outfits[i].needDye]?.n}` : 'Kustomisasi penampilan Arka murni kosmetik tanpa merubah stat!'
   });
 
   if (r >= 0 && r < outfits.length) {
-    S.outfit = outfits[r].id;
+    const chosen = outfits[r];
+    if (chosen.needDye && !S.unlockedOutfits?.[chosen.id]) {
+      addItem(chosen.needDye, -1);
+      S.unlockedOutfits = S.unlockedOutfits || {};
+      S.unlockedOutfits[chosen.id] = true;
+      sfx('heal');
+      popWorld(this.pl.x, this.pl.y - 20, 'Jubah Berhasil Dicelup!', 'heal');
+    }
+    S.outfit = chosen.id;
     sfx('ok');
     if (this.pl) {
-      this.pl.setTint(outfits[r].tint);
+      this.pl.setTint(chosen.tint);
     }
     popWorld(this.pl.x, this.pl.y - 20, 'Penampilan Diperbarui!', 'heal');
     saveGame(this);

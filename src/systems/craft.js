@@ -33,6 +33,10 @@ const CRAFT = [
   { id: 'iron_bar', n: 1, need: { ore: 3 } },
   { id: 'crystal_bar', n: 1, need: { shard: 3 } },
   { id: 'candle', n: 2, need: { wool: 1, berry: 2 } },
+  { id: 'dye_red', n: 1, need: { flower_bouquet: 1, berry: 2 } },
+  { id: 'dye_blue', n: 1, need: { flower_bouquet: 1, herb: 2 } },
+  { id: 'dye_gold', n: 1, need: { flower_bouquet: 1, spore: 2 } },
+  { id: 'dye_purple', n: 1, need: { flower_bouquet: 1, berry: 3 } },
 ];
 const ATTR = [['str', 'Kekuatan', '+1 serangan'], ['int', 'Sihir', '+2 kekuatan sihir'], ['vit', 'Ketahanan', '+5 HP maks & +0,5 pertahanan'], ['agi', 'Kelincahan', '+1% kecepatan & +1% kritikal']];
 function attrInit() {
