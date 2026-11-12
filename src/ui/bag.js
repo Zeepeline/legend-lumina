@@ -17,13 +17,16 @@ async function openBag(sc) {
       return `<span class="lo-btn${lo ? ' has' : ''}" data-lo="${i}" style="display:inline-block;padding:1px 5px;margin:0 2px;background:${lo ? '#4a7a3a' : '#3a3a48'};color:#fff;border-radius:3px;font-size:9px;cursor:pointer;">${i + 1}${lo ? '✓' : ''}</span>`;
     }).join('');
 
+    const srcText = L.length && ITEMS[L[sel]].src ? `<br><span style="color:#8ae8ff;font-size:9px;">📍 Sumber: ${ITEMS[L[sel]].src}</span>` : '';
+    const altWpnText = S.eq.altWpn ? `<br>Cadangan: <b>${ITEMS[S.eq.altWpn]?.n || '-'}</b> [Q]` : '';
     w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span><span class="gold">${S.gold} G</span></div>
      <div class="bb"><div class="bl">${L.length ? L.map((id, i) => {
        const isLck = S.locked && S.locked[id];
        const isNew = S.newItems && S.newItems[id];
        const gemId = S.socket && S.socket[id];
        const gemBadge = gemId ? ` [💎]` : '';
-       return `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}${gemBadge}</span>${isNew ? '<small style="color:#ff8a3a;font-size:8px;font-weight:bold;margin-left:2px;">BARU</small>' : ''}<b>${isLck ? '🔒 ' : ''}${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`;
+       const altBadge = S.eq.altWpn === id ? ` <span style="color:#8ae8ff;font-size:8px;">[Cadangan]</span>` : '';
+       return `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}${gemBadge}${altBadge}</span>${isNew ? '<small style="color:#ff8a3a;font-size:8px;font-weight:bold;margin-left:2px;">BARU</small>' : ''}<b>${isLck ? '🔒 ' : ''}${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`;
      }).join('') : '<div class="empty">Kosong</div>'}</div>
      <div class="bs"><div class="mh">Arka · Lv ${S.lv} (${S.title || 'Petualang'})</div>${['wpn', 'arm', 'acc'].map(s => {
        const eqId = S.eq[s];
@@ -32,8 +35,8 @@ async function openBag(sc) {
      }).join('')}
      <div style="margin:4px 0 2px;font-size:9px;color:#a8a8b8;">Preset: ${loadoutBtns}</div>
      ${setsBadge}
-     <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b></div></div></div>
-     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · B tutup'}</div>`;
+     <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b>${altWpnText}</div></div></div>
+     <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) + srcText : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · B tutup'}</div>`;
     const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => {
@@ -128,6 +131,22 @@ async function openBag(sc) {
       if (k === 'left' || k === 'right') { tab = (tab + (k === 'left' ? 3 : 1)) % 4; sel = 0; sfx('cur'); draw(); }
       else if (k === 'up' || k === 'down') { const n = list().length; if (n) { sel = (sel + (k === 'up' ? n - 1 : 1)) % n; sfx('cur'); draw(); } }
       else if (k === 'a') act();
+      else if (k === 'swap') {
+        const L = list();
+        if (L.length && L[sel] && ITEMS[L[sel]]?.k === 'wpn') {
+          const wpnId = L[sel];
+          if (S.eq.altWpn === wpnId) {
+            S.eq.altWpn = null;
+            sfx('back');
+            if (typeof toastItem === 'function') toastItem(null, `Batal jadikan senjata cadangan`);
+          } else {
+            S.eq.altWpn = wpnId;
+            sfx('ok');
+            if (typeof toastItem === 'function') toastItem(null, `Cadangan: ${ITEMS[wpnId].n} (Tekan Q untuk tukar)`);
+          }
+          draw();
+        }
+      }
       else if (k === 'dash') {
         // Tekan DASH untuk mengunci / membuka kunci item (Fitur #374)
         const L = list();

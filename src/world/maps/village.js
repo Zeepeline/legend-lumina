@@ -37,7 +37,7 @@ MAPS.village = {
     ['bushP2', 588, 340], ['bushG2', 438, 342], ['bushW', 610, 454], ['bushG1', 160, 436], ['bushP', 862, 436],
     ['forge', 964, 560], ['bellows', 942, 564], ['anvil', 916, 556],
     ['bushG2', 62, 424], ['bushG1', 652, 624], ['bushW', 382, 628], ['bushP2', 558, 634], ['bushP', 462, 634],
-    ['pot', 186, 238], ['pot', 308, 228], ['planter', 712, 234], ['pot', 838, 238], ['planter', 200, 566],
+    ['pot', 186, 238], ['pot', 308, 228], ['planter', 712, 234], ['pot', 838, 238], ['mailbox', 924, 240], ['planter', 200, 566],
     ['lamp', 470, 556], ['lamp', 556, 556], ['lamp', 404, 290], ['lamp', 620, 290],
     ['stele', 560, 352, { lore: 'prasasti_desa' }],
     ['sign', 72, 640, { text: 'Barat: DANAU CERMIN' }],

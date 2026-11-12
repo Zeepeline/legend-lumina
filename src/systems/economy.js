@@ -12,6 +12,12 @@ const TITLES = {
   'Kolektor Harta': { n: 'Kolektor Harta', d: 'Telah mengumpulkan total 500 G sepanjang perjalanan.', bonus: '+1 Pertahanan (DEF)', def: 1, check: () => (S.st?.goldEarned || S.gold || 0) >= 500 },
   'Penakluk Bos': { n: 'Penakluk Bos', d: 'Telah menundukkan monster penguasa.', bonus: '+3 Serangan & +2 Pertahanan', atk: 3, def: 2, check: () => (S.st?.bosses || 0) >= 1 || S.stage >= 5 },
   'Penjelajah Lumina': { n: 'Penjelajah Lumina', d: 'Telah menempuh lebih dari 5.000 langkah perjalanan.', bonus: '+15% Kecepatan Lari (SPD)', spd: 0.15, check: () => (S.st?.steps || 0) >= 5000 },
+  'Si Palu Batu': { n: 'Si Palu Batu', d: 'Telah menambang sedikitnya 5 kali urat geoda gua.', bonus: '+2 Pertahanan (DEF)', def: 2, check: () => (S.st?.mined || 0) >= 5 },
+  'Ahli Peledak': { n: 'Ahli Peledak', d: 'Telah meledakkan sedikitnya 3 tong bubuk mesiu tempur.', bonus: '+3 Serangan (ATK)', atk: 3, check: () => (S.st?.barrels || 0) >= 3 },
+  'Pemburu Malam': { n: 'Pemburu Malam', d: 'Telah menundukkan monster buas di kegelapan malam.', bonus: '+10 HP & +2 Serangan', maxhp: 10, atk: 2, check: () => (S.st?.nightKills || 0) >= 8 },
+  'Bayangan Senyap': { n: 'Bayangan Senyap', d: 'Ahli menyergap musuh dari arah belakang (Backstab).', bonus: '+15% Kecepatan Lari (SPD)', spd: 0.15, check: () => (S.st?.backstabs || 0) >= 5 },
+  'Pembuka Rintangan': { n: 'Pembuka Rintangan', d: 'Telah merenovasi jembatan rusak di alam liar.', bonus: '+5 HP & +1 Pertahanan', maxhp: 5, def: 1, check: () => !!S.flags?.bridge_fixed },
+  'Saudagar Muda': { n: 'Saudagar Muda', d: 'Telah mengumpulkan akumulasi kekayaan 1.000 G.', bonus: '+10% Diskon Toko & +1 DEF', def: 1, check: () => (S.st?.goldEarned || 0) >= 1000 },
 };
 
 function checkTitles() {
@@ -388,4 +394,73 @@ async function openDailyFeats() {
     checkTitles();
     await say(`Tantangan "${f.n}" berhasil diklaim! Hadiah: +${f.gold} G dan +${f.exp} EXP.`);
   }
+}
+
+// ---------------- 5. KOTAK SURAT RUMAH ARKA (#485) ----------------
+const MAIL_LIST = [
+  { id: 'elder_start', from: 'Tetua Bram', title: 'Awal Perjalanan', text: 'Arka, langkahmu membanggakan desa. Teruslah berlatih dan jaga dirimu di rimba.', gift: { gold: 50 }, cond: () => S.stage >= 0 },
+  { id: 'lina_mochi', from: 'Lina & Mochi', title: 'Terima Kasih Mochi', text: 'Arka! Mochi mengeong senang sekali sejak kamu tolong. Ini ada buah beri manis untuk bekalmu.', gift: { item: 'berry', n: 3 }, cond: () => S.side?.mochi >= 3 || S.pet },
+  { id: 'rina_dapur', from: 'Bu Rina', title: 'Salam Dapur Penginapan', text: 'Aroma masakanmu tercium harum. Petualang butuh sayur segar agar staminanya tetap prima!', gift: { item: 'veg', n: 2 }, cond: () => (S.st?.cooked || 0) >= 1 },
+  { id: 'darto_lendir', from: 'Pak Darto', title: 'Bantuan Slime', text: 'Pagar kebunku sekarang kokoh berkat perekat lendir itu. Ini ramuan besar simpananku untukmu.', gift: { item: 'hipotion', n: 1 }, cond: () => S.side?.darto >= 2 || S.stage >= 3 },
+  { id: 'kembara_jalan', from: 'Kang Kembara', title: 'Salam Sang Pengelana', text: 'Dunia ini luas, kawan! Aku berdagang keliling dari desa hingga kota sesuai hari. Semoga sukses!', gift: { gold: 40 }, cond: () => S.day >= 2 }
+];
+
+async function openMailbox() {
+  if (G.lock > 0) return;
+  G.lock++; sfx('cur');
+  S.mail = S.mail || [];
+  S.readMail = S.readMail || {};
+
+  // Cek apakah ada surat baru yang memenuhi syarat
+  for (const m of MAIL_LIST) {
+    if (!S.mail.includes(m.id) && m.cond()) {
+      S.mail.push(m.id);
+    }
+  }
+
+  for (;;) {
+    const unreadCount = S.mail.filter(id => !S.readMail[id]).length;
+    const items = S.mail.map(id => {
+      const m = MAIL_LIST.find(x => x.id === id);
+      const isUnread = !S.readMail[id];
+      return {
+        t: (isUnread ? '✉ ' : '📭 ') + m.title,
+        r: m.from
+      };
+    });
+    items.push({ t: 'Tutup' });
+
+    const r = await choose({
+      head: `Kotak Surat Rumah · ${unreadCount ? unreadCount + ' Baru!' : 'Kosong'}`,
+      x: 30, y: 30, w: 230,
+      items,
+      foot: i => i < S.mail.length ? `Dari: ${MAIL_LIST.find(x => x.id === S.mail[i])?.from}` : 'Periksa surat kiriman dari penduduk Lumina.'
+    });
+
+    if (r < 0 || r >= S.mail.length) break;
+
+    const mailId = S.mail[r];
+    const m = MAIL_LIST.find(x => x.id === mailId);
+    const wasUnread = !S.readMail[mailId];
+    S.readMail[mailId] = true;
+
+    sfx('talk');
+    await talk(m.from, [m.text]);
+
+    if (wasUnread && m.gift) {
+      if (m.gift.gold) {
+        S.gold += m.gift.gold;
+        sfx('coin');
+        popWorld(S.x || 512, (S.y || 380) - 24, `+${m.gift.gold} G`, 'gold');
+        await say(`Kamu menemukan lampiran ${m.gift.gold} G di dalam amplop!`, m.from);
+      } else if (m.gift.item) {
+        addItem(m.gift.item, m.gift.n || 1);
+        sfx('chest');
+        popWorld(S.x || 512, (S.y || 380) - 24, `+${ITEMS[m.gift.item].n}`, 'heal');
+        await say(`Kamu menerima bingkisan ${ITEMS[m.gift.item].n} x${m.gift.n || 1}!`, m.from);
+      }
+      updHud();
+    }
+  }
+  G.lock--;
 }

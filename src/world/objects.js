@@ -123,6 +123,8 @@ const OBJ = {
   campfire: { key: 'campfire', col: [16, 8, 0], sh: [12, 4] },
   minestone: { key: 'geoderock', col: [18, 10, 0], sh: [14, 3], fade: 1 },
   bombbarrel: { key: 'barrel', col: [14, 6, 0], sh: [10, 3] },
+  mailbox: { key: 'sign', col: [10, 6, 0], sh: [8, 2], fade: 1 },
+  brokenbridge: { key: 'log', col: [28, 10, 0], sh: [16, 4] },
   fence: { key: 'fence', col: [18, 4, 0] },
   lamp: { key: 'lamp', col: [6, 4, 0], sh: [5, 2] },
   rock: { key: 'rock', col: [16, 6, 0], sh: [9, 2] },

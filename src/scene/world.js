@@ -414,6 +414,53 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'mailbox') {
+      this.inter.push({
+        x, y: y + 2, r: 20,
+        fn: async () => {
+          if (typeof openMailbox === 'function') await openMailbox();
+          else await say('Kotak surat kayu di depan rumah Arka.');
+        }
+      });
+    }
+    if (type === 'brokenbridge') {
+      if (S.flags && S.flags.bridge_fixed) {
+        s.setTexture('log').setScale(1.2, 0.9);
+      } else {
+        s.setTint(0x8a7050);
+        this.inter.push({
+          x, y: y + 2, r: 24,
+          fn: async () => {
+            if (S.flags && S.flags.bridge_fixed) {
+              await say('Jembatan kayu telah diperbaiki dengan kokoh!');
+              return;
+            }
+            const canFix = has('log', 5) && S.gold >= 40;
+            if (await ask(`Jembatan kayu tua ini ambruk. Perbaiki jembatan pintas? (Butuh: 5 Kayu & 40 G · Punya: ${S.inv.log || 0}/5 kayu, ${S.gold} G)`)) {
+              if (canFix) {
+                G.lock++;
+                addItem('log', -5);
+                S.gold -= 40;
+                S.flags = S.flags || {};
+                S.flags.bridge_fixed = 1;
+                sfx('boom');
+                await sleep(250);
+                sfx('chest');
+                this.sparkle(x, y - 8, 'spark', 12);
+                s.clearTint().setTexture('log').setScale(1.2, 0.9);
+                updHud();
+                if (typeof checkTitles === 'function') checkTitles();
+                await say('KLOK! KLOK! Jembatan kayu berhasil diperbaiki! Jalan pintas menyeberang sungai kini terbuka lebar.');
+                G.lock--;
+              } else {
+                sfx('buzz');
+                await say('Bahan kayu atau koin belum mencukupi (Perlu 5 Kayu & 40 G).');
+              }
+            }
+          }
+        });
+      }
+    }
     if (type === 'board') {
       this.inter.push({
         x, y: y + 4, r: 18,
@@ -592,7 +639,16 @@ class World extends Phaser.Scene {
           pl.flipX = pl.dir === 'left';
           if (pl.atkT > 0) { pl.anims.stop(); pl.setFrame(sd + '3'); }
           else { if (pl.anims.currentAnim?.key !== k || !pl.anims.isPlaying) pl.play(k, true); pl.anims.timeScale = (.6 + m * .5) * stat().spd; }
-          this.dustT -= dt; if (this.dustT <= 0 && m > .6) { this.dustT = .28; this.puff(pl.x - v.x * 4, pl.y - 1); }
+          this.dustT -= dt; if (this.dustT <= 0 && m > .6) {
+            this.dustT = .28;
+            const gType = typeof groundAt === 'function' ? groundAt(pl.x, pl.y) : '';
+            if (gType === 'water' || gType === 'shallow') {
+              this.sparkle(pl.x, pl.y - 2, 'dot', 5);
+              sfxAt('splash', pl.x, pl.y, this);
+            } else {
+              this.puff(pl.x - v.x * 4, pl.y - 1);
+            }
+          }
           // Akumulasi statistik langkah kaki (Fitur #25)
           S.st = S.st || {}; S.st.steps = (S.st.steps || 0) + 1;
         } else { pl.anims.stop(); pl.setFrame(sd + (pl.atkT > 0 ? '3' : '0')); pl.flipX = pl.dir === 'left'; }
@@ -697,8 +753,34 @@ class World extends Phaser.Scene {
       if (UIH) { UIH(k.startsWith('j') ? k.slice(1) : k); continue; }
       if (G.lock > 0 || this.trans || this.pl?.dead || G.title) { Input.castAng = null; continue; }
       if (this.carry && this.carryKey(k)) continue;
-      if (k === 'a') this.actionA(); else if (k === 'b') this.magic(); else if (k === 'dash') this.dash(); else if (k === 'nova') this.nova(); else if (k === 'item') this.drink(); else if (k === 'lock') this.cycleLock(); else if (k === 'tool1') this.useSlot(0); else if (k === 'tool2') this.useSlot(1); else if (k === 'menu') mainMenu(this); else if (k === 'map') openMap(this); else if (k === 'bag') openBag(this);
+      if (k === 'a') this.actionA(); else if (k === 'b') this.magic(); else if (k === 'dash') this.dash(); else if (k === 'nova') this.nova(); else if (k === 'item') this.drink(); else if (k === 'swap') this.swapWeapon(); else if (k === 'lock') this.cycleLock(); else if (k === 'tool1') this.useSlot(0); else if (k === 'tool2') this.useSlot(1); else if (k === 'menu') mainMenu(this); else if (k === 'map') openMap(this); else if (k === 'bag') openBag(this);
     }
+  }
+  swapWeapon() {
+    if (!S.eq.altWpn) {
+      // Cari senjata lain di inv jika altWpn belum disetel
+      const otherWpn = Object.keys(S.inv).find(id => ITEMS[id] && ITEMS[id].k === 'wpn' && id !== S.eq.wpn);
+      if (otherWpn) {
+        S.eq.altWpn = otherWpn;
+      } else {
+        popWorld(this.pl.x, this.pl.y - 28, 'Tidak ada senjata cadangan', 'mpc');
+        sfx('buzz');
+        return;
+      }
+    }
+    const cur = S.eq.wpn;
+    const next = S.eq.altWpn;
+    if (!has(next)) {
+      popWorld(this.pl.x, this.pl.y - 28, 'Senjata cadangan tidak ada', 'mpc');
+      sfx('buzz');
+      return;
+    }
+    S.eq.wpn = next;
+    S.eq.altWpn = cur;
+    sfx('ok');
+    this.sparkle(this.pl.x, this.pl.y - 12, 'spark', 6);
+    popWorld(this.pl.x, this.pl.y - 28, '⇄ ' + ITEMS[next].n, 'gold');
+    updHud();
   }
   front(dist = 12) { const [dx, dy] = DIRV[this.pl.dir]; return { x: this.pl.x + dx * dist, y: this.pl.y - 3 + dy * dist }; }
   actionA() {

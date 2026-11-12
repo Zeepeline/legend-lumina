@@ -12,4 +12,12 @@ const ACH = [
   { id: 'puzzle', n: 'Pemecah Teka-teki', d: 'Buka gerbang di Gua Batu', ok: () => !!S.flags.cave_gate, gift: ['gold', 40] },
   { id: 'bosses', n: 'Penakluk', d: 'Kalahkan semua boss & mini-boss', ok: () => ['mb_goblin', 'mb_queen', 'mb_snake', 'boss', 'golem', 'witch', 'dragon'].every(f => S.flags[f]), gift: ['hipotion', 5] },
   { id: 'beast', n: 'Ahli Monster', d: 'Lengkapi bestiari monster biasa', ok: () => BEAST.every(k => S.kills[k]), gift: ['medal', 1] },
+  { id: 'mine5', n: 'Palu Penambang', d: 'Tambang 5 urat batu bijih di gua', ok: () => (S.st?.mined || 0) >= 5, gift: ['gold', 60] },
+  { id: 'barrel3', n: 'Pakar Peledak', d: 'Ledakkan 3 tong bubuk mesiu', ok: () => (S.st?.barrels || 0) >= 3, gift: ['gold', 50] },
+  { id: 'socket1', n: 'Tatah Permata', d: 'Pasang permata pada senjata di Bengkel', ok: () => Object.keys(S.socket || {}).length > 0, gift: ['ether', 2] },
+  { id: 'night8', n: 'Penjaga Malam', d: 'Kalahkan 8 monster varian malam', ok: () => (S.st?.nightKills || 0) >= 8, gift: ['gold', 75] },
+  { id: 'back5', n: 'Langkah Bayangan', d: 'Lakukan 5 serangan Backstab dari belakang', ok: () => (S.st?.backstabs || 0) >= 5, gift: ['gold', 60] },
+  { id: 'craft10', n: 'Tangan Terampil', d: 'Buat 10 barang di kerajinan', ok: () => (S.st?.crafted || 0) >= 10, gift: ['gold', 80] },
+  { id: 'bridge1', n: 'Pembuat Jembatan', d: 'Perbaiki jembatan rusak di alam liar', ok: () => !!S.flags?.bridge_fixed, gift: ['gold', 100] },
+  { id: 'rich1000', n: 'Kantung Tebal', d: 'Kumpulkan akumulasi 1.000 G', ok: () => (S.st?.goldEarned || 0) >= 1000, gift: ['gold', 150] },
 ];

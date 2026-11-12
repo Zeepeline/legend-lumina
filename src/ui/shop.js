@@ -5,16 +5,30 @@ const icon = id => `<img class="ic" src="${ICONS[id]}">`;
 const ownedEq = id => has(id) ? ' ✓' : '';
 async function buyMenu(title, list) {
   let sel = 0;
+  // Diskon loyalitas belanja (#44)
+  S.spent = S.spent || { village: 0, city: 0 };
+  const loc = title.includes('Kota') ? 'city' : 'village';
+  const spentVal = S.spent[loc] || 0;
+  let loyaltyDisc = 0;
+  let loyaltyStars = '';
+  if (spentVal >= 600) { loyaltyDisc = 0.15; loyaltyStars = ' ⭐⭐⭐'; }
+  else if (spentVal >= 350) { loyaltyDisc = 0.10; loyaltyStars = ' ⭐⭐'; }
+  else if (spentVal >= 150) { loyaltyDisc = 0.05; loyaltyStars = ' ⭐'; }
+
   // Diskon keakraban bila pedagang berteman akrab
-  const discount = (title.includes('Sari') && (S.rel?.merchant >= 3)) ? 0.8 : 1;
+  const relDisc = (title.includes('Sari') && (S.rel?.merchant >= 3)) ? 0.2 : 0;
+  const totalDisc = Math.min(0.35, loyaltyDisc + relDisc);
+  const discountMul = 1 - totalDisc;
+
   for (; ;) {
     const hasBuyback = S.buyback && S.buyback.length > 0;
-    const r = await choose({ head: title + ' · ' + S.gold + ' G' + (discount < 1 ? ' (Diskon 20%)' : ''), x: 46, y: 30, w: 196, start: sel,
+    const discLabel = totalDisc > 0 ? ` (Diskon ${Math.round(totalDisc * 100)}%${loyaltyStars})` : '';
+    const r = await choose({ head: title + ' · ' + S.gold + ' G' + discLabel, x: 46, y: 30, w: 196, start: sel,
       items: [
         ...(hasBuyback ? [{ t: `↺ Beli Kembali (${S.buyback.length})`, r: 'riwayat' }] : []),
         ...list.map(id => {
           const it = ITEMS[id], eq = it.k !== 'use' && it.k !== 'mat';
-          const finalPrice = Math.max(1, Math.round(it.price * discount));
+          const finalPrice = Math.max(1, Math.round(it.price * discountMul));
           return { t: icon(id) + it.n + (eq ? ownedEq(id) : ` (${S.inv[id] || 0})`), r: finalPrice + ' G', dis: eq && has(id) };
         }),
         { t: 'Kembali' }
@@ -36,9 +50,11 @@ async function buyMenu(title, list) {
 
     const actualIdx = hasBuyback ? r - 1 : r;
     const id = list[actualIdx], it = ITEMS[id];
-    const finalPrice = Math.max(1, Math.round(it.price * discount));
+    const finalPrice = Math.max(1, Math.round(it.price * discountMul));
     if (S.gold < finalPrice) { sfx('buzz'); await say('Uangnya kurang.'); continue; }
-    S.gold -= finalPrice; addItem(id); sfx('coin'); updHud();
+    S.gold -= finalPrice;
+    S.spent[loc] = (S.spent[loc] || 0) + finalPrice;
+    addItem(id); sfx('coin'); updHud();
     if (['wpn', 'arm', 'acc'].includes(it.k)) { const sl = it.k; if (await ask(`${it.n} dibeli! Langsung pasang?`)) { S.eq[sl] = id; sfx('ok'); updHud(); } }
   }
 }

@@ -121,6 +121,13 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 96 | Tantangan harian aksi (Daily Feats di MENU dengan hadiah koin & EXP berkala) | `systems/economy.js` (`openDailyFeats`), `ui/menus.js` | 14 |
 | 375 | Tanda item baru `BARU` di tas (badge otomatis hilang setelah item dilihat/disorot) | `ui/bag.js`, `core/state.js` | 14 |
 | 91 | Rumput dan semak bergoyang saat Arka melintas | `scene/world.js` | 14 |
+| 70 | Jembatan rusak & jalan pintas (bisa diperbaiki dengan 5 Kayu + 40 G) | `world/maps/wild.js`, `scene/world.js` | 15 |
+| 485 | Kotak surat rumah Arka (menerima surat kiriman warga & hadiah lampiran) | `world/maps/village.js`, `systems/economy.js` (`openMailbox`) | 15 |
+| 372 | Tukar cepat senjata (shortcut Q / tombol pintas menukar senjata utama & cadangan) | `core/input.js`, `scene/world.js` (`swapWeapon`), `ui/bag.js` | 15 |
+| 44 | Diskon langganan toko (akumulasi belanja membuka diskon hingga 15% ⭐⭐⭐) | `ui/shop.js` (`buyMenu`), `core/state.js` | 15 |
+| 376 | Info sumber & habitat item (panduan lokasi asal bahan di tooltip tas) | `data/items.js` (`src`), `ui/bag.js` | 15 |
+| 90 | Air beranimasi & percikan langkah (audio debur & percikan air di zona perairan dangkal) | `scene/world.js` | 15 |
+| 94 | Pencapaian ekstra & gelar baru (8 pencapaian baru & 6 gelar progresif di menu) | `data/quests.js` (`ACH`), `systems/economy.js` (`TITLES`) | 15 |
 
 ## Sebagian
 
@@ -153,7 +160,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~12~~ | ✅ selesai: 45, 39, 374, 36, 28, 18, 25 | Ekonomi Desa, Karakter & Kenyamanan Tas |
 | ~~13~~ | ✅ selesai: 22, 371, 13, 69, 388, 462, 62 | Sinergi Perlengkapan, Taktik & Eksplorasi Malam |
 | ~~14~~ | ✅ selesai: 52, 23, 10, 8, 96, 375, 91 | Penambangan, Permata Soket, Flanking AI, & Interaksi Medan |
-| 15+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~15~~ | ✅ selesai: 70, 485, 372, 44, 376, 90, 94 | Eksplorasi Pintas, Kotak Surat Rumah & Alur Tempur |
+| 16+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 
