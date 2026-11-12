@@ -53,10 +53,24 @@ Object.assign(GroundLayer.prototype, {
     this.textures.addCanvas('wildcanopy', c);
     return 'wildcanopy';
   },
-  // buat isi celah yang dekat kamera, buang yang jauh
+  // buat isi celah yang dekat kamera, buang yang jauh. Kanopi = potongan 256 px (BUKAN tileSprite: di Phaser 3.80 tileSprite
+  // membuat kanvas seukuran objek, celah ribuan px bisa melewati batas kanvas iPhone sehingga tekstur hilang)
   updWilds() {
-    const v = this.cameras.main.worldView, R = wildRects();
-    R.forEach((r, ri) => {
+    const v = this.cameras.main.worldView, R = wildRects(), T = WILD_TILE, m = 2 * T, want = new Set(), key = this.wildCanopyTex();
+    this.wildTiles = this.wildTiles || new Map();
+    const tx0 = Math.floor((v.x - m) / T), tx1 = Math.floor((v.right + m) / T), ty0 = Math.floor((v.y - m) / T), ty1 = Math.floor((v.bottom + m) / T);
+    for (let ty = ty0; ty <= ty1; ty++) for (let tx = tx0; tx <= tx1; tx++) {
+      const X = tx * T, Y = ty * T;
+      R.forEach((r, ri) => {
+        const x0 = Math.max(X, r[0]), y0 = Math.max(Y, r[1]), x1 = Math.min(X + T, r[2]), y1 = Math.min(Y + T, r[3]);
+        if (x1 <= x0 || y1 <= y0) return;
+        const k = tx + ',' + ty + ',' + ri; want.add(k);
+        if (this.wildTiles.has(k)) return;
+        this.wildTiles.set(k, this.add.image(X, Y, key).setOrigin(0).setCrop(x0 - X, y0 - Y, x1 - x0, y1 - y0).setDepth(-1.1e6));
+      });
+    }
+    for (const [k, img] of this.wildTiles) if (!want.has(k)) { img.destroy(); this.wildTiles.delete(k); }
+    R.forEach((r, ri) => { // deretan pohon tepi per celah
       const near = r[2] > v.x - WILD_NEAR && r[0] < v.right + WILD_NEAR && r[3] > v.y - WILD_NEAR && r[1] < v.bottom + WILD_NEAR;
       const has = this.wild.get(ri);
       if (near && !has) this.wild.set(ri, this.makeWild(r));
@@ -64,9 +78,7 @@ Object.assign(GroundLayer.prototype, {
     });
   },
   makeWild(r) {
-    const out = [], key = this.wildCanopyTex(), R = outdoorRects(), keys = wildTreeKeys(this);
-    const ts = this.add.tileSprite(r[0], r[1], r[2] - r[0], r[3] - r[1], key).setOrigin(0).setDepth(-1.1e6);
-    ts.tilePositionX = r[0]; ts.tilePositionY = r[1]; out.push(ts); // pola menyambung di koordinat global
+    const out = [], R = outdoorRects(), keys = wildTreeKeys(this);
     if (!keys.length) return out;
     // deretan pohon di tepi celah yang bersentuhan dengan wilayah
     const edge = (x0, y0, x1, y1, ox, oy) => {

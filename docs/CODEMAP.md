@@ -375,7 +375,7 @@ _Dunia satu peta (langkah 1): wilayah di sekitar Arka berjalan BERSAMAAN sebagai
 _Lapisan tanah bersama (scene 'GL', selalu paling bawah): tanah SEMUA wilayah luar ruang yang dimuat + hutan pengisi celah,_
 `glOn()` 24 · `.glScene()` 26 · `.syncCams()` 32
 
-## src/systems/wilds.js (85 baris)
+## src/systems/wilds.js (97 baris)
 _Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Digambar di lapisan tanah_
 `WILD_MARGIN` 5 · `WILD_RECTS` 6 · `outdoorRects()` 7 · `inRegion()` 11 · `wildRects()` 12 · `wildTreeKeys()` 38
 

@@ -41,6 +41,9 @@ Saran implementasi: hapus clamp kamera antar wilayah (batas kamera = batas benua
 - **Garis gelap 1–3 px** di perbatasan: dulu kamera wilayah pasif disinkron di `update` (sebelum `camStep`) sehingga tertinggal 1 frame. Sekarang `syncCams()` dipanggil di akhir `camStep` (prototipe dibungkus di groundlayer.js).
 - Sisa: benda dari wilayah berbeda tidak saling diurutkan kedalamannya (scene terpisah); hanya terasa tepat di garis perbatasan.
 
+## 1d. v1.27.6
+- JANGAN pakai `tileSprite` untuk area besar: di Phaser 3.80 ia membuat kanvas seukuran objek; celah ribuan px melewati batas kanvas iPhone → tekstur hilang (layar gelap tanpa tanah/pohon). Kanopi hutan kini potongan 256 px di dekat kamera (`wilds.js` `updWilds`).
+
 ## 2. Yang SUDAH selesai
 | Tahap | Isi | File utama |
 |---|---|---|
