@@ -46,6 +46,7 @@ Object.assign(World.prototype, {
                 isBackstab = true;
               }
             }
+            const curWpnId = S.eq?.wpn; // dipakai efek Belati Rembulan, permata & senjata legendaris di bawah
             // Belati Rembulan Danau (selalu kritikal saat malam)
             const isNightTime = S.time >= 19 || S.time < 5;
             if (curWpnId === 'leg_moon' && isNightTime) {
@@ -60,7 +61,6 @@ Object.assign(World.prototype, {
             this.hitEnemy(e, finalDmg, finalCrit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
             const frz = (ITEMS[S.eq.wpn] || {}).frz; if (frz && Math.random() < frz) this.freezeEnemy(e, 1.2);
             // Efek Permata Senjata (#23)
-            const curWpnId = S.eq?.wpn;
             const curGem = curWpnId && S.socket && S.socket[curWpnId];
             // Efek Senjata Legendaris (#33)
             if (curWpnId === 'leg_sun') {

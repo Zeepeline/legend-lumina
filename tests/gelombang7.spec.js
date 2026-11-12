@@ -17,10 +17,10 @@ test('gelombang 7: rumah Arka, perabot, peti', async ({ page }) => {
     return { ok, bad, items: S.home.items.map(f => f.t), store: S.home.store };
   });
   console.log(r);
-  expect(r.ok).toBe(true); expect(r.bad).toBe(false); expect(r.items).toEqual(['bed', 'box']);
+  expect(r.ok).toBe(true); expect(r.bad).toBe(false); expect(r.items).toEqual(expect.arrayContaining(['bed', 'box'])); // rumah bisa punya perabot bawaan (lemari, #21)
   // simpan & muat ulang ruangan: perabot tetap ada
   await h.goto(page, 'village', 874, 260, 'down'); await h.goto(page, 'home', 160, 226, 'up'); await page.waitForTimeout(500);
-  expect(await h.G(page, () => window.__game.sc.hf.length)).toBe(2);
+  expect(await h.G(page, () => window.__game.sc.hf.length)).toBe(await h.G(page, () => S.home.items.length));
   await h.G(page, () => { S.inv.herb = 5; homeInit().box.herb = 2; });
   h.noErrors(errors);
 });

@@ -99,6 +99,7 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 - **Kunci input saat UI terbuka:** `G.lock++`/`G.lock--` berpasangan. `UIH` adalah handler input UI aktif. `talk()` sudah mengunci sendiri.
 - **Bayangan objek** dipanggang ke tanah (`gfx/bake.js`). Objek baru di `OBJ` perlu properti `sh`.
 - **Jangan menimpa fungsi dari file yang dimuat belakangan** (mis. `openMap`, `openFishLog` di `ui/`, yang dimuat setelah `systems/`): dalam mode strict, satu `ReferenceError` menghentikan sisa file. Buat fungsi baru (`openMapNew`) lalu jadikan fungsi lama pendelegasi.
+- **Jangan memakai variabel sebelum `const`-nya** di blok yang sama (TDZ): `curWpnId` di `attack()` sempat membuat setiap pukulan pedang error di versi tayang.
 - **`tone()` = audio, `toneC()` = warna.** Semua file berbagi scope global, jadi hindari nama fungsi ganda.
 - **Save** di `localStorage` (`legenda_lumina_arpg_v2`). Field baru di `S` wajib diberi default di `newState()`.
 - **Malam:** `RenderTexture` diisi alpha 1 lalu `setAlpha()`. Jangan pakai `fill(warna, alpha<1)` (tampilannya pudar saat ada `erase`).
@@ -143,6 +144,6 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 
 **Berikutnya:** Bab 6 (Lembah Besi & Simpang Rantau, `docs/BENUA_LUMINA.md` bag. 7), perluas Desa Lumina, Balai Dewan & Pelabuhan Danau, sprite Arka 4 arah dari pemilik.
 
-Catatan tes: fungsi di `h.G(page, fn)` jangan mengembalikan objek Phaser (misal hasil `setPosition`), karena serialisasinya bisa macet; bungkus dengan `{ }`. Tes memblokir service worker (`playwright.config.js`).
+Catatan tes: **jalankan tes baru sebelum push** (beberapa tes gelombang 14–19 memanggil helper yang tidak ada atau `window.S`/`window.ITEMS`, jadi tidak pernah lulus). Variabel `const`/`let` global (`S`, `ITEMS`, `OPT`, `World`, `has`, …) **tidak** ada di `window`: tulis `S`, bukan `window.S`. Helper yang tersedia: `boot`, `newGame`, `loadGame`/`gotoGame`, `waitForGameReady`, `goto`, `press`, `flush`, `G`. Fungsi di `h.G(page, fn)` jangan mengembalikan objek Phaser (misal hasil `setPosition`), karena serialisasinya bisa macet; bungkus dengan `{ }`. Tes memblokir service worker (`playwright.config.js`).
 
 Setelah menyelesaikan fitur, **perbarui bagian Status ini**.

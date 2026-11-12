@@ -47,4 +47,6 @@ async function killBoss(page) {
 async function learnAll(page) { await G(page, () => { const S = window.__game.S; S.learn = { fire: 1, dash: 1, spin: 1, nova: 1, venom: 1, heal: 1, holy: 1 }; S.spell = 'fire'; }); }
 function noErrors(errors) { expect(errors, 'error JavaScript di halaman').toEqual([]); }
 async function loadGame(page) { const errors = await boot(page); await newGame(page); await flush(page); return errors; }
-module.exports = { loadGame, learnAll, boot, G, press, flush, newGame, goto, hold, faceNpc, talkTo, S, killBoss, noErrors };
+const gotoGame = loadGame;
+async function waitForGameReady(page) { await page.waitForFunction(() => window.__game && window.__game.sc && !window.__game.G.title && !window.__game.sc.trans, null, { timeout: 15000 }); }
+module.exports = { waitForGameReady, gotoGame, loadGame, learnAll, boot, G, press, flush, newGame, goto, hold, faceNpc, talkTo, S, killBoss, noErrors };
