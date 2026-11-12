@@ -20,8 +20,9 @@ test('belajar jurus dari guru', async ({ page }) => {
   // ganti sihir lewat menu jurus & pakai
   await h.G(page, () => { const S = window.__game.S; S.spell = 'holy'; S.mp = 99; window.__game.press('b'); });
   await page.waitForTimeout(400); expect((await h.S(page)).mast.holy).toBe(1);
-  await h.press(page, 'menu', 1, 300); await h.press(page, 'down', 3, 120); await h.press(page, 'a', 1, 400);
+  await h.press(page, 'menu', 1, 300); await h.press(page, 'down', 2, 120); await h.press(page, 'a', 1, 400); /* Karakter */
+  await h.press(page, 'down', 1, 120); await h.press(page, 'a', 1, 400); /* Jurus */
   expect(await h.G(page, () => document.body.innerText.includes('JURUS ARKA'))).toBe(true);
-  await h.press(page, 'b', 1, 300); await h.press(page, 'b', 1, 300);
+  await h.press(page, 'b', 1, 300); await h.press(page, 'b', 1, 300); await h.press(page, 'b', 1, 300);
   h.noErrors(errors);
 });

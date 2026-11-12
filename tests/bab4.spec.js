@@ -6,9 +6,9 @@ test('jurnal, desa kincir, bab 4', async ({ page }) => {
   const errors = await h.boot(page); await h.newGame(page);
   await h.G(page, () => { const S = window.__game.S; S.lv = 30; S.hp = 999; S.stage = 14; S.time = 10; });
   // jurnal terbuka & tertutup
-  await h.press(page, 'menu', 1, 300); await h.press(page, 'down', 1, 120); await h.press(page, 'a', 1, 400);
+  await h.press(page, 'menu', 1, 300); await h.press(page, 'down', 1, 120); await h.press(page, 'a', 1, 400); await h.press(page, 'a', 1, 400); /* Jelajah → Jurnal */
   expect(await h.G(page, () => !!document.querySelector('.jrn'))).toBe(true);
-  await h.press(page, 'right', 2, 200); await h.press(page, 'b', 1, 300); await h.press(page, 'b', 1, 300);
+  await h.press(page, 'right', 2, 200); await h.press(page, 'b', 1, 300); await h.press(page, 'b', 1, 300); await h.press(page, 'b', 1, 300);
   expect(await h.G(page, () => window.__game.G.lock)).toBe(0);
   // Desa Kincir: patok
   await h.goto(page, 'meadow', 300, 330, 'down');

@@ -89,11 +89,12 @@ const NEIGH = {}; // id → [{ to, side, ox, oy, ex }]
         const B = MAPS[bid]; if (!B || B.indoor) continue;
         const ox = PB[0] - PA[0], oy = PB[1] - PA[1];
         if (ox < A.w + 10 && ox + B.w > -10 && oy < A.h + 10 && oy + B.h > -10) {
-          let side = null;
-          if (Math.abs(ox + B.w) < 10) side = 'W';
-          else if (Math.abs(ox - A.w) < 10) side = 'E';
-          else if (Math.abs(oy + B.h) < 10) side = 'N';
-          else if (Math.abs(oy - A.h) < 10) side = 'S';
+          let side = null; /* butuh perbatasan bersama >= 160 px: sudut/celah sempit bukan jalan */
+          const spanX = Math.min(A.w, ox + B.w) - Math.max(0, ox), spanY = Math.min(A.h, oy + B.h) - Math.max(0, oy);
+          if (Math.abs(ox + B.w) < 10 && spanY >= 160) side = 'W';
+          else if (Math.abs(ox - A.w) < 10 && spanY >= 160) side = 'E';
+          else if (Math.abs(oy + B.h) < 10 && spanX >= 160) side = 'N';
+          else if (Math.abs(oy - A.h) < 10 && spanX >= 160) side = 'S';
           if (side) {
             const overlapX0 = Math.max(0, ox), overlapX1 = Math.min(A.w, ox + B.w);
             const overlapY0 = Math.max(0, oy), overlapY1 = Math.min(A.h, oy + B.h);
@@ -102,7 +103,7 @@ const NEIGH = {}; // id → [{ to, side, ox, oy, ex }]
               : side === 'W' ? { x: 0, y: cy - 20, w: 12, h: 40 }
               : side === 'S' ? { x: cx - 20, y: A.h - 12, w: 40, h: 12 }
               : { x: cx - 20, y: 0, w: 40, h: 12 };
-            NEIGH[A.id].push({ to: bid, side, ox: Math.round(ox), oy: Math.round(oy), ex });
+            NEIGH[A.id].push({ to: bid, side, ox: Math.round(ox), oy: Math.round(oy), ex, auto: 1 }); /* tanpa pintu: boleh lewat di mana saja */
             has.add(bid);
           }
         }

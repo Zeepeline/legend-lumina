@@ -29,6 +29,13 @@ Saran implementasi: hapus clamp kamera antar wilayah (batas kamera = batas benua
 ### Bug kecil yang terlihat di screenshot
 - HUD emas menampilkan pecahan panjang (`6640.7407867…`). Bulatkan saat menambah emas (`S.gold = Math.round(...)`, cari sumber pengali — kemungkinan bonus atribut/buff di `craft.js`/`polish.js`) dan tampilkan `Math.floor(S.gold)` di `updHud`.
 
+## 1b. Update v1.27.4 (gradasi & hutan pengisi)
+- **Gradasi perbatasan** (`world/ground.js` `edgeSegs`/`edgeBlend`): pita 150 px tiap sisi, warna tanah tetangga muncul bertahap (noise koordinat GLOBAL + urutan id, jadi kedua sisi menyambung). Sisi tanpa tetangga memudar ke tanah hutan gelap. Menggantikan kasus khusus `pl_meadow_snow`/`pl_village_forest`.
+- **Hutan lebat pengisi celah** (`systems/wilds.js`): celah kosong di antara wilayah (±60% kotak benua) dihitung sekali dari `WORLD_POS`, digambar sebagai `tileSprite` kanopi + deretan pohon di tepi; dibuat lewat `makeActiveFx` (hanya wilayah aktif). Tidak ada lagi area hitam.
+- `NEIGH` otomatis (tanpa pintu, `auto: 1`) kini butuh perbatasan bersama ≥160 px; sentuhan sudut/celah sempit bukan tetangga. Tes open world mencoba beberapa titik untuk tetangga `auto`.
+- Tes menu (`bab4`, `belajar`) disesuaikan dengan submenu baru (Jelajah/Karakter/…).
+- Sisa: perbatasan dengan jenis tanah SAMA masih bisa terlihat garis tipis (tekstur rumput memakai koordinat lokal); jalan setapak putus di garis wilayah.
+
 ## 2. Yang SUDAH selesai
 | Tahap | Isi | File utama |
 |---|---|---|

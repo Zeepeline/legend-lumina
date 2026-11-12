@@ -33,14 +33,65 @@ const GROUND = {
   snow: { g: ['#e2ecf6', '#eaf2fa', '#dae6f2', '#f2f7fc'], edge: '#c4d6e8', path: 'dirt', tuft: '#b4c8de', tuft2: '#ffffff', ice: 1 },
   cave: { g: ['#2c2834', '#332e3c', '#28242e', '#38323f'], path: 'cave' },
 };
+// ---- gradasi tanah di perbatasan wilayah (dunia terbuka) ----
+// Dalam pita BLEND_W px dari tepi, piksel memakai warna tanah tetangga dengan peluang naik dari 0 ke 0,5 tepat di garis.
+// Keputusan memakai noise koordinat GLOBAL & urutan id peta, sehingga kedua sisi garis menghitung pola yang sama (tanpa jahitan).
+// Sisi tanpa tetangga (hutan lebat pengisi celah, systems/wilds.js) memudar ke tanah hutan yang gelap.
+const BLEND_W = 150;
+const WILD_G = ['#2f5f24', '#36692a', '#3d7330', '#2a5620'];
+function edgeSegs(M) {
+  if (M._eseg !== undefined) return M._eseg;
+  M._eseg = null;
+  if (M.indoor || typeof WORLD_POS === 'undefined' || !WORLD_POS[M.id] || !GROUND[M.ground] || M.ground === 'cave') return null;
+  const P = WORLD_POS[M.id], segs = [], cover = { N: [], S: [], W: [], E: [] };
+  for (const [id, Q] of Object.entries(WORLD_POS)) {
+    const B = MAPS[id]; if (id === M.id || !B || B.indoor || !GROUND[B.ground]) continue;
+    const ox = Q[0] - P[0], oy = Q[1] - P[1], tol = 12;
+    const ovX = [Math.max(0, ox), Math.min(M.w, ox + B.w)], ovY = [Math.max(0, oy), Math.min(M.h, oy + B.h)];
+    let side = null, r = null;
+    const hy = ovY[1] > ovY[0], hx = ovX[1] > ovX[0];
+    if (hy && Math.abs(ox - M.w) < tol) { side = 'E'; r = ovY; }
+    else if (hy && Math.abs(ox + B.w) < tol) { side = 'W'; r = ovY; }
+    else if (hx && Math.abs(oy - M.h) < tol) { side = 'S'; r = ovX; }
+    else if (hx && Math.abs(oy + B.h) < tol) { side = 'N'; r = ovX; }
+    if (!side) continue;
+    cover[side].push(r);
+    if (B.ground !== M.ground) segs.push({ side, a0: r[0], a1: r[1], G: GROUND[B.ground].g.map(h2r), first: M.id < id });
+  }
+  for (const side of ['N', 'S', 'W', 'E']) { // celah kosong → hutan lebat
+    const len = side === 'N' || side === 'S' ? M.w : M.h, rs = cover[side].sort((p, q) => p[0] - q[0]); let at = 0;
+    for (const [a, b] of rs.concat([[len, len]])) {
+      if (a - at > 40) segs.push({ side, a0: at, a1: a, G: WILD_G.map(h2r), first: true, wild: 1 });
+      at = Math.max(at, b);
+    }
+  }
+  M._eseg = segs.length ? segs : null;
+  return M._eseg;
+}
+function edgeBlend(M) {
+  const segs = edgeSegs(M); if (!segs) return null;
+  const [PX, PY] = WORLD_POS[M.id], W = M.w, H = M.h;
+  return (x, y, k) => {
+    let best = null, bd = BLEND_W;
+    for (const s of segs) {
+      const along = s.side === 'N' || s.side === 'S' ? x : y; if (along < s.a0 || along > s.a1) continue;
+      const d = s.side === 'N' ? y : s.side === 'S' ? H - 1 - y : s.side === 'W' ? x : W - 1 - x;
+      if (d < bd) { bd = d; best = s; }
+    }
+    if (!best) return null;
+    const gx = x + PX, gy = y + PY, n = vnoise(gx, gy, 22, 31) * .7 + hash(gx, gy, 32) * .3;
+    const half = best.wild ? .62 : .5, p = half * (1 - bd / BLEND_W); // peluang warna tetangga
+    const useOther = best.first ? n < p : n >= 1 - p;
+    return useOther ? best.G[k % best.G.length] : null;
+  };
+}
 // Bisa menggambar sebagian peta saja (rect = [x, y, w, h]) untuk tanah per chunk (systems/stream.js).
 // Warna dihitung murni dari posisi, jadi potongan yang bersebelahan menyambung tanpa jahitan.
 function genGround(M, rect) {
   if (M.ground === 'room') return genRoom(M);
   const W = M.w, H = M.h, [RX, RY, RW, RH] = rect || [0, 0, W, H], img = new ImageData(RW, RH), D = img.data, sd = makeSD(M, rect), GP = GROUND[M.ground];
   const Gc = GP.g.map(h2r), glow = M.glow, cave = GP.path === 'cave';
-  const isSnowTrans = M.id === 'pl_meadow_snow', snowGc = GROUND.snow.g.map(h2r);
-  const isForestTrans = M.id === 'pl_village_forest', forestGc = GROUND.forest.g.map(h2r);
+  const blend = edgeBlend(M);
   const STONE = ['#eae2d6', '#ddd4c9', '#f1ebe1', '#d2c8bd'].map(h2r), MORT = h2r('#b5b8a2'), MORT2 = h2r('#9ea38a');
   const CSTONE = ['#5a5466', '#524c5e', '#625c6e', '#4a4456'].map(h2r), CMORT = h2r('#2a2630');
   const DIRT = ['#c9a46e', '#ba9460', '#d8b47e', '#ad8656'].map(h2r);
@@ -89,22 +140,7 @@ function genGround(M, rect) {
     if (glow) { const g = Math.max(0, 1 - Math.hypot(x - glow[0], (y - glow[1]) * 1.3) / glow[2]); f = g * g * .16; }
     if (d < 2.2) { put(i, EDGE, f * .5); continue; }
     if (d < 4 && hash(x, y, 4) > .5) k = Math.max(0, k - 1);
-    if (isSnowTrans) {
-      const frostF = clamp((1 - (y / Math.max(1, H))) * 1.3 - (vnoise(x, y, 14, 7) * .4 - .2), 0, 1);
-      if (frostF > 0) {
-        const mc = Gc[k], sc = snowGc[k];
-        put(i, [Math.round(mc[0] + (sc[0] - mc[0]) * frostF), Math.round(mc[1] + (sc[1] - mc[1]) * frostF), Math.round(mc[2] + (sc[2] - mc[2]) * frostF)], f);
-        continue;
-      }
-    }
-    if (isForestTrans) {
-      const transF = clamp((y / Math.max(1, H)) * 1.25 - (vnoise(x, y, 14, 8) * .35 - .15), 0, 1);
-      if (transF > 0) {
-        const vc = Gc[k], fc = forestGc[k];
-        put(i, [Math.round(vc[0] + (fc[0] - vc[0]) * transF), Math.round(vc[1] + (fc[1] - vc[1]) * transF), Math.round(vc[2] + (fc[2] - vc[2]) * transF)], f);
-        continue;
-      }
-    }
+    if (blend) { const c2 = blend(x, y, k); if (c2) { put(i, c2, f); continue; } }
     put(i, Gc[k], f);
   }
   const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);

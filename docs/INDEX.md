@@ -20,8 +20,8 @@ _(tanpa sub-bagian)_
 ## GAME_DESIGN.md — Legenda Lumina — Game Design Direction (129 baris, ~1600 token)
 Visi 12 · Prinsip Storytelling 27 · Pacing 45 · Tujuan Pemain 65 · Immediate Goal 69 · Mid-term Goal 72 · Long-term Goal 75 · Misteri utama (jangka panjang) 84 · Peta pengungkapan per bab 101 · Ending: perang besar (keputusan pemilik, dikunci) 112 · Aturan penerapan untuk agent 120
 
-## HANDOFF_OPENWORLD.md — HANDOFF — Open World Legenda Lumina (lanjutan) (114 baris, ~2600 token)
-0. Aturan wajib 6 · 1. Tujuan besar (permintaan user) 14 · DEFINISI SELESAI (ditegaskan user 12 Nov, dengan screenshot) 21 · Bug kecil yang terlihat di screenshot 29 · 2. Yang SUDAH selesai 32 · Cara kerja regions (penting dipahami) 40 · 3. YANG HARUS DIKERJAKAN BERIKUTNYA (urut) 52 · Langkah 2 — Isi benua, buka batas, tanpa ujung 54 · Langkah 3 — Haluskan 60 · Tahap 3 — Gerak (pilihan user) [SELESAI v1.27.3] 64 · Tahap 4 — Konten eksplorasi [SELESAI v1.27.3] 70 · 4. Gotcha teknis (sudah pernah bikin bug) 74 · 5. Tes 83 · 6. Rutinitas rilis 97 · 7. Peta file 105
+## HANDOFF_OPENWORLD.md — HANDOFF — Open World Legenda Lumina (lanjutan) (121 baris, ~2900 token)
+0. Aturan wajib 6 · 1. Tujuan besar (permintaan user) 14 · DEFINISI SELESAI (ditegaskan user 12 Nov, dengan screenshot) 21 · Bug kecil yang terlihat di screenshot 29 · 1b. Update v1.27.4 (gradasi & hutan pengisi) 32 · 2. Yang SUDAH selesai 39 · Cara kerja regions (penting dipahami) 47 · 3. YANG HARUS DIKERJAKAN BERIKUTNYA (urut) 59 · Langkah 2 — Isi benua, buka batas, tanpa ujung 61 · Langkah 3 — Haluskan 67 · Tahap 3 — Gerak (pilihan user) [SELESAI v1.27.3] 71 · Tahap 4 — Konten eksplorasi [SELESAI v1.27.3] 77 · 4. Gotcha teknis (sudah pernah bikin bug) 81 · 5. Tes 90 · 6. Rutinitas rilis 104 · 7. Peta file 112
 
 ## NPC_RULES.md — Aturan NPC & Kehidupan Dunia (WAJIB untuk semua agent) (56 baris, ~800 token)
 1. Setiap NPC punya peran 7 · 2. Tempat kerja harus ada di peta 26 · 3. NPC cerita tetap terjangkau 30 · 4. Siklus siang-malam 34 · 5. Bereaksi pada pemain 39 · 6. Larangan 45 · 7. Dialog & UI (agar layar tidak membeku) 51

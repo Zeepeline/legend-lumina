@@ -91,9 +91,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 200 · obj `cryst` 203 · obj `lamp` 206 · obj `viewpoint` 209 · obj `lumina_shard` 243
 
-## src/world/ground.js (241 baris)
+## src/world/ground.js (277 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `genGround()` 38 · `blockRects()` 142 · `scatter()` 158 · `openSides()` 191 · `borderTrees()` 204 · `ringObjects()` 220 · `mapObjects()` 225 · `mapWalls()` 229
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `genGround()` 90 · `blockRects()` 178 · `scatter()` 194 · `openSides()` 227 · `borderTrees()` 240 · `ringObjects()` 256 · `mapObjects()` 261 · `mapWalls()` 265
 
 ## src/world/maps/village.js (78 baris)
 _Peta: Desa Lumina_
@@ -371,6 +371,10 @@ _Dunia terbuka Tahap 1: wilayah tetangga digambar menempel di tepi wilayah aktif
 _Dunia satu peta (langkah 1): wilayah di sekitar Arka berjalan BERSAMAAN sebagai scene World pasif_
 `REG_LOAD` 6 · `REG` 7 · `regSeq` 8 · `regionsOn()` 9 · `wposOf()` 10 · `relXY()` 11 · `removeRegions()` 12 · `.initPassive()` 15 · `.updPassive()` 21 · `.updRegions()` 37 · `.addRegion()` 52 · `.regBounds()` 59 · `.owHandoff()` 65 · `_hurtRegion` 87 · `_gotoRegion` 94
 
+## src/systems/wilds.js (78 baris)
+_Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Dibuat di wilayah aktif saja_
+`WILD_MARGIN` 5 · `WILD_RECTS` 6 · `outdoorRects()` 7 · `inRegion()` 11 · `wildRects()` 12 · `wildTreeKeys()` 38 · `.wildCanopyTex()` 40 · `.initWilds()` 56
+
 ## src/npc/dialog.js (473 baris)
 _Percakapan NPC, toko, bengkel, penginapan_
 `.npcHasQuest()` 4 · `.talkNpc()` 9 · `.offerPet()` 168 · `.shop()` 172 · `.smithy()` 217 · `.innTalk()` 262 · `.talkArenaMaster()` 273 · `.startCityArena()` 310 · `.talkNightMerchant()` 374 · `.talkCourier()` 388 · `.talkAuctioneer()` 422
@@ -399,7 +403,7 @@ _Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)_
 _Layar judul_
 `titleScreen()` 4
 
-## src/world/layout.js (113 baris)
+## src/world/layout.js (114 baris)
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
 `exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 20 · `plEnemies()` 22 · `NEIGH` 69
 
