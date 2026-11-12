@@ -96,7 +96,7 @@ PERF=1 npx playwright test tests/perf.spec.js  # cek frame (bandingkan dengan NO
 ## 6. Rutinitas rilis
 1. Bump `sw.js` `lumina-vNN` (+1, sekarang v35) dan `GAME_VERSION` (sekarang `1.27.2`).
 2. `python3 tools/bundle.py` lalu `npm run check` (0 masalah).
-3. Update `PROGRES_FITUR.md` dan baris terkait di `AGENTS.md`.
+3. Perbarui bagian Status di `AGENTS.md` (1 baris per fitur) dan catatan serah-terima ini.
 4. Commit, lalu `git fetch origin main && git rebase FETCH_HEAD && git push`.
 5. Cek deploy: `gh run list -R Zeepeline/legend-lumina -w pages.yml -L 1`.
 6. Laporkan ke user dalam Bahasa Indonesia, singkat, tanpa spoiler.

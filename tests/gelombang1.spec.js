@@ -1,4 +1,4 @@
-// Gelombang 1 (docs/PROGRES_FITUR.md): kesulitan, kecepatan teks, perbandingan perlengkapan, coba lagi boss, ikon interaksi, bilah HP musuh, cadangan save
+// Gelombang 1 (docs/arsip/PROGRES_FITUR.md): kesulitan, kecepatan teks, perbandingan perlengkapan, coba lagi boss, ikon interaksi, bilah HP musuh, cadangan save
 const { test, expect } = require('@playwright/test');
 const h = require('./helpers');
 test('gelombang 1', async ({ page }) => {

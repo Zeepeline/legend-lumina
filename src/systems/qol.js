@@ -1,5 +1,5 @@
 'use strict';
-// Kenyamanan (gelombang 1 docs/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),
+// Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),
 // rincian naik level (#888), coba lagi sebelum boss (#180)
 Object.assign(World.prototype, {
   // ikon kecil di atas benda/NPC yang bisa disentuh, plus label tombol aksi berubah

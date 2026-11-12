@@ -304,7 +304,7 @@ _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, m
 `NPC_ROLE` 4 · `STORY_NPC` 11 · `WORK` 13 · `SEATS` 27 · `SOCIAL` 28 · `IDLE_ICON` 29 · `.npcBrainInit()` 32 · `.npcEmote()` 44 · `.npcPickGoal()` 45 · `.npcWalkAnim()` 66 · `.npcBrain()` 67 · `.npcActStart()` 89 · `.npcActTick()` 94
 
 ## src/systems/qol.js (108 baris)
-_Kenyamanan (gelombang 1 docs/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
+_Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
 `.updInteractHint()` 6 · `.updEnemyBars()` 23 · `.retryBoss()` 33 · `levelUpDetail()` 39 · `.setTimeout()` 44 · `TIPS` 53 · `showTip()` 64 · `.updTips()` 70 · `.updMinimap()` 79 · `applyPadOpt()` 104
 
 ## src/systems/feel.js (64 baris)
