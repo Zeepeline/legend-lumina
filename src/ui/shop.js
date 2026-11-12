@@ -210,13 +210,131 @@ async function upgradeMenu() {
   let sel = 0;
   for (; ;) {
     const L = Object.keys(S.inv).filter(id => ITEMS[id] && (ITEMS[id].k === 'wpn' || ITEMS[id].k === 'arm'));
-    const r = await choose({ head: 'Tingkatkan · ' + S.gold + ' G', x: 24, y: 22, w: 240, start: sel,
-      items: [...L.map(id => { const u = S.up[id] || 0; return { t: icon(id) + itemName(id), r: u >= UPG.max ? 'MAKS' : upgCost(id).gold + ' G', dis: u >= UPG.max }; }), { t: 'Kembali' }],
-      foot: i => { if (i >= L.length) return 'Setiap tingkat: senjata Serang +' + UPG.wpn + ', baju Tahan +' + UPG.arm + '.'; const id = L[i]; if ((S.up[id] || 0) >= UPG.max) return 'Sudah tingkat maksimal!'; const C = upgCost(id); return (ITEMS[id].k === 'wpn' ? 'Serang +' + UPG.wpn : 'Tahan +' + UPG.arm) + '<br>Bahan: ' + Object.entries(C.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
-    if (r < 0 || r === L.length) return; sel = r; const id = L[r], C = upgCost(id);
-    if (S.gold < C.gold || !Object.entries(C.need).every(([k, n]) => has(k, n))) { sfx('buzz'); await say('Bahan atau uangnya belum cukup. Bijih Batu dari golem, Pecahan Kristal dari makhluk es.', 'Pak Besi'); continue; }
-    S.gold -= C.gold; for (const [k, n] of Object.entries(C.need)) addItem(k, -n); S.up[id] = (S.up[id] || 0) + 1;
-    sfx('boom'); await sleep(250); sfx('chest'); G.scene.cameras.main.flash(200, 255, 200, 120); updHud();
-    await say(`TANG! ${itemName(id)} jadi lebih kuat!`, 'Pak Besi');
+    const r = await choose({
+      head: 'Bengkel Pak Besi · ' + S.gold + ' G',
+      x: 24, y: 22, w: 240, start: sel,
+      items: [
+        { t: '⚡ Pasang Permata Senjata' },
+        ...L.map(id => {
+          const it = ITEMS[id], u = (S.up[id] || 0), cost = upgCost(id);
+          return { t: icon(id) + it.n + (u ? ' +' + u : ''), r: u >= UPG.max ? 'MAKS' : cost.gold + ' G', dis: u >= UPG.max };
+        }),
+        { t: 'Kembali' }
+      ],
+      foot: i => {
+        if (i === 0) return 'Sisipkan permata berkekuatan khusus ke senjatamu (Kecubung, Kristal, Bijih, Spora).';
+        const actualIdx = i - 1;
+        if (actualIdx < L.length) {
+          const id = L[actualIdx], cost = upgCost(id);
+          const needs = Object.entries(cost.need).map(([k, n]) => `${icon(k)}${ITEMS[k]?.n || k} ${S.inv[k] || 0}/${n}`).join(' · ');
+          return ITEMS[id].d + '<br>Biaya: <b>' + cost.gold + ' G</b> · Bahan: ' + needs;
+        }
+        return '';
+      }
+    });
+
+    if (r < 0 || r === L.length + 1) return;
+    sel = r;
+
+    // Fitur #23: Soket Permata Senjata
+    if (r === 0) {
+      await socketMenu();
+      continue;
+    }
+
+    const actualIdx = r - 1;
+    const id = L[actualIdx], u = (S.up[id] || 0);
+    if (u >= UPG.max) { sfx('buzz'); continue; }
+    const cost = upgCost(id);
+    const canGold = S.gold >= cost.gold;
+    const canMats = Object.entries(cost.need).every(([k, n]) => has(k, n));
+    if (!canGold || !canMats) {
+      sfx('buzz');
+      await say('Bahan atau koin belum mencukupi untuk meningkatkan perlengkapan ini.', 'Pak Besi');
+      continue;
+    }
+
+    S.gold -= cost.gold;
+    for (const [k, n] of Object.entries(cost.need)) addItem(k, -n);
+    S.up[id] = u + 1;
+    sfx('boom');
+    await sleep(250);
+    sfx('chest');
+    updHud();
+    await say(`TANG! TANG! ${ITEMS[id].n} berhasil ditingkatkan menjadi +${S.up[id]}!`, 'Pak Besi');
   }
+}
+
+// Menu Pasang Permata (#23)
+async function socketMenu() {
+  const wpns = Object.keys(S.inv).filter(id => ITEMS[id] && ITEMS[id].k === 'wpn');
+  if (!wpns.length) {
+    await say('Kamu tidak membawa senjata di dalam tas.', 'Pak Besi');
+    return;
+  }
+  const r = await choose({
+    head: 'Pilih Senjata untuk Soket',
+    x: 30, y: 30, w: 220,
+    items: [...wpns.map(id => {
+      const g = S.socket && S.socket[id];
+      return { t: icon(id) + itemName(id), r: g ? ITEMS[g]?.n : '(kosong)' };
+    }), { t: 'Kembali' }]
+  });
+  if (r < 0 || r >= wpns.length) return;
+  const wpnId = wpns[r];
+
+  // Daftar permata yang didukung
+  const GEMS = [
+    { id: 'amethyst_gem', n: 'Kecubung Ungu', eff: 'Vampir: Serangan kritis memulihkan 3 HP' },
+    { id: 'shard', n: 'Pecahan Kristal', eff: 'Hawa Beku: 25% peluang tebasan membekukan musuh' },
+    { id: 'ore', n: 'Bijih Padat', eff: 'Hantaman Kokoh: Serang +3 & dorongan kuat' },
+    { id: 'spore', n: 'Spora Alami', eff: 'Racun Alami: Tebasan memberi efek racun pada musuh' }
+  ];
+
+  const gItems = GEMS.map(g => ({
+    t: icon(g.id) + g.n,
+    r: has(g.id) ? `Punya x${S.inv[g.id]}` : 'Tidak Ada',
+    dis: !has(g.id)
+  }));
+  if (S.socket && S.socket[wpnId]) {
+    gItems.push({ t: 'Lepas Permata Saat Ini' });
+  }
+  gItems.push({ t: 'Batal' });
+
+  const gr = await choose({
+    head: `Soket · ${ITEMS[wpnId].n}`,
+    x: 20, y: 30, w: 250,
+    items: gItems,
+    foot: i => i < GEMS.length ? GEMS[i].eff : 'Biaya pemasangan: Gratis bahan terpasang.'
+  });
+
+  if (gr < 0 || gr === gItems.length - 1) return;
+  if (S.socket && S.socket[wpnId] && gr === gItems.length - 2) {
+    const oldGem = S.socket[wpnId];
+    addItem(oldGem, 1);
+    delete S.socket[wpnId];
+    sfx('ok');
+    updHud();
+    await say(`Permata ${ITEMS[oldGem]?.n || ''} berhasil dilepas dan kembali ke tas.`, 'Pak Besi');
+    return;
+  }
+
+  const gem = GEMS[gr];
+  if (!has(gem.id)) {
+    sfx('buzz');
+    await say(`Kamu tidak memiliki ${gem.n}.`, 'Pak Besi');
+    return;
+  }
+
+  if (S.socket && S.socket[wpnId]) {
+    addItem(S.socket[wpnId], 1); // kembalikan permata lama
+  }
+  addItem(gem.id, -1);
+  S.socket = S.socket || {};
+  S.socket[wpnId] = gem.id;
+  sfx('boom');
+  await sleep(250);
+  sfx('chest');
+  updHud();
+  await say(`KLIK! Permata ${gem.n} berhasil dipasang ke ${ITEMS[wpnId].n}! Efek: ${gem.eff}`, 'Pak Besi');
 }

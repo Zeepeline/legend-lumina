@@ -10,6 +10,7 @@ MAPS.cave = {
   discs: [[120, 800, 76], [420, 700, 84], [300, 420, 72], [620, 300, 86], [900, 470, 128], [860, 790, 72], [640, 110, 56]],
   objs: [['stele', 452, 676, { lore: 'prasasti_gua' }],
     ['dripstone', 350, 440], ['dripstone', 840, 750], 
+    ['minestone', 320, 670], ['minestone', 580, 260], ['minestone', 890, 830],
     ['sign', 170, 760, { text: 'Gua Batu. Kristal ungu menerangi jalan.\nGolem Purba tidur di ruang timur.\nGerbang utara: dorong batu ke pelat bercahaya.' }],
   ],
   caveTorches: [[420, 680], [300, 400], [620, 280]],

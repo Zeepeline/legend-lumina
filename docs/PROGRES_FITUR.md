@@ -114,6 +114,13 @@ Dikerjakan **bertahap per gelombang**, mulai dari yang paling berdampak dan mura
 | 388 | Buat banyak sekaligus di kerajinan & masak (opsi ×1, ×5, Maks) | `systems/craft.js` (`openCraft`), `ui/shop.js` (`cookMenu`) | 13 |
 | 462 | Beli kembali barang toko (riwayat 8 item terakhir yang terjual di toko) | `ui/shop.js` (`buybackMenu`) | 13 |
 | 62 | Penanda pribadi di peta (taruh/hapus hingga 5 pin 📍 di peta besar) | `systems/explore.js` (`openMapNew`) | 13 |
+| 52 | Penambangan di Gua (urat batu geoda `minestone` dengan retakan & hasil bijih/kristal) | `world/maps/cave.js`, `scene/world.js` | 14 |
+| 23 | Permata & soket senjata (pasang permata kecubung/kristal/bijih/spora di Bengkel Pak Besi) | `ui/shop.js` (`socketMenu`), `systems/combat.js` | 14 |
+| 10 | Rintangan medan tempur (tong peledak `bombbarrel` & semak berduri `bramble`) | `world/objects.js`, `scene/world.js` | 14 |
+| 8 | Taktik flanking musuh berkelompok (musuh menyebar mengepung Arka saat mengejar) | `ai/enemies.js` | 14 |
+| 96 | Tantangan harian aksi (Daily Feats di MENU dengan hadiah koin & EXP berkala) | `systems/economy.js` (`openDailyFeats`), `ui/menus.js` | 14 |
+| 375 | Tanda item baru `BARU` di tas (badge otomatis hilang setelah item dilihat/disorot) | `ui/bag.js`, `core/state.js` | 14 |
+| 91 | Rumput dan semak bergoyang saat Arka melintas | `scene/world.js` | 14 |
 
 ## Sebagian
 
@@ -145,7 +152,8 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~11~~ | ✅ selesai: 99, 3, 5, 6, 35, 37, 76, 81 | — |
 | ~~12~~ | ✅ selesai: 45, 39, 374, 36, 28, 18, 25 | Ekonomi Desa, Karakter & Kenyamanan Tas |
 | ~~13~~ | ✅ selesai: 22, 371, 13, 69, 388, 462, 62 | Sinergi Perlengkapan, Taktik & Eksplorasi Malam |
-| 14+ | sisanya per kategori, P1/P2 dulu | — |
+| ~~14~~ | ✅ selesai: 52, 23, 10, 8, 96, 375, 91 | Penambangan, Permata Soket, Flanking AI, & Interaksi Medan |
+| 15+ | sisanya per kategori, P1/P2 dulu | — |
 
 ## Dibatalkan
 

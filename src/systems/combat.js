@@ -54,6 +54,19 @@ Object.assign(World.prototype, {
             }
             this.hitEnemy(e, finalDmg, finalCrit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
             const frz = (ITEMS[S.eq.wpn] || {}).frz; if (frz && Math.random() < frz) this.freezeEnemy(e, 1.2);
+            // Efek Permata Senjata (#23)
+            const curWpnId = S.eq?.wpn;
+            const curGem = curWpnId && S.socket && S.socket[curWpnId];
+            if (curGem === 'shard' && Math.random() < 0.25) {
+              this.freezeEnemy(e, 1.2);
+            } else if (curGem === 'spore' && typeof applyStatus === 'function') {
+              applyStatus(e, 'poison', 4);
+            } else if (curGem === 'amethyst_gem' && finalCrit) {
+              const healAmt = 3;
+              S.hp = Math.min(stat().maxhp, S.hp + healAmt);
+              popWorld(pl.x, pl.y - 20, `+${healAmt} HP (Hisap)`, 'heal');
+              updHud();
+            }
           }
         }
       }

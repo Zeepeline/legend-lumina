@@ -306,3 +306,86 @@ async function openStatsAndTitles() {
     }
   }
 }
+
+
+// ---------------- 6. TANTANGAN HARIAN AKSI (#96) ----------------
+const DAILY_FEATS_DEF = [
+  { id: 'kills', n: 'Pemburu Monster', d: 'Kalahkan 4 monster apapun hari ini', goal: 4, gold: 40, exp: 30, getCur: () => S.st?.kills || 0 },
+  { id: 'mined', n: 'Penambang Urat', d: 'Tambang batu bijih di gua', goal: 2, gold: 50, exp: 35, getCur: () => S.st?.mined || 0 },
+  { id: 'parry', n: 'Ahli Tangkis', d: 'Lakukan tangkisan serangan tepat waktu (Parry)', goal: 2, gold: 45, exp: 40, getCur: () => S.parries || 0 },
+  { id: 'craft', n: 'Tangan Terampil', d: 'Rakit ramuan/alat di kerajinan', goal: 2, gold: 35, exp: 25, getCur: () => S.st?.crafted || 0 },
+  { id: 'fish', n: 'Tangkapan Air', d: 'Pancing ikan dari danau/sungai', goal: 2, gold: 45, exp: 30, getCur: () => S.st?.fish || 0 },
+];
+
+function getDailyFeats() {
+  const seed = (S.day * 2) % DAILY_FEATS_DEF.length;
+  return [
+    DAILY_FEATS_DEF[seed],
+    DAILY_FEATS_DEF[(seed + 2) % DAILY_FEATS_DEF.length],
+    DAILY_FEATS_DEF[(seed + 3) % DAILY_FEATS_DEF.length]
+  ];
+}
+
+async function openDailyFeats() {
+  S.dailyFeats = S.dailyFeats || {};
+  if (S.dailyFeats.day !== S.day) {
+    S.dailyFeats = { day: S.day, claimed: {}, baseline: {} };
+    const feats = getDailyFeats();
+    for (const f of feats) {
+      S.dailyFeats.baseline[f.id] = f.getCur();
+    }
+  }
+
+  for (;;) {
+    const feats = getDailyFeats();
+    const items = feats.map((f, i) => {
+      const base = S.dailyFeats.baseline[f.id] || 0;
+      const prog = Math.max(0, f.getCur() - base);
+      const done = prog >= f.goal;
+      const claimed = S.dailyFeats.claimed[i];
+      return {
+        t: (claimed ? '✓ ' : done ? '★ ' : '• ') + f.n,
+        r: claimed ? 'KLAIMED' : done ? 'KLAIM HADIAH' : `${Math.min(f.goal, prog)}/${f.goal}`,
+        dis: claimed
+      };
+    });
+    items.push({ t: 'Tutup' });
+
+    const r = await choose({
+      head: `TANTANGAN HARIAN · Hari ke-${S.day}`,
+      x: 18, y: 20, w: 270,
+      items,
+      foot: i => i < feats.length ? `${feats[i].d}<br>Hadiah: <b>+${feats[i].gold} G</b> · <b>+${feats[i].exp} EXP</b>` : 'Selesaikan aksi harian untuk bonus koin dan EXP.'
+    });
+
+    if (r < 0 || r >= feats.length) break;
+
+    const f = feats[r];
+    if (S.dailyFeats.claimed[r]) {
+      sfx('buzz');
+      continue;
+    }
+    const base = S.dailyFeats.baseline[f.id] || 0;
+    const prog = Math.max(0, f.getCur() - base);
+    if (prog < f.goal) {
+      sfx('buzz');
+      await say(`Tantangan "${f.n}" belum selesai (${prog}/${f.goal}).`);
+      continue;
+    }
+
+    S.dailyFeats.claimed[r] = true;
+    S.gold += f.gold;
+    S.st = S.st || {};
+    S.st.goldEarned = (S.st.goldEarned || 0) + f.gold;
+    sfx('coin');
+    await sleep(200);
+    sfx('heal');
+    if (typeof gainExp === 'function') gainExp(f.exp);
+    else {
+      S.exp = (S.exp || 0) + f.exp;
+      if (typeof updHud === 'function') updHud();
+    }
+    checkTitles();
+    await say(`Tantangan "${f.n}" berhasil diklaim! Hadiah: +${f.gold} G dan +${f.exp} EXP.`);
+  }
+}

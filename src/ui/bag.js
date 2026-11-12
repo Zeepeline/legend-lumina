@@ -20,16 +20,31 @@ async function openBag(sc) {
     w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span><span class="gold">${S.gold} G</span></div>
      <div class="bb"><div class="bl">${L.length ? L.map((id, i) => {
        const isLck = S.locked && S.locked[id];
-       return `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}</span><b>${isLck ? '🔒 ' : ''}${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`;
+       const isNew = S.newItems && S.newItems[id];
+       const gemId = S.socket && S.socket[id];
+       const gemBadge = gemId ? ` [💎]` : '';
+       return `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}${gemBadge}</span>${isNew ? '<small style="color:#ff8a3a;font-size:8px;font-weight:bold;margin-left:2px;">BARU</small>' : ''}<b>${isLck ? '🔒 ' : ''}${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`;
      }).join('') : '<div class="empty">Kosong</div>'}</div>
-     <div class="bs"><div class="mh">Arka · Lv ${S.lv} (${S.title || 'Petualang'})</div>${['wpn', 'arm', 'acc'].map(s => `<div class="eqs">${S.eq[s] ? icon(S.eq[s]) + itemName(S.eq[s]) : '<i>(kosong)</i>'}</div>`).join('')}
+     <div class="bs"><div class="mh">Arka · Lv ${S.lv} (${S.title || 'Petualang'})</div>${['wpn', 'arm', 'acc'].map(s => {
+       const eqId = S.eq[s];
+       const eqGem = eqId && S.socket && S.socket[eqId] ? ` [💎 ${ITEMS[S.socket[eqId]]?.n || ''}]` : '';
+       return `<div class="eqs">${eqId ? icon(eqId) + itemName(eqId) + eqGem : '<i>(kosong)</i>'}</div>`;
+     }).join('')}
      <div style="margin:4px 0 2px;font-size:9px;color:#a8a8b8;">Preset: ${loadoutBtns}</div>
      ${setsBadge}
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b></div></div></div>
      <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · B tutup'}</div>`;
     const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
-    w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); const i = +e.dataset.i; if (i === sel) act(); else { sel = i; sfx('cur'); draw(); } });
+    w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => {
+      ev.stopPropagation();
+      const i = +e.dataset.i;
+      if (L[i] && S.newItems && S.newItems[L[i]]) {
+        delete S.newItems[L[i]];
+      }
+      if (i === sel) act();
+      else { sel = i; sfx('cur'); draw(); }
+    });
     w.querySelectorAll('.lo-btn').forEach(e => e.onpointerdown = async ev => { ev.stopPropagation(); await handleLoadout(+e.dataset.lo); });
     const s2 = w.querySelector('.bi.sel'); if (s2) s2.scrollIntoView({ block: 'nearest' });
   }

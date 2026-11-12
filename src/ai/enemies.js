@@ -44,7 +44,17 @@ Object.assign(World.prototype, {
         if (aggro && e.shootT <= 0 && d < 160) { e.shootT = 2.4; this.eShoot(e, 'seed', [-.32, 0, .32], D.atk); this.tweens.add({ targets: s, scaleY: 1.15, duration: 100, yoyo: true }); }
         s.anims.timeScale = aggro ? 1.6 : .6; break;
       case 'walk':
-        if (aggro) s.setVelocity(dx / d * D.spd, dy / d * D.spd); else wander(D.spd * .6);
+        if (aggro) {
+          // Musuh Berkelompok & Pengepungan (#8)
+          let angleOffset = 0;
+          const otherAggro = this.enemies.filter(o => o !== e && o.hp > 0 && Math.hypot(pl.x - o.spr.x, pl.y - o.spr.y) < 180);
+          if (otherAggro.length > 0) {
+            const myIdx = this.enemies.indexOf(e);
+            angleOffset = (myIdx % 2 === 0 ? 0.75 : -0.75);
+          }
+          const baseAng = Math.atan2(dy, dx) + angleOffset;
+          s.setVelocity(Math.cos(baseAng) * D.spd, Math.sin(baseAng) * D.spd);
+        } else wander(D.spd * .6);
         if (D.side) s.flipX = s.body.velocity.x > 0; break;
       case 'lunge':
         if (e.st === 'idle' || e.st === 'chase') {

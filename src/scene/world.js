@@ -16,7 +16,7 @@ class World extends Phaser.Scene {
     this.walls = this.physics.add.staticGroup();
     this.shG = this.add.graphics().setDepth(-9e5);
     this.aimG = this.add.graphics().setDepth(9e4);
-    this.fades = []; this.inter = []; this.npcs = []; this.enemies = []; this.shots = []; this.picks = []; this.critters = []; this.lights = [];
+    this.fades = []; this.inter = []; this.npcs = []; this.enemies = []; this.shots = []; this.picks = []; this.critters = []; this.lights = []; this.bushes = [];
     for (const r of M.walls || []) this.wall(...r);
     for (const r of blockRects(M)) this.wall(...r);
     if (M.river) { const R = M.river; for (let x = 0; x < M.w; x += 8) { if (x + 8 > R.bridge[0] + 4 && x < R.bridge[1] - 4) continue; const ry = riverY(R, x + 4); this.wall(x, ry - R.w / 2 - 1, 8, R.w + 2); } }
@@ -103,6 +103,10 @@ class World extends Phaser.Scene {
   spawnObj(o) {
     const [type, x, y, opt] = o; const d = OBJ[type];
     const s = this.add.sprite(x, y, d.key, 0).setOrigin(.5, 1).setDepth(y);
+    if (type.startsWith('bush') || type === 'flower' || type === 'mush') {
+      this.bushes = this.bushes || [];
+      this.bushes.push(s);
+    }
     if (opt && opt.flip) s.setFlipX(true);
     if (d.col && d.col[0]) this.wall(x - d.col[0] / 2, y - d.col[1] - d.col[2], d.col[0], d.col[1]);
     if (type === 'shrine') { this.wall(x - 56, y - 30, 14, 12); this.wall(x + 42, y - 30, 14, 12); s.setDepth(y - 60); }
@@ -419,6 +423,68 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'bombbarrel') {
+      s.setTint(0xff5533);
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          if (s._exploded) return;
+          s._exploded = true;
+          sfx('fire');
+          popWorld(x, y - 20, 'FUSSS...', 'crit');
+          this.tweens.add({
+            targets: s,
+            scaleX: 1.25,
+            scaleY: 1.25,
+            duration: 120,
+            yoyo: true,
+            repeat: 3,
+            onComplete: () => {
+              this.shockwave(x, y, 55, 30);
+              for (const e of this.enemies) {
+                if (e.hp > 0 && Math.hypot(e.spr.x - x, e.spr.y - y) < 60) {
+                  this.hitEnemy(e, 45, true, (e.spr.x - x) || 1, (e.spr.y - y) || 1);
+                }
+              }
+              this.puff(x, y - 6);
+              s.destroy();
+            }
+          });
+        }
+      });
+    }
+    if (type === 'bramble') {
+      s.setTint(0x7a6855);
+    }
+    if (type === 'minestone') {
+      s.minedHp = 3;
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          G.lock++;
+          sfx('boom');
+          this.camShake(80, .003);
+          this.sparkle(x, y - 10, 'spark', 8);
+          s.minedHp = (s.minedHp || 3) - 1;
+          this.tweens.add({ targets: s, angle: 5, duration: 60, yoyo: true, repeat: 2, onComplete: () => { s.angle = 0; } });
+          if (s.minedHp <= 0) {
+            this.puff(x, y - 8);
+            sfx('crit');
+            addItem('ore', rnd(1, 2));
+            addItem('shard', 1);
+            if (Math.random() < 0.35) addItem('amethyst_gem', 1);
+            S.st = S.st || {}; S.st.mined = (S.st.mined || 0) + 1;
+            popWorld(x, y - 24, '+Hasil Tambang!', 'gold');
+            updHud();
+            s.destroy();
+            await say('KRAKK!! Batu urat tambang pecah berkeping-keping! Kamu mendapatkan Bijih Batu dan Pecahan Kristal langka.');
+          } else {
+            await say(`TANGG! Kamu memahat urat batu tambang (${s.minedHp}/3 retakan). Lanjutkan memahat!`);
+          }
+          G.lock--;
+        }
+      });
+    }
     if (type === 'fountain') {
       this.add.particles(x, y - 66, 'dot', { lifespan: 650, speedX: { min: -22, max: 22 }, speedY: { min: -26, max: -8 }, gravityY: 90, alpha: { start: .8, end: 0 }, frequency: 110, tint: 0xd8f6ff }).setDepth(y + 1);
       this.inter.push({
@@ -562,6 +628,27 @@ class World extends Phaser.Scene {
     if (Input.aim.on && Input.aim.drag && !locked && !pl.dead) {
       const a = Math.atan2(Input.aim.y, Input.aim.x), ox = pl.x, oy = pl.y - 9;
       for (let i = 1; i <= 8; i++) { const X = ox + Math.cos(a) * i * 11, Y = oy + Math.sin(a) * i * 11, r = i === 8 ? 3.5 : 2; this.aimG.fillStyle(0x5a2a00, .8).fillCircle(X, Y, r + 1); this.aimG.fillStyle(i === 8 ? 0xff7a2a : 0xffe27a, 1).fillCircle(X, Y, r); }
+    }
+    // Efek rumput/semak bergoyang (#91)
+    if (!locked && !pl.dead && this.bushes && this.bushes.length) {
+      for (const b of this.bushes) {
+        if (!b.active) continue;
+        const d = Math.hypot(pl.x - b.x, pl.y - b.y);
+        if (d < 16 && !b._swaying) {
+          b._swaying = true;
+          this.tweens.add({
+            targets: b,
+            angle: pl.x < b.x ? 12 : -12,
+            duration: 80,
+            yoyo: true,
+            repeat: 2,
+            onComplete: () => {
+              b.angle = 0;
+              this.time.delayedCall(400, () => { b._swaying = false; });
+            }
+          });
+        }
+      }
     }
     for (const o of this.npcs) if (o.mark) { o.mark.setVisible(!G.title && this.npcHasQuest(o.n.id)); o.mark.x = o.spr.x; }
     if (!locked && !pl.dead) this.checkZones();

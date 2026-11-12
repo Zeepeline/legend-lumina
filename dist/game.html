@@ -4111,6 +4111,8 @@ const OBJ = {
   brazier: { key: 'brazier', col: [16, 8, 0], sh: [10, 3] },
   bramble: { key: 'bramble', col: [18, 10, 0], sh: [12, 3] },
   campfire: { key: 'campfire', col: [16, 8, 0], sh: [12, 4] },
+  minestone: { key: 'geoderock', col: [18, 10, 0], sh: [14, 3], fade: 1 },
+  bombbarrel: { key: 'barrel', col: [14, 6, 0], sh: [10, 3] },
   fence: { key: 'fence', col: [18, 4, 0] },
   lamp: { key: 'lamp', col: [6, 4, 0], sh: [5, 2] },
   rock: { key: 'rock', col: [16, 6, 0], sh: [9, 2] },
@@ -4504,6 +4506,7 @@ MAPS.cave = {
   discs: [[120, 800, 76], [420, 700, 84], [300, 420, 72], [620, 300, 86], [900, 470, 128], [860, 790, 72], [640, 110, 56]],
   objs: [['stele', 452, 676, { lore: 'prasasti_gua' }],
     ['dripstone', 350, 440], ['dripstone', 840, 750], 
+    ['minestone', 320, 670], ['minestone', 580, 260], ['minestone', 890, 830],
     ['sign', 170, 760, { text: 'Gua Batu. Kristal ungu menerangi jalan.\nGolem Purba tidur di ruang timur.\nGerbang utara: dorong batu ke pelat bercahaya.' }],
   ],
   caveTorches: [[420, 680], [300, 400], [620, 280]],
@@ -4957,7 +4960,7 @@ const GAME_VERSION = '1.17.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true, font: 1, lite: false, toast: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, playTime: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {} }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, playTime: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {} }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -4984,10 +4987,16 @@ function stat() {
     if (set.mag) sMag += set.mag;
     if (set.regen) sRegen += set.regen;
   }
+  // Bonus Soket Permata Senjata (#23)
+  let gemAtk = 0;
+  const curWpn = S.eq?.wpn;
+  if (curWpn && S.socket && S.socket[curWpn] === 'ore') {
+    gemAtk += 3;
+  }
   return {
     maxhp: 34 + l * 8 + tHp + sHp,
     maxmp: 12 + l * 2,
-    atk: Math.round((6 + l * 2 + eqv('atk') + tAtk + sAtk) * (buffOn('atk') ? BUFF.atk.mul : 1)),
+    atk: Math.round((6 + l * 2 + eqv('atk') + tAtk + sAtk + gemAtk) * (buffOn('atk') ? BUFF.atk.mul : 1)),
     def: Math.round((1 + l + eqv('def') + tDef + sDef) * (buffOn('def') ? BUFF.def.mul : 1)),
     mag: 9 + l * 3 + eqv('mag') + sMag,
     spd: Math.round(((1 + eqv('spd') + tSpd + sSpd) * (buffOn('spd') ? BUFF.spd.mul : 1)) * 100) / 100,
@@ -4996,7 +5005,15 @@ function stat() {
 }
 function need(lv) { return 12 * lv + 6 * (lv - 1) * (lv - 1); }
 const has = (id, n = 1) => (S.inv[id] || 0) >= n;
-function addItem(id, n = 1) { S.inv[id] = (S.inv[id] || 0) + n; if (S.inv[id] <= 0) delete S.inv[id]; }
+function addItem(id, n = 1) {
+  S.inv[id] = (S.inv[id] || 0) + n;
+  if (S.inv[id] <= 0) delete S.inv[id];
+  else if (n > 0) {
+    // Fitur #375: Tanda Item Baru di Tas
+    S.newItems = S.newItems || {};
+    S.newItems[id] = true;
+  }
+}
 function hasSave() { return !!readSaveRaw(); }
 function saveGame(sc) {
   try {
@@ -5026,6 +5043,9 @@ function loadSave() {
       S.loadouts = S.loadouts || [null, null, null];
       S.buyback = S.buyback || [];
       S.pins = S.pins || {};
+      S.socket = S.socket || {};
+      S.dailyFeats = S.dailyFeats || {};
+      S.newItems = S.newItems || {};
       if (!MAPS[S.map]) S.map = 'village';
       if (!s.tipsDone && (S.stage > 1 || S.lv > 2)) S.tipsDone = { all: 1 };
       if (!s.learn) {
@@ -5494,7 +5514,7 @@ class World extends Phaser.Scene {
     this.walls = this.physics.add.staticGroup();
     this.shG = this.add.graphics().setDepth(-9e5);
     this.aimG = this.add.graphics().setDepth(9e4);
-    this.fades = []; this.inter = []; this.npcs = []; this.enemies = []; this.shots = []; this.picks = []; this.critters = []; this.lights = [];
+    this.fades = []; this.inter = []; this.npcs = []; this.enemies = []; this.shots = []; this.picks = []; this.critters = []; this.lights = []; this.bushes = [];
     for (const r of M.walls || []) this.wall(...r);
     for (const r of blockRects(M)) this.wall(...r);
     if (M.river) { const R = M.river; for (let x = 0; x < M.w; x += 8) { if (x + 8 > R.bridge[0] + 4 && x < R.bridge[1] - 4) continue; const ry = riverY(R, x + 4); this.wall(x, ry - R.w / 2 - 1, 8, R.w + 2); } }
@@ -5581,6 +5601,10 @@ class World extends Phaser.Scene {
   spawnObj(o) {
     const [type, x, y, opt] = o; const d = OBJ[type];
     const s = this.add.sprite(x, y, d.key, 0).setOrigin(.5, 1).setDepth(y);
+    if (type.startsWith('bush') || type === 'flower' || type === 'mush') {
+      this.bushes = this.bushes || [];
+      this.bushes.push(s);
+    }
     if (opt && opt.flip) s.setFlipX(true);
     if (d.col && d.col[0]) this.wall(x - d.col[0] / 2, y - d.col[1] - d.col[2], d.col[0], d.col[1]);
     if (type === 'shrine') { this.wall(x - 56, y - 30, 14, 12); this.wall(x + 42, y - 30, 14, 12); s.setDepth(y - 60); }
@@ -5897,6 +5921,68 @@ class World extends Phaser.Scene {
         }
       });
     }
+    if (type === 'bombbarrel') {
+      s.setTint(0xff5533);
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          if (s._exploded) return;
+          s._exploded = true;
+          sfx('fire');
+          popWorld(x, y - 20, 'FUSSS...', 'crit');
+          this.tweens.add({
+            targets: s,
+            scaleX: 1.25,
+            scaleY: 1.25,
+            duration: 120,
+            yoyo: true,
+            repeat: 3,
+            onComplete: () => {
+              this.shockwave(x, y, 55, 30);
+              for (const e of this.enemies) {
+                if (e.hp > 0 && Math.hypot(e.spr.x - x, e.spr.y - y) < 60) {
+                  this.hitEnemy(e, 45, true, (e.spr.x - x) || 1, (e.spr.y - y) || 1);
+                }
+              }
+              this.puff(x, y - 6);
+              s.destroy();
+            }
+          });
+        }
+      });
+    }
+    if (type === 'bramble') {
+      s.setTint(0x7a6855);
+    }
+    if (type === 'minestone') {
+      s.minedHp = 3;
+      this.inter.push({
+        x, y: y + 2, r: 24,
+        fn: async () => {
+          G.lock++;
+          sfx('boom');
+          this.camShake(80, .003);
+          this.sparkle(x, y - 10, 'spark', 8);
+          s.minedHp = (s.minedHp || 3) - 1;
+          this.tweens.add({ targets: s, angle: 5, duration: 60, yoyo: true, repeat: 2, onComplete: () => { s.angle = 0; } });
+          if (s.minedHp <= 0) {
+            this.puff(x, y - 8);
+            sfx('crit');
+            addItem('ore', rnd(1, 2));
+            addItem('shard', 1);
+            if (Math.random() < 0.35) addItem('amethyst_gem', 1);
+            S.st = S.st || {}; S.st.mined = (S.st.mined || 0) + 1;
+            popWorld(x, y - 24, '+Hasil Tambang!', 'gold');
+            updHud();
+            s.destroy();
+            await say('KRAKK!! Batu urat tambang pecah berkeping-keping! Kamu mendapatkan Bijih Batu dan Pecahan Kristal langka.');
+          } else {
+            await say(`TANGG! Kamu memahat urat batu tambang (${s.minedHp}/3 retakan). Lanjutkan memahat!`);
+          }
+          G.lock--;
+        }
+      });
+    }
     if (type === 'fountain') {
       this.add.particles(x, y - 66, 'dot', { lifespan: 650, speedX: { min: -22, max: 22 }, speedY: { min: -26, max: -8 }, gravityY: 90, alpha: { start: .8, end: 0 }, frequency: 110, tint: 0xd8f6ff }).setDepth(y + 1);
       this.inter.push({
@@ -6041,6 +6127,27 @@ class World extends Phaser.Scene {
       const a = Math.atan2(Input.aim.y, Input.aim.x), ox = pl.x, oy = pl.y - 9;
       for (let i = 1; i <= 8; i++) { const X = ox + Math.cos(a) * i * 11, Y = oy + Math.sin(a) * i * 11, r = i === 8 ? 3.5 : 2; this.aimG.fillStyle(0x5a2a00, .8).fillCircle(X, Y, r + 1); this.aimG.fillStyle(i === 8 ? 0xff7a2a : 0xffe27a, 1).fillCircle(X, Y, r); }
     }
+    // Efek rumput/semak bergoyang (#91)
+    if (!locked && !pl.dead && this.bushes && this.bushes.length) {
+      for (const b of this.bushes) {
+        if (!b.active) continue;
+        const d = Math.hypot(pl.x - b.x, pl.y - b.y);
+        if (d < 16 && !b._swaying) {
+          b._swaying = true;
+          this.tweens.add({
+            targets: b,
+            angle: pl.x < b.x ? 12 : -12,
+            duration: 80,
+            yoyo: true,
+            repeat: 2,
+            onComplete: () => {
+              b.angle = 0;
+              this.time.delayedCall(400, () => { b._swaying = false; });
+            }
+          });
+        }
+      }
+    }
     for (const o of this.npcs) if (o.mark) { o.mark.setVisible(!G.title && this.npcHasQuest(o.n.id)); o.mark.x = o.spr.x; }
     if (!locked && !pl.dead) this.checkZones();
   }
@@ -6184,6 +6291,19 @@ Object.assign(World.prototype, {
             }
             this.hitEnemy(e, finalDmg, finalCrit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
             const frz = (ITEMS[S.eq.wpn] || {}).frz; if (frz && Math.random() < frz) this.freezeEnemy(e, 1.2);
+            // Efek Permata Senjata (#23)
+            const curWpnId = S.eq?.wpn;
+            const curGem = curWpnId && S.socket && S.socket[curWpnId];
+            if (curGem === 'shard' && Math.random() < 0.25) {
+              this.freezeEnemy(e, 1.2);
+            } else if (curGem === 'spore' && typeof applyStatus === 'function') {
+              applyStatus(e, 'poison', 4);
+            } else if (curGem === 'amethyst_gem' && finalCrit) {
+              const healAmt = 3;
+              S.hp = Math.min(stat().maxhp, S.hp + healAmt);
+              popWorld(pl.x, pl.y - 20, `+${healAmt} HP (Hisap)`, 'heal');
+              updHud();
+            }
           }
         }
       }
@@ -7104,7 +7224,17 @@ Object.assign(World.prototype, {
         if (aggro && e.shootT <= 0 && d < 160) { e.shootT = 2.4; this.eShoot(e, 'seed', [-.32, 0, .32], D.atk); this.tweens.add({ targets: s, scaleY: 1.15, duration: 100, yoyo: true }); }
         s.anims.timeScale = aggro ? 1.6 : .6; break;
       case 'walk':
-        if (aggro) s.setVelocity(dx / d * D.spd, dy / d * D.spd); else wander(D.spd * .6);
+        if (aggro) {
+          // Musuh Berkelompok & Pengepungan (#8)
+          let angleOffset = 0;
+          const otherAggro = this.enemies.filter(o => o !== e && o.hp > 0 && Math.hypot(pl.x - o.spr.x, pl.y - o.spr.y) < 180);
+          if (otherAggro.length > 0) {
+            const myIdx = this.enemies.indexOf(e);
+            angleOffset = (myIdx % 2 === 0 ? 0.75 : -0.75);
+          }
+          const baseAng = Math.atan2(dy, dx) + angleOffset;
+          s.setVelocity(Math.cos(baseAng) * D.spd, Math.sin(baseAng) * D.spd);
+        } else wander(D.spd * .6);
         if (D.side) s.flipX = s.body.velocity.x > 0; break;
       case 'lunge':
         if (e.st === 'idle' || e.st === 'chase') {
@@ -14140,6 +14270,89 @@ async function openStatsAndTitles() {
   }
 }
 
+
+// ---------------- 6. TANTANGAN HARIAN AKSI (#96) ----------------
+const DAILY_FEATS_DEF = [
+  { id: 'kills', n: 'Pemburu Monster', d: 'Kalahkan 4 monster apapun hari ini', goal: 4, gold: 40, exp: 30, getCur: () => S.st?.kills || 0 },
+  { id: 'mined', n: 'Penambang Urat', d: 'Tambang batu bijih di gua', goal: 2, gold: 50, exp: 35, getCur: () => S.st?.mined || 0 },
+  { id: 'parry', n: 'Ahli Tangkis', d: 'Lakukan tangkisan serangan tepat waktu (Parry)', goal: 2, gold: 45, exp: 40, getCur: () => S.parries || 0 },
+  { id: 'craft', n: 'Tangan Terampil', d: 'Rakit ramuan/alat di kerajinan', goal: 2, gold: 35, exp: 25, getCur: () => S.st?.crafted || 0 },
+  { id: 'fish', n: 'Tangkapan Air', d: 'Pancing ikan dari danau/sungai', goal: 2, gold: 45, exp: 30, getCur: () => S.st?.fish || 0 },
+];
+
+function getDailyFeats() {
+  const seed = (S.day * 2) % DAILY_FEATS_DEF.length;
+  return [
+    DAILY_FEATS_DEF[seed],
+    DAILY_FEATS_DEF[(seed + 2) % DAILY_FEATS_DEF.length],
+    DAILY_FEATS_DEF[(seed + 3) % DAILY_FEATS_DEF.length]
+  ];
+}
+
+async function openDailyFeats() {
+  S.dailyFeats = S.dailyFeats || {};
+  if (S.dailyFeats.day !== S.day) {
+    S.dailyFeats = { day: S.day, claimed: {}, baseline: {} };
+    const feats = getDailyFeats();
+    for (const f of feats) {
+      S.dailyFeats.baseline[f.id] = f.getCur();
+    }
+  }
+
+  for (;;) {
+    const feats = getDailyFeats();
+    const items = feats.map((f, i) => {
+      const base = S.dailyFeats.baseline[f.id] || 0;
+      const prog = Math.max(0, f.getCur() - base);
+      const done = prog >= f.goal;
+      const claimed = S.dailyFeats.claimed[i];
+      return {
+        t: (claimed ? '✓ ' : done ? '★ ' : '• ') + f.n,
+        r: claimed ? 'KLAIMED' : done ? 'KLAIM HADIAH' : `${Math.min(f.goal, prog)}/${f.goal}`,
+        dis: claimed
+      };
+    });
+    items.push({ t: 'Tutup' });
+
+    const r = await choose({
+      head: `TANTANGAN HARIAN · Hari ke-${S.day}`,
+      x: 18, y: 20, w: 270,
+      items,
+      foot: i => i < feats.length ? `${feats[i].d}<br>Hadiah: <b>+${feats[i].gold} G</b> · <b>+${feats[i].exp} EXP</b>` : 'Selesaikan aksi harian untuk bonus koin dan EXP.'
+    });
+
+    if (r < 0 || r >= feats.length) break;
+
+    const f = feats[r];
+    if (S.dailyFeats.claimed[r]) {
+      sfx('buzz');
+      continue;
+    }
+    const base = S.dailyFeats.baseline[f.id] || 0;
+    const prog = Math.max(0, f.getCur() - base);
+    if (prog < f.goal) {
+      sfx('buzz');
+      await say(`Tantangan "${f.n}" belum selesai (${prog}/${f.goal}).`);
+      continue;
+    }
+
+    S.dailyFeats.claimed[r] = true;
+    S.gold += f.gold;
+    S.st = S.st || {};
+    S.st.goldEarned = (S.st.goldEarned || 0) + f.gold;
+    sfx('coin');
+    await sleep(200);
+    sfx('heal');
+    if (typeof gainExp === 'function') gainExp(f.exp);
+    else {
+      S.exp = (S.exp || 0) + f.exp;
+      if (typeof updHud === 'function') updHud();
+    }
+    checkTitles();
+    await say(`Tantangan "${f.n}" berhasil diklaim! Hadiah: +${f.gold} G dan +${f.exp} EXP.`);
+  }
+}
+
 'use strict';
 // Percakapan NPC, toko, bengkel, penginapan
 Object.assign(World.prototype, {
@@ -14584,15 +14797,133 @@ async function upgradeMenu() {
   let sel = 0;
   for (; ;) {
     const L = Object.keys(S.inv).filter(id => ITEMS[id] && (ITEMS[id].k === 'wpn' || ITEMS[id].k === 'arm'));
-    const r = await choose({ head: 'Tingkatkan · ' + S.gold + ' G', x: 24, y: 22, w: 240, start: sel,
-      items: [...L.map(id => { const u = S.up[id] || 0; return { t: icon(id) + itemName(id), r: u >= UPG.max ? 'MAKS' : upgCost(id).gold + ' G', dis: u >= UPG.max }; }), { t: 'Kembali' }],
-      foot: i => { if (i >= L.length) return 'Setiap tingkat: senjata Serang +' + UPG.wpn + ', baju Tahan +' + UPG.arm + '.'; const id = L[i]; if ((S.up[id] || 0) >= UPG.max) return 'Sudah tingkat maksimal!'; const C = upgCost(id); return (ITEMS[id].k === 'wpn' ? 'Serang +' + UPG.wpn : 'Tahan +' + UPG.arm) + '<br>Bahan: ' + Object.entries(C.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
-    if (r < 0 || r === L.length) return; sel = r; const id = L[r], C = upgCost(id);
-    if (S.gold < C.gold || !Object.entries(C.need).every(([k, n]) => has(k, n))) { sfx('buzz'); await say('Bahan atau uangnya belum cukup. Bijih Batu dari golem, Pecahan Kristal dari makhluk es.', 'Pak Besi'); continue; }
-    S.gold -= C.gold; for (const [k, n] of Object.entries(C.need)) addItem(k, -n); S.up[id] = (S.up[id] || 0) + 1;
-    sfx('boom'); await sleep(250); sfx('chest'); G.scene.cameras.main.flash(200, 255, 200, 120); updHud();
-    await say(`TANG! ${itemName(id)} jadi lebih kuat!`, 'Pak Besi');
+    const r = await choose({
+      head: 'Bengkel Pak Besi · ' + S.gold + ' G',
+      x: 24, y: 22, w: 240, start: sel,
+      items: [
+        { t: '⚡ Pasang Permata Senjata' },
+        ...L.map(id => {
+          const it = ITEMS[id], u = (S.up[id] || 0), cost = upgCost(id);
+          return { t: icon(id) + it.n + (u ? ' +' + u : ''), r: u >= UPG.max ? 'MAKS' : cost.gold + ' G', dis: u >= UPG.max };
+        }),
+        { t: 'Kembali' }
+      ],
+      foot: i => {
+        if (i === 0) return 'Sisipkan permata berkekuatan khusus ke senjatamu (Kecubung, Kristal, Bijih, Spora).';
+        const actualIdx = i - 1;
+        if (actualIdx < L.length) {
+          const id = L[actualIdx], cost = upgCost(id);
+          const needs = Object.entries(cost.need).map(([k, n]) => `${icon(k)}${ITEMS[k]?.n || k} ${S.inv[k] || 0}/${n}`).join(' · ');
+          return ITEMS[id].d + '<br>Biaya: <b>' + cost.gold + ' G</b> · Bahan: ' + needs;
+        }
+        return '';
+      }
+    });
+
+    if (r < 0 || r === L.length + 1) return;
+    sel = r;
+
+    // Fitur #23: Soket Permata Senjata
+    if (r === 0) {
+      await socketMenu();
+      continue;
+    }
+
+    const actualIdx = r - 1;
+    const id = L[actualIdx], u = (S.up[id] || 0);
+    if (u >= UPG.max) { sfx('buzz'); continue; }
+    const cost = upgCost(id);
+    const canGold = S.gold >= cost.gold;
+    const canMats = Object.entries(cost.need).every(([k, n]) => has(k, n));
+    if (!canGold || !canMats) {
+      sfx('buzz');
+      await say('Bahan atau koin belum mencukupi untuk meningkatkan perlengkapan ini.', 'Pak Besi');
+      continue;
+    }
+
+    S.gold -= cost.gold;
+    for (const [k, n] of Object.entries(cost.need)) addItem(k, -n);
+    S.up[id] = u + 1;
+    sfx('boom');
+    await sleep(250);
+    sfx('chest');
+    updHud();
+    await say(`TANG! TANG! ${ITEMS[id].n} berhasil ditingkatkan menjadi +${S.up[id]}!`, 'Pak Besi');
   }
+}
+
+// Menu Pasang Permata (#23)
+async function socketMenu() {
+  const wpns = Object.keys(S.inv).filter(id => ITEMS[id] && ITEMS[id].k === 'wpn');
+  if (!wpns.length) {
+    await say('Kamu tidak membawa senjata di dalam tas.', 'Pak Besi');
+    return;
+  }
+  const r = await choose({
+    head: 'Pilih Senjata untuk Soket',
+    x: 30, y: 30, w: 220,
+    items: [...wpns.map(id => {
+      const g = S.socket && S.socket[id];
+      return { t: icon(id) + itemName(id), r: g ? ITEMS[g]?.n : '(kosong)' };
+    }), { t: 'Kembali' }]
+  });
+  if (r < 0 || r >= wpns.length) return;
+  const wpnId = wpns[r];
+
+  // Daftar permata yang didukung
+  const GEMS = [
+    { id: 'amethyst_gem', n: 'Kecubung Ungu', eff: 'Vampir: Serangan kritis memulihkan 3 HP' },
+    { id: 'shard', n: 'Pecahan Kristal', eff: 'Hawa Beku: 25% peluang tebasan membekukan musuh' },
+    { id: 'ore', n: 'Bijih Padat', eff: 'Hantaman Kokoh: Serang +3 & dorongan kuat' },
+    { id: 'spore', n: 'Spora Alami', eff: 'Racun Alami: Tebasan memberi efek racun pada musuh' }
+  ];
+
+  const gItems = GEMS.map(g => ({
+    t: icon(g.id) + g.n,
+    r: has(g.id) ? `Punya x${S.inv[g.id]}` : 'Tidak Ada',
+    dis: !has(g.id)
+  }));
+  if (S.socket && S.socket[wpnId]) {
+    gItems.push({ t: 'Lepas Permata Saat Ini' });
+  }
+  gItems.push({ t: 'Batal' });
+
+  const gr = await choose({
+    head: `Soket · ${ITEMS[wpnId].n}`,
+    x: 20, y: 30, w: 250,
+    items: gItems,
+    foot: i => i < GEMS.length ? GEMS[i].eff : 'Biaya pemasangan: Gratis bahan terpasang.'
+  });
+
+  if (gr < 0 || gr === gItems.length - 1) return;
+  if (S.socket && S.socket[wpnId] && gr === gItems.length - 2) {
+    const oldGem = S.socket[wpnId];
+    addItem(oldGem, 1);
+    delete S.socket[wpnId];
+    sfx('ok');
+    updHud();
+    await say(`Permata ${ITEMS[oldGem]?.n || ''} berhasil dilepas dan kembali ke tas.`, 'Pak Besi');
+    return;
+  }
+
+  const gem = GEMS[gr];
+  if (!has(gem.id)) {
+    sfx('buzz');
+    await say(`Kamu tidak memiliki ${gem.n}.`, 'Pak Besi');
+    return;
+  }
+
+  if (S.socket && S.socket[wpnId]) {
+    addItem(S.socket[wpnId], 1); // kembalikan permata lama
+  }
+  addItem(gem.id, -1);
+  S.socket = S.socket || {};
+  S.socket[wpnId] = gem.id;
+  sfx('boom');
+  await sleep(250);
+  sfx('chest');
+  updHud();
+  await say(`KLIK! Permata ${gem.n} berhasil dipasang ke ${ITEMS[wpnId].n}! Efek: ${gem.eff}`, 'Pak Besi');
 }
 
 'use strict';
@@ -14617,16 +14948,31 @@ async function openBag(sc) {
     w.innerHTML = `<div class="bt">${BAG_TABS.map(([k, n], i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="srt">urut: ${['jenis', 'nilai', 'baru', 'nama'][BAG_SORT]}</span><span class="gold">${S.gold} G</span></div>
      <div class="bb"><div class="bl">${L.length ? L.map((id, i) => {
        const isLck = S.locked && S.locked[id];
-       return `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}</span><b>${isLck ? '🔒 ' : ''}${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`;
+       const isNew = S.newItems && S.newItems[id];
+       const gemId = S.socket && S.socket[id];
+       const gemBadge = gemId ? ` [💎]` : '';
+       return `<div class="bi${i === sel ? ' sel' : ''}" data-i="${i}">${icon(id)}<span class="r${typeof rarity === 'function' ? rarity(id) : 0}">${itemName(id)}${gemBadge}</span>${isNew ? '<small style="color:#ff8a3a;font-size:8px;font-weight:bold;margin-left:2px;">BARU</small>' : ''}<b>${isLck ? '🔒 ' : ''}${isEq(id) ? 'E' : 'x' + S.inv[id]}</b></div>`;
      }).join('') : '<div class="empty">Kosong</div>'}</div>
-     <div class="bs"><div class="mh">Arka · Lv ${S.lv} (${S.title || 'Petualang'})</div>${['wpn', 'arm', 'acc'].map(s => `<div class="eqs">${S.eq[s] ? icon(S.eq[s]) + itemName(S.eq[s]) : '<i>(kosong)</i>'}</div>`).join('')}
+     <div class="bs"><div class="mh">Arka · Lv ${S.lv} (${S.title || 'Petualang'})</div>${['wpn', 'arm', 'acc'].map(s => {
+       const eqId = S.eq[s];
+       const eqGem = eqId && S.socket && S.socket[eqId] ? ` [💎 ${ITEMS[S.socket[eqId]]?.n || ''}]` : '';
+       return `<div class="eqs">${eqId ? icon(eqId) + itemName(eqId) + eqGem : '<i>(kosong)</i>'}</div>`;
+     }).join('')}
      <div style="margin:4px 0 2px;font-size:9px;color:#a8a8b8;">Preset: ${loadoutBtns}</div>
      ${setsBadge}
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b></div></div></div>
      <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · B tutup'}</div>`;
     const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
     w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
-    w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); const i = +e.dataset.i; if (i === sel) act(); else { sel = i; sfx('cur'); draw(); } });
+    w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => {
+      ev.stopPropagation();
+      const i = +e.dataset.i;
+      if (L[i] && S.newItems && S.newItems[L[i]]) {
+        delete S.newItems[L[i]];
+      }
+      if (i === sel) act();
+      else { sel = i; sfx('cur'); draw(); }
+    });
     w.querySelectorAll('.lo-btn').forEach(e => e.onpointerdown = async ev => { ev.stopPropagation(); await handleLoadout(+e.dataset.lo); });
     const s2 = w.querySelector('.bi.sel'); if (s2) s2.scrollIntoView({ block: 'nearest' });
   }
@@ -14804,6 +15150,7 @@ async function mainMenu(sc) {
   const acts = [['Tas', 'Item, perlengkapan & bahan', () => openBag(sc)], ['Jurnal', 'Tujuan, misteri & catatan', () => openQuests()], ['Peta', 'Peta area ini', () => openMap(sc)],
     ['Jurus', 'Jurus yang sudah dikuasai', () => openSkills()], ['Atribut', 'Bagikan poin naik level', () => openAttr()], ['Kerajinan', 'Buat ramuan, bom, panah, umpan', () => openCraft(sc)],
     ['Buku Resep', 'Katalog resep tempa, kerajinan & masakan', () => openRecipeBook()],
+    ['Tantangan Harian', 'Aksi harian bertarung & berpetualang', () => openDailyFeats()],
     ['Statistik & Gelar', 'Rekap petualangan & bonus gelar', () => openStatsAndTitles()],
     ['Bestiari', 'Buku monster', () => openBestiary(sc)], ['Buku Ikan', 'Catatan & habitat fauna air', () => openFishLog(sc)], ['Pencapaian', 'Prestasi & hadiahnya', () => openAch()], ['Riwayat', 'Baca ulang percakapan terakhir', () => openDlgLog()],
     ['Simpan', 'Simpan permainan', async () => { const ok = saveGame(sc); sfx(ok ? 'save' : 'buzz'); await say(ok ? 'Permainan tersimpan.' : 'Gagal menyimpan.'); }],

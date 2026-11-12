@@ -20,7 +20,7 @@ const GAME_VERSION = '1.17.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, steps: true, dynMus: true, font: 1, lite: false, toast: true }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, playTime: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {} }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, playTime: 0 }, garden: [null, null], pet: false, warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {} }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -47,10 +47,16 @@ function stat() {
     if (set.mag) sMag += set.mag;
     if (set.regen) sRegen += set.regen;
   }
+  // Bonus Soket Permata Senjata (#23)
+  let gemAtk = 0;
+  const curWpn = S.eq?.wpn;
+  if (curWpn && S.socket && S.socket[curWpn] === 'ore') {
+    gemAtk += 3;
+  }
   return {
     maxhp: 34 + l * 8 + tHp + sHp,
     maxmp: 12 + l * 2,
-    atk: Math.round((6 + l * 2 + eqv('atk') + tAtk + sAtk) * (buffOn('atk') ? BUFF.atk.mul : 1)),
+    atk: Math.round((6 + l * 2 + eqv('atk') + tAtk + sAtk + gemAtk) * (buffOn('atk') ? BUFF.atk.mul : 1)),
     def: Math.round((1 + l + eqv('def') + tDef + sDef) * (buffOn('def') ? BUFF.def.mul : 1)),
     mag: 9 + l * 3 + eqv('mag') + sMag,
     spd: Math.round(((1 + eqv('spd') + tSpd + sSpd) * (buffOn('spd') ? BUFF.spd.mul : 1)) * 100) / 100,
@@ -59,7 +65,15 @@ function stat() {
 }
 function need(lv) { return 12 * lv + 6 * (lv - 1) * (lv - 1); }
 const has = (id, n = 1) => (S.inv[id] || 0) >= n;
-function addItem(id, n = 1) { S.inv[id] = (S.inv[id] || 0) + n; if (S.inv[id] <= 0) delete S.inv[id]; }
+function addItem(id, n = 1) {
+  S.inv[id] = (S.inv[id] || 0) + n;
+  if (S.inv[id] <= 0) delete S.inv[id];
+  else if (n > 0) {
+    // Fitur #375: Tanda Item Baru di Tas
+    S.newItems = S.newItems || {};
+    S.newItems[id] = true;
+  }
+}
 function hasSave() { return !!readSaveRaw(); }
 function saveGame(sc) {
   try {
@@ -89,6 +103,9 @@ function loadSave() {
       S.loadouts = S.loadouts || [null, null, null];
       S.buyback = S.buyback || [];
       S.pins = S.pins || {};
+      S.socket = S.socket || {};
+      S.dailyFeats = S.dailyFeats || {};
+      S.newItems = S.newItems || {};
       if (!MAPS[S.map]) S.map = 'village';
       if (!s.tipsDone && (S.stage > 1 || S.lv > 2)) S.tipsDone = { all: 1 };
       if (!s.learn) {

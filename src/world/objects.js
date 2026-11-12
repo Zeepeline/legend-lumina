@@ -121,6 +121,8 @@ const OBJ = {
   brazier: { key: 'brazier', col: [16, 8, 0], sh: [10, 3] },
   bramble: { key: 'bramble', col: [18, 10, 0], sh: [12, 3] },
   campfire: { key: 'campfire', col: [16, 8, 0], sh: [12, 4] },
+  minestone: { key: 'geoderock', col: [18, 10, 0], sh: [14, 3], fade: 1 },
+  bombbarrel: { key: 'barrel', col: [14, 6, 0], sh: [10, 3] },
   fence: { key: 'fence', col: [18, 4, 0] },
   lamp: { key: 'lamp', col: [6, 4, 0], sh: [5, 2] },
   rock: { key: 'rock', col: [16, 6, 0], sh: [9, 2] },
