@@ -1,9 +1,10 @@
 # HANDOFF — Open World Legenda Lumina (lanjutan)
 
 > Untuk agen berikutnya. Baca ini + `AGENTS.md` sebelum mengubah apa pun.
-> Status per v1.27.1 (sw `lumina-v34`), 12 Nov 2026.
+> Status per v1.27.2 (sw `lumina-v35`), 12 Nov 2026.
 
 ## 0. Aturan wajib
+- Aturan kode: `docs/CODE_RULES.md`. Cari fungsi lewat `docs/CODEMAP.md` (jangan baca file utuh).
 - Balas user dalam **Bahasa Indonesia**.
 - **JANGAN membahas isi `docs/SPOILER_ENDING.md` dengan user** (user tidak mau spoiler). Boleh dibaca untuk konsistensi, tapi jangan dikutip/diringkas ke user.
 - Ikuti semua dokumen desain: `GAME_DESIGN`, `WORLD_DESIGN`, `BENUA_LUMINA`, `PLACEMENT_RULES`, `NPC_RULES`, `ART_BIBLE`, `VALIDATION_RULES`, `ASSET_RULES`, `ANIMATION_RULES`.
@@ -93,7 +94,7 @@ PERF=1 npx playwright test tests/perf.spec.js  # cek frame (bandingkan dengan NO
 - Helper tes: `boot`, `newGame`, `loadGame`/`gotoGame`, `waitForGameReady`, `goto`, `press`, `flush`, `G`, `hold`, `faceNpc`, `learnAll`, `S`, `noErrors`.
 
 ## 6. Rutinitas rilis
-1. Bump `sw.js` `lumina-vNN` (+1, sekarang v34) dan `GAME_VERSION` (sekarang `1.27.1`).
+1. Bump `sw.js` `lumina-vNN` (+1, sekarang v35) dan `GAME_VERSION` (sekarang `1.27.2`).
 2. `python3 tools/bundle.py` lalu `npm run check` (0 masalah).
 3. Update `PROGRES_FITUR.md` dan baris terkait di `AGENTS.md`.
 4. Commit, lalu `git fetch origin main && git rebase FETCH_HEAD && git push`.
@@ -101,7 +102,7 @@ PERF=1 npx playwright test tests/perf.spec.js  # cek frame (bandingkan dengan NO
 6. Laporkan ke user dalam Bahasa Indonesia, singkat, tanpa spoiler.
 
 ## 7. Peta file
-- `src/scene/world.js` — scene utama (create/update, `passive`, `makeActiveFx`/`dropActiveFx`, `camStep`, `checkZones`).
+- `src/scene/world.js` — scene utama (create/update, `passive`, `makeActiveFx`/`dropActiveFx`, `camStep`, `checkZones`). Perilaku per objek di `src/world/spawn/`.
 - `src/systems/regions.js` — multi-scene wilayah & handoff.
 - `src/systems/openworld.js` — `initOpen`, `updCross`, lintas wilayah.
 - `src/systems/stream.js` — streaming tanah, `groundOverview` (dipakai peta).

@@ -2,7 +2,7 @@
 
 Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Indonesia**.
 
-**Hemat konteks:** jangan membaca semua file. Pakai peta file di bawah untuk menemukan 1–3 file yang relevan, lalu baca file itu saja. Setiap file punya ringkasan di baris ke-2.
+**Hemat konteks:** jangan membaca semua file. Cari nama fungsi di **`docs/CODEMAP.md`** (`grep -n nama docs/CODEMAP.md` → file:baris, dibuat otomatis), lalu baca potongan file itu saja. Setiap file punya ringkasan di baris ke-2. **Aturan menulis kode (maks 400 baris/file, 160 karakter/baris, arsitektur lapisan): `docs/CODE_RULES.md`.**
 
 ## Proyek
 
@@ -28,8 +28,9 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `data/quests.js` | `STAGE_TXT`, `STAGE_GOAL` (misi utama), `SKILLS`, `ACH` (pencapaian) |
 | `art/base.js` | kanvas & warna, **aturan gaya**: `toneC()` (bayangan kebiruan/sorotan kekuningan), `outline()` (garis tepi berwarna), `renderMap()` |
 | `art/monsters2.js` | **sprite monster versi garang** (menimpa `MON` lama, kunci palet sama), `shadeMon()` pencahayaan otomatis, `monFrame2()` frame animasi otomatis (`anim`: walk/squash/bob) |
-| `art/nature.js` · `buildings.js` · `characters.js` · `monsters.js` · `items.js` · `fx.js` · `interior.js` | pixel art buatan kode, per jenis |
+| `art/nature/*` · `art/buildings/*` (dipecah ≤400 baris) · `characters.js` · `monsters.js` · `items.js` · `fx.js` · `interior.js` | pixel art buatan kode, per jenis |
 | `world/objects.js` | `OBJ`: tekstur, kotak tabrakan, bayangan, pudar, cerobong tiap objek dunia |
+| `world/spawn/*` | `OBJ_SPAWN[tipe](s, x, y, opt, d, type)`: perilaku khusus saat objek dibuat (interaksi, partikel, tembok tambahan); dipanggil di akhir `spawnObj` |
 | `world/maps/*.js` | satu file per peta: jalan, objek, NPC, musuh, boss, peti, pintu keluar |
 | `world/ground.js` | generator tanah, tabrakan grid (gua/kolam), penyebar pohon |
 | `gfx/textures.js` | `IMG_LIST` (PNG di `assets/img`), `buildTextures()`: daftar semua tekstur & animasi |
@@ -62,7 +63,8 @@ Pemilik proyek berbahasa Indonesia: balas dan tulis teks game dalam **Bahasa Ind
 | `world/maps/city.js` | Jalan Raya Lama + Kota Lumina (4 area). NPC warga pakai `lines` (dialog acak, `cityLines`) |
 | `data/lore.js` | jurnal: `LORE` (catatan), `MYSTERY` (misteri besar), `midGoal()` (penyelidikan), `learn(id)` |
 | `systems/chapter3.js` | Bab 3: obor kuno, gerbang es, AI Naga Es (`updDragon`, ai `dboss`) |
-| `systems/life.js` | interior, memancing, kebun, teka-teki batu, Mochi |
+| `systems/life/*` | objek interaktif: `core.js` (interior, memancing, kebun, teka-teki batu, Mochi, papan buronan), `harvest_*` (panen), `interact_*` (objek dunia), `minigame_*` (permainan kecil) |
+| `systems/economy/*` | papan permintaan, pedagang keliling, gelar, statistik, buku resep, tantangan harian, surat, kodeks |
 | `systems/story.js` | segel kuil, kristal, peti (termasuk peti terkunci) |
 | `systems/daynight.js` · `achievements.js` | jam & malam · cek pencapaian |
 | `ai/enemies.js` | AI musuh biasa (`updEnemy`, cabang per `ai`) |
@@ -92,7 +94,7 @@ Lainnya: `docs/GAME_DESIGN.md` (arah cerita & story bible), `docs/WORLD_DESIGN.m
 - **Objek baru:** buat fungsi `art<NamaObjek>()` (boleh pakai `mkC(w, h)`) lalu tambahkan entri di `OBJ`. Tekstur **didaftarkan otomatis** di `buildTextures` bila nama fungsinya cocok dengan `OBJ[..].key`. Item baru tanpa `ICONS_DEF` memakai ikon cadangan otomatis, tapi sebaiknya buat ikonnya.
 - **Aset GPT pemilik** (`nature/`, `new_builidng_gpt_1/`, `new_building_gpt_2/`, `new_characters_gpt_1/`): wajib lolos `docs/VALIDATION_RULES.md`. Siapkan lewat `python3 tools/prep_gpt_assets.py` (memakai `tools/clean_asset.py`: tepi tegas, potongan nyasar dibuang, garis hitam → garis berwarna). Tabel `SWAP` = tekstur lama yang diganti (ukuran disamakan agar tata letak tetap benar), `LOOK` = id NPC → karakter. Hasil dimuat `src/gfx/gptassets.js`. File multi-objek (mis. `bld_gpt2_026/027/036/052/056/060`, `nat_tree_054`) jangan dipakai sebelum dipotong ulang.
 - **Aset pemilik:** potret NPC `assets/img/npc_<ch>.png` (32×32, dari `assets/raw/extracted_pixel_assets/rpg_npcs`) otomatis menggantikan gambar kode untuk NPC dengan `ch` itu (`regPortrait`). Hewan `assets/img/ani_*.png` dipakai di `systems/ambient.js`. Aset buatan pemilik sendiri, aman dipakai.
-- **Sebelum push:** jalankan CI (Actions → CI → Run workflow) atau `npm test` lokal. Game sempat tidak bisa dibuka karena ikon yang hilang.
+- **Sebelum push:** `npm run check` (sintaks + ukuran + tata letak + CODEMAP) lalu jalankan CI (Actions → CI → Run workflow) atau `npm test` lokal. Game sempat tidak bisa dibuka karena ikon yang hilang.
 
 - **Beberapa scene `World` bisa berjalan bersamaan** (wilayah pasif). Kode di `create()` yang berjalan sebelum pemain dibuat jangan membaca `this.pl` (pakai `this.pl0`); efek layar (`setScrollFactor(0)`) taruh di `makeActiveFx`; logika per-frame yang hanya untuk wilayah aktif cukup di `update()` (wilayah pasif memakai `updPassive`). Pakai `G.scene` untuk wilayah aktif.
 - **Scene di-restart, bukan dibuat ulang.** `this.scene.restart()` memakai instance `World` yang sama. Properti per-peta (`this.boulder`, `this.garden`, `this.bossOn`, dll.) **harus di-reset di awal `create()`** (`scene/world.js`).

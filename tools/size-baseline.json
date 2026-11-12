@@ -1,0 +1,362 @@
+{
+ "src/ai/bosses.js": {
+  "lines": 0,
+  "long": 16
+ },
+ "src/ai/enemies.js": {
+  "lines": 0,
+  "long": 18
+ },
+ "src/art/base.js": {
+  "lines": 0,
+  "long": 9
+ },
+ "src/art/buildings/buildings_1.js": {
+  "lines": 0,
+  "long": 22
+ },
+ "src/art/characters.js": {
+  "lines": 0,
+  "long": 13
+ },
+ "src/art/fx.js": {
+  "lines": 0,
+  "long": 25
+ },
+ "src/art/interior.js": {
+  "lines": 0,
+  "long": 9
+ },
+ "src/art/items.js": {
+  "lines": 0,
+  "long": 18
+ },
+ "src/art/monsters.js": {
+  "lines": 0,
+  "long": 22
+ },
+ "src/art/monsters2.js": {
+  "lines": 0,
+  "long": 19
+ },
+ "src/art/nature/nature_1.js": {
+  "lines": 0,
+  "long": 11
+ },
+ "src/core/audio.js": {
+  "lines": 0,
+  "long": 10
+ },
+ "src/core/input.js": {
+  "lines": 0,
+  "long": 5
+ },
+ "src/core/state.js": {
+  "lines": 0,
+  "long": 8
+ },
+ "src/core/util.js": {
+  "lines": 0,
+  "long": 1
+ },
+ "src/data/enemies.js": {
+  "lines": 0,
+  "long": 27
+ },
+ "src/data/items.js": {
+  "lines": 0,
+  "long": 79
+ },
+ "src/data/lore.js": {
+  "lines": 0,
+  "long": 22
+ },
+ "src/data/quests.js": {
+  "lines": 0,
+  "long": 5
+ },
+ "src/gfx/bake.js": {
+  "lines": 0,
+  "long": 4
+ },
+ "src/gfx/gptassets.js": {
+  "lines": 0,
+  "long": 3
+ },
+ "src/gfx/textures.js": {
+  "lines": 0,
+  "long": 21
+ },
+ "src/main.js": {
+  "lines": 0,
+  "long": 2
+ },
+ "src/npc/brain.js": {
+  "lines": 0,
+  "long": 14
+ },
+ "src/npc/dialog.js": {
+  "lines": 473,
+  "long": 38
+ },
+ "src/npc/npcs.js": {
+  "lines": 0,
+  "long": 2
+ },
+ "src/scene/world.js": {
+  "lines": 421,
+  "long": 33
+ },
+ "src/systems/achievements.js": {
+  "lines": 0,
+  "long": 1
+ },
+ "src/systems/ambient.js": {
+  "lines": 0,
+  "long": 36
+ },
+ "src/systems/chapter3.js": {
+  "lines": 0,
+  "long": 6
+ },
+ "src/systems/chapter4.js": {
+  "lines": 0,
+  "long": 27
+ },
+ "src/systems/chapter5.js": {
+  "lines": 0,
+  "long": 18
+ },
+ "src/systems/combat.js": {
+  "lines": 0,
+  "long": 25
+ },
+ "src/systems/craft.js": {
+  "lines": 0,
+  "long": 11
+ },
+ "src/systems/daynight.js": {
+  "lines": 0,
+  "long": 3
+ },
+ "src/systems/economy/economy_1.js": {
+  "lines": 0,
+  "long": 15
+ },
+ "src/systems/economy/economy_2.js": {
+  "lines": 0,
+  "long": 6
+ },
+ "src/systems/economy/economy_3.js": {
+  "lines": 0,
+  "long": 4
+ },
+ "src/systems/explore.js": {
+  "lines": 0,
+  "long": 23
+ },
+ "src/systems/feel.js": {
+  "lines": 0,
+  "long": 5
+ },
+ "src/systems/fishing.js": {
+  "lines": 0,
+  "long": 14
+ },
+ "src/systems/home.js": {
+  "lines": 0,
+  "long": 17
+ },
+ "src/systems/learn.js": {
+  "lines": 0,
+  "long": 8
+ },
+ "src/systems/life/core.js": {
+  "lines": 0,
+  "long": 18
+ },
+ "src/systems/life/harvest_2.js": {
+  "lines": 0,
+  "long": 10
+ },
+ "src/systems/life/harvest_3.js": {
+  "lines": 0,
+  "long": 1
+ },
+ "src/systems/life/interact_2.js": {
+  "lines": 0,
+  "long": 1
+ },
+ "src/systems/life/interact_4.js": {
+  "lines": 0,
+  "long": 1
+ },
+ "src/systems/life/interact_5.js": {
+  "lines": 0,
+  "long": 5
+ },
+ "src/systems/life/interact_6.js": {
+  "lines": 0,
+  "long": 7
+ },
+ "src/systems/life/interact_7.js": {
+  "lines": 0,
+  "long": 12
+ },
+ "src/systems/life/interact_8.js": {
+  "lines": 0,
+  "long": 3
+ },
+ "src/systems/life/minigame_1.js": {
+  "lines": 0,
+  "long": 1
+ },
+ "src/systems/life/minigame_3.js": {
+  "lines": 0,
+  "long": 4
+ },
+ "src/systems/life/minigame_4.js": {
+  "lines": 0,
+  "long": 9
+ },
+ "src/systems/life/minigame_5.js": {
+  "lines": 0,
+  "long": 4
+ },
+ "src/systems/openworld.js": {
+  "lines": 0,
+  "long": 3
+ },
+ "src/systems/perf.js": {
+  "lines": 0,
+  "long": 4
+ },
+ "src/systems/polish.js": {
+  "lines": 0,
+  "long": 17
+ },
+ "src/systems/qol.js": {
+  "lines": 0,
+  "long": 19
+ },
+ "src/systems/ranch.js": {
+  "lines": 0,
+  "long": 22
+ },
+ "src/systems/regions.js": {
+  "lines": 0,
+  "long": 9
+ },
+ "src/systems/season.js": {
+  "lines": 0,
+  "long": 12
+ },
+ "src/systems/skills.js": {
+  "lines": 0,
+  "long": 6
+ },
+ "src/systems/sound.js": {
+  "lines": 0,
+  "long": 6
+ },
+ "src/systems/status.js": {
+  "lines": 0,
+  "long": 4
+ },
+ "src/systems/story.js": {
+  "lines": 0,
+  "long": 3
+ },
+ "src/systems/stream.js": {
+  "lines": 0,
+  "long": 6
+ },
+ "src/systems/travel.js": {
+  "lines": 0,
+  "long": 1
+ },
+ "src/ui/bag.js": {
+  "lines": 0,
+  "long": 19
+ },
+ "src/ui/map.js": {
+  "lines": 0,
+  "long": 4
+ },
+ "src/ui/menus.js": {
+  "lines": 0,
+  "long": 23
+ },
+ "src/ui/savecode.js": {
+  "lines": 0,
+  "long": 2
+ },
+ "src/ui/shop.js": {
+  "lines": 407,
+  "long": 2
+ },
+ "src/ui/title.js": {
+  "lines": 0,
+  "long": 2
+ },
+ "src/ui/widgets.js": {
+  "lines": 0,
+  "long": 12
+ },
+ "src/world/ground.js": {
+  "lines": 0,
+  "long": 19
+ },
+ "src/world/layout.js": {
+  "lines": 0,
+  "long": 12
+ },
+ "src/world/maps/cave.js": {
+  "lines": 0,
+  "long": 1
+ },
+ "src/world/maps/city.js": {
+  "lines": 0,
+  "long": 24
+ },
+ "src/world/maps/forest.js": {
+  "lines": 0,
+  "long": 4
+ },
+ "src/world/maps/interiors.js": {
+  "lines": 0,
+  "long": 9
+ },
+ "src/world/maps/lake.js": {
+  "lines": 0,
+  "long": 4
+ },
+ "src/world/maps/meadow.js": {
+  "lines": 0,
+  "long": 3
+ },
+ "src/world/maps/snow.js": {
+  "lines": 0,
+  "long": 2
+ },
+ "src/world/maps/swamp.js": {
+  "lines": 0,
+  "long": 5
+ },
+ "src/world/maps/village.js": {
+  "lines": 0,
+  "long": 1
+ },
+ "src/world/maps/wild.js": {
+  "lines": 0,
+  "long": 11
+ },
+ "src/world/spawn/spawn_1.js": {
+  "lines": 0,
+  "long": 4
+ },
+ "src/world/spawn/spawn_2.js": {
+  "lines": 0,
+  "long": 2
+ }
+}

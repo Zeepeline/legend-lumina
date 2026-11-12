@@ -53,7 +53,7 @@ function outline(c, col) {
 }
 function flipC(c) { const [f, x] = mk(c.width, c.height); x.scale(-1, 1); x.drawImage(c, -c.width, 0); return f; }
 // gabungkan beberapa frame (kanvas) jadi satu strip
-// Kanvas kosong (dipakai gambar-gambar objek baru di nature.js, buildings.js, interior.js)
+// Kanvas kosong (dipakai gambar-gambar objek baru di art/nature/, art/buildings/, interior.js)
 function mkC(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); x.imageSmoothingEnabled = false; return c; }
 function strip(frames) {
   const w = frames[0].width, h = frames[0].height, [c, x] = mk(w * frames.length, h);
