@@ -4,8 +4,7 @@ const h = require('./helpers');
 
 test.describe('Gelombang 21 Features', () => {
   test.beforeEach(async ({ page }) => {
-    await h.goto(page);
-    await h.startNewGame(page);
+    await h.loadGame(page); // membuka game & memulai permainan baru
   });
 
   test('G21: Cek Batangan Logam di ITEMS dan CRAFT', async ({ page }) => {

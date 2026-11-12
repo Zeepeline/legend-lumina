@@ -4,8 +4,7 @@ const h = require('./helpers');
 
 test.describe('Gelombang 22 Features', () => {
   test.beforeEach(async ({ page }) => {
-    await h.goto(page);
-    await h.startNewGame(page);
+    await h.loadGame(page); // membuka game & memulai permainan baru
   });
 
   test('G22: Cek Pohon Bakat Keahlian Arka (#17) & Talents Initial State', async ({ page }) => {

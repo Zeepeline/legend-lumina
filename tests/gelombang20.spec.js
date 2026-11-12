@@ -10,22 +10,22 @@ test.describe('Gelombang 20 - Mendorong Batu Besar, Anjing Kuro, Kamera, Masak B
       const results = {};
 
       // 1. Cek state petDog & filter
-      results.hasPetDogState = 'petDog' in window.S;
-      results.hasFilterOpt = 'filter' in window.OPT;
+      results.hasPetDogState = 'petDog' in S;
+      results.hasFilterOpt = 'filter' in OPT;
 
       // 2. Cek item baru (#31, #502)
-      results.hasLeatherPouch = !!(window.ITEMS && window.ITEMS.leather_pouch);
-      results.hasSeedFlower = !!(window.ITEMS && window.ITEMS.seed_flower);
-      results.hasBouquet = !!(window.ITEMS && window.ITEMS.flower_bouquet);
+      results.hasLeatherPouch = !!(ITEMS && ITEMS.leather_pouch);
+      results.hasSeedFlower = !!(ITEMS && ITEMS.seed_flower);
+      results.hasBouquet = !!(ITEMS && ITEMS.flower_bouquet);
 
       // 3. Cek benih bunga di SEEDS
-      results.hasFlowerSeedInRanch = !!(window.SEEDS && window.SEEDS.seed_flower);
+      results.hasFlowerSeedInRanch = !!(SEEDS && SEEDS.seed_flower);
 
       // 4. Cek fungsi Kamera Foto (#55)
       results.hasPhotoModeFn = typeof window.openPhotoMode === 'function';
 
       // 5. Cek fungsi dorong boulder di scene (#20)
-      results.hasUpdBoulder = typeof window.World.prototype.updBoulder === 'function';
+      results.hasUpdBoulder = typeof World.prototype.updBoulder === 'function';
 
       // 6. Cek filter layar (#93)
       results.hasApplyFilter = typeof window.applyScreenFilter === 'function';
