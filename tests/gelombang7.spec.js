@@ -13,7 +13,7 @@ test('gelombang 7: rumah Arka, perabot, peti', async ({ page }) => {
     const sc = window.__game.sc; sc.pl.setPosition(100, 200); sc.pl.dir = 'up';
     sc.startCarry({ t: 'bed', x: 0, y: 0, v: 0 }, true); sc.updCarry(); const ok = sc.carry.ok; sc.carryKey('a');
     sc.pl.setPosition(160, 230); sc.startCarry({ t: 'box', x: 0, y: 0, v: 0 }, true); sc.updCarry(); const bad = sc.carry.ok; sc.carryKey('b');
-    sc.pl.setPosition(230, 200); sc.pl.dir = 'up'; sc.startCarry({ t: 'box', x: 0, y: 0, v: 0 }, true); sc.updCarry(); sc.carryKey('a');
+    sc.pl.setPosition(175, 140); sc.pl.dir = 'up'; sc.startCarry({ t: 'box', x: 0, y: 0, v: 0 }, true); sc.updCarry(); sc.carryKey('a');
     return { ok, bad, items: S.home.items.map(f => f.t), store: S.home.store };
   });
   console.log(r);

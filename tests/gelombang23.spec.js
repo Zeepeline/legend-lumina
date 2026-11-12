@@ -4,8 +4,7 @@ const h = require('./helpers');
 
 test.describe('Gelombang 23 Features', () => {
   test.beforeEach(async ({ page }) => {
-    await h.goto(page);
-    await h.startNewGame(page);
+    await h.loadGame(page); // membuka game & memulai permainan baru
   });
 
   test('G23: Cek Opsi Layout Skala & Padding Tombol Virtual (#74)', async ({ page }) => {
@@ -21,6 +20,7 @@ test.describe('Gelombang 23 Features', () => {
 
   test('G23: Cek Dapur Rumah Arka (#497) & Pewarna Bunga (#418)', async ({ page }) => {
     const craftHomeCheck = await h.G(page, () => {
+      S.home = null; homeInit(); S.home.owned = 1; homeInit(); // kompor bawaan muncul setelah rumah dimiliki
       const homeItems = S.home?.items || [];
       const hasStove = homeItems.some(i => i.t === 'stove');
       return {
