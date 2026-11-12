@@ -16598,7 +16598,10 @@ Object.assign(World.prototype, {
   syncCams() {
     if (this.passive || this !== G.scene || !this.cameras) return;
     const cam = this.cameras.main;
-    for (const s of REG.values()) { if (!s.sys || !s.cameras) continue; const [dx, dy] = relXY(this, s); s.cameras.main.setScroll(cam.scrollX + dx, cam.scrollY + dy); }
+    for (const s of REG.values()) {
+      if (!s.sys || !s.cameras) continue;
+      const [dx, dy] = relXY(this, s); s.cameras.main.setScroll(cam.scrollX + dx, cam.scrollY + dy);
+    }
     if (!glOn(this.M)) return;
     const gl = this.glScene(), P = WORLD_POS[this.M.id]; if (!gl || !gl.cameras) return;
     gl.cameras.main.setScroll(cam.scrollX + P[0], cam.scrollY + P[1]);

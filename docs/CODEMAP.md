@@ -359,21 +359,25 @@ _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (3)
 _Gelombang A (performa): culling objek di luar layar, entitas jauh "tidur", pengecekan berkala._
 `CULL_PAD` 4 · `.initCull()` 7 · `.updCull()` 22 · `_updEnemyP` 38 · `_updFeelP` 43 · `_updNpcP` 46 · `_updCritP` 52 · `_updHintP` 55
 
-## src/systems/stream.js (64 baris)
+## src/systems/stream.js (65 baris)
 _Gelombang B: tanah per chunk (streaming). Hanya potongan di sekitar layar yang dibuat, sisanya dibuat_
-`GT` 5 · `GTC` 6 · `GOV` 7 · `gtKey()` 8 · `groundOverview()` 9 · `gLayer()` 16 · `.initGround()` 18 · `.gFillView()` 26 · `.gNeed()` 28 · `.gEnsure()` 36 · `.updGround()` 49
+`GT` 5 · `GTC` 6 · `GOV` 7 · `gtKey()` 8 · `groundOverview()` 9 · `gLayer()` 16 · `.initGround()` 18 · `.gFillView()` 27 · `.gNeed()` 29 · `.gEnsure()` 37 · `.updGround()` 50
 
 ## src/systems/openworld.js (53 baris)
 _Dunia terbuka Tahap 1: wilayah tetangga digambar menempel di tepi wilayah aktif (tanah + objek),_
 `OW_BAND` 5 · `.initOpen()` 7 · `.owSeamless()` 35 · `.updCross()` 36
 
-## src/systems/regions.js (96 baris)
+## src/systems/regions.js (94 baris)
 _Dunia satu peta (langkah 1): wilayah di sekitar Arka berjalan BERSAMAAN sebagai scene World pasif_
-`REG_LOAD` 6 · `REG` 7 · `regSeq` 8 · `regionsOn()` 9 · `wposOf()` 10 · `relXY()` 11 · `removeRegions()` 12 · `.initPassive()` 15 · `.updPassive()` 21 · `.updRegions()` 37 · `.addRegion()` 52 · `.regBounds()` 59 · `.owHandoff()` 65 · `_hurtRegion` 87 · `_gotoRegion` 94
+`REG_LOAD` 6 · `REG` 7 · `regSeq` 8 · `regionsOn()` 9 · `wposOf()` 10 · `relXY()` 11 · `removeRegions()` 12 · `.initPassive()` 15 · `.updPassive()` 21 · `.updRegions()` 37 · `.addRegion()` 50 · `.regBounds()` 57 · `.owHandoff()` 63 · `_hurtRegion` 85 · `_gotoRegion` 92
 
-## src/systems/wilds.js (78 baris)
-_Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Dibuat di wilayah aktif saja_
-`WILD_MARGIN` 5 · `WILD_RECTS` 6 · `outdoorRects()` 7 · `inRegion()` 11 · `wildRects()` 12 · `wildTreeKeys()` 38 · `.wildCanopyTex()` 40 · `.initWilds()` 56
+## src/systems/groundlayer.js (49 baris)
+_Lapisan tanah bersama (scene 'GL', selalu paling bawah): tanah SEMUA wilayah luar ruang yang dimuat + hutan pengisi celah,_
+`glOn()` 24 · `.glScene()` 26 · `.syncCams()` 32
+
+## src/systems/wilds.js (85 baris)
+_Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Digambar di lapisan tanah_
+`WILD_MARGIN` 5 · `WILD_RECTS` 6 · `outdoorRects()` 7 · `inRegion()` 11 · `wildRects()` 12 · `wildTreeKeys()` 38
 
 ## src/npc/dialog.js (473 baris)
 _Percakapan NPC, toko, bengkel, penginapan_
