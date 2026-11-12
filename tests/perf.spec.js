@@ -10,10 +10,10 @@ test('performa', async ({ page }) => {
   test.setTimeout(240000);
   await h.boot(page); await h.newGame(page); await h.flush(page);
   const cdp = await page.context().newCDPSession(page); await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
-  await h.G(page, SYS => { OPT.tips = false; const P = window.__perf = { t: {}, n: 0, frames: [] }; const W = World.prototype;
+  await h.G(page, SYS => { OPT.tips = false; window.STREAM_OFF = !!SYS.off; const P = window.__perf = { t: {}, n: 0, frames: [] }; const W = World.prototype;
     for (const k of SYS) { const f = W[k]; if (!f) continue; W[k] = function () { const a = performance.now(); try { return f.apply(this, arguments); } finally { P.t[k] = (P.t[k] || 0) + performance.now() - a; } }; }
     const g = window.__game.sc.game; P.steps = []; let a0 = 0; g.events.on('prestep', () => { a0 = performance.now(); }); g.events.on('postrender', () => { if (a0) P.steps.push(performance.now() - a0); });
-    const sc = window.__game.sc, up = sc.update; sc.update = function () { const a = performance.now(); try { return up.apply(this, arguments); } finally { P.frames.push(performance.now() - a); P.n++; } }; }, SYS);
+    const sc = window.__game.sc, up = sc.update; sc.update = function () { const a = performance.now(); try { return up.apply(this, arguments); } finally { P.frames.push(performance.now() - a); P.n++; } }; }, Object.assign(SYS, { off: !!process.env.NOSTREAM }));
   const out = {};
   for (const [map, x, y, dirs] of [['village', 512, 470, ['left', 'up', 'right', 'down']], ['forest', 420, 300, ['down', 'right', 'up', 'left']], ['kpasar', 700, 700, ['right', 'down', 'left', 'up']], ['deepwood', 700, 420, ['right', 'down', 'left', 'up']]]) {
     await h.goto(page, map, x, y, 'down'); await page.waitForTimeout(800);

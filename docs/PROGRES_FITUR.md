@@ -225,7 +225,7 @@ Simpan otomatis, ekspor/impor save, teleport, peta + penunjuk misi, belajar juru
 | ~~21~~ | ✅ selesai: 11, 241, 420, 496, 208, 495, 83 | Arena Gelombang, Papan Buronan, Batang Logam, Buff Bugar, Tengkorak Bangkit & Landscape Lebar |
 | ~~22~~ | ✅ selesai: 17, 197, 438, 460, 425, 38, 56 | Pohon Bakat Arka, Raja Slime Pecah, Kotak Bekal, Pasar Malam, Lilin Sarang Lebah, Tren Pasar Mingguan, & Perahu Danau Dalam |
 | ~~A~~ | ✅ Performa: culling, entitas jauh tidur, tembok di luar daftar tampilan (CPU/frame Hutan Dalam 14,7 → 5,8 ms) | — |
-| B | Tanah per chunk, atlas tekstur, tabrakan digabung | Fondasi dunia mulus |
+| ~~B~~ | ✅ Tanah per chunk 64 px (masuk wilayah Hutan Dalam 1,9 dtk → 0,19 dtk; memori tanah maks ±26 MB vs ±93 MB), bayangan diindeks (33,6 → 4,5 ms/potongan), tabrakan gua/kolam digabung vertikal. Atlas tidak dikerjakan: Phaser 3.80 sudah menggabungkan 16 tekstur per batch & culling menyisakan ±150 objek | — |
 | C | Pindah wilayah tanpa layar hitam → dunia mulus penuh | — |
 | ~~23~~ | ✅ selesai: 74, 169, 497, 418, 181/183, 442, 40 | Skala & Margin Tombol Kustom, Magnet Koin, Dapur Rumah, Pewarna Bunga, Goblin Taktis, Kurir Kilat, & Balai Lelang |
 | 24+ | sisanya per kategori, P1/P2 dulu | — |

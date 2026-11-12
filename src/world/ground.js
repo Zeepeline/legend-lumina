@@ -2,8 +2,17 @@
 // Generator tanah, tabrakan grid, penyebar pohon
 // ---------------- generator tanah ----------------
 function riverY(R, x) { return R.y + Math.sin(x * R.k) * R.amp + Math.sin(x * R.k * 2.7 + 1) * R.amp * .3; }
-function makeSD(M) {
-  const caps = M.paths || [], discs = M.discs || [], rings = M.rings || [];
+// rect (opsional): hanya bentuk yang dekat potongan itu ikut dihitung. Hasil identik untuk jarak < SD_PAD,
+// dan semua keputusan gambar memakai ambang jauh di bawah itu.
+const SD_PAD = 96;
+function makeSD(M, rect) {
+  let caps = M.paths || [], discs = M.discs || [], rings = M.rings || [];
+  if (rect) {
+    const [X, Y, W, H] = rect, x0 = X - SD_PAD, y0 = Y - SD_PAD, x1 = X + W + SD_PAD, y1 = Y + H + SD_PAD;
+    caps = caps.filter(([a, b, c, d, r]) => Math.max(a, c) + r >= x0 && Math.min(a, c) - r <= x1 && Math.max(b, d) + r >= y0 && Math.min(b, d) - r <= y1);
+    discs = discs.filter(([cx, cy, r]) => cx + r >= x0 && cx - r <= x1 && cy + r >= y0 && cy - r <= y1);
+    rings = rings.filter(([cx, cy, rx, ry, w]) => cx + rx + w >= x0 && cx - rx - w <= x1 && cy + ry + w >= y0 && cy - ry - w <= y1);
+  }
   return (x, y) => {
     let d = 1e9;
     for (const [x1, y1, x2, y2, r] of caps) {
@@ -24,9 +33,11 @@ const GROUND = {
   snow: { g: ['#e2ecf6', '#eaf2fa', '#dae6f2', '#f2f7fc'], edge: '#c4d6e8', path: 'dirt', tuft: '#b4c8de', tuft2: '#ffffff', ice: 1 },
   cave: { g: ['#2c2834', '#332e3c', '#28242e', '#38323f'], path: 'cave' },
 };
-function genGround(M) {
+// Bisa menggambar sebagian peta saja (rect = [x, y, w, h]) untuk tanah per chunk (systems/stream.js).
+// Warna dihitung murni dari posisi, jadi potongan yang bersebelahan menyambung tanpa jahitan.
+function genGround(M, rect) {
   if (M.ground === 'room') return genRoom(M);
-  const W = M.w, H = M.h, img = new ImageData(W, H), D = img.data, sd = makeSD(M), GP = GROUND[M.ground];
+  const W = M.w, H = M.h, [RX, RY, RW, RH] = rect || [0, 0, W, H], img = new ImageData(RW, RH), D = img.data, sd = makeSD(M, rect), GP = GROUND[M.ground];
   const Gc = GP.g.map(h2r), glow = M.glow, cave = GP.path === 'cave';
   const STONE = ['#eae2d6', '#ddd4c9', '#f1ebe1', '#d2c8bd'].map(h2r), MORT = h2r('#b5b8a2'), MORT2 = h2r('#9ea38a');
   const CSTONE = ['#5a5466', '#524c5e', '#625c6e', '#4a4456'].map(h2r), CMORT = h2r('#2a2630');
@@ -42,8 +53,8 @@ function genGround(M) {
     return { m: d2 - d1, id, v: (x - fx) + (y - fy) };
   };
   const water = (i, t, x, y) => { let c = GP.ice ? (t > .82 ? '#e8f8ff' : t > .55 ? '#c4e8f8' : '#a8d8f0') : t > .82 ? '#7cd0f0' : t > .55 ? '#4aa6e0' : '#3a8ed0'; const rp = Math.sin(x * .15 + y * .9) + Math.sin(x * .05 - y * .3) * 1.3; if (rp > 1.85 && t < .8) c = '#a8e8ff'; put(i, h2r(c)); };
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-    const i = (y * W + x) * 4;
+  for (let y = RY; y < RY + RH; y++) for (let x = RX; x < RX + RW; x++) {
+    const i = ((y - RY) * RW + (x - RX)) * 4;
     if (R) {
       const ry = riverY(R, x), dv = Math.abs(y - ry), hw = R.w / 2;
       if (x >= R.bridge[0] && x <= R.bridge[1] && dv < hw + 5) {
@@ -78,14 +89,15 @@ function genGround(M) {
     if (d < 4 && hash(x, y, 4) > .5) k = Math.max(0, k - 1);
     put(i, Gc[k], f);
   }
-  const [c, x] = mk(W, H); x.putImageData(img, 0, 0);
+  const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);
+  const out = (X, Y) => X < RX - 10 || X > RX + RW + 10 || Y < RY - 10 || Y > RY + RH + 10;
   const near = (X, Y) => { if (R && Math.abs(Y - riverY(R, X)) < R.w / 2 + 6) return true; for (const P of ponds) if (pondE(P, X, Y) < 1.15) return true; return false; };
   if (cave) {
-    for (let n = 0; n < W * H / 260; n++) { const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); const d = sd(X, Y); if (d > 2 && d < 60 && hash(n, 3, 22) > .6) { const col = hash(n, 4, 22) > .5 ? '#9a6aff' : '#5ac8ff'; px(x, col, X, Y); px(x, shade(col, .5), X, Y - 1); } else if (d < -4) { px(x, '#6a6476', X, Y); } }
+    for (let n = 0; n < W * H / 260; n++) { const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); if (out(X, Y)) continue; const d = sd(X, Y); if (d > 2 && d < 60 && hash(n, 3, 22) > .6) { const col = hash(n, 4, 22) > .5 ? '#9a6aff' : '#5ac8ff'; px(x, col, X, Y); px(x, shade(col, .5), X, Y - 1); } else if (d < -4) { px(x, '#6a6476', X, Y); } }
     return c;
   }
   for (let n = 0; n < W * H / (M.flowers ? 60 : 90); n++) {
-    const X = Math.floor(hash(n, 1, 21) * W), Y = Math.floor(hash(n, 2, 21) * H);
+    const X = Math.floor(hash(n, 1, 21) * W), Y = Math.floor(hash(n, 2, 21) * H); if (out(X, Y)) continue;
     if (sd(X, Y) < 3 || near(X, Y)) continue;
     const r = hash(n, 3, 21), forest = M.ground === 'forest';
     if (r < (M.flowers ? .55 : .78)) { px(x, GP.tuft, X, Y); px(x, GP.tuft, X - 1, Y - 1); px(x, GP.tuft, X + 1, Y - 1); px(x, GP.tuft2, X, Y - 2); }
@@ -120,7 +132,10 @@ function blockRects(M) {
       if (b && run < 0) run = gx; if (!b && run >= 0) { out.push([run * cs, gy * cs, (gx - run) * cs, cs]); run = -1; }
     }
   }
-  return out;
+  // gabungkan kotak yang persis bertumpuk vertikal (lebih sedikit badan fisika)
+  const key = r => r[0] + ',' + r[2], open = {}, merged = [];
+  for (const r of out) { const k = key(r), o = open[k]; if (o && o[1] + o[3] === r[1]) o[3] += r[3]; else { const n = r.slice(); merged.push(n); open[k] = n; } }
+  return merged;
 }
 function scatter(M, spec) {
   const sd = makeSD(M), out = [], R = M.river, ponds = M.ponds || [];

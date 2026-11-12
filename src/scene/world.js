@@ -8,11 +8,10 @@ class World extends Phaser.Scene {
     if (!HUD) buildHud(ICONS);
     G.scene = this;
     const M = this.M = MAPS[data.map || 'village'];
-    if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
     this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.qArrow = null; this.qStar = null; this.qGoal = null; this.iHint = null; this.eBar = null; this.miniFor = null; if (!G.title) { attrInit(); updToolBtns(); } this.secrets = []; this.fogT = 0; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
-    this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
+    this.initGround(data); // tanah per chunk (systems/stream.js)
     this.walls = this.physics.add.staticGroup();
     this.shG = this.add.graphics().setDepth(-9e5);
     this.aimG = this.add.graphics().setDepth(9e4);
@@ -819,7 +818,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull();
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       // Akumulasi waktu bermain riil (Fitur #25)

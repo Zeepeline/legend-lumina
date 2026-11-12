@@ -4,10 +4,12 @@
 const MINI = {};
 const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja'], ['snow', 'Puncak Beku'], ['lake', 'Danau Cermin'], ['road', 'Jalan Raya Lama'], ['deepwood', 'Hutan Dalam'], ['river', 'Jalur Sungai Senja'], ['kgate', 'Gerbang Kota Lumina'], ['kpasar', 'Distrik Pasar'], ['kakademi', 'Distrik Akademi'], ['kbawah', 'Kota Bawah']];
 function buildMini(sc, M, s) {
-  const key = M.id + '_' + s.toFixed(4); if (MINI[key]) return MINI[key];
+  const ov = !M.indoor && typeof groundOverview === 'function' ? groundOverview(M) : null;
+  const key = M.id + '_' + s.toFixed(4) + '_' + (ov ? ov.v : 0); if (MINI[key]) return MINI[key];
+  for (const k in MINI) if (k.startsWith(M.id + '_' + s.toFixed(4) + '_')) delete MINI[k];
   const w = Math.round(M.w * s), h = Math.round(M.h * s), c = document.createElement('canvas'); c.width = w; c.height = h;
   const x = c.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
-  x.drawImage(sc.textures.get('gs_' + M.id).getSourceImage(), 0, 0, w, h);
+  x.drawImage(ov ? ov.c : sc.textures.get('gs_' + M.id).getSourceImage(), 0, 0, w, h);
   const list = mapObjects(M).slice().sort((a, b) => a[2] - b[2]);
   for (const o of list) {
     const d = OBJ[o[0]]; const tex = sc.textures.get(d.key); const f = tex.has(0) ? tex.get(0) : tex.get(); const src = tex.getSourceImage();

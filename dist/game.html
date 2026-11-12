@@ -4167,8 +4167,17 @@ const MAPS = {};
 // Generator tanah, tabrakan grid, penyebar pohon
 // ---------------- generator tanah ----------------
 function riverY(R, x) { return R.y + Math.sin(x * R.k) * R.amp + Math.sin(x * R.k * 2.7 + 1) * R.amp * .3; }
-function makeSD(M) {
-  const caps = M.paths || [], discs = M.discs || [], rings = M.rings || [];
+// rect (opsional): hanya bentuk yang dekat potongan itu ikut dihitung. Hasil identik untuk jarak < SD_PAD,
+// dan semua keputusan gambar memakai ambang jauh di bawah itu.
+const SD_PAD = 96;
+function makeSD(M, rect) {
+  let caps = M.paths || [], discs = M.discs || [], rings = M.rings || [];
+  if (rect) {
+    const [X, Y, W, H] = rect, x0 = X - SD_PAD, y0 = Y - SD_PAD, x1 = X + W + SD_PAD, y1 = Y + H + SD_PAD;
+    caps = caps.filter(([a, b, c, d, r]) => Math.max(a, c) + r >= x0 && Math.min(a, c) - r <= x1 && Math.max(b, d) + r >= y0 && Math.min(b, d) - r <= y1);
+    discs = discs.filter(([cx, cy, r]) => cx + r >= x0 && cx - r <= x1 && cy + r >= y0 && cy - r <= y1);
+    rings = rings.filter(([cx, cy, rx, ry, w]) => cx + rx + w >= x0 && cx - rx - w <= x1 && cy + ry + w >= y0 && cy - ry - w <= y1);
+  }
   return (x, y) => {
     let d = 1e9;
     for (const [x1, y1, x2, y2, r] of caps) {
@@ -4189,9 +4198,11 @@ const GROUND = {
   snow: { g: ['#e2ecf6', '#eaf2fa', '#dae6f2', '#f2f7fc'], edge: '#c4d6e8', path: 'dirt', tuft: '#b4c8de', tuft2: '#ffffff', ice: 1 },
   cave: { g: ['#2c2834', '#332e3c', '#28242e', '#38323f'], path: 'cave' },
 };
-function genGround(M) {
+// Bisa menggambar sebagian peta saja (rect = [x, y, w, h]) untuk tanah per chunk (systems/stream.js).
+// Warna dihitung murni dari posisi, jadi potongan yang bersebelahan menyambung tanpa jahitan.
+function genGround(M, rect) {
   if (M.ground === 'room') return genRoom(M);
-  const W = M.w, H = M.h, img = new ImageData(W, H), D = img.data, sd = makeSD(M), GP = GROUND[M.ground];
+  const W = M.w, H = M.h, [RX, RY, RW, RH] = rect || [0, 0, W, H], img = new ImageData(RW, RH), D = img.data, sd = makeSD(M, rect), GP = GROUND[M.ground];
   const Gc = GP.g.map(h2r), glow = M.glow, cave = GP.path === 'cave';
   const STONE = ['#eae2d6', '#ddd4c9', '#f1ebe1', '#d2c8bd'].map(h2r), MORT = h2r('#b5b8a2'), MORT2 = h2r('#9ea38a');
   const CSTONE = ['#5a5466', '#524c5e', '#625c6e', '#4a4456'].map(h2r), CMORT = h2r('#2a2630');
@@ -4207,8 +4218,8 @@ function genGround(M) {
     return { m: d2 - d1, id, v: (x - fx) + (y - fy) };
   };
   const water = (i, t, x, y) => { let c = GP.ice ? (t > .82 ? '#e8f8ff' : t > .55 ? '#c4e8f8' : '#a8d8f0') : t > .82 ? '#7cd0f0' : t > .55 ? '#4aa6e0' : '#3a8ed0'; const rp = Math.sin(x * .15 + y * .9) + Math.sin(x * .05 - y * .3) * 1.3; if (rp > 1.85 && t < .8) c = '#a8e8ff'; put(i, h2r(c)); };
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-    const i = (y * W + x) * 4;
+  for (let y = RY; y < RY + RH; y++) for (let x = RX; x < RX + RW; x++) {
+    const i = ((y - RY) * RW + (x - RX)) * 4;
     if (R) {
       const ry = riverY(R, x), dv = Math.abs(y - ry), hw = R.w / 2;
       if (x >= R.bridge[0] && x <= R.bridge[1] && dv < hw + 5) {
@@ -4243,14 +4254,15 @@ function genGround(M) {
     if (d < 4 && hash(x, y, 4) > .5) k = Math.max(0, k - 1);
     put(i, Gc[k], f);
   }
-  const [c, x] = mk(W, H); x.putImageData(img, 0, 0);
+  const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);
+  const out = (X, Y) => X < RX - 10 || X > RX + RW + 10 || Y < RY - 10 || Y > RY + RH + 10;
   const near = (X, Y) => { if (R && Math.abs(Y - riverY(R, X)) < R.w / 2 + 6) return true; for (const P of ponds) if (pondE(P, X, Y) < 1.15) return true; return false; };
   if (cave) {
-    for (let n = 0; n < W * H / 260; n++) { const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); const d = sd(X, Y); if (d > 2 && d < 60 && hash(n, 3, 22) > .6) { const col = hash(n, 4, 22) > .5 ? '#9a6aff' : '#5ac8ff'; px(x, col, X, Y); px(x, shade(col, .5), X, Y - 1); } else if (d < -4) { px(x, '#6a6476', X, Y); } }
+    for (let n = 0; n < W * H / 260; n++) { const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); if (out(X, Y)) continue; const d = sd(X, Y); if (d > 2 && d < 60 && hash(n, 3, 22) > .6) { const col = hash(n, 4, 22) > .5 ? '#9a6aff' : '#5ac8ff'; px(x, col, X, Y); px(x, shade(col, .5), X, Y - 1); } else if (d < -4) { px(x, '#6a6476', X, Y); } }
     return c;
   }
   for (let n = 0; n < W * H / (M.flowers ? 60 : 90); n++) {
-    const X = Math.floor(hash(n, 1, 21) * W), Y = Math.floor(hash(n, 2, 21) * H);
+    const X = Math.floor(hash(n, 1, 21) * W), Y = Math.floor(hash(n, 2, 21) * H); if (out(X, Y)) continue;
     if (sd(X, Y) < 3 || near(X, Y)) continue;
     const r = hash(n, 3, 21), forest = M.ground === 'forest';
     if (r < (M.flowers ? .55 : .78)) { px(x, GP.tuft, X, Y); px(x, GP.tuft, X - 1, Y - 1); px(x, GP.tuft, X + 1, Y - 1); px(x, GP.tuft2, X, Y - 2); }
@@ -4285,7 +4297,10 @@ function blockRects(M) {
       if (b && run < 0) run = gx; if (!b && run >= 0) { out.push([run * cs, gy * cs, (gx - run) * cs, cs]); run = -1; }
     }
   }
-  return out;
+  // gabungkan kotak yang persis bertumpuk vertikal (lebih sedikit badan fisika)
+  const key = r => r[0] + ',' + r[2], open = {}, merged = [];
+  for (const r of out) { const k = key(r), o = open[k]; if (o && o[1] + o[3] === r[1]) o[3] += r[3]; else { const n = r.slice(); merged.push(n); open[k] = n; } }
+  return merged;
 }
 function scatter(M, spec) {
   const sd = makeSD(M), out = [], R = M.river, ponds = M.ponds || [];
@@ -5016,7 +5031,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.23.1';
+const GAME_VERSION = '1.24.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
@@ -5565,16 +5580,29 @@ function achCheck(sc) {
 'use strict';
 // Panggang bayangan objek ke tekstur tanah
 const SHC = {};
-function bakeGround(sc, M) {
-  const g = genGround(M); if (M.indoor) return g;
-  const [c, x] = mk(M.w, M.h); x.drawImage(g, 0, 0);
+function bakeGround(sc, M, rect) {
+  const g = genGround(M, rect); if (M.indoor) return g;
+  const [RX, RY, RW, RH] = rect || [0, 0, M.w, M.h];
+  const c = g, x = c.getContext('2d'); x.setTransform(1, 0, 0, 1, -RX, -RY); // gambar langsung di kanvas tanah (tanpa salin)
   x.globalAlpha = M.dark ? .55 : .36;
+  const I = shadowIndex(sc, M), ids = new Set();
+  for (let j = Math.floor(RY / SHB); j <= Math.floor((RY + RH - 1) / SHB); j++) for (let i = Math.floor(RX / SHB); i <= Math.floor((RX + RW - 1) / SHB); i++) for (const n of I.grid.get(i + ',' + j) || []) ids.add(n);
+  for (const n of [...ids].sort((a, b) => a - b)) { const e = I.list[n]; if (e[2] < RX || e[0] > RX + RW || e[3] < RY || e[1] > RY + RH) continue; x.drawImage(e[4].c, e[0], e[1]); }
+  x.globalAlpha = 1; x.setTransform(1, 0, 0, 1, 0, 0); return c;
+}
+// indeks bayangan per kotak SHB piksel: setiap potongan tanah hanya menggambar bayangan yang menyentuhnya
+const SHB = 128;
+function shadowIndex(sc, M) {
+  if (M._shIdx) return M._shIdx;
+  const list = [], grid = new Map();
   for (const o of mapObjects(M).slice().sort((a, b) => a[2] - b[2])) {
     const d = OBJ[o[0]]; if (!d.sh) continue;
     let C = SHC[d.key]; if (!C) { const tex = sc.textures.get(d.key), f = tex.has(0) ? tex.get(0) : tex.get(); C = SHC[d.key] = shadowCanvas(tex.getSourceImage(), f.cutX, f.cutY, f.cutWidth, f.cutHeight); C.w = f.cutWidth; }
-    x.drawImage(C.c, Math.round(o[1] - C.w / 2 - C.pad), Math.round(o[2] + 3 - C.shH - C.pad));
+    const x0 = Math.round(o[1] - C.w / 2 - C.pad), y0 = Math.round(o[2] + 3 - C.shH - C.pad), n = list.length;
+    list.push([x0, y0, x0 + C.c.width, y0 + C.c.height, C]);
+    for (let j = Math.floor(y0 / SHB); j <= Math.floor((y0 + C.c.height) / SHB); j++) for (let i = Math.floor(x0 / SHB); i <= Math.floor((x0 + C.c.width) / SHB); i++) { const k = i + ',' + j; let b = grid.get(k); if (!b) grid.set(k, b = []); b.push(n); }
   }
-  x.globalAlpha = 1; return c;
+  return M._shIdx = { list, grid };
 }
 
 'use strict';
@@ -5680,11 +5708,10 @@ class World extends Phaser.Scene {
     if (!HUD) buildHud(ICONS);
     G.scene = this;
     const M = this.M = MAPS[data.map || 'village'];
-    if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M));
     S.seen[M.id] = 1;
     this.trans = false; this.t = 0; this.bossOn = false; this.crystal = null; this.dt = 1 / 60; this.dark = null; this.bossE = null; this.barrier = null; this.dustT = 0; this.regT = 0; this.night = null; this.glows = null; this.holdA = 0; this.dashCd = 0; this.trail = []; this.digT = rnd(35, 55); this.fishing = false; this.garden = null; this.boulder = null; this.gateS = null; this.mochi = null; this.charged = false; this.bMoving = false; this.curBoss = null; this.torchS = null; this.warpS = null; this.lanS = null; this.sealS = null; this.slideWall = null; this.slideS = null; this.slideWave = null; this.qArrow = null; this.qStar = null; this.qGoal = null; this.iHint = null; this.eBar = null; this.miniFor = null; if (!G.title) { attrInit(); updToolBtns(); } this.secrets = []; this.fogT = 0; this.iceG = null; this.iceWall = null; this.hsT = 0; this.pst = {}; this.pstT = {}; if (this.physics.world.isPaused) this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1;
     this.physics.world.setBounds(0, 0, M.w, M.h);
-    this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6);
+    this.initGround(data); // tanah per chunk (systems/stream.js)
     this.walls = this.physics.add.staticGroup();
     this.shG = this.add.graphics().setDepth(-9e5);
     this.aimG = this.add.graphics().setDepth(9e4);
@@ -6491,7 +6518,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull();
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       // Akumulasi waktu bermain riil (Fitur #25)
@@ -16036,6 +16063,61 @@ const _updHintP = World.prototype.updInteractHint;
 World.prototype.updInteractHint = function () { this.hintT = (this.hintT || 0) - (this.dt || .016); if (this.hintT > 0) return; this.hintT = .1; return _updHintP.call(this); };
 
 'use strict';
+// Gelombang B: tanah per chunk (streaming). Hanya potongan di sekitar layar yang dibuat, sisanya dibuat
+// bertahap tiap frame dengan jatah waktu, potongan jauh dibuang (LRU). genGround/bakeGround menggambar
+// per potongan dengan hasil identik piksel-per-piksel dengan versi utuh. Fondasi dunia mulus.
+const GT = 64, GT_MAX = 1100, GT_BUDGET = 4, GT_MARGIN = 2; // ukuran potongan, maks potongan di memori, ms/frame, cincin potongan di luar layar
+const GTC = new Map(); // kunci tekstur → waktu terakhir dipakai (LRU, lintas peta)
+const GOV = {};        // ringkasan ¼ ukuran per peta untuk peta besar & peta mini
+function gtKey(M, i, j) { return 'gt:' + M.id + ':' + i + ':' + j; }
+function groundOverview(M) {
+  let o = GOV[M.id]; if (o) return o;
+  const c = document.createElement('canvas'); c.width = Math.ceil(M.w / 4); c.height = Math.ceil(M.h / 4);
+  const x = c.getContext('2d'); x.fillStyle = (GROUND[M.ground] && GROUND[M.ground].g && GROUND[M.ground].g[0]) || '#6a9a4e'; x.fillRect(0, 0, c.width, c.height);
+  return GOV[M.id] = { c, v: 0 };
+}
+Object.assign(World.prototype, {
+  initGround(data) {
+    const M = this.M; this.gImgs = new Map(); this.gStream = !M.indoor && !G.title && !window.STREAM_OFF; // STREAM_OFF: hanya untuk tes perbandingan
+    if (!this.gStream) { if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M)); this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6); return; }
+    this.gCols = Math.ceil(M.w / GT); this.gRows = Math.ceil(M.h / GT);
+    // potongan di sekitar titik masuk dibuat langsung (tanpa jatah waktu) agar layar pertama sudah lengkap
+    const x = data.x || S.x, y = data.y || S.y;
+    for (const [i, j] of this.gNeed(x - VW / 2, y - VH / 2, 0)) this.gEnsure(i, j, true);
+  },
+  // daftar potongan yang dibutuhkan untuk tampilan ini, terdekat dulu
+  gNeed(vx, vy, ring) {
+    const i0 = Math.max(0, Math.floor(vx / GT) - ring), j0 = Math.max(0, Math.floor(vy / GT) - ring);
+    const i1 = Math.min(this.gCols - 1, Math.floor((vx + VW) / GT) + ring), j1 = Math.min(this.gRows - 1, Math.floor((vy + VH) / GT) + ring);
+    const cx = (vx + VW / 2) / GT, cy = (vy + VH / 2) / GT, L = [];
+    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) L.push([i, j, Math.hypot(i + .5 - cx, j + .5 - cy)]);
+    return L.sort((a, b) => a[2] - b[2]);
+  },
+  gEnsure(i, j, force) {
+    const M = this.M, k = gtKey(M, i, j);
+    if (!this.textures.exists(k)) {
+      if (!force && this.gSpent >= GT_BUDGET) return false;
+      const a = performance.now(), w = Math.min(GT, M.w - i * GT), h = Math.min(GT, M.h - j * GT);
+      const c = bakeGround(this, M, [i * GT, j * GT, w, h]); this.textures.addCanvas(k, c);
+      const o = groundOverview(M); o.c.getContext('2d').drawImage(c, i * GT / 4, j * GT / 4, w / 4, h / 4); o.v++;
+      this.gSpent += performance.now() - a; this.gBaked = (this.gBaked || 0) + 1;
+    }
+    GTC.delete(k); GTC.set(k, this.t || 0);
+    if (!this.gImgs.has(k)) this.gImgs.set(k, this.add.image(i * GT, j * GT, k).setOrigin(0).setDepth(-1e6));
+    return true;
+  },
+  updGround() {
+    if (!this.gStream) return; this.gSpent = 0; const v = this.cameras.main.worldView;
+    const need = this.gNeed(v.x, v.y, GT_MARGIN), want = new Set();
+    for (const [i, j] of need) { want.add(gtKey(this.M, i, j)); const inView = i * GT < v.right && (i + 1) * GT > v.x && j * GT < v.bottom && (j + 1) * GT > v.y; this.gEnsure(i, j, inView); }
+    // gambar potongan jauh dilepas dari layar (teksturnya tetap disimpan sampai LRU penuh)
+    for (const [k, img] of this.gImgs) if (!want.has(k)) { const [, , i, j] = k.split(':'); if (Math.abs(i * GT + GT / 2 - (v.x + VW / 2)) > VW + GT * 3 || Math.abs(j * GT + GT / 2 - (v.y + VH / 2)) > VH + GT * 3) { img.destroy(); this.gImgs.delete(k); } }
+    // LRU: buang tekstur tertua yang tidak sedang ditampilkan
+    if (GTC.size > GT_MAX) for (const k of GTC.keys()) { if (GTC.size <= GT_MAX) break; if (this.gImgs.has(k)) continue; GTC.delete(k); if (this.textures.exists(k)) this.textures.remove(k); }
+  },
+});
+
+'use strict';
 // Percakapan NPC, toko, bengkel, penginapan
 Object.assign(World.prototype, {
   npcHasQuest(id) {
@@ -17182,10 +17264,12 @@ async function openQuests() {
 const MINI = {};
 const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja'], ['snow', 'Puncak Beku'], ['lake', 'Danau Cermin'], ['road', 'Jalan Raya Lama'], ['deepwood', 'Hutan Dalam'], ['river', 'Jalur Sungai Senja'], ['kgate', 'Gerbang Kota Lumina'], ['kpasar', 'Distrik Pasar'], ['kakademi', 'Distrik Akademi'], ['kbawah', 'Kota Bawah']];
 function buildMini(sc, M, s) {
-  const key = M.id + '_' + s.toFixed(4); if (MINI[key]) return MINI[key];
+  const ov = !M.indoor && typeof groundOverview === 'function' ? groundOverview(M) : null;
+  const key = M.id + '_' + s.toFixed(4) + '_' + (ov ? ov.v : 0); if (MINI[key]) return MINI[key];
+  for (const k in MINI) if (k.startsWith(M.id + '_' + s.toFixed(4) + '_')) delete MINI[k];
   const w = Math.round(M.w * s), h = Math.round(M.h * s), c = document.createElement('canvas'); c.width = w; c.height = h;
   const x = c.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
-  x.drawImage(sc.textures.get('gs_' + M.id).getSourceImage(), 0, 0, w, h);
+  x.drawImage(ov ? ov.c : sc.textures.get('gs_' + M.id).getSourceImage(), 0, 0, w, h);
   const list = mapObjects(M).slice().sort((a, b) => a[2] - b[2]);
   for (const o of list) {
     const d = OBJ[o[0]]; const tex = sc.textures.get(d.key); const f = tex.has(0) ? tex.get(0) : tex.get(); const src = tex.getSourceImage();
