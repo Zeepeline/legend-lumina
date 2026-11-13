@@ -91,9 +91,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 200 · obj `cryst` 203 · obj `lamp` 206 · obj `viewpoint` 209 · obj `lumina_shard` 243
 
-## src/world/ground.js (277 baris)
+## src/world/ground.js (279 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `genGround()` 90 · `blockRects()` 178 · `scatter()` 194 · `openSides()` 227 · `borderTrees()` 240 · `ringObjects()` 256 · `mapObjects()` 261 · `mapWalls()` 265
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `genGround()` 90 · `blockRects()` 180 · `scatter()` 196 · `openSides()` 229 · `borderTrees()` 242 · `ringObjects()` 258 · `mapObjects()` 263 · `mapWalls()` 267
 
 ## src/world/maps/village.js (78 baris)
 _Peta: Desa Lumina_

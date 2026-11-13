@@ -23,7 +23,7 @@ Kabut rawa, wisp malam, pedagang keliling, banner perbatasan, posisi kucing/Moch
 
 ## B. Visual & kenyamanan
 
-### [ ] T6. Garis tipis di perbatasan dua wilayah bertanah sama
+### [x] T6. Garis tipis di perbatasan dua wilayah bertanah sama
 - File: `src/world/ground.js`, baris `const n = vnoise(x, y, 26, 1) * .55 + vnoise(x, y, 8, 2) * .45;` (±baris 138).
 - Penyebab: noise rumput memakai koordinat lokal → pola di tepi dua wilayah tidak menyambung.
 - Langkah: di awal `genGround` tambahkan `const GX = (typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id]) ? WORLD_POS[M.id][0] : 0, GY = ...[1] : 0;` lalu ganti **hanya baris itu** menjadi `vnoise(x + GX, y + GY, 26, 1) * .55 + vnoise(x + GX, y + GY, 8, 2) * .45`.
