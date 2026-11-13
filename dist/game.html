@@ -5282,8 +5282,11 @@ MAPS.village = {
   ],
   // kandang ternak Arka (fitur #47): pagar dengan gerbang di sisi barat, menghadap jalan
   ranch: { x: 664, y: 298, w: 128, h: 50, gate: [308, 334] },
-  walls: [[664, 298, 128, 6], [664, 342, 128, 6], [786, 298, 6, 50], [664, 298, 6, 10], [664, 334, 6, 14], [0, 0, 1024, 116], [0, 0, 46, 560], [0, 620, 46, 92], [978, 0, 46, 238], [978, 296, 46, 416], [0, 676, 478, 40], [546, 676, 478, 40],
-    [342, 552, 122, 50], [562, 552, 122, 50]],
+  walls: [
+    [664, 298, 128, 6], [664, 342, 128, 6], [786, 298, 6, 50], [664, 298, 6, 10], [664, 334, 6, 14],
+    [0, 0, 1024, 116], [0, 0, 46, 560], [0, 620, 46, 92], [978, 0, 46, 238], [978, 296, 46, 416],
+    [0, 676, 478, 40], [546, 676, 478, 40], [342, 552, 122, 50], [562, 552, 122, 50]
+  ],
   border: { top: 120, bottom: 670, left: 44, right: 980, gap: [474, 550], gapR: [228, 304], gapL: [560, 620], types: ['treeAd', 'treeBd', 'pined'] },
   exits: [{ x: 0, y: 560, w: 12, h: 60, to: 'lake', tx: 1350, ty: 500, dir: 'left', label: 'Danau Cermin' },
     { x: 474, y: 700, w: 76, h: 30, to: 'forest', tx: 640, ty: 44, dir: 'down', label: 'Hutan Lumina' },
@@ -6519,6 +6522,7 @@ const BESTIARY_TEXT = {
     tip: 'Jadikan dukun target utama agar ia tidak sempat menyembuhkan kawanannya.',
   },
 };
+
 
 'use strict';
 // Teks misi, tujuan misi, jurus, pencapaian
@@ -9701,7 +9705,11 @@ Object.assign(World.prototype, {
     updHud();
     sfx('chest');
     popWorld(ox, oy - 22, '🌸 Anggrek Biru Air (+35 MP)!', 'crit');
-    await say('Kamu memetik bunga anggrek biru air yang mekar segar di sela batu kali berlumut.\nAroma semerbaknya menyerap kesegaran air sungai, mampu menjernihkan pikiran dan meredakan lelah (+1 Anggrek Biru Air)!', 'Anggrek Sungai');
+    await say(
+      'Kamu memetik bunga anggrek biru air yang mekar segar di sela batu kali berlumut.\n' +
+      'Aroma semerbaknya menyerap kesegaran air sungai, mampu menjernihkan pikiran dan meredakan lelah (+1 Anggrek Biru Air)!',
+      'Anggrek Sungai'
+    );
 
     this._harvestingOrchid = false;
     G.lock--;
@@ -10224,7 +10232,8 @@ Object.assign(World.prototype, {
     await say("Lentera Jalan Kota Menyala", [
       "Api menyala terang benderang di dalam kubah kaca lentera, menebarkan pendaran cahaya oranye keemasan hangat ke seluruh penjuru jalan!",
       "Cahaya pelindung malam mengusir bayang-bayang kelam (+35 HP, +35 MP & DEF 3 menit)!",
-      "Paman Gani tersenyum lega sambil menyeka dahi: \"Terima kasih banyak atas bantuanmu, Arka! Berkatmu, para pejalan malam tidak akan tersesat!\"" + bonusReward
+      "Paman Gani tersenyum lega sambil menyeka dahi: " +
+      "\"Terima kasih banyak atas bantuanmu, Arka! Berkatmu, para pejalan malam tidak akan tersesat!\"" + bonusReward
     ]);
   },
   async interactSkewerCamp(cx, cy) {
@@ -10941,7 +10950,8 @@ Object.assign(World.prototype, {
     const isNight = (typeof isNightTime === "function") ? isNightTime() : false;
     let loreMsg = "";
     if (isNight) {
-      loreMsg = "\"Huuu... Matahari terbenam bukan tanda kegelapan menang, Arka. Di danau dan sungai, ikan-ikan rembulan bercahaya menyongsong petualang yang terjaga.\"";
+      loreMsg = "\"Huuu... Matahari terbenam bukan tanda kegelapan menang, Arka. " +
+        "Di danau dan sungai, ikan-ikan rembulan bercahaya menyongsong petualang yang terjaga.\"";
     } else {
       loreMsg = "\"Huuu... Manfaatkan terang siang untuk melangkah jauh. Namun jangan lupa kembali ke perapian hangat saat bintang fajar mulai bertebaran.\"";
     }
@@ -12638,7 +12648,8 @@ Object.assign(World.prototype, {
       await say("Balapan Berakhir", [
         winnerName + " berhasil menyentuh garis jembatan hilir terlebih dahulu!",
         "Perahu pilihanmu meluncur dengan gagah meski finish di urutan belakang.",
-        "Kimi tersenyum ramah: \"Jangan sedih Kak Arka, balapannya seru sekali! Nih, makan sebutir Apel Segar manis dari kebun paman! Kapan-kapan kita balapan lagi ya!\""
+        "Kimi tersenyum ramah: \"Jangan sedih Kak Arka, balapannya seru sekali! " +
+        "Nih, makan sebutir Apel Segar manis dari kebun paman! Kapan-kapan kita balapan lagi ya!\""
       ]);
     }
   },

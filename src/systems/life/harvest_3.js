@@ -18,7 +18,11 @@ Object.assign(World.prototype, {
     updHud();
     sfx('chest');
     popWorld(ox, oy - 22, '🌸 Anggrek Biru Air (+35 MP)!', 'crit');
-    await say('Kamu memetik bunga anggrek biru air yang mekar segar di sela batu kali berlumut.\nAroma semerbaknya menyerap kesegaran air sungai, mampu menjernihkan pikiran dan meredakan lelah (+1 Anggrek Biru Air)!', 'Anggrek Sungai');
+    await say(
+      'Kamu memetik bunga anggrek biru air yang mekar segar di sela batu kali berlumut.\n' +
+      'Aroma semerbaknya menyerap kesegaran air sungai, mampu menjernihkan pikiran dan meredakan lelah (+1 Anggrek Biru Air)!',
+      'Anggrek Sungai'
+    );
 
     this._harvestingOrchid = false;
     G.lock--;

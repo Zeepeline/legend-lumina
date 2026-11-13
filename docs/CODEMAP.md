@@ -95,7 +95,7 @@ obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 8
 _Generator tanah, tabrakan grid, penyebar pohon_
 `riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `genGround()` 90 · `blockRects()` 180 · `scatter()` 196 · `openSides()` 229 · `borderTrees()` 242 · `ringObjects()` 258 · `mapObjects()` 263 · `mapWalls()` 267
 
-## src/world/maps/village.js (78 baris)
+## src/world/maps/village.js (81 baris)
 _Peta: Desa Lumina_
 
 
@@ -151,7 +151,7 @@ _Data item & resep tempa_
 _Data musuh & proyektil_
 `ENEMY` 5 · `PROJ` 48 · `BOSS_AI` 49 · `BEAST` 50
 
-## src/data/bestiary_text.js (157 baris)
+## src/data/bestiary_text.js (158 baris)
 _Teks bestiari per musuh (id = kunci ENEMY): habitat & tips melawan. Dipasang ke layar Bestiari oleh sesi besar._
 `BESTIARY_TEXT` 3
 
@@ -243,7 +243,7 @@ _Objek interaktif dunia: harvest — isi: lihat docs/CODEMAP.md_
 _Objek interaktif dunia: harvest — isi: lihat docs/CODEMAP.md_
 `.harvestRiverStone()` 4 · `.harvestSnowChrysanthemum()` 69 · `.roastHarvest()` 173 · `.harvestCaveStalactite()` 217 · `.harvestFrostFlower()` 262 · `.harvestCoffeeShrub()` 310 · `.brewCharcoalCoffee()` 333
 
-## src/systems/life/harvest_3.js (27 baris)
+## src/systems/life/harvest_3.js (31 baris)
 _Objek interaktif dunia: harvest — isi: lihat docs/CODEMAP.md_
 `.harvestRiverOrchid()` 4
 
@@ -251,17 +251,17 @@ _Objek interaktif dunia: harvest — isi: lihat docs/CODEMAP.md_
 _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
 `.interactClimberLedge()` 4 · `.interactMangroveHollow()` 91 · `.interactMeadowWillow()` 178 · `.interactWishingTree()` 237
 
-## src/systems/life/interact_2.js (338 baris)
+## src/systems/life/interact_2.js (339 baris)
 _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
-`.interactBarberChair()` 4 · `.interactStreetGaslamp()` 96 · `.interactSkewerCamp()` 178 · `.interactBirdBath()` 252
+`.interactBarberChair()` 4 · `.interactStreetGaslamp()` 96 · `.interactSkewerCamp()` 179 · `.interactBirdBath()` 253
 
 ## src/systems/life/interact_3.js (383 baris)
 _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
 `.interactStonePestle()` 4 · `.interactCheeseBarrel()` 79 · `.interactPottersWheel()` 146 · `.interactWoodenLoom()` 214 · `.interactBirdHouse()` 289
 
-## src/systems/life/interact_4.js (333 baris)
+## src/systems/life/interact_4.js (334 baris)
 _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
-`.interactStreetViolin()` 4 · `.interactWiseOwl()` 103 · `.interactClockworkTower()` 182 · `.interactTempleKoiPond()` 248
+`.interactStreetViolin()` 4 · `.interactWiseOwl()` 103 · `.interactClockworkTower()` 183 · `.interactTempleKoiPond()` 249
 
 ## src/systems/life/interact_5.js (387 baris)
 _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
@@ -279,7 +279,7 @@ _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
 _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
 `.interactLighthouse()` 4
 
-## src/systems/life/minigame_1.js (359 baris)
+## src/systems/life/minigame_1.js (360 baris)
 _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 `.playHighStriker()` 4 · `.playAntiqueMusicBox()` 165 · `.playCanalBoatRace()` 242
 

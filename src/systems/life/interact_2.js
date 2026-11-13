@@ -172,7 +172,8 @@ Object.assign(World.prototype, {
     await say("Lentera Jalan Kota Menyala", [
       "Api menyala terang benderang di dalam kubah kaca lentera, menebarkan pendaran cahaya oranye keemasan hangat ke seluruh penjuru jalan!",
       "Cahaya pelindung malam mengusir bayang-bayang kelam (+35 HP, +35 MP & DEF 3 menit)!",
-      "Paman Gani tersenyum lega sambil menyeka dahi: \"Terima kasih banyak atas bantuanmu, Arka! Berkatmu, para pejalan malam tidak akan tersesat!\"" + bonusReward
+      "Paman Gani tersenyum lega sambil menyeka dahi: " +
+      "\"Terima kasih banyak atas bantuanmu, Arka! Berkatmu, para pejalan malam tidak akan tersesat!\"" + bonusReward
     ]);
   },
   async interactSkewerCamp(cx, cy) {

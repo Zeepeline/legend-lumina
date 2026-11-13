@@ -634,37 +634,37 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - `hab` = di mana biasa ditemui (1 kalimat; cek peta dengan `grep -rn "'goblin_shaman'" src/world/maps/`). `tip` = cara melawan yang sesuai `ai` (1 kalimat, mis. hop → "tunggu ia mendarat lalu serang").
 - Tanpa spoiler cerita. Cek: `npm run check`; konsol `BESTIARY_TEXT.goblin_shaman.tip`.
 
-### [ ] T112. **Pecah baris > 160 karakter di `src/systems/achievements.js`**
+### [x] T112. **Pecah baris > 160 karakter di `src/systems/achievements.js`**
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/systems/achievements.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.
 
-### [ ] T113. **Pecah baris > 160 karakter di `src/systems/life/harvest_3.js`**
+### [x] T113. **Pecah baris > 160 karakter di `src/systems/life/harvest_3.js`**
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/systems/life/harvest_3.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.
 
-### [ ] T114. **Pecah baris > 160 karakter di `src/systems/life/interact_2.js`**
+### [x] T114. **Pecah baris > 160 karakter di `src/systems/life/interact_2.js`**
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/systems/life/interact_2.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.
 
-### [ ] T115. **Pecah baris > 160 karakter di `src/systems/life/interact_4.js`**
+### [x] T115. **Pecah baris > 160 karakter di `src/systems/life/interact_4.js`**
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/systems/life/interact_4.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.
 
-### [ ] T116. **Pecah baris > 160 karakter di `src/systems/life/minigame_1.js`**
+### [x] T116. **Pecah baris > 160 karakter di `src/systems/life/minigame_1.js`**
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/systems/life/minigame_1.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.
 
-### [ ] T117. **Pecah baris > 160 karakter di `src/world/maps/cave.js`**
+### [x] T117. **Pecah baris > 160 karakter di `src/world/maps/cave.js`**
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/world/maps/cave.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.
 
-### [ ] T118. **Pecah baris > 160 karakter di `src/world/maps/village.js`**
+### [x] T118. **Pecah baris > 160 karakter di `src/world/maps/village.js`**
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/world/maps/village.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.

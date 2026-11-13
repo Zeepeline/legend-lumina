@@ -351,7 +351,8 @@ Object.assign(World.prototype, {
       await say("Balapan Berakhir", [
         winnerName + " berhasil menyentuh garis jembatan hilir terlebih dahulu!",
         "Perahu pilihanmu meluncur dengan gagah meski finish di urutan belakang.",
-        "Kimi tersenyum ramah: \"Jangan sedih Kak Arka, balapannya seru sekali! Nih, makan sebutir Apel Segar manis dari kebun paman! Kapan-kapan kita balapan lagi ya!\""
+        "Kimi tersenyum ramah: \"Jangan sedih Kak Arka, balapannya seru sekali! " +
+        "Nih, makan sebutir Apel Segar manis dari kebun paman! Kapan-kapan kita balapan lagi ya!\""
       ]);
     }
   },

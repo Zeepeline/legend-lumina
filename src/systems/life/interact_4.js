@@ -168,7 +168,8 @@ Object.assign(World.prototype, {
     const isNight = (typeof isNightTime === "function") ? isNightTime() : false;
     let loreMsg = "";
     if (isNight) {
-      loreMsg = "\"Huuu... Matahari terbenam bukan tanda kegelapan menang, Arka. Di danau dan sungai, ikan-ikan rembulan bercahaya menyongsong petualang yang terjaga.\"";
+      loreMsg = "\"Huuu... Matahari terbenam bukan tanda kegelapan menang, Arka. " +
+        "Di danau dan sungai, ikan-ikan rembulan bercahaya menyongsong petualang yang terjaga.\"";
     } else {
       loreMsg = "\"Huuu... Manfaatkan terang siang untuk melangkah jauh. Namun jangan lupa kembali ke perapian hangat saat bintang fajar mulai bertebaran.\"";
     }

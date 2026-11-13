@@ -171,18 +171,6 @@
   "lines": 0,
   "long": 10
  },
- "src/systems/life/harvest_3.js": {
-  "lines": 0,
-  "long": 1
- },
- "src/systems/life/interact_2.js": {
-  "lines": 0,
-  "long": 1
- },
- "src/systems/life/interact_4.js": {
-  "lines": 0,
-  "long": 1
- },
  "src/systems/life/interact_5.js": {
   "lines": 0,
   "long": 5
@@ -198,10 +186,6 @@
  "src/systems/life/interact_8.js": {
   "lines": 0,
   "long": 3
- },
- "src/systems/life/minigame_1.js": {
-  "lines": 0,
-  "long": 1
  },
  "src/systems/life/minigame_3.js": {
   "lines": 0,
@@ -326,10 +310,6 @@
  "src/world/maps/swamp.js": {
   "lines": 0,
   "long": 5
- },
- "src/world/maps/village.js": {
-  "lines": 0,
-  "long": 1
  },
  "src/world/maps/wild.js": {
   "lines": 0,
