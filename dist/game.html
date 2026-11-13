@@ -17646,7 +17646,19 @@ Object.assign(World.prototype, {
   const up0 = W.update;
   W.update = function (t, dl) {
     up0.call(this, t, dl);
-    if (!this.passive && !G.title && this.pl) this.updLowHp(dl / 1000);
+    if (!this.passive && !G.title && this.pl) {
+      this.updLowHp(dl / 1000);
+      const v = typeof Input !== 'undefined' ? Input.vec() : { x: 0, y: 0 };
+      const m = Math.hypot(v.x, v.y);
+      let targetAngle = 0;
+      if (m > 0.25 && !G.lock) {
+        if (Math.abs(v.x) > 0.35 && Math.abs(v.y) > 0.35) {
+          targetAngle = v.x > 0 ? (v.y > 0 ? 5 : -4) : (v.y > 0 ? -5 : 4);
+        }
+      }
+      const cur = this.pl.angle || 0;
+      this.pl.angle = cur + (targetAngle - cur) * Math.min(1, (dl / 1000) * 14);
+    }
   };
 }
 
