@@ -11,7 +11,7 @@ _Konstanta layar & util kecil_
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
 `AU` 4 · `NI` 5 · `nf()` 6 · `parseSeq()` 7 · `bossBass` 8 · `TRACKS` 9 · `auInit()` 31 · `tone()` 42 · `sweep()` 43 · `noise()` 44 · `playBGM()` 45 · `_lastSfx` 55 · `sfx()` 56
 
-## src/core/input.js (152 baris)
+## src/core/input.js (153 baris)
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
 `Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 8 · `enableTouch()` 23 · `UISCALE` 60 · `PAD_STATE` 62 · `pollGamepad()` 63 · `layout()` 123
 

@@ -123,7 +123,8 @@ function pollGamepad() {
 function layout() {
   const vw = innerWidth, vh = innerHeight, touch = document.body.classList.contains('touch'), land = vw > vh;
   let aw = vw - 10, ah = vh - 10;
-  if (touch && !land) ah = vh - 222; if (touch && land) aw = vw - 2 * 180; if (!touch) ah = vh - 36;
+  if (touch && !land) ah = vh - 222;
+  if (!touch) ah = vh - 36;
   const s = Math.max(.6, Math.min(aw / VW, ah / VH));
   const w = Math.floor(VW * s), h = Math.floor(VH * s);
   SCREEN.style.width = w + 'px'; SCREEN.style.height = h + 'px'; UISCALE = w / VW; UI.style.transform = `scale(${UISCALE})`;
