@@ -55,10 +55,6 @@
   "lines": 0,
   "long": 8
  },
- "src/core/util.js": {
-  "lines": 0,
-  "long": 1
- },
  "src/data/enemies.js": {
   "lines": 0,
   "long": 27
@@ -104,7 +100,7 @@
   "long": 2
  },
  "src/scene/world.js": {
-  "lines": 421,
+  "lines": 0,
   "long": 33
  },
  "src/systems/achievements.js": {
@@ -225,7 +221,7 @@
  },
  "src/systems/openworld.js": {
   "lines": 0,
-  "long": 3
+  "long": 2
  },
  "src/systems/perf.js": {
   "lines": 0,
@@ -245,7 +241,7 @@
  },
  "src/systems/regions.js": {
   "lines": 0,
-  "long": 9
+  "long": 8
  },
  "src/systems/season.js": {
   "lines": 0,
@@ -285,7 +281,7 @@
  },
  "src/ui/menus.js": {
   "lines": 0,
-  "long": 23
+  "long": 19
  },
  "src/ui/savecode.js": {
   "lines": 0,

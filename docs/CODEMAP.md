@@ -3,9 +3,9 @@
 Cari nama di sini (`grep -n "namaFungsi" docs/CODEMAP.md`), lalu buka file:baris itu saja.
 Format: `nama` baris. Urutan file = urutan muat di index.html.
 
-## src/core/util.js (15 baris)
+## src/core/util.js (19 baris)
 _Konstanta layar & util kecil_
-`VW` 6 · `VH` 7 · `rnd` 8 · `ri` 9 · `pick` 10 · `clamp` 11 · `sleep` 12 · `$` 13 · `SCREEN` 14
+`VW` 6 · `VH` 7 · `rnd` 12 · `ri` 13 · `pick` 14 · `clamp` 15 · `sleep` 16 · `$` 17 · `SCREEN` 18
 
 ## src/core/audio.js (106 baris)
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_

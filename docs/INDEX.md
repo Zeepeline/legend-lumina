@@ -33,7 +33,7 @@ Visi 12 · Prinsip Storytelling 27 · Pacing 45 · Tujuan Pemain 65 · Immediate
 _Isi rahasia: baca hanya saat menulis cerita/bab/boss. JANGAN dibahas dengan pemilik._
 
 ## TASKS_AGENT.md — TASKS_AGENT — tugas kecil berdampak (untuk agen dengan konteks terbatas) (54 baris, ~1200 token)
-A. (dipindah) Port fitur kecil mode Benua — DIKERJAKAN SESI TUGAS BESAR, bukan agen ini 21 · B. Visual & kenyamanan 24 · [x] T6. Garis tipis di perbatasan dua wilayah bertanah sama 26 · [ ] T7. Ikon item yang hilang 33 · [ ] T8. Cari & perbaiki "Failed to load resource" saat boot 38 · C. Kerapian kode (aman, mekanis) 42 · [ ] T10. Cicil utang baris panjang (1 file per tugas, ulangi) 44 · [ ] T11. Tes menu yang ketinggalan 48
+A. (dipindah) Port fitur kecil mode Benua — DIKERJAKAN SESI TUGAS BESAR, bukan agen ini 21 · B. Visual & kenyamanan 24 · [x] T6. Garis tipis di perbatasan dua wilayah bertanah sama 26 · [x] T7. Ikon item yang hilang 33 · [ ] T8. Cari & perbaiki "Failed to load resource" saat boot 38 · C. Kerapian kode (aman, mekanis) 42 · [ ] T10. Cicil utang baris panjang (1 file per tugas, ulangi) 44 · [ ] T11. Tes menu yang ketinggalan 48
 
 ## VALIDATION_RULES.md — Asset Validation (36 baris, ~200 token)
 _(tanpa sub-bagian)_
