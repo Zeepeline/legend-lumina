@@ -299,9 +299,9 @@ _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 _Segel kuil, Mochi hilang, kristal, peti harta_
 `.touchBarrier()` 4 · `.takeMochi()` 15 · `.useCrystal()` 19 · `.openChest()` 32 · `interactRunePillar()` 82
 
-## src/npc/npcs.js (77 baris)
+## src/npc/npcs.js (78 baris)
 _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_
-`NPC_BARKS` 3 · `BARK_NODES` 18 · `popBark()` 19 · `updBarks()` 30 · `.updNpc()` 45 · `.updCritter()` 62
+`NPC_BARKS` 3 · `BARK_NODES` 19 · `popBark()` 20 · `updBarks()` 31 · `.updNpc()` 46 · `.updCritter()` 63
 
 ## src/npc/brain.js (111 baris)
 _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, mengobrol, duduk, berpatroli), pulang saat malam._

@@ -14,6 +14,7 @@ const NPC_BARKS = {
   elder: ['Jaga kedamaian desa ini, nak.', 'Angin membawa kabar dari hutan.', 'Belajarlah dari alam sekitar.'],
   chick_master: ['Ayam-ayamku lincah sekali!', 'Jangan kejar anak ayam ya.', 'Pakan jagung bikin bulu berkilau.'],
   ayam: ['Petok petok!', 'Kukuruyuk!', 'Kooook petok petok!'],
+  joko: ['Kincir angin berputar tenang.', 'Angin padang terasa sejuk hari ini.', 'Gandum tumbuh subur di lereng.'],
 };
 const BARK_NODES = [];
 function popBark(npcObj, text) {
