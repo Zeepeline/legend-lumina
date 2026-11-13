@@ -3,10 +3,12 @@
 Object.assign(World.prototype, {
   updEnemy(e, dt, locked) {
     const s = e.spr, D = e.D, pl = this.pl, sc = e.sc;
+    if (e.hp <= 0) { s.setVelocity(0); return; }
     e.sh.setPosition(s.x, s.y - 1 + (D.fly ? 10 : 0)).setDepth(s.y - .5); s.setDepth(s.y + (D.fly ? 12 : 0));
     if (e.flash > 0) { e.flash -= dt; if (e.flash <= 0) { s.clearTint(); if (['wind', 'swind', 'cwind', 'throw'].includes(e.st)) s.setTint(0xffa07a); else if (e.p2) s.setTint(0xffb8a8); } }
     if (e.kb > 0) { e.kb -= dt; s.setVelocity(e.kbx, e.kby); return; }
     if (locked) { s.setVelocity(0); return; }
+    if (e.hurtT > 0) { e.hurtT -= dt; s.setVelocity(0); return; }
     if (this.enemyStatus(e, dt)) return;
 
     // Panggilan Bala Bantuan Musuh Terdesak (#9)
@@ -66,6 +68,19 @@ Object.assign(World.prototype, {
         break;
       }
       case 'hop':
+        if (D.tex === 'slime_hd' && aggro && d < 65 && (e.cd || 0) <= 0 && e.st !== 'atk') {
+          e.st = 'atk'; e.t = 0.65; e.cd = rnd(2.2, 3.8);
+          s.setVelocity((dx / d) * D.spd * 2.2, (dy / d) * D.spd * 2.2);
+          s.play('slime_hd_atk', true); s.flipX = dx < 0;
+          break;
+        }
+        if (e.st === 'atk') {
+          if (e.t <= 0) {
+            e.st = 'idle'; e.t = rnd(.5, 1); s.setVelocity(0);
+            s.play('slime_hd_idle', true); this.puff(s.x, s.y);
+          }
+          break;
+        }
         if (e.t <= 0) {
           if (e.st === 'hop') {
             e.st = 'idle'; e.t = rnd(.45, 1); s.setVelocity(0);
@@ -82,7 +97,7 @@ Object.assign(World.prototype, {
             }
           }
         }
-        if (D.tex === 'slime_hd' && !s.anims.isPlaying) s.play(e.st === 'hop' ? 'slime_hd_hop' : 'slime_hd_idle', true);
+        if (D.tex === 'slime_hd' && !s.anims.isPlaying && e.st !== 'atk') s.play(e.st === 'hop' ? 'slime_hd_hop' : 'slime_hd_idle', true);
         s.anims.timeScale = e.st === 'hop' ? 2 : .8; break;
       case 'fly': {
         // Serangan Menukik Musuh Terbang (#7)

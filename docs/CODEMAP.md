@@ -187,9 +187,9 @@ _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditam
 _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._
 `.goto()` 4 · `.guardStop()` 9
 
-## src/systems/combat.js (338 baris)
+## src/systems/combat.js (340 baris)
 _Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah_
-`WEAPON_STYLE` 4 · `.attack()` 12 · `.shootArrow()` 89 · `.aimAngle()` 102 · `.magic()` 111 · `.drink()` 124 · `.useItem()` 130 · `.hitStop()` 139 · `.hitEnemy()` 144 · `.killEnemy()` 172 · `.drop()` 246 · `.updPicks()` 252 · `.gainExp()` 274 · `.hurtPlayer()` 286 · `.eShoot()` 296 · `.shockwave()` 304 · `.updShots()` 311 · `.defeat()` 325
+`WEAPON_STYLE` 4 · `.attack()` 12 · `.shootArrow()` 89 · `.aimAngle()` 102 · `.magic()` 111 · `.drink()` 124 · `.useItem()` 130 · `.hitStop()` 139 · `.hitEnemy()` 144 · `.killEnemy()` 174 · `.drop()` 248 · `.updPicks()` 254 · `.gainExp()` 276 · `.hurtPlayer()` 288 · `.eShoot()` 298 · `.shockwave()` 306 · `.updShots()` 313 · `.defeat()` 327
 
 ## src/systems/skills.js (36 baris)
 _Jurus: dash, tebasan putar, nova es_
@@ -223,9 +223,9 @@ _Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Ray
 _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif._
 `WARPS` 3 · `.spawnWarp()` 9 · `.useWarp()` 15
 
-## src/ai/enemies.js (227 baris)
+## src/ai/enemies.js (242 baris)
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
-`.updEnemy()` 4 · `.charAnim()` 220
+`.updEnemy()` 4 · `.charAnim()` 235
 
 ## src/ai/bosses.js (109 baris)
 _AI boss & alur pertarungan boss_
