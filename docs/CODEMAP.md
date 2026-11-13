@@ -175,7 +175,7 @@ _Cek pencapaian_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 15 · `shadowIndex()` 16
 
-## src/gfx/textures.js (108 baris)
+## src/gfx/textures.js (109 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 12 · `addStrip()` 13 · `darkTree()` 14 · `NPC_W` 16 · `regPortrait()` 17 · `regChar()` 22 · `buildTextures()` 38
 
@@ -442,6 +442,10 @@ _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung da
 ## src/gfx/gptassets.js (13 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
 `GPT_SWAP` 4 · `GPT_LOOK` 5 · `applyGptSwap()` 10
+
+## src/gfx/gptmonsters.js (26 baris)
+_Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._
+`GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
 ## src/main.js (34 baris)
 _Mulai game Phaser_
