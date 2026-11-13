@@ -151,6 +151,10 @@ _Data item & resep tempa_
 _Data musuh & proyektil_
 `ENEMY` 5 · `PROJ` 48 · `BOSS_AI` 49 · `BEAST` 50
 
+## src/data/bestiary_text.js (157 baris)
+_Teks bestiari per musuh (id = kunci ENEMY): habitat & tips melawan. Dipasang ke layar Bestiari oleh sesi besar._
+`BESTIARY_TEXT` 3
+
 ## src/data/quests.js (24 baris)
 _Teks misi, tujuan misi, jurus, pencapaian_
 `STAGE_TXT` 3 · `STAGE_GOAL` 4 · `SKILLS` 5 · `ACH` 6
