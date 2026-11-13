@@ -7,7 +7,7 @@ const IMG_LIST = [
   "apple1", "apple2", "bench", "bigtree", "bushG1", "bushG2", "bushP", "bushP2", "bushW",
   "fountain", "houseA", "houseB", "houseC", "market", "orange1", "planter", "pot",
   "treeA", "treeB", "treeWoodsPine", "stumpWoods",
-  "lampPost", "crateCart", "benchWood"
+  "lampPost", "crateCart", "benchWood", "hero_custom"
 , 'npc_elder', 'npc_smith', 'npc_merchant', 'npc_farmer', 'npc_inn', 'npc_guard', 'npc_hunter', 'npc_hermit', 'npc_nila', 'npc_joko', 'npc_girl', 'npc_child', 'npc_woman', 'npc_mom', 'npc_ratih', 'npc_wati', 'npc_darma', 'npc_bayu', 'npc_lestari', 'npc_gun', 'npc_priest', 'ani_rabbit', 'ani_squirrel', 'ani_deer', 'ani_owl', 'ani_duck'];
 function loadImgs() { return Promise.all(IMG_LIST.map(k => new Promise(r => { const i = new Image(); i.onload = () => { IMGEL[k] = i; r(); }; i.onerror = () => { console.error('Gagal memuat gambar', k); r(); }; i.src = (window.IMG_INLINE && IMG_INLINE[k]) || 'assets/img/' + k + '.png'; }))); }
 function addStrip(scene, key, st) { const t = scene.textures.addCanvas(key, st.c); for (let i = 0; i < st.n; i++) t.add(i, 0, i * st.fw, 0, st.fw, st.fh); }
@@ -19,7 +19,22 @@ function regPortrait(T, k) {
   for (let i = 0; i < 12; i++) x.drawImage(img, i * NPC_W, (i % 4 === 1 || i % 4 === 2) ? -1 : 0);
   const t = T.addCanvas('ch_' + k, c); ['down', 'up', 'side'].forEach((d, di) => { for (let f = 0; f < 4; f++) t.add(d + f, 0, (di * 4 + f) * NPC_W, 0, NPC_W, NPC_H); });
 }
-function regChar(T, k) { if (IMGEL['npc_' + k]) return regPortrait(T, k); const st = artChar(CHARS[k][0], CHARS[k][1]); const t = T.addCanvas('ch_' + k, st.c); ['down', 'up', 'side'].forEach((d, di) => { for (let f = 0; f < 4; f++) t.add(d + f, 0, (di * 4 + f) * CH_FW, 0, CH_FW, CH_FH); }); }
+function regChar(T, k) {
+  if (k === 'hero' && IMGEL.hero_custom) {
+    const img = IMGEL.hero_custom;
+    const t = T.addImage('ch_' + k, img);
+    ['down', 'up', 'side'].forEach((d, di) => {
+      for (let f = 0; f < 4; f++) t.add(d + f, 0, (di * 4 + f) * CH_FW, 0, CH_FW, CH_FH);
+    });
+    return;
+  }
+  if (IMGEL['npc_' + k]) return regPortrait(T, k);
+  const st = artChar(CHARS[k][0], CHARS[k][1]);
+  const t = T.addCanvas('ch_' + k, st.c);
+  ['down', 'up', 'side'].forEach((d, di) => {
+    for (let f = 0; f < 4; f++) t.add(d + f, 0, (di * 4 + f) * CH_FW, 0, CH_FW, CH_FH);
+  });
+}
 function buildTextures(sc) {
   const T = sc.textures, one = (k, c) => T.addCanvas(k, c);
   for (const k in IMGEL) {
