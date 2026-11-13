@@ -22,4 +22,20 @@ function applyGptMonsters(sc) {
     if (!A.exists(key + '_mv')) A.create({ key: key + '_mv', frames: [{ key, frame: 0 }, { key, frame: 1 }], frameRate: 5, repeat: -1 });
     D.tex = key;
   }
+  const hd = IMGEL.mon_slime_hd;
+  if (hd) {
+    if (!T.exists('slime_hd')) sc.textures.addSpriteSheet('slime_hd', hd, { frameWidth: 100, frameHeight: 100 });
+    const regA = (k, st, ed, fps, r) => {
+      if (!A.exists(k)) A.create({ key: k, frames: A.generateFrameNumbers('slime_hd', { start: st, end: ed }), frameRate: fps, repeat: r });
+    };
+    regA('slime_hd_idle', 0, 5, 7, -1);
+    regA('slime_hd_hop', 7, 13, 11, -1);
+    regA('slime_hd_atk', 14, 20, 11, 0);
+    regA('slime_hd_hurt', 21, 23, 10, 0);
+    regA('slime_hd_die', 28, 34, 9, 0);
+    regA('slime_hd_mv', 7, 13, 11, -1);
+    if (ENEMY.slime) { ENEMY.slime.tex = 'slime_hd'; ENEMY.slime.scale = 0.46; }
+    if (ENEMY.slimeb) { ENEMY.slimeb.tex = 'slime_hd'; ENEMY.slimeb.scale = 0.52; }
+    if (ENEMY.king_slime) { ENEMY.king_slime.tex = 'slime_hd'; ENEMY.king_slime.scale = 0.95; }
+  }
 }

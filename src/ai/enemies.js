@@ -67,9 +67,22 @@ Object.assign(World.prototype, {
       }
       case 'hop':
         if (e.t <= 0) {
-          if (e.st === 'hop') { e.st = 'idle'; e.t = rnd(.45, 1); s.setVelocity(0); this.tweens.add({ targets: s, scaleX: sc * 1.25, scaleY: sc * .78, duration: 70, yoyo: true }); }
-          else { e.st = 'hop'; e.t = .36; const a = aggro ? Math.atan2(dy, dx) + rnd(-.35, .35) : (hd > 60 ? Math.atan2(hy, hx) : rnd(0, 6.28)); s.setVelocity(Math.cos(a) * D.spd * 1.7, Math.sin(a) * D.spd * 1.7); this.tweens.add({ targets: s, scaleX: sc * .85, scaleY: sc * 1.2, duration: 120, yoyo: true }); }
+          if (e.st === 'hop') {
+            e.st = 'idle'; e.t = rnd(.45, 1); s.setVelocity(0);
+            if (D.tex === 'slime_hd' && s.anims) s.play('slime_hd_idle', true);
+            else this.tweens.add({ targets: s, scaleX: sc * 1.25, scaleY: sc * .78, duration: 70, yoyo: true });
+          } else {
+            e.st = 'hop'; e.t = .36; const a = aggro ? Math.atan2(dy, dx) + rnd(-.35, .35) : (hd > 60 ? Math.atan2(hy, hx) : rnd(0, 6.28));
+            s.setVelocity(Math.cos(a) * D.spd * 1.7, Math.sin(a) * D.spd * 1.7);
+            if (D.tex === 'slime_hd') {
+              if (s.anims) s.play('slime_hd_hop', true);
+              if (s.body.velocity.x < -3) s.flipX = true; else if (s.body.velocity.x > 3) s.flipX = false;
+            } else {
+              this.tweens.add({ targets: s, scaleX: sc * .85, scaleY: sc * 1.2, duration: 120, yoyo: true });
+            }
+          }
         }
+        if (D.tex === 'slime_hd' && !s.anims.isPlaying) s.play(e.st === 'hop' ? 'slime_hd_hop' : 'slime_hd_idle', true);
         s.anims.timeScale = e.st === 'hop' ? 2 : .8; break;
       case 'fly': {
         // Serangan Menukik Musuh Terbang (#7)

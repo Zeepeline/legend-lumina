@@ -187,9 +187,9 @@ _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditam
 _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._
 `.goto()` 4 · `.guardStop()` 9
 
-## src/systems/combat.js (329 baris)
+## src/systems/combat.js (338 baris)
 _Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah_
-`WEAPON_STYLE` 4 · `.attack()` 12 · `.shootArrow()` 89 · `.aimAngle()` 102 · `.magic()` 111 · `.drink()` 124 · `.useItem()` 130 · `.hitStop()` 139 · `.hitEnemy()` 144 · `.killEnemy()` 171 · `.drop()` 237 · `.updPicks()` 243 · `.gainExp()` 265 · `.hurtPlayer()` 277 · `.eShoot()` 287 · `.shockwave()` 295 · `.updShots()` 302 · `.defeat()` 316
+`WEAPON_STYLE` 4 · `.attack()` 12 · `.shootArrow()` 89 · `.aimAngle()` 102 · `.magic()` 111 · `.drink()` 124 · `.useItem()` 130 · `.hitStop()` 139 · `.hitEnemy()` 144 · `.killEnemy()` 172 · `.drop()` 246 · `.updPicks()` 252 · `.gainExp()` 274 · `.hurtPlayer()` 286 · `.eShoot()` 296 · `.shockwave()` 304 · `.updShots()` 311 · `.defeat()` 325
 
 ## src/systems/skills.js (36 baris)
 _Jurus: dash, tebasan putar, nova es_
@@ -223,9 +223,9 @@ _Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Ray
 _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif._
 `WARPS` 3 · `.spawnWarp()` 9 · `.useWarp()` 15
 
-## src/ai/enemies.js (214 baris)
+## src/ai/enemies.js (227 baris)
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
-`.updEnemy()` 4 · `.charAnim()` 207
+`.updEnemy()` 4 · `.charAnim()` 220
 
 ## src/ai/bosses.js (109 baris)
 _AI boss & alur pertarungan boss_
@@ -443,7 +443,7 @@ _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung da
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
 `GPT_SWAP` 4 · `GPT_LOOK` 5 · `applyGptSwap()` 10
 
-## src/gfx/gptmonsters.js (26 baris)
+## src/gfx/gptmonsters.js (42 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
