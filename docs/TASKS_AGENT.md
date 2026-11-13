@@ -1357,6 +1357,74 @@ Object.assign(World.prototype, {
 - Gaya tombol: tambahkan aturan `.btnBenua` di `styles.css` meniru tombol lain di peta (cari kelas tombol di `#mapw`).
 - Cek: buka PETA → ada tombol "Peta Benua" → membuka peta seluruh benua; menutupnya kembali ke peta biasa.
 
+## E. GELOMBANG 4 — kinerja (T230–T235)
+File BARU milik agen: `src/systems/benua_unload.js`. Web Worker tanah & atlas tekstur TIDAK untuk agen ini (cukup diukur di KINERJA 5–6).
+
+### [ ] T230. **[KINERJA 1] File `src/systems/benua_unload.js`: catat objek per petak**
+- Latar (BACA saja, jangan ubah): mode benua memuat objek per petak 512 px lewat `streamObjs` di `src/systems/benua_scene.js`; tiap objek dibuat `this.spawnObj(o)` dengan `o = [tipe, x, y, opt]` (koordinat global). Objek tidak pernah dibuang → memori naik.
+- Buat file baru, daftarkan di `index.html` tepat SETELAH `<script src="src/systems/benua_scene.js"></script>`:
+```js
+'use strict';
+// Mode benua: buang petak objek yang jauh dari Arka (memori). Mencatat semua yang dibuat spawnObj per petak lalu menghancurkannya.
+const UNLOAD_FAR = 1700, UNLOAD_EVERY = 1.5; // px dari Arka; detik antar-pemeriksaan
+{
+  const W = World.prototype, spawn0 = W.spawnObj;
+  W.spawnObj = function (o) {
+    if (!this.M || !this.M.benua || !Array.isArray(o)) return spawn0.apply(this, arguments);
+    const ch = this.children.list.length, wl = this.walls.getChildren().length, it = this.inter.length, li = this.lights.length, fa = this.fades.length;
+    const r = spawn0.apply(this, arguments);
+    const k = Math.floor(o[1] / OBJ_CELL) + ',' + Math.floor(o[2] / OBJ_CELL), rec = (this.cellRec = this.cellRec || new Map());
+    if (!rec.has(k)) rec.set(k, { objs: [], walls: [], inter: [], lights: [], fades: [] });
+    const R = rec.get(k);
+    R.objs.push(...this.children.list.slice(ch)); R.walls.push(...this.walls.getChildren().slice(wl));
+    R.inter.push(...this.inter.slice(it)); R.lights.push(...this.lights.slice(li)); R.fades.push(...this.fades.slice(fa));
+    return r;
+  };
+}
+```
+- Cek: `?benua=1`, konsol `__game.sc.cellRec.size > 0` dan `[...__game.sc.cellRec.values()][0].objs.length > 0`.
+
+### [ ] T231. **[KINERJA 2] Buang petak yang jauh** (butuh KINERJA 1)
+- Di `benua_unload.js` tambahkan metode (di luar blok, `Object.assign(World.prototype, { … })`):
+```js
+  unloadFar(dt) {
+    if (!this.cellRec || (this.unT = (this.unT || 0) - dt) > 0) return; this.unT = UNLOAD_EVERY;
+    const px = this.pl.x, py = this.pl.y, C = OBJ_CELL;
+    for (const [k, R] of this.cellRec) {
+      const [i, j] = k.split(',').map(Number);
+      if (Math.hypot((i + .5) * C - px, (j + .5) * C - py) < UNLOAD_FAR) continue;
+      const gone = new Set([...R.objs, ...R.walls]);
+      for (const o of gone) if (o && o.active) o.destroy();
+      const drop = a => { const s = new Set(a); return x => !s.has(x); };
+      this.inter = this.inter.filter(drop(R.inter)); this.lights = this.lights.filter(drop(R.lights)); this.fades = this.fades.filter(drop(R.fades));
+      if (this.cullL) this.cullL = this.cullL.filter(c => !gone.has(c.o));
+      this.cellRec.delete(k); this.objCells.delete(k); // petak akan dimuat ulang oleh streamObjs saat didekati lagi
+    }
+  },
+```
+- Panggil dari pembungkus `update` di blok yang sama: `const up0 = W.update; W.update = function (t, dl) { up0.call(this, t, dl); if (this.M && this.M.benua && this.pl && !this.passive) this.unloadFar(Math.min(dl, 100) / 1000); };`
+- Cek: konsol catat `__game.sc.children.list.length`, teleport jauh (`__game.sc.goto('snow', 640, 600, 'down')`), tunggu 3 detik → jumlah turun; kembali ke desa (`goto('village', 512, 384, 'down')`) → pohon & rumah desa muncul lagi, tidak bisa menembus pagar.
+
+### [ ] T232. **[KINERJA 3] Pastikan petak yang dimuat ulang tidak dobel** (butuh KINERJA 2)
+- Uji: jalan bolak-balik desa ↔ Jalan Desa–Padang 3 kali (atau teleport desa ↔ snow 3 kali).
+- Konsol setelah tiap putaran: `__game.sc.children.list.length` (harus stabil, tidak terus naik) dan `__game.sc.inter.length` (stabil).
+- Jika naik terus: periksa bahwa `this.objCells.delete(k)` dan `this.cellRec.delete(k)` terjadi; tulis angka sebelum/sesudah sebagai catatan di bawah tugas ini.
+
+### [ ] T233. **[KINERJA 4] Jangan buang petak yang sedang dipakai cerita/interaksi** (butuh KINERJA 2)
+- Risiko: objek interaktif (peti, lentera, obor) di petak yang dibuang lalu dimuat ulang → status harus tetap benar (mis. peti yang sudah dibuka tidak muncul tertutup).
+- Uji: buka peti di desa (`grep -n "chests" src/world/maps/village.js` untuk posisinya), teleport jauh, tunggu 3 detik, kembali → peti tetap terbuka.
+- Jika ternyata kembali tertutup: tambahkan pengecualian di `unloadFar`: lewati petak yang `R.objs` berisi objek dengan `o.texture && /chest/.test(o.texture.key)`. Catat hasilnya.
+
+### [ ] T234. **[KINERJA 5] Ukur (TANPA mengubah kode game): jumlah tekstur & objek**
+- Buka game `?benua=1`, di konsol jalankan dan catat hasilnya sebagai catatan di bawah tugas ini:
+  `Object.keys(__game.sc.textures.list).length` (jumlah tekstur), `__game.sc.children.list.length` (objek tampilan), `__game.sc.cullL.length`, `__game.sc.enemies.length`, `__game.sc.npcs.length`.
+- Ulangi di 3 tempat: desa, hutan (`goto('forest', 640, 400, 'down')`), kota (`goto('kpasar', 600, 400, 'down')`).
+- Hasil ini dipakai sesi besar untuk memutuskan atlas tekstur. JANGAN mengubah file apa pun selain menulis catatan di sini.
+
+### [ ] T235. **[KINERJA 6] Ukur waktu frame di HP (TANPA mengubah kode game)**
+- Jalankan `PERF=1 npx playwright test tests/perf.spec.js` (CPU diperlambat 4×), lalu salin isi `test-results/perf.json` (rata-rata & frame terburuk) sebagai catatan di bawah tugas ini.
+- Jika ada ponsel: buka game, Chrome remote debugging → Performance, rekam 10 detik berjalan di desa; catat 3 fungsi JS teratas (Bottom-Up). Tidak perlu memperbaiki apa pun.
+
 ---
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
 memasang BESTIARY_TEXT ke layar Bestiari, buang petak objek jauh di mode benua, hapus mode lama. Rincian: `docs/GAME_DESIGN.md` (akhir) & `docs/HANDOFF_OPENWORLD.md`.
