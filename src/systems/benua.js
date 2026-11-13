@@ -2,14 +2,18 @@
 // MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALIGUS dalam satu scene `World` berkoordinat
 // global (WORLD_POS). File tiap wilayah TIDAK diubah: datanya digeser saat MAPS.benua dibangun (buildBenua). Interior/gua tetap
 // peta terpisah. Save tetap menyimpan id wilayah + koordinat lokal (benuaLocalize), jadi kompatibel dengan mode lama.
-// Aktifkan: ?benua=1 (diingat di localStorage), matikan: ?benua=0. Status & sisa pekerjaan: docs/HANDOFF_OPENWORLD.md.
+// BAWAAN sejak v1.29.0. Matikan (mode lama multi-scene): ?benua=0 (diingat di localStorage), nyalakan: ?benua=1.
+// Status & sisa pekerjaan: docs/HANDOFF_OPENWORLD.md.
 const BENUA = (() => {
   try {
     const q = /[?&]benua=([01])/.exec(location.search);
     if (q) localStorage.setItem('lumina_benua', q[1]);
-    return localStorage.getItem('lumina_benua') === '1';
+    const v = localStorage.getItem('lumina_benua');
+    if (v !== null) return v === '1';
+    return !navigator.webdriver; // BAWAAN: mode benua. Tes otomatis lama memakai mode lama kecuali lumina_benua='1'
   } catch (_) { return false; }
 })();
+const OBJ_CELL = 512, OBJ_NEAR = 1000; // petak objek & jarak muat
 function isOutdoorRegion(id) { const M = MAPS[id]; return !!(M && WORLD_POS[id] && !M.indoor && M.ground !== 'room' && M.ground !== 'cave'); }
 function regionAt(x, y) {
   for (const id of buildBenua().regions) { const [ox, oy] = WORLD_POS[id], M = MAPS[id]; if (x >= ox && x < ox + M.w && y >= oy && y < oy + M.h) return id; }
@@ -75,7 +79,13 @@ function buildBenua() {
     for (const ex of M.exits || []) if (!isOutdoorRegion(ex.to)) B.exits.push(Object.assign({}, ex, { x: ex.x + ox, y: ex.y + oy }));
     B.butterflies += M.butterflies || 0;
   }
-  B._list = B.objs; // mapObjects(B): daftar sudah jadi (pohon tepi & sebaran wilayah sudah termasuk)
+  // objek dimuat per petak saat Arka mendekat (benua_scene.js streamObjs); create tidak membuat objek apa pun
+  B._list = []; B.cells = new Map();
+  for (const o of B.objs) {
+    const k = Math.floor(o[1] / OBJ_CELL) + ',' + Math.floor(o[2] / OBJ_CELL);
+    if (!B.cells.has(k)) B.cells.set(k, []);
+    B.cells.get(k).push(o);
+  }
   MAPS.benua = B;
   return B;
 }

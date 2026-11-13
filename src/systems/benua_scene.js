@@ -31,6 +31,7 @@ Object.assign(World.prototype, {
     cam.setScroll(Math.round(this.cx), Math.round(this.cy));
     for (const r of wildRects()) this.wall(r[0], r[1], r[2] - r[0], r[3] - r[1]); // celah hutan lebat tidak bisa dimasuki
     this.wild = new Map(); this.wildT = 0; this.regId = null; this.regT = 0; this.safeXY = [pl.x, pl.y];
+    this.objCells = new Set(); this.streamObjs(99); // petak di sekitar titik masuk langsung dibuat
     for (const id of M.regions) this.withRegion(id, () => this.spawnRegionFx(id));
     this.updBenua(0, data.region);
   },
@@ -64,6 +65,25 @@ Object.assign(World.prototype, {
       run(() => this.spawnNpc({ id: 'kembara', ch: 'hunter', name: 'Kang Kembara', x: K.x + M._ox, y: K.y + M._oy, dir: K.dir, wander: 12 }));
     }
   },
+  // muat petak objek terdekat yang belum dibuat (maks `budget` petak); objek diam langsung ikut culling (perf.js)
+  streamObjs(budget) {
+    const M = this.M, pl = this.pl, C = OBJ_CELL, R = Math.ceil(OBJ_NEAR / C), ci = Math.floor(pl.x / C), cj = Math.floor(pl.y / C), want = [];
+    for (let j = cj - R; j <= cj + R; j++) for (let i = ci - R; i <= ci + R; i++) {
+      const k = i + ',' + j; if (this.objCells.has(k) || !M.cells.has(k)) continue;
+      const d = Math.hypot((i + .5) * C - pl.x, (j + .5) * C - pl.y); if (d < OBJ_NEAR + C) want.push([d, k]);
+    }
+    want.sort((a, b) => a[0] - b[0]);
+    for (const [, k] of want.slice(0, budget)) {
+      this.objCells.add(k);
+      for (const o of M.cells.get(k)) {
+        const s = this.spawnObj(o);
+        if (!this.cullL || !s || s.body || !(s.type === 'Image' || s.type === 'Sprite') || s.displayWidth > 420 || s.displayHeight > 420) continue;
+        this.cullL.push({ o: s, x: s.x, y: s.y, r: Math.max(s.displayWidth, s.displayHeight) + CULL_PAD });
+        if (s.type === 'Sprite' && !(s.anims && s.anims.isPlaying)) this.sys.updateList.remove(s);
+      }
+    }
+    if (want.length) this.cullAt = null;
+  },
   // suasana alam (ambient.js) dibuat ulang untuk wilayah yang sedang dimasuki; batas lebar/tinggi = tepi kanan/bawah global
   benuaAmbient(id) {
     for (const o of this.ambObjs || []) if (o.active) o.destroy();
@@ -84,6 +104,7 @@ Object.assign(World.prototype, {
   updBenua(dt, first) {
     if ((this.wildT -= dt) <= 0) { this.wildT = .4; this.updWilds(); }
     if ((this.regT -= dt) > 0 && !first) return; this.regT = .25;
+    if (!first) this.streamObjs(2);
     const pl = this.pl, id = first || regionAt(pl.x, pl.y); if (!id) return;
     // awal cerita: penjaga melarang masuk hutan (dulu lewat pintu tepi)
     if (S.stage === 0 && (id === 'forest' || (MAPS[id].peralihan || []).includes('forest')) && !this.bossOn) {
@@ -103,3 +124,33 @@ Object.assign(World.prototype, {
   },
 });
 for (const k of ['wildCanopyTex', 'updWilds', 'makeWild']) World.prototype[k] = GroundLayer.prototype[k];
+// peta mini & kabut peta di mode benua: tampilkan wilayah tempat Arka berada (koordinat diterjemahkan ke lokal wilayah)
+for (const k of ['updMinimap', 'updFog']) {
+  const f0 = World.prototype[k];
+  World.prototype[k] = function (dt) {
+    if (!this.M.benua || !this.regId) return f0.call(this, dt);
+    this['_' + k] = (this['_' + k] || 0) - dt; if (this['_' + k] > 0) return; this['_' + k] = .25;
+    const [ox, oy] = WORLD_POS[this.regId], keep = { M: this.M, pl: this.pl, npcs: this.npcs, enemies: this.enemies, qGoal: this.qGoal };
+    const loc = s => ({ x: s.x - ox, y: s.y - oy, visible: s.visible });
+    this.M = MAPS[this.regId]; this.pl = loc(keep.pl);
+    if (k === 'updMinimap') {
+      this.npcs = keep.npcs.map(n => ({ spr: loc(n.spr) })); this.enemies = keep.enemies.map(e => ({ hp: e.hp, spr: loc(e.spr) }));
+      this.qGoal = keep.qGoal && { x: keep.qGoal.x - ox, y: keep.qGoal.y - oy };
+    }
+    try { return f0.call(this, 1); } finally { Object.assign(this, keep); }
+  };
+}
+// peta besar di mode benua: buka peta wilayah tempat Arka berada (scene "tampilan wilayah" berkoordinat lokal)
+{
+  const openMapNew0 = openMapNew;
+  openMapNew = function (sc) { // eslint-disable-line no-global-assign
+    if (!sc || !sc.M || !sc.M.benua || !sc.regId) return openMapNew0(sc);
+    const [ox, oy] = WORLD_POS[sc.regId], loc = s => ({ x: s.x - ox, y: s.y - oy, visible: s.visible });
+    const view = Object.create(sc, {
+      M: { value: MAPS[sc.regId] }, pl: { value: Object.assign(loc(sc.pl), { dir: sc.pl.dir }) },
+      npcs: { value: sc.npcs.map(n => Object.assign({}, n, { spr: loc(n.spr) })) },
+      enemies: { value: sc.enemies.map(e => Object.assign({}, e, { spr: loc(e.spr) })) },
+    });
+    return openMapNew0(view);
+  };
+}

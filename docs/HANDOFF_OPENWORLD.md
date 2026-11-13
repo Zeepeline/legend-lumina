@@ -51,10 +51,15 @@ Jangan mengubah file yang dipakai tugas agen kecil (`src/art/items.js` ICONS_DEF
 menambah per wilayah, offset), kandang (`benuaField('ranch')`), wisp malam, pedagang keliling (`KEMBARA_POS`), kabut rawa (`benuaWeather`),
 suasana alam per wilayah (`benuaAmbient`: dibuat ulang saat pindah wilayah), banner tanpa berulang (20 s), `goto`/`guardStop` → `systems/scene_nav.js`.
 `benuaField(k)` = data wilayah berkoordinat global untuk kode runtime yang membaca `this.M.k`.
+**v1.29.0 — MODE BENUA = BAWAAN.** Juga: peta mini & kabut (`updMinimap`/`updFog` dibungkus: wilayah sekarang, koordinat lokal),
+peta besar (`openMapNew` dibungkus dengan "tampilan wilayah" `Object.create(sc, {M, pl, npcs, enemies})`), streaming objek per petak
+512 px (`B.cells`, `streamObjs`, jarak muat 1000 px, 2 petak/0,25 s; objek baru langsung masuk `cullL`): masuk benua ±0,8 s (dulu ±4 s),
+±2.800 objek di awal (dulu 10.500). Tes otomatis (navigator.webdriver) tetap mode lama kecuali `localStorage.lumina_benua='1'`.
 **BELUM (urut):**
-1. Peta mini/peta besar & kabut (`explore.js` fogOf per `M.id`, `ui/map.js`) untuk `M.benua`: pakai `this.regId` + offset.
-2. Kinerja: ±10.500 objek dalam 1 scene, masuk benua ±4 s. Streaming objek per chunk (spawn saat dekat, hancurkan saat jauh).
-3. Jadikan bawaan (default `BENUA` = true), lalu hapus regions.js, groundlayer.js, openworld.js, kode `owN`/peralihan border.
+1. Objek yang sudah dimuat belum pernah dibuang (memori naik pelan saat menjelajah jauh). Buang petak jauh: lacak objek per petak
+   (sprite, tembok, entri inter/lights/fades yang dibuat spawnObj) lalu hancurkan bila > 1600 px.
+2. Tes untuk mode benua (helpers.goto menunggu `sc.regId === map` saat `sc.M.benua`).
+3. Setelah stabil beberapa hari: hapus mode lama (regions.js, groundlayer.js, openworld.js, `owN`, border peralihan, `REGIONS_OFF`).
 Uji cepat: `localStorage.lumina_benua='1'` lalu muat ulang; `__game.sc.M.id === 'benua'`, `__game.sc.regId` = wilayah sekarang.
 
 ## 1b. Update v1.27.4 (gradasi & hutan pengisi)
