@@ -163,7 +163,7 @@ _Jurnal: catatan lore (LORE), misteri jangka panjang (MYSTERY), penyelidikan jan
 _Jam & siang-malam_
 `nightAmt()` 4 · `isNight()` 5 · `gameHours()` 6 · `lerpCol()` 7 · `_clk` 8 · `updClock()` 9
 
-## src/systems/achievements.js (10 baris)
+## src/systems/achievements.js (12 baris)
 _Cek pencapaian_
 `totalKills()` 3 · `achCheck()` 4
 
