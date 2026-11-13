@@ -15,6 +15,7 @@ const NPC_BARKS = {
   chick_master: ['Ayam-ayamku lincah sekali!', 'Jangan kejar anak ayam ya.', 'Pakan jagung bikin bulu berkilau.'],
   ayam: ['Petok petok!', 'Kukuruyuk!', 'Kooook petok petok!'],
   joko: ['Kincir angin berputar tenang.', 'Angin padang terasa sejuk hari ini.', 'Gandum tumbuh subur di lereng.'],
+  wati: ['Bunga liar di padang cantik ya.', 'Jangan lupa minum air yang cukup.', 'Padang rumput ini sangat luas.'],
 };
 const BARK_NODES = [];
 function popBark(npcObj, text) {
