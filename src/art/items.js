@@ -17,6 +17,7 @@ function artCoin() {
 }
 function artPotion(col = '#e8324a', hl = '#ff9aaa') { const [c, x] = mk(12, 14); fr(x, '#8a5a32', 4, 0, 4, 2); fr(x, '#d8e8f0', 4, 2, 4, 3); ellF(x, '#d8e8f0', 6, 8.5, 4.5, 4.5); ellF(x, col, 6, 9, 3.6, 3.4); fr(x, hl, 4, 7, 1, 2); px(x, '#ffffff', 4, 6); return outline(c, '#2a1c2a'); }
 function artHeart() { const rows = [".RR.RR.", "RWRRRRR", "RRRRRRR", ".RRRRR.", "..RRR..", "...R..."]; return outline(renderMap(rows, { R: '#ff4a5a', W: '#ffffff' }), '#3a1020'); }
+function artShard() { return artIcon('shard'); }
 // ---------- ikon item (12x12) ----------
 const ICON_MAP = {
   flask: ["....KK......", "....KK......", "...GWWG.....", "...GWWG.....", "..GCCCCG....", ".GCLCCCCG...", ".GCLCCCCG...", ".GCCCCCCG...", ".GDCCCCDG...", "..GDDDDG....", "...GGGG....."],

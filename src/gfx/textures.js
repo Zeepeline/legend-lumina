@@ -52,6 +52,7 @@ function buildTextures(sc) {
   addStrip(sc, 'crystal', artCrystal(false)); addStrip(sc, 'crystal_lit', artCrystal(true));
   CHARS.smith = [{ H: '#3a2a20', C: '#7a5a4a', P: '#4a3a3a', K: '#3a2a20', S: '#e8b48a' }, { apron: 1, beard: 1 }];
   CHARS.gchief = [{ H: '#c83a2a', S: '#6ab84a', C: '#7a5a3a', P: '#4a3a2a', E: '#ff3a2a', r: '#4a983a', R: '#e8c050' }, { ears: 1, scarf: 1 }];
+  if (!CHARS.boy) CHARS.boy = CHARS.child;
   for (const k in CHARS) regChar(T, k);
   addStrip(sc, 'slime', artMon('slime')); addStrip(sc, 'slimeb', artMon('slime', { G: '#5aa8f0', D: '#2a5aa8', L: '#e0f4ff' }));
   addStrip(sc, 'slimer', artMon('slime', { G: '#f0604a', D: '#a02a1a', L: '#ffe0d8' })); addStrip(sc, 'slimei', artMon('slime', { G: '#b4ecff', D: '#5aa8d8', L: '#ffffff', E: '#1a3a6a' }));

@@ -67,9 +67,9 @@ _Monster (peta piksel di MON)_
 _Monster versi garang: bentuk baru (mata menyala, taring, tanduk, duri) + pencahayaan otomatis. Menimpa MON lama, kunci palet tetap sama agar varian warna jalan._
 `mixHex()` 40 · `shadeMon()` 41 · `monFrame2()` 57
 
-## src/art/items.js (221 baris)
+## src/art/items.js (222 baris)
 _Ikon item & senjata_
-`SWORD` 3 · `artSword()` 4 · `artSpear()` 9 · `artAxe()` 10 · `artBow()` 11 · `artArrow()` 12 · `artCoin()` 13 · `artPotion()` 18 · `artHeart()` 19 · `ICON_MAP` 21 · `ICONS_DEF` 48 · `iconFallback()` 107 · `artIcon()` 113
+`SWORD` 3 · `artSword()` 4 · `artSpear()` 9 · `artAxe()` 10 · `artBow()` 11 · `artArrow()` 12 · `artCoin()` 13 · `artPotion()` 18 · `artHeart()` 19 · `artShard()` 20 · `ICON_MAP` 22 · `ICONS_DEF` 49 · `iconFallback()` 108 · `artIcon()` 114
 
 ## src/art/fx.js (106 baris)
 _Efek: tebasan, api, proyektil, cahaya, bayangan_
@@ -175,7 +175,7 @@ _Cek pencapaian_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 15 · `shadowIndex()` 16
 
-## src/gfx/textures.js (121 baris)
+## src/gfx/textures.js (122 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 12 · `addStrip()` 13 · `darkTree()` 14 · `NPC_W` 16 · `regPortrait()` 17 · `regChar()` 22 · `buildTextures()` 38
 
