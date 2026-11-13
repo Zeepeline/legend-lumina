@@ -215,9 +215,9 @@ _Bab 4 "Bisikan di Bawah Akar" (investigasi, tanpa boss) + Desa Kincir + prasast
 _Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Raya Lama, Kota Lumina, Kota Bawah, Arsip Akademi_
 `ARSIP` 4 · `.spawnCh5()` 6 · `.ch5Enter()` 15 · `.clearSlide()` 18 · `.arsipRead()` 34 · `.ch5Talk()` 40
 
-## src/systems/travel.js (29 baris)
+## src/systems/travel.js (32 baris)
 _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif._
-`WARPS` 3 · `.spawnWarp()` 6 · `.useWarp()` 12
+`WARPS` 3 · `.spawnWarp()` 9 · `.useWarp()` 15
 
 ## src/ai/enemies.js (214 baris)
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
