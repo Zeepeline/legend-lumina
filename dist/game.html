@@ -8335,6 +8335,11 @@ Object.assign(World.prototype, {
     if (e.hurtT > 0) { e.hurtT -= dt; s.setVelocity(0); return; }
     if (this.enemyStatus(e, dt)) return;
 
+    const dx = pl.x - s.x, dy = pl.y - s.y, d = Math.hypot(dx, dy) || 1;
+    const aggro = !pl.dead && d < (e.boss ? 420 : 120);
+    const hx = e.home.x - s.x, hy = e.home.y - s.y, hd = Math.hypot(hx, hy) || 1;
+    e.t -= dt; e.cd -= dt;
+
     // Panggilan Bala Bantuan Musuh Terdesak (#9)
     if (!e.calledBackup && !e.boss && (e.type === 'goblin' || e.type === 'wolf' || e.type === 'boar') && e.hp < e.max * 0.35 && aggro) {
       e.calledBackup = true;
@@ -8354,11 +8359,6 @@ Object.assign(World.prototype, {
       });
       return;
     }
-
-    const dx = pl.x - s.x, dy = pl.y - s.y, d = Math.hypot(dx, dy) || 1;
-    const aggro = !pl.dead && d < (e.boss ? 420 : 120);
-    const hx = e.home.x - s.x, hy = e.home.y - s.y, hd = Math.hypot(hx, hy) || 1;
-    e.t -= dt; e.cd -= dt;
 
     // Musuh teralihkan oleh Petasan Pengalih (#410)
     if (e.distracted > 0) {
