@@ -20,6 +20,7 @@ const NPC_BARKS = {
   bayu: ['Barang dagangan segar dari padang!', 'Cari perbekalan perjalanan?', 'Harga pas, kualitas terjamin.'],
   domba: ['Mbeee...', 'Mbeee-mbee!', '*Mengunyah rumput hijau*'],
   hermit: ['Kabut rawa menyimpan ketenangan.', 'Dengarkan bisikan air rawa.', 'Jaga pikiranmu tetap jernih.'],
+  nila: ['Udara dingin menusuk tulang.', 'Hati-hati langkah di salju tebal.', 'Tetap hangat di dekat api unggun.'],
 };
 const BARK_NODES = [];
 function popBark(npcObj, text) {
