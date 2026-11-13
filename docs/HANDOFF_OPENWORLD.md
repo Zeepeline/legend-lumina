@@ -43,6 +43,9 @@ Pemilik memutuskan meninggalkan pendekatan multi-scene (wilayah pasif + handoff 
 - `questTarget` → `benuaTarget` (koordinat global). Kamera boss memakai `camB`.
 - Fitur per wilayah yang membaca `this.M` dipanggil lewat `withRegion(id, fn)` (this.M = `regionClone(id)`, koordinat digeser `shiftDeep`):
   kebun, obor, patung teleport (WARPS digeser sementara), gerbang es, kristal, segel, Mochi, kucing desa.
+**Pembagian kerja:** agen kecil memakai `docs/TASKS_AGENT.md` dan DILARANG menyentuh file terkunci yang terdaftar di sana. Sesi tugas besar
+(file ini) juga mengerjakan bekas T1–T5 (kabut rawa, wisp, pedagang, banner, kucing/Mochi) dan memindah `goto`/`guardStop` keluar dari world.js.
+Jangan mengubah file yang dipakai tugas agen kecil (`src/art/items.js` ICONS_DEF, `src/gfx/textures.js` IMG_LIST, `tests/*` menu) tanpa cek status di TASKS_AGENT.md.
 **BELUM di mode benua (kerjakan berurutan, lalu jadikan bawaan):**
 1. `spawnCh4`/`spawnCh5` (objek cerita Bab 4–5 memakai koordinat lokal literal) — WAJIB sebelum jadi bawaan. Saran: ubah fungsi
    itu agar menerima offset (`const [ox, oy] = this.M._ox !== undefined ? [this.M._ox, this.M._oy] : [0, 0]`) lalu panggil via `withRegion`.

@@ -7,36 +7,19 @@
 4. Jalankan `npm run check` (harus lulus) + cek yang tertulis di tugas. Tidak perlu full test suite.
 5. Commit 1 tugas = 1 commit (`fix:`/`feat:` + nomor tugas), tandai `[x]` di file ini, push.
 6. Kalau tugas ternyata lebih besar dari perkiraan (>80 baris perubahan) atau langkahnya tidak cocok dengan kode: **berhenti**, tulis catatan di bawah tugas itu, lanjut ke tugas lain.
+
+**FILE TERKUNCI (milik sesi tugas besar — agen ini DILARANG mengubahnya, termasuk saat T10):**
+`src/systems/benua.js`, `src/systems/benua_scene.js`, `src/scene/world.js`, `src/systems/regions.js`, `src/systems/groundlayer.js`,
+`src/systems/openworld.js`, `src/systems/stream.js`, `src/systems/wilds.js`, `src/systems/ambient.js`, `src/systems/explore.js`,
+`src/systems/chapter4.js`, `src/systems/chapter5.js`, `src/systems/home.js`, `src/systems/ranch.js`, `src/systems/perf.js`,
+`src/ui/map.js`, `src/world/layout.js`, `docs/HANDOFF_OPENWORLD.md`. Kalau sebuah tugas butuh mengubah file ini → berhenti, catat.
+
 Mode Benua (satu peta): buka game dengan `?benua=1`. Di konsol: `__game.sc.M.benua` (1 = mode benua), `__game.sc.regId` (wilayah sekarang), `WORLD_POS[id]` = posisi global wilayah.
 
 ---
 
-## A. Mode Benua — port fitur kecil (prioritas)
-
-### [ ] T1. Cuaca kabut Rawa Senja di mode benua
-- File: `src/systems/benua_scene.js`, fungsi `updBenua`, blok setelah `this.regId = id;`.
-- Masalah: cuaca ditentukan sekali di `create` dari `M.id` (`src/scene/world.js` baris ±78, `this.weather = M.id === 'swamp' ? 'fog' : ...`); di benua `M.id` = `'benua'`.
-- Langkah: saat wilayah berubah, jika `id === 'swamp'` dan `this.weather !== 'fog'` → `this.weather = 'fog'`, lalu `this.dropActiveFx(); this.makeActiveFx();`. Jika keluar dari swamp dan cuaca `'fog'` → `this.weather = 'clear'` + buat ulang efek yang sama.
-- Cek: `?benua=1`, konsol `__game.sc.goto('swamp', 640, 400, 'down')` → kabut muncul; `goto('meadow', 600, 500)` → kabut hilang.
-
-### [ ] T2. Wisp malam di mode benua
-- File: `src/systems/benua_scene.js` fungsi `spawnRegionFx(id)`.
-- Asal: `src/scene/world.js` (cari `isNight() && (M.id === 'forest' || M.id === 'meadow')`) memunculkan 4 `wisp` di tengah jalan `M.paths`.
-- Langkah: di `spawnRegionFx`, jika `!G.title && isNight() && (id === 'forest' || id === 'meadow')`, salin loop itu memakai `this.M.paths` (sudah koordinat global karena `regionClone`).
-- Cek: set `S.time = 1` lalu muat ulang dengan `?benua=1`, teleport ke hutan → ada wisp.
-
-### [ ] T3. Pedagang keliling (Kang Kembara) di mode benua
-- File: `src/systems/benua_scene.js` `spawnRegionFx(id)`; asal di `src/scene/world.js` (cari `isMerchantHere(M.id)` dan `posMap`).
-- Langkah: jika `typeof isMerchantHere === 'function' && isMerchantHere(id)` dan `posMap[id]` ada → `this.spawnNpc({ id: 'kembara', ch: 'hunter', name: 'Kang Kembara', x: pos.x + this.M._ox, y: pos.y + this.M._oy, dir: pos.dir, wander: 12 })`. Salin `posMap` ke konstanta `KEMBARA_POS` di atas file (jangan ubah world.js).
-- Cek: konsol `isMerchantHere('village')`; kalau true, Kang Kembara ada di desa mode benua.
-
-### [ ] T4. Banner wilayah tidak berkedip saat bolak-balik di perbatasan
-- File: `src/systems/benua_scene.js` `updBenua`, baris `banner(R.name, ...)`.
-- Langkah: simpan `this.lastBanner = { id, t: this.t }`; tampilkan banner hanya jika `id` beda dengan banner terakhir ATAU sudah > 20 detik (`this.t - this.lastBanner.t > 20`).
-- Cek: berjalan bolak-balik di garis desa ↔ Jalan Desa–Padang: banner tidak muncul berulang.
-
-### [ ] T5. Kucing desa & Mochi: periksa posisi
-- File: `src/systems/benua_scene.js` `spawnRegionFx`. Cek visual saja: `S.side.mochi = 3; S.pet = 0` lalu muat ulang `?benua=1` → kucing ada di dekat rumah desa (bukan di hutan pengisi). Jika salah posisi, catat koordinatnya di bawah tugas ini (jangan refactor).
+## A. (dipindah) Port fitur kecil mode Benua — DIKERJAKAN SESI TUGAS BESAR, bukan agen ini
+Kabut rawa, wisp malam, pedagang keliling, banner perbatasan, posisi kucing/Mochi (dulu T1–T5) memakai file terkunci.
 
 ## B. Visual & kenyamanan
 
@@ -58,13 +41,8 @@ Mode Benua (satu peta): buka game dengan `?benua=1`. Di konsol: `__game.sc.M.ben
 
 ## C. Kerapian kode (aman, mekanis)
 
-### [ ] T9. world.js di bawah 400 baris
-- File: `src/scene/world.js` (399–421 baris, batas 400). Pindahkan metode `goto(...)` dan `guardStop()` (cari dengan grep) ke file baru `src/systems/scene_nav.js` sebagai `Object.assign(World.prototype, { goto(...) {...}, async guardStop() {...} });`.
-- Daftarkan `<script src="src/systems/scene_nav.js"></script>` di `index.html` **tepat setelah** `src/scene/world.js` (sebelum `benua_scene.js` yang membungkus `goto`!).
-- Cek: `npm run check`; buka game, masuk & keluar rumah berfungsi.
-
 ### [ ] T10. Cicil utang baris panjang (1 file per tugas, ulangi)
-- Pilih 1 file dari `tools/size-baseline.json` dengan angka `long` kecil (1–5). Pecah baris > 160 karakter menjadi beberapa baris **tanpa mengubah logika** (pisah di `;` atau `,`).
+- Pilih 1 file dari `tools/size-baseline.json` dengan angka `long` kecil (1–5) yang **TIDAK** ada di daftar file terkunci. Pecah baris > 160 karakter menjadi beberapa baris **tanpa mengubah logika** (pisah di `;` atau `,`).
 - Jalankan `node tools/check-size.js --update` setelahnya (angka harus turun). Cek: `npm run check`, buka game sebentar.
 
 ### [ ] T11. Tes menu yang ketinggalan
@@ -72,4 +50,4 @@ Mode Benua (satu peta): buka game dengan `?benua=1`. Di konsol: `__game.sc.M.ben
 - Cek: jalankan hanya tes yang diubah.
 
 ---
-Tugas besar (JANGAN diambil agen ini; dikerjakan sesi khusus): port Bab 4–5 (`spawnCh4`/`spawnCh5`) ke mode benua, suasana alam (`ambient.js`), rahasia/rumah/kandang, peta mini benua, streaming objek benua (kinerja), lalu menjadikan benua bawaan. Rinciannya di `docs/HANDOFF_OPENWORLD.md` bagian 0b.
+Tugas besar (JANGAN diambil agen ini; dikerjakan sesi khusus): port fitur kecil benua (bekas T1–T5), `world.js` < 400 baris (bekas T9), port Bab 4–5 (`spawnCh4`/`spawnCh5`) ke mode benua, suasana alam (`ambient.js`), rahasia/rumah/kandang, peta mini benua, streaming objek benua (kinerja), lalu menjadikan benua bawaan. Rinciannya di `docs/HANDOFF_OPENWORLD.md` bagian 0b.
