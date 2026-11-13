@@ -130,181 +130,181 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kafilah.length === 3`.
 
-### [ ] T25. **Sapaan NPC `gj1` (Penjaga Gerbang, peta `kgate`)**
+### [x] T25. **Sapaan NPC `gj1` (Penjaga Gerbang, peta `kgate`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `gj1: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Penjaga Gerbang". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.gj1.length === 3`.
 
-### [ ] T26. **Sapaan NPC `gj2` (Penjaga Gerbang, peta `kgate`)**
+### [x] T26. **Sapaan NPC `gj2` (Penjaga Gerbang, peta `kgate`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `gj2: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Penjaga Gerbang". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.gj2.length === 3`.
 
-### [ ] T27. **Sapaan NPC `courier` (Budi Kurir Kilat, peta `kgate`)**
+### [x] T27. **Sapaan NPC `courier` (Budi Kurir Kilat, peta `kgate`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `courier: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Budi Kurir Kilat". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.courier.length === 3`.
 
-### [ ] T28. **Sapaan NPC `gw1` (Pelancong, peta `kgate`)**
+### [x] T28. **Sapaan NPC `gw1` (Pelancong, peta `kgate`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `gw1: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Pelancong". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.gw1.length === 3`.
 
-### [ ] T29. **Sapaan NPC `gw2` (Petani, peta `kgate`)**
+### [x] T29. **Sapaan NPC `gw2` (Petani, peta `kgate`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `gw2: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Petani". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.gw2.length === 3`.
 
-### [ ] T30. **Sapaan NPC `kmerchant` (Pedagang Pasar, peta `kpasar`)**
+### [x] T30. **Sapaan NPC `kmerchant` (Pedagang Pasar, peta `kpasar`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kmerchant: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Pedagang Pasar". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kmerchant.length === 3`.
 
-### [ ] T31. **Sapaan NPC `auctioneer` (Juru Lelang Bastian, peta `kpasar`)**
+### [x] T31. **Sapaan NPC `auctioneer` (Juru Lelang Bastian, peta `kpasar`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `auctioneer: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Juru Lelang Bastian". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.auctioneer.length === 3`.
 
-### [ ] T32. **Sapaan NPC `rudi` (Rudi, peta `kpasar`)**
+### [x] T32. **Sapaan NPC `rudi` (Rudi, peta `kpasar`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `rudi: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Rudi". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.rudi.length === 3`.
 
-### [ ] T33. **Sapaan NPC `kp1` (Warga, peta `kpasar`)**
+### [x] T33. **Sapaan NPC `kp1` (Warga, peta `kpasar`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kp1: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Warga". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kp1.length === 3`.
 
-### [ ] T34. **Sapaan NPC `kp2` (Warga, peta `kpasar`)**
+### [x] T34. **Sapaan NPC `kp2` (Warga, peta `kpasar`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kp2: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Warga". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kp2.length === 3`.
 
-### [ ] T35. **Sapaan NPC `kp3` (Pedagang, peta `kpasar`)**
+### [x] T35. **Sapaan NPC `kp3` (Pedagang, peta `kpasar`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kp3: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Pedagang". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kp3.length === 3`.
 
-### [ ] T36. **Sapaan NPC `kp4` (Gadis Kota, peta `kpasar`)**
+### [x] T36. **Sapaan NPC `kp4` (Gadis Kota, peta `kpasar`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kp4: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Gadis Kota". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kp4.length === 3`.
 
-### [ ] T37. **Sapaan NPC `kp5` (Kuli Angkut, peta `kpasar`)**
+### [x] T37. **Sapaan NPC `kp5` (Kuli Angkut, peta `kpasar`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kp5: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Kuli Angkut". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kp5.length === 3`.
 
-### [ ] T38. **Sapaan NPC `kp6` (Pedagang Rempah, peta `kpasar`)**
+### [x] T38. **Sapaan NPC `kp6` (Pedagang Rempah, peta `kpasar`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kp6: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Pedagang Rempah". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kp6.length === 3`.
 
-### [ ] T39. **Sapaan NPC `kp7` (Warga, peta `kpasar`)**
+### [x] T39. **Sapaan NPC `kp7` (Warga, peta `kpasar`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kp7: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Warga". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kp7.length === 3`.
 
-### [ ] T40. **Sapaan NPC `kp8` (Penjaga Kota, peta `kpasar`)**
+### [x] T40. **Sapaan NPC `kp8` (Penjaga Kota, peta `kpasar`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kp8: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Penjaga Kota". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kp8.length === 3`.
 
-### [ ] T41. **Sapaan NPC `ka1` (Murid Akademi, peta `kakademi`)**
+### [x] T41. **Sapaan NPC `ka1` (Murid Akademi, peta `kakademi`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `ka1: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Murid Akademi". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.ka1.length === 3`.
 
-### [ ] T42. **Sapaan NPC `ka2` (Murid Muda, peta `kakademi`)**
+### [x] T42. **Sapaan NPC `ka2` (Murid Muda, peta `kakademi`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `ka2: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Murid Muda". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.ka2.length === 3`.
 
-### [ ] T43. **Sapaan NPC `ka3` (Murid Akademi, peta `kakademi`)**
+### [x] T43. **Sapaan NPC `ka3` (Murid Akademi, peta `kakademi`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `ka3: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Murid Akademi". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.ka3.length === 3`.
 
-### [ ] T44. **Sapaan NPC `ka4` (Guru Tua, peta `kakademi`)**
+### [x] T44. **Sapaan NPC `ka4` (Guru Tua, peta `kakademi`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `ka4: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Guru Tua". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.ka4.length === 3`.
 
-### [ ] T45. **Sapaan NPC `ka5` (Penjaga Akademi, peta `kakademi`)**
+### [x] T45. **Sapaan NPC `ka5` (Penjaga Akademi, peta `kakademi`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `ka5: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Penjaga Akademi". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.ka5.length === 3`.
 
-### [ ] T46. **Sapaan NPC `kb1` (Anak Kota Bawah, peta `kbawah`)**
+### [x] T46. **Sapaan NPC `kb1` (Anak Kota Bawah, peta `kbawah`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kb1: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Anak Kota Bawah". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kb1.length === 3`.
 
-### [ ] T47. **Sapaan NPC `kb2` (Mantan Penambang, peta `kbawah`)**
+### [x] T47. **Sapaan NPC `kb2` (Mantan Penambang, peta `kbawah`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kb2: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Mantan Penambang". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kb2.length === 3`.
 
-### [ ] T48. **Sapaan NPC `kb3` (Ibu Kota Bawah, peta `kbawah`)**
+### [x] T48. **Sapaan NPC `kb3` (Ibu Kota Bawah, peta `kbawah`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kb3: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Ibu Kota Bawah". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kb3.length === 3`.
 
-### [ ] T49. **Sapaan NPC `kb4` (Anak Kota Bawah, peta `kbawah`)**
+### [x] T49. **Sapaan NPC `kb4` (Anak Kota Bawah, peta `kbawah`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `kb4: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Anak Kota Bawah". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.kb4.length === 3`.
 
-### [ ] T50. **Sapaan NPC `sambo` (Sambo, Pemburu Gelap, peta `deepwood`)**
+### [x] T50. **Sapaan NPC `sambo` (Sambo, Pemburu Gelap, peta `deepwood`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `sambo: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Sambo, Pemburu Gelap". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.sambo.length === 3`.
 
-### [ ] T51. **Sapaan NPC `pancing` (Pak Teguh, Nelayan, peta `river`)**
+### [x] T51. **Sapaan NPC `pancing` (Pak Teguh, Nelayan, peta `river`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `pancing: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Pak Teguh, Nelayan". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.pancing.length === 3`.
 
-### [ ] T52. **Sapaan NPC `mom` (Bu Wulan, peta `linahome`)**
+### [x] T52. **Sapaan NPC `mom` (Bu Wulan, peta `linahome`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `mom: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Bu Wulan". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.mom.length === 3`.
 
-### [ ] T53. **Sapaan NPC `temple_priest` (Pendeta Elian, peta `temple`)**
+### [x] T53. **Sapaan NPC `temple_priest` (Pendeta Elian, peta `temple`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `temple_priest: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Pendeta Elian". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
 - Cek: `npm run check`; konsol game `NPC_BARKS.temple_priest.length === 3`.
 
-### [ ] T54. **Sapaan NPC `dice_gambler` (Bram si Pengelana, peta `kinn`)**
+### [x] T54. **Sapaan NPC `dice_gambler` (Bram si Pengelana, peta `kinn`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `dice_gambler: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Bram si Pengelana". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
