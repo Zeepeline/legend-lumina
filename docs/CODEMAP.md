@@ -199,9 +199,9 @@ _Jurus: dash, tebasan putar, nova es_
 _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipakai (tingkat I–III)._
 `JURUS` 4 · `MASTERY` 13 · `tierOf` 14 · `learned` 15 · `useJurus()` 16 · `canTeach` 20 · `.learnTalk()` 23 · `.castSpell()` 38
 
-## src/systems/ambient.js (216 baris)
+## src/systems/ambient.js (235 baris)
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
-`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 71 · `.addCrit()` 72 · `.updAmbient()` 73 · `.ambOff()` 193 · `.ripple()` 194 · `artQuestArrow()` 197 · `.updQuestGuide()` 204
+`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 212 · `.ripple()` 213 · `artQuestArrow()` 216 · `.updQuestGuide()` 223
 
 ## src/systems/status.js (67 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_

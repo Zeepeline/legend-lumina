@@ -7712,9 +7712,28 @@ Object.assign(World.prototype, {
       }
     }
   },
-  addBird(x, y) { const E = this.envCfg, s = this.add.sprite(x, y, 'cr_bird', 0).setOrigin(.5, 1).setDepth(y); if (E.birdTint) s.setTint(E.birdTint); this.amb.push({ k: 'bird', s, st: 'peck', t: rnd(.5, 2) }); },
-  addFly(x, y) { const E = this.envCfg, s = this.add.sprite(x, y, 'cr_fly').play('cr_fly_f').setTint((E.flyTint || [0xffe070, 0xff9ad8, 0x9ad8ff, 0xffffff])[Math.floor(Math.random() * (E.flyTint ? E.flyTint.length : 4))]).setDepth(1.3e5); this.amb.push({ k: 'fly', s, hx: x, hy: y, ph: rnd(0, 6) }); },
-  addCrit(x, y) { const E = this.envCfg, k = E.crit[Math.floor(Math.random() * E.crit.length)], s = this.add.sprite(x, y, 'cr_' + k, 0).setOrigin(.5, 1).setDepth(y); this.amb.push({ k: 'crit', s, st: 'idle', t: rnd(.5, 3), vx: 0, vy: 0 }); },
+  addBird(x, y) {
+    const E = this.envCfg || ENV[this.M?.id] || {};
+    const s = this.add.sprite(x, y, 'cr_bird', 0).setOrigin(.5, 1).setDepth(y);
+    if (E.birdTint) s.setTint(E.birdTint);
+    this.amb = this.amb || [];
+    this.amb.push({ k: 'bird', s, st: 'peck', t: rnd(.5, 2) });
+  },
+  addFly(x, y) {
+    const E = this.envCfg || ENV[this.M?.id] || {};
+    const tints = E.flyTint || [0xffe070, 0xff9ad8, 0x9ad8ff, 0xffffff];
+    const s = this.add.sprite(x, y, 'cr_fly').play('cr_fly_f').setTint(tints[Math.floor(Math.random() * tints.length)]).setDepth(1.3e5);
+    this.amb = this.amb || [];
+    this.amb.push({ k: 'fly', s, hx: x, hy: y, ph: rnd(0, 6) });
+  },
+  addCrit(x, y) {
+    const E = this.envCfg || ENV[this.M?.id] || {};
+    if (!E.crit || !E.crit.length) return;
+    const k = E.crit[Math.floor(Math.random() * E.crit.length)];
+    const s = this.add.sprite(x, y, 'cr_' + k, 0).setOrigin(.5, 1).setDepth(y);
+    this.amb = this.amb || [];
+    this.amb.push({ k: 'crit', s, st: 'idle', t: rnd(.5, 3), vx: 0, vy: 0 });
+  },
   updAmbient(dt) {
     if (!this.amb) return; const pl = this.pl, cam = this.cameras.main, night = isNight(), E = this.envCfg; if (!E) return;
     const view = cam.worldView, off = (s, m = 120) => s.x < view.x - m || s.x > view.right + m || s.y < view.y - m || s.y > view.bottom + m;
