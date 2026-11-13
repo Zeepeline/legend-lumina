@@ -3,10 +3,10 @@
 // ---------------- MONSTER ----------------
 // ai: hop | fly | shoot | turret | lunge | walk | charge | ghost | golem | boss | qboss | sboss | gboss
 const ENEMY = {
-  slime: { name: 'Slime', tex: 'slime', hp: 12, atk: 6, def: 1, spd: 40, exp: 4, gold: [1, 3], r: 7, ai: 'hop', drop: ['jelly', .5] },
-  gold_slime: { name: 'Slime Emas', tex: 'slime', hp: 20, atk: 0, def: 12, spd: 130, exp: 100, gold: [150, 250], r: 7, ai: 'flee', drop: ['amethyst_gem', 0.8] },
+  slime: { name: 'Slime', tex: 'slime_hd', hp: 24, atk: 6, def: 1, spd: 40, exp: 4, gold: [1, 3], r: 9, ai: 'hop', scale: 0.46, drop: ['jelly', .5] },
+  gold_slime: { name: 'Slime Emas', tex: 'slime_hd', hp: 25, atk: 0, def: 12, spd: 130, exp: 100, gold: [150, 250], r: 9, ai: 'flee', scale: 0.46, drop: ['amethyst_gem', 0.8] },
   mimic: { name: 'Peti Mimic', tex: 'ch_goblin', hp: 60, atk: 15, def: 6, spd: 85, exp: 45, gold: [60, 100], r: 8, ai: 'lunge', ch: 1, drop: ['amethyst_gem', 0.6] },
-  slimeb: { name: 'Slime Biru', tex: 'slimeb', hp: 24, atk: 9, def: 2, spd: 44, exp: 8, gold: [2, 5], r: 7, ai: 'hop', drop: ['jelly', .6] },
+  slimeb: { name: 'Slime Biru', tex: 'slime_hd', hp: 32, atk: 9, def: 2, spd: 44, exp: 8, gold: [2, 5], r: 10, ai: 'hop', scale: 0.52, drop: ['jelly', .6] },
   slimer: { name: 'Slime Merah', tex: 'slimer', hp: 36, atk: 13, def: 3, spd: 50, exp: 13, gold: [3, 7], r: 7, ai: 'hop', drop: ['jelly', .6] },
   slimei: { name: 'Slime Es', tex: 'slimei', hp: 50, atk: 17, def: 6, spd: 46, exp: 22, gold: [5, 10], r: 7, ai: 'hop', drop: ['shard', .35], fx: ['chill', 3, .5] },
   bat: { name: 'Kelelawar', tex: 'bat', hp: 9, atk: 7, def: 0, spd: 56, exp: 5, gold: [1, 4], r: 6, ai: 'fly', fly: 1 },

@@ -104,5 +104,17 @@ function buildTextures(sc) {
   for (const k in CHARS) for (const d of ['down', 'up', 'side']) A.create({ key: k + '_' + d, frames: [1, 0, 2, 0].map(f => ({ key: 'ch_' + k, frame: d + f })), frameRate: 8, repeat: -1 });
   if (typeof applyGptSwap === 'function') applyGptSwap(T);
   if (typeof applyGptMonsters === 'function') applyGptMonsters(sc); /* sprite monster GPT (gfx/gptmonsters.js) */
+  if (IMGEL.mon_slime_hd) {
+    if (!T.exists('slime_hd')) sc.textures.addSpriteSheet('slime_hd', IMGEL.mon_slime_hd, { frameWidth: 100, frameHeight: 100 });
+    const regA = (k, st, ed, fps, r) => {
+      if (!A.exists(k)) A.create({ key: k, frames: A.generateFrameNumbers('slime_hd', { start: st, end: ed }), frameRate: fps, repeat: r });
+    };
+    regA('slime_hd_idle', 0, 5, 7, -1); regA('slime_hd_hop', 7, 13, 11, -1);
+    regA('slime_hd_atk', 14, 20, 12, 0); regA('slime_hd_hurt', 21, 23, 10, 0);
+    regA('slime_hd_die', 28, 34, 9, 0); regA('slime_hd_mv', 7, 13, 11, -1);
+    regA('slime_idle', 0, 5, 7, -1); regA('slime_hop', 7, 13, 11, -1);
+    regA('slime_atk', 14, 20, 12, 0); regA('slime_hurt', 21, 23, 10, 0);
+    regA('slime_die', 28, 34, 9, 0);
+  }
   ICONS.coin = (() => { const s = artCoin(); const [c, x] = mk(10, 10); x.drawImage(s.c, 0, 0); return c.toDataURL(); })();
 }
