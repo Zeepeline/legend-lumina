@@ -27,7 +27,12 @@ loadImgs().then(() => {
   game.events.once('ready', () => { setTimeout(() => { SCREEN.insertBefore(game.canvas, SCREEN.firstChild); titleScreen(); }, 50); });
 });
 window.__game = { get S() { return S; }, G, MAPS, press, Input, get sc() { return G.scene; }, newState, saveGame, loadSave, ITEMS };
-// PWA: daftarkan service worker (hanya di http/https, bukan file://) agar bisa di-install & main offline.
+// PWA: daftarkan service worker untuk production offline; di localhost buang cache agar perubahan langsung terbaca.
 if ('serviceWorker' in navigator && /^https?:/.test(location.protocol) && !location.pathname.endsWith('/dist/game.html')) {
-  navigator.serviceWorker.register('sw.js').catch(() => { });
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+    navigator.serviceWorker.getRegistrations().then(regs => { for (const r of regs) r.unregister(); });
+    if ('caches' in window) caches.keys().then(ks => Promise.all(ks.map(k => caches.delete(k))));
+  } else {
+    navigator.serviceWorker.register('sw.js').catch(() => { });
+  }
 }

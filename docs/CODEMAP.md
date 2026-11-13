@@ -447,6 +447,6 @@ _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan ole
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
-## src/main.js (34 baris)
+## src/main.js (39 baris)
 _Mulai game Phaser_
 `game` 20
