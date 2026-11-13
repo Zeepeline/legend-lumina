@@ -67,7 +67,7 @@ _Monster (peta piksel di MON)_
 _Monster versi garang: bentuk baru (mata menyala, taring, tanduk, duri) + pencahayaan otomatis. Menimpa MON lama, kunci palet tetap sama agar varian warna jalan._
 `mixHex()` 40 · `shadeMon()` 41 · `monFrame2()` 57
 
-## src/art/items.js (155 baris)
+## src/art/items.js (221 baris)
 _Ikon item & senjata_
 `SWORD` 3 · `artSword()` 4 · `artSpear()` 9 · `artAxe()` 10 · `artBow()` 11 · `artArrow()` 12 · `artCoin()` 13 · `artPotion()` 18 · `artHeart()` 19 · `ICON_MAP` 21 · `ICONS_DEF` 48 · `iconFallback()` 107 · `artIcon()` 113
 

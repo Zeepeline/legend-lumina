@@ -30,7 +30,7 @@ Kabut rawa, wisp malam, pedagang keliling, banner perbatasan, posisi kucing/Moch
 - Jangan ubah baris noise lain. Fungsi harus tetap murni (tanpa acak global).
 - Cek: perbatasan Hutan Lumina ↔ Rimba Peralihan (`goto('forest', 30, 600)`) tidak ada garis lurus.
 
-### [ ] T7. Ikon item yang hilang
+### [x] T7. Ikon item yang hilang
 - Konsol game memperingatkan `Ikon cadangan dipakai untuk item: ...` (antara lain `amethyst_gem`, `frost_moss`, `flower_crown`, `honey_jar`, `sandalwood_comb`; buka game, catat daftar lengkapnya dari konsol).
 - File: `src/art/items.js`, tabel `ICONS_DEF`. Tambahkan entri per item dengan meniru entri item serupa (mis. permata → contoh ikon permata yang sudah ada, bunga → ikon bunga). Ikuti palet `docs/ART_BIBLE.md` bagian 2 saja.
 - Satu commit boleh berisi semua ikon. Cek: konsol tidak lagi menampilkan peringatan untuk item itu.
