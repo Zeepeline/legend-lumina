@@ -32,6 +32,9 @@ Visi 12 · Prinsip Storytelling 27 · Pacing 45 · Tujuan Pemain 65 · Immediate
 ## SPOILER_ENDING.md — ⚠️ SPOILER — KHUSUS UNTUK AI AGENT ⚠️ (50 baris, ~1100 token)
 _Isi rahasia: baca hanya saat menulis cerita/bab/boss. JANGAN dibahas dengan pemilik._
 
+## TASKS_AGENT.md — TASKS_AGENT — tugas kecil berdampak (untuk agen dengan konteks terbatas) (76 baris, ~1700 token)
+A. Mode Benua — port fitur kecil (prioritas) 14 · [ ] T1. Cuaca kabut Rawa Senja di mode benua 16 · [ ] T2. Wisp malam di mode benua 22 · [ ] T3. Pedagang keliling (Kang Kembara) di mode benua 28 · [ ] T4. Banner wilayah tidak berkedip saat bolak-balik di perbatasan 33 · [ ] T5. Kucing desa & Mochi: periksa posisi 38 · B. Visual & kenyamanan 41 · [ ] T6. Garis tipis di perbatasan dua wilayah bertanah sama 43 · [ ] T7. Ikon item yang hilang 50 · [ ] T8. Cari & perbaiki "Failed to load resource" saat boot 55 · C. Kerapian kode (aman, mekanis) 59 · [ ] T9. world.js di bawah 400 baris 61 · [ ] T10. Cicil utang baris panjang (1 file per tugas, ulangi) 66 · [ ] T11. Tes menu yang ketinggalan 70
+
 ## VALIDATION_RULES.md — Asset Validation (36 baris, ~200 token)
 _(tanpa sub-bagian)_
 

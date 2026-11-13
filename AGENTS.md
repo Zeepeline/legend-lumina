@@ -14,6 +14,7 @@ Proyek: action RPG top-down untuk browser/HP, **Phaser 3.80.1**, skrip klasik gl
 | Tugas | Wajib baca (bagian relevan saja) |
 |---|---|
 | Menulis/mengubah kode apa pun | `docs/CODE_RULES.md` |
+| Tugas kecil siap ambil (agen konteks terbatas) | `docs/TASKS_AGENT.md` — ambil SATU tugas teratas |
 | Lanjutan dunia terbuka (open world) | `docs/HANDOFF_OPENWORLD.md` |
 | Menaruh objek/dekorasi/peta | `docs/PLACEMENT_RULES.md` |
 | NPC, dialog, rutinitas | `docs/NPC_RULES.md` |
