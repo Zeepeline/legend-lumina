@@ -11,7 +11,11 @@ function codeDialog(mode) {
   return new Promise(res => {
     G.lock++; const prev = UIH;
     const w = win('menu codew', `<div class="mh">${mode === 'out' ? 'Ekspor Save' : 'Impor Save'}</div>
-      <div class="mf" style="margin:2px 0 4px">${mode === 'out' ? 'Salin kode ini dan simpan di tempat aman (catatan, chat ke diri sendiri). Tempel di menu Impor di perangkat lain.' : 'Tempel kode save di bawah. Progres sekarang akan diganti.'}</div>
+      <div class="mf" style="margin:2px 0 4px">${
+        mode === 'out'
+          ? 'Salin kode ini dan simpan di tempat aman (catatan, chat ke diri sendiri). Tempel di menu Impor di perangkat lain.'
+          : 'Tempel kode save di bawah. Progres sekarang akan diganti.'
+      }</div>
       <textarea spellcheck="false" ${mode === 'out' ? 'readonly' : 'placeholder="LUMINA1:..."'}></textarea>
       <div class="cbtn"><span class="opt sel" data-a="ok">${mode === 'out' ? 'Salin' : 'Muat'}</span><span class="opt" data-a="x">Tutup</span></div>`);
     Object.assign(w.style, { left: '12px', right: '12px', top: '24px' });
@@ -21,7 +25,18 @@ function codeDialog(mode) {
     const done = v => { w.remove(); UIH = prev; G.lock--; res(v); };
     const act = async a => {
       if (a === 'x') return done(false);
-      if (mode === 'out') { ta.select(); try { await navigator.clipboard.writeText(ta.value); msg.textContent = 'Tersalin! Simpan kode ini baik-baik.'; } catch (_) { try { document.execCommand('copy'); msg.textContent = 'Tersalin!'; } catch (__) { msg.textContent = 'Tahan teks lalu pilih Salin.'; } } sfx('ok'); return; }
+      if (mode === 'out') {
+        ta.select();
+        try {
+          await navigator.clipboard.writeText(ta.value);
+          msg.textContent = 'Tersalin! Simpan kode ini baik-baik.';
+        } catch (_) {
+          try { document.execCommand('copy'); msg.textContent = 'Tersalin!'; }
+          catch (__) { msg.textContent = 'Tahan teks lalu pilih Salin.'; }
+        }
+        sfx('ok');
+        return;
+      }
       const o = readCode(ta.value); if (!o) { sfx('buzz'); msg.textContent = 'Kode tidak valid. Pastikan disalin lengkap, diawali LUMINA1:'; return; }
       try { localStorage.setItem(SAVE_KEY, JSON.stringify(o)); } catch (_) { }
       sfx('save'); done(true);

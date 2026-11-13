@@ -83,10 +83,6 @@
   "lines": 0,
   "long": 21
  },
- "src/main.js": {
-  "lines": 0,
-  "long": 2
- },
  "src/npc/brain.js": {
   "lines": 0,
   "long": 14
@@ -94,10 +90,6 @@
  "src/npc/dialog.js": {
   "lines": 473,
   "long": 38
- },
- "src/npc/npcs.js": {
-  "lines": 0,
-  "long": 2
  },
  "src/scene/world.js": {
   "lines": 0,
@@ -259,17 +251,9 @@
   "lines": 0,
   "long": 19
  },
- "src/ui/savecode.js": {
-  "lines": 0,
-  "long": 2
- },
  "src/ui/shop.js": {
-  "lines": 407,
-  "long": 2
- },
- "src/ui/title.js": {
-  "lines": 0,
-  "long": 2
+  "lines": 419,
+  "long": 0
  },
  "src/ui/widgets.js": {
   "lines": 0,
@@ -302,10 +286,6 @@
  "src/world/maps/meadow.js": {
   "lines": 0,
   "long": 3
- },
- "src/world/maps/snow.js": {
-  "lines": 0,
-  "long": 2
  },
  "src/world/maps/swamp.js": {
   "lines": 0,

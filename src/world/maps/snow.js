@@ -18,11 +18,19 @@ MAPS.snow = {
   npcs: [{ id: 'nila', ch: 'nila', name: 'Penjaga Nila', x: 596, y: 1080, dir: 'down' }],
   torches: [[260, 744], [1020, 704], [640, 530]],
   iceGate: [600, 372, 80, 26],
-  chests: [{ id: 'n1', x: 160, y: 1060, item: 'hipotion2' }, { id: 'n2', x: 1130, y: 1040, item: 'antidote3' }, { id: 'n3', x: 640, y: 150, item: 'fspear', needFlag: 'dragon' }],
+  chests: [
+    { id: 'n1', x: 160, y: 1060, item: 'hipotion2' },
+    { id: 'n2', x: 1130, y: 1040, item: 'antidote3' },
+    { id: 'n3', x: 640, y: 150, item: 'fspear', needFlag: 'dragon' }
+  ],
   enemies: [['wolfs', 520, 1040], ['slimef', 760, 1040], ['wolfs', 420, 900], ['salam', 330, 820], ['slimei', 200, 700], ['wolfs', 300, 640],
     ['salam', 860, 900], ['slimef', 960, 800], ['wolfs', 1100, 660], ['golemi', 1000, 600], ['batc', 900, 700],
     ['golemi', 560, 600], ['slimef', 720, 620], ['wolfs', 640, 720], ['salam', 520, 760], ['batc', 760, 480], ['slimei', 480, 480]],
   bosses: [{ type: 'kryos', flag: 'dragon', x: 640, y: 210, zone: [540, 236, 200, 110], need: 12, after: 'dragon',
-    intro: [['???', 'Kraaah... Siapa berani menyalakan api di wilayahku?'], ['Kryos', 'Aku Kryos, Naga Es! Morgath membangunkanku sebelum dia lenyap. Lumina akan membeku selamanya!']] }],
+    intro: [
+      ['???', 'Kraaah... Siapa berani menyalakan api di wilayahku?'],
+      ['Kryos', 'Aku Kryos, Naga Es! Morgath membangunkanku sebelum dia lenyap. Lumina akan membeku selamanya!']
+    ]
+  }],
   trees: { n: 1100, min: 30, types: [['treeSn', .62], ['rock', .26], ['bushW', .12]] },
 };

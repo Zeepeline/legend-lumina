@@ -202,7 +202,13 @@ async function forgeMenu() {
   for (; ;) {
     const r = await choose({ head: 'Tempa · ' + S.gold + ' G', x: 30, y: 22, w: 228, start: sel,
       items: [...RECIPES.map(R => ({ t: icon(R.id) + ITEMS[R.id].n + ownedEq(R.id), r: R.gold + ' G', dis: has(R.id) })), { t: 'Kembali' }],
-      foot: i => { if (i >= RECIPES.length) return ''; const R = RECIPES[i]; return ITEMS[R.id].d + '<br>Bahan: ' + Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
+      foot: i => {
+        if (i >= RECIPES.length) return '';
+        const R = RECIPES[i];
+        const ing = Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · ');
+        return ITEMS[R.id].d + '<br>Bahan: ' + ing;
+      }
+    });
     if (r < 0 || r === RECIPES.length) return; sel = r; const R = RECIPES[r];
     if (!can(R)) { sfx('buzz'); await say('Bahan atau uangnya belum cukup.', 'Pak Besi'); continue; }
     S.gold -= R.gold; for (const [k, n] of Object.entries(R.need)) addItem(k, -n); addItem(R.id);
@@ -217,7 +223,13 @@ async function cookMenu(title = 'Dapur Bu Rina', chef = 'Bu Rina') {
   for (; ;) {
     const r = await choose({ head: title, x: 24, y: 22, w: 240, start: sel,
       items: [...COOK.map(R => ({ t: icon(R.id) + ITEMS[R.id].n, r: 'x' + (S.inv[R.id] || 0) })), { t: 'Kembali' }],
-      foot: i => { if (i >= COOK.length) return ''; const R = COOK[i]; return ITEMS[R.id].d + '<br>Bahan: ' + Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
+      foot: i => {
+        if (i >= COOK.length) return '';
+        const R = COOK[i];
+        const ing = Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · ');
+        return ITEMS[R.id].d + '<br>Bahan: ' + ing;
+      }
+    });
     if (r < 0 || r === COOK.length) return; sel = r; const R = COOK[r];
     if (!can(R)) { sfx('buzz'); await say('Bahannya belum cukup. Ikan dari memancing, sayur dari kebun/alam liar.', chef); continue; }
 

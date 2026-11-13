@@ -115,7 +115,7 @@ _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
-## src/world/maps/snow.js (29 baris)
+## src/world/maps/snow.js (37 baris)
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 
@@ -151,7 +151,7 @@ _Data item & resep tempa_
 _Data musuh & proyektil_
 `ENEMY` 5 · `PROJ` 48 · `BOSS_AI` 49 · `BEAST` 50
 
-## src/data/bestiary_text.js (158 baris)
+## src/data/bestiary_text.js (157 baris)
 _Teks bestiari per musuh (id = kunci ENEMY): habitat & tips melawan. Dipasang ke layar Bestiari oleh sesi besar._
 `BESTIARY_TEXT` 3
 
@@ -303,7 +303,7 @@ _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 _Segel kuil, Mochi hilang, kristal, peti harta_
 `.touchBarrier()` 4 · `.takeMochi()` 15 · `.useCrystal()` 19 · `.openChest()` 32 · `interactRunePillar()` 82
 
-## src/npc/npcs.js (117 baris)
+## src/npc/npcs.js (126 baris)
 _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_
 `NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 85 · `.updCritter()` 102
 
@@ -403,9 +403,9 @@ _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.m
 _Percakapan NPC, toko, bengkel, penginapan_
 `.npcHasQuest()` 4 · `.talkNpc()` 9 · `.offerPet()` 168 · `.shop()` 172 · `.smithy()` 217 · `.innTalk()` 262 · `.talkArenaMaster()` 273 · `.startCityArena()` 310 · `.talkNightMerchant()` 374 · `.talkCourier()` 388 · `.talkAuctioneer()` 422
 
-## src/ui/shop.js (407 baris)
+## src/ui/shop.js (419 baris)
 _Menu beli, jual, tempa_
-`icon` 4 · `ownedEq` 5 · `buyMenu()` 6 · `buybackMenu()` 62 · `sellMenu()` 97 · `forgeMenu()` 199 · `cookMenu()` 215 · `upgCost()` 274 · `upgradeMenu()` 275 · `socketMenu()` 335
+`icon` 4 · `ownedEq` 5 · `buyMenu()` 6 · `buybackMenu()` 62 · `sellMenu()` 97 · `forgeMenu()` 199 · `cookMenu()` 221 · `upgCost()` 286 · `upgradeMenu()` 287 · `socketMenu()` 347
 
 ## src/ui/bag.js (261 baris)
 _Tas (inventaris) & buku misi_
@@ -419,11 +419,11 @@ _Layar peta & navigasi tujuan misi_
 _Menu utama, jurus, bestiari, pencapaian_
 `subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 93 · `enemyThumb()` 105 · `openBestiary()` 106 · `openFishLog()` 114 · `openAch()` 115 · `openDlgLog()` 121 · `chooseSlot()` 128 · `openDebugMenu()` 137 · `openPhotoMode()` 194 · `TALENT_DEFS` 262 · `getTalentPoints()` 289 · `openTalentTree()` 299
 
-## src/ui/savecode.js (34 baris)
+## src/ui/savecode.js (49 baris)
 _Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)_
 `CODE_TAG` 3 · `saveCode()` 4 · `readCode()` 5 · `codeDialog()` 10
 
-## src/ui/title.js (34 baris)
+## src/ui/title.js (41 baris)
 _Layar judul_
 `titleScreen()` 4
 
@@ -435,6 +435,6 @@ _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung da
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
 `GPT_SWAP` 4 · `GPT_LOOK` 5 · `applyGptSwap()` 10
 
-## src/main.js (27 baris)
+## src/main.js (34 baris)
 _Mulai game Phaser_
-`game` 15
+`game` 20

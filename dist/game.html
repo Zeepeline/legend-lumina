@@ -5508,12 +5508,20 @@ MAPS.snow = {
   npcs: [{ id: 'nila', ch: 'nila', name: 'Penjaga Nila', x: 596, y: 1080, dir: 'down' }],
   torches: [[260, 744], [1020, 704], [640, 530]],
   iceGate: [600, 372, 80, 26],
-  chests: [{ id: 'n1', x: 160, y: 1060, item: 'hipotion2' }, { id: 'n2', x: 1130, y: 1040, item: 'antidote3' }, { id: 'n3', x: 640, y: 150, item: 'fspear', needFlag: 'dragon' }],
+  chests: [
+    { id: 'n1', x: 160, y: 1060, item: 'hipotion2' },
+    { id: 'n2', x: 1130, y: 1040, item: 'antidote3' },
+    { id: 'n3', x: 640, y: 150, item: 'fspear', needFlag: 'dragon' }
+  ],
   enemies: [['wolfs', 520, 1040], ['slimef', 760, 1040], ['wolfs', 420, 900], ['salam', 330, 820], ['slimei', 200, 700], ['wolfs', 300, 640],
     ['salam', 860, 900], ['slimef', 960, 800], ['wolfs', 1100, 660], ['golemi', 1000, 600], ['batc', 900, 700],
     ['golemi', 560, 600], ['slimef', 720, 620], ['wolfs', 640, 720], ['salam', 520, 760], ['batc', 760, 480], ['slimei', 480, 480]],
   bosses: [{ type: 'kryos', flag: 'dragon', x: 640, y: 210, zone: [540, 236, 200, 110], need: 12, after: 'dragon',
-    intro: [['???', 'Kraaah... Siapa berani menyalakan api di wilayahku?'], ['Kryos', 'Aku Kryos, Naga Es! Morgath membangunkanku sebelum dia lenyap. Lumina akan membeku selamanya!']] }],
+    intro: [
+      ['???', 'Kraaah... Siapa berani menyalakan api di wilayahku?'],
+      ['Kryos', 'Aku Kryos, Naga Es! Morgath membangunkanku sebelum dia lenyap. Lumina akan membeku selamanya!']
+    ]
+  }],
   trees: { n: 1100, min: 30, types: [['treeSn', .62], ['rock', .26], ['bushW', .12]] },
 };
 
@@ -6522,7 +6530,6 @@ const BESTIARY_TEXT = {
     tip: 'Jadikan dukun target utama agar ia tidak sempat menyembuhkan kawanannya.',
   },
 };
-
 
 'use strict';
 // Teks misi, tujuan misi, jurus, pencapaian
@@ -14002,7 +14009,13 @@ Object.assign(World.prototype, {
     this.npcBrain(o, dt, locked, dPl);
   },
   updCritter(c, dt) {
-    if (c.fly) { c.ph += dt * c.sp; c.s.x = c.ax + Math.sin(c.ph * 1.3) * 60 + Math.sin(c.ph * 3.1) * 8; c.s.y = c.ay + Math.sin(c.ph * .9) * 40 + Math.cos(c.ph * 4) * 5; c.s.setDepth(c.s.y + 40); return; }
+    if (c.fly) {
+      c.ph += dt * c.sp;
+      c.s.x = c.ax + Math.sin(c.ph * 1.3) * 60 + Math.sin(c.ph * 3.1) * 8;
+      c.s.y = c.ay + Math.sin(c.ph * .9) * 40 + Math.cos(c.ph * 4) * 5;
+      c.s.setDepth(c.s.y + 40);
+      return;
+    }
     const s = c.s; c.sh.setPosition(s.x, s.y - 1).setDepth(s.y - .5); s.setDepth(s.y);
     const d = Math.hypot(this.pl.x - s.x, this.pl.y - s.y);
     if (c.busy) return; c.t -= dt;
@@ -14012,7 +14025,10 @@ Object.assign(World.prototype, {
       else { tx = c.home.x + rnd(-46, 46); ty = c.home.y + rnd(-26, 26); }
       tx = clamp(tx, 60, this.M.w - 60); ty = clamp(ty, 130, this.M.h - 60);
       const dist = Math.hypot(tx - s.x, ty - s.y); c.busy = true; s.flipX = tx > s.x; s.play(c.key + '_mv'); s.anims.timeScale = flee ? 2.5 : 1;
-      this.tweens.add({ targets: s, x: tx, y: ty, duration: dist / (flee ? 70 : 20) * 1000, onComplete: () => { c.busy = false; s.anims.stop(); s.setFrame(0); c.t = rnd(2, 5); } });
+      this.tweens.add({
+        targets: s, x: tx, y: ty, duration: dist / (flee ? 70 : 20) * 1000,
+        onComplete: () => { c.busy = false; s.anims.stop(); s.setFrame(0); c.t = rnd(2, 5); }
+      });
     }
   },
 });
@@ -18084,7 +18100,13 @@ async function forgeMenu() {
   for (; ;) {
     const r = await choose({ head: 'Tempa · ' + S.gold + ' G', x: 30, y: 22, w: 228, start: sel,
       items: [...RECIPES.map(R => ({ t: icon(R.id) + ITEMS[R.id].n + ownedEq(R.id), r: R.gold + ' G', dis: has(R.id) })), { t: 'Kembali' }],
-      foot: i => { if (i >= RECIPES.length) return ''; const R = RECIPES[i]; return ITEMS[R.id].d + '<br>Bahan: ' + Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
+      foot: i => {
+        if (i >= RECIPES.length) return '';
+        const R = RECIPES[i];
+        const ing = Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · ');
+        return ITEMS[R.id].d + '<br>Bahan: ' + ing;
+      }
+    });
     if (r < 0 || r === RECIPES.length) return; sel = r; const R = RECIPES[r];
     if (!can(R)) { sfx('buzz'); await say('Bahan atau uangnya belum cukup.', 'Pak Besi'); continue; }
     S.gold -= R.gold; for (const [k, n] of Object.entries(R.need)) addItem(k, -n); addItem(R.id);
@@ -18099,7 +18121,13 @@ async function cookMenu(title = 'Dapur Bu Rina', chef = 'Bu Rina') {
   for (; ;) {
     const r = await choose({ head: title, x: 24, y: 22, w: 240, start: sel,
       items: [...COOK.map(R => ({ t: icon(R.id) + ITEMS[R.id].n, r: 'x' + (S.inv[R.id] || 0) })), { t: 'Kembali' }],
-      foot: i => { if (i >= COOK.length) return ''; const R = COOK[i]; return ITEMS[R.id].d + '<br>Bahan: ' + Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · '); } });
+      foot: i => {
+        if (i >= COOK.length) return '';
+        const R = COOK[i];
+        const ing = Object.entries(R.need).map(([k, n]) => `${icon(k)}${ITEMS[k].n} ${S.inv[k] || 0}/${n}`).join(' · ');
+        return ITEMS[R.id].d + '<br>Bahan: ' + ing;
+      }
+    });
     if (r < 0 || r === COOK.length) return; sel = r; const R = COOK[r];
     if (!can(R)) { sfx('buzz'); await say('Bahannya belum cukup. Ikan dari memancing, sayur dari kebun/alam liar.', chef); continue; }
 
@@ -18974,7 +19002,11 @@ function codeDialog(mode) {
   return new Promise(res => {
     G.lock++; const prev = UIH;
     const w = win('menu codew', `<div class="mh">${mode === 'out' ? 'Ekspor Save' : 'Impor Save'}</div>
-      <div class="mf" style="margin:2px 0 4px">${mode === 'out' ? 'Salin kode ini dan simpan di tempat aman (catatan, chat ke diri sendiri). Tempel di menu Impor di perangkat lain.' : 'Tempel kode save di bawah. Progres sekarang akan diganti.'}</div>
+      <div class="mf" style="margin:2px 0 4px">${
+        mode === 'out'
+          ? 'Salin kode ini dan simpan di tempat aman (catatan, chat ke diri sendiri). Tempel di menu Impor di perangkat lain.'
+          : 'Tempel kode save di bawah. Progres sekarang akan diganti.'
+      }</div>
       <textarea spellcheck="false" ${mode === 'out' ? 'readonly' : 'placeholder="LUMINA1:..."'}></textarea>
       <div class="cbtn"><span class="opt sel" data-a="ok">${mode === 'out' ? 'Salin' : 'Muat'}</span><span class="opt" data-a="x">Tutup</span></div>`);
     Object.assign(w.style, { left: '12px', right: '12px', top: '24px' });
@@ -18984,7 +19016,18 @@ function codeDialog(mode) {
     const done = v => { w.remove(); UIH = prev; G.lock--; res(v); };
     const act = async a => {
       if (a === 'x') return done(false);
-      if (mode === 'out') { ta.select(); try { await navigator.clipboard.writeText(ta.value); msg.textContent = 'Tersalin! Simpan kode ini baik-baik.'; } catch (_) { try { document.execCommand('copy'); msg.textContent = 'Tersalin!'; } catch (__) { msg.textContent = 'Tahan teks lalu pilih Salin.'; } } sfx('ok'); return; }
+      if (mode === 'out') {
+        ta.select();
+        try {
+          await navigator.clipboard.writeText(ta.value);
+          msg.textContent = 'Tersalin! Simpan kode ini baik-baik.';
+        } catch (_) {
+          try { document.execCommand('copy'); msg.textContent = 'Tersalin!'; }
+          catch (__) { msg.textContent = 'Tahan teks lalu pilih Salin.'; }
+        }
+        sfx('ok');
+        return;
+      }
       const o = readCode(ta.value); if (!o) { sfx('buzz'); msg.textContent = 'Kode tidak valid. Pastikan disalin lengkap, diawali LUMINA1:'; return; }
       try { localStorage.setItem(SAVE_KEY, JSON.stringify(o)); } catch (_) { }
       sfx('save'); done(true);
@@ -19000,7 +19043,10 @@ function codeDialog(mode) {
 // ---------------- LAYAR JUDUL ----------------
 async function titleScreen() {
   const t = document.createElement('div'); t.id = 'title';
-  t.innerHTML = `<div class="logo"><small>LEGENDA</small>LUMINA</div><div class="sub">— ACTION RPG —</div><div class="hint" id="verClick">versi ${GAME_VERSION}</div>`;
+  t.innerHTML =
+    `<div class="logo"><small>LEGENDA</small>LUMINA</div>` +
+    `<div class="sub">— ACTION RPG —</div>` +
+    `<div class="hint" id="verClick">versi ${GAME_VERSION}</div>`;
   UI.appendChild(t); showHud(false);
   let vClicks = 0;
   const vc = t.querySelector('#verClick');
@@ -19014,7 +19060,11 @@ async function titleScreen() {
     }
   });
   const anySlot = [0, 1, 2].some(i => slotInfo(i));
-  const r = await choose({ items: [{ t: 'Mulai Baru' }, { t: 'Lanjutkan', dis: !hasSave() }, { t: 'Impor Kode' }, { t: 'Pilih Slot', dis: !anySlot }], start: hasSave() ? 1 : 0, cancel: false, style: { left: '50%', transform: 'translateX(-50%)', bottom: '30px', width: '110px' } });
+  const r = await choose({
+    items: [{ t: 'Mulai Baru' }, { t: 'Lanjutkan', dis: !hasSave() }, { t: 'Impor Kode' }, { t: 'Pilih Slot', dis: !anySlot }],
+    start: hasSave() ? 1 : 0, cancel: false,
+    style: { left: '50%', transform: 'translateX(-50%)', bottom: '30px', width: '110px' }
+  });
   if (r === 3) { const s = await chooseSlot('load'); if (s >= 0) setSlot(s); t.remove(); return titleScreen(); }
   if (r === 0 && [0, 1, 2].some(i => slotInfo(i))) { const s = await chooseSlot('new'); if (s < 0) { t.remove(); return titleScreen(); } setSlot(s); }
   if (r === 2) { t.remove(); if (await codeDialog('in')) { location.reload(); return; } return titleScreen(); }
@@ -19163,7 +19213,12 @@ function applyGptSwap(T) {
   const stop = e => e.preventDefault(), opt = { passive: false };
   for (const ev of ['gesturestart', 'gesturechange', 'gestureend']) document.addEventListener(ev, stop, opt);
   document.addEventListener('touchmove', e => { if (e.touches.length > 1 || (e.scale && e.scale !== 1)) e.preventDefault(); }, opt);
-  let last = 0; document.addEventListener('touchend', e => { const t = Date.now(); if (t - last < 320 && !e.target.closest('textarea')) e.preventDefault(); last = t; }, opt);
+  let last = 0;
+  document.addEventListener('touchend', e => {
+    const t = Date.now();
+    if (t - last < 320 && !e.target.closest('textarea')) e.preventDefault();
+    last = t;
+  }, opt);
   document.addEventListener('dblclick', stop, opt);
   window.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, opt);
   window.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) e.preventDefault(); });
@@ -19181,7 +19236,9 @@ loadImgs().then(() => {
 });
 window.__game = { get S() { return S; }, G, MAPS, press, Input, get sc() { return G.scene; }, newState, saveGame, loadSave, ITEMS };
 // PWA: daftarkan service worker (hanya di http/https, bukan file://) agar bisa di-install & main offline.
-if ('serviceWorker' in navigator && /^https?:/.test(location.protocol) && !location.pathname.endsWith('/dist/game.html')) navigator.serviceWorker.register('sw.js').catch(() => { });
+if ('serviceWorker' in navigator && /^https?:/.test(location.protocol) && !location.pathname.endsWith('/dist/game.html')) {
+  navigator.serviceWorker.register('sw.js').catch(() => { });
+}
 
 </script>
 </body>

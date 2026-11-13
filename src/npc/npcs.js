@@ -100,7 +100,13 @@ Object.assign(World.prototype, {
     this.npcBrain(o, dt, locked, dPl);
   },
   updCritter(c, dt) {
-    if (c.fly) { c.ph += dt * c.sp; c.s.x = c.ax + Math.sin(c.ph * 1.3) * 60 + Math.sin(c.ph * 3.1) * 8; c.s.y = c.ay + Math.sin(c.ph * .9) * 40 + Math.cos(c.ph * 4) * 5; c.s.setDepth(c.s.y + 40); return; }
+    if (c.fly) {
+      c.ph += dt * c.sp;
+      c.s.x = c.ax + Math.sin(c.ph * 1.3) * 60 + Math.sin(c.ph * 3.1) * 8;
+      c.s.y = c.ay + Math.sin(c.ph * .9) * 40 + Math.cos(c.ph * 4) * 5;
+      c.s.setDepth(c.s.y + 40);
+      return;
+    }
     const s = c.s; c.sh.setPosition(s.x, s.y - 1).setDepth(s.y - .5); s.setDepth(s.y);
     const d = Math.hypot(this.pl.x - s.x, this.pl.y - s.y);
     if (c.busy) return; c.t -= dt;
@@ -110,7 +116,10 @@ Object.assign(World.prototype, {
       else { tx = c.home.x + rnd(-46, 46); ty = c.home.y + rnd(-26, 26); }
       tx = clamp(tx, 60, this.M.w - 60); ty = clamp(ty, 130, this.M.h - 60);
       const dist = Math.hypot(tx - s.x, ty - s.y); c.busy = true; s.flipX = tx > s.x; s.play(c.key + '_mv'); s.anims.timeScale = flee ? 2.5 : 1;
-      this.tweens.add({ targets: s, x: tx, y: ty, duration: dist / (flee ? 70 : 20) * 1000, onComplete: () => { c.busy = false; s.anims.stop(); s.setFrame(0); c.t = rnd(2, 5); } });
+      this.tweens.add({
+        targets: s, x: tx, y: ty, duration: dist / (flee ? 70 : 20) * 1000,
+        onComplete: () => { c.busy = false; s.anims.stop(); s.setFrame(0); c.t = rnd(2, 5); }
+      });
     }
   },
 });
