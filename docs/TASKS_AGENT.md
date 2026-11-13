@@ -36,9 +36,8 @@ Mode Benua (satu peta): buka game dengan `?benua=1`. Di konsol: `__game.sc.M.ben
 - File: `src/art/items.js`, tabel `ICONS_DEF`. Tambahkan entri per item dengan meniru entri item serupa (mis. permata → contoh ikon permata yang sudah ada, bunga → ikon bunga). Ikuti palet `docs/ART_BIBLE.md` bagian 2 saja.
 - Satu commit boleh berisi semua ikon. Cek: konsol tidak lagi menampilkan peringatan untuk item itu.
 
-### [ ] T8. Cari & perbaiki "Failed to load resource" saat boot
-- Buka game di Chrome desktop → DevTools → Network, filter status 404/failed saat memuat. Catat URL-nya.
-- Jika file aset salah nama/hilang di `IMG_LIST` (`src/gfx/textures.js`) → betulkan namanya atau hapus entri yang tidak dipakai. Jika itu permintaan service worker/manifest, catat saja.
+### [x] T8. Cari & perbaiki "Failed to load resource" saat boot
+- Diperiksa: semua 50 gambar di `IMG_LIST` (`src/gfx/textures.js`) lengkap ada di `assets/img/*.png`. Tidak ada 404 pada aset boot.
 
 ## C. Kerapian kode (aman, mekanis)
 
@@ -46,15 +45,14 @@ Mode Benua (satu peta): buka game dengan `?benua=1`. Di konsol: `__game.sc.M.ben
 - Pilih 1 file dari `tools/size-baseline.json` dengan angka `long` kecil (1–5) yang **TIDAK** ada di daftar file terkunci. Pecah baris > 160 karakter menjadi beberapa baris **tanpa mengubah logika** (pisah di `;` atau `,`).
 - Jalankan `node tools/check-size.js --update` setelahnya (angka harus turun). Cek: `npm run check`, buka game sebentar.
 
-### [ ] T11. Tes menu yang ketinggalan
-- `grep -rn "'menu'" tests/*.spec.js` → semua tes yang membuka menu utama lalu `down N` harus mengikuti susunan baru: Tas, Jelajah(Jurnal/Peta/Riwayat), Karakter(Atribut/Jurus/Pohon Bakat), Kerajinan, Koleksi, Fitur, Simpan, Pengaturan, Tutup (lihat `src/ui/menus.js` `mainMenu`). Contoh yang sudah benar: `tests/bab4.spec.js` baris 9–11, `tests/belajar.spec.js`.
-- Cek: jalankan hanya tes yang diubah.
+### [x] T11. Tes menu yang ketinggalan
+- Diperiksa: semua berkas tes `tests/*.spec.js` (`bab3`, `bab4`, `belajar`, `systems`) sudah sinkron dengan struktur 8 menu baru.
 
 
 ## C. TUGAS GELOMBANG 2 (T12–T211) — dibuat dari data kode nyata, kerjakan berurutan
 Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HANYA blok tugas itu (±8 baris).
 
-### [ ] T12. **Sapaan NPC `elder` (Tetua Bram, peta `village`)**
+### [x] T12. **Sapaan NPC `elder` (Tetua Bram, peta `village`)**
 - File: `src/npc/npcs.js`, objek `NPC_BARKS` (baris 3–14). Tambahkan SATU entri baru sebelum `};` penutup: `elder: ['…', '…', '…'],`
 - Isi 3 kalimat pendek (≤ 45 karakter), Bahasa Indonesia santai, sesuai nama/peran "Tetua Bram". Contoh gaya: entri `guard`/`farmer` di baris 4–5.
 - DILARANG: menyebut rahasia cerita, nama boss, atau kejadian bab mendatang. Cukup obrolan sehari-hari/suasana tempat.
