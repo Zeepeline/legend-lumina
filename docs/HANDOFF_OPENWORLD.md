@@ -46,14 +46,15 @@ Pemilik memutuskan meninggalkan pendekatan multi-scene (wilayah pasif + handoff 
 **Pembagian kerja:** agen kecil memakai `docs/TASKS_AGENT.md` dan DILARANG menyentuh file terkunci yang terdaftar di sana. Sesi tugas besar
 (file ini) juga mengerjakan bekas T1–T5 (kabut rawa, wisp, pedagang, banner, kucing/Mochi) dan memindah `goto`/`guardStop` keluar dari world.js.
 Jangan mengubah file yang dipakai tugas agen kecil (`src/art/items.js` ICONS_DEF, `src/gfx/textures.js` IMG_LIST, `tests/*` menu) tanpa cek status di TASKS_AGENT.md.
-**BELUM di mode benua (kerjakan berurutan, lalu jadikan bawaan):**
-1. `spawnCh4`/`spawnCh5` (objek cerita Bab 4–5 memakai koordinat lokal literal) — WAJIB sebelum jadi bawaan. Saran: ubah fungsi
-   itu agar menerima offset (`const [ox, oy] = this.M._ox !== undefined ? [this.M._ox, this.M._oy] : [0, 0]`) lalu panggil via `withRegion`.
-2. `spawnAmbient`/`updAmbient` (ENV per `M.id`): pakai `this.R` (wilayah sekarang) + offset.
-3. `initSecrets`, `spawnHome`, `spawnRanch`, pedagang keliling (posMap lokal), wisp malam, cuaca per wilayah.
-4. Peta mini/peta besar & kabut (`explore.js`, `ui/map.js`) untuk `M.benua` (ringkasan `groundOverview` per wilayah sudah ada).
-5. Kinerja: benua = ±10.500 objek tampilan dalam 1 scene. Buat streaming objek per chunk (spawn saat dekat, hancurkan saat jauh).
-6. Setelah bawaan: hapus regions.js, groundlayer.js, openworld.js, peralihan border & kode `owN`.
+**SUDAH di mode benua (v1.28.1):** Bab 4 (`spawnCh4` via BENUA_SHIFT: loreSpots, lanterns, boat, reliefs, sealDoor, patok), Bab 5
+(`spawnCh5` offset `M._ox`, longsor danau + gelombang golem; pemicu kota = `ch5Enter(id)` dari updBenua), rahasia & harta (`initSecrets`
+menambah per wilayah, offset), kandang (`benuaField('ranch')`), wisp malam, pedagang keliling (`KEMBARA_POS`), kabut rawa (`benuaWeather`),
+suasana alam per wilayah (`benuaAmbient`: dibuat ulang saat pindah wilayah), banner tanpa berulang (20 s), `goto`/`guardStop` → `systems/scene_nav.js`.
+`benuaField(k)` = data wilayah berkoordinat global untuk kode runtime yang membaca `this.M.k`.
+**BELUM (urut):**
+1. Peta mini/peta besar & kabut (`explore.js` fogOf per `M.id`, `ui/map.js`) untuk `M.benua`: pakai `this.regId` + offset.
+2. Kinerja: ±10.500 objek dalam 1 scene, masuk benua ±4 s. Streaming objek per chunk (spawn saat dekat, hancurkan saat jauh).
+3. Jadikan bawaan (default `BENUA` = true), lalu hapus regions.js, groundlayer.js, openworld.js, kode `owN`/peralihan border.
 Uji cepat: `localStorage.lumina_benua='1'` lalu muat ulang; `__game.sc.M.id === 'benua'`, `__game.sc.regId` = wilayah sekarang.
 
 ## 1b. Update v1.27.4 (gradasi & hutan pengisi)

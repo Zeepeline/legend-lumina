@@ -17,6 +17,10 @@
     S.map = map; S.x = x; S.y = y; this.regId = null; this.trans = false;
   };
 }
+const KEMBARA_POS = { // posisi lokal pedagang keliling (sama dengan posMap di scene/world.js)
+  village: { x: 740, y: 460, dir: 'left' }, meadow: { x: 480, y: 360, dir: 'down' }, lake: { x: 380, y: 520, dir: 'up' },
+  forest: { x: 520, y: 480, dir: 'down' }, city: { x: 420, y: 350, dir: 'right' },
+};
 Object.assign(World.prototype, {
   initBenua(data) {
     const M = this.M, cam = this.cameras.main, pl = this.pl;
@@ -47,6 +51,34 @@ Object.assign(World.prototype, {
     if (M.barrier && !S.flags.seal_open) run(() => this.spawnBarrier());
     if (M.mochi && S.side.mochi === 1) run(() => this.spawnMochi());
     if (id === 'village' && S.side.mochi === 3 && !S.pet) run(() => this.spawnCritter(['cat', 586 + M._ox, 300 + M._oy, 2]));
+    run(() => this.spawnCh4()); run(() => this.spawnCh5()); run(() => this.initSecrets());
+    if (M.ranch) run(() => this.spawnRanch());
+    if (!G.title && isNight() && (id === 'forest' || id === 'meadow') && (M.paths || []).length) run(() => { // wisp malam
+      for (let i = 0; i < 4; i++) {
+        const P = M.paths[(i * 3 + 2) % M.paths.length];
+        this.spawnEnemy('wisp', (P[0] + P[2]) / 2 + rnd(-30, 30), (P[1] + P[3]) / 2 + rnd(-20, 20));
+      }
+    });
+    const K = KEMBARA_POS[id]; // pedagang keliling
+    if (K && typeof isMerchantHere === 'function' && isMerchantHere(id)) {
+      run(() => this.spawnNpc({ id: 'kembara', ch: 'hunter', name: 'Kang Kembara', x: K.x + M._ox, y: K.y + M._oy, dir: K.dir, wander: 12 }));
+    }
+  },
+  // suasana alam (ambient.js) dibuat ulang untuk wilayah yang sedang dimasuki; batas lebar/tinggi = tepi kanan/bawah global
+  benuaAmbient(id) {
+    for (const o of this.ambObjs || []) if (o.active) o.destroy();
+    if (this.ambInter) this.inter = this.inter.filter(i => !this.ambInter.has(i));
+    this.amb = null; this.envCfg = null;
+    const before = new Set(this.children.list), interBefore = new Set(this.inter), keep = this.M, [ox, oy] = WORLD_POS[id];
+    this.M = Object.assign(regionClone(id), { w: ox + MAPS[id].w, h: oy + MAPS[id].h });
+    try { this.spawnAmbient(); } catch (e) { console.warn('benua: suasana', id, e); } finally { this.M = keep; }
+    this.ambObjs = this.children.list.filter(o => !before.has(o)); this.ambInter = new Set(this.inter.filter(i => !interBefore.has(i)));
+  },
+  // cuaca per wilayah: kabut di rawa
+  benuaWeather(id) {
+    const want = id === 'swamp' ? 'fog' : this.weather === 'fog' ? 'clear' : this.weather;
+    if (want === this.weather) return;
+    this.weather = want; this.dropActiveFx(); this.makeActiveFx();
   },
   // tiap frame (dipanggil dari updRegions): wilayah tempat Arka berada → S.map, nama, musik; hutan pengisi
   updBenua(dt, first) {
@@ -60,8 +92,14 @@ Object.assign(World.prototype, {
     this.safeXY = [pl.x, pl.y];
     if (id === this.regId) return;
     const R = MAPS[id], was = this.regId; this.regId = id; this.R = R; S.map = id; S.seen[id] = 1;
-    if (!this.bossOn && !G.title) playBGM(this.weather === 'rain' ? null : bgmFor(R));
-    if (was && !G.title) { banner(R.name, id === 'village' ? 'SELAMAT DATANG DI' : 'MEMASUKI'); updHud(); }
+    if (G.title) return;
+    this.benuaWeather(id); this.benuaAmbient(id); this.ch5Enter(id);
+    if (!this.bossOn) playBGM(this.weather === 'rain' ? null : bgmFor(R));
+    const lb = this.lastBanner; // banner tidak berulang saat bolak-balik di perbatasan
+    if (was && (!lb || lb.id !== id || this.t - lb.t > 20)) {
+      banner(R.name, id === 'village' ? 'SELAMAT DATANG DI' : 'MEMASUKI'); this.lastBanner = { id, t: this.t };
+    }
+    if (was) updHud();
   },
 });
 for (const k of ['wildCanopyTex', 'updWilds', 'makeWild']) World.prototype[k] = GroundLayer.prototype[k];

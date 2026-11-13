@@ -28,7 +28,16 @@ function shiftDeep(v, ox, oy) {
   }
   return v;
 }
-const BENUA_SHIFT = ['gardens', 'gate', 'torches', 'iceGate', 'crystal', 'barrier', 'mochi', 'ranch', 'glow', 'paths', 'discs', 'rings', 'bosses', 'home'];
+const BENUA_SHIFT = ['gardens', 'gate', 'torches', 'iceGate', 'crystal', 'barrier', 'mochi', 'ranch', 'glow', 'paths', 'discs', 'rings', 'bosses', 'home',
+  'loreSpots', 'lanterns', 'boat', 'reliefs', 'sealDoor', 'patok'];
+const BFIELD = {};
+function benuaField(k) { // data wilayah (mis. 'patok', 'ranch') berkoordinat global, untuk kode runtime yang membaca this.M.k
+  if (!(k in BFIELD)) {
+    const id = buildBenua().regions.find(r => MAPS[r][k] !== undefined);
+    BFIELD[k] = id ? shiftDeep(MAPS[id][k], WORLD_POS[id][0], WORLD_POS[id][1]) : null;
+  }
+  return BFIELD[k];
+}
 function regionClone(id) { // salinan peta wilayah dengan koordinat global (untuk pemanggil spawnX yang membaca this.M)
   const M = MAPS[id], [ox, oy] = WORLD_POS[id], C = Object.assign({}, M, { _ox: ox, _oy: oy });
   for (const k of BENUA_SHIFT) if (M[k] !== undefined) C[k] = shiftDeep(M[k], ox, oy);

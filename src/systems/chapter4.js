@@ -18,7 +18,7 @@ Object.assign(World.prototype, {
     if (M.sealDoor) { const [x, y] = M.sealDoor; this.sealS = this.add.image(x, y, S.lore.kuil_kamar ? 'sealdoor1' : 'sealdoor0').setOrigin(.5, 1).setDepth(y); this.inter.push({ x, y: y + 12, r: 20, fn: () => this.openSealDoor() }); }
     if (M.patok && S.side.patok >= 1) this.spawnPatok();
   },
-  spawnPatok() { const [x, y] = this.M.patok; this.add.image(x, y, 'stele').setOrigin(.5, 1).setScale(.7).setDepth(y); this.wall(x - 5, y - 5, 10, 5); this.inter.push({ x, y: y + 4, r: 14, fn: () => this.findPatok() }); },
+  spawnPatok() { const [x, y] = this.M.patok || benuaField('patok'); this.add.image(x, y, 'stele').setOrigin(.5, 1).setScale(.7).setDepth(y); this.wall(x - 5, y - 5, 10, 5); this.inter.push({ x, y: y + 4, r: 14, fn: () => this.findPatok() }); },
   async readLore(id) {
     await talk(null, [LORE[id][2]]); learn(id); this.arsipRead(id);
     if (id === 'prasasti_desa' && S.stage === 16) await this.treeVision();

@@ -54,13 +54,13 @@ Object.assign(World.prototype, {
     F.animals.forEach((a, i) => this.spawnStock(a, i));
   },
   spawnStock(a, i) {
-    const R = this.M.ranch, D = STOCK[a.k], x = R.x + 24 + (i % 3) * 38, y = R.y + 28 + Math.floor(i / 3) * 14;
+    const R = this.M.ranch || benuaField('ranch'), D = STOCK[a.k], x = R.x + 24 + (i % 3) * 38, y = R.y + 28 + Math.floor(i / 3) * 14;
     const s = this.add.sprite(x, y, D.tex, 0).setOrigin(.5, 1).setDepth(y); s.play(D.tex === 'chick0' ? 'chick0_mv' : D.tex + '_mv');
     const o = { a, s, t: rnd(0, 2), vx: 0, vy: 0 }; this.herd.push(o);
     this.inter.push(o.it = { x, y, r: 16, fn: () => this.tendStock(o) });
   },
   updRanch(dt) {
-    const R = this.M.ranch; if (!R || !this.herd || G.lock) return;
+    const R = this.M.ranch || benuaField('ranch'); if (!R || !this.herd || G.lock) return;
     for (const o of this.herd) {
       o.t -= dt; if (o.t <= 0) { o.t = rnd(1.5, 4); const go = Math.random() < .55, a = rnd(0, 6.28); o.vx = go ? Math.cos(a) * 12 : 0; o.vy = go ? Math.sin(a) * 8 : 0; }
       const s = o.s; s.x = clamp(s.x + o.vx * dt, R.x + 14, R.x + R.w - 14); s.y = clamp(s.y + o.vy * dt, R.y + 22, R.y + R.h - 6); s.setDepth(s.y);

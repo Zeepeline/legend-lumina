@@ -44,10 +44,13 @@ Object.assign(World.prototype, {
     return null;
   },
   initSecrets() {
-    this.secrets = []; const M = this.M; if (G.title || M.indoor || !WILD.includes(M.id)) return this.initTreasure();
+    const M = this.M;
+    if (M._ox === undefined || !this.secrets) this.secrets = []; /* benua: tiap wilayah menambah */
+    if (G.title || M.indoor || !WILD.includes(M.id)) return this.initTreasure();
     const rng = seeded(hash32('rahasia_' + M.id)), kinds = ['bush', ['cave', 'snow', 'swamp'].includes(M.id) ? 'crack' : 'bush', 'dig'];
     kinds.forEach((kind, i) => {
-      const id = 'sec_' + M.id + '_' + i, p = this.freeSpot(rng); if (!p || S.flags[id]) return;
+      const id = 'sec_' + M.id + '_' + i, p0 = this.freeSpot(rng); if (!p0 || S.flags[id]) return;
+      const p = { x: p0.x + (M._ox || 0), y: p0.y + (M._oy || 0) };
       const sc = { id, kind, x: p.x, y: p.y };
       if (kind === 'dig') { sc.spr = this.add.image(p.x, p.y - 2, 'spark').setDepth(p.y).setAlpha(.8); this.tweens.add({ targets: sc.spr, alpha: .15, scale: 1.6, duration: 700, yoyo: true, repeat: -1 }); this.inter.push(sc.it = { x: p.x, y: p.y, r: 16, fn: () => this.openSecret(sc) }); }
       else { sc.spr = this.add.image(p.x, p.y, kind === 'bush' ? 'bushy' : 'rock').setOrigin(.5, 1).setDepth(p.y).setTint(kind === 'bush' ? 0x9a8a5a : 0x9890a0); if (kind === 'crack') sc.spr.setScale(1.3);
@@ -59,7 +62,8 @@ Object.assign(World.prototype, {
   },
   initTreasure() {
     const T = S.tmap; if (!T || T.map !== this.M.id) return;
-    this.inter.push(this.tIt = { x: T.x, y: T.y, r: 18, fn: () => this.digTreasure() });
+    const tx = T.x + (this.M._ox || 0), ty = T.y + (this.M._oy || 0);
+    this.inter.push(this.tIt = { x: tx, y: ty, r: 18, fn: () => this.digTreasure() });
   },
   async digTreasure() {
     const T = S.tmap; if (!T) return; G.lock++; sfx('step'); for (let i = 0; i < 4; i++) { this.puff(T.x + rnd(-6, 6), T.y); await sleep(200); }

@@ -175,9 +175,13 @@ _Panggang bayangan objek ke tekstur tanah_
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 12 · `addStrip()` 13 · `darkTree()` 14 · `NPC_W` 16 · `regPortrait()` 17 · `regChar()` 22 · `buildTextures()` 23
 
-## src/scene/world.js (400 baris)
+## src/scene/world.js (391 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
-`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 207 · `.update()` 208 · `.puff()` 307 · `.camStep()` 308 · `.pump()` 355 · `.front()` 364 · `.actionA()` 365 · `.sparkle()` 375 · `.checkZones()` 379 · `.guardStop()` 390 · `.goto()` 394
+`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 207 · `.update()` 208 · `.puff()` 307 · `.camStep()` 308 · `.pump()` 355 · `.front()` 364 · `.actionA()` 365 · `.sparkle()` 375 · `.checkZones()` 379
+
+## src/systems/scene_nav.js (14 baris)
+_Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._
+`.goto()` 4 · `.guardStop()` 9
 
 ## src/systems/combat.js (329 baris)
 _Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah_
@@ -207,9 +211,9 @@ _Bab 3: obor kuno, gerbang es, Naga Es Kryos (AI 'dboss')_
 _Bab 4 "Bisikan di Bawah Akar" (investigasi, tanpa boss) + Desa Kincir + prasasti lore. Lihat docs/GAME_DESIGN.md & docs/BENUA_LUMINA.md_
 `.spawnCh4()` 5 · `.spawnPatok()` 21 · `.readLore()` 22 · `.treeVision()` 27 · `.lightLantern()` 39 · `.useBoat()` 54 · `.openSealDoor()` 59 · `.findPatok()` 70 · `.storyTalk()` 76
 
-## src/systems/chapter5.js (81 baris)
+## src/systems/chapter5.js (86 baris)
 _Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Raya Lama, Kota Lumina, Kota Bawah, Arsip Akademi_
-`ARSIP` 4 · `.spawnCh5()` 6 · `.clearSlide()` 14 · `.arsipRead()` 29 · `.ch5Talk()` 35
+`ARSIP` 4 · `.spawnCh5()` 6 · `.ch5Enter()` 15 · `.clearSlide()` 18 · `.arsipRead()` 34 · `.ch5Talk()` 40
 
 ## src/systems/travel.js (29 baris)
 _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif._
@@ -319,9 +323,9 @@ _Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#91
 _Gelombang 5: poin atribut (#16), kerajinan (#26), bom & alat lempar (#29, #407),_
 `CRAFT` 23 · `ATTR` 41 · `attrInit()` 42 · `_statBase` 48 · `openAttr()` 54 · `canCraft` 66 · `openCraft()` 67 · `openToolSlots()` 98 · `updToolBtns()` 108 · `.useSlot()` 117 · `.useTool()` 122
 
-## src/systems/explore.js (192 baris)
+## src/systems/explore.js (196 baris)
 _Gelombang 6: kabut peta (#61), rahasia (#63), peta harta (#66), lubang galian (#665),_
-`FOG_N` 4 · `WILD` 5 · `ROLE_ICON` 8 · `hash32()` 9 · `seeded()` 10 · `fogOf()` 12 · `fogSeen()` 13 · `drawFog()` 14 · `.updFog()` 21 · `.freeSpot()` 28 · `.initSecrets()` 46 · `.initTreasure()` 60 · `.digTreasure()` 64 · `.openSecret()` 70 · `.giveTreasureMap()` 81 · `.updSecrets()` 97 · `.blastAt()` 104 · `openMapNew()` 107 · `.draw()` 145
+`FOG_N` 4 · `WILD` 5 · `ROLE_ICON` 8 · `hash32()` 9 · `seeded()` 10 · `fogOf()` 12 · `fogSeen()` 13 · `drawFog()` 14 · `.updFog()` 21 · `.freeSpot()` 28 · `.initSecrets()` 46 · `.initTreasure()` 63 · `.digTreasure()` 68 · `.openSecret()` 74 · `.giveTreasureMap()` 85 · `.updSecrets()` 101 · `.blastAt()` 108 · `openMapNew()` 111 · `.draw()` 149
 
 ## src/systems/home.js (310 baris)
 _Gelombang 7: Rumah Arka (#46), peti penyimpanan (#32), perluasan (#492), tata perabot bebas (#493),_
@@ -379,13 +383,13 @@ _Lapisan tanah bersama (scene 'GL', selalu paling bawah): tanah SEMUA wilayah lu
 _Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Digambar di lapisan tanah_
 `WILD_MARGIN` 5 · `WILD_RECTS` 6 · `outdoorRects()` 7 · `inRegion()` 11 · `wildRects()` 12 · `wildTreeKeys()` 38
 
-## src/systems/benua.js (94 baris)
+## src/systems/benua.js (103 baris)
 _MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALIGUS dalam satu scene `World` berkoordinat_
-`BENUA` 6 · `isOutdoorRegion()` 13 · `regionAt()` 14 · `shiftDeep()` 19 · `BENUA_SHIFT` 31 · `regionClone()` 32 · `buildBenua()` 37 · `benuaData()` 74 · `benuaLocalize()` 81 · `benuaTarget()` 86
+`BENUA` 6 · `isOutdoorRegion()` 13 · `regionAt()` 14 · `shiftDeep()` 19 · `BENUA_SHIFT` 31 · `BFIELD` 33 · `benuaField()` 34 · `regionClone()` 41 · `buildBenua()` 46 · `benuaData()` 83 · `benuaLocalize()` 90 · `benuaTarget()` 95
 
-## src/systems/benua_scene.js (68 baris)
+## src/systems/benua_scene.js (106 baris)
 _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat Arka berada, teleport tanpa memuat ulang._
-`.initBenua()` 21 · `.withRegion()` 34 · `.spawnRegionFx()` 39 · `.updBenua()` 52
+`KEMBARA_POS` 20 · `.initBenua()` 25 · `.withRegion()` 38 · `.spawnRegionFx()` 43 · `.benuaAmbient()` 68 · `.benuaWeather()` 78 · `.updBenua()` 84
 
 ## src/npc/dialog.js (473 baris)
 _Percakapan NPC, toko, bengkel, penginapan_

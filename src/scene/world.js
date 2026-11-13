@@ -387,13 +387,4 @@ class World extends Phaser.Scene {
       if (pl.x > z[0] && pl.x < z[0] + z[2] && pl.y > z[1] && pl.y < z[1] + z[3]) { this.startBoss(B); break; }
     }
   }
-  async guardStop() {
-    G.lock++; const g = this.npcs.find(n => n.n.id === 'guard'); if (g) this.face(g, 'down');
-    await say('Tunggu! Hutan sedang berbahaya. Temui Tetua Bram di rumah pohon dulu.', 'Penjaga'); G.lock--;
-  }
-  goto(map, x, y, dir, extra = {}) {
-    if (this.trans) return; this.trans = true;
-    FADE.style.opacity = 1; S.map = map; S.x = x; S.y = y; S.dir = dir; saveGame(null);
-    setTimeout(() => this.scene.restart(Object.assign({ map, x, y, dir }, extra)), 360);
-  }
 }
