@@ -196,6 +196,8 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #mapw .mi{font-size:9px;line-height:9px;text-shadow:0 0 2px #fff}
 #mapw .mt{font-size:12px;line-height:12px;color:#c8281e;font-weight:700;text-shadow:0 0 2px #fff,1px 1px 0 #fff}
 #mapw .mbox{touch-action:none}
+#mapw .btnBenua{margin-top:4px;padding:3px 8px;background:#6e4222;color:#fff;border:1px solid #a87242;border-radius:3px;font-size:9px;font-family:inherit;cursor:pointer;align-self:flex-start}
+#mapw .btnBenua:hover{background:#8a562c}
 #quest .qd{color:#ffd84a;font-weight:700}
 /* mancing tarik-ulur */
 #tug{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);width:min(88%,330px);background:rgba(20,30,44,.92);border:1px solid #6ab0d8;border-radius:8px;padding:6px 9px;color:#fff;font-size:11px;z-index:70;pointer-events:auto}
