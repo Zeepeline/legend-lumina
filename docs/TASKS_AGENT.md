@@ -1133,6 +1133,230 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - File: `src/data/quests.js`, larik `const ACH = [`. Tambah di AKHIR larik: `{ id: 'k1000', n: 'Momok Monster', d: 'Kalahkan 1.000 monster', ok: () => totalKills() >= 1000, gift: ['gold', 1000] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'k1000').ok()` tidak error.
 
+## D. GELOMBANG 3 — rasa tempur & peta ala Dimraeth (T212–T229)
+File BARU milik agen: `src/systems/combat_fx.js`, `src/ui/worldmap.js` (+ `styles.css` untuk tombol peta). Semua perubahan lewat PEMBUNGKUS; file terkunci hanya DIBACA.
+
+### [ ] T212. **[RASA TEMPUR 1] Buat file `src/systems/combat_fx.js` (kerangka)**
+- Buat file baru berisi persis kerangka ini, lalu daftarkan di `index.html` tepat SETELAH baris `<script src="src/systems/souls.js"></script>`:
+```js
+'use strict';
+// Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling.
+// HANYA efek & rasa. Angka damage/stamina tetap di combat.js & souls.js (file terkunci, JANGAN diubah).
+const CFX = { aim: 64, lunge: 120, lungeT: .07, arcT: 170 };
+Object.assign(World.prototype, {
+});
+{
+  const W = World.prototype;
+}
+```
+- Cek: `npm run check`; buka game, serang 3 kali, tidak ada error konsol.
+
+### [ ] T213. **[RASA TEMPUR 2] Tekstur busur tebasan `arcfx`** (butuh RASA TEMPUR 1)
+- Di `src/systems/combat_fx.js`, di dalam `Object.assign(World.prototype, { ... })` tambahkan:
+```js
+  arcTex() { // bulan sabit putih bergradasi (diwarnai dengan setTint)
+    if (this.textures.exists('arcfx')) return 'arcfx';
+    const [c, x] = mk(72, 72), cx = 36, cy = 36;
+    for (let i = 0; i < 6; i++) {
+      x.globalAlpha = .18 + i * .14; x.fillStyle = '#ffffff'; x.beginPath();
+      x.arc(cx, cy, 33 - i, -1.25, 1.25); x.arc(cx - 9 + i * 1.2, cy, 26 - i * .6, 1.15, -1.15, true); x.closePath(); x.fill();
+    }
+    x.globalAlpha = 1; this.textures.addCanvas('arcfx', c);
+    return 'arcfx';
+  },
+```
+- Cek: konsol `__game.sc.arcTex() === 'arcfx'` dan `__game.sc.textures.exists('arcfx')`.
+
+### [ ] T214. **[RASA TEMPUR 3] Busur tebasan besar saat menyerang** (butuh RASA TEMPUR 2)
+- Di `combat_fx.js`: tambahkan konstanta di bawah `CFX`:
+  `const ARC_TINT = { csword: 0x8ae8ff, ssword: 0xd8e4ff, leg_moon: 0xc8b8ff };` dan
+  `function arcTint(wt) { return ARC_TINT[S.eq.wpn] || (wt === 'axe' ? 0xffc27a : 0xfff1c4); }`
+- Tambah metode `slashFx(wt, combo)` ke `Object.assign(World.prototype, …)`:
+```js
+  slashFx(wt, combo) {
+    const pl = this.pl, [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx), fin = combo === 3;
+    if (wt === 'spear') { // tusukan: garis cahaya lurus
+      const g = this.add.image(pl.x + dx * 18, pl.y - 9 + dy * 14, this.arcTex()).setRotation(ang).setScale(1.5, .35).setTint(arcTint(wt));
+      g.setDepth(pl.y + (dy < 0 ? -2 : 4)).setBlendMode(Phaser.BlendModes.ADD);
+      this.tweens.add({ targets: g, alpha: 0, scaleX: 1.9, duration: CFX.arcT, onComplete: () => g.destroy() });
+      return;
+    }
+    const s = (wt === 'axe' ? 1.25 : 1) * (fin ? 1.35 : combo === 2 ? 1.1 : 1);
+    const a = this.add.image(pl.x + dx * 10, pl.y - 9 + dy * 8, this.arcTex()).setRotation(ang).setScale(s * .75).setTint(arcTint(wt));
+    a.setFlipY(combo === 2).setDepth(pl.y + (dy < 0 ? -2 : 4)).setBlendMode(Phaser.BlendModes.ADD);
+    this.tweens.add({ targets: a, alpha: 0, scale: s, duration: CFX.arcT + (fin ? 60 : 0), ease: 'Cubic.easeOut', onComplete: () => a.destroy() });
+    if (fin) this.cameras.main.shake(70, .003);
+  },
+```
+- Di blok `{ const W = World.prototype; … }` bungkus serangan (JANGAN ubah combat.js):
+```js
+  const attack0 = W.attack;
+  W.attack = function () {
+    const pl = this.pl; if (!pl || pl.dead || pl.atkCd > 0) return attack0.apply(this, arguments);
+    const r = attack0.apply(this, arguments);
+    if (!(pl.atkCd > 0)) return r; // serangan batal (mis. lelah)
+    const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword';
+    if (wt !== 'bow') this.slashFx(wt, pl.combo || 1);
+    return r;
+  };
+```
+- Cek: serang dengan pedang → busur cahaya besar; pukulan ke-3 lebih besar & layar bergetar sedikit; tombak → garis lurus; busur panah → tanpa busur cahaya.
+
+### [ ] T215. **[RASA TEMPUR 4] Bidik bantu ke musuh terdekat (ramah HP)** (butuh RASA TEMPUR 3)
+- Tambah metode di `combat_fx.js`:
+```js
+  nearFoe(r) {
+    let best = null, bd = r;
+    for (const e of this.enemies) {
+      if (e.hp <= 0 || !e.spr.active) continue;
+      const d = Math.hypot(e.spr.x - this.pl.x, e.spr.y - this.pl.y); if (d < bd) { bd = d; best = e; }
+    }
+    return best;
+  },
+```
+- Di pembungkus `W.attack`, SEBELUM baris `const r = attack0.apply(...)`, sisipkan:
+```js
+    const e = this.nearFoe(CFX.aim), v = Input.vec(); // hadap musuh terdekat kecuali joystick diarahkan menjauh
+    if (e) {
+      const ex = e.spr.x - pl.x, ey = e.spr.y - pl.y;
+      const face = Math.abs(ex) > Math.abs(ey) ? (ex < 0 ? 'left' : 'right') : (ey < 0 ? 'up' : 'down');
+      if (Math.hypot(v.x, v.y) < .3 || ex * v.x + ey * v.y > 0) pl.dir = face;
+    }
+```
+- Cek: berdiri di samping slime sambil menghadap ke arah lain, tekan SERANG tanpa joystick → Arka berbalik & tebasan mengenai slime.
+
+### [ ] T216. **[RASA TEMPUR 5] Langkah maju kecil saat menebas ("komit")** (butuh RASA TEMPUR 3)
+- Di pembungkus `W.attack`, ganti baris `if (wt !== 'bow') this.slashFx(wt, pl.combo || 1);` dengan:
+```js
+    if (wt !== 'bow') {
+      this.slashFx(wt, pl.combo || 1);
+      if (!pl.dashT || pl.dashT <= 0) { // langkah maju; ghostT ditunda agar tidak muncul bayangan dash
+        const [dx, dy] = DIRV[pl.dir]; pl.dashT = CFX.lungeT; pl.dvx = dx * CFX.lunge; pl.dvy = dy * CFX.lunge; this.ghostT = CFX.lungeT + .05;
+      }
+    }
+```
+- Latar: `pl.dashT/dvx/dvy` dipakai di `src/scene/world.js` (±baris 228, BACA saja) untuk mendorong Arka; `ghostT` = jeda bayangan dash.
+- Cek: menyerang membuat Arka maju ±8 px, TIDAK menembus tembok/pagar, TIDAK ada bayangan biru seperti dash.
+
+### [ ] T217. **[RASA TEMPUR 6] Kilat putih + percikan saat musuh kena** (butuh RASA TEMPUR 2)
+- Tambah metode di `combat_fx.js`:
+```js
+  hitFx(e, crit) {
+    const s = e.spr; if (!s || !s.active) return;
+    const keep = s.isTinted ? s.tintTopLeft : null;
+    s.setTintFill(0xffffff);
+    this.time.delayedCall(55, () => { if (!s.active) return; if (keep !== null && keep !== 0xffffff) s.setTint(keep); else s.clearTint(); });
+    const y = s.y - (e.D.r || 8) * (e.sc || 1);
+    const ring = this.add.image(s.x, y, this.arcTex()).setScale(.25).setTint(crit ? 0xffd25a : 0xffffff).setBlendMode(Phaser.BlendModes.ADD).setDepth(s.y + 6);
+    ring.setRotation(Math.random() * 6.28);
+    this.tweens.add({ targets: ring, scale: crit ? .8 : .55, alpha: 0, duration: 140, onComplete: () => ring.destroy() });
+    this.sparkle(s.x, y, 'spark', crit ? 8 : 4);
+    if (crit) this.cameras.main.shake(60, .0025);
+  },
+```
+- Di blok pembungkus tambahkan: `const hit0 = W.hitEnemy; W.hitEnemy = function (e, base, crit) { const r = hit0.apply(this, arguments); this.hitFx(e, crit); return r; };`
+- Cek: musuh berkedip putih sekejap tiap kena; musuh elite tetap berwarna elite setelahnya; kritikal → lingkar kuning + getar kecil.
+
+### [ ] T218. **[RASA TEMPUR 7] Debu saat berguling (dash)** (butuh RASA TEMPUR 1)
+- Bayangan dash SUDAH ada di world.js; tugas ini hanya menambah debu di titik awal.
+- Tambah metode: `rollFx() { const pl = this.pl; this.sparkle(pl.x, pl.y - 2, 'dot', 5); },`
+- Bungkus dash di blok pembungkus:
+```js
+  const dash0 = W.dash;
+  W.dash = function () {
+    const pl = this.pl, was = pl && pl.dashT > 0, r = dash0.apply(this, arguments);
+    if (pl && !was && pl.dashT > .1) this.rollFx();
+    return r;
+  };
+```
+- Cek: tekan DASH → kepulan debu kecil di kaki; dash saat stamina habis (tulisan "Lelah!") → tanpa debu.
+
+### [ ] T219. **[RASA TEMPUR 8] Debu langkah saat lari cepat** (butuh RASA TEMPUR 1)
+- Bungkus `updStamina` di blok pembungkus `combat_fx.js` (JANGAN ubah souls.js/qol.js):
+```js
+  const sta0 = W.updStamina;
+  W.updStamina = function (dt, sprint, moving) {
+    if (sprint && moving && this.pl) { this.runDustT = (this.runDustT || 0) - dt; if (this.runDustT <= 0) { this.runDustT = .18; this.sparkle(this.pl.x, this.pl.y - 1, 'dot', 2); } }
+    return sta0.apply(this, arguments);
+  };
+```
+- Cek: lari cepat → kepulan kecil berkala di kaki; jalan biasa → tidak ada.
+
+### [ ] T220. **[RASA TEMPUR 9] Puff saat musuh mati** (butuh RASA TEMPUR 2)
+- `killEnemy(e)` ada di `src/systems/combat.js` baris ±171 (BACA saja). Bungkus di `combat_fx.js`:
+```js
+  const kill0 = W.killEnemy;
+  W.killEnemy = function (e) {
+    const s = e && e.spr, x = s && s.x, y = s && s.y; const r = kill0.apply(this, arguments);
+    if (s) { const p = this.add.image(x, y - 8, this.arcTex()).setScale(.3).setTint(0xffffff).setAlpha(.8).setDepth(y + 6);
+      this.tweens.add({ targets: p, scale: 1, alpha: 0, angle: 180, duration: 260, onComplete: () => p.destroy() }); }
+    return r;
+  };
+```
+- Cek: musuh mati → pusaran cahaya singkat di tempatnya; drop item tetap muncul.
+
+### [ ] T221. **[RASA TEMPUR 10] Getar HP saat terkena serangan besar** (butuh RASA TEMPUR 1)
+- `hurtPlayer` dipanggil saat Arka kena (cari: `grep -n "  hurtPlayer(" src/systems/*.js`, BACA saja). Bungkus di `combat_fx.js`:
+```js
+  const hurt0 = W.hurtPlayer;
+  W.hurtPlayer = function (dmg) {
+    const hp0 = S.hp, r = hurt0.apply(this, arguments);
+    if (S.hp < hp0 && hp0 - S.hp >= stat().maxhp * .15 && navigator.vibrate) { try { navigator.vibrate(25); } catch (_) {} }
+    return r;
+  };
+```
+- Cek: di HP Android, kena pukulan besar → HP bergetar singkat; di desktop tidak error.
+
+### [ ] T222. **[RASA TEMPUR 11] Tepi layar merah saat HP kritis** (butuh RASA TEMPUR 1)
+- Tambah metode `updLowHp(dt)` di `combat_fx.js` yang membuat SATU `this.add.graphics().setScrollFactor(0).setDepth(2.5e5)` (simpan di `this.lowHpG`, buat sekali),
+  menggambar 4 persegi merah tipis (lebar 14 px) di tepi layar `VW`×`VH`, `alpha` berdenyut `.25 + .2 * Math.sin(this.t * 6)` bila `S.hp < stat().maxhp * .3`, else `setVisible(false)`.
+- Panggil dari pembungkus `update` di blok pembungkus: `const up0 = W.update; W.update = function (t, dl) { up0.call(this, t, dl); if (!this.passive && !G.title && this.pl) this.updLowHp(dl / 1000); };`
+- Saat scene restart, objek lama hilang otomatis: cek `this.lowHpG && this.lowHpG.active` sebelum dipakai, buat ulang bila tidak aktif.
+- Cek: konsol `S.hp = 5` → tepi merah berdenyut; minum Botol Cahaya → hilang.
+
+### [ ] T223. **[RASA TEMPUR 12] Catat & cek rasa di HP**
+- Mainkan 5 menit di HP: hutan (slime, serigala), tebas, berguling, kalah sekali.
+- Kalau busur terlalu besar/terang → ubah HANYA angka di `CFX` atau `.75`/`1.35` di `slashFx`. Tulis angka akhir & alasannya sebagai catatan di bawah tugas ini.
+
+### [ ] T224. **[PETA 1] File `src/ui/worldmap.js`: peta seluruh benua (kerangka)**
+- Buat file baru, daftarkan di `index.html` SETELAH `<script src="src/systems/souls.js"></script>` (setelah combat_fx.js bila sudah ada).
+- Isi: fungsi global `openWorldMap(sc)` yang membuat overlay DOM `div#wmap` (position fixed, inset 0, background `rgba(10,18,14,.94)`, z-index 50) dengan satu `<canvas>` & tombol "Tutup" (`button`, menutup overlay). Kunci input: `G.lock++` saat buka, `G.lock--` saat tutup (dalam `try/finally` pola di `docs/CODE_RULES.md` §4).
+- Cek: konsol `openWorldMap(__game.sc)` → overlay muncul, tombol Tutup menutupnya, Arka bisa bergerak lagi.
+
+### [ ] T225. **[PETA 2] Gambar semua wilayah di peta benua** (butuh PETA 1)
+- Di `openWorldMap`: wilayah = `buildBenua().regions` (daftar id). Hitung kotak benua dari `WORLD_POS[id]` + `MAPS[id].w/.h`, skala agar muat kanvas (lebar layar − 24 px).
+- Untuk tiap wilayah: `const ov = groundOverview(MAPS[id])` (kanvas ¼ ukuran, lihat `grep -n "function groundOverview" src/systems/stream.js`, BACA saja) → `ctx.drawImage(ov, X, Y, W, H)` pada posisi skala.
+- Celah antarwilayah: isi kanvas dulu dengan `#244a1c` (hutan lebat).
+- Cek: overlay menampilkan bentuk seluruh benua (desa, hutan, padang, rawa, salju, kota) dalam satu gambar.
+
+### [ ] T226. **[PETA 3] Nama wilayah & penanda Arka** (butuh PETA 2)
+- Tulis `MAPS[id].name` di tengah tiap wilayah (font 10px `'Press Start 2P', monospace` atau font yang dipakai HUD; warna putih, bayangan hitam). Lewati wilayah peralihan (`MAPS[id].peralihan`) agar tidak ramai.
+- Penanda Arka: lingkaran kuning 4 px di posisi pemain: jika `sc.M.benua` → `(sc.pl.x, sc.pl.y)` langsung; jika tidak → `WORLD_POS[sc.M.id] + (sc.pl.x, sc.pl.y)` (lewati jika peta tidak ada di WORLD_POS / interior).
+- Cek: titik kuning berada di wilayah yang benar di desa dan di Puncak Beku (`__game.sc.goto('snow', 640, 600, 'down')`).
+
+### [ ] T227. **[PETA 4] Wilayah yang belum dikunjungi digelapkan** (butuh PETA 3)
+- Untuk wilayah dengan `!S.seen[id]`: setelah menggambar, tutup kotaknya dengan `rgba(0,0,0,.7)` dan ganti nama dengan `???`.
+- Cek: permainan baru → hanya Desa Lumina (dan yang sudah dimasuki) terang.
+
+### [ ] T228. **[PETA 5] Bintang tujuan misi di peta benua** (butuh PETA 3)
+- Ambil tujuan dengan `questTarget(sc.M)` (global, `src/ui/map.js`, BACA saja). Hasil `{x, y}` dalam koordinat scene: jika `sc.M.benua` sudah global; jika tidak, tambah `WORLD_POS[sc.M.id]`.
+- Gambar bintang/segitiga kuning 6 px berkedip (gambar ulang tiap 400 ms dengan `setInterval`, HAPUS interval saat overlay ditutup).
+- Cek: misi aktif → bintang tampil; tutup peta → tidak ada interval yang tertinggal (konsol tidak error).
+
+### [ ] T229. **[PETA 6] Tombol "Benua" di peta biasa** (butuh PETA 1)
+- `openMapNew` ada di `src/systems/explore.js` (TERKUNCI, jangan diubah). Di `worldmap.js` bungkus global setelah file itu dimuat:
+```js
+{ const om0 = openMapNew;
+  openMapNew = function (sc) { // eslint-disable-line no-global-assign
+    const r = om0.apply(this, arguments), w = document.getElementById('mapw');
+    if (w && !w.querySelector('.btnBenua')) { const b = document.createElement('button'); b.className = 'btnBenua'; b.textContent = 'Peta Benua';
+      b.onclick = () => openWorldMap(sc); w.appendChild(b); }
+    return r;
+  }; }
+```
+- Gaya tombol: tambahkan aturan `.btnBenua` di `styles.css` meniru tombol lain di peta (cari kelas tombol di `#mapw`).
+- Cek: buka PETA → ada tombol "Peta Benua" → membuka peta seluruh benua; menutupnya kembali ke peta biasa.
+
 ---
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
 memasang BESTIARY_TEXT ke layar Bestiari, buang petak objek jauh di mode benua, hapus mode lama. Rincian: `docs/GAME_DESIGN.md` (akhir) & `docs/HANDOFF_OPENWORLD.md`.
