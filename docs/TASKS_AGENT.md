@@ -1014,82 +1014,82 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - Perilaku harus identik. Jangan ubah teks yang tampil.
 - Cek: `npm run check`; mainkan minigame/fitur itu sekali sampai selesai tanpa error konsol.
 
-### [ ] T188. **Pencapaian baru `fish50` — Kail Emas**
+### [x] T188. **Pencapaian baru `fish50` — Kail Emas**
 - Dulu cek duplikat: `grep -n "S.st.fish" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'fish50', n: 'Kail Emas', d: 'Tangkap 50 ikan', ok: () => S.st.fish >= 50, gift: ['gold', 200] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'fish50').ok()` tidak error.
 
-### [ ] T189. **Pencapaian baru `harvest30` — Petani Rajin**
+### [x] T189. **Pencapaian baru `harvest30` — Petani Rajin**
 - Dulu cek duplikat: `grep -n "S.st.harvest" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'harvest30', n: 'Petani Rajin', d: 'Panen 30 kali', ok: () => S.st.harvest >= 30, gift: ['seed', 5] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'harvest30').ok()` tidak error.
 
-### [ ] T190. **Pencapaian baru `craft20` — Tangan Terampil**
+### [x] T190. **Pencapaian baru `craft20` — Tangan Terampil**
 - Dulu cek duplikat: `grep -n "S.st.crafted" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'craft20', n: 'Tangan Terampil', d: 'Buat 20 barang kerajinan', ok: () => S.st.crafted >= 20, gift: ['gold', 120] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'craft20').ok()` tidak error.
 
-### [ ] T191. **Pencapaian baru `cook15` — Juru Masak Desa**
+### [x] T191. **Pencapaian baru `cook15` — Juru Masak Desa**
 - Dulu cek duplikat: `grep -n "S.st.cooked" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'cook15', n: 'Juru Masak Desa', d: 'Masak 15 hidangan', ok: () => S.st.cooked >= 15, gift: ['potion', 3] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'cook15').ok()` tidak error.
 
-### [ ] T192. **Pencapaian baru `mine40` — Penambang**
+### [x] T192. **Pencapaian baru `mine40` — Penambang**
 - Dulu cek duplikat: `grep -n "S.st.mined" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'mine40', n: 'Penambang', d: 'Tambang 40 kali', ok: () => S.st.mined >= 40, gift: ['gold', 150] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'mine40').ok()` tidak error.
 
-### [ ] T193. **Pencapaian baru `barrel25` — Penghancur Tong**
+### [x] T193. **Pencapaian baru `barrel25` — Penghancur Tong**
 - Dulu cek duplikat: `grep -n "S.st.barrels" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'barrel25', n: 'Penghancur Tong', d: 'Pecahkan 25 tong', ok: () => S.st.barrels >= 25, gift: ['ether', 2] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'barrel25').ok()` tidak error.
 
-### [ ] T194. **Pencapaian baru `tree30` — Penebang**
+### [x] T194. **Pencapaian baru `tree30` — Penebang**
 - Dulu cek duplikat: `grep -n "S.st.trees" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'tree30', n: 'Penebang', d: 'Tebang 30 pohon', ok: () => S.st.trees >= 30, gift: ['gold', 100] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'tree30').ok()` tidak error.
 
-### [ ] T195. **Pencapaian baru `steps20k` — Kaki Baja**
+### [x] T195. **Pencapaian baru `steps20k` — Kaki Baja**
 - Dulu cek duplikat: `grep -n "S.st.steps" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'steps20k', n: 'Kaki Baja', d: 'Berjalan 20.000 langkah', ok: () => S.st.steps >= 20000, gift: ['boots', 1] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'steps20k').ok()` tidak error.
 
-### [ ] T196. **Pencapaian baru `play5h` — Betah di Lumina**
+### [x] T196. **Pencapaian baru `play5h` — Betah di Lumina**
 - Dulu cek duplikat: `grep -n "S.st.playTime" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'play5h', n: 'Betah di Lumina', d: 'Bermain selama 5 jam', ok: () => S.st.playTime >= 18000, gift: ['hipotion', 2] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'play5h').ok()` tidak error.
 
-### [ ] T197. **Pencapaian baru `back10` — Bayangan**
+### [x] T197. **Pencapaian baru `back10` — Bayangan**
 - Dulu cek duplikat: `grep -n "S.st.backstabs" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'back10', n: 'Bayangan', d: 'Serang dari belakang 10 kali', ok: () => S.st.backstabs >= 10, gift: ['gold', 120] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'back10').ok()` tidak error.
 
-### [ ] T198. **Pencapaian baru `gold5k` — Saudagar Muda**
+### [x] T198. **Pencapaian baru `gold5k` — Saudagar Muda**
 - Dulu cek duplikat: `grep -n "S.st.goldEarned" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'gold5k', n: 'Saudagar Muda', d: 'Kumpulkan total 5.000 G', ok: () => S.st.goldEarned >= 5000, gift: ['gold', 300] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'gold5k').ok()` tidak error.
 
-### [ ] T199. **Pencapaian baru `boss5` — Penakluk**
+### [x] T199. **Pencapaian baru `boss5` — Penakluk**
 - Dulu cek duplikat: `grep -n "S.st.bosses" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'boss5', n: 'Penakluk', d: 'Kalahkan 5 boss', ok: () => S.st.bosses >= 5, gift: ['hipotion', 3] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'boss5').ok()` tidak error.
 
-### [ ] T200. **Pencapaian baru `k500` — Legenda Pemburu**
+### [x] T200. **Pencapaian baru `k500` — Legenda Pemburu**
 - Dulu cek duplikat: `grep -n "totalKills\\(\\)" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'k500', n: 'Legenda Pemburu', d: 'Kalahkan 500 monster', ok: () => totalKills() >= 500, gift: ['gold', 500] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'k500').ok()` tidak error.
 
-### [ ] T201. **Pencapaian baru `lv20` — Pahlawan Muda**
+### [x] T201. **Pencapaian baru `lv20` — Pahlawan Muda**
 - Dulu cek duplikat: `grep -n "S.lv" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'lv20', n: 'Pahlawan Muda', d: 'Capai level 20', ok: () => S.lv >= 20, gift: ['hipotion', 2] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'lv20').ok()` tidak error.
 
-### [ ] T202. **Pencapaian baru `lv30` — Pahlawan Lumina**
+### [x] T202. **Pencapaian baru `lv30` — Pahlawan Lumina**
 - Dulu cek duplikat: `grep -n "S.lv" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'lv30', n: 'Pahlawan Lumina', d: 'Capai level 30', ok: () => S.lv >= 30, gift: ['gold', 600] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'lv30').ok()` tidak error.
 
-### [ ] T203. **Pencapaian baru `warp5` — Pengelana Cahaya**
+### [x] T203. **Pencapaian baru `warp5` — Pengelana Cahaya**
 - Dulu cek duplikat: `grep -n "Object.keys\\(S.warps || {}\\).length" src/data/quests.js`. Jika sudah ada pencapaian dengan syarat sama/lebih mudah → tandai [x] dengan catatan "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'warp5', n: 'Pengelana Cahaya', d: 'Aktifkan 5 patung teleport', ok: () => Object.keys(S.warps || {}).length >= 5, gift: ['ether', 3] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'warp5').ok()` tidak error.
@@ -1118,17 +1118,17 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - Jalankan `node tools/check-layout.js` dan lihat 4 peringatan (cari opsi verbose di `tools/check-layout.js` bila ringkas).
 - Untuk tiap peringatan: jika objek benar-benar salah tempat menurut `docs/PLACEMENT_RULES.md` → geser koordinatnya di file `src/world/maps/*.js` yang disebut (BUKAN layout.js). Jika memang disengaja → tulis catatan di bawah tugas ini.
 - Cek: `npm run check` (0 masalah).
-### [ ] T209. **Pencapaian baru `fish100` — Raja Pemancing**
+### [x] T209. **Pencapaian baru `fish100` — Raja Pemancing**
 - Dulu cek duplikat: `grep -n "fish100\|S.st.fish" src/data/quests.js`. Jika syarat sama sudah ada → tandai [x] "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [`. Tambah di AKHIR larik: `{ id: 'fish100', n: 'Raja Pemancing', d: 'Tangkap 100 ikan', ok: () => S.st.fish >= 100, gift: ['gold', 400] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'fish100').ok()` tidak error.
 
-### [ ] T210. **Pencapaian baru `tree100` — Rimbawan**
+### [x] T210. **Pencapaian baru `tree100` — Rimbawan**
 - Dulu cek duplikat: `grep -n "tree100\|S.st.trees" src/data/quests.js`. Jika syarat sama sudah ada → tandai [x] "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [`. Tambah di AKHIR larik: `{ id: 'tree100', n: 'Rimbawan', d: 'Tebang 100 pohon', ok: () => S.st.trees >= 100, gift: ['gold', 300] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'tree100').ok()` tidak error.
 
-### [ ] T211. **Pencapaian baru `k1000` — Momok Monster**
+### [x] T211. **Pencapaian baru `k1000` — Momok Monster**
 - Dulu cek duplikat: `grep -n "k1000\|totalKills()" src/data/quests.js`. Jika syarat sama sudah ada → tandai [x] "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [`. Tambah di AKHIR larik: `{ id: 'k1000', n: 'Momok Monster', d: 'Kalahkan 1.000 monster', ok: () => totalKills() >= 1000, gift: ['gold', 1000] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'k1000').ok()` tidak error.
