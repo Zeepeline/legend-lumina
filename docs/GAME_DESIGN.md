@@ -126,3 +126,15 @@ Jangan menjadikan "kalahkan boss" sebagai satu-satunya tujuan.
 - **Dunia bereaksi:** setelah peristiwa besar, dialog NPC dan tampilan dunia ikut berubah (contoh yang sudah ada: kabut rawa hilang setelah Morgath kalah).
 - **Pengungkapan bertahap:** satu bab maksimal menjawab 1–2 pertanyaan dan membuka 1–2 pertanyaan baru.
 - Semua teks dalam Bahasa Indonesia.
+
+## Arah gameplay: ala Dimraeth (disetujui pemilik 13 Nov 2026)
+Target jangka panjang: action RPG pixel art dunia terbuka dengan pertarungan **Souls-lite "menantang tapi adil"**, build yang dalam,
+markas yang berkembang, dan ikatan dengan sekutu. Main di HP tetap prioritas: ancang-ancang musuh harus jelas, ada opsi Santai.
+| Pilar | Isi | Status |
+|---|---|---|
+| 1. Pertarungan Souls-lite | serang & berguling makan stamina (jeda pulih 0,7 s), Botol Cahaya isi ulang (patung/tidur/bangkit), kalah → separuh emas jadi Jejak Cahaya yang bisa diambil kembali | **v1.30.0** (`systems/souls.js`) |
+| 2. Build & mantra | archetype dari gabungan 2 aliran jurus, 5 slot mantra dengan syarat atribut, buku mantra lewat kerajinan | rencana |
+| 3. Markas | Rumah Arka → benteng kecil; bangunan (bengkel, dapur, menara sihir) membuka resep/fitur | rencana |
+| 4. Sekutu & ikatan | rekrut NPC ke markas, tingkat ikatan → misi pribadi & dialog, sumbang bahan ke fasilitas sekutu | rencana |
+| 5. Co-op | 8 pemain tidak realistis (GitHub Pages tanpa server); kemungkinan nanti 2 pemain P2P (WebRTC) | ditunda |
+Pilar 1 lanjutan (belum): musuh punya pola serangan berantai & jendela hukuman yang jelas, peningkatan Botol Cahaya (maks +1 per Pecahan), boss dengan fase.

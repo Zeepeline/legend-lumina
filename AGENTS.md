@@ -53,4 +53,5 @@ Proyek: action RPG top-down untuk browser/HP, **Phaser 3.80.1**, skrip klasik gl
 - **Cerita:** Bab 1–5 (stage 0–27), jurnal 3 lapis tujuan, lore & misteri, 4 misi sampingan.
 - **Sistem:** 7 jurus/5 guru, 4 gaya senjata, status, pancing, kebun, masak, tempa, teleport, siang-malam & cuaca & musim, Rumah Arka, kandang, ekonomi, 3 slot simpan, PWA, gamepad. Fitur 1–1000 (gelombang) selesai, arsip di `docs/arsip/`.
 - **Dunia terbuka:** posisi global + peralihan + streaming tanah + wilayah pasif & handoff + kamera lintas wilayah (v1.27.x). Lanjutan: `docs/HANDOFF_OPENWORLD.md`.
+- **Souls-lite (arah Dimraeth):** stamina serang/berguling, Botol Cahaya, Jejak Cahaya saat kalah (`systems/souls.js`, v1.30.0). Roadmap pilar: `docs/GAME_DESIGN.md` bagian akhir.
 - **Berikutnya:** konten ekspansi Bab 6 (`BENUA_LUMINA.md` bag. 7) & eksplorasi teka-teki kuil kuno.

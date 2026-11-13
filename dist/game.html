@@ -5917,11 +5917,11 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.29.0';
+const GAME_VERSION = '1.30.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
-function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, sta: 100, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, trees: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, petDog: false, flowerPlots: [null, null], warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, bountiesDone: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {}, shards: {}, bank: { gold: 0, day: 1 }, records: {}, outfit: 'default', runePillars: {}, homeStyle: { floor: 'wood', wall: 'wood' }, arenaRank: 0, talents: { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] }, bento: [], courierTimer: null, auctionWon: {} }; }
+function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, sta: 100, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, trees: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, petDog: false, flowerPlots: [null, null], warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, bountiesDone: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {}, shards: {}, bank: { gold: 0, day: 1 }, records: {}, outfit: 'default', runePillars: {}, homeStyle: { floor: 'wood', wall: 'wood' }, arenaRank: 0, talents: { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] }, bento: [], courierTimer: null, auctionWon: {}, flask: { n: 3, max: 3 }, lost: null }; }
 function eqv(k) {
   let v = 0;
   for (const s of ['wpn', 'arm', 'acc']) { const id = S.eq[s], it = ITEMS[id]; if (!it) continue; if (it[k]) v += it[k]; const u = (S.up && S.up[id]) || 0; if (u && s === 'wpn' && k === 'atk') v += UPG.wpn * u; if (u && s === 'arm' && k === 'def') v += UPG.arm * u; }
@@ -16802,7 +16802,7 @@ Object.assign(GroundLayer.prototype, {
 // MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALIGUS dalam satu scene `World` berkoordinat
 // global (WORLD_POS). File tiap wilayah TIDAK diubah: datanya digeser saat MAPS.benua dibangun (buildBenua). Interior/gua tetap
 // peta terpisah. Save tetap menyimpan id wilayah + koordinat lokal (benuaLocalize), jadi kompatibel dengan mode lama.
-// BAWAAN sejak v1.29.0. Matikan (mode lama multi-scene): ?benua=0 (diingat di localStorage), nyalakan: ?benua=1.
+// BAWAAN sejak v1.30.0. Matikan (mode lama multi-scene): ?benua=0 (diingat di localStorage), nyalakan: ?benua=1.
 // Status & sisa pekerjaan: docs/HANDOFF_OPENWORLD.md.
 const BENUA = (() => {
   try {
@@ -17066,6 +17066,122 @@ for (const k of ['updMinimap', 'updFog']) {
     });
     return openMapNew0(view);
   };
+}
+
+'use strict';
+// Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):
+// - serangan & berguling (dash, sudah kebal sesaat) memakan stamina; stamina berhenti pulih sebentar setelah dipakai
+// - Botol Cahaya: penyembuh isi ulang (S.flask), terisi penuh di patung teleport, saat tidur, dan saat bangkit setelah kalah
+// - kalah: separuh emas tertinggal sebagai "Jejak Cahaya" di tempat jatuh; ambil kembali sebelum kalah lagi (S.lost)
+// Kesulitan Santai (OPT.diff 0) memotong biaya stamina separuh.
+const SOUL = { atk: { sword: 12, spear: 14, axe: 20, bow: 8 }, roll: 22, regenDelay: .7, flaskHeal: .45, flaskT: .55, lostR: 18 };
+function flaskOf() { if (!S.flask) S.flask = { n: 3, max: 3 }; return S.flask; }
+function soulCost(n) { return OPT.diff === 0 ? Math.round(n / 2) : n; }
+function refillFlask(sc) {
+  const F = flaskOf(); if (F.n >= F.max) return;
+  F.n = F.max; updHud(); if (sc && sc.pl) popWorld(sc.pl.x, sc.pl.y - 30, 'Botol Cahaya terisi ' + F.n + '/' + F.max, 'heal');
+}
+{
+  const W = World.prototype;
+  // stamina: biaya serangan & berguling
+  const spend = (sc, n) => {
+    if (S.sta == null) S.sta = stat().maxsta || 100;
+    if (S.sta < Math.min(n, 6)) {
+      if (!sc.tiredT || sc.t - sc.tiredT > 1) { sc.tiredT = sc.t; popWorld(sc.pl.x, sc.pl.y - 30, 'Lelah!', 'mpc'); sfx('buzz'); }
+      return false;
+    }
+    S.sta = Math.max(0, S.sta - n); sc.staDelay = SOUL.regenDelay; return true;
+  };
+  const attack0 = W.attack;
+  W.attack = function () {
+    const pl = this.pl; if (!pl || pl.dead || pl.atkCd > 0) return attack0.apply(this, arguments);
+    const wt = (ITEMS[S.eq.wpn] && ITEMS[S.eq.wpn].wt) || 'sword';
+    if (!spend(this, soulCost(SOUL.atk[wt] || 12))) return;
+    return attack0.apply(this, arguments);
+  };
+  const dash0 = W.dash;
+  W.dash = function () {
+    if (this.dashCd > 0 || (this.pl && this.pl.dashT > 0)) return dash0.apply(this, arguments);
+    if (!spend(this, soulCost(SOUL.roll))) return;
+    return dash0.apply(this, arguments);
+  };
+  const updSta0 = W.updStamina; // jeda pulih setelah memakai stamina
+  W.updStamina = function (dt, sprint, moving) {
+    if (this.staDelay > 0) { this.staDelay -= dt; if (!(sprint && moving)) return; }
+    return updSta0.call(this, dt, sprint, moving);
+  };
+  // Botol Cahaya dulu, ramuan biasa bila botol habis
+  const drink0 = W.drink;
+  W.drink = function () {
+    const F = flaskOf(), st = stat(), pl = this.pl;
+    if (F.n <= 0 || this.flaskT > 0) return drink0.apply(this, arguments);
+    if (S.hp >= st.maxhp) { popWorld(pl.x, pl.y - 30, 'HP penuh', 'heal'); return; }
+    F.n--; this.flaskT = SOUL.flaskT; sfx('ok'); updHud(); // minum butuh waktu: rentan diserang (adil, bukan instan)
+    this.time.delayedCall(SOUL.flaskT * 1000, () => {
+      if (!this.pl || this.pl.dead) return; const h = Math.round(stat().maxhp * SOUL.flaskHeal);
+      S.hp = Math.min(stat().maxhp, S.hp + h); popWorld(this.pl.x, this.pl.y - 30, '+' + h, 'heal');
+      this.sparkle(this.pl.x, this.pl.y - 12, 'spark', 10); updHud();
+    });
+  };
+  const useWarp0 = W.useWarp;
+  W.useWarp = function () { refillFlask(this); return useWarp0.apply(this, arguments); };
+  // kalah: catat Jejak Cahaya (separuh emas yang hilang) di tempat jatuh
+  const defeat0 = W.defeat;
+  W.defeat = async function () {
+    const pl = this.pl, g0 = S.gold;
+    let map = this.M.id, x = pl.x, y = pl.y;
+    if (this.M.benua && typeof regionAt === 'function') { map = regionAt(x, y) || this.regId; x -= WORLD_POS[map][0]; y -= WORLD_POS[map][1]; }
+    const had = S.lost;
+    const r = await defeat0.apply(this, arguments);
+    if (S.gold < g0 && !this.M.indoor) {
+      S.lost = { map, x: Math.round(x), y: Math.round(y), gold: g0 - S.gold };
+      if (had) S.lostGone = had.gold; // jejak lama hilang selamanya
+    }
+    const F = flaskOf(); F.n = F.max;
+    return r;
+  };
+  // tiap frame: hitung mundur & Jejak Cahaya
+  const update0 = W.update;
+  W.update = function (time, dl) {
+    update0.call(this, time, dl);
+    if (this.passive || G.title || !this.pl) return;
+    soulHudWrap();
+    const dt = Math.min(dl, 100) / 1000; if (this.flaskT > 0) this.flaskT -= dt;
+    this.updLost();
+  };
+}
+Object.assign(World.prototype, {
+  updLost() {
+    const L = S.lost;
+    if (!L) { if (this.lostS) { this.lostS.destroy(); this.lostS = null; } return; }
+    let gx = L.x, gy = L.y;
+    if (this.M.benua) { if (!WORLD_POS[L.map] || !isOutdoorRegion(L.map)) return; gx += WORLD_POS[L.map][0]; gy += WORLD_POS[L.map][1]; }
+    else if (this.M.id !== L.map) { if (this.lostS) { this.lostS.destroy(); this.lostS = null; } return; }
+    if (!this.lostS || !this.lostS.active) {
+      this.lostS = this.add.image(gx, gy, 'spark').setOrigin(.5, 1).setScale(1.8).setTint(0xffe28a).setDepth(gy);
+      this.tweens.add({ targets: this.lostS, alpha: .35, scale: 2.4, duration: 700, yoyo: true, repeat: -1 });
+      this.lights.push({ x: gx, y: gy - 6, small: 1 });
+    }
+    if (this.pl.dead || Math.hypot(this.pl.x - gx, this.pl.y - gy) > SOUL.lostR) return;
+    S.gold += L.gold; S.lost = null; this.lostS.destroy(); this.lostS = null; sfx('chest'); updHud();
+    popWorld(gx, gy - 24, 'Jejak Cahaya: +' + L.gold + ' G', 'gold'); this.sparkle(gx, gy - 10, 'doto', 16);
+  },
+});
+{ // tidur memulihkan Botol Cahaya
+  const sleep0 = sleepToMorning;
+  sleepToMorning = function () { const r = sleep0.apply(this, arguments); refillFlask(G.scene); return r; }; // eslint-disable-line no-global-assign
+}
+// HUD tombol OBAT: "botol/maks · ramuan" (updHud ada di ui/widgets.js yang dimuat belakangan → dibungkus saat runtime)
+let soulHudOn = false;
+function soulHudWrap() {
+  if (soulHudOn || typeof updHud !== 'function') return; soulHudOn = true;
+  const u0 = updHud;
+  updHud = function () { // eslint-disable-line no-global-assign
+    const r = u0.apply(this, arguments), e = document.getElementById('hPot'), F = flaskOf();
+    if (e) e.textContent = F.n + '/' + F.max + ' · ' + ((S.inv.potion || 0) + (S.inv.hipotion || 0));
+    return r;
+  };
+  updHud();
 }
 
 'use strict';

@@ -17,8 +17,8 @@ _(tanpa sub-bagian)_
 ## CODE_RULES.md — CODE_RULES — aturan menulis kode Legenda Lumina (63 baris, ~1200 token)
 1. Cara agen membaca proyek (urutan hemat konteks) 6 · 2. Batas ukuran (dicek otomatis) 11 · 3. Arsitektur (tetap, jangan diganti tanpa izin pemilik) 21 · 4. Pola yang dipakai 36 · 5. Gaya penulisan 51 · 6. Sebelum push 59
 
-## GAME_DESIGN.md — Legenda Lumina — Game Design Direction (129 baris, ~1600 token)
-Visi 12 · Prinsip Storytelling 27 · Pacing 45 · Tujuan Pemain 65 · Immediate Goal 69 · Mid-term Goal 72 · Long-term Goal 75 · Misteri utama (jangka panjang) 84 · Peta pengungkapan per bab 101 · Ending: perang besar (keputusan pemilik, dikunci) 112 · Aturan penerapan untuk agent 120
+## GAME_DESIGN.md — Legenda Lumina — Game Design Direction (141 baris, ~1900 token)
+Visi 12 · Prinsip Storytelling 27 · Pacing 45 · Tujuan Pemain 65 · Immediate Goal 69 · Mid-term Goal 72 · Long-term Goal 75 · Misteri utama (jangka panjang) 84 · Peta pengungkapan per bab 101 · Ending: perang besar (keputusan pemilik, dikunci) 112 · Aturan penerapan untuk agent 120 · Arah gameplay: ala Dimraeth (disetujui pemilik 13 Nov 2026) 130
 
 ## HANDOFF_OPENWORLD.md — HANDOFF — Open World Legenda Lumina (lanjutan) (162 baris, ~4100 token)
 0. Aturan wajib 6 · 1. Tujuan besar (permintaan user) 14 · DEFINISI SELESAI (ditegaskan user 12 Nov, dengan screenshot) 21 · Bug kecil yang terlihat di screenshot 29 · 0b. MODE BENUA = ARAH UTAMA (keputusan pemilik 13 Nov): satu peta raksasa, file per wilayah tetap 32 · 1b. Update v1.27.4 (gradasi & hutan pengisi) 65 · 1c. Update v1.27.5 (lapisan tanah bersama) 72 · 1d. v1.27.6 77 · 2. Yang SUDAH selesai 80 · Cara kerja regions (penting dipahami) 88 · 3. YANG HARUS DIKERJAKAN BERIKUTNYA (urut) 100 · Langkah 2 — Isi benua, buka batas, tanpa ujung 102 · Langkah 3 — Haluskan 108 · Tahap 3 — Gerak (pilihan user) [SELESAI v1.27.3] 112 · Tahap 4 — Konten eksplorasi [SELESAI v1.27.3] 118 · 4. Gotcha teknis (sudah pernah bikin bug) 122 · 5. Tes 131 · 6. Rutinitas rilis 145 · 7. Peta file 153

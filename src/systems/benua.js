@@ -2,7 +2,7 @@
 // MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALIGUS dalam satu scene `World` berkoordinat
 // global (WORLD_POS). File tiap wilayah TIDAK diubah: datanya digeser saat MAPS.benua dibangun (buildBenua). Interior/gua tetap
 // peta terpisah. Save tetap menyimpan id wilayah + koordinat lokal (benuaLocalize), jadi kompatibel dengan mode lama.
-// BAWAAN sejak v1.29.0. Matikan (mode lama multi-scene): ?benua=0 (diingat di localStorage), nyalakan: ?benua=1.
+// BAWAAN sejak v1.30.0. Matikan (mode lama multi-scene): ?benua=0 (diingat di localStorage), nyalakan: ?benua=1.
 // Status & sisa pekerjaan: docs/HANDOFF_OPENWORLD.md.
 const BENUA = (() => {
   try {
