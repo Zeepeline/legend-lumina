@@ -107,7 +107,7 @@ _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 _Peta: Padang Angin_
 
 
-## src/world/maps/cave.js (30 baris)
+## src/world/maps/cave.js (37 baris)
 _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 
 
