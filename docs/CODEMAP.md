@@ -179,9 +179,9 @@ _Panggang bayangan objek ke tekstur tanah_
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 12 · `addStrip()` 13 · `darkTree()` 14 · `NPC_W` 16 · `regPortrait()` 17 · `regChar()` 22 · `buildTextures()` 38
 
-## src/scene/world.js (391 baris)
+## src/scene/world.js (394 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
-`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 207 · `.update()` 208 · `.puff()` 307 · `.camStep()` 308 · `.pump()` 355 · `.front()` 364 · `.actionA()` 365 · `.sparkle()` 375 · `.checkZones()` 379
+`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 207 · `.update()` 208 · `.puff()` 310 · `.camStep()` 311 · `.pump()` 358 · `.front()` 367 · `.actionA()` 368 · `.sparkle()` 378 · `.checkZones()` 382
 
 ## src/systems/scene_nav.js (14 baris)
 _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._

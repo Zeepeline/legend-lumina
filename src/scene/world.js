@@ -229,9 +229,12 @@ class World extends Phaser.Scene {
         else if (!climbing && !gliding) pl.setVelocity(v.x * sp, v.y * sp);
         if (m > .3 && v.y < -.5) for (const d of this.doors) if (Math.abs(pl.x - d.x) < 10 && pl.y < d.y + 15 && pl.y > d.y - 4) { this.enterRoom(d.to, [d.x, d.y]); break; }
         if (m > .15) {
-          if (pl.atkT <= 0) pl.dir = Math.abs(v.x) > Math.abs(v.y) * 1.05 ? (v.x > 0 ? 'right' : 'left') : (v.y > 0 ? 'down' : 'up');
-          const k = 'hero_' + (pl.dir === 'left' || pl.dir === 'right' ? 'side' : pl.dir);
-          pl.flipX = pl.dir === 'left';
+          if (pl.atkT <= 0) {
+            pl.dir = Math.abs(v.x) > Math.abs(v.y) * 1.05 ? (v.x > 0 ? 'right' : 'left') : (v.y > 0 ? 'down' : 'up');
+            if (v.x !== 0) pl.lastSide = v.x > 0 ? 'right' : 'left';
+          }
+          const k = 'hero_side';
+          pl.flipX = (pl.lastSide || (pl.dir === 'left' ? 'left' : 'right')) === 'left';
           if (pl.atkT > 0) { pl.anims.stop(); pl.setFrame(sd + '3'); }
           else { if (pl.anims.currentAnim?.key !== k || !pl.anims.isPlaying) pl.play(k, true); pl.anims.timeScale = (.6 + m * .5) * stat().spd; }
           this.dustT -= dt; if (this.dustT <= 0 && m > .6) {
