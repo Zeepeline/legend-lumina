@@ -111,8 +111,8 @@ img.ic{width:12px;height:12px;image-rendering:pixelated;vertical-align:-2px;marg
 body.touch #pad{display:block}
 #joy{position:absolute;left:18px;top:42px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,#3a5a3a 0%,#22382a 70%);box-shadow:inset 0 0 0 3px #4e7a4a,0 5px 0 #0e1a12;touch-action:none}
 #knob{position:absolute;left:42px;top:42px;width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d8f0c0,#7ab45a);box-shadow:0 4px 0 #2e5a2a;pointer-events:none}
-.btn{position:absolute;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:24px;line-height:1;color:#fff;text-shadow:0 2px 0 #0006;box-shadow:0 5px 0 #0008,inset 0 2px 0 #fff5;touch-action:none}
-.btn small{font-size:8px;letter-spacing:1px;margin-top:2px;font-weight:600}
+.btn{position:absolute;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:24px;line-height:1;color:#fff;border:2px solid rgba(18,12,8,.75);text-shadow:0 1px 2px #000,1px 1px 0 #000,-1px -1px 0 #000;box-shadow:0 5px 0 #0008,inset 0 2px 0 #fff5;touch-action:none}
+.btn small{font-size:8px;letter-spacing:1px;margin-top:2px;font-weight:700;text-shadow:0 1px 2px #000,1px 1px 0 #000,-1px -1px 0 #000}
 .btn.on{transform:translateY(3px);box-shadow:0 2px 0 #0008,inset 0 2px 0 #fff5;filter:brightness(1.15)}
 #bA{right:18px;top:40px;width:80px;height:80px;background:radial-gradient(circle at 35% 30%,#ff9a7a,#d0482e)}
 #bB{right:110px;top:100px;width:62px;height:62px;font-size:20px;background:radial-gradient(circle at 35% 30%,#ffd07a,#e07a1e)}

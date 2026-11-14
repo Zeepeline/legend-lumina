@@ -1648,7 +1648,8 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; ubah ukuran huruf di Pengaturan → dialog ikut membesar.
 
-### [ ] T269. **Tombol sentuh terbaca di layar terang**
+### [x] T269. **Tombol sentuh terbaca di layar terang**
+- Selesai: menambahkan `border: 2px solid rgba(18,12,8,.75)` serta bayangan teks kontur gelap (`text-shadow: 0 1px 2px #000, 1px 1px 0 #000, -1px -1px 0 #000`) pada tombol `.btn` dan label `.btn small`.
 - File: `styles.css`. Baca dulu: aturan tombol sentuh (SERANG, DASH, SIHIR, OBAT, MENU, PETA, TAS).
 - Lakukan: tambah garis tepi gelap 2px & bayangan teks agar label terbaca di bawah sinar matahari; jangan ubah ukuran/posisi.
 - Batasan: hanya CSS.
