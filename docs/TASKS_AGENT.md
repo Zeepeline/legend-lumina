@@ -1867,7 +1867,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; lawan perkemahan goblin → pemanah di belakang, ada yang memutar ke belakang Arka.
 
-### [ ] T299. **Menghindar saat Arka mengayun** — referensi: Dark Souls (musuh membaca input), Sekiro
+### [x] T299. **Menghindar saat Arka mengayun** — referensi: Dark Souls (musuh membaca input), Sekiro
 - File: `src/ai/enemies.js` (+ `DODGERS` di `src/systems/feel.js`, BACA). Baca dulu: `updFeel()`/`DODGERS` dan cabang `'walk'`/`'lunge'`.
 - Lakukan: musuh pintar (goblin, serigala elit, Taring Perak) punya peluang 25% melangkah menyamping/mundur 20 px saat Arka mulai menyerang di depannya dalam 40 px; jeda minimal 2 s per musuh.
 - Batasan: slime & musuh kecil tidak menghindar.

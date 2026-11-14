@@ -15211,6 +15211,18 @@ Object.assign(World.prototype, {
     if (e.shootT > .5) e.shootWarn = 0;
     // pola tambahan musuh elit: lingkaran peluru
     if (e.elite && e.alert === 2) { e.eT -= dt; if (e.eT <= .5 && !e.eW) { e.eW = 1; markOver(this, e, '!!', '#ffd84a'); } if (e.eT <= 0) { e.eT = rnd(3.5, 5); e.eW = 0; this.eShoot(e, 'seed', [0, 1, 2, 3, 4, 5, 6, 7].map(i => i * Math.PI / 4), Math.round(e.D.atk * .7), true); } }
+    // musuh cerdas mengelak saat Arka mulai mengayunkan senjata di depannya (T299)
+    const isSmart = e.type === 'goblin' || e.type === 'bounty_wolf' || (e.elite && (e.type === 'wolf' || e.type === 'wolfs')) || e.type === 'goblin_chief';
+    if (e.swingDodgeCd > 0) e.swingDodgeCd -= dt;
+    if (isSmart && (e.swingDodgeCd || 0) <= 0 && pl.swingT != null && (this.t - pl.swingT < .08) && d <= 42) {
+      e.swingDodgeCd = 2.0;
+      if (Math.random() < .25) {
+        const side = Math.random() < .5 ? 1 : -1;
+        const nx = -(pl.y - s.y) / d, ny = (pl.x - s.x) / d;
+        e.kb = .14; e.kbx = (nx * side * 130) - ((pl.x - s.x) / d * 70); e.kby = (ny * side * 130) - ((pl.y - s.y) / d * 70);
+        popWorld(s.x, s.y - 20, 'Elak!', 'xp'); this.puff(s.x, s.y);
+      }
+    }
     // musuh gesit menghindar dari bola api/panah
     if (DODGERS.includes(e.D.ai) && (e.dodgeCd = (e.dodgeCd || 0) - dt) <= 0) {
       for (const p of this.shots) {
