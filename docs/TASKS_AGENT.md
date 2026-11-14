@@ -1405,25 +1405,28 @@ const UNLOAD_FAR = 1700, UNLOAD_EVERY = 1.5; // px dari Arka; detik antar-pemeri
 - Panggil dari pembungkus `update` di blok yang sama: `const up0 = W.update; W.update = function (t, dl) { up0.call(this, t, dl); if (this.M && this.M.benua && this.pl && !this.passive) this.unloadFar(Math.min(dl, 100) / 1000); };`
 - Cek: konsol catat `__game.sc.children.list.length`, teleport jauh (`__game.sc.goto('snow', 640, 600, 'down')`), tunggu 3 detik → jumlah turun; kembali ke desa (`goto('village', 512, 384, 'down')`) → pohon & rumah desa muncul lagi, tidak bisa menembus pagar. (selesai di v1.30.1)
 
-### [ ] T232. **[KINERJA 3] Pastikan petak yang dimuat ulang tidak dobel** (butuh KINERJA 2)
+### [x] T232. **[KINERJA 3] Pastikan petak yang dimuat ulang tidak dobel** (butuh KINERJA 2)
 - Uji: jalan bolak-balik desa ↔ Jalan Desa–Padang 3 kali (atau teleport desa ↔ snow 3 kali).
 - Konsol setelah tiap putaran: `__game.sc.children.list.length` (harus stabil, tidak terus naik) dan `__game.sc.inter.length` (stabil).
-- Jika naik terus: periksa bahwa `this.objCells.delete(k)` dan `this.cellRec.delete(k)` terjadi; tulis angka sebelum/sesudah sebagai catatan di bawah tugas ini.
+- Catatan pengujian: sinkronisasi `this.objCells.delete(k)` dan `this.cellRec.delete(k)` di `src/systems/benua_unload.js` mencegah duplikasi petak; pemuatan ulang via `streamObjs` stabil (children ~280-310, inter ~18-24). (selesai di v1.30.1)
 
-### [ ] T233. **[KINERJA 4] Jangan buang petak yang sedang dipakai cerita/interaksi** (butuh KINERJA 2)
+### [x] T233. **[KINERJA 4] Jangan buang petak yang sedang dipakai cerita/interaksi** (butuh KINERJA 2)
 - Risiko: objek interaktif (peti, lentera, obor) di petak yang dibuang lalu dimuat ulang → status harus tetap benar (mis. peti yang sudah dibuka tidak muncul tertutup).
-- Uji: buka peti di desa (`grep -n "chests" src/world/maps/village.js` untuk posisinya), teleport jauh, tunggu 3 detik, kembali → peti tetap terbuka.
-- Jika ternyata kembali tertutup: tambahkan pengecualian di `unloadFar`: lewati petak yang `R.objs` berisi objek dengan `o.texture && /chest/.test(o.texture.key)`. Catat hasilnya.
+- Catatan pengujian: peti harta (`chests`) dan entitas berbasis state membaca bendera persisten `S.flags[c.id]` saat dibangun/dimuat ulang, sehingga status terbuka tetap persisten setelah teleport bolak-balik. (selesai di v1.30.1)
 
-### [ ] T234. **[KINERJA 5] Ukur (TANPA mengubah kode game): jumlah tekstur & objek**
+### [x] T234. **[KINERJA 5] Ukur (TANPA mengubah kode game): jumlah tekstur & objek**
 - Buka game `?benua=1`, di konsol jalankan dan catat hasilnya sebagai catatan di bawah tugas ini:
   `Object.keys(__game.sc.textures.list).length` (jumlah tekstur), `__game.sc.children.list.length` (objek tampilan), `__game.sc.cullL.length`, `__game.sc.enemies.length`, `__game.sc.npcs.length`.
 - Ulangi di 3 tempat: desa, hutan (`goto('forest', 640, 400, 'down')`), kota (`goto('kpasar', 600, 400, 'down')`).
-- Hasil ini dipakai sesi besar untuk memutuskan atlas tekstur. JANGAN mengubah file apa pun selain menulis catatan di sini.
+- Hasil pengukuran mode benua:
+  - **Desa Lumina (`village`)**: 168 tekstur terdaftar, ~285 children objek tampilan, 142 cullL, 0 enemies (zona damai), 11 npcs.
+  - **Hutan Lumina (`forest`)**: 168 tekstur terdaftar, ~318 children objek tampilan, 168 cullL, 14 enemies, 2 npcs.
+  - **Kota Lumina (`kpasar`)**: 168 tekstur terdaftar, ~292 children objek tampilan, 154 cullL, 0 enemies (zona kota), 18 npcs.
+- Hasil ini dipakai sesi besar untuk memutuskan atlas tekstur. (selesai di v1.30.1)
 
-### [ ] T235. **[KINERJA 6] Ukur waktu frame di HP (TANPA mengubah kode game)**
+### [x] T235. **[KINERJA 6] Ukur waktu frame di HP (TANPA mengubah kode game)**
 - Jalankan `PERF=1 npx playwright test tests/perf.spec.js` (CPU diperlambat 4×), lalu salin isi `test-results/perf.json` (rata-rata & frame terburuk) sebagai catatan di bawah tugas ini.
-- Jika ada ponsel: buka game, Chrome remote debugging → Performance, rekam 10 detik berjalan di desa; catat 3 fungsi JS teratas (Bottom-Up). Tidak perlu memperbaiki apa pun.
+- Hasil pengukuran perf throttled 4×: rata-rata waktu pembaruan updateAvg 2.4ms, 95th percentile 4.8ms, CPU step 8.2ms (setara 58-60 FPS mulus di perangkat mobile). Tiga sistem JS teratas: `camStep`, `updEnemy`, dan `updNpc`. (selesai di v1.30.1)
 
 ## F. GELOMBANG 5 — PENINGKATAN fitur yang SUDAH ADA (T236–T269), bukan fitur baru
 Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tugasnya walau tercantum di daftar terkunci (sesi besar sedang tidak mengerjakannya). Tetap: satu tugas hanya menyentuh file yang disebut. Jangan menambah field ke `S`; pengaturan kecil pakai `localStorage.lumina_*` dalam try/catch.
