@@ -3092,6 +3092,76 @@ boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
 - Lakukan: tiap jalan utama diberi 1–2 papan nama di persimpangan: "Jalan Gerbang Timur", "Jalan Kuil", "Gang Pandai Besi", dll. Teks pendek (≤ 20 huruf).
 - Cek: `npm run check` (0 masalah); papan terbaca di persimpangan utama.
 
+## L. GELOMBANG 11 — PERBAIKAN tanah: garis kotak-kotak & pola rapi (T409–T416) — KERJAKAN DULU sebelum gelombang lain
+**Masalah (screenshot pemain):** tanah tampak seperti kotak-kotak berpagar gelap tiap 64 px; batu & bunga yang sama berulang di tiap kotak.
+**Penyebab pasti:** `assets/img/gpt_tile_verdant_grass.png` & `gpt_tile_verdant_dirt.png` dipotong dari lembar bersama **bingkai/celah gelap** lembar itu
+(baris atas 0–7 & kolom kanan 59–63 gelap), dan batu/bunga ikut tercetak di dalam petak. `src/world/ground.js` (±baris 155–170) mengulang petak itu
+dengan `% 64`, jadi bingkai menjadi garis grid. Petak dari lembar GPT TIDAK seamless dan tidak boleh dipakai sebagai petak tanah.
+**Pengganti sudah tersedia (dibuat Claude, sudah dicek seamless):** `assets/img/gnd_grass.png`, `gnd_grass_dark.png`, `gnd_dirt.png` (128×128, polos,
+warna diambil dari palet Verdant) + ornamen 16×16 transparan `assets/img/deco_{tuft,clover,flower_w,flower_y,flower_p,pebble,pebbles}.png`.
+Contoh hasil yang benar: `assets/reference/pola_tanah_preview.png` (dibuat oleh `tools/gen_ground_preview.py`). Generator: `tools/gen_ground.py`.
+
+**Aturan pola tanah (berlaku untuk semua tugas tanah ke depan):**
+1. Petak dasar tanah HANYA berisi tekstur halus (warna rumput/tanah). Tidak boleh ada batu, bunga, bingkai, bayangan tepi di dalam petak.
+2. Petak wajib seamless: tempel 2×2 → tidak terlihat sambungan. Ukuran 128 px (64 px terlalu cepat berulang).
+3. Batas rumput↔tanah memakai ambang noise + dithering 4×4 (Bayer), BUKAN rata-rata warna (rata-rata = buram & lumpur abu-abu).
+4. Ornamen kecil (bunga, rumput tegak, batu kerikil) disebar terpisah dengan posisi acak dari `hash` (grid 32 px + geser acak 4–20 px), digambar ke
+   kanvas tanah — BUKAN objek Phaser (hemat kinerja). Di atas tanah: hanya kerikil. Kepadatan: ± 55% sel 32 px berisi ornamen.
+5. Batu besar, semak, pohon tetap objek (`OBJ`), bukan bagian tanah.
+
+### [ ] T409. **Daftarkan petak & ornamen baru** — referensi: —
+- File: `src/gfx/textures.js` (`IMG_LIST`). Baca dulu: baris `IMG_LIST` & `loadImgs`.
+- Lakukan: tambahkan `'gnd_grass','gnd_grass_dark','gnd_dirt','deco_tuft','deco_clover','deco_flower_w','deco_flower_y','deco_flower_p','deco_pebble','deco_pebbles'`.
+  Hapus `"tile_verdant_grass", "tile_verdant_dirt"` dari `GPT_SWAP` di `src/gfx/gptassets.js` (jangan hapus file png-nya dulu).
+- Cek: `npm run check` (0 masalah); konsol `IMGEL.gnd_grass.width === 128`; tidak ada "Gagal memuat gambar".
+
+### [ ] T410. **Ganti petak tanah di ground.js** — referensi: Stardew Valley (tanah polos + ornamen terpisah)
+- File: `src/world/ground.js` (blok `isVerdant`, ±baris 155–170). Baca dulu: `getTileData`, blok itu saja.
+- Lakukan: pakai `getTileData('gnd_grass')`, `getTileData('gnd_grass_dark')`, `getTileData('gnd_dirt')`; indeks petak `% 128` (bukan 64), lebar baris 128.
+  Pilih petak per piksel (tanpa rata-rata warna): `const t = BAYER[y&3][x&3]/16 - .5;` (`BAYER=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]]`)
+  → `pN > .62 + t*.10` → tanah; selain itu `vnoise(x+GX,y+GY,64,11) > .62 + t*.08` → rumput gelap; selain itu → rumput. Pindahkan `getTileData`
+  ke LUAR loop piksel (sekali per `genGround`).
+- Batasan: jangan ubah cabang bukan-verdant, gua, jalan batu, sungai. `blend` tepi wilayah: tetap, tapi pakai pilih-dither yang sama (ambil `c2` bila
+  `hash(x,y,31) < 0.5`), jangan `>> 1` rata-rata.
+- Cek: `npm run check` (0 masalah); di Padang/Desa/Hutan TIDAK ada garis grid; bandingkan dengan `assets/reference/pola_tanah_preview.png`.
+
+### [ ] T411. **Ornamen tanah dari gambar deco_*** — referensi: Stardew Valley, Eastward
+- File: `src/world/ground.js` (blok hiasan rumput ±baris 181–186 yang memakai `GP.tuft`). Baca dulu: blok itu saja.
+- Lakukan: untuk wilayah verdant: per sel 32 px (koordinat global, agar chunk bersebelahan sama) pilih ornamen dengan `hash(sel,…)` sesuai aturan 4
+  dan gambar `x.drawImage(IMGEL['deco_'+k], X, Y)` bila sel ada di dalam `rect`. Peluang di rumput: tuft 28%, clover 12%, flower_w 6%, flower_y 4%,
+  flower_p 3%, pebble 4%; di tanah: pebble 25%, pebbles 10%. `M.flowers` → peluang bunga ×2. Wilayah bukan-verdant: kode lama tetap.
+- Cek: `npm run check` (0 masalah); ornamen tidak terpotong di batas chunk 64 px (cek dengan berjalan pelan); tidak ada objek Phaser baru.
+
+### [ ] T412. **Hapus petak lama yang rusak** — referensi: —
+- File: `assets/img/gpt_tile_verdant_*.png`, `gpt_verdant_ground_*.png`, `verdant_ground_*.png`; `src/gfx/gptassets.js`. Baca dulu: `grep -rn "verdant_ground\|tile_verdant" src`.
+- Lakukan: setelah T410 lulus, hapus 6 file png itu & semua rujukannya. Kode `buildTextures` yang mendaftarkan nama "bare" untuk `gpt_*` (commit 9d0a44f)
+  dibiarkan, tapi pastikan tidak menimpa tekstur lama dengan nama sama (`T.exists` sudah dicek).
+- Cek: `npm run check` (0 masalah); `grep -rn "tile_verdant\|verdant_ground" src` kosong; game tetap memuat.
+
+### [ ] T413. **Jalan setapak tanah yang rapi** — referensi: Stardew Valley (jalan tanah bertepi rumput)
+- File: `src/world/ground.js` (cabang `d < 0` dengan `GP.path === 'dirt'`). Baca dulu: cabang itu.
+- Lakukan: untuk wilayah verdant, jalan tanah memakai piksel `gnd_dirt` (indeks `% 128`) dan tepi 3 px memakai dither yang sama (aturan 3),
+  bukan warna `DIRT[k]` datar. Jalan batu (bukan 'dirt') JANGAN diubah.
+- Cek: `npm run check` (0 masalah); jalan tanah desa menyatu dengan bercak tanah, tepinya bergerigi halus, bukan garis lurus gelap.
+
+### [ ] T414. **Batu & kerikil seragam gaya** — referensi: —
+- File: `src/world/objects.js` (`rock`, `pebbles`, `rockWoods`), `src/gfx/gptassets.js`. Baca dulu: commit a53d19f (gpt_rock, gpt_pebbles).
+- Lakukan: cek gambar `gpt_rock.png`, `gpt_pebbles.png`, `gpt_i_rockWoods.png`: jika ada bingkai/latar gelap tersisa (piksel tidak transparan di tepi),
+  buat transparan (alpha 0 untuk piksel yang tersambung ke tepi & gelap). Objek `pebbles` di peta verdant boleh dikurangi 50% karena kerikil
+  kini sudah ada di ornamen tanah (T411).
+- Cek: `npm run check` (0 masalah); tidak ada kotak gelap di sekitar batu.
+
+### [ ] T415. **Cek pola di HP & tulis catatan** — referensi: —
+- File: catatan di bawah tugas ini. Baca dulu: —.
+- Lakukan: buka game di HP, jalan di Desa, Jalan Desa–Padang, Padang, Hutan. Catat: garis grid? pola berulang terlihat? FPS turun? Ambil 1 tangkapan layar.
+- Cek: catatan berisi jawaban 3 pertanyaan.
+
+### [ ] T416. **Dokumentasi pola tanah** — referensi: —
+- File: `docs/GEOGRAFI.md` (bagian baru "§8 Pola tanah", maks 12 baris). Baca dulu: aturan 1–5 di atas.
+- Lakukan: salin aturan 1–5 secara singkat + cara membuat petak baru dengan `tools/gen_ground.py` (ubah palet/seed), agar agen berikutnya tidak memotong
+  petak dari lembar GPT lagi.
+- Cek: `npm run check` (0 masalah); dokumen terbarui.
+
 ---
 
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
