@@ -50,11 +50,35 @@ async function buyMenu(title, list) {
 
     const actualIdx = hasBuyback ? r - 1 : r;
     const id = list[actualIdx], it = ITEMS[id];
-    const finalPrice = Math.max(1, Math.round(it.price * discountMul));
-    if (S.gold < finalPrice) { sfx('buzz'); await say('Uangnya kurang.'); continue; }
-    S.gold -= finalPrice;
-    S.spent[loc] = (S.spent[loc] || 0) + finalPrice;
-    addItem(id); sfx('coin'); updHud();
+    const unitPrice = Math.max(1, Math.round(it.price * discountMul));
+    if (S.gold < unitPrice) { sfx('buzz'); await say('Uangnya kurang.'); continue; }
+
+    let count = 1;
+    const isConsumable = it.k === 'use' || it.k === 'mat' || it.crop;
+    if (isConsumable) {
+      const opts = [1, 5, 10].filter(qty => S.gold >= unitPrice * qty);
+      if (opts.length > 1) {
+        const qtyChoices = opts.map(qty => ({
+          t: `Beli ×${qty}`,
+          r: `${unitPrice * qty} G`
+        }));
+        qtyChoices.push({ t: 'Batal' });
+        const qc = await choose({
+          head: `Berapa banyak ${it.n}?`,
+          x: 56, y: 45, w: 160,
+          items: qtyChoices,
+          foot: () => `Harga satuan: ${unitPrice} G · Emasmu: ${S.gold} G`
+        });
+        if (qc < 0 || qc >= opts.length) continue;
+        count = opts[qc];
+      }
+    }
+
+    const totalPrice = unitPrice * count;
+    if (S.gold < totalPrice) { sfx('buzz'); await say('Uangnya kurang.'); continue; }
+    S.gold -= totalPrice;
+    S.spent[loc] = (S.spent[loc] || 0) + totalPrice;
+    addItem(id, count); sfx('coin'); updHud();
     if (['wpn', 'arm', 'acc'].includes(it.k)) { const sl = it.k; if (await ask(`${it.n} dibeli! Langsung pasang?`)) { S.eq[sl] = id; sfx('ok'); updHud(); } }
   }
 }
@@ -343,76 +367,3 @@ async function upgradeMenu() {
   }
 }
 
-// Menu Pasang Permata (#23)
-async function socketMenu() {
-  const wpns = Object.keys(S.inv).filter(id => ITEMS[id] && ITEMS[id].k === 'wpn');
-  if (!wpns.length) {
-    await say('Kamu tidak membawa senjata di dalam tas.', 'Pak Besi');
-    return;
-  }
-  const r = await choose({
-    head: 'Pilih Senjata untuk Soket',
-    x: 30, y: 30, w: 220,
-    items: [...wpns.map(id => {
-      const g = S.socket && S.socket[id];
-      return { t: icon(id) + itemName(id), r: g ? ITEMS[g]?.n : '(kosong)' };
-    }), { t: 'Kembali' }]
-  });
-  if (r < 0 || r >= wpns.length) return;
-  const wpnId = wpns[r];
-
-  // Daftar permata yang didukung
-  const GEMS = [
-    { id: 'amethyst_gem', n: 'Kecubung Ungu', eff: 'Vampir: Serangan kritis memulihkan 3 HP' },
-    { id: 'shard', n: 'Pecahan Kristal', eff: 'Hawa Beku: 25% peluang tebasan membekukan musuh' },
-    { id: 'ore', n: 'Bijih Padat', eff: 'Hantaman Kokoh: Serang +3 & dorongan kuat' },
-    { id: 'spore', n: 'Spora Alami', eff: 'Racun Alami: Tebasan memberi efek racun pada musuh' }
-  ];
-
-  const gItems = GEMS.map(g => ({
-    t: icon(g.id) + g.n,
-    r: has(g.id) ? `Punya x${S.inv[g.id]}` : 'Tidak Ada',
-    dis: !has(g.id)
-  }));
-  if (S.socket && S.socket[wpnId]) {
-    gItems.push({ t: 'Lepas Permata Saat Ini' });
-  }
-  gItems.push({ t: 'Batal' });
-
-  const gr = await choose({
-    head: `Soket · ${ITEMS[wpnId].n}`,
-    x: 20, y: 30, w: 250,
-    items: gItems,
-    foot: i => i < GEMS.length ? GEMS[i].eff : 'Biaya pemasangan: Gratis bahan terpasang.'
-  });
-
-  if (gr < 0 || gr === gItems.length - 1) return;
-  if (S.socket && S.socket[wpnId] && gr === gItems.length - 2) {
-    const oldGem = S.socket[wpnId];
-    addItem(oldGem, 1);
-    delete S.socket[wpnId];
-    sfx('ok');
-    updHud();
-    await say(`Permata ${ITEMS[oldGem]?.n || ''} berhasil dilepas dan kembali ke tas.`, 'Pak Besi');
-    return;
-  }
-
-  const gem = GEMS[gr];
-  if (!has(gem.id)) {
-    sfx('buzz');
-    await say(`Kamu tidak memiliki ${gem.n}.`, 'Pak Besi');
-    return;
-  }
-
-  if (S.socket && S.socket[wpnId]) {
-    addItem(S.socket[wpnId], 1); // kembalikan permata lama
-  }
-  addItem(gem.id, -1);
-  S.socket = S.socket || {};
-  S.socket[wpnId] = gem.id;
-  sfx('boom');
-  await sleep(250);
-  sfx('chest');
-  updHud();
-  await say(`KLIK! Permata ${gem.n} berhasil dipasang ke ${ITEMS[wpnId].n}! Efek: ${gem.eff}`, 'Pak Besi');
-}

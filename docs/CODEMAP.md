@@ -203,9 +203,9 @@ _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipak
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
 `ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 212 · `.ripple()` 213 · `artQuestArrow()` 216 · `.updQuestGuide()` 223
 
-## src/systems/status.js (67 baris)
+## src/systems/status.js (99 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
-`STATUS` 5 · `.inflict()` 12 · `.cure()` 21 · `.speedMul()` 22 · `.updStatus()` 27 · `.enemyStatus()` 40 · `.burnEnemy()` 56 · `.freezeEnemy()` 57 · `updStatusHud()` 60
+`STATUS` 5 · `.inflict()` 12 · `.cure()` 21 · `.speedMul()` 22 · `.updStatus()` 27 · `.enemyStatus()` 61 · `.burnEnemy()` 84 · `.freezeEnemy()` 85 · `updStatusHud()` 92
 
 ## src/systems/chapter3.js (107 baris)
 _Bab 3: obor kuno, gerbang es, Naga Es Kryos (AI 'dboss')_
@@ -415,9 +415,13 @@ _Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)_
 _Percakapan NPC, toko, bengkel, penginapan_
 `.npcHasQuest()` 4 · `.talkNpc()` 9 · `.offerPet()` 168 · `.shop()` 172 · `.smithy()` 217 · `.innTalk()` 262 · `.talkArenaMaster()` 273 · `.startCityArena()` 310 · `.talkNightMerchant()` 374 · `.talkCourier()` 388 · `.talkAuctioneer()` 422
 
-## src/ui/shop.js (419 baris)
+## src/ui/shop.js (370 baris)
 _Menu beli, jual, tempa_
-`icon` 4 · `ownedEq` 5 · `buyMenu()` 6 · `buybackMenu()` 62 · `sellMenu()` 97 · `forgeMenu()` 199 · `cookMenu()` 221 · `upgCost()` 286 · `upgradeMenu()` 287 · `socketMenu()` 347
+`icon` 4 · `ownedEq` 5 · `buyMenu()` 6 · `buybackMenu()` 86 · `sellMenu()` 121 · `forgeMenu()` 223 · `cookMenu()` 245 · `upgCost()` 310 · `upgradeMenu()` 311
+
+## src/ui/socket.js (76 baris)
+_Menu Pasang Permata (#23)_
+`socketMenu()` 3
 
 ## src/ui/bag.js (261 baris)
 _Tas (inventaris) & buku misi_

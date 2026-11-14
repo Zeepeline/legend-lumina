@@ -1428,7 +1428,7 @@ const UNLOAD_FAR = 1700, UNLOAD_EVERY = 1.5; // px dari Arka; detik antar-pemeri
 ## F. GELOMBANG 5 — PENINGKATAN fitur yang SUDAH ADA (T236–T269), bukan fitur baru
 Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tugasnya walau tercantum di daftar terkunci (sesi besar sedang tidak mengerjakannya). Tetap: satu tugas hanya menyentuh file yang disebut. Jangan menambah field ke `S`; pengaturan kecil pakai `localStorage.lumina_*` dalam try/catch.
 
-### [ ] T236. **Toko: beli dalam jumlah (1/5/10) untuk barang habis pakai**
+### [x] T236. **Toko: beli dalam jumlah (1/5/10) untuk barang habis pakai**
 - File: `src/ui/shop.js`. Baca dulu: `buyMenu()` (baris ±6–61).
 - Lakukan: untuk item `k: 'use'`/ramuan/umpan/benih, setelah memilih item tampilkan `choose` jumlah ×1, ×5, ×10 (sembunyikan yang emasnya tidak cukup). Kurangi emas & tambah item sesuai jumlah dengan fungsi yang sudah dipakai `buyMenu`.
 - Batasan: senjata/zirah tetap dibeli satu-satu.
