@@ -103,7 +103,7 @@ _Peta: Desa Lumina_
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
-## src/world/maps/meadow.js (84 baris)
+## src/world/maps/meadow.js (85 baris)
 _Peta: Padang Angin_
 
 
@@ -115,7 +115,7 @@ _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
-## src/world/maps/snow.js (48 baris)
+## src/world/maps/snow.js (49 baris)
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 
@@ -123,7 +123,7 @@ _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (139 baris)
+## src/world/maps/city.js (140 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 

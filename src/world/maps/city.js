@@ -24,6 +24,7 @@ MAPS.road = {
     ['campfire', 560, 520], ['bench', 560, 480], ['crate', 590, 520], ['barrel', 540, 545],
     ['cart', 390, 880], ['crate', 420, 876], ['barrel', 380, 894],
     ['rock', 300, 900], ['rock', 312, 930], ['stump', 600, 820], ['log', 620, 1600],
+    ['verdant_cliff_straight', 320, 1920], ['verdant_cliff_straight', 580, 1920],
     ['crate', 360, 1240], ['crate', 330, 1210], ['barrel', 430, 1290], ['barrel', 450, 1294], ['hay', 340, 1290], ['coffeekettle', 330, 1250],
     ['coffeeshrub', 260, 840], ['coffeeshrub', 640, 1500],
     ['sign', 470, 1210, { text: 'Pos Istirahat Kafilah\nKota Lumina: setengah hari ke utara.' }]],

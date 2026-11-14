@@ -2737,7 +2737,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); tidak ada pohon salju di rawa, dsb.
 
-### [ ] T360. **Tebing di perpindahan ketinggian** — referensi: BotW (lereng), Pokémon (tebing & tangga)
+### [x] T360. **Tebing di perpindahan ketinggian** — referensi: BotW (lereng), Pokémon (tebing & tangga)
 
 - File: `src/world/maps/snow.js`, `meadow.js`, `city.js` (`road`). Baca dulu: `docs/GEOGRAFI.md` §2; objek tebing `ls_*_cliff` yang sudah ada (grep `cliff` di maps).
 - Lakukan: di sisi wilayah yang menuju ketinggian lebih rendah/tinggi (lihat tabel §2), tambahkan deret tebing pendek di luar jalan; di titik jalan melintas biarkan celah 40 px sebagai tanjakan.

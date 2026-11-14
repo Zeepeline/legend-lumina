@@ -36,6 +36,7 @@ MAPS.meadow = {
     ['sign', 120, 300, { text: 'Padang Angin\nBarat: Desa Lumina · Timur laut: Gua Batu' }],
     ['sign', 970, 960, { text: 'Selatan: RAWA SENJA\nBerbahaya! Hanya untuk petualang berpengalaman.' }],
     ['sign', 660, 90, { text: 'Utara: PUNCAK BEKU\nDingin menusuk. Bawa Penawar & Ramuan.' }],
+    ['rock', 480, 80], ['rock', 800, 80], ['pebbles', 460, 86], ['pebbles', 820, 86],
     ['sign', 1150, 230, { text: 'GUA BATU\nTempat Golem Purba tidur. Jangan berisik!' }],
     ['rock', 560, 380], ['rock', 900, 600], ['rock', 1100, 520], ['log', 630, 350], ['stump', 380, 600], ['rock', 180, 700],
     ['rock', 350, 310], ['bushG1', 378, 320], ['pebbles', 350, 326],

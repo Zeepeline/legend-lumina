@@ -18,6 +18,7 @@ MAPS.snow = {
     ['pebbles', 750, 925], ['pebbles', 740, 935],
     ['frostflower', 740, 150], ['frostflower', 670, 440], ['pebbles', 680, 690], ['pebbles', 785, 780],
     ['rock', 520, 640], ['rock', 780, 660], ['stump', 440, 940], ['log', 820, 960], ['bones', 600, 300], ['bones', 680, 320],
+    ['rock', 530, 1140], ['rock', 750, 1140], ['pebbles', 510, 1150], ['pebbles', 770, 1150],
     ['rock', 560, 480], ['bushW', 580, 486], ['pebbles', 550, 492],
     ['frostflower', 480, 840], ['frostflower', 800, 780],
     ['viewpoint', 640, 110, { id: 'vp_snow', name: 'Puncak Abadi Kryos' }],
