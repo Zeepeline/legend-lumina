@@ -302,7 +302,16 @@ Object.assign(World.prototype, {
     updHud();
   },
   hurtPlayer(atk, sx, sy, fx) {
-    const pl = this.pl; if (pl.inv > 0 || pl.dead || G.lock > 0 || UIH) return;
+    const pl = this.pl;
+    if (pl.inv > 0 || pl.dead || G.lock > 0 || UIH) {
+      if ((pl.dashT > 0 || this.t - (pl.dashStartT || 0) <= .2) && !pl.perfectDodged) {
+        pl.perfectDodged = true; popWorld(pl.x, pl.y - 32, 'Lolos!', 'heal'); sfx('crit');
+        this.time.timeScale = 0.3; this.physics.world.timeScale = 0.3;
+        setTimeout(() => { if (this.time) { this.time.timeScale = 1; this.physics.world.timeScale = 1; } }, 120);
+        S.sta = Math.min((stat().maxsta || 100), (S.sta || 0) + 10); updHud();
+      }
+      return;
+    }
     if (pl.dashT > 0) return; if (this.night && isNight()) atk *= 1.15;
     const dmg = Math.max(1, Math.round((atk * rnd(.85, 1.15) - stat().def * .6) * DIFF[OPT.diff].dmg));
     S.hp = Math.max(0, S.hp - dmg); popWorld(pl.x, pl.y - 28, '-' + dmg, 'hurt'); sfx('hurt'); this.hitStop(.06, 40); if (S.hp > 0) this.inflict(fx);

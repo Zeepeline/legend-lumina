@@ -21,7 +21,8 @@ Object.assign(World.prototype, {
     const pl = this.pl; if (!learned('dash')) { popWorld(pl.x, pl.y - 30, 'Belum belajar Dash', 'xp'); return; }
     if (this.dashCd > 0 || pl.dashT > 0) return;
     const v = Input.vec(); let dx = v.x, dy = v.y; if (Math.hypot(dx, dy) < .3) [dx, dy] = DIRV[pl.dir]; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
-    pl.dashT = .17; pl.dvx = dx * 290; pl.dvy = dy * 290; pl.inv = Math.max(pl.inv, .22 + .04 * tierOf('dash')); this.dashCd = .85 - .1 * tierOf('dash'); useJurus(this, 'dash'); sfx('jump'); this.puff(pl.x, pl.y);
+    pl.dashT = .17; pl.dashStartT = this.t; pl.perfectDodged = false;
+    pl.dvx = dx * 290; pl.dvy = dy * 290; pl.inv = Math.max(pl.inv, .22 + .04 * tierOf('dash')); this.dashCd = .85 - .1 * tierOf('dash'); useJurus(this, 'dash'); sfx('jump'); this.puff(pl.x, pl.y);
   },
   nova() {
     const pl = this.pl, st = stat(); if (!learned('nova')) { popWorld(pl.x, pl.y - 30, 'Belum belajar Nova Es', 'xp'); return; }

@@ -1772,7 +1772,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; tekan SERANG cepat berirama → kombo 3 pukulan tidak 'tertelan'.
 
-### [ ] T285. **Menghindar tepat waktu (perfect dodge)** — referensi: Bayonetta, Monster Hunter
+### [x] T285. **Menghindar tepat waktu (perfect dodge)** — referensi: Bayonetta, Monster Hunter
+- Selesai: saat musuh menyerang mengenai Arka dalam kondisi kebal dash (<= 0.2s sejak dash dimulai), memicu 'Lolos!', slomo 0.12s, sfx crit, dan pemulihan +10 stamina (maksimal sekali per dash via `pl.perfectDodged`).
 - File: `src/systems/combat.js`. Baca dulu: `hurtPlayer()` (±292) bagian saat pemain kebal (`inv`).
 - Lakukan: jika serangan mengenai saat Arka kebal KARENA dash (≤ 0,2 s setelah dash dimulai): pop "Lolos!", perlambatan 0,12 s, dan +10 stamina. Maks sekali per dash.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
