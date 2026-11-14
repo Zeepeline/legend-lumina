@@ -124,10 +124,25 @@ async function openDlgLog() {
   G.lock++; await new Promise(res => { const prev = UIH; UIH = k => { if (k === 'up' || k === 'down') w.querySelector('.jb').scrollTop += k === 'up' ? -50 : 50; else if (['a', 'b', 'menu', 'back'].includes(k)) { UIH = prev; res(); } }; });
   w.remove(); G.lock--;
 }
-// ---------------- PILIH SLOT (#79) ----------------
+// ---------------- PILIH SLOT (#79, T247) ----------------
 async function chooseSlot(mode) {
-  const items = [0, 1, 2].map(i => { const f = slotInfo(i); return { t: `Slot ${i + 1}${i === SAVE_SLOT ? ' ★' : ''}`, r: f ? `Lv ${f.lv} · ${f.map}` : '(kosong)', dis: mode === 'load' && !f }; });
-  const r = await choose({ head: mode === 'load' ? 'Muat dari slot' : 'Mulai baru di slot', items: [...items, { t: 'Batal' }], x: 30, y: 60, w: 240, foot: i => { if (i > 2) return ''; const f = slotInfo(i); return f ? `${f.gold} G · tersimpan ${f.when}` : 'Slot kosong'; } });
+  const items = [0, 1, 2].map(i => {
+    const f = slotInfo(i);
+    return {
+      t: `Slot ${i + 1}${i === SAVE_SLOT ? ' ★' : ''}`,
+      r: f ? `Lv ${f.lv} · ${f.map} · ${f.timeStr}` : '(kosong)',
+      dis: mode === 'load' && !f
+    };
+  });
+  const r = await choose({
+    head: mode === 'load' ? 'Muat dari slot' : 'Mulai baru di slot',
+    items: [...items, { t: 'Batal' }], x: 20, y: 60, w: 260,
+    foot: i => {
+      if (i > 2) return '';
+      const f = slotInfo(i);
+      return f ? `${f.gold} G · tersimpan ${f.when}` : 'Slot kosong';
+    }
+  });
   if (r < 0 || r > 2) return -1;
   if (mode === 'new' && slotInfo(r) && !(await ask(`Slot ${r + 1} sudah berisi. Timpa dengan permainan baru?`))) return -1;
   return r;

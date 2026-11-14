@@ -8,8 +8,22 @@ const slotKey = i => i ? SAVE_BASE + '_s' + i : SAVE_BASE;
 let SAVE_SLOT = (() => { try { return +localStorage.getItem('legenda_lumina_slot') || 0; } catch (_) { return 0; } })();
 let SAVE_KEY = slotKey(SAVE_SLOT);
 function setSlot(i) { SAVE_SLOT = i; SAVE_KEY = slotKey(i); try { localStorage.setItem('legenda_lumina_slot', i); } catch (_) { } }
-// ringkasan slot untuk layar pilih slot (fitur #79)
-function slotInfo(i) { const s = readSaveRaw(slotKey(i)); if (!s) return null; const m = MAPS[s.map]; return { lv: s.lv, map: m ? m.name : s.map, gold: s.gold, when: s.savedAt ? new Date(s.savedAt).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '' }; }
+// ringkasan slot untuk layar pilih slot (fitur #79, T247)
+function slotInfo(i) {
+  const s = readSaveRaw(slotKey(i));
+  if (!s) return null;
+  const m = MAPS[s.map];
+  const pt = (s.st && s.st.playTime) || 0;
+  const j = Math.floor(pt / 3600), mnt = Math.floor((pt % 3600) / 60);
+  const timeStr = `${j}j ${mnt}m`;
+  return {
+    lv: s.lv,
+    map: m ? m.name : s.map,
+    gold: s.gold,
+    timeStr,
+    when: s.savedAt ? new Date(s.savedAt).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''
+  };
+}
 const DIRV = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] };
 let S = null;
 // Pengaturan perangkat (bukan bagian save game): musik/efek 0-4, getar, goyang layar

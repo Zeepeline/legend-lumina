@@ -143,9 +143,9 @@ _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
 _Bilah 5 slot jurus dengan cooldown (T327)_
 `SPELLBAR` 3 · `buildSpellbar()` 4 · `updSpellbar()` 12
 
-## src/core/state.js (136 baris)
+## src/core/state.js (150 baris)
 _Status pemain (S), simpan/muat, rumus stat_
-`SAVE_BASE` 6 · `slotKey` 7 · `SAVE_SLOT` 8 · `SAVE_KEY` 9 · `setSlot()` 10 · `slotInfo()` 12 · `DIRV` 13 · `S` 14 · `OPT_KEY` 16 · `DIFF` 18 · `GAME_VERSION` 19 · `OPT` 20 · `saveOpt()` 21 · `applyOpt()` 22 · `newState()` 23 · `eqv()` 24 · `UPG` 30 · `itemName` 31 · `BUFF` 33 · `buffOn` 34 · `stat()` 35 · `need()` 71 · `has` 72 · `addItem()` 73 · `hasSave()` 82 · `saveGame()` 83 · `readSaveRaw()` 94 · `loadSave()` 98
+`SAVE_BASE` 6 · `slotKey` 7 · `SAVE_SLOT` 8 · `SAVE_KEY` 9 · `setSlot()` 10 · `slotInfo()` 12 · `DIRV` 27 · `S` 28 · `OPT_KEY` 30 · `DIFF` 32 · `GAME_VERSION` 33 · `OPT` 34 · `saveOpt()` 35 · `applyOpt()` 36 · `newState()` 37 · `eqv()` 38 · `UPG` 44 · `itemName` 45 · `BUFF` 47 · `buffOn` 48 · `stat()` 49 · `need()` 85 · `has` 86 · `addItem()` 87 · `hasSave()` 96 · `saveGame()` 97 · `readSaveRaw()` 108 · `loadSave()` 112
 
 ## src/data/items.js (270 baris)
 _Data item & resep tempa_
@@ -439,9 +439,9 @@ _Tas (inventaris) & buku misi_
 _Layar peta & navigasi tujuan misi_
 `MINI` 4 · `WORLD` 5 · `buildMini()` 6 · `routeNext()` 23 · `questTarget()` 28 · `openMap()` 36
 
-## src/ui/menus.js (376 baris)
+## src/ui/menus.js (391 baris)
 _Menu utama, jurus, bestiari, pencapaian_
-`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 93 · `enemyThumb()` 105 · `openBestiary()` 106 · `openFishLog()` 114 · `openAch()` 115 · `openDlgLog()` 121 · `chooseSlot()` 128 · `openDebugMenu()` 137 · `openPhotoMode()` 194 · `TALENT_DEFS` 262 · `getTalentPoints()` 289 · `openTalentTree()` 299
+`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 93 · `enemyThumb()` 105 · `openBestiary()` 106 · `openFishLog()` 114 · `openAch()` 115 · `openDlgLog()` 121 · `chooseSlot()` 128 · `openDebugMenu()` 152 · `openPhotoMode()` 209 · `TALENT_DEFS` 277 · `getTalentPoints()` 304 · `openTalentTree()` 314
 
 ## src/ui/savecode.js (49 baris)
 _Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)_

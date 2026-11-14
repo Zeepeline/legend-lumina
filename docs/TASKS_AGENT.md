@@ -1500,12 +1500,12 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; serang sampai kritikal → angka besar kuning.
 
-### [ ] T247. **Layar judul: info tiap slot simpan**
-- File: `src/ui/title.js`. Baca dulu: `titleScreen()`.
+### [x] T247. **Layar judul: info tiap slot simpan**
+- File: `src/core/state.js`, `src/ui/menus.js`. Baca dulu: `slotInfo()` & `chooseSlot()`.
 - Lakukan: di daftar slot tampilkan: level, nama wilayah (`MAPS[s.map].name`), waktu main (jam:menit dari `s.st.playTime`). Baca data slot dari fungsi yang sudah dipakai layar judul.
 - Batasan: jangan ubah format save.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
-- Cek: `npm run check`; slot berisi save → terlihat "Lv 6 · Desa Lumina · 1j 12m".
+- Cek: `npm run check`; slot berisi save → terlihat "Lv 6 · Desa Lumina · 1j 12m". (selesai di v1.30.1)
 
 ### [x] T248. **Kode simpan: tombol salin & pesan error jelas** (sudah ada: writeText/execCommand & LUMINA1: validasi)
 - File: `src/ui/savecode.js`. Baca dulu: `codeDialog()` (±10–48).
