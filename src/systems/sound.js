@@ -40,12 +40,16 @@ function bgmFor(M) {
   return b;
 }
 // pergantian lagu dengan memudar
-function swapBGM(name) {
+function swapBGM(name, fadeSec = 1) {
   if (AU.cur === name) return;
   if (!AU.ctx) return playBGM(name);
   const g = AU.music.gain, v = .09 * OPT.mus / 3, t = AU.ctx.currentTime;
-  g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + .35);
-  setTimeout(() => { playBGM(name); const t2 = AU.ctx.currentTime; g.cancelScheduledValues(t2); g.setValueAtTime(0, t2); g.linearRampToValueAtTime(v, t2 + .6); }, 360);
+  const fo = Math.min(.5, fadeSec * .5), fi = Math.max(.5, fadeSec * .5);
+  g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + fo);
+  setTimeout(() => {
+    playBGM(name); if (!AU.ctx) return;
+    const t2 = AU.ctx.currentTime; g.cancelScheduledValues(t2); g.setValueAtTime(0, t2); g.linearRampToValueAtTime(v, t2 + fi);
+  }, Math.round(fo * 1000));
 }
 // suara berjarak + arah kiri/kanan
 function sfxAt(n, x, y, sc) {
@@ -94,9 +98,9 @@ Object.assign(World.prototype, {
     this.bgmT = (this.bgmT || 0) - dt; if (this.bgmT > 0) return; this.bgmT = .5;
     if (this.bossOn || this.trans || pl.dead || AU.cur === 'victory' || AU.cur === 'lose' || this.weather === 'rain') return;
     if (!OPT.dynMus) return;
-    const fight = this.enemies.some(e => e.hp > 0 && !e.boss && e.alert === 2 && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 150);
+    const fight = this.enemies.some(e => e.hp > 0 && !e.boss && e.alert === 2 && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 180);
     if (fight) this.calmT = 4; else this.calmT = (this.calmT || 0) - .5;
     const want = this.calmT > 0 ? 'battle' : bgmFor(this.M);
-    if (want && want !== AU.cur) swapBGM(want);
+    if (want && want !== AU.cur) swapBGM(want, 1);
   },
 });

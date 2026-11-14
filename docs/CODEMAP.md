@@ -323,9 +323,9 @@ _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–85
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
 `ELITE_RATE` 4 · `DODGERS` 5 · `markOver()` 6 · `dangerEdge()` 12 · `.makeElite()` 18 · `.updFeel()` 30 · `.dangerFrom()` 60 · `.hurtAnim()` 66
 
-## src/systems/sound.js (103 baris)
+## src/systems/sound.js (107 baris)
 _Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#911),_
-`bgmFor()` 33 · `swapBGM()` 43 · `sfxAt()` 51 · `_stepLeft` 60 · `stepSound()` 61 · `segD()` 76 · `.groundAt()` 78 · `.updSound()` 88
+`bgmFor()` 33 · `swapBGM()` 43 · `sfxAt()` 55 · `_stepLeft` 64 · `stepSound()` 65 · `segD()` 80 · `.groundAt()` 82 · `.updSound()` 92
 
 ## src/systems/craft.js (265 baris)
 _Gelombang 5: poin atribut (#16), kerajinan (#26), bom & alat lempar (#29, #407),_

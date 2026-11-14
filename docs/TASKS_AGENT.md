@@ -1844,14 +1844,14 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; kalahkan kelompok 3 slime → yang terakhir memberi momen lambat singkat.
 
-### [ ] T296. **Audit kepadatan kawanan musuh** — referensi: Diablo, Zelda (penempatan musuh)
+### [x] T296. **Audit kepadatan kawanan musuh** — referensi: Diablo, Zelda (penempatan musuh) (hasil audit: tidak ada kluster >5 musuh & 0 musuh dekat portal)
 - File: `src/world/maps/*.js` (larik `enemies`). Baca dulu: daftar `enemies` tiap peta luar ruang.
 - Lakukan: hitung dengan skrip kecil (di `/tmp`, bukan di repo) kelompok musuh dalam radius 150 px. Jika > 5 musuh dalam satu kelompok atau musuh berada < 120 px dari pintu masuk/teleport, geser beberapa ke ruang terbuka terdekat. Catat perubahan di bawah tugas ini.
 - Batasan: jangan menambah/menghapus musuh, hanya menggeser.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; `npm run check` 0 masalah; berjalan di hutan tidak 'dikeroyok' tepat di pintu masuk.
 
-### [ ] T297. **Musik tempur selesai dengan halus** — referensi: Hades, Ori
+### [x] T297. **Musik tempur selesai dengan halus** — referensi: Hades, Ori
 - File: `src/systems/sound.js`. Baca dulu: `swapBGM()` (±43) & logika masuk/keluar tempur (grep `combat` di sound.js).
 - Lakukan: keluar dari musik tempur hanya setelah 4 s tanpa musuh yang mengejar, dengan fade 1 s; jangan bolak-balik bila musuh baru mengejar dalam 2 s.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
