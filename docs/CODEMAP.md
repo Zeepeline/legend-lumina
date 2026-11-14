@@ -359,9 +359,9 @@ _Gelombang 9: mancing tarik-ulur (#51, #571), ikan per jam (#572) & cuaca (#573)
 _Gelombang 10: kalender (#701), nama hari (#702), libur toko (#703), jam toko (#704),_
 `DAYS` 4 · `SEASONS` 5 · `SEASON_DAYS` 11 · `dayName` 12 · `seasonIdx` 13 · `season` 14 · `dateTxt` 15 · `_updClock` 17 · `_plotHours` 20 · `_logFish` 23 · `shopShut()` 26 · `wrapShops()` 32 · `sleepToMorning()` 38 · `.spawnSeason()` 40 · `.updSeason()` 55
 
-## src/systems/polish.js (169 baris)
+## src/systems/polish.js (221 baris)
 _Gelombang 11: hemat baterai (#99), tangkis (#3), kelemahan elemen (#5), kunci target (#6),_
-`ELEM` 5 · `WEAK` 6 · `ELEM_COL` 7 · `_hitEnemy` 8 · `_updShots` 39 · `_eShoot` 42 · `_nova` 59 · `_useTool` 61 · `PARRY_WIN` 64 · `_attack` 65 · `_hurtPlayer` 67 · `.initLock()` 101 · `.setLock()` 106 · `.cycleLock()` 107 · `.updLock()` 108 · `_aim` 115 · `RARE_N` 118 · `rarity()` 119 · `TOAST` 121 · `toastItem()` 122 · `_addItem` 129 · `applyFont()` 132 · `applyLite()` 133 · `applyScreenFilter()` 136 · `.initPolish()` 167
+`ELEM` 5 · `WEAK` 6 · `ELEM_COL` 7 · `_hitEnemy` 8 · `_updShots` 39 · `_eShoot` 42 · `_nova` 59 · `_useTool` 61 · `PARRY_WIN` 64 · `_attack` 65 · `_hurtPlayer` 67 · `.initLock()` 101 · `.setLock()` 106 · `.cycleLock()` 107 · `.updLock()` 108 · `_aim` 115 · `RARE_N` 118 · `rarity()` 119 · `TOAST` 121 · `toastItem()` 122 · `_addItem` 129 · `applyFont()` 132 · `applyLite()` 133 · `applyScreenFilter()` 136 · `RARITY_BEAM_COL` 168 · `_drop0` 169 · `_updPicks0` 205 · `.initPolish()` 219
 
 ## src/systems/economy/economy_1.js (399 baris)
 _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (1) — isi: lihat docs/CODEMAP.md_

@@ -17095,6 +17095,58 @@ function applyScreenFilter() {
 
 applyFont();
 applyScreenFilter();
+
+// T287: Cahaya tegak untuk barang langka (Diablo, Borderlands)
+const RARITY_BEAM_COL = [null, 0x9ac8ff, 0xd8a8ff, 0xffc860];
+const _drop0 = World.prototype.drop;
+World.prototype.drop = function (x, y, kind, val) {
+  _drop0.apply(this, arguments);
+  if (kind !== 'coin' && val && this.picks && this.picks.length) {
+    const r = typeof rarity === 'function' ? rarity(val) : 0;
+    if (r > 0) {
+      const col = RARITY_BEAM_COL[r] || 0xffc860;
+      if (typeof sfx === 'function') sfx('save');
+      const p = this.picks[this.picks.length - 1];
+      if (p) {
+        const beam = this.add.graphics().setDepth(y + 1);
+        beam.fillStyle(col, 0.6);
+        beam.fillRect(-3, -42, 6, 42);
+        if (!OPT.lite) {
+          beam.lineStyle(1.5, 0xffffff, 0.8);
+          beam.lineBetween(-3, 0, 3, 0);
+        }
+        p.beam = beam;
+        this.tweens.add({
+          targets: beam, alpha: { from: 0.7, to: 0.35 }, scaleX: { from: 1, to: 1.25 },
+          duration: 450, yoyo: true, repeat: -1
+        });
+        this.time.addEvent({
+          delay: 16, repeat: 30,
+          callback: () => {
+            if (p.s && p.s.active && beam.active) {
+              beam.setPosition(p.s.x, p.s.y);
+              beam.setDepth(p.s.y + 1);
+            }
+          }
+        });
+      }
+    }
+  }
+};
+
+const _updPicks0 = World.prototype.updPicks;
+World.prototype.updPicks = function (dt) {
+  _updPicks0.apply(this, arguments);
+  if (this.picks) {
+    for (const p of this.picks) {
+      if (p.got && p.beam) {
+        p.beam.destroy();
+        p.beam = null;
+      }
+    }
+  }
+};
+
 Object.assign(World.prototype, {
   initPolish() { this.initLock(); applyLite(); applyScreenFilter(); if (OPT.lite) { if (this.seaP) this.seaP.setVisible(false); } },
 });

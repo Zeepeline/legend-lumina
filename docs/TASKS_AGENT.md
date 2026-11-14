@@ -1786,11 +1786,11 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; bunuh slime → titik cahaya terbang ke Arka.
 
-### [ ] T287. **Cahaya tegak untuk barang langka** — referensi: Diablo, Borderlands
-- File: `src/systems/combat.js`. Baca dulu: `drop()` (±252) (+ `rarity()` di polish.js, BACA saja).
+### [x] T287. **Cahaya tegak untuk barang langka** — referensi: Diablo, Borderlands
+- File: `src/systems/polish.js`. Baca dulu: `drop()` (±252) (+ `rarity()` di polish.js, BACA saja).
 - Lakukan: barang dengan kelangkaan di atas biasa: berkas cahaya vertikal tipis (warna sesuai kelangkaan) di atasnya + suara kecil saat jatuh; hilang saat diambil.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
-- Cek: `npm run check`; konsol buat drop item langka → ada berkas cahaya.
+- Cek: `npm run check`; konsol buat drop item langka → ada berkas cahaya. (selesai di v1.30.1)
 
 ### [x] T288. **Koin & bahan biasa tertarik ke Arka** — referensi: Hades, Diablo (sudah ada di `updPicks()` `src/systems/combat.js`)
 - File: `src/systems/combat.js`. Baca dulu: `updPicks()` (±258–279).
