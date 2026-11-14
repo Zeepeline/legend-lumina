@@ -16,7 +16,7 @@ const ENEMY = {
   plant: { name: 'Bunga Pemakan', tex: 'plant', hp: 36, atk: 12, def: 3, spd: 0, exp: 15, gold: [4, 8], r: 7, ai: 'turret', proj: 'seed', drop: ['spore', .4] },
   skel: { name: 'Tengkorak', tex: 'ch_skel', hp: 54, atk: 17, def: 6, spd: 38, exp: 30, gold: [6, 12], r: 7, ai: 'shoot', proj: 'bone', ch: 1, drop: ['bone', .6] },
   goblin: { name: 'Goblin', tex: 'ch_goblin', hp: 34, atk: 12, def: 4, spd: 50, exp: 16, gold: [5, 10], r: 7, ai: 'lunge', ch: 1 },
-  wolf: { name: 'Serigala', tex: 'wolf', hp: 28, atk: 11, def: 2, spd: 66, exp: 14, gold: [3, 7], r: 8, ai: 'lunge', side: 1, drop: ['pelt', .55] },
+  wolf: { name: 'Serigala', tex: 'wolf_hd', hp: 34, atk: 11, def: 2, spd: 66, exp: 14, gold: [3, 7], r: 9, ai: 'lunge', side: 1, drop: ['pelt', .55] },
   snake: { name: 'Ular', tex: 'snake', hp: 20, atk: 10, def: 2, spd: 34, exp: 10, gold: [2, 5], r: 6, ai: 'walk', side: 1, drop: ['scale', .55], fx: ['poison', 5, .4] },
   boar: { name: 'Babi Hutan', tex: 'boar', hp: 50, atk: 15, def: 4, spd: 40, exp: 22, gold: [5, 9], r: 9, ai: 'charge', side: 1, drop: ['tusk', .55] },
   ghost: { name: 'Hantu', tex: 'ghost', hp: 42, atk: 16, def: 3, spd: 40, exp: 28, gold: [6, 11], r: 7, ai: 'ghost', fly: 1, drop: ['ecto', .55] },

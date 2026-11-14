@@ -21,9 +21,10 @@ Object.assign(World.prototype, {
       e.calledBackup = true;
       e.st = 'calling';
       s.setVelocity(0);
+      if (D.tex === 'wolf_hd' && s.anims) s.play('wolf_hd_howl', true);
       popWorld(s.x, s.y - 20, 'BAHAYA! MENGGELAR BANTUAN!', 'crit');
       sfxAt('crit', s.x, s.y, this);
-      this.time.delayedCall(450, () => {
+      this.time.delayedCall(650, () => {
         if (e.hp > 0 && this.enemies.length < 12) {
           const spawnX = clamp(s.x + rnd(-80, 80), 40, this.M.w - 40);
           const spawnY = clamp(s.y + rnd(-80, 80), 40, this.M.h - 40);
@@ -35,6 +36,7 @@ Object.assign(World.prototype, {
       });
       return;
     }
+    if (e.st === 'calling') { s.setVelocity(0); return; }
 
     // Musuh teralihkan oleh Petasan Pengalih (#410)
     if (e.distracted > 0) {
@@ -199,12 +201,36 @@ Object.assign(World.prototype, {
         if (e.st === 'idle' || e.st === 'chase') {
           if (aggro) {
             e.st = 'chase'; s.setVelocity(dx / d * D.spd, dy / d * D.spd);
-            if (d < (D.side ? 44 : 34) && e.t <= 0) { e.st = 'wind'; e.t = D.side ? .32 : .42; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); }
-          } else wander(28);
-        } else if (e.st === 'wind') { if (e.t <= 0) { e.st = 'lunge'; e.t = .22; s.clearTint(); s.setVelocity(e.lx * 210, e.ly * 210); sfxAt('swing', s.x, s.y, this); } }
-        else if (e.st === 'lunge') { if (e.t <= 0) { e.st = 'rec'; e.t = .55; s.setVelocity(0); } }
-        else if (e.st === 'rec') { if (e.t <= 0) { e.st = 'chase'; e.t = .3; } }
-        if (D.ch) this.charAnim(e); else s.flipX = (e.st === 'wind' ? e.lx : s.body.velocity.x) > 0; break;
+            if (D.tex === 'wolf_hd' && s.anims) s.play('wolf_hd_run', true);
+            if (d < (D.side ? 48 : 34) && e.t <= 0) {
+              e.st = 'wind'; e.t = D.side ? .28 : .42; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
+              if (D.tex === 'wolf_hd' && s.anims) {
+                e.atkAnim = Math.random() < 0.5 ? 'wolf_hd_bite' : 'wolf_hd_pounce';
+                s.play(e.atkAnim, true);
+              } else s.setTint(0xffa07a);
+            }
+          } else {
+            wander(28);
+            if (D.tex === 'wolf_hd' && s.anims) {
+              const mv = Math.hypot(s.body.velocity.x, s.body.velocity.y) > 4;
+              s.play(mv ? 'wolf_hd_walk' : 'wolf_hd_idle', true);
+            }
+          }
+        } else if (e.st === 'wind') {
+          if (e.t <= 0) { e.st = 'lunge'; e.t = .25; s.clearTint(); s.setVelocity(e.lx * 210, e.ly * 210); sfxAt('swing', s.x, s.y, this); }
+        } else if (e.st === 'lunge') {
+          if (e.t <= 0) {
+            e.st = 'rec'; e.t = .5; s.setVelocity(0);
+            if (D.tex === 'wolf_hd' && s.anims) s.play('wolf_hd_idle', true);
+          }
+        } else if (e.st === 'rec') {
+          if (e.t <= 0) { e.st = 'chase'; e.t = .35; }
+        }
+        if (D.ch) this.charAnim(e);
+        else if (Math.abs(e.st === 'wind' || e.st === 'lunge' ? e.lx : s.body.velocity.x) > 2) {
+          s.flipX = (e.st === 'wind' || e.st === 'lunge' ? e.lx : s.body.velocity.x) > 0;
+        }
+        break;
       case 'charge':
         if (e.st === 'idle' || e.st === 'chase') {
           if (aggro && d < 140 && e.cd <= 0) { e.st = 'wind'; e.t = .6; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); s.flipX = dx > 0; }

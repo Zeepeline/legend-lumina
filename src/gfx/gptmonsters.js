@@ -38,4 +38,21 @@ function applyGptMonsters(sc) {
     if (ENEMY.slimeb) { ENEMY.slimeb.tex = 'slime_hd'; ENEMY.slimeb.scale = 0.52; }
     if (ENEMY.king_slime) { ENEMY.king_slime.tex = 'slime_hd'; ENEMY.king_slime.scale = 0.95; }
   }
+  const whd = IMGEL.mon_wolf_hd;
+  if (whd) {
+    if (!T.exists('wolf_hd')) sc.textures.addSpriteSheet('wolf_hd', whd, { frameWidth: 128, frameHeight: 96 });
+    const regW = (k, st, ed, fps, r) => {
+      if (!A.exists(k)) A.create({ key: k, frames: A.generateFrameNumbers('wolf_hd', { start: st, end: ed }), frameRate: fps, repeat: r });
+    };
+    regW('wolf_hd_idle', 0, 6, 8, -1);
+    regW('wolf_hd_walk', 7, 13, 10, -1);
+    regW('wolf_hd_run', 14, 20, 12, -1);
+    regW('wolf_hd_bite', 21, 25, 11, 0);
+    regW('wolf_hd_pounce', 28, 32, 11, 0);
+    regW('wolf_hd_hurt', 35, 39, 10, 0);
+    regW('wolf_hd_die', 42, 45, 8, 0);
+    regW('wolf_hd_howl', 49, 54, 9, 0);
+    regW('wolf_hd_mv', 7, 13, 10, -1);
+    if (ENEMY.wolf) { ENEMY.wolf.tex = 'wolf_hd'; ENEMY.wolf.scale = 0.44; }
+  }
 }
