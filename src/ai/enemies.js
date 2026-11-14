@@ -181,23 +181,17 @@ Object.assign(World.prototype, {
       }
       case 'shoot': {
         const isArcherHd = D.tex === 'goblin_archer_hd';
-        if (e.st === 'shoot') {
-          s.setVelocity(0);
-          if (e.t <= 0) { e.st = 'idle'; }
-          break;
-        }
-        if (D.ch) {
-          if (aggro && d > 70) s.setVelocity(dx / d * D.spd, dy / d * D.spd);
-          else if (aggro && d < 46) s.setVelocity(-dx / d * D.spd, -dy / d * D.spd);
-          else if (aggro) s.setVelocity(0);
-          else wander(D.spd * .6);
-        } else {
-          if (aggro) {
-            if (d > 110) s.setVelocity(dx / d * D.spd, dy / d * D.spd);
-            else if (d < 55) s.setVelocity(-dx / d * D.spd, -dy / d * D.spd);
-            else s.setVelocity(0);
-          } else wander(D.spd * .5);
-        }
+        if (e.st === 'shoot') { s.setVelocity(0); if (e.t <= 0) e.st = 'idle'; break; }
+        if (aggro) {
+          if (d < 70) s.setVelocity((-dx / d) * D.spd, (-dy / d) * D.spd);
+          else if (d > 120) s.setVelocity((dx / d) * D.spd, (dy / d) * D.spd);
+          else {
+            e.strafeT = (e.strafeT || 0) - dt;
+            if (e.strafeT <= 0) { e.strafeT = 0.6; e.strafeDir = Math.random() < 0.5 ? 1 : -1; }
+            s.setVelocity((-dy / d * e.strafeDir) * D.spd * 0.7, (dx / d * e.strafeDir) * D.spd * 0.7);
+          }
+          s.flipX = dx > 0;
+        } else wander(D.spd * .5);
         e.shootT = (e.shootT || rnd(1.5, 2.5)) - dt;
         if (aggro && e.shootT <= 0 && d < 160) {
           e.shootT = rnd(2.0, 3.0);

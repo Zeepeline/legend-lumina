@@ -223,9 +223,9 @@ _Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Ray
 _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif._
 `WARPS` 3 · `.spawnWarp()` 9 · `.useWarp()` 15
 
-## src/ai/enemies.js (400 baris)
+## src/ai/enemies.js (394 baris)
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
-`.updEnemy()` 4 · `.charAnim()` 393
+`.updEnemy()` 4 · `.charAnim()` 387
 
 ## src/ai/elite_brute.js (89 baris)
 _AI untuk musuh Brute Elite (Goblin Brute Elite, dsb)_

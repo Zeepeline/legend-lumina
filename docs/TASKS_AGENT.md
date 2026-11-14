@@ -1734,7 +1734,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; lawan serigala sampai sekarat → kadang kabur sebentar.
 
-### [ ] T280. **Penembak menjaga jarak & bergeser** — referensi: Diablo (pemanah), Enter the Gungeon
+### [x] T280. **Penembak menjaga jarak & bergeser** — referensi: Diablo (pemanah), Enter the Gungeon
+- Selesai: AI penembak `'shoot'` aktif mundur saat pemain < 70px, mendekat saat > 120px, dan aktif bergeser strafing menyamping (arah acak tiap 0,6 detik) di antara jeda tembakan. Cabang `'turret'` tetap stasioner.
 - File: `src/ai/enemies.js`. Baca dulu: cabang `'shoot'` dan `'turret'`.
 - Lakukan: `'shoot'`: jika pemain < 70 px → mundur; di antara tembakan bergeser menyamping 0,6 s (arah acak). `'turret'` tidak berubah.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
