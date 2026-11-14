@@ -114,8 +114,12 @@ function updPops(cam) { for (const p of POPS) { p.e.style.left = Math.round(p.x 
 let HUD = null;
 function buildHud(icons) {
   HUD = document.createElement('div');
-  HUD.innerHTML = `<div id="hud"><div class="lv">LV<b id="hLv">1</b></div><div class="bars">
-   <div class="bar hp" id="hHp"><i class="ghost"></i><i class="fill"></i><span></span></div><div class="bar mp" id="hMp"><i></i><span></span></div><div class="bar sta" id="hSta" style="height:4px"><i></i></div><div class="bar xp" id="hXp"><i></i></div><div id="hSt"></div></div></div>
+  HUD.innerHTML = `<div id="hud"><div class="hud-main"><div class="bars">
+   <div class="bar hp" id="hHp"><i class="ghost"></i><i class="fill"></i><span></span></div>
+   <div class="bar sta" id="hSta"><i class="fill"></i><span></span></div>
+   <div class="bar mp" id="hMp"><i class="fill"></i><span></span></div>
+   <div class="hud-sub"><span class="lv">LV <b id="hLv">1</b></span><div class="bar xp" id="hXp"><i></i></div></div>
+   <div id="hSt"></div></div></div></div>
    <div id="hDate"></div><div id="hud2"><span id="hClock">☀</span><span id="hCompass" style="font-size:9px;color:#ffe27a;margin:0 2px;">🧭 U</span><span><img src="${icons.coin}"><b id="hGold">0</b></span><span class="pt"><img src="${icons.potion}"><b id="hPot">0</b></span></div>
    <div id="fps-meter" style="display:${OPT.fps ? 'block' : 'none'};position:absolute;top:28px;left:4px;font-size:9px;color:#a0f080;background:rgba(0,0,0,0.55);padding:2px 5px;border-radius:3px;z-index:9000;pointer-events:none;font-family:monospace;">60 FPS</div>
    <div id="quest"></div><div id="boss"><span id="bName"></span><div class="bar"><i class="ghost" id="bGhost"></i><i id="bHp"></i><div class="p2-line"></div></div></div>`;
@@ -133,8 +137,17 @@ function updHud() {
   if (fillBar) fillBar.style.width = hpPct;
   hp.lastChild.textContent = S.hp + '/' + st.maxhp;
   hp.classList.toggle('low', S.hp <= st.maxhp * .3);
-  const mp = $('hMp'); mp.firstChild.style.width = (S.mp / st.maxmp * 100) + '%'; mp.lastChild.textContent = S.mp + '/' + st.maxmp;
-  const sta = $('hSta'); if (sta) { const curSta = S.sta != null ? S.sta : st.maxsta; sta.firstChild.style.width = (curSta / st.maxsta * 100) + '%'; }
+  const curSta = S.sta != null ? S.sta : st.maxsta;
+  const sta = $('hSta');
+  if (sta) {
+    const staFill = sta.querySelector('.fill') || sta.firstChild;
+    if (staFill) staFill.style.width = (curSta / st.maxsta * 100) + '%';
+    sta.lastChild.textContent = Math.round(curSta) + '/' + st.maxsta;
+  }
+  const mp = $('hMp');
+  const mpFill = mp.querySelector('.fill') || mp.firstChild;
+  if (mpFill) mpFill.style.width = (S.mp / st.maxmp * 100) + '%';
+  mp.lastChild.textContent = S.mp + '/' + st.maxmp;
   $('hXp').firstChild.style.width = (S.exp / need(S.lv) * 100) + '%';
   $('hGold').textContent = Math.floor(S.gold || 0);
   const potEl = $('hPot');
