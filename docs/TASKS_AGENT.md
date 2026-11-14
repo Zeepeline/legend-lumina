@@ -2702,7 +2702,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); suasana kontras dengan akademi; tidak ada jalan buntu yang menjebak.
 
-### [ ] T355. **Jalan Raya Lama: rasa perjalanan** — referensi: Witcher 3 (jalan antarkota), Skyrim
+### [x] T355. **Jalan Raya Lama: rasa perjalanan** — referensi: Witcher 3 (jalan antarkota), Skyrim
 
 - File: `src/world/maps/city.js` peta `road`. Baca dulu: `objs`, `paths`.
 - Lakukan: tambahkan dari objek yang ada: patok/batu penanda jarak tiap ±300 px, satu tempat singgah (api unggun + kotak + bangku) di tengah, gerobak rusak di pinggir jalan.
