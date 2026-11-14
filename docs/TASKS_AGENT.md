@@ -2100,11 +2100,11 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Hasil cetak verifikasi: sungai hutan menyentuh tepi kanan `forest` di y global ≈ 4692–4712 (lokal y=580, WORLD_POS.forest[1]=4112).
 - Cek: `npm run check` (0 masalah). (selesai di v1.30.1)
 
-### [ ] T333. **Sungai Senja 1: mata air di Puncak Beku** — referensi: BotW (sungai dari pegunungan), GEOGRAFI §3
+### [x] T333. **Sungai Senja 1: mata air di Puncak Beku** — referensi: BotW (sungai dari pegunungan), GEOGRAFI §3
 - File: `src/world/maps/snow.js` (field `ponds`). Baca dulu: `docs/GEOGRAFI.md` §3; posisi `WORLD_POS.snow` = [4500, 1000], ukuran 1280×1200.
-- Lakukan: tambah rangkaian elips dari mata air lokal (700, 150) [global 5200,1150] berkelok ke selatan sampai menyentuh tepi bawah di x lokal ≈ 650 (global 5150). Lebar awal kecil (rx/ry 22–28) lalu melebar (40). Beri 1 arungan di setiap jalan yang dipotong (celah 32–40 px + `pebbles`/`rock`). Mata air bisa ditandai `stele` bila sesuai.
+- Lakukan: tambah rangkaian elips dari mata air lokal (700, 150) [global 5200,1150] berkelok ke selatan sampai menyentuh tepi bawah di x lokal ≈ 660 (global 5160). Lebar awal kecil (rx/ry 24–28) lalu melebar (38). Beri 1 arungan di setiap jalan yang dipotong (celah 32–40 px + `pebbles`/`rock`). Mata air bisa ditandai `stele` bila sesuai.
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
-- Cek: `npm run check` (0 masalah); jalan dari mata air ke tepi selatan terlihat sebagai satu aliran utuh; jalur pemain tetap bisa lewat.
+- Cek: `npm run check` (0 masalah); jalan dari mata air ke tepi selatan terlihat sebagai satu aliran utuh; jalur pemain tetap bisa lewat. (selesai di v1.30.1)
 
 ### [ ] T334. **Peralihan bisa punya air (dukungan data)** — referensi: —
 - File: `src/world/layout.js` (PENGECUALIAN KUNCI hanya untuk tugas ini). Baca dulu: `PERALIHAN` & `buildPeralihan()`.

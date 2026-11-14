@@ -115,7 +115,7 @@ _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
-## src/world/maps/snow.js (37 baris)
+## src/world/maps/snow.js (45 baris)
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 
