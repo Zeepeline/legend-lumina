@@ -231,9 +231,9 @@ _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
 _AI untuk musuh Brute Elite (Goblin Brute Elite, dsb)_
 `.updEliteBrute()` 4
 
-## src/ai/bosses.js (114 baris)
+## src/ai/bosses.js (123 baris)
 _AI boss & alur pertarungan boss_
-`.summon()` 4 · `.updBoss()` 9 · `.updQueen()` 39 · `.updSnake()` 51 · `.updWitch()` 62 · `.startBoss()` 78 · `.bossDown()` 97
+`.summon()` 4 · `.triggerPhase2()` 9 · `.updBoss()` 19 · `.updQueen()` 45 · `.updSnake()` 58 · `.updWitch()` 70 · `.startBoss()` 87 · `.bossDown()` 106
 
 ## src/systems/life/core.js (374 baris)
 _Objek interaktif dunia: core — isi: lihat docs/CODEMAP.md_

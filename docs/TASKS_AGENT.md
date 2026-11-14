@@ -1818,7 +1818,7 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; masuk arena boss → kartu nama tampil, permainan lanjut normal.
 
-### [ ] T292. **Fase kedua boss di 50% HP** — referensi: Dark Souls, Elden Ring
+### [x] T292. **Fase kedua boss di 50% HP** — referensi: Dark Souls, Elden Ring
 - File: `src/ai/bosses.js` + `src/systems/combat.js`. Baca dulu: `updBoss()` & `hitEnemy()`.
 - Lakukan: saat HP boss pertama kali < 50%: kebal 1 s, kilat & gelombang kejut visual (tanpa damage), banner kecil "BANGKIT!", lalu kecepatan & laju serangan +20% (`e.phase2 = true`, dipakai di AI boss).
 - Batasan: HP & damage boss tidak berubah.
