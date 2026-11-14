@@ -2782,7 +2782,7 @@ File BARU milik agen: `src/npc/crowd.js`, `src/systems/townlife.js`. Pengecualia
 - Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan; jangan membuat gambar baru
 - Cek: `npm run check` (0 masalah); ukur ulang dengan alat → masuk target.
 
-### [ ] T365. **Kota Bawah: rumah berdempetan** — referensi: Kota tua, Bloodborne (Yharnam)
+### [x] T365. **Kota Bawah: rumah berdempetan** — referensi: Kota tua, Bloodborne (Yharnam)
 
 - File: `src/world/maps/city.js` peta `kbawah`. Baca dulu: objek rumah yang ada.
 - Lakukan: tambah rumah sampai ±25–30 per Mpx² (≈ 30–36 untuk 1,2 Mpx²), dempet kiri-kanan dengan gang 32–40 px, pintu tetap tercapai.
