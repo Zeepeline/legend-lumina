@@ -1099,10 +1099,10 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - Ingat: `ITEMS`, `MAPS`, `ENEMY` adalah const global (tulis `ITEMS`, BUKAN `window.ITEMS`).
 - Cek: `npx playwright test tests/data_npc_barks.spec.js` lulus. (selesai di v1.30.1)
 
-### [ ] T205. **Tes penjaga data: items_desc** (kerjakan SETELAH tugas kategori terkait selesai)
+### [x] T205. **Tes penjaga data: items_desc** (kerjakan SETELAH tugas kategori terkait selesai)
 - Buat `tests/data_items_desc.spec.js` meniru pola `tests/boot.spec.js`: `h.boot(page)`, lalu `page.evaluate` yang memeriksa setiap ITEMS punya `d` minimal 25 karakter; `expect(daftarYangGagal).toEqual([])`.
 - Ingat: `ITEMS`, `MAPS`, `ENEMY` adalah const global (tulis `ITEMS`, BUKAN `window.ITEMS`).
-- Cek: `npx playwright test tests/data_items_desc.spec.js` lulus.
+- Cek: `npx playwright test tests/data_items_desc.spec.js` lulus. (selesai di v1.30.1)
 
 ### [ ] T206. **Tes penjaga data: bestiary_text** (kerjakan SETELAH tugas kategori terkait selesai)
 - Buat `tests/data_bestiary_text.spec.js` meniru pola `tests/boot.spec.js`: `h.boot(page)`, lalu `page.evaluate` yang memeriksa setiap kunci ENEMY punya BESTIARY_TEXT[id].hab & .tip; `expect(daftarYangGagal).toEqual([])`.
