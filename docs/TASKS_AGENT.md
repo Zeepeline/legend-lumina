@@ -1832,6 +1832,231 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; kalahkan musuh lalu diam → musik kembali halus, tidak berkedip-kedip.
 
+## H. GELOMBANG 7 — AI lebih pintar & tangguh, efek visual, UI ala Dimraeth (T298–T331)
+Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File BARU milik agen: `src/systems/spell_fx.js`, `src/ui/spellbar.js`. Boleh mengubah file yang disebut tiap tugas. Kinerja HP: efek dibuat seperlunya & dihancurkan; uji di `?benua=1`.
+
+### [ ] T298. **Peran dalam kelompok: depan, belakang, pengapit** — referensi: Ghost of Tsushima, God of War (Dimraeth memakai sistem token terinspirasi keduanya)
+- File: `src/ai/enemies.js`. Baca dulu: `updEnemy()` (cabang AI yang disebut) + hasil tugas token serangan (gelombang 6).
+- Lakukan: saat ≥3 musuh mengejar Arka: musuh jarak dekat terdekat = 'depan' (mendekat), penembak/dukun = 'belakang' (jaga jarak 90–130 px), sisanya = 'pengapit' (bergerak ke sisi/belakang Arka sebelum meminta token). Simpan `e.role`, hitung ulang tiap 1 s.
+- Batasan: boss tidak ikut.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; lawan perkemahan goblin → pemanah di belakang, ada yang memutar ke belakang Arka.
+
+### [ ] T299. **Menghindar saat Arka mengayun** — referensi: Dark Souls (musuh membaca input), Sekiro
+- File: `src/ai/enemies.js` (+ `DODGERS` di `src/systems/feel.js`, BACA). Baca dulu: `updFeel()`/`DODGERS` dan cabang `'walk'`/`'lunge'`.
+- Lakukan: musuh pintar (goblin, serigala elit, Taring Perak) punya peluang 25% melangkah menyamping/mundur 20 px saat Arka mulai menyerang di depannya dalam 40 px; jeda minimal 2 s per musuh.
+- Batasan: slime & musuh kecil tidak menghindar.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; serang goblin berulang dari depan → kadang ia mengelak.
+
+### [ ] T300. **Musuh bertameng menangkis dari depan** — referensi: Dark Souls (tameng), Zelda (Darknut)
+- File: `src/ai/enemies.js` + `src/systems/combat.js`. Baca dulu: `hitEnemy()` & data goblin di `src/data/enemies.js` (BACA).
+- Lakukan: goblin & kepala goblin: pukulan dari arah depannya (sudut < 70° dari arah hadap) dikurangi 70% dan muncul percikan + teks "Tertahan"; pukulan samping/belakang, akhir kombo, atau kapak menembus. Arah hadap = arah gerak terakhir musuh.
+- Batasan: tidak berlaku bila goblin sedang terhuyung.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; pukul goblin dari depan → damage kecil; dari samping → normal.
+
+### [ ] T301. **Ancang-ancang tipuan (tempo bervariasi)** — referensi: Elden Ring (delayed attacks)
+- File: `src/ai/enemies.js`. Baca dulu: durasi ancang-ancang di cabang `'lunge'`/`'charge'`/`'elite_brute'`.
+- Lakukan: musuh elite & boss mengacak durasi ancang-ancang antara 0,35–0,75 s (musuh biasa tetap tetap), jadi pemain harus membaca, bukan menghafal ritme.
+- Batasan: mode Santai: maks 0,6 s & tetap ada tanda "!".
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; lawan elite → waktunya tidak selalu sama.
+
+### [ ] T302. **Serangan berantai (kombo musuh)** — referensi: Monster Hunter, Hollow Knight
+- File: `src/ai/enemies.js`. Baca dulu: cabang `'lunge'` (serigala) & `'elite_brute'` (kepala goblin).
+- Lakukan: serigala: setelah terjangan pertama, 40% peluang terjangan kedua 0,25 s kemudian. Kepala goblin: rangkaian 3 ayunan dengan jeda 0,3 s, ayunan ke-3 lebih lebar. Setelah kombo selesai musuh lelah 0,8 s (jendela balas).
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; serigala kadang menerjang dua kali; setelahnya diam sebentar.
+
+### [ ] T303. **Penembak butuh garis pandang** — referensi: Diablo, XCOM (line of sight)
+- File: `src/ai/enemies.js`. Baca dulu: cabang `'shoot'` & `'turret'`.
+- Lakukan: sebelum menembak, cek garis lurus ke Arka tidak memotong tembok (`this.walls`, cek titik tiap 12 px dengan `Phaser.Geom.Rectangle.Contains`). Jika terhalang, bergeser ke samping 30 px lalu coba lagi.
+- Batasan: maks 1 cek per 0,3 s per musuh (kinerja).
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; berdiri di balik pohon besar → pemanah tidak menembak menembus, ia berpindah.
+
+### [ ] T304. **Dukun memprioritaskan menyembuhkan teman** — referensi: Dimraeth (bobot pilihan sihir), Diablo (Shaman)
+- File: `src/ai/enemies.js`. Baca dulu: cabang `'shaman'`.
+- Lakukan: jika ada teman dalam 140 px dengan HP < 60%, dukun menyembuhkan yang paling terluka (+20% HP maks, efek cahaya hijau) dengan jeda 4 s; selain itu menyerang seperti biasa. Tampilkan garis cahaya dukun→teman 0,3 s.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; lukai goblin di dekat dukun → dukun menyembuhkannya; jadi target utama yang masuk akal.
+
+### [ ] T305. **Musuh makin agresif saat Arka sekarat** — referensi: Bloodborne (tekanan)
+- File: `src/ai/enemies.js`. Baca dulu: bagian jeda antar serangan di updEnemy.
+- Lakukan: jika HP Arka < 30%, jeda antar serangan musuh dalam 120 px −20% (tidak berlaku mode Santai).
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; konsol `S.hp = 10` → musuh menekan lebih cepat.
+
+### [ ] T306. **Penembak membidik ke depan (prediksi)** — referensi: Enter the Gungeon, Hades
+- File: `src/ai/enemies.js` + `src/systems/combat.js`. Baca dulu: `eShoot()` & cabang `'shoot'`.
+- Lakukan: pada kesulitan Normal ke atas, 50% tembakan diarahkan ke posisi Arka 0,35 s ke depan (posisi + kecepatan × 0,35). Santai: selalu ke posisi sekarang.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; berlari lurus di depan pemanah → sebagian panah mengenai jalur larimu.
+
+### [ ] T307. **Musuh lebih tangguh sesuai wilayah & level** — referensi: Dark Souls (tingkat area), Diablo (level monster)
+- File: `src/ai/enemies.js` atau `src/scene/world.js` `spawnEnemy` (pilih SATU, catat). Baca dulu: tempat HP/ATK musuh dibuat saat spawn (grep `spawnEnemy(`).
+- Lakukan: saat spawn: pengali `k = 1 + 0,06 × max(0, S.lv − levelWilayah)` (maks 1,4) untuk HP & DEF, dengan `levelWilayah` = konstanta per id wilayah (desa 1, hutan 3, padang 5, sungai 6, rawa 8, salju 10, kota 12; tulis tabelnya di file yang sama). Elite ×1,25 tambahan.
+- Batasan: jangan ubah tabel `ENEMY`; EXP tidak ikut naik.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; pemain level 15 di hutan → slime perlu lebih banyak pukulan dari sebelumnya.
+
+### [ ] T308. **Pilihan kesulitan 'Sulit'** — referensi: Hades (Heat), Dark Souls
+- File: file yang menyimpan `OPT.diff` & menu pengaturan (grep `OPT.diff`). Baca dulu: pilihan kesulitan yang ada.
+- Lakukan: tambahkan nilai `OPT.diff = 2` ("Sulit"): musuh HP ×1,3, ATK ×1,2, jeda serangan −15%, Botol Cahaya maks −1. Terapkan di titik yang sama dengan tugas sebelumnya.
+- Batasan: nilai bawaan tetap Normal.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; pilih Sulit di Pengaturan → pertarungan terasa lebih berat.
+
+### [ ] T309. **Sinergi status: beku + pukulan berat = pecah** — referensi: Dimraeth (contoh: beku lalu lembing es), Divinity
+- File: `src/systems/status.js` + `src/systems/combat.js`. Baca dulu: `freezeEnemy()`, `burnEnemy()`, `hitEnemy()`.
+- Lakukan: musuh beku yang terkena akhir kombo atau kapak: damage +50%, efek pecahan es, status beku hilang. Musuh terbakar yang terkena Kabut Racun: ledakan kecil 1× (damage 30% ATK sihir).
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; Nova Es lalu tebas akhir kombo → angka besar + pecahan es.
+
+### [ ] T310. **Elite mengamuk saat temannya tumbang** — referensi: Diablo (Frenzy), Monster Hunter (enrage)
+- File: `src/ai/enemies.js` + `src/systems/combat.js`. Baca dulu: `killEnemy()`.
+- Lakukan: saat musuh mati, elite dalam 150 px menjadi 'mengamuk' 6 s: tint merah berdenyut, kecepatan +25%, jeda serangan −20%.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; bunuh slime di dekat elite → elite memerah & mengganas.
+
+### [ ] T311. **Penyergapan dari semak** — referensi: Zelda (Deku Scrub), Monster Hunter
+- File: `src/ai/enemies.js`. Baca dulu: cabang `'walk'` & tempat musuh diam/patroli.
+- Lakukan: musuh dengan flag `opt.ambush` (tambahkan pada 3–5 musuh di peta hutan & rawa di `src/world/maps/*.js`) tersembunyi (alpha 0,15, tidak bergerak) sampai Arka < 60 px, lalu melompat keluar dengan tanda "!" dan debu.
+- Batasan: jangan menempatkan penyergap < 150 px dari pintu masuk/teleport.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; lewati semak di hutan → goblin tiba-tiba melompat keluar.
+
+### [ ] T312. **Tebasan dengan jejak bertumpuk** — referensi: Hades, Dead Cells
+- File: `src/systems/combat_fx.js`. Baca dulu: `slashFx()` (hasil gelombang 3).
+- Lakukan: tambahkan 2 salinan busur yang mengekor (delay 25 & 50 ms, alpha 0,5 & 0,25, rotasi sedikit tertinggal) + 3 percikan kecil di ujung busur.
+- Batasan: maks 4 objek efek per tebasan (kinerja HP).
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; tebas → busur terlihat seperti sapuan bergerak, bukan sekali kedip.
+
+### [ ] T313. **Efek khas per senjata** — referensi: Hades (tiap senjata punya bahasa visual sendiri)
+- File: `src/systems/combat_fx.js`. Baca dulu: `slashFx()`.
+- Lakukan: tombak: garis tusuk + cincin debu di ujung; kapak: akhir kombo membuat retakan tanah (garis cokelat bercabang, pudar 0,6 s); busur: panah meninggalkan jejak tipis & percikan saat kena (bungkus `shootArrow`).
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; coba ketiga senjata → masing-masing berbeda.
+
+### [ ] T314. **Kilat akhir kombo** — referensi: Devil May Cry, Hollow Knight
+- File: `src/systems/combat_fx.js`. Baca dulu: `slashFx()` bagian `fin`.
+- Lakukan: pada pukulan ke-3: kilat putih layar 1 frame (persegi `setScrollFactor(0)` alpha .25 → 0 dalam 80 ms) + 6 garis radial pendek dari titik kena.
+- Batasan: matikan kilat bila `OPT.lite` (hemat baterai) aktif.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; kombo 3 → kilat singkat terasa tegas.
+
+### [ ] T315. **Tangkis: dentang, percikan, layar membeku** — referensi: Sekiro, Hollow Knight
+- File: `src/systems/combat_fx.js` (bungkus fungsi tangkis di polish.js, JANGAN ubah polish.js). Baca dulu: pembungkus `_hurtPlayer` & `PARRY_WIN` di polish.js (BACA).
+- Lakukan: saat tangkis berhasil: cincin putih→emas membesar, 10 percikan kuning menyembur dari titik benturan, Arka & musuh berhenti 120 ms (freeze-frame), tepi layar kilat emas tipis.
+- Batasan: jangan ubah jendela tangkis.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; tangkis serangan → terasa 'TING!' yang memuaskan.
+
+### [ ] T316. **Dash: garis angin & kedip awal-akhir** — referensi: Celeste, Hyper Light Drifter
+- File: `src/systems/combat_fx.js`. Baca dulu: pembungkus `W.dash` & `rollFx()`.
+- Lakukan: saat dash: 4 garis angin tipis di belakang Arka (searah gerak, pudar 150 ms), kedip putih singkat di titik awal & akhir, jejak debu tiap 40 ms selama dash.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; dash → terlihat cepat & tajam.
+
+### [ ] T317. **Menghindar sempurna: siluet biru & waktu melambat** — referensi: Bayonetta (Witch Time), Nier Automata
+- File: `src/systems/combat_fx.js`. Baca dulu: hasil tugas "Menghindar tepat waktu" (gelombang 6).
+- Lakukan: saat perfect dodge: siluet biru Arka tertinggal di posisi semula 0,4 s, layar sedikit kebiruan (overlay alpha .12) selama perlambatan.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; dash tepat waktu → siluet biru & warna dingin singkat.
+
+### [ ] T318. **Lingkar rune saat merapal jurus** — referensi: Diablo, Tales of
+- File: file baru `src/systems/spell_fx.js` (daftarkan di index.html setelah combat_fx.js). Baca dulu: `castSpell()` di `src/systems/learn.js` (BACA).
+- Lakukan: bungkus `castSpell`: sebelum efek jurus, gambar lingkar rune berputar di bawah Arka (warna per sekolah sihir: api oranye, es biru, alam hijau, cahaya emas) 0,35 s, lalu memudar.
+- Batasan: jangan ubah biaya MP/efek jurus.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; rapal jurus apa pun → lingkar muncul.
+
+### [ ] T319. **Bola Api: inti menyala, ekor, ledakan** — referensi: Diablo II (Fire Ball), Hades
+- File: `src/systems/spell_fx.js`. Baca dulu: proyektil Bola Api (`JURUS.fire`; grep di learn.js/combat.js).
+- Lakukan: proyektil diberi inti terang (blend ADD) + jejak partikel oranye; saat kena: ledakan bundar 3 lapis (putih→kuning→oranye) & asap kecil.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; rapal Bola Api ke slime → ledakan jelas.
+
+### [ ] T320. **Nova Es: cincin kristal & serpihan** — referensi: Path of Exile (Frost Nova)
+- File: `src/systems/spell_fx.js`. Baca dulu: `nova()` di `src/systems/skills.js` (BACA).
+- Lakukan: bungkus `nova`: cincin biru mengembang + 12 serpihan kristal melesat keluar + kabut dingin di tanah 0,8 s; musuh yang beku diberi lapisan es (tint biru muda berkilau).
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; rapal Nova Es → cincin & musuh terlihat membeku.
+
+### [ ] T321. **Tebasan Putar: pusaran & sapuan angin** — referensi: Diablo III (Whirlwind), Zelda (Spin Attack)
+- File: `src/systems/spell_fx.js`. Baca dulu: `spin()` di `src/systems/skills.js` (BACA).
+- Lakukan: bungkus `spin`: lingkaran busur 360° berputar 2× (busur `arcfx` diputar), daun/debu terlempar keluar, kamera bergetar kecil di akhir.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; Tebasan Putar → pusaran terlihat penuh.
+
+### [ ] T322. **Kabut Racun, Cahaya Pulih, Lentera Suci** — referensi: Divinity (awan racun), Final Fantasy (Cure), Diablo (Holy)
+- File: `src/systems/spell_fx.js`. Baca dulu: bagian ketiga jurus itu di `castSpell()` (BACA).
+- Lakukan: Kabut Racun: gelembung hijau naik & awan berdenyut; Cahaya Pulih: pilar cahaya hijau-emas + daun melayang ke atas; Lentera Suci: sinar silang emas + titik cahaya mengorbit Arka 1 s.
+- Batasan: satu commit boleh berisi ketiganya bila < 80 baris.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; rapal ketiganya → masing-masing punya ciri sendiri.
+
+### [ ] T323. **Efek status di musuh** — referensi: Divinity, Diablo
+- File: `src/systems/spell_fx.js` (+ `src/systems/status.js` BACA). Baca dulu: `enemyStatus()`/`updStatus()`.
+- Lakukan: terbakar: 2 partikel api naik berkedip; beku: kilau es & gerak 0 visual; racun: gelembung hijau kecil. Buat sekali per musuh berstatus, hancurkan saat status habis.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; bakar & racuni slime → efeknya tampak di atasnya.
+
+### [ ] T324. **Percikan kena sesuai bahan musuh** — referensi: Hollow Knight, Dead Cells
+- File: `src/systems/combat_fx.js`. Baca dulu: `hitFx()`.
+- Lakukan: jenis percikan: slime → cipratan warna slime; golem/mimic → bunga api & serpihan batu; tengkorak/hantu → debu tulang/kabut; binatang → percikan putih biasa. Tentukan dari id/tekstur musuh.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; pukul slime & golem → percikannya beda.
+
+### [ ] T325. **Cahaya bersinar (glow) untuk efek penting** — referensi: Ori, Hades
+- File: `src/systems/combat_fx.js` & `src/systems/spell_fx.js`. Baca dulu: dokumentasi Phaser 3.80 `preFX.addGlow` (sprite WebGL).
+- Lakukan: beri glow tipis pada busur tebasan akhir kombo, proyektil sihir, dan cincin tangkis HANYA bila renderer WebGL dan `OPT.lite` mati.
+- Batasan: jangan pasang glow pada objek yang dibuat > 10 per detik.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; efek tampak bercahaya di HP; mode hemat baterai → tanpa glow.
+
+### [ ] T326. **HUD vital ala Dimraeth: HP, Stamina, Konsentrasi** — referensi: Dimraeth (vital: Health, Stamina, Concentration), Elden Ring
+- File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `buildHud()` (±115) & `updHud()`.
+- Lakukan: rapikan HUD kiri atas menjadi 3 bar tipis berbingkai: HP (merah), Stamina (hijau, tepat di bawah HP), Konsentrasi (biru = MP yang sudah ada, ganti labelnya). Bingkai piksel gelap 2 px, angka kecil di dalam bar.
+- Batasan: jangan menghapus info level/EXP (pindahkan ke bawah bar).
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; HUD terlihat rapi seperti RPG souls; nilai tetap benar.
+
+### [ ] T327. **Bilah 5 slot jurus dengan cooldown** — referensi: Dimraeth (5 jurus terpasang), Diablo III, MOBA
+- File: file baru `src/ui/spellbar.js` + `styles.css` (daftarkan di index.html). Baca dulu: `JURUS`, `learned()`, `S.spell` (learn.js) & menu jurus di `src/ui/menus.js` (BACA).
+- Lakukan: tampilkan bar 5 slot di bawah tengah layar berisi jurus yang sudah dipelajari (urutan JURUS). Slot jurus aktif (`S.spell`) berbingkai emas; ketuk slot jurus sihir → jadikan `S.spell`. Tampilkan sapuan cooldown melingkar & biaya MP; slot abu-abu bila MP kurang.
+- Batasan: di HP, bar tidak menutupi joystick/tombol (sesuaikan `bottom`).
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; pelajari 2 jurus → keduanya tampil; ketuk → tombol SIHIR memakai jurus itu.
+
+### [ ] T328. **Bilah HP boss ala souls** — referensi: Dark Souls, Dimraeth (boss = pengalaman utama)
+- File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `bossBar()` (±153).
+- Lakukan: bilah lebar di bawah tengah layar, nama boss di atas kiri bilah, garis penanda di 50% (fase 2), bayangan HP putih yang menyusul (seperti tugas HUD bayangan), muncul dengan fade.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; masuk arena boss → bilah gaya souls.
+
+### [ ] T329. **Ikon Botol Cahaya ala Estus** — referensi: Dark Souls (Estus Flask)
+- File: `styles.css` + elemen `hPot` (cari di `src/ui/widgets.js`). Baca dulu: pembungkus HUD `soulHudWrap` di `src/systems/souls.js` (BACA saja).
+- Lakukan: tampilkan botol sebagai ikon botol bercahaya dengan titik-titik isi (●●○) di atas tombol OBAT, bukan teks "2/3 · 3". Ramuan biasa sebagai angka kecil di pojok.
+- Batasan: logika botol di souls.js tidak diubah.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; minum Botol Cahaya → satu titik meredup.
+
+### [ ] T330. **Baris ikon buff & debuff** — referensi: Diablo, World of Warcraft
+- File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `updStatusHud()` (status.js) & `S.buff` (state.js, BACA).
+- Lakukan: satukan ikon status negatif (racun/terbakar/dingin) dan bonus masakan (`S.buff`) dalam satu baris kecil di bawah bar vital: buff berbingkai hijau, debuff merah, dengan sisa detik.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; makan masakan & kena racun → keduanya tampil berdampingan.
+
+### [ ] T331. **HUD memudar saat damai** — referensi: Elder Scrolls Online (bar muncul hanya saat berubah), Breath of the Wild
+- File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `updHud()`.
+- Lakukan: jika HP & stamina penuh dan tidak ada musuh mengejar selama 5 s, bar vital memudar ke opacity .35; kembali penuh seketika saat ada perubahan/tempur. Bisa dimatikan `localStorage.lumina_hudfade='0'`.
+- Batasan: kartu misi & tombol tidak ikut memudar.
+- Jika SUDAH ada → tandai [x] "sudah ada".
+- Cek: `npm run check`; jalan santai di desa → HUD redup; diserang → terang.
+
 ---
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
 memasang BESTIARY_TEXT ke layar Bestiari, buang petak objek jauh di mode benua, hapus mode lama. Rincian: `docs/GAME_DESIGN.md` (akhir) & `docs/HANDOFF_OPENWORLD.md`.
