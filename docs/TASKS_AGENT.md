@@ -2775,7 +2775,7 @@ File BARU milik agen: `src/npc/crowd.js`, `src/systems/townlife.js`. Pengecualia
 - Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan
 - Cek: `npm run check` (0 masalah); Akademi tidak lagi terlihat seperti hutan.
 
-### [ ] T364. **Distrik Pasar: tambah kios & rumah dagang** — referensi: Pasar Brynn (Stoneshard), Diablo
+### [x] T364. **Distrik Pasar: tambah kios & rumah dagang** — referensi: Pasar Brynn (Stoneshard), Diablo
 
 - File: `src/world/maps/city.js` peta `kpasar`. Baca dulu: objek bangunan/kios/tenda yang sudah ada di `src/world/objects.js`.
 - Lakukan: tambah bangunan/kios dari jenis yang SUDAH ada sampai ±18–25 bangunan per Mpx² (≈ 35–45 untuk peta 1,92 Mpx²), deret rapat dengan lorong 40–48 px.
