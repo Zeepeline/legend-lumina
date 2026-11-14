@@ -28,10 +28,15 @@ Object.assign(World.prototype, {
   slashFx(wt, combo) {
     const pl = this.pl, [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx), fin = combo === 3;
     if (wt === 'spear') { // tusukan: garis cahaya lurus
+      const tipX = pl.x + dx * 28, tipY = pl.y - 9 + dy * 22;
       const g = this.add.image(pl.x + dx * 18, pl.y - 9 + dy * 14, this.arcTex())
         .setRotation(ang).setScale(1.5, .35).setTint(arcTint(wt));
       g.setDepth(pl.y + (dy < 0 ? -2 : 4)).setBlendMode(Phaser.BlendModes.ADD);
       this.tweens.add({ targets: g, alpha: 0, scaleX: 1.9, duration: CFX.arcT, onComplete: () => g.destroy() });
+      // Cincin debu di ujung tusukan (T313)
+      this.puff(tipX, tipY);
+      const ring = this.add.ellipse(tipX, tipY, 14, 8, 0xffffff, 0.4).setDepth(tipY - 1);
+      this.tweens.add({ targets: ring, scaleX: 1.8, scaleY: 1.8, alpha: 0, duration: 150, onComplete: () => ring.destroy() });
       return;
     }
     const s = (wt === 'axe' ? 1.25 : 1) * (fin ? 1.35 : combo === 2 ? 1.1 : 1);
@@ -39,6 +44,9 @@ Object.assign(World.prototype, {
     const ox = pl.x + dx * 10, oy = pl.y - 9 + dy * 8;
     const a = this.add.image(ox, oy, this.arcTex()).setRotation(ang).setScale(s * .75).setTint(tint);
     a.setFlipY(flipY).setDepth(depth).setBlendMode(Phaser.BlendModes.ADD);
+    if (fin && !OPT.lite && a.preFX && this.renderer?.type === Phaser.WEBGL) {
+      try { a.preFX.addGlow(tint, 2, 0, false, 0.1, 8); } catch (_) {}
+    }
     this.tweens.add({
       targets: a, alpha: 0, scale: s, duration: CFX.arcT + (fin ? 60 : 0),
       ease: 'Cubic.easeOut', onComplete: () => a.destroy()
@@ -60,6 +68,18 @@ Object.assign(World.prototype, {
     const tipX = ox + Math.cos(ang) * (24 * s), tipY = oy + Math.sin(ang) * (24 * s);
     if (this.sparkle) this.sparkle(tipX, tipY, 'spark', 3);
     if (fin) this.cameras.main.shake(70, .003);
+    if (wt === 'axe' && fin) {
+      const gx = ox + dx * 14, gy = oy + dy * 10;
+      const crack = this.add.graphics().setDepth(gy - 2);
+      crack.lineStyle(2, 0x5a3418, 0.9);
+      crack.beginPath();
+      crack.moveTo(gx - dx * 8, gy - dy * 8); crack.lineTo(gx, gy);
+      crack.lineTo(gx + dx * 12 + dy * 8, gy + dy * 12 - dx * 8);
+      crack.moveTo(gx, gy); crack.lineTo(gx + dx * 14 - dy * 8, gy + dy * 14 + dx * 8);
+      crack.strokePath();
+      this.tweens.add({ targets: crack, alpha: 0, duration: 600, ease: 'Quad.easeIn', onComplete: () => crack.destroy() });
+      sfxAt('boom', gx, gy, this);
+    }
   },
 
   nearFoe(r) {
@@ -213,6 +233,21 @@ Object.assign(World.prototype, {
       }
       const cur = this.pl.angle || 0;
       this.pl.angle = cur + (targetAngle - cur) * Math.min(1, (dl / 1000) * 14);
+    }
+  };
+
+  const shoot0 = W.shootArrow;
+  W.shootArrow = function () {
+    shoot0.apply(this, arguments);
+    const arrow = this.shots[this.shots.length - 1];
+    if (arrow && arrow.kind === 'arrow') {
+      const origX = arrow.gx, origY = arrow.gy;
+      this.time.addEvent({
+        delay: 50, repeat: 8,
+        callback: () => {
+          if (arrow.s?.active && this.sparkle) this.sparkle(arrow.s.x, arrow.s.y, 'dot', 1);
+        }
+      });
     }
   };
 }

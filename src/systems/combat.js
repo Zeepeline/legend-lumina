@@ -1,11 +1,10 @@
-'use strict';
-// Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah
+'use strict'; // Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah
 // pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali dorongan
 const WEAPON_STYLE = {
   sword: { cd: .32, lock: .2, pts: [[14, 15]], mul: 1, crit: .1, kb: 1, fxs: 1 },
   spear: { cd: .38, lock: .22, pts: [[12, 9], [22, 9], [31, 9]], mul: 1, crit: .12, kb: .7, fxs: 1 },
   axe: { cd: .62, lock: .34, pts: [[13, 21]], mul: 1.25, crit: .18, kb: 1.6, fxs: 1.45, delay: 110 },
-  bow: { cd: .42, lock: .16 },
+  bow: { cd: .42, lock: .16 }
 };
 Object.assign(World.prototype, {
   // Gaya serang per jenis senjata (ITEMS[..].wt): sword (default), spear, axe, bow
@@ -113,6 +112,7 @@ Object.assign(World.prototype, {
     pl.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'); pl.flipX = pl.dir === 'left';
     const big = S.eq.acc === 'ring';
     const s = this.add.sprite(pl.x + dx * 8, pl.y - 9 + dy * 6, 'fire').play('fire').setRotation(a).setScale(big ? 1.3 : 1);
+    if (!OPT.lite && s.preFX && this.renderer?.type === Phaser.WEBGL) { try { s.preFX.addGlow(0xff7722, 2, 0, false, .1, 8); } catch (_) {} }
     this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 200, vy: dy * 200, life: .85, kind: 'fire', mine: 1, dmg: st.mag * (1 + .25 * (tierOf('fire') - 1)) }); s.setScale(1 + .15 * (tierOf('fire') - 1)); useJurus(this, 'fire');
   },
   drink() {

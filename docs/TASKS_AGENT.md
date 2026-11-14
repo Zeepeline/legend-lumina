@@ -2035,7 +2035,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; pukul slime & golem → percikannya beda.
 
-### [ ] T325. **Cahaya bersinar (glow) untuk efek penting** — referensi: Ori, Hades
+### [x] T325. **Cahaya bersinar (glow) untuk efek penting** — referensi: Ori, Hades
 - File: `src/systems/combat_fx.js` & `src/systems/spell_fx.js`. Baca dulu: dokumentasi Phaser 3.80 `preFX.addGlow` (sprite WebGL).
 - Lakukan: beri glow tipis pada busur tebasan akhir kombo, proyektil sihir, dan cincin tangkis HANYA bila renderer WebGL dan `OPT.lite` mati.
 - Batasan: jangan pasang glow pada objek yang dibuat > 10 per detik.

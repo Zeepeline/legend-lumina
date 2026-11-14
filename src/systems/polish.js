@@ -79,6 +79,9 @@ World.prototype.hurtPlayer = function (atk, sx, sy, fx) {
         popWorld(e.spr.x, e.spr.y - 20, 'JATUH TERSUNGKUR!', 'crit');
       }
       const pRing = this.add.graphics().setDepth(pl.y + 4); const ro = { r: 8 };
+      if (!OPT.lite && pRing.preFX && this.renderer?.type === Phaser.WEBGL) {
+        try { pRing.preFX.addGlow(0xffffff, 3, 0, false, 0.1, 10); } catch (_) {}
+      }
       this.tweens.add({
         targets: ro, r: 42, duration: 220, ease: 'Quad.easeOut',
         onUpdate: () => { pRing.clear(); pRing.lineStyle(2.5, 0xffffff, 1 - ro.r / 42).strokeCircle(pl.x, pl.y - 10, ro.r); },

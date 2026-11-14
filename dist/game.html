@@ -7566,14 +7566,13 @@ Object.assign(World.prototype, {
   },
 });
 
-'use strict';
-// Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah
+'use strict'; // Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah
 // pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali dorongan
 const WEAPON_STYLE = {
   sword: { cd: .32, lock: .2, pts: [[14, 15]], mul: 1, crit: .1, kb: 1, fxs: 1 },
   spear: { cd: .38, lock: .22, pts: [[12, 9], [22, 9], [31, 9]], mul: 1, crit: .12, kb: .7, fxs: 1 },
   axe: { cd: .62, lock: .34, pts: [[13, 21]], mul: 1.25, crit: .18, kb: 1.6, fxs: 1.45, delay: 110 },
-  bow: { cd: .42, lock: .16 },
+  bow: { cd: .42, lock: .16 }
 };
 Object.assign(World.prototype, {
   // Gaya serang per jenis senjata (ITEMS[..].wt): sword (default), spear, axe, bow
@@ -7681,6 +7680,7 @@ Object.assign(World.prototype, {
     pl.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'); pl.flipX = pl.dir === 'left';
     const big = S.eq.acc === 'ring';
     const s = this.add.sprite(pl.x + dx * 8, pl.y - 9 + dy * 6, 'fire').play('fire').setRotation(a).setScale(big ? 1.3 : 1);
+    if (!OPT.lite && s.preFX && this.renderer?.type === Phaser.WEBGL) { try { s.preFX.addGlow(0xff7722, 2, 0, false, .1, 8); } catch (_) {} }
     this.shots.push({ s, gx: pl.x + dx * 8, gy: pl.y + dy * 6, vx: dx * 200, vy: dy * 200, life: .85, kind: 'fire', mine: 1, dmg: st.mag * (1 + .25 * (tierOf('fire') - 1)) }); s.setScale(1 + .15 * (tierOf('fire') - 1)); useJurus(this, 'fire');
   },
   drink() {
@@ -16779,6 +16779,9 @@ World.prototype.hurtPlayer = function (atk, sx, sy, fx) {
         popWorld(e.spr.x, e.spr.y - 20, 'JATUH TERSUNGKUR!', 'crit');
       }
       const pRing = this.add.graphics().setDepth(pl.y + 4); const ro = { r: 8 };
+      if (!OPT.lite && pRing.preFX && this.renderer?.type === Phaser.WEBGL) {
+        try { pRing.preFX.addGlow(0xffffff, 3, 0, false, 0.1, 10); } catch (_) {}
+      }
       this.tweens.add({
         targets: ro, r: 42, duration: 220, ease: 'Quad.easeOut',
         onUpdate: () => { pRing.clear(); pRing.lineStyle(2.5, 0xffffff, 1 - ro.r / 42).strokeCircle(pl.x, pl.y - 10, ro.r); },
@@ -18642,10 +18645,15 @@ Object.assign(World.prototype, {
   slashFx(wt, combo) {
     const pl = this.pl, [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx), fin = combo === 3;
     if (wt === 'spear') { // tusukan: garis cahaya lurus
+      const tipX = pl.x + dx * 28, tipY = pl.y - 9 + dy * 22;
       const g = this.add.image(pl.x + dx * 18, pl.y - 9 + dy * 14, this.arcTex())
         .setRotation(ang).setScale(1.5, .35).setTint(arcTint(wt));
       g.setDepth(pl.y + (dy < 0 ? -2 : 4)).setBlendMode(Phaser.BlendModes.ADD);
       this.tweens.add({ targets: g, alpha: 0, scaleX: 1.9, duration: CFX.arcT, onComplete: () => g.destroy() });
+      // Cincin debu di ujung tusukan (T313)
+      this.puff(tipX, tipY);
+      const ring = this.add.ellipse(tipX, tipY, 14, 8, 0xffffff, 0.4).setDepth(tipY - 1);
+      this.tweens.add({ targets: ring, scaleX: 1.8, scaleY: 1.8, alpha: 0, duration: 150, onComplete: () => ring.destroy() });
       return;
     }
     const s = (wt === 'axe' ? 1.25 : 1) * (fin ? 1.35 : combo === 2 ? 1.1 : 1);
@@ -18653,6 +18661,9 @@ Object.assign(World.prototype, {
     const ox = pl.x + dx * 10, oy = pl.y - 9 + dy * 8;
     const a = this.add.image(ox, oy, this.arcTex()).setRotation(ang).setScale(s * .75).setTint(tint);
     a.setFlipY(flipY).setDepth(depth).setBlendMode(Phaser.BlendModes.ADD);
+    if (fin && !OPT.lite && a.preFX && this.renderer?.type === Phaser.WEBGL) {
+      try { a.preFX.addGlow(tint, 2, 0, false, 0.1, 8); } catch (_) {}
+    }
     this.tweens.add({
       targets: a, alpha: 0, scale: s, duration: CFX.arcT + (fin ? 60 : 0),
       ease: 'Cubic.easeOut', onComplete: () => a.destroy()

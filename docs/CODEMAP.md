@@ -192,8 +192,8 @@ _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (g
 `.goto()` 4 · `.guardStop()` 9
 
 ## src/systems/combat.js (400 baris)
-_Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah_
-`WEAPON_STYLE` 4 · `.attack()` 12 · `.shootArrow()` 83 · `.aimAngle()` 96 · `.magic()` 105 · `.drink()` 118 · `.useItem()` 124 · `.hitStop()` 133 · `.hitEnemy()` 138 · `.killEnemy()` 188 · `.drop()` 264 · `.updPicks()` 270 · `.gainExp()` 292 · `.hurtPlayer()` 308 · `.eShoot()` 327 · `.shockwave()` 337 · `.updShots()` 370 · `.defeat()` 387
+_pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali dorongan_
+`WEAPON_STYLE` 3 · `.attack()` 11 · `.shootArrow()` 82 · `.aimAngle()` 95 · `.magic()` 104 · `.drink()` 118 · `.useItem()` 124 · `.hitStop()` 133 · `.hitEnemy()` 138 · `.killEnemy()` 188 · `.drop()` 264 · `.updPicks()` 270 · `.gainExp()` 292 · `.hurtPlayer()` 308 · `.eShoot()` 327 · `.shockwave()` 337 · `.updShots()` 370 · `.defeat()` 387
 
 ## src/systems/skills.js (37 baris)
 _Jurus: dash, tebasan putar, nova es_
@@ -355,9 +355,9 @@ _Gelombang 9: mancing tarik-ulur (#51, #571), ikan per jam (#572) & cuaca (#573)
 _Gelombang 10: kalender (#701), nama hari (#702), libur toko (#703), jam toko (#704),_
 `DAYS` 4 · `SEASONS` 5 · `SEASON_DAYS` 11 · `dayName` 12 · `seasonIdx` 13 · `season` 14 · `dateTxt` 15 · `_updClock` 17 · `_plotHours` 20 · `_logFish` 23 · `shopShut()` 26 · `wrapShops()` 32 · `sleepToMorning()` 38 · `.spawnSeason()` 40 · `.updSeason()` 55
 
-## src/systems/polish.js (166 baris)
+## src/systems/polish.js (169 baris)
 _Gelombang 11: hemat baterai (#99), tangkis (#3), kelemahan elemen (#5), kunci target (#6),_
-`ELEM` 5 · `WEAK` 6 · `ELEM_COL` 7 · `_hitEnemy` 8 · `_updShots` 39 · `_eShoot` 42 · `_nova` 59 · `_useTool` 61 · `PARRY_WIN` 64 · `_attack` 65 · `_hurtPlayer` 67 · `.initLock()` 98 · `.setLock()` 103 · `.cycleLock()` 104 · `.updLock()` 105 · `_aim` 112 · `RARE_N` 115 · `rarity()` 116 · `TOAST` 118 · `toastItem()` 119 · `_addItem` 126 · `applyFont()` 129 · `applyLite()` 130 · `applyScreenFilter()` 133 · `.initPolish()` 164
+`ELEM` 5 · `WEAK` 6 · `ELEM_COL` 7 · `_hitEnemy` 8 · `_updShots` 39 · `_eShoot` 42 · `_nova` 59 · `_useTool` 61 · `PARRY_WIN` 64 · `_attack` 65 · `_hurtPlayer` 67 · `.initLock()` 101 · `.setLock()` 106 · `.cycleLock()` 107 · `.updLock()` 108 · `_aim` 115 · `RARE_N` 118 · `rarity()` 119 · `TOAST` 121 · `toastItem()` 122 · `_addItem` 129 · `applyFont()` 132 · `applyLite()` 133 · `applyScreenFilter()` 136 · `.initPolish()` 167
 
 ## src/systems/economy/economy_1.js (399 baris)
 _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (1) — isi: lihat docs/CODEMAP.md_
@@ -407,9 +407,9 @@ _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat 
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
 `SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 120
 
-## src/systems/combat_fx.js (219 baris)
+## src/systems/combat_fx.js (239 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
-`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 65 · `.hitFx()` 75 · `.rollFx()` 98 · `.updLowHp()` 103
+`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 85 · `.hitFx()` 95 · `.rollFx()` 118 · `.updLowHp()` 123
 
 ## src/ui/worldmap.js (343 baris)
 _Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)_
