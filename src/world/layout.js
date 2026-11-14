@@ -71,6 +71,7 @@ function plEnemies(A, B, paths) {
       : { top: 40, bottom: H - 40, gapL: sideA === 'W' ? [la[1] - 40, la[1] + 40] : [lb[1] - 40, lb[1] + 40], gapR: sideA === 'E' ? [la[1] - 40, la[1] + 40] : [lb[1] - 40, lb[1] + 40], types: ground === 'forest' ? ['pined', 'pine', 'round'] : ['treeAd', 'treeBd', 'treeA'] };
     let TT = { meadow: [['treeA', .2], ['treeB', .15], ['bushG2', .2], ['bushG1', .15], ['rock', .2], ['apple1', .05], ['stump', .05]], forest: [['treeAd', .3], ['treeBd', .25], ['pined', .2], ['bushG2', .1], ['stump', .05], ['rock', .1]], swamp: [['bushG1', .35], ['rock', .25], ['stump', .2], ['treeBd', .2]] }[ground];
     if (id === 'pl_meadow_snow') TT = [['treeA', .15], ['treeSn', .25], ['rock', .25], ['bushW', .15], ['bushG2', .1], ['stump', .1]];
+    if (id === 'pl_meadow_swamp') TT = [['treeA', .15], ['treeSw', .2], ['treeBd', .2], ['bushG2', .2], ['rock', .15], ['stump', .1]];
     MAPS[id] = { id, name, w: Math.round(W), h: Math.round(H), ground, bgm: A.bgm, scale: Math.max(A.scale || 1, B.scale || 1), peralihan: [a, b],
       paths, discs: [], objs: [], ponds, npcs: [], enemies: plEnemies(A, B, paths), exits, border,
       trees: { n: Math.round(W * H / (ground === 'forest' ? 2600 : 4600)), min: 30, types: TT } };

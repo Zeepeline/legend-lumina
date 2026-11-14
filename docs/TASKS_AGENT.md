@@ -2730,7 +2730,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; jalan tetap terbuka
 - Cek: `npm run check` (0 masalah); berjalan di padang → penanda 'terungkap' saat melewati gugus batu.
 
-### [ ] T359. **Konsistensi bioma per wilayah** — referensi: Ekologi nyata, GEOGRAFI §2
+### [x] T359. **Konsistensi bioma per wilayah** — referensi: Ekologi nyata, GEOGRAFI §2
 
 - File: `src/world/maps/*.js` (tabel pohon/semak sebaran tiap peta) & `PERALIHAN` di layout.js (BACA). Baca dulu: daftar jenis objek alam tiap peta.
 - Lakukan: pastikan: salju → hanya pinus/pohon salju/batu es; rawa → alang-alang, pohon mati, jamur; padang → bunga & sedikit pohon; hutan → paling rapat di tengah, jarang di tepi. Ganti jenis yang salah tempat dengan jenis yang benar (posisi tetap).
