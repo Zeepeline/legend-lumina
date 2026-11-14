@@ -2093,10 +2093,12 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 ## I. GELOMBANG 8 — GEOGRAFI: sungai, kota, bangunan, penanda (T332–T361)
 Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu sama lain). Hampir semua perubahan = DATA peta (`src/world/maps/*.js`), bukan kode. Uji di `?benua=1` & lihat dari Peta Benua. Satu-satunya pengecualian kunci: `src/world/layout.js` untuk field `ponds` peralihan.
 
-### [ ] T332. **Alat cek sambungan air antarwilayah** — referensi: GEOGRAFI §3 & §5
-- File: skrip SEMENTARA di `/tmp` (BUKAN di repo). Baca dulu: `docs/GEOGRAFI.md` §3, format `ponds` di `src/world/maps/wild.js` baris 43.
+### [x] T332. **Alat cek sambungan air antarwilayah** — referensi: GEOGRAFI §3 & §5
+- File: skrip SEMENTARA di `/tmp/check_water.js` (BUKAN di repo). Baca dulu: `docs/GEOGRAFI.md` §3, format `ponds` di `src/world/maps/wild.js` baris 43.
 - Lakukan: tulis skrip Node/Python yang membaca `ponds` & `river` tiap peta (boleh dengan menjalankan game via Playwright lalu `page.evaluate` membaca `MAPS` & `WORLD_POS`) dan mencetak, untuk tiap tepi wilayah, titik air yang menyentuh tepi dalam koordinat GLOBAL. Simpan perintahnya sebagai catatan di bawah tugas ini agar tugas sungai berikut bisa memakainya.
-- Cek: `npm run check` (0 masalah); hasil cetak menunjukkan sungai hutan menyentuh tepi kanan `forest` di y global ≈ 4712.
+- Perintah validator: `node /tmp/check_water.js`
+- Hasil cetak verifikasi: sungai hutan menyentuh tepi kanan `forest` di y global ≈ 4692–4712 (lokal y=580, WORLD_POS.forest[1]=4112).
+- Cek: `npm run check` (0 masalah). (selesai di v1.30.1)
 
 ### [ ] T333. **Sungai Senja 1: mata air di Puncak Beku** — referensi: BotW (sungai dari pegunungan), GEOGRAFI §3
 - File: `src/world/maps/snow.js` (field `ponds`). Baca dulu: `docs/GEOGRAFI.md` §3; posisi `WORLD_POS.snow` = [4500, 1000], ukuran 1280×1200.
