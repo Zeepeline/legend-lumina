@@ -1487,13 +1487,13 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; konsol `S.hp -= 30; updHud()` → bar utama langsung turun, bayangan menyusul.
 
-### [ ] T245. **Ikon simpan otomatis lebih jelas**
+### [x] T245. **Ikon simpan otomatis lebih jelas** (sudah ada: #autosv teks tersimpan fade in/out)
 - File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `autoSaveIcon()` (±131).
 - Lakukan: tampilkan teks kecil "Tersimpan" di samping ikon selama 1,2 s dengan fade in/out.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; tunggu simpan otomatis (45 s) atau konsol `saveGame(__game.sc); autoSaveIcon()`.
 
-### [ ] T246. **Angka damage kritikal lebih menonjol**
+### [x] T246. **Angka damage kritikal lebih menonjol** (sudah ada: .pop.crit 14px kuning)
 - File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `popWorld()` & `POPS` (±88–95).
 - Lakukan: tipe pop kritikal (cari pemanggil `popWorld(..., 'crit')` dengan grep) tampil 1,4× lebih besar, kuning, dengan sedikit 'pop' skala. Jika tipe crit tidak ada, tandai catatan.
 - Batasan: jangan ubah cara damage dihitung.
@@ -1507,13 +1507,13 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; slot berisi save → terlihat "Lv 6 · Desa Lumina · 1j 12m".
 
-### [ ] T248. **Kode simpan: tombol salin & pesan error jelas**
+### [x] T248. **Kode simpan: tombol salin & pesan error jelas** (sudah ada: writeText/execCommand & LUMINA1: validasi)
 - File: `src/ui/savecode.js`. Baca dulu: `codeDialog()` (±10–48).
 - Lakukan: tombol "Salin" memakai `navigator.clipboard.writeText` (try/catch, fallback pilih teks). Saat impor gagal, tampilkan alasan singkat (kode terpotong / bukan kode Lumina).
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; ekspor → Salin → tempel di impor → berhasil; tempel teks acak → pesan jelas.
 
-### [ ] T249. **Joystick: zona mati yang nyaman**
+### [x] T249. **Joystick: zona mati yang nyaman**
 - File: `src/core/input.js`. Baca dulu: `enableTouch()` (±23–59).
 - Lakukan: pastikan ada zona mati (deadzone) ±18% radius: di bawahnya vektor = 0. Jadikan konstanta `JOY_DEAD = .18` di atas fungsi.
 - Batasan: jangan ubah tata letak tombol.

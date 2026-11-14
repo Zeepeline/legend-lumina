@@ -23,6 +23,7 @@ Input.vec = () => {
 function enableTouch() { if (!document.body.classList.contains('touch')) { document.body.classList.add('touch'); layout(); } }
 if (matchMedia('(pointer:coarse)').matches || ('ontouchstart' in window && navigator.maxTouchPoints > 0)) document.body.classList.add('touch');
 addEventListener('touchstart', enableTouch, { passive: true });
+const JOY_DEAD = .18;
 (function () {
   const joy = $('joy'), knob = $('knob'); let pid = null, lastDir = null, rep = null;
   function upd(e) {
@@ -31,7 +32,13 @@ addEventListener('touchstart', enableTouch, { passive: true });
     if (l > m) { dx *= m / l; dy *= m / l; }
     knob.style.transform = `translate(${dx}px,${dy}px)`;
     let nx = dx / m, ny = dy / m; const L = Math.hypot(nx, ny);
-    if (L < .2) { nx = ny = 0; } else { const s = Math.min(1, (L - .2) / .6 + .35); nx = nx / L * s; ny = ny / L * s; }
+    if (L < JOY_DEAD) {
+      nx = ny = 0;
+    } else {
+      const s = Math.min(1, (L - JOY_DEAD) / (1 - JOY_DEAD));
+      nx = (nx / L) * s;
+      ny = (ny / L) * s;
+    }
     Input.joy.x = nx; Input.joy.y = ny;
     // arah diskrit untuk menu
     const d = L < .55 ? null : Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
