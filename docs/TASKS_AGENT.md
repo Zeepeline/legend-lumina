@@ -1605,7 +1605,8 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; dekati Tetua Bram → muncul "Tetua Bram".
 
-### [ ] T263. **Bilah HP musuh: nama untuk elite & buronan**
+### [x] T263. **Bilah HP musuh: nama untuk elite & buronan**
+- Selesai: `updEnemyBars()` menampilkan label nama `e.D.name` di atas bilah HP musuh tipe istimewa (`e.elite`, `e.D.isBounty`, atau `goblin_elite`).
 - File: `src/systems/qol.js`. Baca dulu: `updEnemyBars()` (±23–32).
 - Lakukan: untuk musuh elite (`e.elite`) dan buronan (`e.D.isBounty` atau sejenis; grep) tampilkan nama `e.D.name` di atas bilah HP.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.

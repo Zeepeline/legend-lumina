@@ -29,11 +29,27 @@ Object.assign(World.prototype, {
   // bilah HP kecil di atas musuh yang sudah terluka (bukan boss; boss punya bilah sendiri)
   updEnemyBars() {
     if (!this.eBar) this.eBar = this.add.graphics().setDepth(1.97e5);
-    const g = this.eBar; g.clear(); if (!OPT.hpbar) return;
+    const g = this.eBar; g.clear();
     for (const e of this.enemies) {
-      if (e.hp <= 0 || e.boss || e.hp >= e.max || !e.spr.visible) continue;
-      const s = e.spr, w = 18, x = Math.round(s.x - w / 2), y = Math.round(s.y - s.displayHeight - 6), p = Math.max(0, e.hp / e.max);
-      g.fillStyle(0x1a1420, .8).fillRect(x - 1, y - 1, w + 2, 4); g.fillStyle(p > .5 ? 0x6ad04a : p > .25 ? 0xf0c040 : 0xe84a3a, 1).fillRect(x, y, Math.ceil(w * p), 2);
+      const isSpec = !!(e.elite || e.D?.isBounty || e.type === 'goblin_elite');
+      const show = OPT.hpbar && e.hp > 0 && !e.boss && e.hp < e.max && e.spr && e.spr.visible;
+      if (!show) {
+        if (e.nameTag) { e.nameTag.destroy(); e.nameTag = null; }
+        continue;
+      }
+      const s = e.spr, w = isSpec ? 26 : 18, x = Math.round(s.x - w / 2), y = Math.round(s.y - s.displayHeight - 6), p = Math.max(0, e.hp / e.max);
+      g.fillStyle(0x1a1420, .8).fillRect(x - 1, y - 1, w + 2, 4);
+      g.fillStyle(p > .5 ? 0x6ad04a : p > .25 ? 0xf0c040 : 0xe84a3a, 1).fillRect(x, y, Math.ceil(w * p), 2);
+      if (isSpec) {
+        const nm = (e.elite && !e.D?.isBounty ? '★ ' : '') + (e.D?.name || 'Elit');
+        if (!e.nameTag) {
+          e.nameTag = this.add.text(s.x, y - 2, nm, {
+            fontFamily: 'sans-serif', fontSize: '9px', stroke: '#1a1420', strokeThickness: 3, color: '#ffd84a'
+          }).setOrigin(.5, 1).setDepth(1.98e5);
+        } else {
+          e.nameTag.setText(nm).setPosition(s.x, y - 2).setVisible(true);
+        }
+      } else if (e.nameTag) { e.nameTag.destroy(); e.nameTag = null; }
     }
   },
   // coba lagi tepat sebelum boss (#180): dipanggil dari defeat() bila kalah saat melawan boss
