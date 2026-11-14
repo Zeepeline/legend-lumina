@@ -1792,13 +1792,13 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; konsol buat drop item langka → ada berkas cahaya.
 
-### [ ] T288. **Koin & bahan biasa tertarik ke Arka** — referensi: Hades, Diablo
+### [x] T288. **Koin & bahan biasa tertarik ke Arka** — referensi: Hades, Diablo (sudah ada di `updPicks()` `src/systems/combat.js`)
 - File: `src/systems/combat.js`. Baca dulu: `updPicks()` (±258–279).
 - Lakukan: koin & bahan biasa dalam 52 px bergerak ke arah Arka (makin dekat makin cepat) lalu diambil seperti biasa. Barang langka tetap harus didatangi.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; bunuh musuh → koin meluncur ke Arka.
 
-### [ ] T289. **Sifat elite (affix)** — referensi: Diablo III
+### [x] T289. **Sifat elite (affix)** — referensi: Diablo III
 - File: `src/systems/feel.js` + `src/systems/combat.js`. Baca dulu: `makeElite()` (feel.js ±18–29), `killEnemy()`.
 - Lakukan: elite mendapat 1 sifat acak: "Cepat" (kecepatan +30%), "Keras" (DEF +50%), "Membara" (pukulannya membakar: `inflict` status bakar), "Beranak" (saat mati memunculkan 2 slime kecil). Nama sifat tampil di bawah nama elite.
 - Batasan: sifat Beranak hanya untuk elite non-boss.
