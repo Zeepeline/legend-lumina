@@ -25,14 +25,32 @@ Object.assign(World.prototype, {
     return mul;
   },
   updStatus(dt) {
-    const pl = this.pl; let any = null;
-    for (const k in S.buff) { if (S.buff[k] > 0) { S.buff[k] -= dt; if (S.buff[k] <= 0) { delete S.buff[k]; popWorld(pl.x, pl.y - 38, 'Efek ' + BUFF[k].n + ' habis', 'xp'); updStatusHud(this); updHud(); } } }
+    const pl = this.pl; let any = null, active = false;
+    for (const k in S.buff) {
+      if (S.buff[k] > 0) {
+        active = true; S.buff[k] -= dt;
+        if (S.buff[k] <= 0) {
+          delete S.buff[k]; popWorld(pl.x, pl.y - 38, 'Efek ' + BUFF[k].n + ' habis', 'xp');
+          updStatusHud(this); updHud();
+        }
+      }
+    }
     for (const k in this.pst) {
       if (!(this.pst[k] > 0)) continue;
-      this.pst[k] -= dt; any = k; const D = STATUS[k];
-      if (D.every) { this.pstT[k] -= dt; if (this.pstT[k] <= 0) { this.pstT[k] = D.every; if (S.hp > 1) { const d = Math.min(D.dmg(), S.hp - 1); S.hp -= d; popWorld(pl.x + rnd(-6, 6), pl.y - 30, '-' + d, D.c); updHud(); } } }
+      active = true; this.pst[k] -= dt; any = k; const D = STATUS[k];
+      if (D.every) {
+        this.pstT[k] -= dt;
+        if (this.pstT[k] <= 0) {
+          this.pstT[k] = D.every;
+          if (S.hp > 1) { const d = Math.min(D.dmg(), S.hp - 1); S.hp -= d; popWorld(pl.x + rnd(-6, 6), pl.y - 30, '-' + d, D.c); updHud(); }
+        }
+      }
       if (Math.random() < dt * 6) this.sparkle(pl.x + rnd(-5, 5), pl.y - rnd(8, 20), k === 'chill' ? 'dot' : k === 'burn' ? 'doto' : 'dotg', 1);
       if (this.pst[k] <= 0) { delete this.pst[k]; updStatusHud(this); if (!Object.keys(this.pst).length) pl.clearTint(); }
+    }
+    if (active) {
+      this.stHudT = (this.stHudT || 0) - dt;
+      if (this.stHudT <= 0) { this.stHudT = .25; updStatusHud(this); }
     }
     if (any && !this.charged && pl.inv <= 0) pl.setTint(STATUS[any].tint);
   },
@@ -62,5 +80,9 @@ function updStatusHud(sc) {
   if (!el) { el = document.createElement('span'); el.id = 'hSt'; h2.appendChild(el); }
   const ks = Object.keys(sc.pst).filter(k => sc.pst[k] > 0);
   const bs = Object.keys(S.buff || {}).filter(k => S.buff[k] > 0);
-  el.textContent = ks.map(k => STATUS[k].ic).join('') + bs.map(k => BUFF[k].ic).join(''); el.style.display = ks.length + bs.length ? '' : 'none';
+  const items = [
+    ...ks.map(k => `<span class="stic">${STATUS[k].ic}<small>${Math.ceil(sc.pst[k])}</small></span>`),
+    ...bs.map(k => `<span class="stic">${BUFF[k].ic}<small>${Math.ceil(S.buff[k])}</small></span>`)
+  ];
+  el.innerHTML = items.join(''); el.style.display = items.length ? '' : 'none';
 }

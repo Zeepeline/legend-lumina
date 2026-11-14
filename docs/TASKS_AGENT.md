@@ -1555,19 +1555,16 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; Buku Ikan baru → baris ??? berisi petunjuk.
 
-### [ ] T255. **Pergantian musim terasa**
+### [x] T255. **Pergantian musim terasa**
+- Sudah ada: di `src/systems/season.js` memanggil `banner(season().n, season().d, true, 2600)` saat `this.seaFor !== id`.
 - File: `src/systems/season.js`. Baca dulu: `updSeason()` (±55) & `SEASONS`.
-- Lakukan: saat hari berganti ke hari pertama musim baru, tampilkan `banner(namaMusim, 'MUSIM BARU')` sekali (catat musim terakhir di `this.lastSeasonShown`).
-- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
-- Cek: `npm run check`; konsol majukan hari ke awal musim berikut → banner muncul sekali.
 
-### [ ] T256. **Toko tutup: pesan jam buka yang jelas**
+### [x] T256. **Toko tutup: pesan jam buka yang jelas**
+- Sudah ada: di `src/systems/season.js` pesan toko tutup mencantumkan jam buka (`Buka lagi pukul 08.00 sampai 18.00`).
 - File: `src/systems/season.js`. Baca dulu: `shopShut()` & `wrapShops()` (±26–37).
-- Lakukan: pesan saat toko tutup menyebut jam buka berikutnya, contoh "Toko tutup. Buka lagi pukul 07:00."
-- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
-- Cek: `npm run check`; datangi toko jam 23:00 → pesan memuat jam buka.
 
-### [ ] T257. **Status: sisa durasi di ikon HUD**
+### [x] T257. **Status: sisa durasi di ikon HUD**
+- Selesai: ikon status (debuff racun/bakar/dingin & buff) di HUD menampilkan sisa detik yang dihitung mundur secara dinamis.
 - File: `src/systems/status.js` + `styles.css`. Baca dulu: `updStatusHud()` (±60) & `STATUS`.
 - Lakukan: di ikon status (racun/terbakar/dingin) tampilkan angka detik tersisa kecil di pojok, diperbarui saat `updStatusHud`.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
