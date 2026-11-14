@@ -27,8 +27,8 @@ function makeSD(M, rect) {
 function pondE(P, x, y) { return Math.hypot((x - P[0]) / P[2], (y - P[1]) / P[3]); }
 const GROUND = {
   village: { g: ['#7ec462', '#8ccf6c', '#98d877', '#a6e083'], edge: '#72b85c', path: 'stone', tuft: '#5fa84a', tuft2: '#b8ec98' },
-  forest: { g: ['#3f7d2c', '#4f9234', '#5ea33c', '#6cb244'], edge: '#3a6e28', path: 'dirt', tuft: '#2f6420', tuft2: '#5aa03a' },
-  meadow: { g: ['#8cc45e', '#9ccf66', '#aad870', '#b6de7a'], edge: '#7cb452', path: 'dirt', tuft: '#6aa846', tuft2: '#d0f08e' },
+  forest: { g: ['#407838', '#488838', '#509038', '#60a040'], edge: '#36682e', path: 'dirt', tuft: '#34602a', tuft2: '#78b848' },
+  meadow: { g: ['#4a8238', '#549440', '#62a448', '#70b452'], edge: '#3e702e', path: 'dirt', tuft: '#3c6e2a', tuft2: '#86c454' },
   swamp: { g: ['#4a6a4a', '#567a50', '#628858', '#507048'], edge: '#3e5a3e', path: 'dirt', tuft: '#3a5a3a', tuft2: '#8ab070' },
   snow: { g: ['#e2ecf6', '#eaf2fa', '#dae6f2', '#f2f7fc'], edge: '#c4d6e8', path: 'dirt', tuft: '#b4c8de', tuft2: '#ffffff', ice: 1 },
   cave: { g: ['#2c2834', '#332e3c', '#28242e', '#38323f'], path: 'cave' },
@@ -157,7 +157,11 @@ function genGround(M, rect) {
     if (sd(X, Y) < 3 || near(X, Y)) continue;
     const r = hash(n, 3, 21), forest = M.ground === 'forest';
     if (r < (M.flowers ? .55 : .78)) { px(x, GP.tuft, X, Y); px(x, GP.tuft, X - 1, Y - 1); px(x, GP.tuft, X + 1, Y - 1); px(x, GP.tuft2, X, Y - 2); }
-    else if (r < .97 || forest) { const fl = GP.ice ? ['#ffffff', '#cfe6fa', '#b4d4f0'][Math.floor(hash(n, 4, 21) * 3)] : ['#ffffff', '#ffd84a', '#ff8ac0', '#b48aea', '#ff6a5a'][Math.floor(hash(n, 4, 21) * 5)]; px(x, fl, X, Y - 1); px(x, fl, X - 1, Y); px(x, fl, X + 1, Y); px(x, fl, X, Y + 1); px(x, GP.ice ? '#ffffff' : '#ffe27a', X, Y); }
+    else if (r < .97 || forest) {
+      const fl = GP.ice ? ['#ffffff', '#cfe6fa', '#b4d4f0'][Math.floor(hash(n, 4, 21) * 3)] :
+        ['#ffffff', '#fff2b8', '#ffccd8', '#d0c4f8', '#ffd4a0'][Math.floor(hash(n, 4, 21) * 5)];
+      px(x, fl, X, Y - 1); px(x, fl, X - 1, Y); px(x, fl, X + 1, Y); px(x, fl, X, Y + 1); px(x, GP.ice ? '#ffffff' : '#ffea88', X, Y);
+    }
     else { ellF(x, '#d6d0c4', X, Y, 2.5, 1.6); px(x, '#f0ece2', X - 1, Y - 1); }
   }
   for (const [gx, gy, gw, gh, t] of (M.gardens || [])) {

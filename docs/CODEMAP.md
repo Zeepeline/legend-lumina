@@ -79,9 +79,9 @@ _Efek: tebasan, api, proyektil, cahaya, bayangan_
 _Lantai & perabot interior_
 `FURN` 4 · `drawFurn()` 5 · `genRoom()` 15 · `artMusicBox()` 28
 
-## src/world/objects.js (164 baris)
+## src/world/objects.js (175 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 163
+`OBJ` 7 · `MAPS` 174
 
 ## src/world/spawn/spawn_1.js (398 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
@@ -91,11 +91,11 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 203 · obj `treeA` 210 · obj `goblin_torch` 218 · obj `goblin_cauldron` 221 · obj `cryst` 230 · obj `lamp` 233 · obj `viewpoint` 236 · obj `lumina_shard` 270
 
-## src/world/ground.js (279 baris)
+## src/world/ground.js (283 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `genGround()` 90 · `blockRects()` 180 · `scatter()` 196 · `openSides()` 229 · `borderTrees()` 242 · `ringObjects()` 258 · `mapObjects()` 263 · `mapWalls()` 267
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `genGround()` 90 · `blockRects()` 184 · `scatter()` 200 · `openSides()` 233 · `borderTrees()` 246 · `ringObjects()` 262 · `mapObjects()` 267 · `mapWalls()` 271
 
-## src/world/maps/village.js (84 baris)
+## src/world/maps/village.js (86 baris)
 _Peta: Desa Lumina_
 
 
@@ -119,7 +119,7 @@ _Peta: Rawa Senja (bab 2, Morgath)_
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 
-## src/world/maps/lake.js (38 baris)
+## src/world/maps/lake.js (40 baris)
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
@@ -459,9 +459,9 @@ _Layar judul_
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
 `exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 32 · `plEnemies()` 34 · `NEIGH` 83
 
-## src/gfx/gptassets.js (36 baris)
+## src/gfx/gptassets.js (39 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
-`GPT_SWAP` 4 · `GPT_LOOK` 10 · `applyGptSwap()` 22
+`GPT_SWAP` 4 · `GPT_LOOK` 13 · `applyGptSwap()` 25
 
 ## src/gfx/gptmonsters.js (135 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._

@@ -159,5 +159,16 @@ const OBJ = {
   stalag: { key: 'stalag', col: [12, 6, 0], sh: [8, 2], fade: 1 },
   cryst: { key: 'cryst' }, crystp: { key: 'crystp' }, bones: { key: 'bones' },
   shrine: { key: 'shrine', mm: 1 },
+  verdant_tree: { key: 'verdant_tree', col: [14, 8, 2], sh: [26, 6], fade: 1 },
+  verdant_rock_large: { key: 'verdant_rock_large', col: [24, 10, 0], sh: [20, 5], fade: 1 },
+  verdant_rock_med: { key: 'verdant_rock_med', col: [18, 8, 0], sh: [14, 4], fade: 1 },
+  verdant_rock_pillar: { key: 'verdant_rock_pillar', col: [20, 10, 0], sh: [16, 4], fade: 1 },
+  verdant_bush: { key: 'verdant_bush', col: [26, 8, 0], sh: [18, 4] },
+  verdant_bush_small: { key: 'verdant_bush_small', col: [16, 6, 0], sh: [10, 3] },
+  verdant_stump: { key: 'verdant_stump', col: [14, 6, 0], sh: [10, 3] },
+  verdant_log: { key: 'verdant_log', col: [24, 8, 0], sh: [16, 4] },
+  verdant_cliff_corner: { key: 'verdant_cliff_corner', col: [60, 20, 0], sh: [40, 6], fade: 1 },
+  verdant_cliff_straight: { key: 'verdant_cliff_straight', col: [60, 20, 0], sh: [40, 6], fade: 1 },
+  verdant_cliff_slope: { key: 'verdant_cliff_slope', col: [60, 20, 0], sh: [40, 6], fade: 1 },
 };
 const MAPS = {};

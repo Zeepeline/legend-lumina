@@ -2660,7 +2660,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); jalan utama tampak lebih lebar & jelas arahnya.
 
-### [ ] T349. **Desa: zona fungsi** — referensi: Stardew (kebun di pinggir, toko di pusat)
+### [x] T349. **Desa: zona fungsi** — referensi: Stardew (kebun di pinggir, toko di pusat)
 
 - File: `src/world/maps/village.js`. Baca dulu: catatan audit.
 - Lakukan: pindahkan HANYA hiasan (pagar, tong, peti kayu, tumpukan jerami) agar: area kebun/kandang di pinggir berpagar, area pandai besi berisi tong & landasan dekat jalan masuk, penginapan berhias tong & lampu di jalan utama. Bangunan tidak dipindah.

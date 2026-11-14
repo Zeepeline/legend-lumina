@@ -4379,6 +4379,17 @@ const OBJ = {
   stalag: { key: 'stalag', col: [12, 6, 0], sh: [8, 2], fade: 1 },
   cryst: { key: 'cryst' }, crystp: { key: 'crystp' }, bones: { key: 'bones' },
   shrine: { key: 'shrine', mm: 1 },
+  verdant_tree: { key: 'verdant_tree', col: [14, 8, 2], sh: [26, 6], fade: 1 },
+  verdant_rock_large: { key: 'verdant_rock_large', col: [24, 10, 0], sh: [20, 5], fade: 1 },
+  verdant_rock_med: { key: 'verdant_rock_med', col: [18, 8, 0], sh: [14, 4], fade: 1 },
+  verdant_rock_pillar: { key: 'verdant_rock_pillar', col: [20, 10, 0], sh: [16, 4], fade: 1 },
+  verdant_bush: { key: 'verdant_bush', col: [26, 8, 0], sh: [18, 4] },
+  verdant_bush_small: { key: 'verdant_bush_small', col: [16, 6, 0], sh: [10, 3] },
+  verdant_stump: { key: 'verdant_stump', col: [14, 6, 0], sh: [10, 3] },
+  verdant_log: { key: 'verdant_log', col: [24, 8, 0], sh: [16, 4] },
+  verdant_cliff_corner: { key: 'verdant_cliff_corner', col: [60, 20, 0], sh: [40, 6], fade: 1 },
+  verdant_cliff_straight: { key: 'verdant_cliff_straight', col: [60, 20, 0], sh: [40, 6], fade: 1 },
+  verdant_cliff_slope: { key: 'verdant_cliff_slope', col: [60, 20, 0], sh: [40, 6], fade: 1 },
 };
 const MAPS = {};
 
@@ -5112,8 +5123,8 @@ function makeSD(M, rect) {
 function pondE(P, x, y) { return Math.hypot((x - P[0]) / P[2], (y - P[1]) / P[3]); }
 const GROUND = {
   village: { g: ['#7ec462', '#8ccf6c', '#98d877', '#a6e083'], edge: '#72b85c', path: 'stone', tuft: '#5fa84a', tuft2: '#b8ec98' },
-  forest: { g: ['#3f7d2c', '#4f9234', '#5ea33c', '#6cb244'], edge: '#3a6e28', path: 'dirt', tuft: '#2f6420', tuft2: '#5aa03a' },
-  meadow: { g: ['#8cc45e', '#9ccf66', '#aad870', '#b6de7a'], edge: '#7cb452', path: 'dirt', tuft: '#6aa846', tuft2: '#d0f08e' },
+  forest: { g: ['#407838', '#488838', '#509038', '#60a040'], edge: '#36682e', path: 'dirt', tuft: '#34602a', tuft2: '#78b848' },
+  meadow: { g: ['#4a8238', '#549440', '#62a448', '#70b452'], edge: '#3e702e', path: 'dirt', tuft: '#3c6e2a', tuft2: '#86c454' },
   swamp: { g: ['#4a6a4a', '#567a50', '#628858', '#507048'], edge: '#3e5a3e', path: 'dirt', tuft: '#3a5a3a', tuft2: '#8ab070' },
   snow: { g: ['#e2ecf6', '#eaf2fa', '#dae6f2', '#f2f7fc'], edge: '#c4d6e8', path: 'dirt', tuft: '#b4c8de', tuft2: '#ffffff', ice: 1 },
   cave: { g: ['#2c2834', '#332e3c', '#28242e', '#38323f'], path: 'cave' },
@@ -5242,7 +5253,11 @@ function genGround(M, rect) {
     if (sd(X, Y) < 3 || near(X, Y)) continue;
     const r = hash(n, 3, 21), forest = M.ground === 'forest';
     if (r < (M.flowers ? .55 : .78)) { px(x, GP.tuft, X, Y); px(x, GP.tuft, X - 1, Y - 1); px(x, GP.tuft, X + 1, Y - 1); px(x, GP.tuft2, X, Y - 2); }
-    else if (r < .97 || forest) { const fl = GP.ice ? ['#ffffff', '#cfe6fa', '#b4d4f0'][Math.floor(hash(n, 4, 21) * 3)] : ['#ffffff', '#ffd84a', '#ff8ac0', '#b48aea', '#ff6a5a'][Math.floor(hash(n, 4, 21) * 5)]; px(x, fl, X, Y - 1); px(x, fl, X - 1, Y); px(x, fl, X + 1, Y); px(x, fl, X, Y + 1); px(x, GP.ice ? '#ffffff' : '#ffe27a', X, Y); }
+    else if (r < .97 || forest) {
+      const fl = GP.ice ? ['#ffffff', '#cfe6fa', '#b4d4f0'][Math.floor(hash(n, 4, 21) * 3)] :
+        ['#ffffff', '#fff2b8', '#ffccd8', '#d0c4f8', '#ffd4a0'][Math.floor(hash(n, 4, 21) * 5)];
+      px(x, fl, X, Y - 1); px(x, fl, X - 1, Y); px(x, fl, X + 1, Y); px(x, fl, X, Y + 1); px(x, GP.ice ? '#ffffff' : '#ffea88', X, Y);
+    }
     else { ellF(x, '#d6d0c4', X, Y, 2.5, 1.6); px(x, '#f0ece2', X - 1, Y - 1); }
   }
   for (const [gx, gy, gw, gh, t] of (M.gardens || [])) {
@@ -5404,6 +5419,8 @@ MAPS.village = {
     ['bushP2', 198, 242], ['bushW', 316, 240], ['bushG1', 700, 242], ['bushP', 832, 244], ['bushG2', 990, 430],
     ['bushP2', 588, 340], ['bushG2', 438, 342], ['bushW', 610, 454], ['bushG1', 160, 436], ['bushP', 862, 436],
     ['forge', 964, 560], ['bellows', 942, 564], ['anvil', 916, 556],
+    ['barrel', 900, 540], ['crate', 960, 510], ['log', 970, 600],
+    ['hay', 310, 560], ['hay', 670, 280], ['barrel', 804, 238], ['pot', 780, 225],
     ['bushG2', 62, 424], ['bushG1', 652, 624], ['bushW', 382, 628], ['bushP2', 558, 634], ['bushP', 462, 634],
     ['pot', 186, 238], ['pot', 308, 228], ['planter', 712, 234], ['pot', 838, 238], ['mailbox', 924, 240], ['planter', 200, 566],
     ['lamp', 470, 556], ['lamp', 556, 556], ['lamp', 404, 290], ['lamp', 620, 290],
@@ -5760,6 +5777,8 @@ MAPS.lake = {
     ['houseC', 1120, 300], ['barrel', 1180, 300], ['crate', 1060, 300], ['fence', 1150, 340], ['fence', 1168, 340],
     ['stele', 1010, 452, { text: 'Prasasti Danau Cermin:\n"Cahaya lahir di utara, tumbuh di selatan, lalu pulang di barat. Hanya cahaya yang pulang yang boleh menyeberang."' }],
     ['sign', 880, 200, { text: 'Jalan ke KOTA LUMINA (utara)\nPerbaikan longsor oleh Dewan Kota.', lore: 'kota_lumina' }],
+    ['verdant_cliff_corner', 1260, 100], ['verdant_cliff_straight', 1150, 100],
+    ['verdant_rock_large', 1220, 190], ['verdant_bush', 1120, 180], ['verdant_tree', 1300, 160],
     ['log', 900, 130]],
   walls: [[0, 0, 780, 40], [860, 0, 540, 40], [0, 0, 40, 1000], [0, 960, 1400, 40], [1360, 0, 40, 470], [1360, 530, 40, 470]],
   border: { top: 40, bottom: 960, left: 40, right: 1360, gapR: [470, 530], gapT: [780, 860], types: ['treeA', 'treeB', 'pine'] },
@@ -5771,7 +5790,7 @@ MAPS.lake = {
   boat: [902, 512],
   feedSpots: [[890, 520]],
   enemies: [['frog', 300, 260], ['frog', 820, 760], ['wisp', 240, 800], ['wisp', 900, 220], ['slimep', 1200, 760], ['frog', 1180, 840], ['wisp', 360, 840]],
-  trees: { n: 760, min: 30, types: [['treeA', .4], ['treeB', .3], ['bushG1', .15], ['rock', .15]] },
+  trees: { n: 760, min: 30, types: [['verdant_tree', .35], ['treeA', .25], ['verdant_bush', .15], ['verdant_rock_large', .1], ['rock', .15]] },
 };
 
 'use strict';
@@ -21715,7 +21734,10 @@ const GPT_SWAP = [
   "i_treeA", "treeAd", "treeSn", "round", "pine", "pined", "i_treeWoodsPine", "i_apple1", "i_orange1",
   "i_bushG1", "i_bushG2", "i_bushP", "i_bushW", "i_bushP2", "bush", "bushy", "bushv", "rock",
   "i_rockWoods", "stump", "log", "hay", "i_cart", "crate", "barrel", "fence", "sign", "lamp",
-  "mush", "stele", "i_houseA", "i_houseB", "i_houseC", "i_market", "windmill"
+  "mush", "stele", "i_houseA", "i_houseB", "i_houseC", "i_market", "windmill",
+  "verdant_tree", "verdant_rock_large", "verdant_rock_med", "verdant_rock_pillar",
+  "verdant_bush", "verdant_bush_small", "verdant_stump", "verdant_log",
+  "verdant_cliff_corner", "verdant_cliff_straight", "verdant_cliff_slope"
 ];
 const GPT_LOOK = {
   "domba": "g094", "ayam": "g090", "chick_master": "g023", "child": "g055", "rudi": "g074",

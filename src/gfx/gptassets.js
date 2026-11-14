@@ -5,7 +5,10 @@ const GPT_SWAP = [
   "i_treeA", "treeAd", "treeSn", "round", "pine", "pined", "i_treeWoodsPine", "i_apple1", "i_orange1",
   "i_bushG1", "i_bushG2", "i_bushP", "i_bushW", "i_bushP2", "bush", "bushy", "bushv", "rock",
   "i_rockWoods", "stump", "log", "hay", "i_cart", "crate", "barrel", "fence", "sign", "lamp",
-  "mush", "stele", "i_houseA", "i_houseB", "i_houseC", "i_market", "windmill"
+  "mush", "stele", "i_houseA", "i_houseB", "i_houseC", "i_market", "windmill",
+  "verdant_tree", "verdant_rock_large", "verdant_rock_med", "verdant_rock_pillar",
+  "verdant_bush", "verdant_bush_small", "verdant_stump", "verdant_log",
+  "verdant_cliff_corner", "verdant_cliff_straight", "verdant_cliff_slope"
 ];
 const GPT_LOOK = {
   "domba": "g094", "ayam": "g090", "chick_master": "g023", "child": "g055", "rudi": "g074",
