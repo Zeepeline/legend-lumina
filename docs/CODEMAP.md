@@ -99,7 +99,7 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _Peta: Desa Lumina_
 
 
-## src/world/maps/forest.js (79 baris)
+## src/world/maps/forest.js (85 baris)
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 

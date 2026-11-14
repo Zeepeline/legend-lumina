@@ -2149,7 +2149,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); alat cek air: menyentuh tepi bawah di global x ≈ 2932.
 
-### [ ] T341. **Anak Sungai Cermin di Hutan Lumina** — referensi: GEOGRAFI §3
+### [x] T341. **Anak Sungai Cermin di Hutan Lumina** — referensi: GEOGRAFI §3
 - File: `src/world/maps/forest.js` (`ponds`; JANGAN ubah `river` yang sudah ada). Baca dulu: `docs/GEOGRAFI.md` §3; `WORLD_POS.forest` = [2872, 4112]; sungai hutan `river: { y: 600 … }`.
 - Lakukan: aliran dari tepi ATAS di x lokal ≈ 60 (global 2932) turun dan bergabung dengan sungai hutan di y lokal ≈ 600. Pastikan sungai hutan menyentuh tepi kanan (x lokal 1280).
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
