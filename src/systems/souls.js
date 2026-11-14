@@ -5,7 +5,13 @@
 // - kalah: separuh emas tertinggal sebagai "Jejak Cahaya" di tempat jatuh; ambil kembali sebelum kalah lagi (S.lost)
 // Kesulitan Santai (OPT.diff 0) memotong biaya stamina separuh.
 const SOUL = { atk: { sword: 12, spear: 14, axe: 20, bow: 8 }, roll: 22, regenDelay: .7, flaskHeal: .45, flaskT: .55, lostR: 18 };
-function flaskOf() { if (!S.flask) S.flask = { n: 3, max: 3 }; return S.flask; }
+function flaskOf() {
+  const maxF = (typeof OPT !== 'undefined' && OPT.diff === 2) ? 2 : 3;
+  if (!S.flask) S.flask = { n: maxF, max: maxF };
+  else S.flask.max = maxF;
+  if (S.flask.n > S.flask.max) S.flask.n = S.flask.max;
+  return S.flask;
+}
 function soulCost(n) { return OPT.diff === 0 ? Math.round(n / 2) : n; }
 function refillFlask(sc) {
   const F = flaskOf(); if (F.n >= F.max) return;

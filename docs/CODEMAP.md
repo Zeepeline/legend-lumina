@@ -203,7 +203,7 @@ _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipak
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
 `ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 212 · `.ripple()` 213 · `artQuestArrow()` 216 · `.updQuestGuide()` 223
 
-## src/systems/status.js (89 baris)
+## src/systems/status.js (93 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
 `STATUS` 5 · `.inflict()` 12 · `.cure()` 21 · `.speedMul()` 22 · `.updStatus()` 27 · `.enemyStatus()` 58 · `.burnEnemy()` 74 · `.freezeEnemy()` 75 · `updStatusHud()` 78
 
@@ -399,9 +399,9 @@ _MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALI
 _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat Arka berada, teleport tanpa memuat ulang._
 `KEMBARA_POS` 20 · `.initBenua()` 25 · `.withRegion()` 39 · `.spawnRegionFx()` 44 · `.streamObjs()` 69 · `.benuaAmbient()` 88 · `.benuaWeather()` 98 · `.updBenua()` 104
 
-## src/systems/souls.js (116 baris)
+## src/systems/souls.js (122 baris)
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
-`SOUL` 7 · `flaskOf()` 8 · `soulCost()` 9 · `refillFlask()` 10 · `.updLost()` 84 · `soulHudOn` 105 · `soulHudWrap()` 106 · `.updHud()` 114
+`SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 120
 
 ## src/systems/combat_fx.js (202 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._

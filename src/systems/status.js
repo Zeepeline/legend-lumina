@@ -76,13 +76,17 @@ Object.assign(World.prototype, {
 });
 // Ikon status di HUD (sebelah jam)
 function updStatusHud(sc) {
-  let el = $('hSt'); const h2 = $('hud2'); if (!h2) return;
-  if (!el) { el = document.createElement('span'); el.id = 'hSt'; h2.appendChild(el); }
-  const ks = Object.keys(sc.pst).filter(k => sc.pst[k] > 0);
+  let el = $('hSt');
+  if (!el) {
+    const bars = document.querySelector('#hud .bars');
+    if (!bars) return;
+    el = document.createElement('div'); el.id = 'hSt'; bars.appendChild(el);
+  }
+  const ks = Object.keys(sc.pst || {}).filter(k => sc.pst[k] > 0);
   const bs = Object.keys(S.buff || {}).filter(k => S.buff[k] > 0);
   const items = [
-    ...ks.map(k => `<span class="stic">${STATUS[k].ic}<small>${Math.ceil(sc.pst[k])}</small></span>`),
-    ...bs.map(k => `<span class="stic">${BUFF[k].ic}<small>${Math.ceil(S.buff[k])}</small></span>`)
+    ...ks.map(k => `<span class="stic debuff">${STATUS[k]?.ic || '⚡'}<small>${Math.ceil(sc.pst[k])}s</small></span>`),
+    ...bs.map(k => `<span class="stic buff">${BUFF[k]?.ic || '✨'}<small>${Math.ceil(S.buff[k])}s</small></span>`)
   ];
-  el.innerHTML = items.join(''); el.style.display = items.length ? '' : 'none';
+  el.innerHTML = items.join(''); el.style.display = items.length ? 'flex' : 'none';
 }

@@ -39,9 +39,9 @@ Object.assign(World.prototype, {
       }
     }
     e.t -= dt; e.cd -= dt;
-    const rel = (typeof OPT !== 'undefined' && OPT.diff === 0);
+    const rel = (typeof OPT !== 'undefined' && OPT.diff === 0), hard = (typeof OPT !== 'undefined' && OPT.diff === 2);
     const lowHp = !rel && typeof S !== 'undefined' && typeof stat === 'function' && S.hp < stat().maxhp * 0.3 && d < 120;
-    const wMul = rel ? 1.3 : 1, cdMul = (rel ? 1.2 : 1) * (lowHp ? 0.8 : 1);
+    const wMul = rel ? 1.3 : 1, cdMul = (rel ? 1.2 : hard ? 0.85 : 1) * (lowHp ? 0.8 : 1);
     if (this.atkTok && this.atkTok.has(e)) { e.tokT = (e.tokT || 0) + dt; if (e.tokT > 2.2) { this.atkTok.delete(e); e.tokT = 0; } }
     // Insting binatang kabur saat sekarat (#T279)
     if ((e.type === 'wolf' || e.type === 'boar') && !e.fleeChecked && e.hp < e.max * 0.2) {

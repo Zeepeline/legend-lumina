@@ -59,9 +59,11 @@ body{font-family:'Pixelify Sans','Courier New',monospace;color:#3b2618}
 #hud2{position:absolute;right:4px;top:4px;display:flex;gap:6px;align-items:center;background:rgba(30,20,12,.62);border:1px solid rgba(255,230,180,.35);border-radius:4px;padding:2px 6px;color:#fff;font-size:10px;transition:opacity .3s;z-index:2}
 #hud2 img{width:10px;height:10px;image-rendering:pixelated;vertical-align:-1px;margin-right:2px}
 #hud2 .pt img{width:9px;height:11px}
-#hSt{display:inline-flex;gap:3px;align-items:center}
-#hSt .stic{display:inline-flex;align-items:baseline;font-size:10px}
-#hSt .stic small{font-size:7.5px;color:#ffd84a;margin-left:1px;font-weight:700}
+#hSt{display:flex;gap:3px;align-items:center;margin-top:2px}
+#hSt .stic{display:inline-flex;align-items:center;font-size:8px;padding:1px 3px;border-radius:2px;background:rgba(20,15,10,.85)}
+#hSt .stic.buff{border:1px solid #4ade80}
+#hSt .stic.debuff{border:1px solid #ef4444}
+#hSt .stic small{font-size:7px;color:#fff;margin-left:2px;font-weight:700}
 #boss{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:180px;text-align:center;color:#fff;font-size:9px;text-shadow:1px 1px 0 #000;display:none;z-index:3}
 #boss .bar{width:180px;height:8px;margin-top:1px}
 #boss .bar>i{background:linear-gradient(#ff9a8a,#c8282a)}
@@ -6043,7 +6045,7 @@ let HUD = null;
 function buildHud(icons) {
   HUD = document.createElement('div');
   HUD.innerHTML = `<div id="hud"><div class="lv">LV<b id="hLv">1</b></div><div class="bars">
-   <div class="bar hp" id="hHp"><i class="ghost"></i><i class="fill"></i><span></span></div><div class="bar mp" id="hMp"><i></i><span></span></div><div class="bar sta" id="hSta" style="height:4px"><i></i></div><div class="bar xp" id="hXp"><i></i></div></div></div>
+   <div class="bar hp" id="hHp"><i class="ghost"></i><i class="fill"></i><span></span></div><div class="bar mp" id="hMp"><i></i><span></span></div><div class="bar sta" id="hSta" style="height:4px"><i></i></div><div class="bar xp" id="hXp"><i></i></div><div id="hSt"></div></div></div>
    <div id="hDate"></div><div id="hud2"><span id="hClock">☀</span><span id="hCompass" style="font-size:9px;color:#ffe27a;margin:0 2px;">🧭 U</span><span><img src="${icons.coin}"><b id="hGold">0</b></span><span class="pt"><img src="${icons.potion}"><b id="hPot">0</b></span></div>
    <div id="fps-meter" style="display:${OPT.fps ? 'block' : 'none'};position:absolute;top:28px;left:4px;font-size:9px;color:#a0f080;background:rgba(0,0,0,0.55);padding:2px 5px;border-radius:3px;z-index:9000;pointer-events:none;font-family:monospace;">60 FPS</div>
    <div id="quest"></div><div id="boss"><span id="bName"></span><div class="bar"><i id="bHp"></i></div></div>`;
@@ -8255,15 +8257,19 @@ Object.assign(World.prototype, {
 });
 // Ikon status di HUD (sebelah jam)
 function updStatusHud(sc) {
-  let el = $('hSt'); const h2 = $('hud2'); if (!h2) return;
-  if (!el) { el = document.createElement('span'); el.id = 'hSt'; h2.appendChild(el); }
-  const ks = Object.keys(sc.pst).filter(k => sc.pst[k] > 0);
+  let el = $('hSt');
+  if (!el) {
+    const bars = document.querySelector('#hud .bars');
+    if (!bars) return;
+    el = document.createElement('div'); el.id = 'hSt'; bars.appendChild(el);
+  }
+  const ks = Object.keys(sc.pst || {}).filter(k => sc.pst[k] > 0);
   const bs = Object.keys(S.buff || {}).filter(k => S.buff[k] > 0);
   const items = [
-    ...ks.map(k => `<span class="stic">${STATUS[k].ic}<small>${Math.ceil(sc.pst[k])}</small></span>`),
-    ...bs.map(k => `<span class="stic">${BUFF[k].ic}<small>${Math.ceil(S.buff[k])}</small></span>`)
+    ...ks.map(k => `<span class="stic debuff">${STATUS[k]?.ic || '⚡'}<small>${Math.ceil(sc.pst[k])}s</small></span>`),
+    ...bs.map(k => `<span class="stic buff">${BUFF[k]?.ic || '✨'}<small>${Math.ceil(S.buff[k])}s</small></span>`)
   ];
-  el.innerHTML = items.join(''); el.style.display = items.length ? '' : 'none';
+  el.innerHTML = items.join(''); el.style.display = items.length ? 'flex' : 'none';
 }
 
 'use strict';
@@ -8672,9 +8678,9 @@ Object.assign(World.prototype, {
       }
     }
     e.t -= dt; e.cd -= dt;
-    const rel = (typeof OPT !== 'undefined' && OPT.diff === 0);
+    const rel = (typeof OPT !== 'undefined' && OPT.diff === 0), hard = (typeof OPT !== 'undefined' && OPT.diff === 2);
     const lowHp = !rel && typeof S !== 'undefined' && typeof stat === 'function' && S.hp < stat().maxhp * 0.3 && d < 120;
-    const wMul = rel ? 1.3 : 1, cdMul = (rel ? 1.2 : 1) * (lowHp ? 0.8 : 1);
+    const wMul = rel ? 1.3 : 1, cdMul = (rel ? 1.2 : hard ? 0.85 : 1) * (lowHp ? 0.8 : 1);
     if (this.atkTok && this.atkTok.has(e)) { e.tokT = (e.tokT || 0) + dt; if (e.tokT > 2.2) { this.atkTok.delete(e); e.tokT = 0; } }
     // Insting binatang kabur saat sekarat (#T279)
     if ((e.type === 'wolf' || e.type === 'boar') && !e.fleeChecked && e.hp < e.max * 0.2) {
@@ -18316,7 +18322,13 @@ for (const k of ['updMinimap', 'updFog']) {
 // - kalah: separuh emas tertinggal sebagai "Jejak Cahaya" di tempat jatuh; ambil kembali sebelum kalah lagi (S.lost)
 // Kesulitan Santai (OPT.diff 0) memotong biaya stamina separuh.
 const SOUL = { atk: { sword: 12, spear: 14, axe: 20, bow: 8 }, roll: 22, regenDelay: .7, flaskHeal: .45, flaskT: .55, lostR: 18 };
-function flaskOf() { if (!S.flask) S.flask = { n: 3, max: 3 }; return S.flask; }
+function flaskOf() {
+  const maxF = (typeof OPT !== 'undefined' && OPT.diff === 2) ? 2 : 3;
+  if (!S.flask) S.flask = { n: maxF, max: maxF };
+  else S.flask.max = maxF;
+  if (S.flask.n > S.flask.max) S.flask.n = S.flask.max;
+  return S.flask;
+}
 function soulCost(n) { return OPT.diff === 0 ? Math.round(n / 2) : n; }
 function refillFlask(sc) {
   const F = flaskOf(); if (F.n >= F.max) return;

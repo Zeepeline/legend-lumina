@@ -2069,7 +2069,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; minum Botol Cahaya → satu titik meredup.
 
-### [ ] T330. **Baris ikon buff & debuff** — referensi: Diablo, World of Warcraft
+### [x] T330. **Baris ikon buff & debuff** — referensi: Diablo, World of Warcraft
 - File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `updStatusHud()` (status.js) & `S.buff` (state.js, BACA).
 - Lakukan: satukan ikon status negatif (racun/terbakar/dingin) dan bonus masakan (`S.buff`) dalam satu baris kecil di bawah bar vital: buff berbingkai hijau, debuff merah, dengan sisa detik.
 - Jika SUDAH ada → tandai [x] "sudah ada".
