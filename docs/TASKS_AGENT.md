@@ -2113,7 +2113,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Cek: `npm run check` (0 masalah); `MAPS.pl_*.ponds` didukung dan scatter pohon menghindarinya. (selesai di v1.30.1)
 - Cek: `npm run check` (0 masalah); konsol `MAPS.pl_meadow_snow.ponds` berisi data yang ditambahkan tugas berikut.
 
-### [ ] T335. **Sungai Senja 2: lereng Puncak Beku → Padang** — referensi: GEOGRAFI §3
+### [x] T335. **Sungai Senja 2: lereng Puncak Beku → Padang** — referensi: GEOGRAFI §3
 - File: `src/world/layout.js` entri `pl_meadow_snow` (field `ponds` dari tugas sebelumnya). Baca dulu: `docs/GEOGRAFI.md` §3; hitung x lokal = 5150 − x global kiri peta peralihan.
 - Lakukan: rangkaian elips lurus berkelok tipis dari tepi atas ke tepi bawah di x global ≈ 5150, menyambung dengan ujung sungai `snow` & awal sungai `meadow` (selisih ≤ 20 px). Satu arungan di jalan L peralihan.
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar

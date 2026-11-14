@@ -14,7 +14,10 @@ const WORLD_POS = {
 // [wilayah A, wilayah B, jenis tanah, nama] — dihubungkan lewat medan peralihan
 const PERALIHAN = [
   ['village', 'meadow', 'meadow', 'Jalan Desa–Padang'], ['village', 'forest', 'meadow', 'Tepi Hutan Lumina'],
-  ['meadow', 'snow', 'meadow', 'Lereng Puncak Beku'], ['meadow', 'swamp', 'meadow', 'Dataran Senja'],
+  ['meadow', 'snow', 'meadow', 'Lereng Puncak Beku', [
+    [736, 0, 28, 28], [734, 40, 28, 28], [732, 80, 30, 30], [730, 120, 30, 30], [728, 160, 32, 32],
+    [728, 240, 32, 32], [726, 280, 34, 34], [726, 320, 34, 34], [726, 360, 34, 34], [726, 400, 34, 34],
+  ]], ['meadow', 'swamp', 'meadow', 'Dataran Senja'],
   ['forest', 'deepwood', 'forest', 'Rimba Peralihan'], ['forest', 'river', 'forest', 'Hulu Sungai Senja'], ['river', 'swamp', 'swamp', 'Muara Rawa'],
 ];
 const SIDE_OF = (M, e) => e.x < 20 ? 'W' : e.x + e.w > M.w - 20 ? 'E' : e.y < 20 ? 'N' : e.y + e.h > M.h - 20 ? 'S' : null;
