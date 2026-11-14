@@ -8,10 +8,12 @@ const STATUS = {
   chill: { n: 'Dingin', ic: '❄', tint: 0xb0e0ff, every: 0, slow: .55, c: 'mpc' },
 };
 Object.assign(World.prototype, {
-  // Beri status ke pemain. fx = [jenis, detik, peluang]
+  // Beri status ke pemain. fx = [jenis, detik, peluang] atau string jenis
   inflict(fx) {
-    if (!fx || this.pl.dead) return; const [k, sec, ch = 1] = fx;
-    if (Math.random() > ch) return;
+    if (!fx || this.pl.dead) return;
+    if (typeof fx === 'string') fx = [fx, 3, 1];
+    const [k, sec = 3, ch = 1] = fx;
+    if (!STATUS[k] || Math.random() > ch) return;
     if (k === 'poison' && S.eq.acc === 'amulet') return; // Jimat Daun kebal racun
     if (k === 'chill' && buffOn('warm')) return; // Sup Jahe: kebal dingin
     const fresh = !(this.pst[k] > 0); this.pst[k] = Math.max(this.pst[k] || 0, sec);

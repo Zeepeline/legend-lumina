@@ -25,7 +25,7 @@ Object.assign(World.prototype, {
     const afAtk = e.D.atk || 5, afDef = Math.round((e.D.def || 0) * 1.25), afSpd = e.D.spd || 50;
     const newDef = e.affix === 'tough' ? Math.round(afDef * 1.5) + 2 : afDef;
     const newSpd = e.affix === 'fast' ? Math.round(afSpd * 1.3) : afSpd;
-    const newFx = e.affix === 'fire' ? 'burn' : e.D.fx;
+    const newFx = e.affix === 'fire' ? ['burn', 3, 0.8] : e.D.fx;
     e.D = Object.assign({}, e.D, {
       atk: Math.round(afAtk * 1.3), def: newDef, spd: newSpd, fx: newFx,
       exp: (e.D.exp || 10) * 3, gold: (e.D.gold || [1, 2]).map(g => g * 3),
