@@ -1114,10 +1114,15 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - Ingat: `ITEMS`, `MAPS`, `ENEMY` adalah const global (tulis `ITEMS`, BUKAN `window.ITEMS`).
 - Cek: `npx playwright test tests/data_ach_unique.spec.js` lulus.
 
-### [ ] T208. **Periksa 4 peringatan `check-layout`**
+### [x] T208. **Periksa 4 peringatan `check-layout`**
 - Jalankan `node tools/check-layout.js` dan lihat 4 peringatan (cari opsi verbose di `tools/check-layout.js` bila ringkas).
 - Untuk tiap peringatan: jika objek benar-benar salah tempat menurut `docs/PLACEMENT_RULES.md` → geser koordinatnya di file `src/world/maps/*.js` yang disebut (BUKAN layout.js). Jika memang disengaja → tulis catatan di bawah tugas ini.
-- Cek: `npm run check` (0 masalah).
+- Catatan audit layout:
+  1. `forest`: jamur digeser dari (450, 700) ke (370, 710) agar keluar dari jalur setapak jalan hutan (selesai).
+  2. `deepwood`: jamur digeser dari (900, 1300) ke (885, 1300) agar keluar dari simpul jalan setapak (selesai).
+  3. `village`: NPC ayam di (380, 570) sengaja berada di dalam pagar kandang desa (bagian dari lore/minigame lomba ayam Kiki).
+  4. `kakademi`: shrine di (700, 600) sengaja didesain sebagai monumen pusat bundaran plaza akademisi kota.
+- Cek: `npm run check` (0 masalah). (selesai di v1.30.1)
 ### [x] T209. **Pencapaian baru `fish100` — Raja Pemancing**
 - Dulu cek duplikat: `grep -n "fish100\|S.st.fish" src/data/quests.js`. Jika syarat sama sudah ada → tandai [x] "duplikat", selesai.
 - File: `src/data/quests.js`, larik `const ACH = [`. Tambah di AKHIR larik: `{ id: 'fish100', n: 'Raja Pemancing', d: 'Tangkap 100 ikan', ok: () => S.st.fish >= 100, gift: ['gold', 400] },`

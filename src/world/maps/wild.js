@@ -24,7 +24,7 @@ MAPS.deepwood = {
     ['bramble', 1720, 1450],
     ['hay', 1560, 1400], ['crate', 1640, 1390], ['barrel', 1660, 1400], ['log', 1600, 1460], ['sign', 1680, 1450, { text: 'DILARANG MASUK\nPerburuan lumut lumen. — Kelompok Sambo' }],
     // jamur & lumut bercahaya
-    ...[[900, 1300], [940, 1330], [870, 1340], [1200, 1100], [1230, 1130], [700, 1500], [1800, 1100], [1830, 1120], [400, 700], [2200, 1200]].map(([x, y]) => ['mush', x, y]),
+    ...[[885, 1300], [940, 1330], [870, 1340], [1200, 1100], [1230, 1130], [700, 1500], [1800, 1100], [1830, 1120], [400, 700], [2200, 1200]].map(([x, y]) => ['mush', x, y]),
     ['sign', 2300, 690, { text: 'HUTAN DALAM\nJangan tinggalkan jalan setapak. Lumut bercahaya menunjukkan arah pulang.' }]],
   walls: [[0, 0, 2400, 30], [0, 0, 40, 1800], [2360, 0, 40, 700], [2360, 760, 40, 1040], [0, 1770, 2400, 30]],
   exits: [{ x: 2388, y: 700, w: 12, h: 60, to: 'forest', tx: 60, ty: 730, dir: 'right', label: 'Hutan Lumina' }],
