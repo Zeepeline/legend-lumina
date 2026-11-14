@@ -171,9 +171,9 @@ _Jurnal: catatan lore (LORE), misteri jangka panjang (MYSTERY), penyelidikan jan
 _Jam & siang-malam_
 `nightAmt()` 4 · `isNight()` 11 · `gameHours()` 12 · `lerpCol()` 13 · `_clk` 17 · `updClock()` 18
 
-## src/systems/achievements.js (12 baris)
-_Cek pencapaian_
-`totalKills()` 3 · `achCheck()` 4
+## src/systems/achievements.js (70 baris)
+_Cek pencapaian & kabar progres 50% / 90% (T265)_
+`totalKills()` 3 · `toastAch()` 5 · `achProgCheck()` 15 · `achCheck()` 61
 
 ## src/gfx/bake.js (48 baris)
 _Panggang bayangan objek ke tekstur tanah_

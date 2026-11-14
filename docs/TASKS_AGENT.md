@@ -1619,12 +1619,12 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; konsol berikan EXP sampai naik level → rincian jelas.
 
-### [ ] T265. **Pencapaian: kabar progres 50% & 90%**
+### [x] T265. **Pencapaian: kabar progres 50% & 90%**
 - File: `src/systems/achievements.js`. Baca dulu: `achCheck()` (±4–11) & `ACH` di `src/data/quests.js` (BACA saja).
 - Lakukan: untuk pencapaian yang syaratnya counter `S.st.x >= N`, tampilkan toast kecil satu kali saat progres melewati 50% dan 90%. Catat yang sudah diumumkan di `localStorage.lumina_achprog` (JSON).
 - Batasan: jangan menambah field ke S.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
-- Cek: `npm run check`; konsol `S.st.fish = 26; achCheck()` → toast "Kail Emas 50%" sekali.
+- Cek: `npm run check`; konsol `S.st.fish = 26; achCheck()` → toast "Kail Emas 50%" sekali. (selesai di v1.30.1)
 
 ### [x] T266. **Sapaan NPC tidak berulang**
 - Selesai: `o.lastBarkIdx` disimpan pada objek NPC dan pengacakan kalimat berikutnya selalu mengecualikan indeks sebelumnya.
