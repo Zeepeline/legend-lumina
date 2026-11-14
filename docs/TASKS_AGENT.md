@@ -1547,7 +1547,8 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; mancing di danau → zona jelas terlihat.
 
-### [ ] T254. **Buku Ikan: petunjuk ikan yang belum tertangkap**
+### [x] T254. **Buku Ikan: petunjuk ikan yang belum tertangkap**
+- Selesai: ikan yang belum tertangkap menampilkan "???" / "★ ???" dan petunjuk samar wilayah/jam/cuaca tanpa membocorkan nama asli ikan.
 - File: `src/systems/fishing.js`. Baca dulu: `openFishLogNew()` (±94–107) & `FISH` (±21).
 - Lakukan: untuk ikan belum tertangkap tampilkan "???" + petunjuk samar dari datanya: wilayah & rentang jam (mis. "Danau, malam"). Ikan legendaris: hanya wilayah.
 - Batasan: jangan bocorkan nama ikan.

@@ -16072,6 +16072,22 @@ World.prototype.fish = async function (f) {
     achCheck(this);
   } finally { this.fishing = false; G.lock--; }
 };
+function fishClue(F) {
+  if (F.id === 'oldboot') return 'Benda tak terduga di dasar air';
+  const placeNames = { forest: 'Hutan Lumina', river: 'Sungai Senja', swamp: 'Rawa Senja', meadow: 'Padang Angin', deepwood: 'Hutan Dalam' };
+  let loc = F.w && F.w.length ? F.w.map(k => placeNames[k] || k).join(' / ') : 'Perairan bebas';
+  if (F.leg) return `Habitat: ${loc} · Butuh umpan`;
+  let cond = 'Kapan saja';
+  if (F.wx === 'rain') cond = 'Saat hujan';
+  else if (F.t) {
+    const [s, e] = F.t;
+    if (s === 5 && e <= 11) cond = 'Pagi hari';
+    else if (s >= 15 && e <= 20) cond = 'Senja';
+    else if (s >= 19 || s === 0) cond = 'Malam hari';
+    else cond = `Jam ${s}–${e}`;
+  }
+  return `${loc} · ${cond}`;
+}
 // Buku Ikan baru: semua jenis, habitat, jumlah, rekor
 async function openFishLogNew() {
   S.fishLog = S.fishLog || {}; const cnt = id => { const e = S.fishLog[id]; return typeof e === 'object' && e ? e.count : +e || 0; };
@@ -16080,7 +16096,7 @@ async function openFishLogNew() {
     const c = cnt(F.id), e = S.fishLog[F.id];
     const st = 'display:block;text-align:center;padding:4px';
     return c ? `<div class="bc" style="${st}"><div class="fic">${icon(F.id)}</div><b>${ITEMS[F.id].n}${F.leg ? ' ★' : ''}</b><div class="fx">${c}× · rekor ${e && e.max ? e.max + ' cm' : '-'}</div><div class="fh">${F.h}</div></div>`
-      : `<div class="bc unk" style="${st}"><div class="fic">❔</div><b>${F.leg ? '★ ???' : '???'}</b><div class="fh">${F.h}</div></div>`;
+      : `<div class="bc unk" style="${st}"><div class="fic">❔</div><b>${F.leg ? '★ ???' : '???'}</b><div class="fh">${fishClue(F)}</div></div>`;
   }).join('') + `</div><div class="mf">Jam & cuaca menentukan ikan yang datang. Umpan memanggil ikan besar.</div>`);
   Object.assign(w.style, { left: '8px', right: '8px', top: '8px', bottom: '34px', overflow: 'auto' });
   await choose({ items: [{ t: 'Kembali' }], x: 110, bottom: 6 }); w.remove();
