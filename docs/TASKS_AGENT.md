@@ -2674,7 +2674,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); malam hari jalan utama terang; papan menunjukkan arah.
 
-### [ ] T351. **Gerbang Kota Lumina yang megah** — referensi: Skyrim (Whiterun), Zelda (Hyrule Castle Town)
+### [x] T351. **Gerbang Kota Lumina yang megah** — referensi: Skyrim (Whiterun), Zelda (Hyrule Castle Town)
 
 - File: `src/world/maps/city.js` peta `kgate`. Baca dulu: `objs`, `paths`, `npcs` peta itu.
 - Lakukan: jalan masuk lurus & lebar (radius 16) menuju gerbang, simetris kiri-kanan: tembok/pagar, 2 pos penjaga, lampu berpasangan. Penjaga yang sudah ada diletakkan di pos.
