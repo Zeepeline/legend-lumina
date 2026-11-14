@@ -1998,11 +1998,11 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; rapal jurus apa pun → lingkar muncul. (selesai di v1.30.1)
 
-### [ ] T319. **Bola Api: inti menyala, ekor, ledakan** — referensi: Diablo II (Fire Ball), Hades
+### [x] T319. **Bola Api: inti menyala, ekor, ledakan** — referensi: Diablo II (Fire Ball), Hades
 - File: `src/systems/spell_fx.js`. Baca dulu: proyektil Bola Api (`JURUS.fire`; grep di learn.js/combat.js).
 - Lakukan: proyektil diberi inti terang (blend ADD) + jejak partikel oranye; saat kena: ledakan bundar 3 lapis (putih→kuning→oranye) & asap kecil.
 - Jika SUDAH ada → tandai [x] "sudah ada".
-- Cek: `npm run check`; rapal Bola Api ke slime → ledakan jelas.
+- Cek: `npm run check`; rapal Bola Api ke slime → ledakan jelas. (selesai di v1.30.1)
 
 ### [x] T320. **Nova Es: cincin kristal & serpihan** — referensi: Path of Exile (Frost Nova)
 - File: `src/systems/spell_fx.js`. Baca dulu: `nova()` di `src/systems/skills.js` (BACA).

@@ -139,6 +139,32 @@ Object.assign(World.prototype, {
     return r;
   };
 
+  W.fireballExplode = function (x, y) {
+    if (typeof sfxAt === 'function') sfxAt('boom', x, y, this);
+    if (this.puff) this.puff(x, y - 6);
+    const layers = [
+      { col: 0xffffff, r: 16, dur: 180 },
+      { col: 0xffea60, r: 32, dur: 240 },
+      { col: 0xff6a20, r: 48, dur: 300 }
+    ];
+    layers.forEach(l => {
+      const g = this.add.graphics().setDepth(y + 2);
+      const ro = { r: 6 };
+      this.tweens.add({
+        targets: ro, r: l.r, duration: l.dur, ease: 'Quad.easeOut',
+        onUpdate: () => {
+          g.clear();
+          g.fillStyle(l.col, 0.45 * (1 - ro.r / l.r));
+          g.lineStyle(2, l.col, 1 - ro.r / l.r);
+          g.fillCircle(x, y - 6, ro.r);
+          g.strokeCircle(x, y - 6, ro.r);
+        },
+        onComplete: () => g.destroy()
+      });
+    });
+    if (this.sparkle) this.sparkle(x, y - 6, 'doto', 12);
+  };
+
   // Lingkar rune saat merapal jurus (T318)
   const cast0 = W.castSpell;
   W.castSpell = function (id) {
@@ -153,6 +179,39 @@ Object.assign(World.prototype, {
     if (this.pl && S.spell && typeof JURUS !== 'undefined' && JURUS[S.spell] && S.mp >= (JURUS[S.spell].mp || 3)) {
       this.runeCircle(JURUS[S.spell].school, this.pl.x, this.pl.y - 2);
     }
-    return magic0.apply(this, arguments);
+    const r = magic0.apply(this, arguments);
+    // T319: Bola Api inti menyala (ADD blend) & jejak bara
+    if (this.shots && this.shots.length) {
+      const shot = this.shots[this.shots.length - 1];
+      if (shot && shot.kind === 'fire' && shot.s?.active) {
+        if (shot.s.setBlendMode) shot.s.setBlendMode(Phaser.BlendModes.ADD);
+        shot.isFireBall = true;
+      }
+    }
+    return r;
+  };
+
+  // T319: Jejak bara & ledakan 3 lapis saat mengenai target
+  const updShots0 = W.updShots;
+  W.updShots = function (dt, locked) {
+    if (this.shots) {
+      for (const p of this.shots) {
+        if (p.isFireBall && !p.dead && p.s?.active) {
+          p.trailT = (p.trailT || 0) + dt;
+          if (p.trailT >= 0.05) {
+            p.trailT = 0;
+            if (this.sparkle) this.sparkle(p.gx, p.gy - 8, 'doto', 2);
+          }
+        }
+      }
+    }
+    const fireShots = this.shots ? this.shots.filter(p => p.isFireBall) : [];
+    updShots0.apply(this, arguments);
+    for (const p of fireShots) {
+      if (p.dead && !p.exploded) {
+        p.exploded = true;
+        this.fireballExplode(p.gx, p.gy);
+      }
+    }
   };
 }

@@ -199,7 +199,7 @@ _pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali d
 _Jurus: dash, tebasan putar, nova es_
 `.updSkills()` 4 · `.spin()` 12 · `.dash()` 20 · `.nova()` 27
 
-## src/systems/spell_fx.js (159 baris)
+## src/systems/spell_fx.js (218 baris)
 _Efek visual sihir: lingkar rune, proyektil, ledakan, dan aura (T318-T322)_
 `RUNE_COL` 3 · `.runeCircle()` 11 · `.spellFx()` 32
 
