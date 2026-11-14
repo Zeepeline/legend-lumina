@@ -2090,6 +2090,186 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; jalan santai di desa → HUD redup; diserang → terang.
 
+## I. GELOMBANG 8 — GEOGRAFI: sungai, kota, bangunan, penanda (T332–T361)
+Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu sama lain). Hampir semua perubahan = DATA peta (`src/world/maps/*.js`), bukan kode. Uji di `?benua=1` & lihat dari Peta Benua. Satu-satunya pengecualian kunci: `src/world/layout.js` untuk field `ponds` peralihan.
+
+### [ ] T332. **Alat cek sambungan air antarwilayah** — referensi: GEOGRAFI §3 & §5
+- File: skrip SEMENTARA di `/tmp` (BUKAN di repo). Baca dulu: `docs/GEOGRAFI.md` §3, format `ponds` di `src/world/maps/wild.js` baris 43.
+- Lakukan: tulis skrip Node/Python yang membaca `ponds` & `river` tiap peta (boleh dengan menjalankan game via Playwright lalu `page.evaluate` membaca `MAPS` & `WORLD_POS`) dan mencetak, untuk tiap tepi wilayah, titik air yang menyentuh tepi dalam koordinat GLOBAL. Simpan perintahnya sebagai catatan di bawah tugas ini agar tugas sungai berikut bisa memakainya.
+- Cek: `npm run check` (0 masalah); hasil cetak menunjukkan sungai hutan menyentuh tepi kanan `forest` di y global ≈ 4712.
+
+### [ ] T333. **Sungai Senja 1: mata air di Puncak Beku** — referensi: BotW (sungai dari pegunungan), GEOGRAFI §3
+- File: `src/world/maps/snow.js` (field `ponds`). Baca dulu: `docs/GEOGRAFI.md` §3; posisi `WORLD_POS.snow` = [4500, 1000], ukuran 1280×1200.
+- Lakukan: tambah rangkaian elips dari mata air lokal (700, 150) [global 5200,1150] berkelok ke selatan sampai menyentuh tepi bawah di x lokal ≈ 650 (global 5150). Lebar awal kecil (rx/ry 22–28) lalu melebar (40). Beri 1 arungan di setiap jalan yang dipotong (celah 32–40 px + `pebbles`/`rock`). Mata air bisa ditandai `stele` bila sesuai.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); jalan dari mata air ke tepi selatan terlihat sebagai satu aliran utuh; jalur pemain tetap bisa lewat.
+
+### [ ] T334. **Peralihan bisa punya air (dukungan data)** — referensi: —
+- File: `src/world/layout.js` (PENGECUALIAN KUNCI hanya untuk tugas ini). Baca dulu: `PERALIHAN` & `buildPeralihan()`.
+- Lakukan: izinkan entri `PERALIHAN` memiliki field opsional `ponds` (koordinat lokal peta peralihan) yang disalin apa adanya ke `MAPS[pl_*].ponds` oleh `buildPeralihan`. Pohon tepi/hiasan otomatis jangan diletakkan di atas elips itu (lewati bila titik di dalam elips).
+- Batasan: jangan ubah posisi `WORLD_POS`.
+- Cek: `npm run check` (0 masalah); konsol `MAPS.pl_meadow_snow.ponds` berisi data yang ditambahkan tugas berikut.
+
+### [ ] T335. **Sungai Senja 2: lereng Puncak Beku → Padang** — referensi: GEOGRAFI §3
+- File: `src/world/layout.js` entri `pl_meadow_snow` (field `ponds` dari tugas sebelumnya). Baca dulu: `docs/GEOGRAFI.md` §3; hitung x lokal = 5150 − x global kiri peta peralihan.
+- Lakukan: rangkaian elips lurus berkelok tipis dari tepi atas ke tepi bawah di x global ≈ 5150, menyambung dengan ujung sungai `snow` & awal sungai `meadow` (selisih ≤ 20 px). Satu arungan di jalan L peralihan.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); alat cek air: tepi atas & bawah tersambung.
+
+### [ ] T336. **Sungai Senja 3: membelah Padang Angin** — referensi: BotW, Stardew (sungai membelah wilayah)
+- File: `src/world/maps/meadow.js` (`ponds`). Baca dulu: `docs/GEOGRAFI.md` §3; `WORLD_POS.meadow` = [4424, 2600], ukuran 1440×1040.
+- Lakukan: sungai masuk dari tepi atas di x lokal ≈ 726 (global 5150), berkelok ke tenggara menghindari Desa Kincir & bangunan, keluar tepi bawah di x lokal ≈ 1176 (global 5600). Arungan di setiap jalan. Lebar rx/ry 40–55.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); jalan utama padang tetap bisa dilalui lewat arungan; bangunan tidak terendam.
+
+### [ ] T337. **Sungai Senja 4: Dataran Senja (peralihan padang→rawa)** — referensi: GEOGRAFI §3
+- File: `src/world/layout.js` entri `pl_meadow_swamp` (`ponds`). Baca dulu: hasil tugas "Peralihan bisa punya air".
+- Lakukan: aliran dari tepi atas ke tepi bawah di x global ≈ 5600 (x lokal = 5600 − x kiri peta peralihan).
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); alat cek air: menyambung ke `meadow` & `river`.
+
+### [ ] T338. **Sungai Senja 5: alur utama Jalur Sungai Senja** — referensi: GEOGRAFI §3 (sungai bergabung, tidak bercabang)
+- File: `src/world/maps/wild.js` peta `river` (`ponds` baris ±43). Baca dulu: `docs/GEOGRAFI.md` §3; `WORLD_POS.river` = [4552, 4112], ukuran 2600×1000.
+- Lakukan: ganti elips lama yang terpisah-pisah dengan alur menyambung: masuk dari atas di x lokal ≈ 1048, turun ke (1048, 600), lalu berkelok ke TIMUR sampai tepi kanan di y lokal ≈ 600. Pertahankan arungan di dekat `brokenbridge` (1420, 560) & kincir (1800, 160). Pindahkan objek yang kini terendam ke tepi sungai terdekat.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; jangan hapus objek, hanya geser
+- Cek: `npm run check` (0 masalah); satu sungai utuh terlihat di peta besar wilayah ini.
+
+### [ ] T339. **Anak sungai bergabung di Jalur Sungai Senja** — referensi: GEOGRAFI §3 (anak sungai)
+- File: `src/world/maps/wild.js` peta `river`. Baca dulu: hasil tugas sebelumnya.
+- Lakukan: anak sungai lebih sempit (rx/ry 22–30) dari tepi KIRI di y lokal ≈ 600 (global 4712) mengalir ke timur dan bertemu alur utama di sekitar (1048, 600). Arungan di jalan yang dipotong.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); dua aliran bertemu jadi satu, tidak ada percabangan.
+
+### [ ] T340. **Anak Sungai Cermin: keluar dari Danau Cermin** — referensi: GEOGRAFI §3
+- File: `src/world/maps/lake.js` (`ponds`). Baca dulu: `docs/GEOGRAFI.md` §3; `WORLD_POS.lake` = [1600, 3090], danau = elips (560, 500, 330, 210).
+- Lakukan: aliran keluar dari sisi tenggara danau menuju tepi bawah di x lokal ≈ 1332 (global 2932). rx/ry 22–28. Arungan di jalan.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); alat cek air: menyentuh tepi bawah di global x ≈ 2932.
+
+### [ ] T341. **Anak Sungai Cermin di Hutan Lumina** — referensi: GEOGRAFI §3
+- File: `src/world/maps/forest.js` (`ponds`; JANGAN ubah `river` yang sudah ada). Baca dulu: `docs/GEOGRAFI.md` §3; `WORLD_POS.forest` = [2872, 4112]; sungai hutan `river: { y: 600 … }`.
+- Lakukan: aliran dari tepi ATAS di x lokal ≈ 60 (global 2932) turun dan bergabung dengan sungai hutan di y lokal ≈ 600. Pastikan sungai hutan menyentuh tepi kanan (x lokal 1280).
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); masuk hutan dari danau → ikuti aliran sampai sungai hutan.
+
+### [ ] T342. **Hulu Sungai Senja (peralihan hutan→sungai)** — referensi: GEOGRAFI §3
+- File: `src/world/layout.js` entri `pl_forest_river` (`ponds`). Baca dulu: hasil tugas "Peralihan bisa punya air".
+- Lakukan: aliran horizontal di y global ≈ 4712 dari tepi kiri ke kanan, menyambung sungai hutan & anak sungai di `river`. Arungan di jalan L.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); alat cek air: tersambung dua sisi.
+
+### [ ] T343. **Muara: Sungai Senja ke Rawa Senja + delta** — referensi: GEOGRAFI §3 (delta = satu-satunya percabangan)
+- File: `src/world/layout.js` entri `pl_river_swamp` + `src/world/maps/swamp.js` (`ponds`). Baca dulu: `docs/GEOGRAFI.md` §3; `WORLD_POS.swamp` = [7552, 4112].
+- Lakukan: peralihan: aliran di y global ≈ 4712. Rawa: masuk dari tepi kiri di y lokal ≈ 600 lalu MEMECAH menjadi 2–3 alur sempit yang berakhir di genangan rawa yang sudah ada.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); berjalan dari Jalur Sungai Senja ke rawa → sungai melebar jadi delta.
+
+### [ ] T344. **Titik memancing mengikuti sungai baru** — referensi: Stardew (spot mancing di tepi air)
+- File: `src/world/maps/*.js` field `fish` (snow, meadow, river, lake, forest, swamp). Baca dulu: format `fish` di peta yang sudah punya; `src/systems/fishing.js` `fishPool()` (BACA).
+- Lakukan: tambahkan 1–2 titik `fish` di tepi sungai baru per peta (di darat, menghadap air, ≤ 20 px dari tepi). Jangan ubah tabel `FISH`.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); berdiri di titik baru → bisa memancing.
+
+### [ ] T345. **Hiasan tepi air** — referensi: Stardew, Zelda
+- File: `src/world/maps/*.js` (objs) — peta yang dilalui sungai. Baca dulu: objek tepi air yang ada di `src/world/objects.js` (grep: reed, lily, cattail, pebbles, rock).
+- Lakukan: tambahkan rumpun hiasan tepi air yang sudah ada jenisnya (maks 8 per peta) di tepi sungai, terutama di tikungan & arungan.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; hanya objek yang sudah ada di OBJ
+- Cek: `npm run check` (0 masalah); sungai terlihat alami, tidak polos.
+
+### [ ] T346. **Audit tata letak Desa Lumina** — referensi: Stardew/Pokémon (desa), GEOGRAFI §1
+- File: `src/world/maps/village.js` (hanya membaca di tugas ini). Baca dulu: semua `objs` bangunan, `paths`, `npcs`.
+- Lakukan: tulis catatan di bawah tugas ini: daftar bangunan + arah pintu + jarak ke bangunan terdekat. Tandai: jarak < 40 px, pintu tidak terhubung jalan, jalan buntu tanpa tujuan.
+- Cek: `npm run check` (0 masalah); catatan berisi tabel; tidak ada perubahan kode.
+
+### [ ] T347. **Desa: alun-alun sebagai pusat** — referensi: Stardew (alun-alun Pelican Town), urban planning
+- File: `src/world/maps/village.js`. Baca dulu: catatan audit desa.
+- Lakukan: jadikan satu ruang terbuka di tengah (dekat rumah tetua) sebagai alun-alun: lantai `discs` (cakram tanah/batu yang sudah dipakai peta), sumur atau lampu di tengah, 2 bangku, papan (`sign`). Jalan-jalan desa bermuara ke sini.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; jangan memindah bangunan yang dipakai misi/NPC
+- Cek: `npm run check` (0 masalah); dari mana pun di desa, jalan mengarah ke alun-alun.
+
+### [ ] T348. **Desa: hierarki jalan** — referensi: Urban planning (jalan utama vs setapak)
+- File: `src/world/maps/village.js` (`paths`). Baca dulu: `docs/GEOGRAFI.md` §1 (radius jalan).
+- Lakukan: jalan masuk dari timur (ke padang) & selatan (ke hutan) radius 14; jalan kampung 10–12; setapak ke tiap pintu 8–9. Setiap pintu terhubung jalan; hapus setapak buntu yang tidak menuju apa-apa (atau beri tujuan: bangku/papan).
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); jalan utama tampak lebih lebar & jelas arahnya.
+
+### [ ] T349. **Desa: zona fungsi** — referensi: Stardew (kebun di pinggir, toko di pusat)
+- File: `src/world/maps/village.js`. Baca dulu: catatan audit.
+- Lakukan: pindahkan HANYA hiasan (pagar, tong, peti kayu, tumpukan jerami) agar: area kebun/kandang di pinggir berpagar, area pandai besi berisi tong & landasan dekat jalan masuk, penginapan berhias tong & lampu di jalan utama. Bangunan tidak dipindah.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); tiap area punya 'rasa' fungsinya.
+
+### [ ] T350. **Lampu & papan arah di jalan utama** — referensi: Zelda, Skyrim (papan penunjuk)
+- File: `src/world/maps/village.js`, `src/world/maps/city.js`. Baca dulu: objek `lamp`, `sign` (lihat opsi teks papan yang ada dengan grep `'sign'`).
+- Lakukan: lampu setiap ±160 px di sisi jalan utama (bukan di atas jalan); papan arah di tiap pertigaan menuju wilayah lain (teks: nama wilayah tujuan).
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); malam hari jalan utama terang; papan menunjukkan arah.
+
+### [ ] T351. **Gerbang Kota Lumina yang megah** — referensi: Skyrim (Whiterun), Zelda (Hyrule Castle Town)
+- File: `src/world/maps/city.js` peta `kgate`. Baca dulu: `objs`, `paths`, `npcs` peta itu.
+- Lakukan: jalan masuk lurus & lebar (radius 16) menuju gerbang, simetris kiri-kanan: tembok/pagar, 2 pos penjaga, lampu berpasangan. Penjaga yang sudah ada diletakkan di pos.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); dari Jalan Raya Lama, gerbang terlihat sebagai tujuan jelas.
+
+### [ ] T352. **Distrik Pasar: padat & hidup** — referensi: Pasar abad pertengahan, Diablo (Tristram)
+- File: `src/world/maps/city.js` peta `kpasar`. Baca dulu: `objs` kios/tenda, `paths`.
+- Lakukan: susun kios dalam deret dengan lorong 40–48 px, plaza terbuka di tengah, peti/tong/karung di samping kios (bukan di lorong).
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); berjalan di pasar terasa ramai tapi tidak tersangkut.
+
+### [ ] T353. **Distrik Akademi: rapi & simetris** — referensi: Arsitektur akademi/klasik
+- File: `src/world/maps/city.js` peta `kakademi`. Baca dulu: `objs`, `paths`.
+- Lakukan: tata simetris pada sumbu tengah: jalan lurus ke gedung utama, taman berpagar di kiri-kanan, menara jam (`clockworktower`) sebagai penanda di ujung sumbu bila objeknya ada.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); akademi tampak teratur dibanding pasar.
+
+### [ ] T354. **Kota Bawah: sempit & berliku** — referensi: Kota tua (gang), Bloodborne (Yharnam)
+- File: `src/world/maps/city.js` peta `kbawah`. Baca dulu: `objs`, `paths`.
+- Lakukan: jalan lebih sempit (radius 8–9) & berliku, banyak tumpukan barang/tong di pinggir gang, sedikit lampu. Tetap: lebar lorong ≥ 32 px & semua pintu tercapai.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); suasana kontras dengan akademi; tidak ada jalan buntu yang menjebak.
+
+### [ ] T355. **Jalan Raya Lama: rasa perjalanan** — referensi: Witcher 3 (jalan antarkota), Skyrim
+- File: `src/world/maps/city.js` peta `road`. Baca dulu: `objs`, `paths`.
+- Lakukan: tambahkan dari objek yang ada: patok/batu penanda jarak tiap ±300 px, satu tempat singgah (api unggun + kotak + bangku) di tengah, gerobak rusak di pinggir jalan.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; benda alam liar (api unggun) hanya di luar permukiman
+- Cek: `npm run check` (0 masalah); jalan panjang terasa punya cerita.
+
+### [ ] T356. **Satu penanda besar per wilayah** — referensi: BotW (gravitasi), GEOGRAFI §4
+- File: peta wilayah di tabel GEOGRAFI §4 (`src/world/maps/*.js`). Baca dulu: `docs/GEOGRAFI.md` §4; daftar objek tinggi di `src/world/objects.js`.
+- Lakukan: untuk tiap wilayah pastikan ada penanda dari tabel (pakai objek yang sudah ada; kalau tidak ada yang cocok, tulis catatan). Letakkan di titik yang terlihat dari jalan masuk wilayah.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; jangan membuat gambar/objek baru
+- Cek: `npm run check` (0 masalah); masuk tiap wilayah → penanda terlihat dalam 1–2 layar.
+
+### [ ] T357. **Hadiah di sekitar penanda & sudut pandang** — referensi: BotW (gravitasi), Elden Ring
+- File: peta yang punya penanda / sudut pandang `vp_*` (grep `vp_` di maps). Baca dulu: posisi penanda & `vp_*`; format peti (`chests`) & daun obat di peta.
+- Lakukan: dalam 120 px dari tiap penanda/sudut pandang letakkan satu hal menarik yang SUDAH ada jenisnya: peti kecil, prasasti lore yang sudah ada, atau tanaman obat. Maks 1 per penanda.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; jangan menambah item/lore baru di data
+- Cek: `npm run check` (0 masalah); mendekati penanda selalu ada sesuatu yang didapat.
+
+### [ ] T358. **Aturan segitiga: gugus batu & bukit** — referensi: BotW (aturan segitiga)
+- File: `src/world/maps/meadow.js`, `forest.js`, `snow.js`, `swamp.js`. Baca dulu: objek batu/semak besar yang ada.
+- Lakukan: di tiap wilayah, buat 2–3 gugus batu/semak dengan ukuran BERAGAM (besar–sedang–kecil) yang menutup sebagian pandangan ke penanda/rahasia dari jalan utama, sehingga pemain berbelok untuk melihat.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; jalan tetap terbuka
+- Cek: `npm run check` (0 masalah); berjalan di padang → penanda 'terungkap' saat melewati gugus batu.
+
+### [ ] T359. **Konsistensi bioma per wilayah** — referensi: Ekologi nyata, GEOGRAFI §2
+- File: `src/world/maps/*.js` (tabel pohon/semak sebaran tiap peta) & `PERALIHAN` di layout.js (BACA). Baca dulu: daftar jenis objek alam tiap peta.
+- Lakukan: pastikan: salju → hanya pinus/pohon salju/batu es; rawa → alang-alang, pohon mati, jamur; padang → bunga & sedikit pohon; hutan → paling rapat di tengah, jarang di tepi. Ganti jenis yang salah tempat dengan jenis yang benar (posisi tetap).
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); tidak ada pohon salju di rawa, dsb.
+
+### [ ] T360. **Tebing di perpindahan ketinggian** — referensi: BotW (lereng), Pokémon (tebing & tangga)
+- File: `src/world/maps/snow.js`, `meadow.js`, `city.js` (`road`). Baca dulu: `docs/GEOGRAFI.md` §2; objek tebing `ls_*_cliff` yang sudah ada (grep `cliff` di maps).
+- Lakukan: di sisi wilayah yang menuju ketinggian lebih rendah/tinggi (lihat tabel §2), tambahkan deret tebing pendek di luar jalan; di titik jalan melintas biarkan celah 40 px sebagai tanjakan.
+- Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
+- Cek: `npm run check` (0 masalah); dari padang ke lereng salju terasa 'naik'.
+
+### [ ] T361. **Rangkum perubahan geografi** — referensi: —
+- File: `docs/GEOGRAFI.md` (bagian baru §6 di akhir). Baca dulu: —.
+- Lakukan: setelah tugas-tugas geografi di atas: tambahkan §6 "Status" berisi daftar peta yang sudah punya sungai/penanda/alun-alun, dan yang belum beserta alasannya (maks 15 baris).
+- Cek: `npm run check` (0 masalah); dokumen menggambarkan keadaan nyata.
+
 ---
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
 memasang BESTIARY_TEXT ke layar Bestiari, buang petak objek jauh di mode benua, hapus mode lama. Rincian: `docs/GAME_DESIGN.md` (akhir) & `docs/HANDOFF_OPENWORLD.md`.
