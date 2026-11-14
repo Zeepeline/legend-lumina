@@ -91,9 +91,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 203 · obj `treeA` 210 · obj `goblin_torch` 218 · obj `goblin_cauldron` 221 · obj `cryst` 230 · obj `lamp` 233 · obj `viewpoint` 236 · obj `lumina_shard` 270
 
-## src/world/ground.js (296 baris)
+## src/world/ground.js (314 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `genGround()` 90 · `blockRects()` 197 · `scatter()` 213 · `openSides()` 246 · `borderTrees()` 259 · `ringObjects()` 275 · `mapObjects()` 280 · `mapWalls()` 284
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `TILE_CACHE` 90 · `getTileData()` 91 · `genGround()` 100 · `blockRects()` 215 · `scatter()` 231 · `openSides()` 264 · `borderTrees()` 277 · `ringObjects()` 293 · `mapObjects()` 298 · `mapWalls()` 302
 
 ## src/world/maps/village.js (88 baris)
 _Peta: Desa Lumina_
@@ -459,9 +459,9 @@ _Layar judul_
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
 `exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 32 · `plEnemies()` 34 · `NEIGH` 84
 
-## src/gfx/gptassets.js (39 baris)
+## src/gfx/gptassets.js (40 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
-`GPT_SWAP` 4 · `GPT_LOOK` 13 · `applyGptSwap()` 25
+`GPT_SWAP` 4 · `GPT_LOOK` 14 · `applyGptSwap()` 26
 
 ## src/gfx/gptmonsters.js (135 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._

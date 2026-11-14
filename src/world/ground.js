@@ -87,6 +87,16 @@ function edgeBlend(M) {
 }
 // Bisa menggambar sebagian peta saja (rect = [x, y, w, h]) untuk tanah per chunk (systems/stream.js).
 // Warna dihitung murni dari posisi, jadi potongan yang bersebelahan menyambung tanpa jahitan.
+let TILE_CACHE = null;
+function getTileData(k) {
+  if (!TILE_CACHE) TILE_CACHE = {};
+  if (TILE_CACHE[k] !== undefined) return TILE_CACHE[k];
+  const el = (typeof IMGEL !== 'undefined' && (IMGEL['gpt_' + k] || IMGEL[k]));
+  if (!el || !el.width) { TILE_CACHE[k] = null; return null; }
+  const [c, ctx] = mk(el.width, el.height); ctx.drawImage(el, 0, 0);
+  TILE_CACHE[k] = ctx.getImageData(0, 0, el.width, el.height).data;
+  return TILE_CACHE[k];
+}
 function genGround(M, rect) {
   if (M.ground === 'room') return genRoom(M);
   const pos = (typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id]) || [0, 0];
@@ -142,8 +152,16 @@ function genGround(M, rect) {
     if (glow) { const g = Math.max(0, 1 - Math.hypot(x - glow[0], (y - glow[1]) * 1.3) / glow[2]); f = g * g * .16; }
     if (d < 2.2) { put(i, EDGE, f * .5); continue; }
     if (d < 4 && hash(x, y, 4) > .5) k = Math.max(0, k - 1);
-    if (blend) { const c2 = blend(x, y, k); if (c2) { put(i, c2, f); continue; } }
-    put(i, Gc[k], f);
+    const tData = (M.ground === 'forest' || M.ground === 'meadow' || M.ground === 'village') ? getTileData('verdant_ground_grass') : null;
+    if (tData) {
+      const tx = ((x + GX) % 64 + 64) % 64, ty = ((y + GY) % 64 + 64) % 64, ti = (ty * 64 + tx) * 4;
+      let tr = tData[ti], tg = tData[ti + 1], tb = tData[ti + 2];
+      if (blend) { const c2 = blend(x, y, k); if (c2) { tr = (tr + c2[0]) >> 1; tg = (tg + c2[1]) >> 1; tb = (tb + c2[2]) >> 1; } }
+      put(i, [tr, tg, tb], f);
+    } else {
+      if (blend) { const c2 = blend(x, y, k); if (c2) { put(i, c2, f); continue; } }
+      put(i, Gc[k], f);
+    }
   }
   const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);
   const out = (X, Y) => X < RX - 10 || X > RX + RW + 10 || Y < RY - 10 || Y > RY + RH + 10;
