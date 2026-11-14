@@ -15175,6 +15175,30 @@ Object.assign(World.prototype, {
     if (e.aura) e.aura.setPosition(s.x, s.y).setDepth(s.y - 1);
     if (e.boss) return;
     const pl = this.pl, d = Math.hypot(pl.x - s.x, pl.y - s.y);
+    // penetapan peran kelompok bila >= 3 musuh mengejar Arka (T298)
+    this.roleT = (this.roleT || 0) - dt;
+    if (this.roleT <= 0) {
+      this.roleT = 1;
+      const aggros = (this.enemies || []).filter(o => o.hp > 0 && !o.boss && (o.alert === 2 || o.packAggro));
+      if (aggros.length >= 3) {
+        const ranged = aggros.filter(o => o.D.ai === 'shoot' || o.D.ai === 'shaman');
+        const melees = aggros.filter(o => o.D.ai !== 'shoot' && o.D.ai !== 'shaman')
+          .sort((a, b) => Math.hypot(pl.x - a.spr.x, pl.y - a.spr.y) - Math.hypot(pl.x - b.spr.x, pl.y - b.spr.y));
+        ranged.forEach(o => { o.role = 'belakang'; });
+        if (melees[0]) melees[0].role = 'depan';
+        for (let i = 1; i < melees.length; i++) melees[i].role = 'pengapit';
+      } else {
+        aggros.forEach(o => { o.role = null; });
+      }
+    }
+    // penyesuaian navigasi berdasarkan peran
+    if (e.role === 'pengapit' && e.st === 'chase' && !['wind', 'swind', 'lunge', 'charge'].includes(e.st)) {
+      const idx = (this.enemies || []).indexOf(e);
+      const flankSide = (idx % 2 === 0 ? 1 : -1) * 1.35;
+      const baseAng = Math.atan2(pl.y - s.y, pl.x - s.x) + flankSide;
+      s.setVelocity(Math.cos(baseAng) * e.D.spd * 0.9, Math.sin(baseAng) * e.D.spd * 0.9);
+      if (s.body?.velocity.x) s.flipX = s.body.velocity.x > 0;
+    }
     // meteran waspada: ? saat curiga, ! saat mengejar
     if (!e.alert && d < 165 && d >= 120) { e.alert = 1; markOver(this, e, '?', '#fff3c0'); }
     else if (e.alert !== 2 && d < 120 && !pl.dead) { e.alert = 2; markOver(this, e, '!', '#ff5a3a'); sfx('jump'); }

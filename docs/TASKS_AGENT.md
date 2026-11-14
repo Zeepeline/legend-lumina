@@ -1860,7 +1860,7 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 ## H. GELOMBANG 7 — AI lebih pintar & tangguh, efek visual, UI ala Dimraeth (T298–T331)
 Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File BARU milik agen: `src/systems/spell_fx.js`, `src/ui/spellbar.js`. Boleh mengubah file yang disebut tiap tugas. Kinerja HP: efek dibuat seperlunya & dihancurkan; uji di `?benua=1`.
 
-### [ ] T298. **Peran dalam kelompok: depan, belakang, pengapit** — referensi: Ghost of Tsushima, God of War (Dimraeth memakai sistem token terinspirasi keduanya)
+### [x] T298. **Peran dalam kelompok: depan, belakang, pengapit** — referensi: Ghost of Tsushima, God of War (Dimraeth memakai sistem token terinspirasi keduanya)
 - File: `src/ai/enemies.js`. Baca dulu: `updEnemy()` (cabang AI yang disebut) + hasil tugas token serangan (gelombang 6).
 - Lakukan: saat ≥3 musuh mengejar Arka: musuh jarak dekat terdekat = 'depan' (mendekat), penembak/dukun = 'belakang' (jaga jarak 90–130 px), sisanya = 'pengapit' (bergerak ke sisi/belakang Arka sebelum meminta token). Simpan `e.role`, hitung ulang tiap 1 s.
 - Batasan: boss tidak ikut.
