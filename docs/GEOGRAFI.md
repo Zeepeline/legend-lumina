@@ -24,6 +24,7 @@ penanda besar & isi menarik di dekatnya; (3) kota disusun menurut fungsi, jalan 
 Tebing/lereng (`ls_*_cliff`) diletakkan pada perpindahan ketinggian; jalan yang melewatinya diberi tanjakan (celah tanpa tebing).
 
 ## 3. Sistem sungai (koordinat GLOBAL, air = rangkaian elips `ponds: [cx, cy, rx, ry]` di data peta)
+> **Sejak v1.34.0 (`src/world/water.js`):** elips `ponds` berurutan (kecil, jarak < 220 px) disambung otomatis; air wilayah tetangga dekat tepi ikut dihitung (`pondsAll`) sehingga sungai menyambung mulus antarwilayah; jalan yang melintasi air otomatis jadi jembatan kayu (bisa dilewati). Celah arungan TIDAK perlu lagi.
 Rangkaian elips: jarak antarpusat ≤ 1,4 × rx agar menyambung; lebar sungai utama ry/rx 40–60, anak sungai 22–32.
 **Sungai Senja (utama):** mata air (5200, 1150) di Puncak Beku → selatan, keluar tepi bawah `snow` di x≈5150 → `pl_meadow_snow` x≈5150 →
 masuk `meadow` (5150, 2600), berkelok ke tenggara → keluar tepi bawah `meadow` di x≈5600 → `pl_meadow_swamp` lurus ke selatan di x≈5600 →

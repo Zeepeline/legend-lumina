@@ -12,57 +12,54 @@ function openWorldMap(sc) {
   });
 
   const header = document.createElement('div');
-  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;width:min(94vw, 540px);margin-bottom:6px;';
+  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;width:min(96vw, 720px);margin-bottom:8px;';
 
   const title = document.createElement('div');
   title.textContent = 'PETA BENUA LUMINA';
-  title.style.cssText = 'color:#f4d068;font-family:monospace;font-size:13px;font-weight:bold;letter-spacing:1px;';
+  title.style.cssText = 'color:#f4d068;font-family:"Pixelify Sans",monospace;font-size:16px;font-weight:700;letter-spacing:2px;text-shadow:0 2px 0 #2a1a0e;';
   header.appendChild(title);
 
   const controls = document.createElement('div');
   controls.style.cssText = 'display:flex;gap:6px;align-items:center;';
 
   const btnFocus = document.createElement('button');
-  btnFocus.className = 'opt';
-  btnFocus.textContent = '🎯 Fokus Arka';
-  btnFocus.style.cssText = 'padding:2px 8px;font-size:11px;cursor:pointer;';
+  btnFocus.className = 'wmb g';
+  btnFocus.textContent = '◎ ARKA';
   controls.appendChild(btnFocus);
 
   const btnZoomOut = document.createElement('button');
-  btnZoomOut.className = 'opt';
+  btnZoomOut.className = 'wmb';
   btnZoomOut.textContent = '−';
-  btnZoomOut.style.cssText = 'padding:2px 8px;font-size:13px;font-weight:bold;cursor:pointer;';
   controls.appendChild(btnZoomOut);
 
   const btnZoomIn = document.createElement('button');
-  btnZoomIn.className = 'opt';
+  btnZoomIn.className = 'wmb';
   btnZoomIn.textContent = '+';
-  btnZoomIn.style.cssText = 'padding:2px 8px;font-size:13px;font-weight:bold;cursor:pointer;';
   controls.appendChild(btnZoomIn);
 
   header.appendChild(controls);
   overlay.appendChild(header);
 
   const canvas = document.createElement('canvas');
-  const maxW = Math.min(window.innerWidth - 20, 540);
-  const maxH = Math.min(window.innerHeight - 100, 380);
+  const maxW = Math.min(window.innerWidth - 16, 720);
+  const maxH = Math.min(window.innerHeight - 190, 640);
   canvas.width = maxW;
   canvas.height = maxH;
-  canvas.style.cssText = 'border:2px solid #5a4228;border-radius:4px;box-shadow:0 0 12px rgba(0,0,0,.8);background:#1a2e16;cursor:grab;touch-action:none;';
+  canvas.style.cssText = 'border:3px solid #6e4222;border-radius:10px;box-shadow:0 0 0 2px #2a1a0e,0 6px 18px rgba(0,0,0,.8);background:#1d3b4a;cursor:grab;touch-action:none;image-rendering:pixelated;';
   overlay.appendChild(canvas);
 
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
 
   const hint = document.createElement('div');
-  hint.textContent = 'Geser / drag untuk menjelajahi peta · Scroll / tombol + − untuk zoom';
-  hint.style.cssText = 'color:#a0b898;font-size:11px;font-family:sans-serif;margin-top:6px;text-align:center;';
+  hint.textContent = 'Geser untuk menjelajah · cubit atau + − untuk zoom';
+  hint.style.cssText = 'color:#c8d8b8;font-size:12px;font-family:"Pixelify Sans",monospace;margin-top:8px;text-align:center;opacity:.8;';
   overlay.appendChild(hint);
 
   const btnClose = document.createElement('button');
-  btnClose.className = 'opt';
-  btnClose.textContent = 'Tutup';
-  btnClose.style.cssText = 'margin-top:8px;padding:5px 24px;cursor:pointer;font-size:12px;';
+  btnClose.className = 'wmb r';
+  btnClose.textContent = '✕ TUTUP';
+  btnClose.style.cssText = 'margin-top:10px;padding:8px 28px;';
   overlay.appendChild(btnClose);
 
   const closeMap = () => {
@@ -88,7 +85,8 @@ function openWorldMap(sc) {
   const pad = 16;
   const baseScale = Math.min((canvas.width - pad * 2) / worldW, (canvas.height - pad * 2) / worldH);
 
-  let zoom = 1.0;
+  let zoom = 2.0;
+  const wmQueue = new Set(); let wmBusy = false;
   // Offset pan dalam koordinat layar canvas
   let panX = (canvas.width - worldW * baseScale) / 2;
   let panY = (canvas.height - worldH * baseScale) / 2;
@@ -111,6 +109,7 @@ function openWorldMap(sc) {
   };
 
   btnFocus.onclick = () => { focusPlayer(); drawMap(blinkState); };
+  focusPlayer();
   btnZoomIn.onclick = () => { changeZoom(1.3, canvas.width / 2, canvas.height / 2); };
   btnZoomOut.onclick = () => { changeZoom(1 / 1.3, canvas.width / 2, canvas.height / 2); };
 
@@ -192,67 +191,33 @@ function openWorldMap(sc) {
 
   // Gambar peta benua
   const drawMap = (blink) => {
-    ctx.fillStyle = '#172714';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const s = baseScale * zoom;
-
-    // Gambar grid latar halus
-    ctx.strokeStyle = 'rgba(255,255,255,.03)';
-    ctx.lineWidth = 1;
-    const gridSize = Math.max(30, Math.round(120 * s));
-    const startGX = ((panX % gridSize) + gridSize) % gridSize;
-    const startGY = ((panY % gridSize) + gridSize) % gridSize;
-    ctx.beginPath();
-    for (let x = startGX; x < canvas.width; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); }
-    for (let y = startGY; y < canvas.height; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); }
-    ctx.stroke();
-
+    ctx.fillStyle = '#1d3b4a'; ctx.fillRect(0, 0, canvas.width, canvas.height); // laut di sekeliling benua
+    const s = baseScale * zoom, labels = [];
+    ctx.imageSmoothingEnabled = s < 1 / WOV_K;
     for (const id of regList) {
       const pos = WORLD_POS[id], m = MAPS[id];
       if (!pos || !m) continue;
-      const rx = panX + (pos[0] - minX) * s;
-      const ry = panY + (pos[1] - minY) * s;
-      const rw = (m.w || 1024) * s;
-      const rh = (m.h || 1024) * s;
-
-      // Culling jika di luar layar
+      const rx = panX + (pos[0] - minX) * s, ry = panY + (pos[1] - minY) * s, rw = (m.w || 1024) * s, rh = (m.h || 1024) * s;
       if (rx + rw < 0 || rx > canvas.width || ry + rh < 0 || ry > canvas.height) continue;
-
-      if (typeof groundOverview === 'function') {
-        try {
-          const ov = groundOverview(m);
-          if (ov) ctx.drawImage(ov, rx, ry, rw, rh);
-        } catch (_) {}
-      } else {
-        ctx.fillStyle = '#3a6830';
-        ctx.fillRect(rx, ry, rw, rh);
-      }
-
-      // Gelapkan jika belum pernah dikunjungi
+      const ov = WOV[id];
+      if (ov) ctx.drawImage(ov, rx, ry, rw, rh);
+      else { ctx.fillStyle = '#4f8a3c'; ctx.fillRect(rx, ry, rw, rh); wmQueue.add(id); }
       const visited = !!(S.seen && S.seen[id]);
-      if (!visited) {
-        ctx.fillStyle = 'rgba(0,0,0,.78)';
-        ctx.fillRect(rx, ry, rw, rh);
-      }
-
-      // Garis tepi wilayah
-      ctx.strokeStyle = visited ? 'rgba(255,230,120,.25)' : 'rgba(0,0,0,.4)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(rx, ry, rw, rh);
-
-      // Teks nama wilayah (lewati wilayah peralihan)
-      if (!m.peralihan) {
-        const fontSize = Math.max(9, Math.min(14, Math.round(10 * Math.sqrt(zoom))));
-        ctx.font = `bold ${fontSize}px monospace`;
-        ctx.textAlign = 'center';
-        ctx.fillStyle = '#000000';
-        const txt = visited ? (m.name || id) : '???';
-        ctx.fillText(txt, rx + rw / 2 + 1, ry + rh / 2 + 1);
-        ctx.fillStyle = visited ? '#ffffff' : '#888888';
-        ctx.fillText(txt, rx + rw / 2, ry + rh / 2);
-      }
+      if (!visited) { ctx.fillStyle = 'rgba(8,14,20,.55)'; ctx.fillRect(rx, ry, rw, rh); }
+      if (!m.peralihan) labels.push([rw * rh, visited ? (m.name || id) : '???', rx + rw / 2, ry + rh / 2, visited]);
     }
+    // nama wilayah: label berlatar gelap, wilayah besar didahulukan, label yang bertumpuk dilewati
+    const fs = Math.max(10, Math.min(16, Math.round(11 * Math.sqrt(zoom)))), boxes = [];
+    ctx.font = `700 ${fs}px "Pixelify Sans", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const [, txt, cx, cy, vis] of labels.sort((p, q) => q[0] - p[0])) {
+      const w = ctx.measureText(txt).width + 10, h = fs + 6, bx = cx - w / 2, by = cy - h / 2;
+      if (boxes.some(([x0, y0, x1, y1]) => bx < x1 && bx + w > x0 && by < y1 && by + h > y0)) continue;
+      boxes.push([bx, by, bx + w, by + h]);
+      ctx.fillStyle = 'rgba(30,20,12,.72)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, w, h, 5) : ctx.rect(bx, by, w, h); ctx.fill();
+      ctx.fillStyle = vis ? '#fff3c4' : '#9a9a9a'; ctx.fillText(txt, cx, cy + 1);
+    }
+    ctx.textBaseline = 'alphabetic'; ctx.imageSmoothingEnabled = false;
+    wmPump();
 
     // Posisi Pemain (Arka)
     if (sc && sc.pl) {
@@ -312,6 +277,14 @@ function openWorldMap(sc) {
     }
   };
 
+  function wmPump() {
+    if (wmBusy || !wmQueue.size) return; wmBusy = true;
+    setTimeout(() => {
+      const id = wmQueue.values().next().value; wmQueue.delete(id);
+      try { worldOverview(MAPS[id]); } catch (e) { console.error('peta benua', id, e); WOV[id] = document.createElement('canvas'); }
+      wmBusy = false; if (document.getElementById('wmap')) { drawMap(blinkState); }
+    }, 0);
+  }
   let blinkState = true;
   drawMap(blinkState);
   timer = setInterval(() => {

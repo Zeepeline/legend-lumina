@@ -5203,7 +5203,7 @@ function genGround(M, rect) {
   const STONE = ['#eae2d6', '#ddd4c9', '#f1ebe1', '#d2c8bd'].map(h2r), MORT = h2r('#b5b8a2'), MORT2 = h2r('#9ea38a');
   const CSTONE = ['#5a5466', '#524c5e', '#625c6e', '#4a4456'].map(h2r), CMORT = h2r('#2a2630');
   const DIRT = ['#c9a46e', '#ba9460', '#d8b47e', '#ad8656'].map(h2r);
-  const EDGE = GP.edge ? h2r(GP.edge) : null, R = M.river, ponds = M.ponds || [], PL = pondsNear(M, RX, RY, RX + RW, RY + RH);
+  const EDGE = GP.edge ? h2r(GP.edge) : null, R = M.river, ponds = pondsAll(M), PL = pondsNear(M, RX, RY, RX + RW, RY + RH);
   const put = (i, c, f = 0) => { let r = c[0], g = c[1], b = c[2]; if (f > 0) { r += (255 - r) * f; g += (255 - g) * f; b += (255 - b) * f; } else if (f < 0) { r *= 1 + f; g *= 1 + f; b *= 1 + f; } D[i] = r; D[i + 1] = g; D[i + 2] = b; D[i + 3] = 255; };
   const vor = (x, y, cell, s) => {
     const gx = Math.floor(x / cell), gy = Math.floor(y / cell); let d1 = 1e9, d2 = 1e9, id = 0, fx = 0, fy = 0;
@@ -5231,7 +5231,11 @@ function genGround(M, rect) {
     let inPond = false;
     if (PL.length) {
       const we = waterE(PL, x, y, GX, GY), wr = waterE.r;
-      if (we < 1) { water(i, wr < 70 ? Math.max(we, .5) : we, x, y); continue; }
+      if (we < 1) {
+        const ds = sd(x, y);
+        if (ds < 1.5) { if (ds > -1.5) { put(i, h2r('#5e3b20')); continue; } const ly = (y + 1000) % 6; put(i, h2r(ly === 0 ? '#6e4222' : ly === 1 ? '#c8945a' : '#a8703e')); continue; }
+        water(i, wr < 70 ? Math.max(we, .5) : we, x, y); continue;
+      }
       if (we < 1 + 5 / wr) {
         if (VW) { const b = verdantBank(M, (we - 1) * wr, x + GX, y + GY, waterE(PL, x, y + 4, GX, GY) < we); if (b) { put(i, b); continue; } }
         else { put(i, h2r(we < 1 + 2 / wr ? '#8a7a5a' : '#d6c08c')); continue; }
@@ -5301,18 +5305,18 @@ function genGround(M, rect) {
     }
   }
   // teratai di kolam
-  if (!GP.ice) for (const P of ponds) for (let n = 0; n < 7; n++) { const a = hash(n, 1, 77) * 6.28, r = .3 + hash(n, 2, 77) * .5; const X = P[0] + Math.cos(a) * P[2] * r, Y = P[1] + Math.sin(a) * P[3] * r; if (waterE(ponds, X, Y, GX, GY) > .8) continue; ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5); if (n % 2) { px(x, '#ffb4d8', X + 1, Y - 1); px(x, '#ffffff', X + 2, Y - 1); } }
+  if (!GP.ice) for (const P of (M.ponds || [])) for (let n = 0; n < 7; n++) { const a = hash(n, 1, 77) * 6.28, r = .3 + hash(n, 2, 77) * .5; const X = P[0] + Math.cos(a) * P[2] * r, Y = P[1] + Math.sin(a) * P[3] * r; if (waterE(ponds, X, Y, GX, GY) > .8) continue; ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5); if (n % 2) { px(x, '#ffb4d8', X + 1, Y - 1); px(x, '#ffffff', X + 2, Y - 1); } }
   return c;
 }
 // kotak tabrakan dari grid (dinding gua, kolam)
 function blockRects(M) {
-  const out = [], cs = 16, sd = makeSD(M), cave = M.ground === 'cave', ponds = M.ponds || [];
+  const out = [], cs = 16, sd = makeSD(M), cave = M.ground === 'cave', ponds = pondsAll(M);
   if (!cave && !ponds.length) return out;
   for (let gy = 0; gy < Math.ceil(M.h / cs); gy++) {
     let run = -1;
     for (let gx = 0; gx <= Math.ceil(M.w / cs); gx++) {
       const x = gx * cs + 8, y = gy * cs + 8; let b = false;
-      if (gx < Math.ceil(M.w / cs)) { if (cave && sd(x, y) > 5) b = true; if (ponds.length && waterE(ponds, x, y, ...waterGXY(M)) < .94) b = true; }
+      if (gx < Math.ceil(M.w / cs)) { if (cave && sd(x, y) > 5) b = true; if (ponds.length && waterE(ponds, x, y, ...waterGXY(M)) < .94 && sd(x, y) > 6) b = true; }
       if (b && run < 0) run = gx; if (!b && run >= 0) { out.push([run * cs, gy * cs, (gx - run) * cs, cs]); run = -1; }
     }
   }
@@ -5322,7 +5326,7 @@ function blockRects(M) {
   return merged;
 }
 function scatter(M, spec) {
-  const sd = makeSD(M), out = [], R = M.river, ponds = M.ponds || [];
+  const sd = makeSD(M), out = [], R = M.river, ponds = pondsAll(M);
   const ok = (x, y, t) => {
     const d = sd(x, y);
     if (spec.near) { if (d < spec.near[0] || d > spec.near[1]) return false; }
@@ -5409,8 +5413,46 @@ function mapWalls(M) {
 // Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,
 // lalu garis pantai diberi liuk noise (teluk & tanjung). Dipakai untuk gambar tanah, tabrakan, dan sebaran objek.
 // waterE(...) < 1 = air. Setelah dipanggil: waterE.r = jari-jari elips terdekat (px), waterE.cy = pusat y-nya.
+// Elips berurutan yang kecil (sungai) & berdekatan (< 220 px) disambung dengan elips perantara agar alur tidak putus.
+function pondsBase(M) {
+  if (M._pondsB && M._pondsB.src === M.ponds) return M._pondsB;
+  const P = M.ponds || [], out = [];
+  for (let i = 0; i < P.length; i++) {
+    const a = P[i], b = P[i + 1]; out.push(a);
+    if (!b || Math.min(a[2], a[3]) > 70 || Math.min(b[2], b[3]) > 70) continue;
+    const d = Math.hypot(b[0] - a[0], b[1] - a[1]); if (d > 220) continue;
+    const step = Math.min(a[2], a[3], b[2], b[3]) * .8, n = Math.ceil(d / step);
+    for (let k = 1; k < n; k++) { const t = k / n; out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t, a[3] + (b[3] - a[3]) * t]); }
+  }
+  out.src = M.ponds; return M._pondsB = out;
+}
+// semua air dunia dalam koordinat global (elips + sungai berliku di dekat tepi wilayah), untuk menyambung air antarwilayah
+let WGLOB = null;
+function waterGlobal() {
+  if (WGLOB) return WGLOB; WGLOB = [];
+  if (typeof WORLD_POS === 'undefined') return WGLOB;
+  for (const id in WORLD_POS) {
+    const M = MAPS[id]; if (!M || M.indoor) continue; const [X, Y] = WORLD_POS[id];
+    for (const P of pondsBase(M)) WGLOB.push([P[0] + X, P[1] + Y, P[2], P[3], id]);
+    if (M.river) for (let x = 0; x <= M.w; x += 12) {
+      if (x > 200 && x < M.w - 200) continue; const r = M.river.w / 2 * 1.1;
+      WGLOB.push([x + X, riverY(M.river, x) + Y, r, r, id]);
+    }
+  }
+  return WGLOB;
+}
+// elips wilayah ini + elips wilayah tetangga yang menyentuh area dekat tepinya (koordinat lokal)
+function pondsAll(M) {
+  if (M._pondsX && M._pondsX.src === M.ponds) return M._pondsX;
+  const out = pondsBase(M).slice(), pos = typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id];
+  if (pos && !M.indoor) for (const [gx, gy, rx, ry, id] of waterGlobal()) {
+    if (id === M.id) continue; const x = gx - pos[0], y = gy - pos[1];
+    if (x + rx * 2 > -160 && x - rx * 2 < M.w + 160 && y + ry * 2 > -160 && y - ry * 2 < M.h + 160) out.push([x, y, rx, ry]);
+  }
+  out.src = M.ponds; return M._pondsX = out;
+}
 function pondsNear(M, x0, y0, x1, y1) {
-  return (M.ponds || []).filter(P => P[0] + P[2] * 1.6 + 40 > x0 && P[0] - P[2] * 1.6 - 40 < x1 && P[1] + P[3] * 1.6 + 40 > y0 && P[1] - P[3] * 1.6 - 40 < y1);
+  return pondsAll(M).filter(P => P[0] + P[2] * 1.6 + 40 > x0 && P[0] - P[2] * 1.6 - 40 < x1 && P[1] + P[3] * 1.6 + 40 > y0 && P[1] - P[3] * 1.6 - 40 < y1);
 }
 function waterE(L, x, y, GX = 0, GY = 0) {
   let sum = 0, best = 9, bp = null; const k = .16;
@@ -6456,7 +6498,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.33.0';
+const GAME_VERSION = '1.34.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() { if (!AU.ctx) return; AU.music.gain.value = .09 * OPT.mus / 3; AU.sfx.gain.value = .2 * OPT.sfx / 3; AU.master.gain.value = AU.on ? 1 : 0; }
@@ -19852,6 +19894,70 @@ Object.assign(World.prototype, {
 }
 
 'use strict';
+// Gambar ringkas berwarna tiap wilayah untuk Peta Benua (1 piksel = WOV_K piksel dunia):
+// tanah, jalan, sungai & danau (waterE), kebun, pohon, semak, batu, bangunan, tembok. Dibuat sekali per wilayah lalu disimpan.
+const WOV_K = 8, WOV = {};
+const WOV_TREE = /tree|pine|oak|round|pear|apple|orange|bigtree|willow|mangrove/i;
+const WOV_BUSH = /bush|shrub|bramble|hay/i;
+const WOV_ROCK = /rock|stone|boulder|cairn|stalag|cryst|pebble/i;
+const WOV_BLD = /house|hut|inn|shop|academy|gatehouse|market|tower|fortress|lighthouse|temple|shrine|windmill|smith|forge|tavern|home/i;
+function wovRGB(h) { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+function worldOverview(M) {
+  if (WOV[M.id]) return WOV[M.id];
+  const W = Math.ceil(M.w / WOV_K), H = Math.ceil(M.h / WOV_K), c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d'), img = x.createImageData(W, H), D = img.data;
+  const GP = GROUND[M.ground] || GROUND.meadow, [GX, GY] = waterGXY(M), sd = makeSD(M), R = M.river, ponds = pondsAll(M);
+  const g = (GP.g || ['#5a9a44']).map(wovRGB), ice = !!GP.ice, cave = GP.path === 'cave', verd = VERDANT[M.ground];
+  const PATH = wovRGB(GP.path === 'stone' ? '#cfc5b6' : cave ? '#4a4456' : '#a8875a');
+  const WAT = ice ? [[168, 216, 240], [196, 232, 248], [232, 248, 255]] : [[40, 96, 126], [52, 122, 150], [80, 156, 168]];
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+    const px = i * WOV_K + 4, py = j * WOV_K + 4, o = (j * W + i) * 4; let col = null;
+    if (R && Math.abs(py - riverY(R, px)) < R.w / 2) col = (px >= R.bridge[0] && px <= R.bridge[1]) ? [168, 112, 62] : WAT[1];
+    if (!col && ponds.length) { const e = waterE(ponds, px, py, GX, GY); if (e < 1) col = sd(px, py) < 0 ? [168, 112, 62] : WAT[e > .82 ? 2 : e > .5 || waterE.r < 70 ? 1 : 0]; }
+    if (!col && sd(px, py) < 0) col = PATH;
+    if (!col) {
+      const v = vnoise(px + GX, py + GY, 56, 11) * .75 + vnoise(px + GX, py + GY, 20, 12) * .25;
+      if (verd) col = v > .6 ? [90, 153, 58] : v < .4 ? [64, 118, 55] : [79, 138, 60];
+      else col = g[v < .33 ? 0 : v < .5 ? 1 : v < .68 ? 2 : 3 % g.length] || g[0];
+      if (verd && vnoise(px + GX, py + GY, 30, 13) * .75 + vnoise(px + GX, py + GY, 9, 14) * .25 > .74) col = [120, 98, 66];
+    }
+    D[o] = col[0]; D[o + 1] = col[1]; D[o + 2] = col[2]; D[o + 3] = 255;
+  }
+  x.putImageData(img, 0, 0);
+  const k = 1 / WOV_K;
+  for (const [gx, gy, gw, gh] of (M.gardens || [])) { x.fillStyle = '#7a5230'; x.fillRect(gx * k, gy * k, gw * k, gh * k); }
+  const objs = (typeof mapObjects === 'function' ? mapObjects(M) : M.objs || []).slice().sort((a, b) => a[2] - b[2]);
+  for (const o of objs) {
+    const t = o[0], d = (typeof OBJ !== 'undefined' && OBJ[t]) || {}, X = o[1] * k, Y = o[2] * k, w = Math.max(8, (d.sh && d.sh[0]) || 16) * k;
+    if (t === 'cwall') { x.fillStyle = '#8a8478'; x.fillRect(X - w, Y - 3, w * 2, 3); continue; }
+    if (WOV_BLD.test(t) || d.mm) {
+      const bw = Math.max(3, w * 1.1), bh = Math.max(3, bw * .75);
+      x.fillStyle = '#3b2618'; x.fillRect(X - bw / 2 - .5, Y - bh - .5, bw + 1, bh + 1);
+      x.fillStyle = /academy|temple|shrine|gatehouse/.test(t) ? '#d8d0c0' : '#b8563a'; x.fillRect(X - bw / 2, Y - bh, bw, bh * .6);
+      x.fillStyle = '#e8d8b0'; x.fillRect(X - bw / 2, Y - bh * .4, bw, bh * .4); continue;
+    }
+    if (WOV_TREE.test(t) || WOV_TREE.test(d.key || '')) {
+      const r = Math.max(1.6, w * .55), pine = /pine/i.test(t);
+      x.fillStyle = pine ? '#1f4a3a' : '#24502a'; x.beginPath(); x.arc(X, Y - r * .8, r, 0, 6.29); x.fill();
+      x.fillStyle = ice ? '#e8f0f8' : pine ? '#2f6a4e' : '#3d7a34'; x.beginPath(); x.arc(X - r * .25, Y - r, r * .6, 0, 6.29); x.fill(); continue;
+    }
+    if (WOV_BUSH.test(t)) { x.fillStyle = '#2f6a2c'; x.fillRect(X - 1, Y - 2, 2, 2); continue; }
+    if (WOV_ROCK.test(t)) { x.fillStyle = '#8a8c88'; x.fillRect(X - 1, Y - 1.5, 2, 1.5); }
+  }
+  return WOV[M.id] = c;
+}
+// tombol bergaya kayu seperti tombol MENU/PETA di layar game
+(function wmCss() {
+  const s = document.createElement('style');
+  s.textContent = '.wmb{font-family:"Pixelify Sans",monospace;font-weight:700;color:#fff3c4;background:linear-gradient(#9a6a3e,#6e4222);' +
+    'border:2px solid #3b2618;border-radius:12px;box-shadow:0 3px 0 #2a1a0e,inset 0 1px 0 rgba(255,255,255,.25);padding:6px 12px;font-size:13px;' +
+    'letter-spacing:1px;cursor:pointer;text-shadow:0 1px 0 #2a1a0e;min-width:40px;touch-action:manipulation}' +
+    '.wmb:active{transform:translateY(2px);box-shadow:0 1px 0 #2a1a0e}.wmb.g{background:linear-gradient(#5e9a52,#3e6e34)}' +
+    '.wmb.r{background:linear-gradient(#c8604a,#9a3e2e)}';
+  document.head.appendChild(s);
+})();
+
+'use strict';
 // Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)
 function openWorldMap(sc) {
   if (document.getElementById('wmap')) return;
@@ -19865,57 +19971,54 @@ function openWorldMap(sc) {
   });
 
   const header = document.createElement('div');
-  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;width:min(94vw, 540px);margin-bottom:6px;';
+  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;width:min(96vw, 720px);margin-bottom:8px;';
 
   const title = document.createElement('div');
   title.textContent = 'PETA BENUA LUMINA';
-  title.style.cssText = 'color:#f4d068;font-family:monospace;font-size:13px;font-weight:bold;letter-spacing:1px;';
+  title.style.cssText = 'color:#f4d068;font-family:"Pixelify Sans",monospace;font-size:16px;font-weight:700;letter-spacing:2px;text-shadow:0 2px 0 #2a1a0e;';
   header.appendChild(title);
 
   const controls = document.createElement('div');
   controls.style.cssText = 'display:flex;gap:6px;align-items:center;';
 
   const btnFocus = document.createElement('button');
-  btnFocus.className = 'opt';
-  btnFocus.textContent = '🎯 Fokus Arka';
-  btnFocus.style.cssText = 'padding:2px 8px;font-size:11px;cursor:pointer;';
+  btnFocus.className = 'wmb g';
+  btnFocus.textContent = '◎ ARKA';
   controls.appendChild(btnFocus);
 
   const btnZoomOut = document.createElement('button');
-  btnZoomOut.className = 'opt';
+  btnZoomOut.className = 'wmb';
   btnZoomOut.textContent = '−';
-  btnZoomOut.style.cssText = 'padding:2px 8px;font-size:13px;font-weight:bold;cursor:pointer;';
   controls.appendChild(btnZoomOut);
 
   const btnZoomIn = document.createElement('button');
-  btnZoomIn.className = 'opt';
+  btnZoomIn.className = 'wmb';
   btnZoomIn.textContent = '+';
-  btnZoomIn.style.cssText = 'padding:2px 8px;font-size:13px;font-weight:bold;cursor:pointer;';
   controls.appendChild(btnZoomIn);
 
   header.appendChild(controls);
   overlay.appendChild(header);
 
   const canvas = document.createElement('canvas');
-  const maxW = Math.min(window.innerWidth - 20, 540);
-  const maxH = Math.min(window.innerHeight - 100, 380);
+  const maxW = Math.min(window.innerWidth - 16, 720);
+  const maxH = Math.min(window.innerHeight - 190, 640);
   canvas.width = maxW;
   canvas.height = maxH;
-  canvas.style.cssText = 'border:2px solid #5a4228;border-radius:4px;box-shadow:0 0 12px rgba(0,0,0,.8);background:#1a2e16;cursor:grab;touch-action:none;';
+  canvas.style.cssText = 'border:3px solid #6e4222;border-radius:10px;box-shadow:0 0 0 2px #2a1a0e,0 6px 18px rgba(0,0,0,.8);background:#1d3b4a;cursor:grab;touch-action:none;image-rendering:pixelated;';
   overlay.appendChild(canvas);
 
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
 
   const hint = document.createElement('div');
-  hint.textContent = 'Geser / drag untuk menjelajahi peta · Scroll / tombol + − untuk zoom';
-  hint.style.cssText = 'color:#a0b898;font-size:11px;font-family:sans-serif;margin-top:6px;text-align:center;';
+  hint.textContent = 'Geser untuk menjelajah · cubit atau + − untuk zoom';
+  hint.style.cssText = 'color:#c8d8b8;font-size:12px;font-family:"Pixelify Sans",monospace;margin-top:8px;text-align:center;opacity:.8;';
   overlay.appendChild(hint);
 
   const btnClose = document.createElement('button');
-  btnClose.className = 'opt';
-  btnClose.textContent = 'Tutup';
-  btnClose.style.cssText = 'margin-top:8px;padding:5px 24px;cursor:pointer;font-size:12px;';
+  btnClose.className = 'wmb r';
+  btnClose.textContent = '✕ TUTUP';
+  btnClose.style.cssText = 'margin-top:10px;padding:8px 28px;';
   overlay.appendChild(btnClose);
 
   const closeMap = () => {
@@ -19941,7 +20044,8 @@ function openWorldMap(sc) {
   const pad = 16;
   const baseScale = Math.min((canvas.width - pad * 2) / worldW, (canvas.height - pad * 2) / worldH);
 
-  let zoom = 1.0;
+  let zoom = 2.0;
+  const wmQueue = new Set(); let wmBusy = false;
   // Offset pan dalam koordinat layar canvas
   let panX = (canvas.width - worldW * baseScale) / 2;
   let panY = (canvas.height - worldH * baseScale) / 2;
@@ -19964,6 +20068,7 @@ function openWorldMap(sc) {
   };
 
   btnFocus.onclick = () => { focusPlayer(); drawMap(blinkState); };
+  focusPlayer();
   btnZoomIn.onclick = () => { changeZoom(1.3, canvas.width / 2, canvas.height / 2); };
   btnZoomOut.onclick = () => { changeZoom(1 / 1.3, canvas.width / 2, canvas.height / 2); };
 
@@ -20045,67 +20150,33 @@ function openWorldMap(sc) {
 
   // Gambar peta benua
   const drawMap = (blink) => {
-    ctx.fillStyle = '#172714';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const s = baseScale * zoom;
-
-    // Gambar grid latar halus
-    ctx.strokeStyle = 'rgba(255,255,255,.03)';
-    ctx.lineWidth = 1;
-    const gridSize = Math.max(30, Math.round(120 * s));
-    const startGX = ((panX % gridSize) + gridSize) % gridSize;
-    const startGY = ((panY % gridSize) + gridSize) % gridSize;
-    ctx.beginPath();
-    for (let x = startGX; x < canvas.width; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); }
-    for (let y = startGY; y < canvas.height; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); }
-    ctx.stroke();
-
+    ctx.fillStyle = '#1d3b4a'; ctx.fillRect(0, 0, canvas.width, canvas.height); // laut di sekeliling benua
+    const s = baseScale * zoom, labels = [];
+    ctx.imageSmoothingEnabled = s < 1 / WOV_K;
     for (const id of regList) {
       const pos = WORLD_POS[id], m = MAPS[id];
       if (!pos || !m) continue;
-      const rx = panX + (pos[0] - minX) * s;
-      const ry = panY + (pos[1] - minY) * s;
-      const rw = (m.w || 1024) * s;
-      const rh = (m.h || 1024) * s;
-
-      // Culling jika di luar layar
+      const rx = panX + (pos[0] - minX) * s, ry = panY + (pos[1] - minY) * s, rw = (m.w || 1024) * s, rh = (m.h || 1024) * s;
       if (rx + rw < 0 || rx > canvas.width || ry + rh < 0 || ry > canvas.height) continue;
-
-      if (typeof groundOverview === 'function') {
-        try {
-          const ov = groundOverview(m);
-          if (ov) ctx.drawImage(ov, rx, ry, rw, rh);
-        } catch (_) {}
-      } else {
-        ctx.fillStyle = '#3a6830';
-        ctx.fillRect(rx, ry, rw, rh);
-      }
-
-      // Gelapkan jika belum pernah dikunjungi
+      const ov = WOV[id];
+      if (ov) ctx.drawImage(ov, rx, ry, rw, rh);
+      else { ctx.fillStyle = '#4f8a3c'; ctx.fillRect(rx, ry, rw, rh); wmQueue.add(id); }
       const visited = !!(S.seen && S.seen[id]);
-      if (!visited) {
-        ctx.fillStyle = 'rgba(0,0,0,.78)';
-        ctx.fillRect(rx, ry, rw, rh);
-      }
-
-      // Garis tepi wilayah
-      ctx.strokeStyle = visited ? 'rgba(255,230,120,.25)' : 'rgba(0,0,0,.4)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(rx, ry, rw, rh);
-
-      // Teks nama wilayah (lewati wilayah peralihan)
-      if (!m.peralihan) {
-        const fontSize = Math.max(9, Math.min(14, Math.round(10 * Math.sqrt(zoom))));
-        ctx.font = `bold ${fontSize}px monospace`;
-        ctx.textAlign = 'center';
-        ctx.fillStyle = '#000000';
-        const txt = visited ? (m.name || id) : '???';
-        ctx.fillText(txt, rx + rw / 2 + 1, ry + rh / 2 + 1);
-        ctx.fillStyle = visited ? '#ffffff' : '#888888';
-        ctx.fillText(txt, rx + rw / 2, ry + rh / 2);
-      }
+      if (!visited) { ctx.fillStyle = 'rgba(8,14,20,.55)'; ctx.fillRect(rx, ry, rw, rh); }
+      if (!m.peralihan) labels.push([rw * rh, visited ? (m.name || id) : '???', rx + rw / 2, ry + rh / 2, visited]);
     }
+    // nama wilayah: label berlatar gelap, wilayah besar didahulukan, label yang bertumpuk dilewati
+    const fs = Math.max(10, Math.min(16, Math.round(11 * Math.sqrt(zoom)))), boxes = [];
+    ctx.font = `700 ${fs}px "Pixelify Sans", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const [, txt, cx, cy, vis] of labels.sort((p, q) => q[0] - p[0])) {
+      const w = ctx.measureText(txt).width + 10, h = fs + 6, bx = cx - w / 2, by = cy - h / 2;
+      if (boxes.some(([x0, y0, x1, y1]) => bx < x1 && bx + w > x0 && by < y1 && by + h > y0)) continue;
+      boxes.push([bx, by, bx + w, by + h]);
+      ctx.fillStyle = 'rgba(30,20,12,.72)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, w, h, 5) : ctx.rect(bx, by, w, h); ctx.fill();
+      ctx.fillStyle = vis ? '#fff3c4' : '#9a9a9a'; ctx.fillText(txt, cx, cy + 1);
+    }
+    ctx.textBaseline = 'alphabetic'; ctx.imageSmoothingEnabled = false;
+    wmPump();
 
     // Posisi Pemain (Arka)
     if (sc && sc.pl) {
@@ -20165,6 +20236,14 @@ function openWorldMap(sc) {
     }
   };
 
+  function wmPump() {
+    if (wmBusy || !wmQueue.size) return; wmBusy = true;
+    setTimeout(() => {
+      const id = wmQueue.values().next().value; wmQueue.delete(id);
+      try { worldOverview(MAPS[id]); } catch (e) { console.error('peta benua', id, e); WOV[id] = document.createElement('canvas'); }
+      wmBusy = false; if (document.getElementById('wmap')) { drawMap(blinkState); }
+    }, 0);
+  }
   let blinkState = true;
   drawMap(blinkState);
   timer = setInterval(() => {
