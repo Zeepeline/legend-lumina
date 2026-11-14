@@ -7740,11 +7740,37 @@ Object.assign(World.prototype, {
     }
   },
   shockwave(x, y, R, atk) {
-    sfxAt('boom', x, y, this); this.camShake(250, .012);
-    const g = this.add.graphics().setDepth(y - 1); const o = { r: 6 };
-    this.tweens.add({ targets: o, r: R, duration: 300, onUpdate: () => { g.clear(); g.lineStyle(3, 0xfff0b0, 1 - o.r / R * .6).strokeEllipse(x, y, o.r * 2, o.r * 1.2); g.lineStyle(1, 0xffffff, .8).strokeEllipse(x, y, o.r * 1.6, o.r * .9); }, onComplete: () => g.destroy() });
-    const p = this.add.particles(x, y, 'smoke', { lifespan: 600, speed: { min: 30, max: 70 }, angle: { min: 160, max: 380 }, scale: { start: .8, end: 1.6 }, alpha: { start: .6, end: 0 }, emitting: false, tint: 0xd8c8a0 }).setDepth(y + 1); p.explode(14); this.time.delayedCall(700, () => p.destroy());
-    const pl = this.pl; if (Math.hypot(pl.x - x, (pl.y - y) * 1.5) < R) this.hurtPlayer(atk, x, y);
+    const tg = this.add.graphics().setDepth(y - 2);
+    const fill = { p: 0 };
+    this.tweens.add({
+      targets: fill, p: 1, duration: 500,
+      onUpdate: () => {
+        tg.clear();
+        tg.lineStyle(2, 0xff3a3a, .75).strokeEllipse(x, y, R * 2, R * 1.2);
+        tg.fillStyle(0xff4433, .22).fillEllipse(x, y, R * 2 * fill.p, R * 1.2 * fill.p);
+      },
+      onComplete: () => {
+        tg.destroy();
+        sfxAt('boom', x, y, this); this.camShake(250, .012);
+        const g = this.add.graphics().setDepth(y - 1); const o = { r: 6 };
+        this.tweens.add({
+          targets: o, r: R, duration: 300,
+          onUpdate: () => {
+            g.clear();
+            g.lineStyle(3, 0xfff0b0, 1 - o.r / R * .6).strokeEllipse(x, y, o.r * 2, o.r * 1.2);
+            g.lineStyle(1, 0xffffff, .8).strokeEllipse(x, y, o.r * 1.6, o.r * .9);
+          },
+          onComplete: () => g.destroy()
+        });
+        const p = this.add.particles(x, y, 'smoke', {
+          lifespan: 600, speed: { min: 30, max: 70 }, angle: { min: 160, max: 380 },
+          scale: { start: .8, end: 1.6 }, alpha: { start: .6, end: 0 }, emitting: false, tint: 0xd8c8a0
+        }).setDepth(y + 1);
+        p.explode(14); this.time.delayedCall(700, () => p.destroy());
+        const pl = this.pl;
+        if (Math.hypot(pl.x - x, (pl.y - y) * 1.5) < R) this.hurtPlayer(atk, x, y);
+      }
+    });
   },
   updShots(dt, locked) {
     if (locked) return;

@@ -1674,7 +1674,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; lawan serigala, babi hutan, golem → selalu ada "!" sebelum serangan.
 
-### [ ] T272. **Lingkaran bahaya untuk serangan area** — referensi: Hades, Monster Hunter
+### [x] T272. **Lingkaran bahaya untuk serangan area** — referensi: Hades, Monster Hunter
+- Selesai: method `shockwave()` menggambar elips telegraf merah transparan di tanah selama 0,5 detik yang mengisi dari tengah sebelum dentuman ledakan dan damage mengenai area.
 - File: `src/systems/combat.js`. Baca dulu: `shockwave()` (±310) dan pemanggilnya (grep `shockwave(`).
 - Lakukan: 0,5 s sebelum damage area, gambar elips merah transparan seukuran jangkauannya di tanah (depth di bawah karakter) yang mengisi dari tengah; damage terjadi saat terisi penuh.
 - Batasan: jangan ubah damage/jangkauan.
