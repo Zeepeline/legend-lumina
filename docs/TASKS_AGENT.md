@@ -2119,7 +2119,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); alat cek air: tepi atas & bawah tersambung.
 
-### [ ] T336. **Sungai Senja 3: membelah Padang Angin** — referensi: BotW, Stardew (sungai membelah wilayah)
+### [x] T336. **Sungai Senja 3: membelah Padang Angin** — referensi: BotW, Stardew (sungai membelah wilayah)
 - File: `src/world/maps/meadow.js` (`ponds`). Baca dulu: `docs/GEOGRAFI.md` §3; `WORLD_POS.meadow` = [4424, 2600], ukuran 1440×1040.
 - Lakukan: sungai masuk dari tepi atas di x lokal ≈ 726 (global 5150), berkelok ke tenggara menghindari Desa Kincir & bangunan, keluar tepi bawah di x lokal ≈ 1176 (global 5600). Arungan di setiap jalan. Lebar rx/ry 40–55.
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
