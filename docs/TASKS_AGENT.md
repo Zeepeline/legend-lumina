@@ -1633,13 +1633,15 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; dekati NPC berkali-kali → kalimat berganti.
 
-### [ ] T267. **Peta benua: tombol perbesar/perkecil**
+### [x] T267. **Peta benua: tombol perbesar/perkecil**
+- Selesai: sudah ada di `src/ui/worldmap.js` (tombol zoom in/out + dan -, tombol fokus Arka, serta navigasi pan/drag canvas).
 - File: `src/ui/worldmap.js`. Baca dulu: `openWorldMap()`.
 - Lakukan: tambahkan tombol + / − yang mengubah skala gambar (0,5×–3×) dan bisa digeser (sudah ada geser? cek); pertahankan titik Arka terlihat saat memperbesar.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; buka Peta Benua → perbesar 2× → geser → tutup tanpa error.
 
-### [ ] T268. **Teks dialog mengikuti ukuran huruf pengaturan**
+### [x] T268. **Teks dialog mengikuti ukuran huruf pengaturan**
+- Selesai: aturan `styles.css` memperluas penggunaan variabel `--fz` ke teks dialog `.dlg .tx`, kartu misi `#quest .qt`, dan kotak tip `#tip`.
 - File: `styles.css`. Baca dulu: aturan CSS kotak dialog & opsi ukuran huruf di `src/systems/polish.js` (BACA saja, cari 'font').
 - Lakukan: pastikan kotak dialog, kartu misi, dan tip memakai variabel ukuran huruf yang sama dengan pengaturan, sehingga opsi ukuran huruf berpengaruh ke semuanya.
 - Batasan: hanya CSS.

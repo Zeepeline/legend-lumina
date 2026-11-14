@@ -226,7 +226,7 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 .toast{display:flex;align-items:center;gap:3px;background:rgba(30,20,12,.82);border:1px solid rgba(255,230,180,.4);border-radius:4px;padding:1px 6px 1px 3px;font-size:9px;color:#fff;animation:tipin .25s ease}
 .toast img{width:12px;height:12px;image-rendering:pixelated}.toast b{color:#8dff9f}.toast.r1 span{color:#9ac8ff}.toast.r2 span{color:#d8a8ff}.toast.r3 span{color:#ffc860}
 /* ukuran huruf (#76) */
-.win .tx,.win .ops,.win .mf,.win .bd,.win .bl,.win .jb,.win .qr{zoom:var(--fz,1)}
+.win .tx,.win .ops,.win .mf,.win .bd,.win .bl,.win .jb,.win .qr,.dlg .tx,#quest .qt,#tip{zoom:var(--fz,1)}
 #bagw .gold{white-space:nowrap}
 #ui:has(.win) #toasts,body:has(.win) #toasts,
 #ui:has(.win) #mini,body:has(.win) #mini,
