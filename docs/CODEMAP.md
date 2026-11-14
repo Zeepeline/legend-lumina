@@ -363,9 +363,9 @@ _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (1)
 _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (2) — isi: lihat docs/CODEMAP.md_
 `MAIL_LIST` 3 · `openMailbox()` 11 · `CODEX_FLORA` 72 · `CODEX_FAUNA` 73 · `CODEX_BUGS` 74 · `CODEX_MINERAL` 75 · `openEncyclopedia()` 77 · `ALCHEMY_FORMULAS` 144 · `openAlchemyTable()` 151 · `openVillageVault()` 228 · `openHallOfFame()` 296 · `MEMORY_BOSSES` 342 · `openMemoryTrials()` 348
 
-## src/systems/economy/economy_3.js (138 baris)
+## src/systems/economy/economy_3.js (151 baris)
 _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (3) — isi: lihat docs/CODEMAP.md_
-`startRematchBattle()` 3 · `BARTER_DEALS` 52 · `CITY_BOUNTIES` 95 · `openCityBounties()` 101
+`startRematchBattle()` 3 · `BARTER_DEALS` 56 · `CITY_BOUNTIES` 99 · `openCityBounties()` 114
 
 ## src/systems/perf.js (57 baris)
 _Gelombang A (performa): culling objek di luar layar, entitas jauh "tidur", pengecekan berkala._

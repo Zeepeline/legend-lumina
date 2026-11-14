@@ -16977,7 +16977,11 @@ function startRematchBattle(sc, target) {
         else S.exp = (S.exp || 0) + target.exp;
         updHud();
 
-        await say(`LUAR BIASA! Kamu menaklukkan ${target.n} dalam waktu ${elapsedSec.toFixed(1)} detik! ${isNewRecord ? '⭐ REKOR TERBARU TERCATAT!' : ''}\nHadiah Ujian: +${target.gold} G, +${target.exp} EXP & 1 Permata Kecubung.`);
+        const recMsg = isNewRecord ? '⭐ REKOR TERBARU TERCATAT!' : '';
+        await say(
+          `LUAR BIASA! Kamu menaklukkan ${target.n} dalam waktu ${elapsedSec.toFixed(1)} detik! ${recMsg}\n` +
+          `Hadiah Ujian: +${target.gold} G, +${target.exp} EXP & 1 Permata Kecubung.`
+        );
         playBGM(bgmFor(sc.M));
       }
     }
@@ -17029,9 +17033,18 @@ World.prototype.openDirectBarter = async function () {
 
 // ---------------- 12. PAPAN BURONAN MONSTER LANGKA (#241) ----------------
 const CITY_BOUNTIES = [
-  { id: 'bounty_wolf', name: 'Taring Perak', map: 'meadow', x: 800, y: 720, rew: 200, loc: 'Padang Angin (dekat pohon buah)', d: 'Serigala berbulu perak yang lincah dan ganas meneror kafilah pedagang.' },
-  { id: 'bounty_frog', name: 'Raja Rawa Toksin', map: 'swamp', x: 880, y: 380, rew: 250, loc: 'Rawa Senja (ceruk timur)', d: 'Katak raksasa purba penyembur lendir beracun pekat di kubangan rawa.' },
-  { id: 'bounty_gargoyle', name: 'Gargoyle Merah', map: 'cave', x: 600, y: 220, rew: 300, loc: 'Gua Batu (lorong kristal utara)', d: 'Monster bersayap api yang bersembunyi di langit-langit kegelapan gua.' }
+  {
+    id: 'bounty_wolf', name: 'Taring Perak', map: 'meadow', x: 800, y: 720, rew: 200,
+    loc: 'Padang Angin (dekat pohon buah)', d: 'Serigala berbulu perak yang lincah dan ganas meneror kafilah pedagang.'
+  },
+  {
+    id: 'bounty_frog', name: 'Raja Rawa Toksin', map: 'swamp', x: 880, y: 380, rew: 250,
+    loc: 'Rawa Senja (ceruk timur)', d: 'Katak raksasa purba penyembur lendir beracun pekat di kubangan rawa.'
+  },
+  {
+    id: 'bounty_gargoyle', name: 'Gargoyle Merah', map: 'cave', x: 600, y: 220, rew: 300,
+    loc: 'Gua Batu (lorong kristal utara)', d: 'Monster bersayap api yang bersembunyi di langit-langit kegelapan gua.'
+  }
 ];
 
 async function openCityBounties(sc) {
