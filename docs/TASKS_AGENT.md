@@ -1913,7 +1913,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; konsol `S.hp = 10` → musuh menekan lebih cepat.
 
-### [ ] T306. **Penembak membidik ke depan (prediksi)** — referensi: Enter the Gungeon, Hades
+### [x] T306. **Penembak membidik ke depan (prediksi)** — referensi: Enter the Gungeon, Hades
 - File: `src/ai/enemies.js` + `src/systems/combat.js`. Baca dulu: `eShoot()` & cabang `'shoot'`.
 - Lakukan: pada kesulitan Normal ke atas, 50% tembakan diarahkan ke posisi Arka 0,35 s ke depan (posisi + kecepatan × 0,35). Santai: selalu ke posisi sekarang.
 - Jika SUDAH ada → tandai [x] "sudah ada".

@@ -32,6 +32,23 @@ World.prototype.hitEnemy = function (e, base, crit, nx, ny) {
 // sumber elemen: bola api = api (proyektil ditandai _curShot di updShots), nova = es, bom = api
 const _updShots = World.prototype.updShots;
 World.prototype.updShots = function (dt, locked) { this._inShots = true; try { return _updShots.call(this, dt, locked); } finally { this._inShots = false; this._curShot = null; } };
+// Penembak membidik ke depan / prediksi pergerakan pemain (T306)
+const _eShoot = World.prototype.eShoot;
+World.prototype.eShoot = function (e, kind, angles, dmg, abs) {
+  if (!abs && this.pl && this.pl.body) {
+    const isRelaxed = (typeof OPT !== 'undefined' && OPT.diff === 0);
+    if (!isRelaxed && Math.random() < 0.5) {
+      const pvx = this.pl.body.velocity.x || 0, pvy = this.pl.body.velocity.y || 0;
+      if (Math.hypot(pvx, pvy) > 10) {
+        const predX = this.pl.x + pvx * 0.35, predY = this.pl.y + pvy * 0.35;
+        const curAng = Math.atan2(this.pl.y - e.spr.y, this.pl.x - e.spr.x);
+        const delta = Math.atan2(predY - e.spr.y, predX - e.spr.x) - curAng;
+        angles = (angles || [0]).map(a => a + delta);
+      }
+    }
+  }
+  return _eShoot.call(this, e, kind, angles, dmg, abs);
+};
 // nova es
 const _nova = World.prototype.nova;
 World.prototype.nova = function () { this.curElem = 'ice'; try { return _nova.apply(this, arguments); } finally { this.time.delayedCall(400, () => { this.curElem = null; }); } };
