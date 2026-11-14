@@ -2155,7 +2155,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); masuk hutan dari danau → ikuti aliran sampai sungai hutan.
 
-### [ ] T342. **Hulu Sungai Senja (peralihan hutan→sungai)** — referensi: GEOGRAFI §3
+### [x] T342. **Hulu Sungai Senja (peralihan hutan→sungai)** — referensi: GEOGRAFI §3
 - File: `src/world/layout.js` entri `pl_forest_river` (`ponds`). Baca dulu: hasil tugas "Peralihan bisa punya air".
 - Lakukan: aliran horizontal di y global ≈ 4712 dari tepi kiri ke kanan, menyambung sungai hutan & anak sungai di `river`. Arungan di jalan L.
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar

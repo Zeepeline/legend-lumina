@@ -455,9 +455,9 @@ _Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)_
 _Layar judul_
 `titleScreen()` 4
 
-## src/world/layout.js (122 baris)
+## src/world/layout.js (125 baris)
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
-`exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 26 · `plEnemies()` 28 · `NEIGH` 77
+`exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 29 · `plEnemies()` 31 · `NEIGH` 80
 
 ## src/gfx/gptassets.js (36 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
