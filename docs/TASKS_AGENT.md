@@ -3092,7 +3092,7 @@ boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
 - Lakukan: tiap jalan utama diberi 1–2 papan nama di persimpangan: "Jalan Gerbang Timur", "Jalan Kuil", "Gang Pandai Besi", dll. Teks pendek (≤ 20 huruf).
 - Cek: `npm run check` (0 masalah); papan terbaca di persimpangan utama.
 
-## L. GELOMBANG 11 — PERBAIKAN tanah: garis kotak-kotak & pola rapi (T409–T419) — KERJAKAN DULU sebelum gelombang lain
+## L. GELOMBANG 11 — PERBAIKAN tanah: garis kotak-kotak & pola rapi (T409–T419) — SEBAGIAN SUDAH DIPASANG Claude v1.32.0 (`src/world/ground_verdant.js`); sisa: T414–T417
 **Masalah (screenshot pemain):** tanah tampak seperti kotak-kotak berpagar gelap tiap 64 px; batu & bunga yang sama berulang di tiap kotak.
 **Penyebab pasti:** petak `gpt_tile_verdant_*`, `tile_verdant_*`, `land_verdant_*`, `verdant_*_tile`, `verdant_tile_32` dipotong langsung dari
 `enemy_image/lands/Verdant Forest Pixel Tileset.png`. Petak di lembar itu adalah ILUSTRASI berbingkai (tepi bergerigi, celah gelap, batu & bunga di dalamnya),
@@ -3113,13 +3113,13 @@ BUKAN petak seamless. Diulang dengan `% 64` di `src/world/ground.js` (±baris 15
 4. Ornamen kecil disebar terpisah: grid 40 px global + geser acak 2–18 px dari `hash`, digambar ke kanvas tanah — BUKAN objek Phaser. Di atas tanah: hanya kerikil.
 5. Batu besar, semak, pohon, gelagah tetap objek (`OBJ`), bukan bagian tanah.
 
-### [ ] T409. **Daftarkan petak & ornamen baru** — referensi: —
+### [x] T409. **Daftarkan petak & ornamen baru** — referensi: —
 - File: `src/gfx/textures.js` (`IMG_LIST`). Baca dulu: baris `IMG_LIST` & `loadImgs`.
 - Lakukan: tambahkan `'gnd_grass','gnd_grass_light','gnd_grass_dark','gnd_dirt'`, 12 nama `deco_fl_*` dan ke-15 nama `deco_*` di atas (pakai `...['tuft',…].map(k => 'deco_' + k)`).
   Hapus `"tile_verdant_grass", "tile_verdant_dirt"` dari `GPT_SWAP` di `src/gfx/gptassets.js` (jangan hapus file png-nya dulu).
 - Cek: `npm run check` (0 masalah); konsol `IMGEL.gnd_grass.width === 128`; tidak ada "Gagal memuat gambar".
 
-### [ ] T410. **Ganti petak tanah di ground.js** — referensi: Stardew Valley (tanah polos + ornamen terpisah)
+### [x] T410. **Ganti petak tanah di ground.js** — referensi: Stardew Valley (tanah polos + ornamen terpisah)
 - File: `src/world/ground.js` (blok `isVerdant`, ±baris 155–170). Baca dulu: `getTileData`, blok itu saja.
 - Lakukan: pakai `getTileData('gnd_grass')`, `getTileData('gnd_grass_dark')`, `getTileData('gnd_dirt')`; indeks petak `% 128` (bukan 64), lebar baris 128.
   Pilih petak per piksel (tanpa rata-rata warna): `const t = BAYER[y&3][x&3]/16 - .5;` (`BAYER=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]]`)
@@ -3131,21 +3131,21 @@ BUKAN petak seamless. Diulang dengan `% 64` di `src/world/ground.js` (±baris 15
   `hash(x,y,31) < 0.5`), jangan `>> 1` rata-rata.
 - Cek: `npm run check` (0 masalah); di Padang/Desa/Hutan TIDAK ada garis grid; bandingkan dengan `assets/reference/pola_tanah_preview.png`.
 
-### [ ] T411. **Ornamen tanah dari gambar deco_*** — referensi: Stardew Valley, Eastward
+### [x] T411. **Ornamen tanah dari gambar deco_*** — referensi: Stardew Valley, Eastward
 - File: `src/world/ground.js` (blok hiasan rumput ±baris 181–186 yang memakai `GP.tuft`). Baca dulu: blok itu saja.
 - Lakukan: untuk wilayah verdant: per sel 40 px (koordinat global, agar chunk bersebelahan sama) pilih ornamen dengan `hash(sel,…)` sesuai aturan 4
   dan gambar `x.drawImage(IMGEL['deco_'+k], X, Y)` bila sel (+ ukuran gambar) bersinggungan dengan `rect`. Grid 22 px, geser 0–15 px. Peluang di
   rumput: tuft 16%, sprout_c 8%, sprout_a 4%, fl_w* 12%, fl_p* 7%, fl_y* 4%, fl_v* 3% (angka 1–3 acak), mushroom 1% (hanya hutan); di tanah: pebble 12%. `M.flowers` → peluang bunga ×2. Contoh persis: `tools/gen_ground_preview.py`. Bukan-verdant: kode lama tetap.
 - Cek: `npm run check` (0 masalah); ornamen tidak terpotong di batas chunk 64 px (cek dengan berjalan pelan); tidak ada objek Phaser baru.
 
-### [ ] T412. **Hapus petak lama yang rusak** — referensi: —
+### [x] T412. **Hapus petak lama yang rusak** — referensi: —
 - File: `assets/img/` petak lama; `src/gfx/gptassets.js`. Baca dulu: `grep -rn "verdant_ground\|tile_verdant\|land_verdant\|verdant_.*_tile\|verdant_tile_32" src`.
 - Lakukan: setelah T410 lulus, hapus 13 file png: `gpt_tile_verdant_{grass,dirt}`, `gpt_verdant_ground_{grass,dirt}`, `verdant_ground_{grass,dirt}`,
   `tile_verdant_{grass,dirt}`, `land_verdant_{grass,dirt}`, `verdant_{grass,dirt}_tile`, `verdant_tile_32` & semua rujukannya. Lembar sumber di `enemy_image/lands/` TETAP. Kode `buildTextures` yang mendaftarkan nama "bare" untuk `gpt_*` (commit 9d0a44f)
   dibiarkan, tapi pastikan tidak menimpa tekstur lama dengan nama sama (`T.exists` sudah dicek).
 - Cek: `npm run check` (0 masalah); `grep -rn "tile_verdant\|verdant_ground" src` kosong; game tetap memuat.
 
-### [ ] T413. **Jalan setapak tanah yang rapi** — referensi: Stardew Valley (jalan tanah bertepi rumput)
+### [x] T413. **Jalan setapak tanah yang rapi** — referensi: Stardew Valley (jalan tanah bertepi rumput)
 - File: `src/world/ground.js` (cabang `d < 0` dengan `GP.path === 'dirt'`). Baca dulu: cabang itu.
 - Lakukan: untuk wilayah verdant, jalan tanah memakai piksel `gnd_dirt` (indeks `% 128`) dan tepi 3 px memakai dither yang sama (aturan 3),
   bukan warna `DIRT[k]` datar. Jalan batu (bukan 'dirt') JANGAN diubah.
@@ -3158,13 +3158,13 @@ BUKAN petak seamless. Diulang dengan `% 64` di `src/world/ground.js` (±baris 15
   kini sudah ada di ornamen tanah (T411).
 - Cek: `npm run check` (0 masalah); tidak ada kotak gelap di sekitar batu.
 
-### [ ] T418. **Kaki objek tertanam rumput** — referensi: target_padang.png (batu & semak dikelilingi rumput)
+### [x] T418. **Kaki objek tertanam rumput** — referensi: target_padang.png (batu & semak dikelilingi rumput)
 - File: `src/world/ground.js` (setelah ornamen T411). Baca dulu: `scatter`, daftar objek peta `M._list`.
 - Lakukan: untuk objek batu/semak/tunggul (`rock*`, `verdant_rock_*`, `verdant_bush*`, `verdant_stump`, `bush*`) di peta verdant, gambar 3–5 `deco_tuft`
   di sekitar kakinya (x ± setengah lebar objek, y −3…+2) ke kanvas tanah yang chunk-nya memuat titik itu. Posisi dari `hash(x,y)` agar tetap sama.
 - Cek: `npm run check` (0 masalah); batu & semak tidak lagi "melayang" di atas rumput datar.
 
-### [ ] T419. **Tepi padang dibingkai pohon rimbun** — referensi: target_padang.png
+### [x] T419. **Tepi padang dibingkai pohon rimbun** — referensi: target_padang.png
 - File: peta Padang & Hutan (`src/world/maps/meadow.js`, `forest.js`, data `border`/`trees`). Baca dulu: `borderTrees` di `ground.js`, `PLACEMENT_RULES.md`.
 - Lakukan: pakai `verdant_tree` untuk pohon tepi & kelompok pohon (2–4 pohon saling tumpang, jarak 40–60 px); area tengah tetap lapang dengan batu &
   semak tersebar (1 per ±200×200 px). Jangan menutup jalan/portal.
