@@ -39,6 +39,7 @@ Object.assign(World.prototype, {
     const pl = this.pl, st = stat(), J = JURUS[id], t = tierOf(id);
     if (pl.atkCd > 0) return; if (S.mp < J.mp) { popWorld(pl.x, pl.y - 30, 'MP kurang!', 'mpc'); sfx('buzz'); return; }
     S.mp -= J.mp; updHud(); pl.atkCd = .45; pl.atkT = .2; useJurus(this, id);
+    if (this.spellFx) this.spellFx(id, t);
     if (id === 'heal') {
       const n = Math.round(st.maxhp * (.22 + .08 * t)); S.hp = Math.min(st.maxhp, S.hp + n); updHud(); sfx('heal');
       popWorld(pl.x, pl.y - 34, '+' + n, 'heal'); this.sparkle(pl.x, pl.y - 12, 'dot', 16); this.cameras.main.flash(150, 255, 250, 200); return;
