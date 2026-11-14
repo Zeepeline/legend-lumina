@@ -1360,7 +1360,7 @@ Object.assign(World.prototype, {
 ## E. GELOMBANG 4 — kinerja (T230–T235)
 File BARU milik agen: `src/systems/benua_unload.js`. Web Worker tanah & atlas tekstur TIDAK untuk agen ini (cukup diukur di KINERJA 5–6).
 
-### [ ] T230. **[KINERJA 1] File `src/systems/benua_unload.js`: catat objek per petak**
+### [x] T230. **[KINERJA 1] File `src/systems/benua_unload.js`: catat objek per petak**
 - Latar (BACA saja, jangan ubah): mode benua memuat objek per petak 512 px lewat `streamObjs` di `src/systems/benua_scene.js`; tiap objek dibuat `this.spawnObj(o)` dengan `o = [tipe, x, y, opt]` (koordinat global). Objek tidak pernah dibuang → memori naik.
 - Buat file baru, daftarkan di `index.html` tepat SETELAH `<script src="src/systems/benua_scene.js"></script>`:
 ```js
@@ -1382,7 +1382,7 @@ const UNLOAD_FAR = 1700, UNLOAD_EVERY = 1.5; // px dari Arka; detik antar-pemeri
   };
 }
 ```
-- Cek: `?benua=1`, konsol `__game.sc.cellRec.size > 0` dan `[...__game.sc.cellRec.values()][0].objs.length > 0`.
+- Cek: `?benua=1`, konsol `__game.sc.cellRec.size > 0` dan `[...__game.sc.cellRec.values()][0].objs.length > 0`. (selesai di v1.30.1)
 
 ### [ ] T231. **[KINERJA 2] Buang petak yang jauh** (butuh KINERJA 1)
 - Di `benua_unload.js` tambahkan metode (di luar blok, `Object.assign(World.prototype, { … })`):
