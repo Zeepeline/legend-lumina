@@ -2695,7 +2695,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); akademi tampak teratur dibanding pasar.
 
-### [ ] T354. **Kota Bawah: sempit & berliku** — referensi: Kota tua (gang), Bloodborne (Yharnam)
+### [x] T354. **Kota Bawah: sempit & berliku** — referensi: Kota tua (gang), Bloodborne (Yharnam)
 
 - File: `src/world/maps/city.js` peta `kbawah`. Baca dulu: `objs`, `paths`.
 - Lakukan: jalan lebih sempit (radius 8–9) & berliku, banyak tumpukan barang/tong di pinggir gang, sedikit lampu. Tetap: lebar lorong ≥ 32 px & semua pintu tercapai.
