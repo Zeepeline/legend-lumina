@@ -16416,13 +16416,24 @@ World.prototype.hurtPlayer = function (atk, sx, sy, fx) {
     const e = this.enemies.filter(e => e.hp > 0 && !e.boss).sort((a, b) => Math.hypot(a.spr.x - sx, a.spr.y - sy) - Math.hypot(b.spr.x - sx, b.spr.y - sy))[0];
     if (e && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 60) {
       pl.swingT = null; pl.inv = .4; pl.parryCrit = 1.5; S.parries = (S.parries || 0) + 1;
-      e.kb = .2; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1; e.kbx = (e.spr.x - pl.x) / n * 200; e.kby = (e.spr.y - pl.y) / n * 200; e.st = 'rec'; e.t = 1;
+      e.staggerT = 0.6; e.st = 'rec'; e.t = 0.6; e.spr.setVelocity(0);
+      e.kb = .2; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1; e.kbx = (e.spr.x - pl.x) / n * 200; e.kby = (e.spr.y - pl.y) / n * 200;
       if (e.D && e.D.ai === 'fly') {
         // Jatuhkan musuh terbang saat ditangkis waktu menukik (#7)
         this.freezeEnemy(e, 2);
         popWorld(e.spr.x, e.spr.y - 20, 'JATUH TERSUNGKUR!', 'crit');
       }
-      sfx('crit'); this.hitStop(.12, 30); this.sparkle((pl.x + e.spr.x) / 2, (pl.y + e.spr.y) / 2 - 10, 'doto', 10); popWorld(pl.x, pl.y - 34, 'TANGKIS!', 'crit'); return;
+      const pRing = this.add.graphics().setDepth(pl.y + 4); const ro = { r: 8 };
+      this.tweens.add({
+        targets: ro, r: 42, duration: 220, ease: 'Quad.easeOut',
+        onUpdate: () => { pRing.clear(); pRing.lineStyle(2.5, 0xffffff, 1 - ro.r / 42).strokeCircle(pl.x, pl.y - 10, ro.r); },
+        onComplete: () => pRing.destroy()
+      });
+      sfx('crit'); this.hitStop(.12, 30); this.sparkle((pl.x + e.spr.x) / 2, (pl.y + e.spr.y) / 2 - 10, 'doto', 10);
+      popWorld(pl.x, pl.y - 34, 'TANGKIS!', 'crit');
+      this.time.timeScale = 0.25; this.physics.world.timeScale = 0.25;
+      setTimeout(() => { if (this.time) { this.time.timeScale = 1; this.physics.world.timeScale = 1; } }, 150);
+      return;
     }
   }
   return _hurtPlayer.apply(this, arguments);

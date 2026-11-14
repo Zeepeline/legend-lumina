@@ -1749,7 +1749,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; panah/bola sihir musuh terlihat jelas di rumput & malam hari.
 
-### [ ] T282. **Tangkis (parry) terasa memuaskan** — referensi: Sekiro, Hollow Knight
+### [x] T282. **Tangkis (parry) terasa memuaskan** — referensi: Sekiro, Hollow Knight
+- Selesai: parry sukses memunculkan lingkar cahaya putih membesar dari Arka, perlambatan waktu (slomo 0,15s pada timeScale), sfx kritikal, dan musuh terhuyung 0,6 detik.
 - File: `src/systems/polish.js`. Baca dulu: `PARRY_WIN` (±27) & pembungkus `_hurtPlayer` (±30) tempat tangkis berhasil.
 - Lakukan: saat tangkis berhasil: lingkar cahaya putih membesar dari Arka, suara `sfx('parry')` atau yang ada, perlambatan waktu 0,15 s (`this.time.timeScale` & `physics.world.timeScale`, kembalikan setelahnya), musuh penyerang terhuyung 0,6 s.
 - Batasan: jangan ubah jendela waktu tangkis.
