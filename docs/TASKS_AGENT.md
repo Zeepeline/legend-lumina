@@ -2106,10 +2106,11 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); jalan dari mata air ke tepi selatan terlihat sebagai satu aliran utuh; jalur pemain tetap bisa lewat. (selesai di v1.30.1)
 
-### [ ] T334. **Peralihan bisa punya air (dukungan data)** — referensi: —
+### [x] T334. **Peralihan bisa punya air (dukungan data)** — referensi: —
 - File: `src/world/layout.js` (PENGECUALIAN KUNCI hanya untuk tugas ini). Baca dulu: `PERALIHAN` & `buildPeralihan()`.
 - Lakukan: izinkan entri `PERALIHAN` memiliki field opsional `ponds` (koordinat lokal peta peralihan) yang disalin apa adanya ke `MAPS[pl_*].ponds` oleh `buildPeralihan`. Pohon tepi/hiasan otomatis jangan diletakkan di atas elips itu (lewati bila titik di dalam elips).
 - Batasan: jangan ubah posisi `WORLD_POS`.
+- Cek: `npm run check` (0 masalah); `MAPS.pl_*.ponds` didukung dan scatter pohon menghindarinya. (selesai di v1.30.1)
 - Cek: `npm run check` (0 masalah); konsol `MAPS.pl_meadow_snow.ponds` berisi data yang ditambahkan tugas berikut.
 
 ### [ ] T335. **Sungai Senja 2: lereng Puncak Beku → Padang** — referensi: GEOGRAFI §3

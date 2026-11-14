@@ -28,7 +28,8 @@ function plEnemies(A, B, paths) {
 }
 (function buildPeralihan() {
   const PAD = 300, GAPW = 84, inside = (M, e, d) => { const s = SIDE_OF(M, e), cx = e.x + e.w / 2, cy = e.y + e.h / 2; return s === 'W' ? [cx + d, cy] : s === 'E' ? [cx - d, cy] : s === 'N' ? [cx, cy + d] : [cx, cy - d]; };
-  for (const [a, b, ground, name] of PERALIHAN) {
+  for (const item of PERALIHAN) {
+    const a = item[0], b = item[1], ground = item[2], name = item[3], ponds = item[4] || [];
     const A = MAPS[a], B = MAPS[b], ea = A.exits.find(e => e.to === b), eb = B.exits.find(e => e.to === a); if (!ea || !eb) { console.warn('Peralihan tanpa pintu', a, b); continue; }
     const sa = SIDE_OF(A, ea), PA = WORLD_POS[a], PB = WORLD_POS[b];
     const ga = [PA[0] + ea.x + ea.w / 2, PA[1] + ea.y + ea.h / 2], gb = [PB[0] + eb.x + eb.w / 2, PB[1] + eb.y + eb.h / 2];
@@ -59,7 +60,8 @@ function plEnemies(A, B, paths) {
     let TT = { meadow: [['treeA', .2], ['treeB', .15], ['bushG2', .2], ['bushG1', .15], ['rock', .2], ['apple1', .05], ['stump', .05]], forest: [['treeAd', .3], ['treeBd', .25], ['pined', .2], ['bushG2', .1], ['stump', .05], ['rock', .1]], swamp: [['bushG1', .35], ['rock', .25], ['stump', .2], ['treeBd', .2]] }[ground];
     if (id === 'pl_meadow_snow') TT = [['treeA', .15], ['treeSn', .25], ['rock', .25], ['bushW', .15], ['bushG2', .1], ['stump', .1]];
     MAPS[id] = { id, name, w: Math.round(W), h: Math.round(H), ground, bgm: A.bgm, scale: Math.max(A.scale || 1, B.scale || 1), peralihan: [a, b],
-      paths, discs: [], objs: [], npcs: [], enemies: plEnemies(A, B, paths), exits, border, trees: { n: Math.round(W * H / (ground === 'forest' ? 2600 : 4600)), min: 30, types: TT } };
+      paths, discs: [], objs: [], ponds, npcs: [], enemies: plEnemies(A, B, paths), exits, border,
+      trees: { n: Math.round(W * H / (ground === 'forest' ? 2600 : 4600)), min: 30, types: TT } };
     WORLD_POS[id] = [Math.round(X), Math.round(Y)];
     // pintu lama A→B dan B→A sekarang menuju medan peralihan
     Object.assign(ea, { to: id, tx: la[0] + (sideA === 'N' ? 0 : sideA === 'S' ? 0 : sideA === 'W' ? 34 : -34), ty: la[1] + (sideA === 'N' ? 34 : sideA === 'S' ? -34 : 0), label: name });
