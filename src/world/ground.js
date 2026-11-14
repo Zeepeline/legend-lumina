@@ -152,10 +152,18 @@ function genGround(M, rect) {
     if (glow) { const g = Math.max(0, 1 - Math.hypot(x - glow[0], (y - glow[1]) * 1.3) / glow[2]); f = g * g * .16; }
     if (d < 2.2) { put(i, EDGE, f * .5); continue; }
     if (d < 4 && hash(x, y, 4) > .5) k = Math.max(0, k - 1);
-    const tData = (M.ground === 'forest' || M.ground === 'meadow' || M.ground === 'village') ? getTileData('verdant_ground_grass') : null;
-    if (tData) {
+    const isVerdant = (M.ground === 'forest' || M.ground === 'meadow' || M.ground === 'village');
+    const gTile = isVerdant ? getTileData('tile_verdant_grass') : null;
+    const dTile = isVerdant ? getTileData('tile_verdant_dirt') : null;
+    if (gTile && dTile) {
       const tx = ((x + GX) % 64 + 64) % 64, ty = ((y + GY) % 64 + 64) % 64, ti = (ty * 64 + tx) * 4;
-      let tr = tData[ti], tg = tData[ti + 1], tb = tData[ti + 2];
+      // Perpaduan organik rumput & tanah tanpa garis tepi yang keras (smooth noise transition)
+      const pNoise = vnoise(x + GX, y + GY, 42, 7) * .65 + vnoise(x + GX, y + GY, 16, 9) * .35;
+      // pNoise > 0.63 -> bercak tanah alami dengan gradasi lembut
+      let dw = pNoise > 0.68 ? 1 : pNoise > 0.58 ? (pNoise - 0.58) / 0.1 : 0;
+      let tr = Math.round(gTile[ti] * (1 - dw) + dTile[ti] * dw);
+      let tg = Math.round(gTile[ti + 1] * (1 - dw) + dTile[ti + 1] * dw);
+      let tb = Math.round(gTile[ti + 2] * (1 - dw) + dTile[ti + 2] * dw);
       if (blend) { const c2 = blend(x, y, k); if (c2) { tr = (tr + c2[0]) >> 1; tg = (tg + c2[1]) >> 1; tb = (tb + c2[2]) >> 1; } }
       put(i, [tr, tg, tb], f);
     } else {

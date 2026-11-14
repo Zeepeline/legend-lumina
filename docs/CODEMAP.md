@@ -91,9 +91,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 203 · obj `treeA` 210 · obj `goblin_torch` 218 · obj `goblin_cauldron` 221 · obj `cryst` 230 · obj `lamp` 233 · obj `viewpoint` 236 · obj `lumina_shard` 270
 
-## src/world/ground.js (314 baris)
+## src/world/ground.js (322 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `TILE_CACHE` 90 · `getTileData()` 91 · `genGround()` 100 · `blockRects()` 215 · `scatter()` 231 · `openSides()` 264 · `borderTrees()` 277 · `ringObjects()` 293 · `mapObjects()` 298 · `mapWalls()` 302
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `TILE_CACHE` 90 · `getTileData()` 91 · `genGround()` 100 · `blockRects()` 223 · `scatter()` 239 · `openSides()` 272 · `borderTrees()` 285 · `ringObjects()` 301 · `mapObjects()` 306 · `mapWalls()` 310
 
 ## src/world/maps/village.js (88 baris)
 _Peta: Desa Lumina_
@@ -123,7 +123,7 @@ _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (143 baris)
+## src/world/maps/city.js (147 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 
@@ -179,7 +179,7 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 23 · `shadowIndex()` 24
 
-## src/gfx/textures.js (125 baris)
+## src/gfx/textures.js (130 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 15 · `addStrip()` 16 · `darkTree()` 17 · `NPC_W` 19 · `regPortrait()` 20 · `regChar()` 25 · `buildTextures()` 41
 

@@ -41,7 +41,12 @@ function regChar(T, k) {
 function buildTextures(sc) {
   const T = sc.textures, one = (k, c) => T.addCanvas(k, c);
   for (const k in IMGEL) {
-    if (IMGEL[k]) T.addImage('i_' + k, IMGEL[k]);
+    if (!IMGEL[k]) continue;
+    T.addImage('i_' + k, IMGEL[k]);
+    if (k.startsWith('gpt_')) {
+      const bare = k.slice(4);
+      if (!T.exists(bare)) T.addImage(bare, IMGEL[k]);
+    }
   }
   one('treeAd', darkTree(IMGEL.treeA)); one('treeBd', darkTree(IMGEL.treeA));
   one('pear', artFruitTree('pear', 3)); one('round', artRoundTree(4)); one('pine', artPine(5)); one('pined', artPine(6, 1));
