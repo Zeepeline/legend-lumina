@@ -171,9 +171,9 @@ _Jam & siang-malam_
 _Cek pencapaian_
 `totalKills()` 3 · `achCheck()` 4
 
-## src/gfx/bake.js (28 baris)
+## src/gfx/bake.js (48 baris)
 _Panggang bayangan objek ke tekstur tanah_
-`SHC` 3 · `bakeGround()` 4 · `SHB` 15 · `shadowIndex()` 16
+`SHC` 3 · `bakeGround()` 4 · `SHB` 23 · `shadowIndex()` 24
 
 ## src/gfx/textures.js (125 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
