@@ -47,6 +47,18 @@ Object.assign(World.prototype, {
     if (e.aura) e.aura.setPosition(s.x, s.y).setDepth(s.y - 1);
     if (e.boss) return;
     const pl = this.pl, d = Math.hypot(pl.x - s.x, pl.y - s.y);
+    // musuh penyergap di semak (T311)
+    if (e.ambushing) {
+      s.setVelocity(0);
+      if (d < 60 && !pl.dead) {
+        e.ambushing = false; e.spr.setAlpha(1);
+        if (e.sh) e.sh.setAlpha(0.22);
+        markOver(this, e, '!', '#ff3a3a');
+        sfxAt('jump', s.x, s.y, this); this.puff(s.x, s.y);
+        e.alert = 2; e.st = 'chase';
+      }
+      return;
+    }
     // status elite mengamuk saat temannya tumbang (T310)
     if (e.elite && (e.enrageT || 0) > 0) {
       e.enrageT -= dt;

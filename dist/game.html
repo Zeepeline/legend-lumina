@@ -44,18 +44,20 @@ body{font-family:'Pixelify Sans','Courier New',monospace;color:#3b2618}
 .done .more{opacity:1;animation:bob .6s ease-in-out infinite alternate}
 @keyframes bob{to{transform:translateY(2px)}}
 @keyframes blink{50%{opacity:.25}}
-#hud{position:absolute;left:4px;top:4px;display:flex;gap:4px;align-items:center;background:rgba(30,20,12,.62);border:1px solid rgba(255,230,180,.35);border-radius:4px;padding:3px 5px 3px 4px;color:#fff;transition:opacity .3s;z-index:2}
-#hud .lv{font-size:8px;line-height:9px;text-align:center;color:#ffe27a;font-weight:700;width:18px}
-#hud .lv b{display:block;font-size:12px;line-height:12px;color:#fff}
+#hud{position:absolute;left:4px;top:4px;display:flex;gap:4px;align-items:center;background:rgba(20,14,10,.82);border:2px solid #000;border-radius:4px;padding:3px 5px;color:#fff;transition:opacity .3s;z-index:2}
+.hud-sub{display:flex;align-items:center;gap:4px;margin-top:1px}
+.hud-sub .lv{font-size:7.5px;color:#ffe27a;font-weight:700}
+.hud-sub .lv b{font-size:8.5px;color:#fff}
 .bars{display:flex;flex-direction:column;gap:2px}
-.bar{position:relative;width:66px;height:7px;background:#2a1a12;border-radius:2px;overflow:hidden;box-shadow:inset 0 0 0 1px #000}
+.bar{position:relative;width:74px;height:6px;background:#1a100a;border-radius:1px;overflow:hidden;box-shadow:inset 0 0 0 1px #000}
 .bar>i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(#9cf07a,#3cae3a);transition:width .12s}
+.bar.hp>i.fill{background:linear-gradient(#ef4444,#b91c1c)}
 .bar.hp>i.ghost{background:linear-gradient(#ffa090,#d03030);transition:width .6s ease-out .25s}
-.bar.mp>i{background:linear-gradient(#a8e4ff,#3a8ee0)}
-.bar.sta>i{background:linear-gradient(#ffe066,#d49818)}
-.bar.xp{height:3px}.bar.xp>i{background:linear-gradient(#fff0a0,#e0a82a)}
-.bar.low>i{background:linear-gradient(#ffb08a,#e0582a)}
-.bar>span{position:absolute;right:2px;top:-1px;font-size:7px;line-height:9px;color:#fff;text-shadow:1px 1px 0 #000}
+.bar.sta>i.fill{background:linear-gradient(#22c55e,#15803d)}
+.bar.mp>i.fill{background:linear-gradient(#38bdf8,#0284c7)}
+.bar.xp{height:2px;flex:1}.bar.xp>i{background:linear-gradient(#fff0a0,#e0a82a)}
+.bar.low>i.fill{background:linear-gradient(#f87171,#dc2626)}
+.bar>span{position:absolute;right:2px;top:-1px;font-size:6px;line-height:8px;color:#fff;text-shadow:1px 1px 0 #000;font-family:monospace}
 #hud2{position:absolute;right:4px;top:4px;display:flex;gap:6px;align-items:center;background:rgba(30,20,12,.62);border:1px solid rgba(255,230,180,.35);border-radius:4px;padding:2px 6px;color:#fff;font-size:10px;transition:opacity .3s;z-index:2}
 #hud2 img{width:10px;height:10px;image-rendering:pixelated;vertical-align:-1px;margin-right:2px}
 #hud2 .pt img{width:9px;height:11px}
@@ -5494,13 +5496,13 @@ MAPS.forest = {
   exits: [{ x: 0, y: 700, w: 12, h: 60, to: 'deepwood', tx: 2340, ty: 730, dir: 'left', label: 'Hutan Dalam' }, { x: 1268, y: 500, w: 12, h: 60, to: 'river', tx: 60, ty: 530, dir: 'right', label: 'Jalur Sungai' }, { x: 600, y: 0, w: 80, h: 12, to: 'village', tx: 512, ty: 664, dir: 'up', label: 'Desa Lumina' }],
   npcs: [{ id: 'hunter', ch: 'hunter', name: 'Pemburu Raka', x: 600, y: 90, dir: 'down' }],
   enemies: [
-    ['slime', 520, 220], ['slime', 600, 250], ['slime', 400, 330], ['bat', 440, 400], ['slime', 330, 470],
+    ['slime', 520, 220], ['slime', 600, 250], ['slime', 400, 330], ['bat', 440, 400], ['slime', 330, 470, { ambush: true }],
     ['goblin', 910, 370], ['goblin', 960, 320], ['goblin', 1040, 350], ['goblin', 1110, 330],
     ['goblin_archer', 890, 230], ['goblin_archer', 1170, 230], ['goblin_archer', 1010, 370], ['goblin_archer', 1140, 380],
     ['goblin_shaman', 1040, 250], ['goblin_shaman', 1150, 300],
     ['goblin_elite', 1080, 280],
     ['shroom', 210, 620], ['shroom', 170, 760], ['bat', 240, 700], ['wolf', 200, 520],
-    ['slimeb', 480, 720], ['shroom', 580, 740], ['bat', 660, 720], ['goblin', 680, 860], ['slimeb', 600, 900], ['wolf', 720, 950],
+    ['slimeb', 480, 720], ['shroom', 580, 740], ['bat', 660, 720], ['goblin', 680, 860, { ambush: true }], ['slimeb', 600, 900], ['wolf', 720, 950],
     ['snake', 960, 830], ['snake', 1060, 900], ['snake', 1000, 800], ['shroom', 1100, 830],
   ],
   bosses: [
@@ -5637,9 +5639,12 @@ MAPS.swamp = {
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 450], [0, 510, 40, 450], [1240, 0, 40, 960], [0, 930, 1280, 30]],
   exits: [{ x: 0, y: 450, w: 12, h: 60, to: 'river', tx: 2540, ty: 480, dir: 'left', label: 'Jalur Sungai' }, { x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }],
   npcs: [{ id: 'hermit', ch: 'hermit', name: 'Pertapa Sura', x: 604, y: 130, dir: 'down' }],
-  enemies: [['bounty_frog', 880, 380], ['frog', 520, 240], ['frog', 440, 330], ['wisp', 380, 420], ['slimep', 340, 480], ['frog', 260, 560], ['wisp', 420, 620],
+  enemies: [
+    ['bounty_frog', 880, 380], ['frog', 520, 240], ['frog', 440, 330, { ambush: true }], ['wisp', 380, 420],
+    ['slimep', 340, 480], ['frog', 260, 560, { ambush: true }], ['wisp', 420, 620],
     ['frog', 760, 250], ['slimep', 860, 340], ['wisp', 920, 440], ['plant', 1000, 520], ['frog', 900, 620], ['wisp', 820, 680],
-    ['slimep', 500, 680], ['ghost', 560, 760], ['snake', 760, 760], ['plant', 720, 560]],
+    ['slimep', 500, 680], ['ghost', 560, 760], ['snake', 760, 760], ['plant', 720, 560]
+  ],
   bosses: [{ type: 'witch', flag: 'witch', x: 640, y: 840, zone: [560, 772, 160, 130], need: 7, after: 'witch',
     intro: [['???', 'Jadi kamu bocah yang merusak rencanaku dengan Raja Goblin...'], ['Morgath', 'Aku Morgath. Cahaya Kristal Lumina seharusnya menjadi milikku! Lenyaplah dalam kabut!']] }],
   fish: [[620, 516]],
@@ -6059,8 +6064,12 @@ function updPops(cam) { for (const p of POPS) { p.e.style.left = Math.round(p.x 
 let HUD = null;
 function buildHud(icons) {
   HUD = document.createElement('div');
-  HUD.innerHTML = `<div id="hud"><div class="lv">LV<b id="hLv">1</b></div><div class="bars">
-   <div class="bar hp" id="hHp"><i class="ghost"></i><i class="fill"></i><span></span></div><div class="bar mp" id="hMp"><i></i><span></span></div><div class="bar sta" id="hSta" style="height:4px"><i></i></div><div class="bar xp" id="hXp"><i></i></div><div id="hSt"></div></div></div>
+  HUD.innerHTML = `<div id="hud"><div class="hud-main"><div class="bars">
+   <div class="bar hp" id="hHp"><i class="ghost"></i><i class="fill"></i><span></span></div>
+   <div class="bar sta" id="hSta"><i class="fill"></i><span></span></div>
+   <div class="bar mp" id="hMp"><i class="fill"></i><span></span></div>
+   <div class="hud-sub"><span class="lv">LV <b id="hLv">1</b></span><div class="bar xp" id="hXp"><i></i></div></div>
+   <div id="hSt"></div></div></div></div>
    <div id="hDate"></div><div id="hud2"><span id="hClock">☀</span><span id="hCompass" style="font-size:9px;color:#ffe27a;margin:0 2px;">🧭 U</span><span><img src="${icons.coin}"><b id="hGold">0</b></span><span class="pt"><img src="${icons.potion}"><b id="hPot">0</b></span></div>
    <div id="fps-meter" style="display:${OPT.fps ? 'block' : 'none'};position:absolute;top:28px;left:4px;font-size:9px;color:#a0f080;background:rgba(0,0,0,0.55);padding:2px 5px;border-radius:3px;z-index:9000;pointer-events:none;font-family:monospace;">60 FPS</div>
    <div id="quest"></div><div id="boss"><span id="bName"></span><div class="bar"><i class="ghost" id="bGhost"></i><i id="bHp"></i><div class="p2-line"></div></div></div>`;
@@ -6078,8 +6087,17 @@ function updHud() {
   if (fillBar) fillBar.style.width = hpPct;
   hp.lastChild.textContent = S.hp + '/' + st.maxhp;
   hp.classList.toggle('low', S.hp <= st.maxhp * .3);
-  const mp = $('hMp'); mp.firstChild.style.width = (S.mp / st.maxmp * 100) + '%'; mp.lastChild.textContent = S.mp + '/' + st.maxmp;
-  const sta = $('hSta'); if (sta) { const curSta = S.sta != null ? S.sta : st.maxsta; sta.firstChild.style.width = (curSta / st.maxsta * 100) + '%'; }
+  const curSta = S.sta != null ? S.sta : st.maxsta;
+  const sta = $('hSta');
+  if (sta) {
+    const staFill = sta.querySelector('.fill') || sta.firstChild;
+    if (staFill) staFill.style.width = (curSta / st.maxsta * 100) + '%';
+    sta.lastChild.textContent = Math.round(curSta) + '/' + st.maxsta;
+  }
+  const mp = $('hMp');
+  const mpFill = mp.querySelector('.fill') || mp.firstChild;
+  if (mpFill) mpFill.style.width = (S.mp / st.maxmp * 100) + '%';
+  mp.lastChild.textContent = S.mp + '/' + st.maxmp;
   $('hXp').firstChild.style.width = (S.exp / need(S.lv) * 100) + '%';
   $('hGold').textContent = Math.floor(S.gold || 0);
   const potEl = $('hPot');
@@ -15318,6 +15336,18 @@ Object.assign(World.prototype, {
     if (e.aura) e.aura.setPosition(s.x, s.y).setDepth(s.y - 1);
     if (e.boss) return;
     const pl = this.pl, d = Math.hypot(pl.x - s.x, pl.y - s.y);
+    // musuh penyergap di semak (T311)
+    if (e.ambushing) {
+      s.setVelocity(0);
+      if (d < 60 && !pl.dead) {
+        e.ambushing = false; e.spr.setAlpha(1);
+        if (e.sh) e.sh.setAlpha(0.22);
+        markOver(this, e, '!', '#ff3a3a');
+        sfxAt('jump', s.x, s.y, this); this.puff(s.x, s.y);
+        e.alert = 2; e.st = 'chase';
+      }
+      return;
+    }
     // status elite mengamuk saat temannya tumbang (T310)
     if (e.elite && (e.enrageT || 0) > 0) {
       e.enrageT -= dt;
@@ -15409,9 +15439,9 @@ Object.assign(World.prototype, {
     return true;
   },
 });
-// Penyesuaian ketangguhan musuh sesuai wilayah & level Arka (T307)
+// Penyesuaian ketangguhan musuh sesuai wilayah & level Arka (T307) serta penyergapan (T311)
 const _spawnEnemy = World.prototype.spawnEnemy;
-World.prototype.spawnEnemy = function (type, x, y) {
+World.prototype.spawnEnemy = function (type, x, y, opt) {
   const e = _spawnEnemy.call(this, type, x, y);
   if (e && !e.boss && typeof S !== 'undefined' && S.lv) {
     const areaLv = LEVEL_WILAYAH[this.M?.id] || 4;
@@ -15422,6 +15452,10 @@ World.prototype.spawnEnemy = function (type, x, y) {
       e.max = Math.round(e.max * k);
       e.D = Object.assign({}, e.D, { hp: e.hp, def: Math.round((e.D.def || 0) * k) });
     }
+  }
+  if (e && opt && opt.ambush) {
+    e.ambush = true; e.ambushing = true;
+    e.spr.setAlpha(0.15); if (e.sh) e.sh.setAlpha(0.06);
   }
   return e;
 };

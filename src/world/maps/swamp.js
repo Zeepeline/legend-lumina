@@ -12,9 +12,12 @@ MAPS.swamp = {
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 450], [0, 510, 40, 450], [1240, 0, 40, 960], [0, 930, 1280, 30]],
   exits: [{ x: 0, y: 450, w: 12, h: 60, to: 'river', tx: 2540, ty: 480, dir: 'left', label: 'Jalur Sungai' }, { x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }],
   npcs: [{ id: 'hermit', ch: 'hermit', name: 'Pertapa Sura', x: 604, y: 130, dir: 'down' }],
-  enemies: [['bounty_frog', 880, 380], ['frog', 520, 240], ['frog', 440, 330], ['wisp', 380, 420], ['slimep', 340, 480], ['frog', 260, 560], ['wisp', 420, 620],
+  enemies: [
+    ['bounty_frog', 880, 380], ['frog', 520, 240], ['frog', 440, 330, { ambush: true }], ['wisp', 380, 420],
+    ['slimep', 340, 480], ['frog', 260, 560, { ambush: true }], ['wisp', 420, 620],
     ['frog', 760, 250], ['slimep', 860, 340], ['wisp', 920, 440], ['plant', 1000, 520], ['frog', 900, 620], ['wisp', 820, 680],
-    ['slimep', 500, 680], ['ghost', 560, 760], ['snake', 760, 760], ['plant', 720, 560]],
+    ['slimep', 500, 680], ['ghost', 560, 760], ['snake', 760, 760], ['plant', 720, 560]
+  ],
   bosses: [{ type: 'witch', flag: 'witch', x: 640, y: 840, zone: [560, 772, 160, 130], need: 7, after: 'witch',
     intro: [['???', 'Jadi kamu bocah yang merusak rencanaku dengan Raja Goblin...'], ['Morgath', 'Aku Morgath. Cahaya Kristal Lumina seharusnya menjadi milikku! Lenyaplah dalam kabut!']] }],
   fish: [[620, 516]],

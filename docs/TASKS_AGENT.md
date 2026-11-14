@@ -1945,7 +1945,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; bunuh slime di dekat elite → elite memerah & mengganas.
 
-### [ ] T311. **Penyergapan dari semak** — referensi: Zelda (Deku Scrub), Monster Hunter
+### [x] T311. **Penyergapan dari semak** — referensi: Zelda (Deku Scrub), Monster Hunter
 - File: `src/ai/enemies.js`. Baca dulu: cabang `'walk'` & tempat musuh diam/patroli.
 - Lakukan: musuh dengan flag `opt.ambush` (tambahkan pada 3–5 musuh di peta hutan & rawa di `src/world/maps/*.js`) tersembunyi (alpha 0,15, tidak bergerak) sampai Arka < 60 px, lalu melompat keluar dengan tanda "!" dan debu.
 - Batasan: jangan menempatkan penyergap < 150 px dari pintu masuk/teleport.
@@ -2042,7 +2042,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; efek tampak bercahaya di HP; mode hemat baterai → tanpa glow.
 
-### [ ] T326. **HUD vital ala Dimraeth: HP, Stamina, Konsentrasi** — referensi: Dimraeth (vital: Health, Stamina, Concentration), Elden Ring
+### [x] T326. **HUD vital ala Dimraeth: HP, Stamina, Konsentrasi** — referensi: Dimraeth (vital: Health, Stamina, Concentration), Elden Ring
 - File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `buildHud()` (±115) & `updHud()`.
 - Lakukan: rapikan HUD kiri atas menjadi 3 bar tipis berbingkai: HP (merah), Stamina (hijau, tepat di bawah HP), Konsentrasi (biru = MP yang sudah ada, ganti labelnya). Bingkai piksel gelap 2 px, angka kecil di dalam bar.
 - Batasan: jangan menghapus info level/EXP (pindahkan ke bawah bar).

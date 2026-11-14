@@ -51,13 +51,13 @@ MAPS.forest = {
   exits: [{ x: 0, y: 700, w: 12, h: 60, to: 'deepwood', tx: 2340, ty: 730, dir: 'left', label: 'Hutan Dalam' }, { x: 1268, y: 500, w: 12, h: 60, to: 'river', tx: 60, ty: 530, dir: 'right', label: 'Jalur Sungai' }, { x: 600, y: 0, w: 80, h: 12, to: 'village', tx: 512, ty: 664, dir: 'up', label: 'Desa Lumina' }],
   npcs: [{ id: 'hunter', ch: 'hunter', name: 'Pemburu Raka', x: 600, y: 90, dir: 'down' }],
   enemies: [
-    ['slime', 520, 220], ['slime', 600, 250], ['slime', 400, 330], ['bat', 440, 400], ['slime', 330, 470],
+    ['slime', 520, 220], ['slime', 600, 250], ['slime', 400, 330], ['bat', 440, 400], ['slime', 330, 470, { ambush: true }],
     ['goblin', 910, 370], ['goblin', 960, 320], ['goblin', 1040, 350], ['goblin', 1110, 330],
     ['goblin_archer', 890, 230], ['goblin_archer', 1170, 230], ['goblin_archer', 1010, 370], ['goblin_archer', 1140, 380],
     ['goblin_shaman', 1040, 250], ['goblin_shaman', 1150, 300],
     ['goblin_elite', 1080, 280],
     ['shroom', 210, 620], ['shroom', 170, 760], ['bat', 240, 700], ['wolf', 200, 520],
-    ['slimeb', 480, 720], ['shroom', 580, 740], ['bat', 660, 720], ['goblin', 680, 860], ['slimeb', 600, 900], ['wolf', 720, 950],
+    ['slimeb', 480, 720], ['shroom', 580, 740], ['bat', 660, 720], ['goblin', 680, 860, { ambush: true }], ['slimeb', 600, 900], ['wolf', 720, 950],
     ['snake', 960, 830], ['snake', 1060, 900], ['snake', 1000, 800], ['shroom', 1100, 830],
   ],
   bosses: [

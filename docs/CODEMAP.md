@@ -111,7 +111,7 @@ _Peta: Padang Angin_
 _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 
 
-## src/world/maps/swamp.js (23 baris)
+## src/world/maps/swamp.js (26 baris)
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
@@ -135,9 +135,9 @@ _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina
 _Interior: penginapan, rumah pohon, rumah Lina_
 `makeRoom()` 4
 
-## src/ui/widgets.js (205 baris)
+## src/ui/widgets.js (218 baris)
 _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
-`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 36 · `choose()` 40 · `ask()` 76 · `BANNER_QUEUE` 82 · `BANNER_BUSY` 83 · `processBannerQueue()` 84 · `banner()` 97 · `POPS` 106 · `popWorld()` 107 · `updPops()` 111 · `HUD` 114 · `buildHud()` 115 · `updHud()` 125 · `hudPeaceT` 167 · `updHudFade()` 168 · `showHud()` 183 · `bossBar()` 188 · `autoSaveIcon()` 204
+`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 36 · `choose()` 40 · `ask()` 76 · `BANNER_QUEUE` 82 · `BANNER_BUSY` 83 · `processBannerQueue()` 84 · `banner()` 97 · `POPS` 106 · `popWorld()` 107 · `updPops()` 111 · `HUD` 114 · `buildHud()` 115 · `updHud()` 129 · `hudPeaceT` 180 · `updHudFade()` 181 · `showHud()` 196 · `bossBar()` 201 · `autoSaveIcon()` 217
 
 ## src/ui/spellbar.js (53 baris)
 _Bilah 5 slot jurus dengan cooldown (T327)_
@@ -323,9 +323,9 @@ _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, m
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
 `.updInteractHint()` 6 · `.updEnemyBars()` 30 · `.retryBoss()` 56 · `levelUpDetail()` 62 · `.setTimeout()` 68 · `TIPS` 81 · `showTip()` 92 · `.updTips()` 111 · `.updPeaceHud()` 121 · `.updMinimap()` 126 · `.swapWeapon()` 160 · `.updStamina()` 171 · `.tryClimb()` 182 · `.tryGlide()` 208 · `.stopGlide()` 234 · `applyPadOpt()` 240
 
-## src/systems/feel.js (177 baris)
+## src/systems/feel.js (189 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
-`ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 118 · `.hurtAnim()` 124 · `.hasLineOfSight()` 126 · `_spawnEnemy` 142 · `_killEnemy` 162
+`ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 130 · `.hurtAnim()` 136 · `.hasLineOfSight()` 138 · `_spawnEnemy` 154 · `_killEnemy` 174
 
 ## src/systems/sound.js (107 baris)
 _Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#911),_
