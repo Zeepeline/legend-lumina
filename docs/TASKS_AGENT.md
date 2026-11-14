@@ -1952,7 +1952,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; lewati semak di hutan → goblin tiba-tiba melompat keluar.
 
-### [ ] T312. **Tebasan dengan jejak bertumpuk** — referensi: Hades, Dead Cells
+### [x] T312. **Tebasan dengan jejak bertumpuk** — referensi: Hades, Dead Cells
 - File: `src/systems/combat_fx.js`. Baca dulu: `slashFx()` (hasil gelombang 3).
 - Lakukan: tambahkan 2 salinan busur yang mengekor (delay 25 & 50 ms, alpha 0,5 & 0,25, rotasi sedikit tertinggal) + 3 percikan kecil di ujung busur.
 - Batasan: maks 4 objek efek per tebasan (kinerja HP).

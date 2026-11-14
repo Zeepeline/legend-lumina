@@ -407,9 +407,9 @@ _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat 
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
 `SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 120
 
-## src/systems/combat_fx.js (202 baris)
+## src/systems/combat_fx.js (219 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
-`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 48 · `.hitFx()` 58 · `.rollFx()` 81 · `.updLowHp()` 86
+`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 65 · `.hitFx()` 75 · `.rollFx()` 98 · `.updLowHp()` 103
 
 ## src/ui/worldmap.js (343 baris)
 _Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)_

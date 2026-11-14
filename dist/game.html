@@ -18649,13 +18649,30 @@ Object.assign(World.prototype, {
       return;
     }
     const s = (wt === 'axe' ? 1.25 : 1) * (fin ? 1.35 : combo === 2 ? 1.1 : 1);
-    const a = this.add.image(pl.x + dx * 10, pl.y - 9 + dy * 8, this.arcTex())
-      .setRotation(ang).setScale(s * .75).setTint(arcTint(wt));
-    a.setFlipY(combo === 2).setDepth(pl.y + (dy < 0 ? -2 : 4)).setBlendMode(Phaser.BlendModes.ADD);
+    const tint = arcTint(wt), flipY = combo === 2, depth = pl.y + (dy < 0 ? -2 : 4);
+    const ox = pl.x + dx * 10, oy = pl.y - 9 + dy * 8;
+    const a = this.add.image(ox, oy, this.arcTex()).setRotation(ang).setScale(s * .75).setTint(tint);
+    a.setFlipY(flipY).setDepth(depth).setBlendMode(Phaser.BlendModes.ADD);
     this.tweens.add({
       targets: a, alpha: 0, scale: s, duration: CFX.arcT + (fin ? 60 : 0),
       ease: 'Cubic.easeOut', onComplete: () => a.destroy()
     });
+    // 2 salinan busur mengekor (T312)
+    [{ delay: 25, a: 0.5, rOff: -0.12 }, { delay: 50, a: 0.25, rOff: -0.24 }].forEach(trail => {
+      this.time.delayedCall(trail.delay, () => {
+        if (!this.pl || this.pl.dead) return;
+        const tRot = ang + trail.rOff * (flipY ? -1 : 1);
+        const ghost = this.add.image(ox, oy, this.arcTex()).setRotation(tRot).setScale(s * .68).setTint(tint).setAlpha(trail.a);
+        ghost.setFlipY(flipY).setDepth(depth - 0.1).setBlendMode(Phaser.BlendModes.ADD);
+        this.tweens.add({
+          targets: ghost, alpha: 0, scale: s * 0.95, duration: Math.max(40, CFX.arcT - trail.delay + 20),
+          ease: 'Cubic.easeOut', onComplete: () => ghost.destroy()
+        });
+      });
+    });
+    // 3 percikan kecil di ujung busur (T312)
+    const tipX = ox + Math.cos(ang) * (24 * s), tipY = oy + Math.sin(ang) * (24 * s);
+    if (this.sparkle) this.sparkle(tipX, tipY, 'spark', 3);
     if (fin) this.cameras.main.shake(70, .003);
   },
 
