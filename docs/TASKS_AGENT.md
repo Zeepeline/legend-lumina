@@ -2137,7 +2137,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; jangan hapus objek, hanya geser
 - Cek: `npm run check` (0 masalah); satu sungai utuh terlihat di peta besar wilayah ini.
 
-### [ ] T339. **Anak sungai bergabung di Jalur Sungai Senja** — referensi: GEOGRAFI §3 (anak sungai)
+### [x] T339. **Anak sungai bergabung di Jalur Sungai Senja** — referensi: GEOGRAFI §3 (anak sungai)
 - File: `src/world/maps/wild.js` peta `river`. Baca dulu: hasil tugas sebelumnya.
 - Lakukan: anak sungai lebih sempit (rx/ry 22–30) dari tepi KIRI di y lokal ≈ 600 (global 4712) mengalir ke timur dan bertemu alur utama di sekitar (1048, 600). Arungan di jalan yang dipotong.
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
