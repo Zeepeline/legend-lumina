@@ -8,8 +8,7 @@ const GPT_SWAP = [
   "mush", "stele", "i_houseA", "i_houseB", "i_houseC", "i_market", "windmill", "pebbles",
   "verdant_tree", "verdant_rock_large", "verdant_rock_med", "verdant_rock_pillar",
   "verdant_bush", "verdant_bush_small", "verdant_stump", "verdant_log",
-  "verdant_cliff_corner", "verdant_cliff_straight", "verdant_cliff_slope",
-  "tile_verdant_grass", "tile_verdant_dirt"
+  "verdant_cliff_corner", "verdant_cliff_straight", "verdant_cliff_slope"
 ];
 const GPT_LOOK = {
   "domba": "g094", "ayam": "g090", "chick_master": "g023", "child": "g055", "rudi": "g074",

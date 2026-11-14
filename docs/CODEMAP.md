@@ -91,9 +91,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 203 · obj `treeA` 210 · obj `goblin_torch` 218 · obj `goblin_cauldron` 221 · obj `cryst` 230 · obj `lamp` 233 · obj `viewpoint` 236 · obj `lumina_shard` 270
 
-## src/world/ground.js (322 baris)
+## src/world/ground.js (302 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `TILE_CACHE` 90 · `getTileData()` 91 · `genGround()` 100 · `blockRects()` 223 · `scatter()` 239 · `openSides()` 272 · `borderTrees()` 285 · `ringObjects()` 301 · `mapObjects()` 306 · `mapWalls()` 310
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `TILE_CACHE` 90 · `getTileData()` 91 · `genGround()` 100 · `blockRects()` 203 · `scatter()` 219 · `openSides()` 252 · `borderTrees()` 265 · `ringObjects()` 281 · `mapObjects()` 286 · `mapWalls()` 290
 
 ## src/world/maps/village.js (88 baris)
 _Peta: Desa Lumina_
@@ -103,7 +103,7 @@ _Peta: Desa Lumina_
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
-## src/world/maps/meadow.js (85 baris)
+## src/world/maps/meadow.js (86 baris)
 _Peta: Padang Angin_
 
 
@@ -182,6 +182,10 @@ _Panggang bayangan objek ke tekstur tanah_
 ## src/gfx/textures.js (130 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 15 · `addStrip()` 16 · `darkTree()` 17 · `NPC_W` 19 · `regPortrait()` 20 · `regChar()` 25 · `buildTextures()` 41
+
+## src/world/ground_verdant.js (69 baris)
+_Tanah Verdant (Padang, Hutan, Desa) meniru assets/reference/target_padang.png._
+`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `VT` 9 · `verdantTiles()` 10 · `vMod` 16 · `vDirtN` 18 · `vDirtT` 19 · `verdantPix()` 21 · `verdantDeco()` 33 · `VBASE` 54 · `verdantBase()` 55
 
 ## src/scene/world.js (397 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
@@ -463,9 +467,9 @@ _Layar judul_
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
 `exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 32 · `plEnemies()` 34 · `NEIGH` 84
 
-## src/gfx/gptassets.js (40 baris)
+## src/gfx/gptassets.js (39 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
-`GPT_SWAP` 4 · `GPT_LOOK` 14 · `applyGptSwap()` 26
+`GPT_SWAP` 4 · `GPT_LOOK` 13 · `applyGptSwap()` 25
 
 ## src/gfx/gptmonsters.js (135 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._

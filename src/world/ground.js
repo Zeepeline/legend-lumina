@@ -142,6 +142,7 @@ function genGround(M, rect) {
       put(i, c); continue;
     }
     if (d < 0) {
+      if (GP.path === 'dirt' && VERDANT[M.ground] && (d < -2 || hash(x + GX, y + GY, 32) < .5)) { const vp = verdantPix(M, x + GX, y + GY, 1); if (vp) { put(i, vp); continue; } }
       if (GP.path === 'dirt') { const n = vnoise(x, y, 6, 3), k = n < .3 ? 1 : n < .7 ? 0 : 2; let c = DIRT[k]; if (hash(x, y, 8) > .985) c = h2r('#8a7a6a'); put(i, c, d > -2 ? -.12 : 0); continue; }
       const v = vor(x, y, 7, 11);
       if (v.m < 1.25) { put(i, d > -1.5 ? MORT2 : MORT); continue; }
@@ -150,22 +151,12 @@ function genGround(M, rect) {
     const n = vnoise(x + GX, y + GY, 26, 1) * .55 + vnoise(x + GX, y + GY, 8, 2) * .45;
     let k = n < .33 ? 0 : n < .5 ? 1 : n < .68 ? 2 : 3, f = 0;
     if (glow) { const g = Math.max(0, 1 - Math.hypot(x - glow[0], (y - glow[1]) * 1.3) / glow[2]); f = g * g * .16; }
-    if (d < 2.2) { put(i, EDGE, f * .5); continue; }
+    if (d < 2.2 && !(VERDANT[M.ground] && GP.path === 'dirt' && verdantTiles())) { put(i, EDGE, f * .5); continue; }
     if (d < 4 && hash(x, y, 4) > .5) k = Math.max(0, k - 1);
-    const isVerdant = (M.ground === 'forest' || M.ground === 'meadow' || M.ground === 'village');
-    const gTile = isVerdant ? getTileData('tile_verdant_grass') : null;
-    const dTile = isVerdant ? getTileData('tile_verdant_dirt') : null;
-    if (gTile && dTile) {
-      const tx = ((x + GX) % 64 + 64) % 64, ty = ((y + GY) % 64 + 64) % 64, ti = (ty * 64 + tx) * 4;
-      // Perpaduan organik rumput & tanah tanpa garis tepi yang keras (smooth noise transition)
-      const pNoise = vnoise(x + GX, y + GY, 42, 7) * .65 + vnoise(x + GX, y + GY, 16, 9) * .35;
-      // pNoise > 0.63 -> bercak tanah alami dengan gradasi lembut
-      let dw = pNoise > 0.68 ? 1 : pNoise > 0.58 ? (pNoise - 0.58) / 0.1 : 0;
-      let tr = Math.round(gTile[ti] * (1 - dw) + dTile[ti] * dw);
-      let tg = Math.round(gTile[ti + 1] * (1 - dw) + dTile[ti + 1] * dw);
-      let tb = Math.round(gTile[ti + 2] * (1 - dw) + dTile[ti + 2] * dw);
-      if (blend) { const c2 = blend(x, y, k); if (c2) { tr = (tr + c2[0]) >> 1; tg = (tg + c2[1]) >> 1; tb = (tb + c2[2]) >> 1; } }
-      put(i, [tr, tg, tb], f);
+    const vc = VERDANT[M.ground] && verdantPix(M, x + GX, y + GY);
+    if (vc) {
+      if (blend && hash(x + GX, y + GY, 31) < .35) { const c2 = blend(x, y, k); if (c2) { put(i, c2, f); continue; } }
+      put(i, vc, f);
     } else {
       if (blend) { const c2 = blend(x, y, k); if (c2) { put(i, c2, f); continue; } }
       put(i, Gc[k], f);
@@ -178,7 +169,9 @@ function genGround(M, rect) {
     for (let n = 0; n < W * H / 260; n++) { const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); if (out(X, Y)) continue; const d = sd(X, Y); if (d > 2 && d < 60 && hash(n, 3, 22) > .6) { const col = hash(n, 4, 22) > .5 ? '#9a6aff' : '#5ac8ff'; px(x, col, X, Y); px(x, shade(col, .5), X, Y - 1); } else if (d < -4) { px(x, '#6a6476', X, Y); } }
     return c;
   }
-  for (let n = 0; n < W * H / (M.flowers ? 60 : 90); n++) {
+  const vOK = VERDANT[M.ground] && verdantTiles();
+  if (vOK) verdantDeco(x, M, [RX, RY, RW, RH], GX, GY, sd, near);
+  if (!vOK) for (let n = 0; n < W * H / (M.flowers ? 60 : 90); n++) {
     const X = Math.floor(hash(n, 1, 21) * W), Y = Math.floor(hash(n, 2, 21) * H); if (out(X, Y)) continue;
     if (sd(X, Y) < 3 || near(X, Y)) continue;
     const r = hash(n, 3, 21), forest = M.ground === 'forest';
@@ -189,19 +182,6 @@ function genGround(M, rect) {
       px(x, fl, X, Y - 1); px(x, fl, X - 1, Y); px(x, fl, X + 1, Y); px(x, fl, X, Y + 1); px(x, GP.ice ? '#ffffff' : '#ffea88', X, Y);
     }
     else { ellF(x, '#d6d0c4', X, Y, 2.5, 1.6); px(x, '#f0ece2', X - 1, Y - 1); }
-  }
-  // Sebaran bercak tanah alami & bebatuan kecil Verdant Forest (sesuai ubin referensi gambar)
-  if (M.ground === 'forest' || M.ground === 'meadow' || M.ground === 'village') {
-    for (let n = 0; n < Math.floor(W * H / 9500); n++) {
-      const px0 = Math.floor(hash(n, 5, 33) * (W - 80)) + 40, py0 = Math.floor(hash(n, 6, 33) * (H - 80)) + 40;
-      if (out(px0, py0) || sd(px0, py0) < 12 || near(px0, py0)) continue;
-      const rx = 10 + hash(n, 7, 33) * 14, ry = 6 + hash(n, 8, 33) * 8;
-      ellF(x, '#6a5a44', px0, py0, rx + 1, ry + 1);
-      ellF(x, '#7e6e54', px0, py0 - 1, rx, ry);
-      ellF(x, '#948266', px0 - 1, py0 - 2, rx * 0.7, ry * 0.6);
-      px(x, '#564836', px0 + rx * 0.4, py0 + ry * 0.3);
-      px(x, '#b0a086', px0 - rx * 0.3, py0 - ry * 0.2);
-    }
   }
   for (const [gx, gy, gw, gh, t] of (M.gardens || [])) {
     fr(x, '#5e3b20', gx - 2, gy - 2, gw + 4, gh + 4); fr(x, '#8a5a32', gx, gy, gw, gh);

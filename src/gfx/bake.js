@@ -17,7 +17,7 @@ function bakeGround(sc, M, rect) {
     if (e[2] < RX || e[0] > RX + RW || e[3] < RY || e[1] > RY + RH) continue;
     x.drawImage(e[4].c, e[0], e[1]);
   }
-  x.globalAlpha = 1; x.setTransform(1, 0, 0, 1, 0, 0); return c;
+  x.globalAlpha = 1; verdantBase(x, M, rect); x.setTransform(1, 0, 0, 1, 0, 0); return c;
 }
 // indeks bayangan per kotak SHB piksel: setiap potongan tanah hanya menggambar bayangan yang menyentuhnya
 const SHB = 128;
