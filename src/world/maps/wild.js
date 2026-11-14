@@ -63,6 +63,7 @@ MAPS.river = {
   objs: [['rock', 700, 440], ['rock', 720, 470], ['rock', 1520, 420], ['rock', 1540, 690], ['rock', 2120, 520],
     ['pebbles', 750, 580], ['pebbles', 1560, 840], ['pebbles', 1280, 600], ['pebbles', 1280, 580],
     ['pebbles', 490, 600], ['pebbles', 480, 605],
+    ['pebbles', 1000, 280], ['pebbles', 1100, 420], ['pebbles', 160, 630], ['orchidrock', 1710, 640],
     ['brokenbridge', 1430, 560, { ok: 'jembatan rusak di atas aliran sungai senja' }],
     ['orchidrock', 870, 520], ['canaryperch', 1240, 680],
     ['windmill', 1800, 160], ['fence', 1760, 220], ['fence', 1778, 220], ['fence', 1840, 220], ['stele', 1880, 210, { lore: 'kincir_tua' }],

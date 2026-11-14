@@ -18,8 +18,9 @@ MAPS.swamp = {
     [370, 490, 28, 24], [440, 465, 30, 24], [510, 450, 32, 26],
   ],
   objs: [['stele', 330, 504, { lore: 'prasasti_rawa' }], ['totem', 480, 290], ['lotuspad', 340, 530], ['lotuspad', 660, 480], ['sign', 676, 130, { text: 'RAWA SENJA\nKabut di sini bukan kabut biasa...' }], ['rock', 560, 300], ['log', 760, 600], ['stump', 380, 660], ['mush', 500, 560], ['mush', 820, 480], ['rock', 880, 700], ['bones', 600, 780], ['bones', 700, 800],
-    // Batu loncatan arungan delta rawa (T343)
-    ['pebbles', 300, 520], ['pebbles', 310, 525]],
+    // Batu loncatan arungan delta rawa (T343) & hiasan air (T345)
+    ['pebbles', 300, 520], ['pebbles', 310, 525],
+    ['lotuspad', 100, 680], ['lotuspad', 240, 530], ['pebbles', 60, 620], ['mush', 80, 550]],
   chests: [{ id: 's1', x: 300, y: 516, item: 'hipotion2' }, { id: 's2', x: 960, y: 556, item: 'ether3' }, { id: 's3', x: 640, y: 884, item: 'mring', needFlag: 'witch' }],
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 450], [0, 510, 40, 450], [1240, 0, 40, 960], [0, 930, 1280, 30]],
   exits: [{ x: 0, y: 450, w: 12, h: 60, to: 'river', tx: 2540, ty: 480, dir: 'left', label: 'Jalur Sungai' }, { x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }],

@@ -16,6 +16,7 @@ MAPS.snow = {
     ...[60, 120, 180, 240, 300, 360, 420, 480, 540, 740, 800, 860, 920, 980, 1040, 1100, 1160, 1220].map(x => ['rock', x, 392]),
     ['stele', 700, 120, { ok: 'mata air suci Sungai Senja' }],
     ['pebbles', 750, 925], ['pebbles', 740, 935],
+    ['frostflower', 740, 150], ['frostflower', 670, 440], ['pebbles', 680, 690], ['pebbles', 785, 780],
     ['rock', 520, 640], ['rock', 780, 660], ['stump', 440, 940], ['log', 820, 960], ['bones', 600, 300], ['bones', 680, 320],
     ['frostflower', 480, 840], ['frostflower', 800, 780],
     ['viewpoint', 640, 110, { id: 'vp_snow', name: 'Puncak Abadi Kryos' }],

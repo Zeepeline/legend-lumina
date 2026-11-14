@@ -42,9 +42,10 @@ MAPS.meadow = {
     ['treeA', 150, 450], ['apple2', 620, 300], ['orange1', 900, 260], ['treeB', 1300, 600], ['apple1', 1100, 900],
     ['viewpoint', 300, 110, { id: 'vp_meadow', name: 'Bukit Kincir Angin' }],
     ['lumina_shard', 300, 70, { id: 'ls_meadow_hill' }],
-    // Batu loncatan arungan Sungai Senja (T336)
+    // Batu loncatan arungan & hiasan tepi Sungai Senja (T336 & T345)
     ['pebbles', 690, 465], ['pebbles', 680, 475],
     ['pebbles', 1000, 890], ['pebbles', 990, 900],
+    ['pebbles', 800, 230], ['bushG2', 815, 310], ['bushW', 800, 870], ['pebbles', 1160, 960],
   ],
   chests: [{ id: 'm1', x: 300, y: 870, item: 'potion3' }, { id: 'm2', x: 1250, y: 780, item: 'ring' }],
   walls: [[0, 0, 560, 60], [640, 0, 800, 60], [0, 0, 40, 296], [0, 364, 40, 676], [1400, 0, 40, 1040], [0, 1006, 960, 40], [1040, 1006, 400, 40]],

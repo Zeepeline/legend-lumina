@@ -27,6 +27,7 @@ MAPS.forest = {
     ['sign', 440, 280, { text: 'SIMPANG TIGA HUTAN\n← Barat: Hutan Dalam (Berbahaya)\n→ Timur: Jalur Sungai Senja\n↑ Utara: Desa Lumina' }],
     ['campfire', 650, 180],
     ['woodlandshrine', 500, 350],
+    ['pebbles', 95, 170], ['pebbles', 30, 410], ['mush', 95, 290], ['bushG1', 95, 470],
     ['treeWoodsRound', 250, 480], ['treeWoodsPine', 520, 160],
     ['stumpWoods', 740, 880], ['rockWoods', 500, 840],
     ['log', 228, 760], ['rock', 130, 880],

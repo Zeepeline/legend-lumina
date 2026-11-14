@@ -99,11 +99,11 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _Peta: Desa Lumina_
 
 
-## src/world/maps/forest.js (85 baris)
+## src/world/maps/forest.js (86 baris)
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
-## src/world/maps/meadow.js (80 baris)
+## src/world/maps/meadow.js (81 baris)
 _Peta: Padang Angin_
 
 
@@ -111,15 +111,15 @@ _Peta: Padang Angin_
 _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 
 
-## src/world/maps/swamp.js (38 baris)
+## src/world/maps/swamp.js (39 baris)
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
-## src/world/maps/snow.js (46 baris)
+## src/world/maps/snow.js (47 baris)
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 
-## src/world/maps/lake.js (37 baris)
+## src/world/maps/lake.js (38 baris)
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
@@ -127,7 +127,7 @@ _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan k
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 
-## src/world/maps/wild.js (80 baris)
+## src/world/maps/wild.js (81 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
 `ruinRing` 4
 

@@ -5472,6 +5472,7 @@ MAPS.forest = {
     ['sign', 440, 280, { text: 'SIMPANG TIGA HUTAN\n← Barat: Hutan Dalam (Berbahaya)\n→ Timur: Jalur Sungai Senja\n↑ Utara: Desa Lumina' }],
     ['campfire', 650, 180],
     ['woodlandshrine', 500, 350],
+    ['pebbles', 95, 170], ['pebbles', 30, 410], ['mush', 95, 290], ['bushG1', 95, 470],
     ['treeWoodsRound', 250, 480], ['treeWoodsPine', 520, 160],
     ['stumpWoods', 740, 880], ['rockWoods', 500, 840],
     ['log', 228, 760], ['rock', 130, 880],
@@ -5572,9 +5573,10 @@ MAPS.meadow = {
     ['treeA', 150, 450], ['apple2', 620, 300], ['orange1', 900, 260], ['treeB', 1300, 600], ['apple1', 1100, 900],
     ['viewpoint', 300, 110, { id: 'vp_meadow', name: 'Bukit Kincir Angin' }],
     ['lumina_shard', 300, 70, { id: 'ls_meadow_hill' }],
-    // Batu loncatan arungan Sungai Senja (T336)
+    // Batu loncatan arungan & hiasan tepi Sungai Senja (T336 & T345)
     ['pebbles', 690, 465], ['pebbles', 680, 475],
     ['pebbles', 1000, 890], ['pebbles', 990, 900],
+    ['pebbles', 800, 230], ['bushG2', 815, 310], ['bushW', 800, 870], ['pebbles', 1160, 960],
   ],
   chests: [{ id: 'm1', x: 300, y: 870, item: 'potion3' }, { id: 'm2', x: 1250, y: 780, item: 'ring' }],
   walls: [[0, 0, 560, 60], [640, 0, 800, 60], [0, 0, 40, 296], [0, 364, 40, 676], [1400, 0, 40, 1040], [0, 1006, 960, 40], [1040, 1006, 400, 40]],
@@ -5665,8 +5667,9 @@ MAPS.swamp = {
     [370, 490, 28, 24], [440, 465, 30, 24], [510, 450, 32, 26],
   ],
   objs: [['stele', 330, 504, { lore: 'prasasti_rawa' }], ['totem', 480, 290], ['lotuspad', 340, 530], ['lotuspad', 660, 480], ['sign', 676, 130, { text: 'RAWA SENJA\nKabut di sini bukan kabut biasa...' }], ['rock', 560, 300], ['log', 760, 600], ['stump', 380, 660], ['mush', 500, 560], ['mush', 820, 480], ['rock', 880, 700], ['bones', 600, 780], ['bones', 700, 800],
-    // Batu loncatan arungan delta rawa (T343)
-    ['pebbles', 300, 520], ['pebbles', 310, 525]],
+    // Batu loncatan arungan delta rawa (T343) & hiasan air (T345)
+    ['pebbles', 300, 520], ['pebbles', 310, 525],
+    ['lotuspad', 100, 680], ['lotuspad', 240, 530], ['pebbles', 60, 620], ['mush', 80, 550]],
   chests: [{ id: 's1', x: 300, y: 516, item: 'hipotion2' }, { id: 's2', x: 960, y: 556, item: 'ether3' }, { id: 's3', x: 640, y: 884, item: 'mring', needFlag: 'witch' }],
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 450], [0, 510, 40, 450], [1240, 0, 40, 960], [0, 930, 1280, 30]],
   exits: [{ x: 0, y: 450, w: 12, h: 60, to: 'river', tx: 2540, ty: 480, dir: 'left', label: 'Jalur Sungai' }, { x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }],
@@ -5701,6 +5704,7 @@ MAPS.snow = {
     ...[60, 120, 180, 240, 300, 360, 420, 480, 540, 740, 800, 860, 920, 980, 1040, 1100, 1160, 1220].map(x => ['rock', x, 392]),
     ['stele', 700, 120, { ok: 'mata air suci Sungai Senja' }],
     ['pebbles', 750, 925], ['pebbles', 740, 935],
+    ['frostflower', 740, 150], ['frostflower', 670, 440], ['pebbles', 680, 690], ['pebbles', 785, 780],
     ['rock', 520, 640], ['rock', 780, 660], ['stump', 440, 940], ['log', 820, 960], ['bones', 600, 300], ['bones', 680, 320],
     ['frostflower', 480, 840], ['frostflower', 800, 780],
     ['viewpoint', 640, 110, { id: 'vp_snow', name: 'Puncak Abadi Kryos' }],
@@ -5747,8 +5751,9 @@ MAPS.lake = {
     [1270, 970, 28, 24], [1332, 1000, 28, 24],
   ],
   objs: [['shrine', 560, 520], ['campfire', 1110, 560], ['pebbles', 890, 500], ['pebbles', 230, 480], ['dockboat', 980, 520], ['dockboat', 250, 560], ['lakelighthouse', 1140, 430], ['rock', 470, 470, { ok: 'cincin batu pulau kuil di tengah danau' }], ['rock', 650, 470, { ok: 'cincin batu pulau kuil di tengah danau' }], ['rock', 520, 560, { ok: 'cincin batu pulau kuil di tengah danau' }], ['rock', 610, 565, { ok: 'cincin batu pulau kuil di tengah danau' }],
-    // Batu loncatan arungan anak sungai cermin (T340)
+    // Batu loncatan arungan anak sungai cermin (T340) & hiasan tepi air (T345)
     ['pebbles', 840, 705], ['pebbles', 850, 715],
+    ['lotuspad', 750, 600], ['lotuspad', 450, 420], ['pebbles', 990, 850], ['bushG1', 1090, 890],
     ['houseC', 1120, 300], ['barrel', 1180, 300], ['crate', 1060, 300], ['fence', 1150, 340], ['fence', 1168, 340],
     ['stele', 1010, 452, { text: 'Prasasti Danau Cermin:\n"Cahaya lahir di utara, tumbuh di selatan, lalu pulang di barat. Hanya cahaya yang pulang yang boleh menyeberang."' }],
     ['sign', 880, 200, { text: 'Jalan ke KOTA LUMINA (utara)\nPerbaikan longsor oleh Dewan Kota.', lore: 'kota_lumina' }],
@@ -5945,6 +5950,7 @@ MAPS.river = {
   objs: [['rock', 700, 440], ['rock', 720, 470], ['rock', 1520, 420], ['rock', 1540, 690], ['rock', 2120, 520],
     ['pebbles', 750, 580], ['pebbles', 1560, 840], ['pebbles', 1280, 600], ['pebbles', 1280, 580],
     ['pebbles', 490, 600], ['pebbles', 480, 605],
+    ['pebbles', 1000, 280], ['pebbles', 1100, 420], ['pebbles', 160, 630], ['orchidrock', 1710, 640],
     ['brokenbridge', 1430, 560, { ok: 'jembatan rusak di atas aliran sungai senja' }],
     ['orchidrock', 870, 520], ['canaryperch', 1240, 680],
     ['windmill', 1800, 160], ['fence', 1760, 220], ['fence', 1778, 220], ['fence', 1840, 220], ['stele', 1880, 210, { lore: 'kincir_tua' }],
