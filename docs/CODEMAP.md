@@ -323,6 +323,10 @@ _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_
 _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, mengobrol, duduk, berpatroli), pulang saat malam._
 `NPC_ROLE` 4 · `STORY_NPC` 11 · `WORK` 13 · `SEATS` 27 · `SOCIAL` 28 · `IDLE_ICON` 29 · `.npcBrainInit()` 32 · `.npcEmote()` 44 · `.npcPickGoal()` 45 · `.npcWalkAnim()` 66 · `.npcBrain()` 67 · `.npcActStart()` 89 · `.npcActTick()` 94
 
+## src/npc/crowd.js (155 baris)
+_Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed._
+`CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 60 · `.clearCrowd()` 138 · `_updAmbP` 150
+
 ## src/systems/qol.js (244 baris)
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
 `.updInteractHint()` 6 · `.updEnemyBars()` 30 · `.retryBoss()` 56 · `levelUpDetail()` 62 · `.setTimeout()` 68 · `TIPS` 81 · `showTip()` 92 · `.updTips()` 111 · `.updPeaceHud()` 121 · `.updMinimap()` 126 · `.swapWeapon()` 160 · `.updStamina()` 171 · `.tryClimb()` 182 · `.tryGlide()` 208 · `.stopGlide()` 234 · `applyPadOpt()` 240

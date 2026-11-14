@@ -2796,7 +2796,7 @@ File BARU milik agen: `src/npc/crowd.js`, `src/systems/townlife.js`. Pengecualia
 - Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan
 - Cek: `npm run check` (0 masalah); ukur ulang → masuk target.
 
-### [ ] T367. **Warga latar ringan (sistem)** — referensi: Stoneshard (warga kota), Crowd di Assassin's Creed
+### [x] T367. **Warga latar ringan (sistem)** — referensi: Stoneshard (warga kota), Crowd di Assassin's Creed
 
 - File: file baru `src/npc/crowd.js` (daftarkan di index.html setelah `src/npc/brain.js`). Baca dulu: cara NPC biasa dibuat (`spawnNpc`) & pola `lines` warga kota (`cityLines` di `src/world/maps/city.js`).
 - Lakukan: buat `spawnCrowd(n, area)` yang memunculkan N warga ringan: sprite karakter acak dari `CHARS` (warna acak), berjalan antar titik acak di jalan (`M.paths`) kecepatan 18–28, berhenti 1–4 s, dan saat ditekan A menampilkan 1 kalimat dari `cityLines`. TIDAK memakai otak `brain.js` & tidak disimpan di save. Maks 12 per peta; yang > 500 px dari kamera tidak di-update.
