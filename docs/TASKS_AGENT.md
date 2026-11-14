@@ -1094,10 +1094,10 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - File: `src/data/quests.js`, larik `const ACH = [` (baris ±6). Tambah di AKHIR larik: `{ id: 'warp5', n: 'Pengelana Cahaya', d: 'Aktifkan 5 patung teleport', ok: () => Object.keys(S.warps || {}).length >= 5, gift: ['ether', 3] },`
 - Cek: `npm run check`; konsol `ACH.find(a => a.id === 'warp5').ok()` tidak error.
 
-### [ ] T204. **Tes penjaga data: npc_barks** (kerjakan SETELAH tugas kategori terkait selesai)
+### [x] T204. **Tes penjaga data: npc_barks** (kerjakan SETELAH tugas kategori terkait selesai)
 - Buat `tests/data_npc_barks.spec.js` meniru pola `tests/boot.spec.js`: `h.boot(page)`, lalu `page.evaluate` yang memeriksa setiap NPC di semua MAPS punya entri NPC_BARKS (berdasarkan id ATAU ch); `expect(daftarYangGagal).toEqual([])`.
 - Ingat: `ITEMS`, `MAPS`, `ENEMY` adalah const global (tulis `ITEMS`, BUKAN `window.ITEMS`).
-- Cek: `npx playwright test tests/data_npc_barks.spec.js` lulus.
+- Cek: `npx playwright test tests/data_npc_barks.spec.js` lulus. (selesai di v1.30.1)
 
 ### [ ] T205. **Tes penjaga data: items_desc** (kerjakan SETELAH tugas kategori terkait selesai)
 - Buat `tests/data_items_desc.spec.js` meniru pola `tests/boot.spec.js`: `h.boot(page)`, lalu `page.evaluate` yang memeriksa setiap ITEMS punya `d` minimal 25 karakter; `expect(daftarYangGagal).toEqual([])`.
