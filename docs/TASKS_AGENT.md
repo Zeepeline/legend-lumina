@@ -2075,7 +2075,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; makan masakan & kena racun → keduanya tampil berdampingan.
 
-### [ ] T331. **HUD memudar saat damai** — referensi: Elder Scrolls Online (bar muncul hanya saat berubah), Breath of the Wild
+### [x] T331. **HUD memudar saat damai** — referensi: Elder Scrolls Online (bar muncul hanya saat berubah), Breath of the Wild
 - File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `updHud()`.
 - Lakukan: jika HP & stamina penuh dan tidak ada musuh mengejar selama 5 s, bar vital memudar ke opacity .35; kembali penuh seketika saat ada perubahan/tempur. Bisa dimatikan `localStorage.lumina_hudfade='0'`.
 - Batasan: kartu misi & tombol tidak ikut memudar.

@@ -6076,8 +6076,25 @@ function updHud() {
   q.innerHTML = txt ? `<div class="qh">★ MISI UTAMA</div><div class="qt">${txt}${prog ? ` <span class="qp">${prog[0]}/${prog[1]}</span>` : ''}</div><div class="qf">ketuk: Jurnal<span class="qd"></span></div>` : '';
   q.style.display = txt ? '' : 'none';
   if (!q._tap) { q._tap = 1; q.addEventListener('pointerdown', e => { e.stopPropagation(); if (!G.lock && !G.title) openQuests(); }); }
+  updHudFade(st);
 }
-function showHud(v) { if (!HUD) return; for (const id of ['hud', 'hud2', 'quest']) $(id).style.opacity = v ? 1 : 0; }
+let hudPeaceT = 0;
+function updHudFade(st) {
+  const h = $('hud'); if (!h) return;
+  try { if (localStorage.getItem('lumina_hudfade') === '0') { h.style.opacity = ''; return; } } catch (_) {}
+  const curSta = S.sta != null ? S.sta : st.maxsta;
+  const isFull = S.hp >= st.maxhp && curSta >= st.maxsta;
+  const sc = G.scene, pl = sc?.pl;
+  const chasing = pl && sc?.enemies ? sc.enemies.some(e => e.hp > 0 && (e.boss || (!pl.dead && Math.hypot(pl.x - e.spr?.x, pl.y - e.spr?.y) < 130) || e.packAggro)) : false;
+  if (isFull && !chasing) {
+    hudPeaceT += 0.25;
+    if (hudPeaceT >= 5) h.style.opacity = '0.35';
+  } else {
+    hudPeaceT = 0;
+    h.style.opacity = '';
+  }
+}
+function showHud(v) { if (!HUD) return; for (const id of ['hud', 'hud2', 'quest']) $(id).style.opacity = v ? '' : 0; if (v) hudPeaceT = 0; }
 function bossBar(name, f) { const b = $('boss'); if (name === null) { b.style.display = 'none'; return; } b.style.display = 'block'; $('bName').textContent = name; $('bHp').style.width = Math.max(0, f * 100) + '%'; }
 SCREEN.addEventListener('pointerdown', () => { if (UIH && UIH.tap) press('tap'); });
 // Ikon kecil "tersimpan" di pojok saat simpan otomatis
@@ -7278,7 +7295,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround(); this.updRegions(dt); this.updCross();
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updPeaceHud?.(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround(); this.updRegions(dt); this.updCross();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       // Akumulasi waktu bermain riil (Fitur #25)
@@ -14996,7 +15013,12 @@ Object.assign(World.prototype, {
     this.tipT = (this.tipT || 2) - dt; if (this.tipT > 0) return; this.tipT = 1;
     if (document.getElementById('tip')) return;
     const T = TIPS.find(t => !S.tipsDone[t.id] && t.when(this)); if (!T) return;
+    if (S.tipsDone[T.id] === undefined) return;
     S.tipsDone[T.id] = 1; showTip(T.txt); this.tipT = 9;
+  },
+  updPeaceHud(dt) {
+    this.hudPeaceStep = (this.hudPeaceStep || 0) + dt;
+    if (this.hudPeaceStep >= 0.25) { this.hudPeaceStep = 0; if (typeof updHud === 'function') updHud(); }
   },
   // ---------------- PETA MINI (#82) ----------------
   updMinimap(dt) {

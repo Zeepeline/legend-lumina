@@ -257,7 +257,7 @@ class World extends Phaser.Scene {
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }
     if (!locked && !pl.dead) { this.updSkills(dt); this.updStatus(dt); }
-    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround(); this.updRegions(dt); this.updCross();
+    this.updAmbient(dt); this.updQuestGuide(dt); this.updInteractHint(); this.updEnemyBars(); this.updTips(dt); this.updPeaceHud?.(dt); this.updMinimap(dt); this.updSound(dt); this.updFog(dt); this.updSecrets(); this.updCarry(); this.updRanch(dt); this.updSeason(dt); this.updLock(); this.updCull(); this.updGround(); this.updRegions(dt); this.updCross();
     if (!locked) {
       S.time += dt / 15; if (S.time >= 24) { S.time -= 24; S.day++; }
       // Akumulasi waktu bermain riil (Fitur #25)

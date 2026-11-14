@@ -148,8 +148,25 @@ function updHud() {
   q.innerHTML = txt ? `<div class="qh">★ MISI UTAMA</div><div class="qt">${txt}${prog ? ` <span class="qp">${prog[0]}/${prog[1]}</span>` : ''}</div><div class="qf">ketuk: Jurnal<span class="qd"></span></div>` : '';
   q.style.display = txt ? '' : 'none';
   if (!q._tap) { q._tap = 1; q.addEventListener('pointerdown', e => { e.stopPropagation(); if (!G.lock && !G.title) openQuests(); }); }
+  updHudFade(st);
 }
-function showHud(v) { if (!HUD) return; for (const id of ['hud', 'hud2', 'quest']) $(id).style.opacity = v ? 1 : 0; }
+let hudPeaceT = 0;
+function updHudFade(st) {
+  const h = $('hud'); if (!h) return;
+  try { if (localStorage.getItem('lumina_hudfade') === '0') { h.style.opacity = ''; return; } } catch (_) {}
+  const curSta = S.sta != null ? S.sta : st.maxsta;
+  const isFull = S.hp >= st.maxhp && curSta >= st.maxsta;
+  const sc = G.scene, pl = sc?.pl;
+  const chasing = pl && sc?.enemies ? sc.enemies.some(e => e.hp > 0 && (e.boss || (!pl.dead && Math.hypot(pl.x - e.spr?.x, pl.y - e.spr?.y) < 130) || e.packAggro)) : false;
+  if (isFull && !chasing) {
+    hudPeaceT += 0.25;
+    if (hudPeaceT >= 5) h.style.opacity = '0.35';
+  } else {
+    hudPeaceT = 0;
+    h.style.opacity = '';
+  }
+}
+function showHud(v) { if (!HUD) return; for (const id of ['hud', 'hud2', 'quest']) $(id).style.opacity = v ? '' : 0; if (v) hudPeaceT = 0; }
 function bossBar(name, f) { const b = $('boss'); if (name === null) { b.style.display = 'none'; return; } b.style.display = 'block'; $('bName').textContent = name; $('bHp').style.width = Math.max(0, f * 100) + '%'; }
 SCREEN.addEventListener('pointerdown', () => { if (UIH && UIH.tap) press('tap'); });
 // Ikon kecil "tersimpan" di pojok saat simpan otomatis

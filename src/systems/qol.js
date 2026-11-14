@@ -115,7 +115,12 @@ Object.assign(World.prototype, {
     this.tipT = (this.tipT || 2) - dt; if (this.tipT > 0) return; this.tipT = 1;
     if (document.getElementById('tip')) return;
     const T = TIPS.find(t => !S.tipsDone[t.id] && t.when(this)); if (!T) return;
+    if (S.tipsDone[T.id] === undefined) return;
     S.tipsDone[T.id] = 1; showTip(T.txt); this.tipT = 9;
+  },
+  updPeaceHud(dt) {
+    this.hudPeaceStep = (this.hudPeaceStep || 0) + dt;
+    if (this.hudPeaceStep >= 0.25) { this.hudPeaceStep = 0; if (typeof updHud === 'function') updHud(); }
   },
   // ---------------- PETA MINI (#82) ----------------
   updMinimap(dt) {
