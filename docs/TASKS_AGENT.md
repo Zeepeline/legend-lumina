@@ -1612,7 +1612,8 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; lawan musuh elite → namanya tampil.
 
-### [ ] T264. **Naik level: tampilkan stat sebelum → sesudah**
+### [x] T264. **Naik level: tampilkan stat sebelum → sesudah**
+- Selesai: sudah ada di `src/systems/qol.js` (`levelUpDetail()` baris 64 menampilkan format `${n} ${a[k]} → <b>${b[k]}</b> <span style="color:#7ad05a">+...</span>`).
 - File: `src/systems/qol.js`. Baca dulu: `levelUpDetail()` (±39–44).
 - Lakukan: format setiap stat sebagai "HP 62 → 70" dengan angka baru hijau.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
@@ -1625,7 +1626,8 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; konsol `S.st.fish = 26; achCheck()` → toast "Kail Emas 50%" sekali.
 
-### [ ] T266. **Sapaan NPC tidak berulang**
+### [x] T266. **Sapaan NPC tidak berulang**
+- Selesai: `o.lastBarkIdx` disimpan pada objek NPC dan pengacakan kalimat berikutnya selalu mengecualikan indeks sebelumnya.
 - File: `src/npc/npcs.js`. Baca dulu: bagian yang memilih kalimat dari `NPC_BARKS` (grep `NPC_BARKS[`).
 - Lakukan: jangan memilih kalimat yang sama dengan kalimat terakhir NPC itu (simpan indeks terakhir di objek NPC).
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.

@@ -14598,7 +14598,13 @@ Object.assign(World.prototype, {
     if (!locked && !G.title && dPl < 34 && o.barkCd <= 0 && !UIH) {
       const barks = NPC_BARKS[o.n.id] || NPC_BARKS[o.ch];
       if (barks && barks.length) {
-        popBark(o, pick(barks));
+        let idx = 0;
+        if (barks.length > 1) {
+          const pool = barks.map((_, i) => i).filter(i => i !== o.lastBarkIdx);
+          idx = pick(pool);
+        }
+        o.lastBarkIdx = idx;
+        popBark(o, barks[idx]);
         o.barkCd = rnd(12, 22);
       }
     }
