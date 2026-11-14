@@ -26,9 +26,9 @@ function makeSD(M, rect) {
 }
 function pondE(P, x, y) { return Math.hypot((x - P[0]) / P[2], (y - P[1]) / P[3]); }
 const GROUND = {
-  village: { g: ['#7ec462', '#8ccf6c', '#98d877', '#a6e083'], edge: '#72b85c', path: 'stone', tuft: '#5fa84a', tuft2: '#b8ec98' },
-  forest: { g: ['#407838', '#488838', '#509038', '#60a040'], edge: '#36682e', path: 'dirt', tuft: '#34602a', tuft2: '#78b848' },
-  meadow: { g: ['#4a8238', '#549440', '#62a448', '#70b452'], edge: '#3e702e', path: 'dirt', tuft: '#3c6e2a', tuft2: '#86c454' },
+  village: { g: ['#427a36', '#4c8c3e', '#589c44', '#68ac4c'], edge: '#38682a', path: 'stone', tuft: '#346428', tuft2: '#7ac456' },
+  forest: { g: ['#3a6c2e', '#447c34', '#508e3a', '#5ea042'], edge: '#2e5824', path: 'dirt', tuft: '#2c5422', tuft2: '#70b448' },
+  meadow: { g: ['#468238', '#52943e', '#60a648', '#72ba54'], edge: '#3a6c2c', path: 'dirt', tuft: '#386828', tuft2: '#86cc5c' },
   swamp: { g: ['#4a6a4a', '#567a50', '#628858', '#507048'], edge: '#3e5a3e', path: 'dirt', tuft: '#3a5a3a', tuft2: '#8ab070' },
   snow: { g: ['#e2ecf6', '#eaf2fa', '#dae6f2', '#f2f7fc'], edge: '#c4d6e8', path: 'dirt', tuft: '#b4c8de', tuft2: '#ffffff', ice: 1 },
   cave: { g: ['#2c2834', '#332e3c', '#28242e', '#38323f'], path: 'cave' },
@@ -159,10 +159,23 @@ function genGround(M, rect) {
     if (r < (M.flowers ? .55 : .78)) { px(x, GP.tuft, X, Y); px(x, GP.tuft, X - 1, Y - 1); px(x, GP.tuft, X + 1, Y - 1); px(x, GP.tuft2, X, Y - 2); }
     else if (r < .97 || forest) {
       const fl = GP.ice ? ['#ffffff', '#cfe6fa', '#b4d4f0'][Math.floor(hash(n, 4, 21) * 3)] :
-        ['#ffffff', '#fff2b8', '#ffccd8', '#d0c4f8', '#ffd4a0'][Math.floor(hash(n, 4, 21) * 5)];
+        ['#ffffff', '#fff0b0', '#ffc8d4', '#d8c8f8', '#ffd09c'][Math.floor(hash(n, 4, 21) * 5)];
       px(x, fl, X, Y - 1); px(x, fl, X - 1, Y); px(x, fl, X + 1, Y); px(x, fl, X, Y + 1); px(x, GP.ice ? '#ffffff' : '#ffea88', X, Y);
     }
     else { ellF(x, '#d6d0c4', X, Y, 2.5, 1.6); px(x, '#f0ece2', X - 1, Y - 1); }
+  }
+  // Sebaran bercak tanah alami & bebatuan kecil Verdant Forest (sesuai ubin referensi gambar)
+  if (M.ground === 'forest' || M.ground === 'meadow' || M.ground === 'village') {
+    for (let n = 0; n < Math.floor(W * H / 9500); n++) {
+      const px0 = Math.floor(hash(n, 5, 33) * (W - 80)) + 40, py0 = Math.floor(hash(n, 6, 33) * (H - 80)) + 40;
+      if (out(px0, py0) || sd(px0, py0) < 12 || near(px0, py0)) continue;
+      const rx = 10 + hash(n, 7, 33) * 14, ry = 6 + hash(n, 8, 33) * 8;
+      ellF(x, '#6a5a44', px0, py0, rx + 1, ry + 1);
+      ellF(x, '#7e6e54', px0, py0 - 1, rx, ry);
+      ellF(x, '#948266', px0 - 1, py0 - 2, rx * 0.7, ry * 0.6);
+      px(x, '#564836', px0 + rx * 0.4, py0 + ry * 0.3);
+      px(x, '#b0a086', px0 - rx * 0.3, py0 - ry * 0.2);
+    }
   }
   for (const [gx, gy, gw, gh, t] of (M.gardens || [])) {
     fr(x, '#5e3b20', gx - 2, gy - 2, gw + 4, gh + 4); fr(x, '#8a5a32', gx, gy, gw, gh);
