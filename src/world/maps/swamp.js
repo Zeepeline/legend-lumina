@@ -32,6 +32,6 @@ MAPS.swamp = {
   ],
   bosses: [{ type: 'witch', flag: 'witch', x: 640, y: 840, zone: [560, 772, 160, 130], need: 7, after: 'witch',
     intro: [['???', 'Jadi kamu bocah yang merusak rencanaku dengan Raja Goblin...'], ['Morgath', 'Aku Morgath. Cahaya Kristal Lumina seharusnya menjadi milikku! Lenyaplah dalam kabut!']] }],
-  fish: [[620, 516]],
+  fish: [[620, 516], [100, 710]],
   trees: { n: 1500, min: 30, types: [['treeSw', .5], ['treeBd', .2], ['rock', .12], ['bushG2', .18]] },
 };

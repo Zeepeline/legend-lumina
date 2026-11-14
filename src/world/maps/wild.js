@@ -73,7 +73,7 @@ MAPS.river = {
     { x: 2588, y: 450, w: 12, h: 60, to: 'swamp', tx: 60, ty: 480, dir: 'right', label: 'Rawa Senja' }],
   npcs: [{ id: 'pancing', ch: 'joko', name: 'Pak Teguh, Nelayan', x: 1290, y: 800, dir: 'down', wander: 16 }],
   chests: [{ id: 'rv1', x: 1820, y: 120, item: 'gold180' }, { id: 'rv2', x: 2480, y: 900, item: 'ether2' }, { id: 'rv3', x: 120, y: 900, item: 'hipotion2' }],
-  fish: [[760, 630], [1000, 820], [1580, 760], [2000, 590]],
+  fish: [[760, 630], [1000, 820], [1580, 760], [2000, 590], [230, 630], [1108, 280]],
   enemies: [['frog', 800, 640], ['frog', 1080, 780], ['snake', 1200, 500], ['bee', 1400, 200], ['bee', 1440, 240], ['boar', 1900, 400], ['plant', 2200, 300], ['frog', 2300, 680], ['snake', 1700, 900], ['boar', 400, 800], ['wolf', 300, 300], ['plant', 2450, 820]],
   trees: { n: 1700, min: 28, types: [['treeA', .35], ['treeB', .25], ['bushG1', .15], ['round', .1], ['rock', .15]] },
 };

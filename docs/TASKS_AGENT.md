@@ -2167,7 +2167,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); berjalan dari Jalur Sungai Senja ke rawa → sungai melebar jadi delta.
 
-### [ ] T344. **Titik memancing mengikuti sungai baru** — referensi: Stardew (spot mancing di tepi air)
+### [x] T344. **Titik memancing mengikuti sungai baru** — referensi: Stardew (spot mancing di tepi air)
 - File: `src/world/maps/*.js` field `fish` (snow, meadow, river, lake, forest, swamp). Baca dulu: format `fish` di peta yang sudah punya; `src/systems/fishing.js` `fishPool()` (BACA).
 - Lakukan: tambahkan 1–2 titik `fish` di tepi sungai baru per peta (di darat, menghadap air, ≤ 20 px dari tepi). Jangan ubah tabel `FISH`.
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar

@@ -53,7 +53,7 @@ MAPS.meadow = {
     { x: 1180, y: 160, w: 40, h: 22, to: 'cave', tx: 120, ty: 790, dir: 'up', label: 'Gua Batu' },
     { x: 560, y: 0, w: 80, h: 12, to: 'snow', tx: 640, ty: 1150, dir: 'up', label: 'Puncak Beku' },
     { x: 960, y: 1026, w: 80, h: 30, to: 'swamp', tx: 640, ty: 44, dir: 'down', label: 'Rawa Senja' }],
-  fish: [[660, 820]],
+  fish: [[660, 820], [690, 240], [1110, 1020]],
   feedSpots: [[660, 780]],
   npcs: [{ id: 'joko', ch: 'joko', name: 'Pak Joko', x: 340, y: 290, dir: 'down', wander: 26 },
     { id: 'wati', ch: 'wati', name: 'Wati', x: 180, y: 290, dir: 'down', wander: 22 },

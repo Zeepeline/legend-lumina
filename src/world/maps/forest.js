@@ -79,6 +79,6 @@ MAPS.forest = {
   barrier: { x: 640, y: 984, w: 64 },
   ring: { cx: 640, cy: 1068, r: 104, gap: 22 },
   mochi: { x: 112, y: 430 },
-  fish: [[446, 598]],
+  fish: [[446, 598], [90, 350]],
   trees: { n: 3200, min: 34, types: [['pined', .3], ['pine', .15], ['treeAd', .3], ['treeBd', .25]] }, butterflies: 4,
 };

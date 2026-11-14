@@ -26,6 +26,7 @@ MAPS.snow = {
   npcs: [{ id: 'nila', ch: 'nila', name: 'Penjaga Nila', x: 596, y: 1080, dir: 'down' }],
   torches: [[260, 744], [1020, 704], [640, 530]],
   iceGate: [600, 372, 80, 26],
+  fish: [[670, 150], [700, 835]],
   chests: [
     { id: 'n1', x: 160, y: 1060, item: 'hipotion2' },
     { id: 'n2', x: 1130, y: 1040, item: 'antidote3' },

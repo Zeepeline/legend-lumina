@@ -28,6 +28,7 @@ MAPS.lake = {
     { x: 1388, y: 470, w: 12, h: 60, to: 'village', tx: 40, ty: 590, dir: 'right', label: 'Desa Lumina' }],
   npcs: [{ id: 'gun', ch: 'gun', name: 'Pak Gun', x: 930, y: 170, dir: 'left' }, { id: 'ratih', ch: 'ratih', name: 'Nenek Ratih', x: 1040, y: 560, dir: 'left' }],
   lanterns: [[560, 266], [560, 744], [206, 500]],
+  fish: [[890, 520], [1060, 890]],
   boat: [902, 512],
   feedSpots: [[890, 520]],
   enemies: [['frog', 300, 260], ['frog', 820, 760], ['wisp', 240, 800], ['wisp', 900, 220], ['slimep', 1200, 760], ['frog', 1180, 840], ['wisp', 360, 840]],
