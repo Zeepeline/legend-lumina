@@ -18882,6 +18882,37 @@ const UNLOAD_FAR = 1700, UNLOAD_EVERY = 1.5; // px dari Arka; detik antar-pemeri
   };
 }
 
+Object.assign(World.prototype, {
+  unloadFar(dt) {
+    if (!this.cellRec || (this.unT = (this.unT || 0) - dt) > 0) return;
+    this.unT = UNLOAD_EVERY;
+    const px = this.pl.x, py = this.pl.y, C = OBJ_CELL;
+    for (const [k, R] of this.cellRec) {
+      const [i, j] = k.split(',').map(Number);
+      if (Math.hypot((i + .5) * C - px, (j + .5) * C - py) < UNLOAD_FAR) continue;
+      const gone = new Set([...R.objs, ...R.walls]);
+      for (const o of gone) if (o && o.active) o.destroy();
+      const drop = a => { const s = new Set(a); return x => !s.has(x); };
+      this.inter = this.inter.filter(drop(R.inter));
+      this.lights = this.lights.filter(drop(R.lights));
+      this.fades = this.fades.filter(drop(R.fades));
+      if (this.cullL) this.cullL = this.cullL.filter(c => !gone.has(c.o));
+      this.cellRec.delete(k);
+      if (this.objCells) this.objCells.delete(k);
+    }
+  }
+});
+
+{
+  const W = World.prototype, up0 = W.update;
+  W.update = function (t, dl) {
+    up0.call(this, t, dl);
+    if (this.M && this.M.benua && this.pl && !this.passive) {
+      this.unloadFar(Math.min(dl, 100) / 1000);
+    }
+  };
+}
+
 'use strict';
 // Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):
 // - serangan & berguling (dash, sudah kebal sesaat) memakan stamina; stamina berhenti pulih sebentar setelah dipakai

@@ -1384,7 +1384,7 @@ const UNLOAD_FAR = 1700, UNLOAD_EVERY = 1.5; // px dari Arka; detik antar-pemeri
 ```
 - Cek: `?benua=1`, konsol `__game.sc.cellRec.size > 0` dan `[...__game.sc.cellRec.values()][0].objs.length > 0`. (selesai di v1.30.1)
 
-### [ ] T231. **[KINERJA 2] Buang petak yang jauh** (butuh KINERJA 1)
+### [x] T231. **[KINERJA 2] Buang petak yang jauh** (butuh KINERJA 1)
 - Di `benua_unload.js` tambahkan metode (di luar blok, `Object.assign(World.prototype, { … })`):
 ```js
   unloadFar(dt) {
@@ -1403,7 +1403,7 @@ const UNLOAD_FAR = 1700, UNLOAD_EVERY = 1.5; // px dari Arka; detik antar-pemeri
   },
 ```
 - Panggil dari pembungkus `update` di blok yang sama: `const up0 = W.update; W.update = function (t, dl) { up0.call(this, t, dl); if (this.M && this.M.benua && this.pl && !this.passive) this.unloadFar(Math.min(dl, 100) / 1000); };`
-- Cek: konsol catat `__game.sc.children.list.length`, teleport jauh (`__game.sc.goto('snow', 640, 600, 'down')`), tunggu 3 detik → jumlah turun; kembali ke desa (`goto('village', 512, 384, 'down')`) → pohon & rumah desa muncul lagi, tidak bisa menembus pagar.
+- Cek: konsol catat `__game.sc.children.list.length`, teleport jauh (`__game.sc.goto('snow', 640, 600, 'down')`), tunggu 3 detik → jumlah turun; kembali ke desa (`goto('village', 512, 384, 'down')`) → pohon & rumah desa muncul lagi, tidak bisa menembus pagar. (selesai di v1.30.1)
 
 ### [ ] T232. **[KINERJA 3] Pastikan petak yang dimuat ulang tidak dobel** (butuh KINERJA 2)
 - Uji: jalan bolak-balik desa ↔ Jalan Desa–Padang 3 kali (atau teleport desa ↔ snow 3 kali).

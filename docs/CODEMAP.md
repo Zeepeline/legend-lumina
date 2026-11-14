@@ -407,9 +407,9 @@ _MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALI
 _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat Arka berada, teleport tanpa memuat ulang._
 `KEMBARA_POS` 20 · `.initBenua()` 25 · `.withRegion()` 39 · `.spawnRegionFx()` 44 · `.streamObjs()` 69 · `.benuaAmbient()` 88 · `.benuaWeather()` 98 · `.updBenua()` 104
 
-## src/systems/benua_unload.js (18 baris)
+## src/systems/benua_unload.js (49 baris)
 _Mode benua: buang petak objek yang jauh dari Arka (memori). Mencatat semua yang dibuat spawnObj per petak lalu menghancurkannya._
-`UNLOAD_FAR` 3
+`UNLOAD_FAR` 3 · `.unloadFar()` 20
 
 ## src/systems/souls.js (122 baris)
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
