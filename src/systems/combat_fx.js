@@ -236,8 +236,34 @@ Object.assign(World.prototype, {
   };
 
   const hurt0 = W.hurtPlayer;
-  W.hurtPlayer = function (dmg) {
-    const hp0 = S.hp, r = hurt0.apply(this, arguments);
+  W.hurtPlayer = function (atk, sx, sy, fx) {
+    const pl = this.pl, prevParries = S?.parries || 0, hp0 = S.hp;
+    const r = hurt0.apply(this, arguments);
+    if ((S?.parries || 0) > prevParries && pl) {
+      const bx = (pl.x + (sx || pl.x)) / 2, by = (pl.y + (sy || pl.y)) / 2;
+      this.hitStop(.12, 50);
+      const ring = this.add.graphics().setDepth(pl.y + 6);
+      const ro = { r: 6 };
+      this.tweens.add({
+        targets: ro, r: 48, duration: 240, ease: 'Quad.easeOut',
+        onUpdate: () => {
+          ring.clear(); ring.lineStyle(3, 0xffe066, 1 - ro.r / 48).strokeCircle(bx, by, ro.r);
+        },
+        onComplete: () => ring.destroy()
+      });
+      for (let i = 0; i < 10; i++) {
+        const ang = (i / 10) * Math.PI * 2 + Math.random() * 0.4, spd = rnd(60, 140);
+        const p = this.add.rectangle(bx, by, 3, 3, 0xffea78).setDepth(pl.y + 7);
+        this.physics.add.existing(p);
+        p.body.setVelocity(Math.cos(ang) * spd, Math.sin(ang) * spd);
+        this.tweens.add({ targets: p, alpha: 0, scale: 0.2, duration: 180, onComplete: () => p.destroy() });
+      }
+      if (!OPT.lite) {
+        const edge = this.add.graphics().setScrollFactor(0).setDepth(9998);
+        edge.lineStyle(6, 0xffd700, 0.45).strokeRect(0, 0, VW, VH);
+        this.tweens.add({ targets: edge, alpha: 0, duration: 140, onComplete: () => edge.destroy() });
+      }
+    }
     if (S.hp < hp0 && hp0 - S.hp >= stat().maxhp * .15 && navigator.vibrate) {
       try { navigator.vibrate(25); } catch (_) {}
     }

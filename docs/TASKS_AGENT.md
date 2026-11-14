@@ -1972,12 +1972,12 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; kombo 3 → kilat singkat terasa tegas.
 
-### [ ] T315. **Tangkis: dentang, percikan, layar membeku** — referensi: Sekiro, Hollow Knight
+### [x] T315. **Tangkis: dentang, percikan, layar membeku** — referensi: Sekiro, Hollow Knight
 - File: `src/systems/combat_fx.js` (bungkus fungsi tangkis di polish.js, JANGAN ubah polish.js). Baca dulu: pembungkus `_hurtPlayer` & `PARRY_WIN` di polish.js (BACA).
 - Lakukan: saat tangkis berhasil: cincin putih→emas membesar, 10 percikan kuning menyembur dari titik benturan, Arka & musuh berhenti 120 ms (freeze-frame), tepi layar kilat emas tipis.
 - Batasan: jangan ubah jendela tangkis.
 - Jika SUDAH ada → tandai [x] "sudah ada".
-- Cek: `npm run check`; tangkis serangan → terasa 'TING!' yang memuaskan.
+- Cek: `npm run check`; tangkis serangan → terasa 'TING!' yang memuaskan. (selesai di v1.30.1)
 
 ### [ ] T316. **Dash: garis angin & kedip awal-akhir** — referensi: Celeste, Hyper Light Drifter
 - File: `src/systems/combat_fx.js`. Baca dulu: pembungkus `W.dash` & `rollFx()`.
