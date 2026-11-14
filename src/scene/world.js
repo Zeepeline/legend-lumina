@@ -61,7 +61,7 @@ class World extends Phaser.Scene {
     }
     for (const a of M.animals || []) this.spawnCritter(a);
     for (let i = 0; i < (M.butterflies || 0); i++) this.spawnFly(i);
-    for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2]);
+    for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2], e[3]);
     this.initSecrets(); this.spawnHome(); this.spawnRanch(); if (!P) { this.spawnSeason(); this.initPolish(); }
     if (!G.title && isNight() && (M.id === 'forest' || M.id === 'meadow')) for (let i = 0; i < 4; i++) { const P = M.paths[(i * 3 + 2) % M.paths.length]; this.spawnEnemy('wisp', (P[0] + P[2]) / 2 + rnd(-30, 30), (P[1] + P[3]) / 2 + rnd(-20, 20)); }
     // pemain

@@ -138,9 +138,9 @@ Object.assign(World.prototype, {
     return true;
   },
 });
-// Penyesuaian ketangguhan musuh sesuai wilayah & level Arka (T307)
+// Penyesuaian ketangguhan musuh sesuai wilayah & level Arka (T307) serta penyergapan (T311)
 const _spawnEnemy = World.prototype.spawnEnemy;
-World.prototype.spawnEnemy = function (type, x, y) {
+World.prototype.spawnEnemy = function (type, x, y, opt) {
   const e = _spawnEnemy.call(this, type, x, y);
   if (e && !e.boss && typeof S !== 'undefined' && S.lv) {
     const areaLv = LEVEL_WILAYAH[this.M?.id] || 4;
@@ -151,6 +151,10 @@ World.prototype.spawnEnemy = function (type, x, y) {
       e.max = Math.round(e.max * k);
       e.D = Object.assign({}, e.D, { hp: e.hp, def: Math.round((e.D.def || 0) * k) });
     }
+  }
+  if (e && opt && opt.ambush) {
+    e.ambush = true; e.ambushing = true;
+    e.spr.setAlpha(0.15); if (e.sh) e.sh.setAlpha(0.06);
   }
   return e;
 };

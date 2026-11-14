@@ -74,6 +74,14 @@ body{font-family:'Pixelify Sans','Courier New',monospace;color:#3b2618}
 #boss .bar>i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(#ff7a6a,#b81e20);transition:width .12s}
 #boss .bar>i.ghost{background:#fff;opacity:.75;transition:width .6s ease-out .25s}
 #boss .bar .p2-line{position:absolute;left:50%;top:0;bottom:0;width:1px;background:#ffe27a;opacity:.8;z-index:2}
+#spellbar{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);display:flex;gap:4px;z-index:2}
+body.touch #spellbar{bottom:52px}
+.s-slot{position:relative;width:22px;height:22px;background:rgba(20,15,10,.85);border:1px solid rgba(255,230,180,.35);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;user-select:none}
+.s-slot.act{border:1px solid #ffd700;box-shadow:0 0 4px #ffd700}
+.s-slot.nomp{filter:grayscale(1);opacity:.45}
+.s-slot .s-ic{font-size:11px}
+.s-slot .s-mp{position:absolute;right:1px;bottom:0;font-size:6px;color:#8ad8ff;font-weight:700;line-height:7px}
+.s-slot .s-cd{position:absolute;inset:0;background:conic-gradient(rgba(0,0,0,.65) var(--cd),transparent 0);pointer-events:none}
 .pop{position:absolute;font-weight:700;font-size:11px;color:#fff;text-shadow:1px 1px 0 #000,-1px 0 0 #000,0 -1px 0 #000,1px 0 0 #000;pointer-events:none;transform:translate(-50%,-50%);white-space:nowrap;animation:pop .9s ease-out forwards}
 .pop.hurt{color:#ff6a6a}.pop.heal{color:#8dff9f}.pop.mpc{color:#8fd8ff}.pop.crit{color:#ffe66b;font-size:14px}.pop.gold{color:#ffe27a;font-size:9px}.pop.xp{color:#c8e8ff;font-size:8px}.pop.purp{color:#d88aff;font-size:12px}
 @keyframes pop{0%{opacity:0;margin-top:4px;scale:.5}15%{opacity:1;margin-top:-5px;scale:1.25}30%{margin-top:-6px;scale:1}75%{opacity:1}100%{opacity:0;margin-top:-18px}}
@@ -6057,6 +6065,7 @@ function buildHud(icons) {
    <div id="fps-meter" style="display:${OPT.fps ? 'block' : 'none'};position:absolute;top:28px;left:4px;font-size:9px;color:#a0f080;background:rgba(0,0,0,0.55);padding:2px 5px;border-radius:3px;z-index:9000;pointer-events:none;font-family:monospace;">60 FPS</div>
    <div id="quest"></div><div id="boss"><span id="bName"></span><div class="bar"><i class="ghost" id="bGhost"></i><i id="bHp"></i><div class="p2-line"></div></div></div>`;
   UI.appendChild(HUD);
+  if (typeof buildSpellbar === 'function') buildSpellbar();
 }
 function updHud() {
   if (!HUD) return; const st = stat();
@@ -6098,6 +6107,7 @@ function updHud() {
   q.style.display = txt ? '' : 'none';
   if (!q._tap) { q._tap = 1; q.addEventListener('pointerdown', e => { e.stopPropagation(); if (!G.lock && !G.title) openQuests(); }); }
   updHudFade(st);
+  if (typeof updSpellbar === 'function') updSpellbar();
 }
 let hudPeaceT = 0;
 function updHudFade(st) {
@@ -6115,7 +6125,11 @@ function updHudFade(st) {
     h.style.opacity = '';
   }
 }
-function showHud(v) { if (!HUD) return; for (const id of ['hud', 'hud2', 'quest']) $(id).style.opacity = v ? '' : 0; if (v) hudPeaceT = 0; }
+function showHud(v) {
+  if (!HUD) return;
+  for (const id of ['hud', 'hud2', 'quest', 'spellbar']) { const el = $(id); if (el) el.style.opacity = v ? '' : 0; }
+  if (v) hudPeaceT = 0;
+}
 function bossBar(name, f) {
   const b = $('boss');
   if (name === null) {
@@ -6133,6 +6147,59 @@ function bossBar(name, f) {
 SCREEN.addEventListener('pointerdown', () => { if (UIH && UIH.tap) press('tap'); });
 // Ikon kecil "tersimpan" di pojok saat simpan otomatis
 function autoSaveIcon() { let e = $('autosv'); if (!e) { e = document.createElement('div'); e.id = 'autosv'; e.textContent = '💾 tersimpan'; SCREEN.appendChild(e); } e.classList.remove('on'); void e.offsetWidth; e.classList.add('on'); }
+
+'use strict';
+// Bilah 5 slot jurus dengan cooldown (T327)
+let SPELLBAR = null;
+function buildSpellbar() {
+  if (SPELLBAR) SPELLBAR.remove();
+  SPELLBAR = document.createElement('div');
+  SPELLBAR.id = 'spellbar';
+  UI.appendChild(SPELLBAR);
+  updSpellbar();
+}
+
+function updSpellbar() {
+  if (!SPELLBAR) return;
+  if (G.title || G.lock) { SPELLBAR.style.display = 'none'; return; }
+  const learnedIds = Object.keys(JURUS).filter(k => learned(k));
+  if (!learnedIds.length) { SPELLBAR.style.display = 'none'; return; }
+  SPELLBAR.style.display = 'flex';
+  const slots = learnedIds.slice(0, 5);
+  const sc = G.scene;
+  const pl = sc?.pl;
+
+  let html = '';
+  for (const id of slots) {
+    const J = JURUS[id];
+    const isAct = (S.spell === id);
+    const noMp = (J.kind === 'spell' && S.mp < (J.mp || 0));
+    let cdPct = 0;
+    if (id === 'dash' && sc?.dashCd > 0) cdPct = Math.max(0, Math.min(1, sc.dashCd / 0.85));
+    else if (id === 'spin' && sc?.holdA > 0) cdPct = Math.max(0, Math.min(1, sc.holdA / 0.45));
+    else if (J.kind === 'spell' && pl?.atkCd > 0) cdPct = Math.max(0, Math.min(1, pl.atkCd / 0.5));
+
+    const cls = ['s-slot', isAct ? 'act' : '', noMp ? 'nomp' : ''].filter(Boolean).join(' ');
+    const icon = { fire: '🔥', dash: '»', spin: '⚔', venom: '☣', nova: '❄', heal: '💚', holy: '✨' }[id] || '✦';
+    html += `<div class="${cls}" data-id="${id}">
+      <span class="s-ic">${icon}</span>
+      ${J.mp ? `<span class="s-mp">${J.mp}</span>` : ''}
+      ${cdPct > 0 ? `<div class="s-cd" style="--cd:${Math.round(cdPct * 360)}deg"></div>` : ''}
+    </div>`;
+  }
+  SPELLBAR.innerHTML = html;
+  SPELLBAR.querySelectorAll('.s-slot').forEach(el => {
+    el.onpointerdown = e => {
+      e.stopPropagation();
+      const id = el.dataset.id;
+      if (JURUS[id]?.kind === 'spell') {
+        S.spell = id;
+        sfx('ok');
+        updSpellbar();
+      }
+    };
+  });
+}
 
 'use strict';
 // Status pemain (S), simpan/muat, rumus stat
@@ -7133,7 +7200,7 @@ class World extends Phaser.Scene {
     }
     for (const a of M.animals || []) this.spawnCritter(a);
     for (let i = 0; i < (M.butterflies || 0); i++) this.spawnFly(i);
-    for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2]);
+    for (const e of M.enemies || []) this.spawnEnemy(e[0], e[1], e[2], e[3]);
     this.initSecrets(); this.spawnHome(); this.spawnRanch(); if (!P) { this.spawnSeason(); this.initPolish(); }
     if (!G.title && isNight() && (M.id === 'forest' || M.id === 'meadow')) for (let i = 0; i < 4; i++) { const P = M.paths[(i * 3 + 2) % M.paths.length]; this.spawnEnemy('wisp', (P[0] + P[2]) / 2 + rnd(-30, 30), (P[1] + P[3]) / 2 + rnd(-20, 20)); }
     // pemain
@@ -18505,12 +18572,7 @@ function soulHudWrap() {
   const u0 = updHud;
   updHud = function () { // eslint-disable-line no-global-assign
     const r = u0.apply(this, arguments), e = document.getElementById('hPot'), F = flaskOf();
-    if (e && F) {
-      let dots = '';
-      for (let i = 0; i < F.max; i++) dots += (i < F.n) ? '●' : '○';
-      const pCount = (S.inv.potion || 0) + (S.inv.hipotion || 0);
-      e.innerHTML = `<span class="f-dots">${dots}</span><small class="p-num">${pCount}</small>`;
-    }
+    if (e) e.textContent = F.n + '/' + F.max + ' · ' + ((S.inv.potion || 0) + (S.inv.hipotion || 0));
     return r;
   };
   updHud();

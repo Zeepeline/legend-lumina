@@ -120,6 +120,7 @@ function buildHud(icons) {
    <div id="fps-meter" style="display:${OPT.fps ? 'block' : 'none'};position:absolute;top:28px;left:4px;font-size:9px;color:#a0f080;background:rgba(0,0,0,0.55);padding:2px 5px;border-radius:3px;z-index:9000;pointer-events:none;font-family:monospace;">60 FPS</div>
    <div id="quest"></div><div id="boss"><span id="bName"></span><div class="bar"><i class="ghost" id="bGhost"></i><i id="bHp"></i><div class="p2-line"></div></div></div>`;
   UI.appendChild(HUD);
+  if (typeof buildSpellbar === 'function') buildSpellbar();
 }
 function updHud() {
   if (!HUD) return; const st = stat();
@@ -161,6 +162,7 @@ function updHud() {
   q.style.display = txt ? '' : 'none';
   if (!q._tap) { q._tap = 1; q.addEventListener('pointerdown', e => { e.stopPropagation(); if (!G.lock && !G.title) openQuests(); }); }
   updHudFade(st);
+  if (typeof updSpellbar === 'function') updSpellbar();
 }
 let hudPeaceT = 0;
 function updHudFade(st) {
@@ -178,7 +180,11 @@ function updHudFade(st) {
     h.style.opacity = '';
   }
 }
-function showHud(v) { if (!HUD) return; for (const id of ['hud', 'hud2', 'quest']) $(id).style.opacity = v ? '' : 0; if (v) hudPeaceT = 0; }
+function showHud(v) {
+  if (!HUD) return;
+  for (const id of ['hud', 'hud2', 'quest', 'spellbar']) { const el = $(id); if (el) el.style.opacity = v ? '' : 0; }
+  if (v) hudPeaceT = 0;
+}
 function bossBar(name, f) {
   const b = $('boss');
   if (name === null) {

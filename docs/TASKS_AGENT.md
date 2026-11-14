@@ -2049,7 +2049,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; HUD terlihat rapi seperti RPG souls; nilai tetap benar.
 
-### [ ] T327. **Bilah 5 slot jurus dengan cooldown** — referensi: Dimraeth (5 jurus terpasang), Diablo III, MOBA
+### [x] T327. **Bilah 5 slot jurus dengan cooldown** — referensi: Dimraeth (5 jurus terpasang), Diablo III, MOBA
 - File: file baru `src/ui/spellbar.js` + `styles.css` (daftarkan di index.html). Baca dulu: `JURUS`, `learned()`, `S.spell` (learn.js) & menu jurus di `src/ui/menus.js` (BACA).
 - Lakukan: tampilkan bar 5 slot di bawah tengah layar berisi jurus yang sudah dipelajari (urutan JURUS). Slot jurus aktif (`S.spell`) berbingkai emas; ketuk slot jurus sihir → jadikan `S.spell`. Tampilkan sapuan cooldown melingkar & biaya MP; slot abu-abu bila MP kurang.
 - Batasan: di HP, bar tidak menutupi joystick/tombol (sesuaikan `bottom`).
