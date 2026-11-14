@@ -41,9 +41,13 @@ const ENEMY = {
   bounty_gargoyle: { name: 'Gargoyle Merah', tex: 'batc', hp: 360, atk: 30, def: 14, spd: 76, exp: 350, gold: [250, 300], r: 10, ai: 'fly', fly: 1, scale: 1.5, drop: ['shard', 1], fx: ['burn', 4, .6], isBounty: true },
   // Raja Slime Membelah Diri (#197)
   king_slime: { name: 'Raja Slime Mahkota', tex: 'slime', hp: 130, atk: 11, def: 4, spd: 46, exp: 60, gold: [45, 80], r: 12, ai: 'hop', scale: 1.65, drop: ['amethyst_gem', .4] },
-  // Skuad Taktis Goblin: Pemanah & Dukun (#181 & #183)
+  // Skuad Taktis Goblin: Pemanah, Dukun & Brute Elite
   goblin_archer: { name: 'Goblin Pemanah', tex: 'goblin_archer_hd', scale: 0.46, hp: 28, atk: 9, def: 2, spd: 50, exp: 20, gold: [5, 10], r: 7, ai: 'shoot', proj: 'arrow', drop: ['sarrow', .5] },
   goblin_shaman: { name: 'Dukun Goblin', tex: 'ch_goblin', hp: 42, atk: 8, def: 4, spd: 42, exp: 35, gold: [8, 16], r: 8, ai: 'shaman', ch: 1, drop: ['herb', .7] },
+  goblin_elite: {
+    name: 'Goblin Brute Elite', tex: 'ch_goblin', hp: 160, atk: 22, def: 8, spd: 54, exp: 90, gold: [25, 45], r: 14,
+    ai: 'elite_brute', ch: 1, scale: 1.0, drop: ['iron', .8]
+  },
 };
 const PROJ = { spore: { key: 'spore', spd: 72, fx: ['poison', 4, .5] }, seed: { key: 'seed', spd: 84 }, bone: { key: 'bone', spd: 96, spin: 1 }, rock: { key: 'rockshot', spd: 110, spin: 1 }, venom: { key: 'venom', spd: 96, fx: ['poison', 5, .6] }, ice: { key: 'icebolt', spd: 112, fx: ['chill', 3, .7] }, arrow: { key: 'spore', spd: 90 } };
 const BOSS_AI = ['boss', 'gboss', 'qboss', 'sboss', 'wboss', 'dboss'];

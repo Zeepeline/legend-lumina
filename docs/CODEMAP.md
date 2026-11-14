@@ -99,7 +99,7 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _Peta: Desa Lumina_
 
 
-## src/world/maps/forest.js (69 baris)
+## src/world/maps/forest.js (79 baris)
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
@@ -147,9 +147,9 @@ _Status pemain (S), simpan/muat, rumus stat_
 _Data item & resep tempa_
 `ITEMS` 4 · `ICON_OF` 182 · `COOK` 208 · `RECIPES` 216 · `SETS` 224 · `activeSets()` 259
 
-## src/data/enemies.js (51 baris)
+## src/data/enemies.js (55 baris)
 _Data musuh & proyektil_
-`ENEMY` 5 · `PROJ` 48 · `BOSS_AI` 49 · `BEAST` 50
+`ENEMY` 5 · `PROJ` 52 · `BOSS_AI` 53 · `BEAST` 54
 
 ## src/data/bestiary_text.js (157 baris)
 _Teks bestiari per musuh (id = kunci ENEMY): habitat & tips melawan. Dipasang ke layar Bestiari oleh sesi besar._
@@ -179,17 +179,17 @@ _Panggang bayangan objek ke tekstur tanah_
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 15 · `addStrip()` 16 · `darkTree()` 17 · `NPC_W` 19 · `regPortrait()` 20 · `regChar()` 25 · `buildTextures()` 41
 
-## src/scene/world.js (394 baris)
+## src/scene/world.js (397 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
-`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 207 · `.update()` 208 · `.puff()` 310 · `.camStep()` 311 · `.pump()` 358 · `.front()` 367 · `.actionA()` 368 · `.sparkle()` 378 · `.checkZones()` 382
+`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 210 · `.update()` 211 · `.puff()` 313 · `.camStep()` 314 · `.pump()` 361 · `.front()` 370 · `.actionA()` 371 · `.sparkle()` 381 · `.checkZones()` 385
 
 ## src/systems/scene_nav.js (14 baris)
 _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._
 `.goto()` 4 · `.guardStop()` 9
 
-## src/systems/combat.js (340 baris)
+## src/systems/combat.js (344 baris)
 _Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah_
-`WEAPON_STYLE` 4 · `.attack()` 12 · `.shootArrow()` 89 · `.aimAngle()` 102 · `.magic()` 111 · `.drink()` 124 · `.useItem()` 130 · `.hitStop()` 139 · `.hitEnemy()` 144 · `.killEnemy()` 174 · `.drop()` 248 · `.updPicks()` 254 · `.gainExp()` 276 · `.hurtPlayer()` 288 · `.eShoot()` 298 · `.shockwave()` 306 · `.updShots()` 313 · `.defeat()` 327
+`WEAPON_STYLE` 4 · `.attack()` 12 · `.shootArrow()` 89 · `.aimAngle()` 102 · `.magic()` 111 · `.drink()` 124 · `.useItem()` 130 · `.hitStop()` 139 · `.hitEnemy()` 144 · `.killEnemy()` 176 · `.drop()` 252 · `.updPicks()` 258 · `.gainExp()` 280 · `.hurtPlayer()` 292 · `.eShoot()` 302 · `.shockwave()` 310 · `.updShots()` 317 · `.defeat()` 331
 
 ## src/systems/skills.js (36 baris)
 _Jurus: dash, tebasan putar, nova es_
@@ -223,9 +223,13 @@ _Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Ray
 _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif._
 `WARPS` 3 · `.spawnWarp()` 9 · `.useWarp()` 15
 
-## src/ai/enemies.js (288 baris)
+## src/ai/enemies.js (342 baris)
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
-`.updEnemy()` 4 · `.charAnim()` 281
+`.updEnemy()` 4 · `.charAnim()` 335
+
+## src/ai/elite_brute.js (83 baris)
+_AI untuk musuh Brute Elite (Goblin Brute Elite, dsb)_
+`.updEliteBrute()` 4
 
 ## src/ai/bosses.js (109 baris)
 _AI boss & alur pertarungan boss_
@@ -443,7 +447,7 @@ _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung da
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
 `GPT_SWAP` 4 · `GPT_LOOK` 5 · `applyGptSwap()` 10
 
-## src/gfx/gptmonsters.js (94 baris)
+## src/gfx/gptmonsters.js (135 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 

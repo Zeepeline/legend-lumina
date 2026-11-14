@@ -250,6 +250,7 @@ Object.assign(World.prototype, {
         }
         break;
       }
+      case 'elite_brute': this.updEliteBrute(e, dt, dx, dy, d, aggro); break;
       case 'walk':
         if (aggro) {
           // Musuh Berkelompok & Pengepungan (#8)
