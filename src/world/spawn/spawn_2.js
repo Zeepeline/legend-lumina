@@ -189,7 +189,10 @@ Object.assign(OBJ_SPAWN, {
     });
   },
   fountain(s, x, y, opt, d, type) {
-    this.add.particles(x, y - 66, 'dot', { lifespan: 650, speedX: { min: -22, max: 22 }, speedY: { min: -26, max: -8 }, gravityY: 90, alpha: { start: .8, end: 0 }, frequency: 110, tint: 0xd8f6ff }).setDepth(y + 1);
+    this.add.particles(x, y - 66, 'dot', {
+      lifespan: 650, speedX: { min: -22, max: 22 }, speedY: { min: -26, max: -8 },
+      gravityY: 90, alpha: { start: .8, end: 0 }, frequency: 110, tint: 0xd8f6ff
+    }).setDepth(y + 1);
     this.inter.push({
       x, y: y + 8, r: 26,
       fn: async () => {
@@ -198,7 +201,11 @@ Object.assign(OBJ_SPAWN, {
     });
   },
   windmill(s, x, y, opt, d, type) {
-    { const b = this.add.image(x, y - 70, 'blades').setDepth(y + 1); this.tweens.add({ targets: b, angle: 360, duration: 7000, repeat: -1 }); this.fades.push({ s: b, l: x - 36, r: x + 36, t: y - 110, b: y - 22 }); }
+    {
+      const b = this.add.image(x, y - 70, 'blades').setDepth(y + 1);
+      this.tweens.add({ targets: b, angle: 360, duration: 7000, repeat: -1 });
+      this.fades.push({ s: b, l: x - 36, r: x + 36, t: y - 110, b: y - 22 });
+    }
   },
   treeA(s, x, y, opt, d, type) {
     const k = (d && d.key) || type || 'i_treeA';

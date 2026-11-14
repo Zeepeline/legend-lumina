@@ -699,7 +699,7 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.
 
-### [ ] T125. **Pecah baris > 160 karakter di `src/world/spawn/spawn_2.js`**
+### [x] T125. **Pecah baris > 160 karakter di `src/world/spawn/spawn_2.js`**
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/world/spawn/spawn_2.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.

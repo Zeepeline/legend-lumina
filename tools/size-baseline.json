@@ -5,7 +5,7 @@
  },
  "src/ai/enemies.js": {
   "lines": 0,
-  "long": 18
+  "long": 11
  },
  "src/art/base.js": {
   "lines": 0,
@@ -77,7 +77,7 @@
  },
  "src/gfx/gptassets.js": {
   "lines": 0,
-  "long": 3
+  "long": 2
  },
  "src/gfx/textures.js": {
   "lines": 0,
@@ -97,7 +97,7 @@
  },
  "src/systems/ambient.js": {
   "lines": 0,
-  "long": 36
+  "long": 33
  },
  "src/systems/chapter3.js": {
   "lines": 0,
@@ -298,9 +298,5 @@
  "src/world/spawn/spawn_1.js": {
   "lines": 0,
   "long": 4
- },
- "src/world/spawn/spawn_2.js": {
-  "lines": 0,
-  "long": 2
  }
 }

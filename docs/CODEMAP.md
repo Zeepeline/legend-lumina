@@ -87,9 +87,9 @@ _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 `OBJ_SPAWN` 3 · obj `shrine` 5 · obj `cavemouth` 8 · obj `sign` 11 · obj `forge` 14 · obj `pebbles` 18 · obj `telescope` 26 · obj `altar` 34 · obj `fieldoven` 42 · obj `dripstone` 50 · obj `frostflower` 58 · obj `totem` 66 · obj `pigeons` 74 · obj `teatable` 82 · obj `lotuspad` 90 · obj `dockboat` 98 · obj `coffeeshrub` 153 · obj `coffeekettle` 161 · obj `orchidrock` 169 · obj `canaryperch` 177 · obj `woodlandshrine` 185 · obj `bellows` 193 · obj `ringbooth` 201 · obj `archerytarget` 209 · obj `lakelighthouse` 217 · obj `streetdrum` 225 · obj `dummy` 233 · obj `pot` 241 · obj `well` 251 · obj `apple1` 266 · obj `bench` 327 · obj `bell` 343 · obj `campfire` 351 · obj `alchemytable` 361 · obj `scenicbench` 370 · obj `mailbox` 388
 
-## src/world/spawn/spawn_2.js (296 baris)
+## src/world/spawn/spawn_2.js (303 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 200 · obj `treeA` 203 · obj `goblin_torch` 211 · obj `goblin_cauldron` 214 · obj `cryst` 223 · obj `lamp` 226 · obj `viewpoint` 229 · obj `lumina_shard` 263
+obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 203 · obj `treeA` 210 · obj `goblin_torch` 218 · obj `goblin_cauldron` 221 · obj `cryst` 230 · obj `lamp` 233 · obj `viewpoint` 236 · obj `lumina_shard` 270
 
 ## src/world/ground.js (279 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
