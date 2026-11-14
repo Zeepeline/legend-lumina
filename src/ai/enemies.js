@@ -196,25 +196,24 @@ Object.assign(World.prototype, {
         } else wander(D.spd * .5);
         e.shootT = (e.shootT || rnd(1.5, 2.5)) - dt;
         if (aggro && e.shootT <= 0 && d < 160) {
-          e.shootT = rnd(2.0, 3.0) * cdMul;
-          if (isArcherHd && s.anims) {
-            e.st = 'shoot'; e.t = 0.55 * wMul; s.setVelocity(0);
-            s.flipX = dx > 0;
-            const anim = Math.random() < 0.35 ? 'goblin_archer_hd_rain' : 'goblin_archer_hd_shoot';
-            s.play(anim, true);
-            this.time.delayedCall(260, () => {
-              if (s.active && e.hp > 0) {
-                if (anim === 'goblin_archer_hd_rain') {
-                  this.eShoot(e, 'arrow', [-0.25, 0, 0.25], D.atk);
-                } else {
-                  this.eShoot(e, 'arrow', [0], D.atk);
-                }
-              }
-            });
+          if (this.hasLineOfSight && !this.hasLineOfSight(s.x, s.y, pl.x, pl.y)) {
+            e.shootT = 0.35;
+            const side = Math.random() < 0.5 ? 1 : -1;
+            s.setVelocity((-dy / d * side) * D.spd, (dx / d * side) * D.spd);
           } else {
-            if (!D.ch) s.setVelocity(0);
-            this.eShoot(e, D.proj || 'arrow', D.proj === 'bone' ? [-.12, .12] : [0], D.atk);
-            this.tweens.add({ targets: s, scaleY: sc * .85, scaleX: sc * 1.15, duration: 90, yoyo: true });
+            e.shootT = rnd(2.0, 3.0) * cdMul;
+            if (isArcherHd && s.anims) {
+              e.st = 'shoot'; e.t = 0.55 * wMul; s.setVelocity(0); s.flipX = dx > 0;
+              const anim = Math.random() < 0.35 ? 'goblin_archer_hd_rain' : 'goblin_archer_hd_shoot';
+              s.play(anim, true);
+              this.time.delayedCall(260, () => {
+                if (s.active && e.hp > 0) this.eShoot(e, 'arrow', anim === 'goblin_archer_hd_rain' ? [-0.25, 0, 0.25] : [0], D.atk);
+              });
+            } else {
+              if (!D.ch) s.setVelocity(0);
+              this.eShoot(e, D.proj || 'arrow', D.proj === 'bone' ? [-.12, .12] : [0], D.atk);
+              this.tweens.add({ targets: s, scaleY: sc * .85, scaleX: sc * 1.15, duration: 90, yoyo: true });
+            }
           }
         }
         if (D.ch) this.charAnim(e);

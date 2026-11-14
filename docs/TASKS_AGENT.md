@@ -1894,7 +1894,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; serigala kadang menerjang dua kali; setelahnya diam sebentar.
 
-### [ ] T303. **Penembak butuh garis pandang** — referensi: Diablo, XCOM (line of sight)
+### [x] T303. **Penembak butuh garis pandang** — referensi: Diablo, XCOM (line of sight)
 - File: `src/ai/enemies.js`. Baca dulu: cabang `'shoot'` & `'turret'`.
 - Lakukan: sebelum menembak, cek garis lurus ke Arka tidak memotong tembok (`this.walls`, cek titik tiap 12 px dengan `Phaser.Geom.Rectangle.Contains`). Jika terhalang, bergeser ke samping 30 px lalu coba lagi.
 - Batasan: maks 1 cek per 0,3 s per musuh (kinerja).

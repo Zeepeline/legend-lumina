@@ -100,4 +100,19 @@ Object.assign(World.prototype, {
   },
   // animasi terkena pukul pada Arka
   hurtAnim() { const pl = this.pl; this.tweens.add({ targets: pl, scaleX: 1.15, scaleY: .85, duration: 70, yoyo: true }); },
+  // garis pandang (Line of Sight) menembus rintangan padat (T303)
+  hasLineOfSight(x1, y1, x2, y2) {
+    if (!this.walls || !this.walls.children) return true;
+    const dx = x2 - x1, dy = y2 - y1, dist = Math.hypot(dx, dy);
+    const steps = Math.floor(dist / 14), walls = this.walls.children.entries;
+    for (let i = 1; i < steps; i++) {
+      const px = x1 + (dx / dist) * (i * 14), py = y1 + (dy / dist) * (i * 14);
+      for (const w of walls) {
+        if (!w.body) continue;
+        const b = w.body;
+        if (px >= b.x && px <= b.x + b.width && py >= b.y && py <= b.y + b.height) return false;
+      }
+    }
+    return true;
+  },
 });

@@ -223,9 +223,9 @@ _Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Ray
 _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif._
 `WARPS` 3 · `.spawnWarp()` 9 · `.useWarp()` 15
 
-## src/ai/enemies.js (399 baris)
+## src/ai/enemies.js (398 baris)
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
-`.updEnemy()` 4 · `.charAnim()` 392
+`.updEnemy()` 4 · `.charAnim()` 391
 
 ## src/ai/elite_brute.js (95 baris)
 _AI untuk musuh Brute Elite (Goblin Brute Elite, dsb)_
@@ -319,9 +319,9 @@ _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, m
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
 `.updInteractHint()` 6 · `.updEnemyBars()` 30 · `.retryBoss()` 56 · `levelUpDetail()` 62 · `.setTimeout()` 68 · `TIPS` 81 · `showTip()` 92 · `.updTips()` 111 · `.updPeaceHud()` 121 · `.updMinimap()` 126 · `.swapWeapon()` 160 · `.updStamina()` 171 · `.tryClimb()` 182 · `.tryGlide()` 208 · `.stopGlide()` 234 · `applyPadOpt()` 240
 
-## src/systems/feel.js (104 baris)
+## src/systems/feel.js (119 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
-`ELITE_RATE` 4 · `DODGERS` 5 · `markOver()` 6 · `dangerEdge()` 12 · `.makeElite()` 18 · `.updFeel()` 30 · `.dangerFrom()` 96 · `.hurtAnim()` 102
+`ELITE_RATE` 4 · `DODGERS` 5 · `markOver()` 6 · `dangerEdge()` 12 · `.makeElite()` 18 · `.updFeel()` 30 · `.dangerFrom()` 96 · `.hurtAnim()` 102 · `.hasLineOfSight()` 104
 
 ## src/systems/sound.js (107 baris)
 _Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#911),_
