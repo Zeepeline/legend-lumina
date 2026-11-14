@@ -111,20 +111,20 @@ function applyGptMonsters(sc) {
   }
   const gehd = IMGEL.mon_goblin_elite;
   if (gehd) {
-    if (!T.exists('goblin_elite')) sc.textures.addSpriteSheet('goblin_elite', gehd, { frameWidth: 96, frameHeight: 80 });
+    if (!T.exists('goblin_elite')) sc.textures.addSpriteSheet('goblin_elite', gehd, { frameWidth: 100, frameHeight: 84 });
     const regGE = (k, st, ed, fps, r) => {
       if (!A.exists(k)) A.create({ key: k, frames: A.generateFrameNumbers('goblin_elite', { start: st, end: ed }), frameRate: fps, repeat: r });
     };
-    regGE('goblin_elite_idle', 0, 7, 8, -1);
-    regGE('goblin_elite_walk', 8, 15, 9, -1);
-    regGE('goblin_elite_run', 16, 19, 10, -1);
-    regGE('goblin_elite_charge', 20, 23, 11, -1);
+    regGE('goblin_elite_idle', 0, 6, 8, -1);
+    regGE('goblin_elite_walk', 8, 14, 9, -1);
+    regGE('goblin_elite_run', 16, 22, 11, -1);
     regGE('goblin_elite_smash', 24, 28, 10, 0);
     regGE('goblin_elite_sweep', 29, 31, 9, 0);
-    regGE('goblin_elite_hurt', 32, 34, 10, 0);
-    regGE('goblin_elite_die', 35, 37, 7, 0);
-    regGE('goblin_elite_roar', 38, 39, 6, -1);
-    regGE('goblin_elite_mv', 8, 15, 9, -1);
+    regGE('goblin_elite_charge', 32, 35, 11, -1);
+    regGE('goblin_elite_hurt', 36, 38, 10, 0);
+    regGE('goblin_elite_die', 40, 42, 7, 0);
+    regGE('goblin_elite_roar', 43, 44, 6, -1);
+    regGE('goblin_elite_mv', 8, 14, 9, -1);
     if (ENEMY.goblin_elite) {
       ENEMY.goblin_elite.tex = 'goblin_elite';
       ENEMY.goblin_elite.scale = 1.0;
