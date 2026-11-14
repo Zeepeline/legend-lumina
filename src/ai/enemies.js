@@ -3,18 +3,31 @@
 Object.assign(World.prototype, {
   updEnemy(e, dt, locked) {
     const s = e.spr, D = e.D, pl = this.pl, sc = e.sc;
-    if (e.hp <= 0) { s.setVelocity(0); return; }
+    if (e.hp <= 0) {
+      if (this.atkTok) this.atkTok.delete(e);
+      s.setVelocity(0); return;
+    }
     e.sh.setPosition(s.x, s.y - 1 + (D.fly ? 10 : 0)).setDepth(s.y - .5); s.setDepth(s.y + (D.fly ? 12 : 0));
     if (e.flash > 0) { e.flash -= dt; if (e.flash <= 0) { s.clearTint(); if (['wind', 'swind', 'cwind', 'throw'].includes(e.st)) s.setTint(0xffa07a); else if (e.p2) s.setTint(0xffb8a8); } }
-    if (e.kb > 0) { e.kb -= dt; s.setVelocity(e.kbx, e.kby); return; }
+    if (e.kb > 0) {
+      if (this.atkTok) this.atkTok.delete(e);
+      e.kb -= dt; s.setVelocity(e.kbx, e.kby); return;
+    }
     if (locked) { s.setVelocity(0); return; }
-    if (e.hurtT > 0) { e.hurtT -= dt; s.setVelocity(0); return; }
+    if (e.hurtT > 0) {
+      if (this.atkTok) this.atkTok.delete(e);
+      e.hurtT -= dt; s.setVelocity(0); return;
+    }
     if (this.enemyStatus(e, dt)) return;
 
     const dx = pl.x - s.x, dy = pl.y - s.y, d = Math.hypot(dx, dy) || 1;
     const aggro = !pl.dead && d < (e.boss ? 420 : 120);
     const hx = e.home.x - s.x, hy = e.home.y - s.y, hd = Math.hypot(hx, hy) || 1;
     e.t -= dt; e.cd -= dt;
+    if (this.atkTok && this.atkTok.has(e)) {
+      e.tokT = (e.tokT || 0) + dt;
+      if (e.tokT > 2.2) { this.atkTok.delete(e); e.tokT = 0; }
+    }
 
     // Panggilan Bala Bantuan Musuh Terdesak (#9)
     if (!e.calledBackup && !e.boss && (e.type === 'goblin' || e.type === 'wolf' || e.type === 'boar') && e.hp < e.max * 0.35 && aggro) {
@@ -71,13 +84,18 @@ Object.assign(World.prototype, {
       }
       case 'hop':
         if (D.tex === 'slime_hd' && aggro && d < 65 && (e.cd || 0) <= 0 && e.st !== 'atk') {
-          e.st = 'atk'; e.t = 0.65; e.cd = rnd(2.2, 3.8);
-          s.setVelocity((dx / d) * D.spd * 2.2, (dy / d) * D.spd * 2.2);
-          s.play('slime_hd_atk', true); s.flipX = dx < 0;
-          break;
+          if (!this.atkTok) this.atkTok = new Set();
+          if (this.atkTok.size < 2) {
+            this.atkTok.add(e); e.tokT = 0;
+            e.st = 'atk'; e.t = 0.65; e.cd = rnd(2.2, 3.8);
+            s.setVelocity((dx / d) * D.spd * 2.2, (dy / d) * D.spd * 2.2);
+            s.play('slime_hd_atk', true); s.flipX = dx < 0;
+            break;
+          }
         }
         if (e.st === 'atk') {
           if (e.t <= 0) {
+            if (this.atkTok) this.atkTok.delete(e);
             e.st = 'idle'; e.t = rnd(.5, 1); s.setVelocity(0);
             s.play('slime_hd_idle', true); this.puff(s.x, s.y);
           }
@@ -265,34 +283,42 @@ Object.assign(World.prototype, {
         } else wander(D.spd * .6);
         if (D.side) s.flipX = s.body.velocity.x > 0; break;
       case 'lunge': {
-        const isWolfHd = D.tex === 'wolf_hd' || D.tex === 'wolf_elite_hd';
-        const isGoblinHd = D.tex === 'goblin_hd';
-        const isHd = isWolfHd || isGoblinHd;
-        if (e.st === 'idle' || e.st === 'chase') {
+        const isWolfHd = D.tex === 'wolf_hd' || D.tex === 'wolf_elite_hd', isGoblinHd = D.tex === 'goblin_hd', isHd = isWolfHd || isGoblinHd;
+        if (e.st === 'idle' || e.st === 'chase' || e.st === 'circle') {
           if (aggro) {
-            e.st = 'chase'; s.setVelocity(dx / d * D.spd, dy / d * D.spd);
-            if (isHd && s.anims) s.play(D.tex + '_run', true);
+            if (!this.atkTok) this.atkTok = new Set();
+            const hasTok = this.atkTok.has(e);
             if (d < (D.side ? 48 : 34) && e.t <= 0) {
-              e.st = 'wind'; e.t = D.side ? .28 : .42; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
-              if (isWolfHd && s.anims) {
-                e.atkAnim = D.tex + (Math.random() < 0.5 ? '_bite' : '_pounce');
-                s.play(e.atkAnim, true);
-              } else if (isGoblinHd && s.anims) {
-                e.atkAnim = D.tex + (Math.random() < 0.5 ? '_slash' : '_bite');
-                s.play(e.atkAnim, true);
-              } else s.setTint(0xffa07a);
+              if (hasTok || this.atkTok.size < 2) {
+                this.atkTok.add(e); e.tokT = 0; e.st = 'wind'; e.t = D.side ? .28 : .42; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
+                if (isWolfHd && s.anims) { e.atkAnim = D.tex + (Math.random() < 0.5 ? '_bite' : '_pounce'); s.play(e.atkAnim, true); }
+                else if (isGoblinHd && s.anims) { e.atkAnim = D.tex + (Math.random() < 0.5 ? '_slash' : '_bite'); s.play(e.atkAnim, true); }
+                else s.setTint(0xffa07a);
+              } else {
+                e.st = 'circle'; const ang = Math.atan2(dy, dx) + (this.enemies.indexOf(e) % 2 ? 1.4 : -1.4);
+                s.setVelocity(Math.cos(ang) * D.spd * .7, Math.sin(ang) * D.spd * .7);
+                if (isHd && s.anims) s.play(D.tex + '_walk', true);
+              }
+            } else if (e.st === 'circle') {
+              if (this.atkTok.size < 2) e.st = 'chase';
+              else {
+                const ang = Math.atan2(dy, dx) + (this.enemies.indexOf(e) % 2 ? 1.4 : -1.4);
+                s.setVelocity(Math.cos(ang) * D.spd * .7, Math.sin(ang) * D.spd * .7);
+                if (isHd && s.anims) s.play(D.tex + '_walk', true);
+              }
+            } else {
+              e.st = 'chase'; s.setVelocity(dx / d * D.spd, dy / d * D.spd);
+              if (isHd && s.anims) s.play(D.tex + '_run', true);
             }
           } else {
             wander(28);
-            if (isHd && s.anims) {
-              const mv = Math.hypot(s.body.velocity.x, s.body.velocity.y) > 4;
-              s.play(D.tex + (mv ? '_walk' : '_idle'), true);
-            }
+            if (isHd && s.anims) { const mv = Math.hypot(s.body.velocity.x, s.body.velocity.y) > 4; s.play(D.tex + (mv ? '_walk' : '_idle'), true); }
           }
         } else if (e.st === 'wind') {
           if (e.t <= 0) { e.st = 'lunge'; e.t = .25; s.clearTint(); s.setVelocity(e.lx * 210, e.ly * 210); sfxAt('swing', s.x, s.y, this); }
         } else if (e.st === 'lunge') {
           if (e.t <= 0) {
+            if (this.atkTok) this.atkTok.delete(e);
             e.st = 'rec'; e.t = .5; s.setVelocity(0);
             if (isHd && s.anims) s.play(D.tex + '_idle', true);
           }
@@ -306,16 +332,40 @@ Object.assign(World.prototype, {
         break;
       }
       case 'charge':
-        if (e.st === 'idle' || e.st === 'chase') {
-          if (aggro && d < 140 && e.cd <= 0) { e.st = 'wind'; e.t = .6; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); s.flipX = dx > 0; }
-          else if (aggro) s.setVelocity(dx / d * D.spd * .6, dy / d * D.spd * .6); else wander(D.spd * .5);
+        if (e.st === 'idle' || e.st === 'chase' || e.st === 'circle') {
+          if (!this.atkTok) this.atkTok = new Set();
+          const hasTok = this.atkTok.has(e);
+          if (aggro && d < 140 && e.cd <= 0) {
+            if (hasTok || this.atkTok.size < 2) {
+              this.atkTok.add(e); e.tokT = 0;
+              e.st = 'wind'; e.t = .6; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); s.flipX = dx > 0;
+            } else {
+              e.st = 'circle';
+              const ang = Math.atan2(dy, dx) + (this.enemies.indexOf(e) % 2 ? 1.4 : -1.4);
+              s.setVelocity(Math.cos(ang) * D.spd * .6, Math.sin(ang) * D.spd * .6);
+            }
+          } else if (e.st === 'circle') {
+            if (this.atkTok.size < 2) e.st = 'chase';
+            else {
+              const ang = Math.atan2(dy, dx) + (this.enemies.indexOf(e) % 2 ? 1.4 : -1.4);
+              s.setVelocity(Math.cos(ang) * D.spd * .6, Math.sin(ang) * D.spd * .6);
+            }
+          } else if (aggro) s.setVelocity(dx / d * D.spd * .6, dy / d * D.spd * .6); else wander(D.spd * .5);
           if (s.body.velocity.x) s.flipX = s.body.velocity.x > 0;
         } else if (e.st === 'wind') { s.x += Math.sin(this.t * 60) * .6; if (e.t <= 0) { e.st = 'run'; e.t = .9; s.clearTint(); s.setVelocity(e.lx * 220, e.ly * 220); sfxAt('roar', s.x, s.y, this); } }
         else if (e.st === 'run') {
           s.anims.timeScale = 3; this.dustE = (this.dustE || 0) - dt; if (this.dustE <= 0) { this.dustE = .08; this.puff(s.x, s.y); }
-          const b = s.body.blocked; if (b.left || b.right || b.up || b.down) { e.st = 'stun'; e.t = 1.2; s.setVelocity(0); this.camShake(100, .004); popWorld(s.x, s.y - 20, 'pusing!', 'xp'); }
-          else if (e.t <= 0) { e.st = 'rec'; e.t = .6; s.setVelocity(0); }
-        } else if (e.st === 'stun' || e.st === 'rec') { s.anims.timeScale = .5; if (e.t <= 0) { e.st = 'chase'; e.cd = rnd(1, 2); s.anims.timeScale = 1; } }
+          const b = s.body.blocked; if (b.left || b.right || b.up || b.down) {
+            if (this.atkTok) this.atkTok.delete(e);
+            e.st = 'stun'; e.t = 1.2; s.setVelocity(0); this.camShake(100, .004); popWorld(s.x, s.y - 20, 'pusing!', 'xp');
+          } else if (e.t <= 0) {
+            if (this.atkTok) this.atkTok.delete(e);
+            e.st = 'rec'; e.t = .6; s.setVelocity(0);
+          }
+        } else if (e.st === 'stun' || e.st === 'rec') {
+          if (this.atkTok) this.atkTok.delete(e);
+          s.anims.timeScale = .5; if (e.t <= 0) { e.st = 'chase'; e.cd = rnd(1, 2); s.anims.timeScale = 1; }
+        }
         break;
       case 'golem':
         if (e.st === 'wind') { s.setVelocity(0); if (e.t <= 0) { e.st = 'rec'; e.t = .9; s.clearTint(); this.shockwave(s.x, s.y, 42, D.atk); } }

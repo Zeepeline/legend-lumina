@@ -1659,7 +1659,8 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 ## G. GELOMBANG 6 — tempur & pengalaman melawan monster ala RPG top (T270–T297)
 Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Pengecualian kunci sama seperti gelombang 5: boleh mengubah file yang disebut di tugasnya (combat.js, feel.js, polish.js, ai/enemies.js, ai/bosses.js, sound.js). Uji di mode benua: `?benua=1`.
 
-### [ ] T270. **Token serangan: maks 2 musuh menyerang bersamaan** — referensi: Batman Arkham, Assassin's Creed, Hades
+### [x] T270. **Token serangan: maks 2 musuh menyerang bersamaan** — referensi: Batman Arkham, Assassin's Creed, Hades
+- Selesai: sistem `this.atkTok` (Set) membatasi maksimal 2 musuh jarak dekat (`lunge`, `charge`, `hop` slime) yang ancang-ancang/menerjang bersamaan, sisanya berputar mengelilingi pemain pada jarak aman. Token dilepas saat serangan tuntas/terkena hit/mati/timeout > 2.2 detik.
 - File: `src/ai/enemies.js`. Baca dulu: `updEnemy()` cabang `'walk'`, `'lunge'`, `'charge'` (cari tempat musuh mulai ancang-ancang/menyerang).
 - Lakukan: buat `this.atkTok = this.atkTok || new Set()`. Sebelum musuh jarak dekat MULAI ancang-ancang, wajib `this.atkTok.size < 2` lalu `add(e)`; lepas (`delete(e)`) saat serangan selesai, musuh mati, atau lebih dari 2 s. Musuh tanpa token mengitari pemain pada jarak ±48 px.
 - Batasan: musuh jarak jauh & boss tidak memakai token.
