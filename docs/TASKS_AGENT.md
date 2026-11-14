@@ -3092,26 +3092,27 @@ boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
 - Lakukan: tiap jalan utama diberi 1–2 papan nama di persimpangan: "Jalan Gerbang Timur", "Jalan Kuil", "Gang Pandai Besi", dll. Teks pendek (≤ 20 huruf).
 - Cek: `npm run check` (0 masalah); papan terbaca di persimpangan utama.
 
-## L. GELOMBANG 11 — PERBAIKAN tanah: garis kotak-kotak & pola rapi (T409–T416) — KERJAKAN DULU sebelum gelombang lain
+## L. GELOMBANG 11 — PERBAIKAN tanah: garis kotak-kotak & pola rapi (T409–T417) — KERJAKAN DULU sebelum gelombang lain
 **Masalah (screenshot pemain):** tanah tampak seperti kotak-kotak berpagar gelap tiap 64 px; batu & bunga yang sama berulang di tiap kotak.
-**Penyebab pasti:** `assets/img/gpt_tile_verdant_grass.png` & `gpt_tile_verdant_dirt.png` dipotong dari lembar bersama **bingkai/celah gelap** lembar itu
-(baris atas 0–7 & kolom kanan 59–63 gelap), dan batu/bunga ikut tercetak di dalam petak. `src/world/ground.js` (±baris 155–170) mengulang petak itu
-dengan `% 64`, jadi bingkai menjadi garis grid. Petak dari lembar GPT TIDAK seamless dan tidak boleh dipakai sebagai petak tanah.
-**Pengganti sudah tersedia (dibuat Claude, sudah dicek seamless):** `assets/img/gnd_grass.png`, `gnd_grass_dark.png`, `gnd_dirt.png` (128×128, polos,
-warna diambil dari palet Verdant) + ornamen 16×16 transparan `assets/img/deco_{tuft,clover,flower_w,flower_y,flower_p,pebble,pebbles}.png`.
-Contoh hasil yang benar: `assets/reference/pola_tanah_preview.png` (dibuat oleh `tools/gen_ground_preview.py`). Generator: `tools/gen_ground.py`.
+**Penyebab pasti:** petak `gpt_tile_verdant_*`, `tile_verdant_*`, `land_verdant_*`, `verdant_*_tile`, `verdant_tile_32` dipotong langsung dari
+`enemy_image/lands/Verdant Forest Pixel Tileset.png`. Petak di lembar itu adalah ILUSTRASI berbingkai (tepi bergerigi, celah gelap, batu & bunga di dalamnya),
+BUKAN petak seamless. Diulang dengan `% 64` di `src/world/ground.js` (±baris 155–170) → garis grid + pola berulang.
+**Pengganti sudah tersedia (dibuat Claude dari lembar Verdant yang sama, sudah dicek seamless):**
+- Petak dasar 128×128 tanpa batu/bunga: `assets/img/gnd_grass.png`, `gnd_grass_dark.png`, `gnd_dirt.png`.
+- Ornamen transparan (dipotong dari baris 3–4 lembar, skala 1/3.5): `assets/img/deco_{tuft,sprout_a,sprout_b,sprout_c,flower_w,flower_w2,flower_w3,
+  flower_b,flower_b2,flowers,flowers_w,mushroom,pebble,pebbles,reeds}.png`.
+- Contoh hasil benar: `assets/reference/pola_tanah_preview.png`. Pembuat ulang: `python3 -I tools/gen_ground.py` (lalu `tools/gen_ground_preview.py`).
 
 **Aturan pola tanah (berlaku untuk semua tugas tanah ke depan):**
-1. Petak dasar tanah HANYA berisi tekstur halus (warna rumput/tanah). Tidak boleh ada batu, bunga, bingkai, bayangan tepi di dalam petak.
-2. Petak wajib seamless: tempel 2×2 → tidak terlihat sambungan. Ukuran 128 px (64 px terlalu cepat berulang).
+1. Petak dasar tanah HANYA berisi tekstur halus. Tidak boleh ada batu, bunga, bingkai, bayangan tepi di dalam petak.
+2. Petak wajib seamless: tempel 2×2 → tidak terlihat sambungan. Ukuran 128 px. JANGAN memotong petak langsung dari lembar GPT/ilustrasi.
 3. Batas rumput↔tanah memakai ambang noise + dithering 4×4 (Bayer), BUKAN rata-rata warna (rata-rata = buram & lumpur abu-abu).
-4. Ornamen kecil (bunga, rumput tegak, batu kerikil) disebar terpisah dengan posisi acak dari `hash` (grid 32 px + geser acak 4–20 px), digambar ke
-   kanvas tanah — BUKAN objek Phaser (hemat kinerja). Di atas tanah: hanya kerikil. Kepadatan: ± 55% sel 32 px berisi ornamen.
-5. Batu besar, semak, pohon tetap objek (`OBJ`), bukan bagian tanah.
+4. Ornamen kecil disebar terpisah: grid 40 px global + geser acak 2–18 px dari `hash`, digambar ke kanvas tanah — BUKAN objek Phaser. Di atas tanah: hanya kerikil.
+5. Batu besar, semak, pohon, gelagah tetap objek (`OBJ`), bukan bagian tanah.
 
 ### [ ] T409. **Daftarkan petak & ornamen baru** — referensi: —
 - File: `src/gfx/textures.js` (`IMG_LIST`). Baca dulu: baris `IMG_LIST` & `loadImgs`.
-- Lakukan: tambahkan `'gnd_grass','gnd_grass_dark','gnd_dirt','deco_tuft','deco_clover','deco_flower_w','deco_flower_y','deco_flower_p','deco_pebble','deco_pebbles'`.
+- Lakukan: tambahkan `'gnd_grass','gnd_grass_dark','gnd_dirt'` dan ke-15 nama `deco_*` di atas (pakai `...['tuft',…].map(k => 'deco_' + k)`).
   Hapus `"tile_verdant_grass", "tile_verdant_dirt"` dari `GPT_SWAP` di `src/gfx/gptassets.js` (jangan hapus file png-nya dulu).
 - Cek: `npm run check` (0 masalah); konsol `IMGEL.gnd_grass.width === 128`; tidak ada "Gagal memuat gambar".
 
@@ -3127,14 +3128,16 @@ Contoh hasil yang benar: `assets/reference/pola_tanah_preview.png` (dibuat oleh 
 
 ### [ ] T411. **Ornamen tanah dari gambar deco_*** — referensi: Stardew Valley, Eastward
 - File: `src/world/ground.js` (blok hiasan rumput ±baris 181–186 yang memakai `GP.tuft`). Baca dulu: blok itu saja.
-- Lakukan: untuk wilayah verdant: per sel 32 px (koordinat global, agar chunk bersebelahan sama) pilih ornamen dengan `hash(sel,…)` sesuai aturan 4
-  dan gambar `x.drawImage(IMGEL['deco_'+k], X, Y)` bila sel ada di dalam `rect`. Peluang di rumput: tuft 28%, clover 12%, flower_w 6%, flower_y 4%,
-  flower_p 3%, pebble 4%; di tanah: pebble 25%, pebbles 10%. `M.flowers` → peluang bunga ×2. Wilayah bukan-verdant: kode lama tetap.
+- Lakukan: untuk wilayah verdant: per sel 40 px (koordinat global, agar chunk bersebelahan sama) pilih ornamen dengan `hash(sel,…)` sesuai aturan 4
+  dan gambar `x.drawImage(IMGEL['deco_'+k], X, Y)` bila sel (+ ukuran gambar) bersinggungan dengan `rect`. Peluang di rumput: tuft 14%, sprout_c 8%,
+  sprout_a 5%, sprout_b 4%, flower_w 3%, flower_w2 2%, flower_b2 2%, flower_b 2%, flowers_w 2%, flowers 2%, mushroom 1% (hanya hutan), pebble 3%;
+  di tanah: pebble 25%, pebbles 10%. `M.flowers` → peluang bunga ×2. Contoh persis: `tools/gen_ground_preview.py`. Bukan-verdant: kode lama tetap.
 - Cek: `npm run check` (0 masalah); ornamen tidak terpotong di batas chunk 64 px (cek dengan berjalan pelan); tidak ada objek Phaser baru.
 
 ### [ ] T412. **Hapus petak lama yang rusak** — referensi: —
-- File: `assets/img/gpt_tile_verdant_*.png`, `gpt_verdant_ground_*.png`, `verdant_ground_*.png`; `src/gfx/gptassets.js`. Baca dulu: `grep -rn "verdant_ground\|tile_verdant" src`.
-- Lakukan: setelah T410 lulus, hapus 6 file png itu & semua rujukannya. Kode `buildTextures` yang mendaftarkan nama "bare" untuk `gpt_*` (commit 9d0a44f)
+- File: `assets/img/` petak lama; `src/gfx/gptassets.js`. Baca dulu: `grep -rn "verdant_ground\|tile_verdant\|land_verdant\|verdant_.*_tile\|verdant_tile_32" src`.
+- Lakukan: setelah T410 lulus, hapus 13 file png: `gpt_tile_verdant_{grass,dirt}`, `gpt_verdant_ground_{grass,dirt}`, `verdant_ground_{grass,dirt}`,
+  `tile_verdant_{grass,dirt}`, `land_verdant_{grass,dirt}`, `verdant_{grass,dirt}_tile`, `verdant_tile_32` & semua rujukannya. Lembar sumber di `enemy_image/lands/` TETAP. Kode `buildTextures` yang mendaftarkan nama "bare" untuk `gpt_*` (commit 9d0a44f)
   dibiarkan, tapi pastikan tidak menimpa tekstur lama dengan nama sama (`T.exists` sudah dicek).
 - Cek: `npm run check` (0 masalah); `grep -rn "tile_verdant\|verdant_ground" src` kosong; game tetap memuat.
 
@@ -3150,6 +3153,11 @@ Contoh hasil yang benar: `assets/reference/pola_tanah_preview.png` (dibuat oleh 
   buat transparan (alpha 0 untuk piksel yang tersambung ke tepi & gelap). Objek `pebbles` di peta verdant boleh dikurangi 50% karena kerikil
   kini sudah ada di ornamen tanah (T411).
 - Cek: `npm run check` (0 masalah); tidak ada kotak gelap di sekitar batu.
+
+### [ ] T417. **Gelagah di tepi air** — referensi: Stardew Valley (rumput tepi kolam)
+- File: `src/world/objects.js` (tambah `reeds: { key: 'deco_reeds', col: [8, 4, 0], sh: [10, 3] }`), peta dengan `ponds`/sungai (verdant). Baca dulu: `GEOGRAFI.md` §3.
+- Lakukan: taruh 3–6 `reeds` berkelompok di tepi tiap kolam/sungai di Padang, Hutan, Desa (tepi air, bukan di air, bukan di jalan).
+- Cek: `npm run check` (0 masalah); `check-layout` tanpa peringatan baru; gelagah terlihat di tepi air.
 
 ### [ ] T415. **Cek pola di HP & tulis catatan** — referensi: —
 - File: catatan di bawah tugas ini. Baca dulu: —.

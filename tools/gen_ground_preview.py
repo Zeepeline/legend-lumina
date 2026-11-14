@@ -28,17 +28,17 @@ for y in range(H):
         if dirt>.62+(t-.5)*.10: c=D[x%128,y%128]   # tepi dithering 4x4: rapi, tidak buram
         P[x,y]=c
 out=out.convert('RGBA')
-decos={k:Image.open(R+'deco_'+k+'.png') for k in ['flower_w','flower_y','flower_p','tuft','pebble','pebbles','clover']}
+decos={k:Image.open(R+'deco_'+k+'.png') for k in ['flower_w','flower_w2','flower_w3','flower_b','flower_b2','flowers','flowers_w','sprout_a','sprout_b','sprout_c','tuft','pebble','pebbles','mushroom']}
 rnd=random.Random(5)
-for cy in range(0,H,32):
-    for cx in range(0,W,32):
-        x,y=cx+rnd.randrange(4,20),cy+rnd.randrange(4,20)
+for cy in range(0,H,40):
+    for cx in range(0,W,40):
+        x,y=cx+rnd.randrange(2,18),cy+rnd.randrange(2,18)
         onDirt=(n1(x+8,y+8)*.7+n2(x+8,y+8)*.3-.1)>.6 or abs(y+8-(160+30*math.sin((x+8)/70)))<26
         r=rnd.random()
         if onDirt: k='pebble' if r<.25 else 'pebbles' if r<.35 else None
-        else: k='tuft' if r<.28 else 'clover' if r<.4 else 'flower_w' if r<.46 else 'flower_y' if r<.5 else 'flower_p' if r<.53 else 'pebble' if r<.57 else None
+        else: k='tuft' if r<.14 else 'sprout_c' if r<.22 else 'sprout_a' if r<.27 else 'sprout_b' if r<.31 else 'flower_w' if r<.34 else 'flower_w2' if r<.36 else 'flower_b2' if r<.38 else 'flower_b' if r<.40 else 'flowers_w' if r<.42 else 'flowers' if r<.44 else 'mushroom' if r<.45 else 'pebble' if r<.48 else None
         if k: out.alpha_composite(decos[k],(x,y))
-out.resize((W*2,H*2),Image.NEAREST).save('/tmp/gnd/preview.png')
+out.resize((W*2,H*2),Image.NEAREST).save('/home/claude/legend-lumina/assets/reference/pola_tanah_preview.png')
 # cek seam: 2x2 tiling tiap petak
 s=Image.new('RGB',(256*3+16,256),'white')
 for n,t in enumerate([g,gd,d]):
