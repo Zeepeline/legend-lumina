@@ -2010,7 +2010,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; rapal Nova Es → cincin & musuh terlihat membeku.
 
-### [ ] T321. **Tebasan Putar: pusaran & sapuan angin** — referensi: Diablo III (Whirlwind), Zelda (Spin Attack)
+### [x] T321. **Tebasan Putar: pusaran & sapuan angin** — referensi: Diablo III (Whirlwind), Zelda (Spin Attack)
 - File: `src/systems/spell_fx.js`. Baca dulu: `spin()` di `src/systems/skills.js` (BACA).
 - Lakukan: bungkus `spin`: lingkaran busur 360° berputar 2× (busur `arcfx` diputar), daun/debu terlempar keluar, kamera bergetar kecil di akhir.
 - Jika SUDAH ada → tandai [x] "sudah ada".

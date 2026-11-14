@@ -48,3 +48,33 @@ Object.assign(World.prototype, {
     }
   }
 });
+
+{
+  // Tebasan Putar: pusaran & sapuan angin (T321)
+  const W = World.prototype;
+  const spin0 = W.spin;
+  W.spin = function () {
+    const pl = this.pl;
+    const r = spin0.apply(this, arguments);
+    if (!pl) return r;
+    // Lingkaran busur 360 derajat berputar 2x
+    const arc = this.add.image(pl.x, pl.y - 8, this.arcTex()).setDepth(pl.y + 4).setScale(1.4).setTint(0xe0f2fe).setAlpha(0.85);
+    this.tweens.add({
+      targets: arc, rotation: Math.PI * 4, alpha: 0, scale: 1.8, duration: 320, ease: 'Cubic.easeOut',
+      onComplete: () => arc.destroy()
+    });
+    // Daun/debu terlempar keluar
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * 6.28;
+      this.time.delayedCall(i * 20, () => {
+        if (!this.pl) return;
+        this.sparkle(pl.x + Math.cos(a) * 22, pl.y - 6 + Math.sin(a) * 14, 'dot', 2);
+      });
+    }
+    // Kamera bergetar kecil di akhir
+    this.time.delayedCall(240, () => {
+      if (this.cameras?.main) this.cameras.main.shake(60, 0.002);
+    });
+    return r;
+  };
+}

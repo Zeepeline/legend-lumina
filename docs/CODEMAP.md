@@ -199,7 +199,7 @@ _pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali d
 _Jurus: dash, tebasan putar, nova es_
 `.updSkills()` 4 · `.spin()` 12 · `.dash()` 20 · `.nova()` 27
 
-## src/systems/spell_fx.js (51 baris)
+## src/systems/spell_fx.js (81 baris)
 _Efek khusus jurus: Kabut Racun, Cahaya Pulih, Lentera Suci (T322)_
 `.spellFx()` 4
 
