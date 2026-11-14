@@ -34,12 +34,13 @@ Object.assign(World.prototype, {
     if (aggro && e.skillCd <= 0) {
       if (d < 50) {
         e.skillCd = rnd(3.2, 5.0);
-        e.st = 'smash'; e.t = 0.65;
+        e.st = 'smash'; e.t = 0.75;
         s.setVelocity(0); s.flipX = dx < 0;
+        markOver(this, e, '!', '#ffd84a');
         if (isElite && s.anims && s.anims.animationManager.exists('goblin_elite_smash')) {
           s.play('goblin_elite_smash', true);
         }
-        this.time.delayedCall(320, () => {
+        this.time.delayedCall(380, () => {
           if (e.hp <= 0) return;
           sfxAt('boom', s.x, s.y, this);
           this.camShake(240, .009);
@@ -52,12 +53,17 @@ Object.assign(World.prototype, {
         return;
       } else if (d < 150 && Math.random() < 0.65) {
         e.skillCd = rnd(3.5, 5.5);
-        e.st = 'charge'; e.t = 0.85;
+        e.st = 'cwind'; e.t = 0.38;
+        s.setVelocity(0); s.flipX = dx < 0;
         sfxAt('roar', s.x, s.y, this);
         const ang = Math.atan2(dy, dx);
         e.cvx = Math.cos(ang) * D.spd * 2.2;
         e.cvy = Math.sin(ang) * D.spd * 2.2;
-        s.flipX = e.cvx < 0;
+        this.time.delayedCall(380, () => {
+          if (e.hp <= 0) return;
+          e.st = 'charge'; e.t = 0.85;
+          s.flipX = e.cvx < 0;
+        });
         return;
       }
     }

@@ -227,7 +227,7 @@ _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah i
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
 `.updEnemy()` 4 · `.charAnim()` 385
 
-## src/ai/elite_brute.js (83 baris)
+## src/ai/elite_brute.js (89 baris)
 _AI untuk musuh Brute Elite (Goblin Brute Elite, dsb)_
 `.updEliteBrute()` 4
 

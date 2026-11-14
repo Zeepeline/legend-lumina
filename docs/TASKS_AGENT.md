@@ -1667,7 +1667,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; lawan 5 slime/serigala sekaligus → paling banyak 2 yang menyerang bersamaan, sisanya berputar.
 
-### [ ] T271. **Ancang-ancang konsisten di semua serangan jarak dekat** — referensi: Dark Souls, Hades (telegraf jelas)
+### [x] T271. **Ancang-ancang konsisten di semua serangan jarak dekat** — referensi: Dark Souls, Hades (telegraf jelas)
+- Selesai: cabang `lunge` disesuaikan ancang-ancang minimal 0.36–0.42s; `charge` & `golem` memiliki 0.6–0.65s ancang-ancang yang memicu tanda `!` via `feel.js`; `elite_brute` smash memicu `markOver(!)` dengan delay 380ms dan jurus charge kini memiliki telegraf `cwind` 0.38s sebelum melesat.
 - File: `src/ai/enemies.js` (+ `src/systems/feel.js` BACA saja). Baca dulu: `markOver()` & `dangerFrom()` di feel.js; cabang `'lunge'`, `'charge'`, `'golem'`, `'elite_brute'` di updEnemy.
 - Lakukan: pastikan setiap cabang itu menampilkan tanda "!" (`markOver`) minimal 0,35 s sebelum damage, dan musuh berkedip/berhenti sejenak saat ancang-ancang. Catat cabang yang sebelumnya tanpa tanda.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
