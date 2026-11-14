@@ -36,6 +36,8 @@ MAPS.kgate = {
   ponds: [[300, 470, 210, 70], [900, 470, 210, 70]],
   objs: [['gatehouse', 600, 404], ...[[60, 404], [192, 404], [324, 404], [876, 404], [1008, 404], [1140, 404]].map(([x, y]) => ['cwall', x, y]),
     ...lampRow(560, 560, 2, 80), ...lampRow(560, 720, 2, 80), ...lampRow(540, 250, 3, 60),
+    ['lamp', 300, 620], ['lamp', 900, 620],
+    ['sign', 550, 660, { text: 'PERSIMPANGAN GERBANG\n↑ Distrik Pasar · ↓ Jalan Raya Lama · ← Pos Sayap Barat · → Sayap Timur' }],
     ['sign', 680, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\n↑ Masuk lewat gerbang di utara → Distrik Pasar.' }], ['bounty_board', 720, 600], ['crate', 260, 620], ['crate', 282, 616], ['barrel', 330, 630], ['crate', 880, 620], ['barrel', 930, 626],
     ['houseB', 200, 230], ['houseC', 1000, 230], ['planter', 470, 300], ['planter', 730, 300],
     ['pigeons', 680, 520], ['pigeons', 420, 680],

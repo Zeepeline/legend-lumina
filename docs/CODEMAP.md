@@ -95,7 +95,7 @@ obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 8
 _Generator tanah, tabrakan grid, penyebar pohon_
 `riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `genGround()` 90 · `blockRects()` 184 · `scatter()` 200 · `openSides()` 233 · `borderTrees()` 246 · `ringObjects()` 262 · `mapObjects()` 267 · `mapWalls()` 271
 
-## src/world/maps/village.js (86 baris)
+## src/world/maps/village.js (88 baris)
 _Peta: Desa Lumina_
 
 
@@ -123,7 +123,7 @@ _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (114 baris)
+## src/world/maps/city.js (116 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 

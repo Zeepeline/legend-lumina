@@ -2667,7 +2667,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); tiap area punya 'rasa' fungsinya.
 
-### [ ] T350. **Lampu & papan arah di jalan utama** — referensi: Zelda, Skyrim (papan penunjuk)
+### [x] T350. **Lampu & papan arah di jalan utama** — referensi: Zelda, Skyrim (papan penunjuk)
 
 - File: `src/world/maps/village.js`, `src/world/maps/city.js`. Baca dulu: objek `lamp`, `sign` (lihat opsi teks papan yang ada dengan grep `'sign'`).
 - Lakukan: lampu setiap ±160 px di sisi jalan utama (bukan di atas jalan); papan arah di tiap pertigaan menuju wilayah lain (teks: nama wilayah tujuan).
