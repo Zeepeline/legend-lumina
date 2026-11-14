@@ -8632,28 +8632,29 @@ Object.assign(World.prototype, {
       return;
     }
     if (e.leash) { e.leash = false; e.hp = e.max; popWorld(s.x, s.y - 14, 'pulih!', 'heal'); }
-    const aggro = !pl.dead && d < (e.boss ? 420 : 120);
+    const aggro = !pl.dead && (d < (e.boss ? 420 : 120) || e.packAggro);
+    if (aggro && !e.wasAggro && !e.boss) {
+      e.wasAggro = true;
+      for (const o of this.enemies) {
+        if (o !== e && o.hp > 0 && o.type === e.type && Math.hypot(o.spr.x - s.x, o.spr.y - s.y) < 90 && !o.packAggro) {
+          this.time.delayedCall(300, () => { if (o.hp > 0) { o.packAggro = true; markOver(this, o, '!', '#ff5a3a'); } });
+        }
+      }
+    }
     e.t -= dt; e.cd -= dt;
     if (this.atkTok && this.atkTok.has(e)) {
       e.tokT = (e.tokT || 0) + dt;
       if (e.tokT > 2.2) { this.atkTok.delete(e); e.tokT = 0; }
     }
-
     // Panggilan Bala Bantuan Musuh Terdesak (#9)
     if (!e.calledBackup && !e.boss && (e.type === 'goblin' || e.type === 'wolf' || e.type === 'boar') && e.hp < e.max * 0.35 && aggro) {
-      e.calledBackup = true;
-      e.st = 'calling';
-      s.setVelocity(0);
+      e.calledBackup = true; e.st = 'calling'; s.setVelocity(0);
       if ((D.tex === 'wolf_hd' || D.tex === 'wolf_elite_hd') && s.anims) s.play(D.tex + '_howl', true);
-      popWorld(s.x, s.y - 20, 'BAHAYA! MENGGELAR BANTUAN!', 'crit');
-      sfxAt('crit', s.x, s.y, this);
+      popWorld(s.x, s.y - 20, 'BAHAYA! MENGGELAR BANTUAN!', 'crit'); sfxAt('crit', s.x, s.y, this);
       this.time.delayedCall(650, () => {
         if (e.hp > 0 && this.enemies.length < 12) {
-          const spawnX = clamp(s.x + rnd(-80, 80), 40, this.M.w - 40);
-          const spawnY = clamp(s.y + rnd(-80, 80), 40, this.M.h - 40);
-          this.puff(spawnX, spawnY);
-          this.spawnEnemy(e.type, spawnX, spawnY);
-          popWorld(spawnX, spawnY - 14, '+Bala Bantuan!', 'crit');
+          const spawnX = clamp(s.x + rnd(-80, 80), 40, this.M.w - 40), spawnY = clamp(s.y + rnd(-80, 80), 40, this.M.h - 40);
+          this.puff(spawnX, spawnY); this.spawnEnemy(e.type, spawnX, spawnY); popWorld(spawnX, spawnY - 14, '+Bala Bantuan!', 'crit');
         }
         e.st = 'idle';
       });

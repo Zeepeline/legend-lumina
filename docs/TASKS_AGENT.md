@@ -1719,7 +1719,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; pancing serigala jauh lalu lari → serigala pulang, HP pulih.
 
-### [ ] T278. **Aggro berkelompok** — referensi: Diablo (pack)
+### [x] T278. **Aggro berkelompok** — referensi: Diablo (pack)
+- Selesai: saat musuh non-boss pertama kali masuk status `aggro`, kawanannya yang sejenis dalam radius 90px diberi status `packAggro` dan tanda `!` setelah jeda 0,3 detik sehingga ikut mengejar bersama.
 - File: `src/ai/enemies.js`. Baca dulu: bagian saat musuh mulai mengejar (status aggro; grep `aggro`).
 - Lakukan: saat satu musuh mulai mengejar, musuh sejenis dalam 90 px yang masih diam ikut mengejar setelah jeda 0,3 s (sekali saja).
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
