@@ -144,32 +144,44 @@ Object.assign(World.prototype, {
   hitEnemy(e, base, crit, nx, ny) {
     if (this.pl.dead || e.hp <= 0 || !e.spr.active) return;
     if (e.faded) { popWorld(e.spr.x, e.spr.y - 20, 'tembus!', 'mpc'); return; }
-    const dmg = Math.max(1, Math.round(base * rnd(.9, 1.1) * (crit ? 1.7 : 1) - e.D.def * .5));
-    let label = '' + dmg;
+    const hasPoise = (e.D.r >= 12 || e.elite || e.boss);
+    if (hasPoise && e.poise == null) e.poise = (e.boss || e.elite) ? 5 : 3;
+    const isStagger = (e.staggerT || 0) > 0;
+    let dmg = Math.max(1, Math.round(base * rnd(.9, 1.1) * (crit ? 1.7 : 1) - e.D.def * .5));
+    if (isStagger) dmg = Math.round(dmg * 1.25);
+    let label = (OPT.colorblind ? (crit ? `[KRIT!] ${dmg}` : `${dmg}`) : (crit ? dmg + '!' : '' + dmg));
     let style = crit ? 'crit' : '';
-    if (OPT.colorblind) {
-      if (crit) label = `[KRIT!] ${dmg}`;
-      else label = `${dmg}`;
-    } else if (crit) {
-      label = dmg + '!';
-    }
     e.hp -= dmg; popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 2 - (e.D.fly ? 10 : 0), label, style);
     sfx(crit ? 'crit' : 'hit'); if (crit) shake();
     const fatal = e.hp <= 0;
     this.hitStop(e.boss && fatal ? .22 : fatal || crit ? .085 : .045, crit || fatal ? 25 : 12);
     if (crit || fatal || e.boss) this.camShake(fatal ? 110 : 80, fatal ? .005 : .003);
     e.spr.setTintFill(0xffffff); e.flash = .09;
+    let breakPoise = false;
+    if (hasPoise && !isStagger) {
+      e.poise--;
+      if (e.poise <= 0) {
+        breakPoise = true; e.staggerT = 0.8; e.hurtT = 0.8;
+        popWorld(e.spr.x, e.spr.y - 24, 'TERHUYUNG!', 'crit'); sfxAt('crit', e.spr.x, e.spr.y, this);
+        this.time.delayedCall(800, () => { if (e.hp > 0) e.poise = (e.boss || e.elite) ? 5 : 3; });
+      }
+    }
     const heavy = e.boss || e.D.ai === 'golem' || e.D.ai === 'turret';
-    const kb = heavy ? (e.D.ai === 'turret' ? 0 : 40) : 175; e.kb = heavy ? .06 : .17; e.kbx = nx * kb; e.kby = ny * kb;
+    const canKb = !hasPoise || breakPoise || isStagger;
+    if (canKb) {
+      const kb = heavy ? (e.D.ai === 'turret' ? 0 : 40) : 175;
+      e.kb = heavy ? .06 : .17; e.kbx = nx * kb; e.kby = ny * kb;
+    } else { e.kb = 0; }
     // squash saat terkena
     this.tweens.add({ targets: e.spr, scaleX: e.sc * 1.2, scaleY: e.sc * .82, duration: 60, yoyo: true });
-    if (e.st === 'wind' && !e.boss) e.st = 'chase';
+    if (e.st === 'wind' && !e.boss && canKb) e.st = 'chase';
     const isHd = e.D?.tex === 'slime_hd' || e.D?.tex === 'wolf_hd' || e.D?.tex === 'wolf_elite_hd' ||
       e.D?.tex === 'goblin_hd' || e.D?.tex === 'goblin_archer_hd';
-    if (isHd && e.spr?.anims && e.hp > 0) {
+    if (isHd && e.spr?.anims && e.hp > 0 && canKb) {
       e.hurtT = 0.32; e.spr.play(e.D.tex + '_hurt', true);
     }
-    const sp = this.add.image(e.spr.x + rnd(-3, 3), e.spr.y - e.spr.displayHeight / 2, 'spark').setDepth(e.spr.y + 5); this.tweens.add({ targets: sp, scale: 1.8, alpha: 0, duration: 200, onComplete: () => sp.destroy() });
+    const sp = this.add.image(e.spr.x + rnd(-3, 3), e.spr.y - e.spr.displayHeight / 2, 'spark').setDepth(e.spr.y + 5);
+    this.tweens.add({ targets: sp, scale: 1.8, alpha: 0, duration: 200, onComplete: () => sp.destroy() });
     if (e.boss) bossBar(e.D.name, e.hp / e.max);
     if (e.hp <= 0) this.killEnemy(e);
   },

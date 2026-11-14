@@ -1682,7 +1682,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; golem menghantam tanah → lingkaran merah muncul lebih dulu, bisa dihindari.
 
-### [ ] T273. **Ketahanan (poise) musuh besar** — referensi: Dark Souls, Elden Ring
+### [x] T273. **Ketahanan (poise) musuh besar** — referensi: Dark Souls, Elden Ring
+- Selesai: musuh berbadan besar (`e.D.r >= 12`) atau elite/boss memiliki `e.poise` (3 untuk besar, 5 untuk elite/boss). Poise berkurang tiap pukulan dan kebal knockback/sentak hingga poise habis (0) memicu status terhuyung 0,8s ('TERHUYUNG!') dengan bonus damage +25%.
 - File: `src/systems/combat.js`. Baca dulu: `hitEnemy()` (±144–175), bagian knockback/sentak.
 - Lakukan: musuh dengan `e.D.r >= 12` atau elite punya `e.poise` (awal = 3 untuk besar, 5 untuk elite/boss). Tiap pukulan mengurangi 1; selama poise > 0 musuh TIDAK tersentak/terdorong. Saat 0 → terhuyung 0,8 s (berhenti, berkedip), damage +25% selama terhuyung, lalu poise penuh lagi.
 - Batasan: slime & musuh kecil tetap tersentak tiap pukulan.
