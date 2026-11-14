@@ -2768,7 +2768,7 @@ File BARU milik agen: `src/npc/crowd.js`, `src/systems/townlife.js`. Pengecualia
   | kbawah | 1.20 | 13 | 7 | 80 | 10.8 | 5.8 | 66.7 |
 - Cek: `npm run check` (0 masalah); tabel awal tercatat (desa ±8 bangunan & 14 NPC per Mpx², pasar ±6 & 6).
 
-### [ ] T363. **Kota: kurangi pohon sebaran otomatis** — referensi: Kota bukan hutan (Skyrim, Stoneshard Brynn)
+### [x] T363. **Kota: kurangi pohon sebaran otomatis** — referensi: Kota bukan hutan (Skyrim, Stoneshard Brynn)
 
 - File: `src/world/maps/city.js` (peta kgate, kpasar, kakademi, kbawah). Baca dulu: pengaturan sebaran/tepi pohon peta itu (grep `trees`, `border`, `scatter` di city.js & `mapObjects` di `src/world/ground.js` BACA).
 - Lakukan: matikan/kurangi pohon sebaran acak di dalam kota (sisakan tepi luar & taman). Target: pohon ≤ 20% dari total objek peta.
