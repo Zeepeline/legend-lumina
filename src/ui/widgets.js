@@ -115,7 +115,7 @@ let HUD = null;
 function buildHud(icons) {
   HUD = document.createElement('div');
   HUD.innerHTML = `<div id="hud"><div class="lv">LV<b id="hLv">1</b></div><div class="bars">
-   <div class="bar hp" id="hHp"><i></i><span></span></div><div class="bar mp" id="hMp"><i></i><span></span></div><div class="bar sta" id="hSta" style="height:4px"><i></i></div><div class="bar xp" id="hXp"><i></i></div></div></div>
+   <div class="bar hp" id="hHp"><i class="ghost"></i><i class="fill"></i><span></span></div><div class="bar mp" id="hMp"><i></i><span></span></div><div class="bar sta" id="hSta" style="height:4px"><i></i></div><div class="bar xp" id="hXp"><i></i></div></div></div>
    <div id="hDate"></div><div id="hud2"><span id="hClock">☀</span><span id="hCompass" style="font-size:9px;color:#ffe27a;margin:0 2px;">🧭 U</span><span><img src="${icons.coin}"><b id="hGold">0</b></span><span class="pt"><img src="${icons.potion}"><b id="hPot">0</b></span></div>
    <div id="fps-meter" style="display:${OPT.fps ? 'block' : 'none'};position:absolute;top:28px;left:4px;font-size:9px;color:#a0f080;background:rgba(0,0,0,0.55);padding:2px 5px;border-radius:3px;z-index:9000;pointer-events:none;font-family:monospace;">60 FPS</div>
    <div id="quest"></div><div id="boss"><span id="bName"></span><div class="bar"><i id="bHp"></i></div></div>`;
@@ -124,7 +124,14 @@ function buildHud(icons) {
 function updHud() {
   if (!HUD) return; const st = stat();
   $('hLv').textContent = S.lv;
-  const hp = $('hHp'); hp.firstChild.style.width = (S.hp / st.maxhp * 100) + '%'; hp.lastChild.textContent = S.hp + '/' + st.maxhp; hp.classList.toggle('low', S.hp <= st.maxhp * .3);
+  const hp = $('hHp');
+  const hpPct = (S.hp / st.maxhp * 100) + '%';
+  const ghostBar = hp.querySelector('.ghost');
+  const fillBar = hp.querySelector('.fill') || hp.firstChild;
+  if (ghostBar) ghostBar.style.width = hpPct;
+  if (fillBar) fillBar.style.width = hpPct;
+  hp.lastChild.textContent = S.hp + '/' + st.maxhp;
+  hp.classList.toggle('low', S.hp <= st.maxhp * .3);
   const mp = $('hMp'); mp.firstChild.style.width = (S.mp / st.maxmp * 100) + '%'; mp.lastChild.textContent = S.mp + '/' + st.maxmp;
   const sta = $('hSta'); if (sta) { const curSta = S.sta != null ? S.sta : st.maxsta; sta.firstChild.style.width = (curSta / st.maxsta * 100) + '%'; }
   $('hXp').firstChild.style.width = (S.exp / need(S.lv) * 100) + '%';
