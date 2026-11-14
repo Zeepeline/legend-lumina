@@ -291,9 +291,9 @@ _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 `.playKnifeToss()` 4 · `.playArmWrestling()` 168
 
-## src/systems/life/minigame_3.js (303 baris)
+## src/systems/life/minigame_3.js (319 baris)
 _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
-`.startChickenRace()` 4 · `.playTavernDice()` 112 · `.strikeDummy()` 206
+`.startChickenRace()` 4 · `.playTavernDice()` 112 · `.strikeDummy()` 222
 
 ## src/systems/life/minigame_4.js (396 baris)
 _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_

@@ -13514,7 +13514,11 @@ Object.assign(World.prototype, {
   },
   async playTavernDice(dealerX, dealerY) {
     G.lock++;
-    await say('Yo, kawan pengelana! Mau menghangatkan malam di kedai dengan lempar dadu gading? Aturannya mudah: tebak angka ganjil atau genap!', 'Bram si Pengelana');
+    await say(
+      'Yo, kawan pengelana! Mau menghangatkan malam di kedai dengan lempar dadu gading? ' +
+      'Aturannya mudah: tebak angka ganjil atau genap!',
+      'Bram si Pengelana'
+    );
 
     for (; ;) {
       const choice = await choose({
@@ -13544,7 +13548,11 @@ Object.assign(World.prototype, {
       }
 
       if (choice === 4) {
-        await say('Dadu berkepala enam dikocok di dalam cangkir kayu. Jika angka yang muncul sesuai tebakanmu (ganjil/genap), kamu membawa pulang hadiah 2x lipat taruhanmu!', 'Aturan Dadu');
+        await say(
+          'Dadu berkepala enam dikocok di dalam cangkir kayu. Jika angka yang muncul sesuai ' +
+          'tebakanmu (ganjil/genap), kamu membawa pulang hadiah 2x lipat taruhanmu!',
+          'Aturan Dadu'
+        );
         continue;
       }
 
@@ -13596,11 +13604,19 @@ Object.assign(World.prototype, {
         updHud();
         this.sparkle(tableX, tableY - 12, 'dotg', 18);
         popWorld(this.pl.x, this.pl.y - 18, `🎉 Menang! +${reward} G`, 'heal');
-        await say(`Dadu berhenti di angka [${result}] (${typeTxt})! Tebakanmu tepat sekali! Bram menyerahkan ${reward} G dengan senyum lebar: "Luar biasa, instingmu tajam sekali kawan!"`, 'Bram si Pengelana');
+        await say(
+          `Dadu berhenti di angka [${result}] (${typeTxt})! Tebakanmu tepat sekali! ` +
+          `Bram menyerahkan ${reward} G dengan senyum lebar: "Luar biasa, instingmu tajam sekali kawan!"`,
+          'Bram si Pengelana'
+        );
       } else {
         sfx('buzz');
         popWorld(this.pl.x, this.pl.y - 18, 'Kalah...', 'xp');
-        await say(`Dadu berhenti di angka [${result}] (${typeTxt}). Sayang sekali tebakanmu meleset! Bram tertawa ramah: "Hahaha, dewi keberuntungan tersenyum padaku kali ini! Mau coba putaran lagi, kawan?"`, 'Bram si Pengelana');
+        await say(
+          `Dadu berhenti di angka [${result}] (${typeTxt}). Sayang sekali tebakanmu meleset! ` +
+          'Bram tertawa ramah: "Hahaha, dewi keberuntungan tersenyum padaku kali ini! Mau coba putaran lagi, kawan?"',
+          'Bram si Pengelana'
+        );
       }
     }
 
