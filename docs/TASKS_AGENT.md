@@ -2621,11 +2621,30 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; hanya objek yang sudah ada di OBJ
 - Cek: `npm run check` (0 masalah); sungai terlihat alami, tidak polos.
 
-### [ ] T346. **Audit tata letak Desa Lumina** — referensi: Stardew/Pokémon (desa), GEOGRAFI §1
+### [x] T346. **Audit tata letak Desa Lumina** — referensi: Stardew/Pokémon (desa), GEOGRAFI §1
 
 - File: `src/world/maps/village.js` (hanya membaca di tugas ini). Baca dulu: semua `objs` bangunan, `paths`, `npcs`.
 - Lakukan: tulis catatan di bawah tugas ini: daftar bangunan + arah pintu + jarak ke bangunan terdekat. Tandai: jarak < 40 px, pintu tidak terhubung jalan, jalan buntu tanpa tujuan.
 - Cek: `npm run check` (0 masalah); catatan berisi tabel; tidak ada perubahan kode.
+
+#### Catatan Audit Tata Letak Desa Lumina (T346):
+| Bangunan | Koordinat (x, y) | Arah Pintu | Bangunan Terdekat (Jarak) | Terhubung Jalan? | Catatan Audit |
+|---|---|---|---|---|---|
+| Rumah Pohon Tetua Bram (`bigtree`) | (512, 300) | Atas / Batang (513, 286) | Kandang Ternak (152 px) | Ya (Ring alun-alun radius 26) | Pusat desa & ikon orientasi cerita |
+| Rumah Pak Darto (`houseA`) | (150, 232) | Bawah (150, 232) | Rumah Lina (122 px) | Ya (`[150, 232 -> 150, 266]`) | Klaster hunian barat laut; jarak > 40 px |
+| Rumah Lina (`houseC`) | (272, 222) | Bawah (272, 222) | Rumah Pak Darto (122 px) | Ya (`[272, 222 -> 272, 266]`) | Klaster hunian barat laut; pintu terhubung rapi |
+| Penginapan Daun Emas (`houseC`) | (752, 222) | Bawah (752, 222) | Kandang Ternak (116 px) | Ya (`[752, 222 -> 752, 266]`) | Klaster timur laut; pintu terhubung ke jalan utama |
+| Rumah Arka (`houseA`) | (874, 232) | Bawah (874, 232) | Penginapan (122 px) | Ya (`[874, 232 -> 874, 266]`) | Rumah pemain di tepi timur jalan Padang |
+| Rumah Bu Lastri (`houseB`) | (104, 480) | Bawah (104, 480) | Rumah Pak Darto (252 px) | Ya (`[104, 480 -> 104, 492]`) | Hunian barat daya dekat jalan Danau Cermin |
+| Rumah Bengkel Pak Besi (`houseB`) | (920, 480) | Bawah (920, 480) | Bengkel Tempa (91 px) | Ya (`[920, 480 -> 920, 492]`) | Hunian/gudang pandai besi; terhubung jalan |
+| Kandang Ternak Arka (`ranch`) | (664, 298) | Barat (664, 308) | Penginapan (116 px) | Sebagian (dekat jalan `630, 266`) | Pintu menghadap barat, ada ruang gerbang 26 px |
+| Kios Pasar Bu Sari (`market`) | (712, 434) | Bawah/Selatan (712, 440) | Kandang Ternak (144 px) | Ya (Dekat disc alun-alun `512, 476`) | Menghadap plaza/alun-alun selatan |
+| Bengkel Tempa Terbuka (`forge`) | (964, 560) | Barat/Anvil (916, 556) | Rumah Pak Besi (91 px) | Tidak langsung (jarak 68 px ke jalan) | **Tandai:** butuh setapak kecil dari `[920, 492]` ke anvil `[916, 556]` |
+
+**Ringkasan Temuan Audit:**
+1. **Jarak Antar-Bangunan:** Semua bangunan memiliki jarak > 90 px (TIDAK ADA yang berjarak < 40 px); ruang gerak lega dan tertata.
+2. **Keterhubungan Jalan:** 9 dari 10 bangunan terhubung langsung lewat segmen setapak. Satu pengecualian: Bengkel Tempa (`forge` di 964, 560) berada di selatan jalan utama timur (`y=492`), disarankan diberi setapak cabang pendek pada T348.
+3. **Jalan Buntu:** Tidak ditemukan jalan buntu menjebak; semua percabangan berakhir di pintu bangunan atau pintu keluar wilayah (`lake`, `forest`, `meadow`).
 
 ### [ ] T347. **Desa: alun-alun sebagai pusat** — referensi: Stardew (alun-alun Pelican Town), urban planning
 
