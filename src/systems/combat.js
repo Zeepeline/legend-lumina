@@ -320,9 +320,11 @@ Object.assign(World.prototype, {
   eShoot(e, kind, angles, dmg, abs) {
     const P = PROJ[kind], s = e.spr, pl = this.pl, base = abs ? 0 : Math.atan2(pl.y - s.y, pl.x - s.x);
     sfxAt('spore', s.x, s.y, this);
+    const tint = /venom|spore/.test(kind) ? 0x80ff60 : /ice/.test(kind) ? 0x80e0ff : 0xffb060;
     for (const a of angles) {
-      const sp = this.add.image(s.x, s.y - 8, P.key);
-      this.shots.push({ s: sp, gx: s.x, gy: s.y, vx: Math.cos(base + a) * P.spd, vy: Math.sin(base + a) * P.spd, life: 2.6, kind, dmg, spin: P.spin, enemy: 1, fx: P.fx || e.D.fx });
+      const sp = this.add.image(s.x, s.y - 8, P.key).setTint(tint);
+      const sh = this.add.image(s.x, s.y, 'shadow').setScale(.35).setAlpha(.3).setDepth(s.y - 1);
+      this.shots.push({ s: sp, sh, age: 0, gx: s.x, gy: s.y, vx: Math.cos(base + a) * P.spd, vy: Math.sin(base + a) * P.spd, life: 2.6, kind, dmg, spin: P.spin, enemy: 1, fx: P.fx || e.D.fx });
     }
   },
   shockwave(x, y, R, atk) {
@@ -361,14 +363,17 @@ Object.assign(World.prototype, {
   updShots(dt, locked) {
     if (locked) return;
     for (const p of this.shots) {
-      p.life -= dt; p.gx += p.vx * dt; p.gy += p.vy * dt; p.s.setPosition(p.gx, p.gy - 9).setDepth(p.gy + 2);
+      p.life -= dt; p.age = (p.age || 0) + dt;
+      const spdScale = (p.enemy && p.age < 0.1) ? 0.5 : 1;
+      p.gx += p.vx * dt * spdScale; p.gy += p.vy * dt * spdScale; p.s.setPosition(p.gx, p.gy - 9).setDepth(p.gy + 2);
+      if (p.sh) p.sh.setPosition(p.gx, p.gy).setDepth(p.gy - 1);
       if (p.spin) p.s.rotation += dt * 14;
       let dead = p.life <= 0;
       if (!dead && this.physics.overlapRect(p.gx - 2, p.gy - 3, 4, 4, false, true).length) dead = true;
       this._curShot = p;
       if (!dead && p.mine) for (const e of this.enemies) { if (e.hp > 0 && !(p.hitSet && p.hitSet.has(e)) && Math.hypot(e.spr.x - p.gx, e.spr.y - e.D.r * e.sc * .7 - (e.D.fly ? 6 : 0) - (p.gy - 4)) < e.D.r * e.sc + 6) { const n = Math.hypot(p.vx, p.vy); this.hitEnemy(e, p.dmg, false, p.vx / n, p.vy / n); if (p.kind === 'fire') this.burnEnemy(e, p.dmg * .2, 2); if (p.pierce) { (p.hitSet = p.hitSet || new Set()).add(e); continue; } dead = true; break; } }
       if (!dead && p.enemy && Math.hypot(this.pl.x - p.gx, this.pl.y - 4 - p.gy) < 8) { this.hurtPlayer(p.dmg, p.gx - p.vx, p.gy - p.vy, p.fx); dead = true; }
-      if (dead) { p.dead = true; p.s.destroy(); if (p.kind === 'fire') this.sparkle(p.gx, p.gy - 8, 'doto', 8); }
+      if (dead) { p.dead = true; p.s.destroy(); if (p.sh) p.sh.destroy(); if (p.kind === 'fire') this.sparkle(p.gx, p.gy - 8, 'doto', 8); }
     }
     this.shots = this.shots.filter(p => !p.dead);
   },

@@ -1741,7 +1741,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; lawan goblin pemanah → ia mundur saat didekati & tidak berdiri diam.
 
-### [ ] T281. **Proyektil musuh mudah dibaca** — referensi: Enter the Gungeon, Hades
+### [x] T281. **Proyektil musuh mudah dibaca** — referensi: Enter the Gungeon, Hades
+- Selesai: proyektil musuh di `eShoot()` diberi pendaran warna glow terang sesuai jenisnya + bayangan tanah dinamis yang sinkron di `updShots()`, dan melaju 50% lebih lambat di 0,1s pertama sebagai telegraf tembakan.
 - File: `src/systems/combat.js`. Baca dulu: `eShoot()` (±302) & `updShots()` (±317).
 - Lakukan: proyektil musuh diberi lingkar terang tipis (blend ADD, warna sesuai jenis) + bayangan kecil di tanah; 0,1 s pertama bergerak 50% lebih lambat agar terlihat keluar.
 - Batasan: kecepatan setelah 0,1 s tetap.
