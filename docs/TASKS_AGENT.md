@@ -1697,7 +1697,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; slime terlempar jauh, golem hampir tidak bergeser; kapak lebih kuat dari pedang.
 
-### [ ] T275. **Hitstop bertingkat** — referensi: Hades, Monster Hunter
+### [x] T275. **Hitstop bertingkat** — referensi: Hades, Monster Hunter
+- Selesai: durasi hitstop bertingkat diterapkan di `hitEnemy()`: pukulan biasa 35ms, akhir kombo 60ms, serangan kritikal 80ms, dan pukulan membunuh 90ms (serta 220ms untuk boss fatal) tanpa menumpuk (`Math.max`).
 - File: `src/systems/combat.js`. Baca dulu: `hitStop()` (±139) & pemanggilnya di `hitEnemy`/`killEnemy`.
 - Lakukan: durasi: pukulan biasa 35 ms, akhir kombo 60 ms, kritikal 80 ms, membunuh 90 ms. Jangan menumpuk: jika hitstop masih berjalan, ambil yang terbesar.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.

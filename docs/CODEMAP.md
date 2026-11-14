@@ -187,9 +187,9 @@ _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditam
 _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._
 `.goto()` 4 · `.guardStop()` 9
 
-## src/systems/combat.js (385 baris)
+## src/systems/combat.js (388 baris)
 _Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah_
-`WEAPON_STYLE` 4 · `.attack()` 12 · `.shootArrow()` 89 · `.aimAngle()` 102 · `.magic()` 111 · `.drink()` 124 · `.useItem()` 130 · `.hitStop()` 139 · `.hitEnemy()` 144 · `.killEnemy()` 191 · `.drop()` 267 · `.updPicks()` 273 · `.gainExp()` 295 · `.hurtPlayer()` 307 · `.eShoot()` 317 · `.shockwave()` 325 · `.updShots()` 358 · `.defeat()` 372
+`WEAPON_STYLE` 4 · `.attack()` 12 · `.shootArrow()` 89 · `.aimAngle()` 102 · `.magic()` 111 · `.drink()` 124 · `.useItem()` 130 · `.hitStop()` 139 · `.hitEnemy()` 144 · `.killEnemy()` 194 · `.drop()` 270 · `.updPicks()` 276 · `.gainExp()` 298 · `.hurtPlayer()` 310 · `.eShoot()` 320 · `.shockwave()` 328 · `.updShots()` 361 · `.defeat()` 375
 
 ## src/systems/skills.js (36 baris)
 _Jurus: dash, tebasan putar, nova es_

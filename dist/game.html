@@ -7586,7 +7586,10 @@ Object.assign(World.prototype, {
     e.hp -= dmg; popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 2 - (e.D.fly ? 10 : 0), label, style);
     sfx(crit ? 'crit' : 'hit'); if (crit) shake();
     const fatal = e.hp <= 0;
-    this.hitStop(e.boss && fatal ? .22 : fatal || crit ? .085 : .045, crit || fatal ? 25 : 12);
+    const isComboFin = this.pl?.combo === 3;
+    const hsDur = (e.boss && fatal) ? .22 : fatal ? .09 : crit ? .08 : isComboFin ? .06 : .035;
+    const hsVib = (fatal || crit) ? 25 : isComboFin ? 16 : 10;
+    this.hitStop(hsDur, hsVib);
     if (crit || fatal || e.boss) this.camShake(fatal ? 110 : 80, fatal ? .005 : .003);
     e.spr.setTintFill(0xffffff); e.flash = .09;
     let breakPoise = false;
