@@ -95,7 +95,7 @@ obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 8
 _Generator tanah, tabrakan grid, penyebar pohon_
 `riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `genGround()` 90 · `blockRects()` 180 · `scatter()` 196 · `openSides()` 229 · `borderTrees()` 242 · `ringObjects()` 258 · `mapObjects()` 263 · `mapWalls()` 267
 
-## src/world/maps/village.js (81 baris)
+## src/world/maps/village.js (84 baris)
 _Peta: Desa Lumina_
 
 

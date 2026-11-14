@@ -2653,7 +2653,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; jangan memindah bangunan yang dipakai misi/NPC
 - Cek: `npm run check` (0 masalah); dari mana pun di desa, jalan mengarah ke alun-alun.
 
-### [ ] T348. **Desa: hierarki jalan** — referensi: Urban planning (jalan utama vs setapak)
+### [x] T348. **Desa: hierarki jalan** — referensi: Urban planning (jalan utama vs setapak)
 
 - File: `src/world/maps/village.js` (`paths`). Baca dulu: `docs/GEOGRAFI.md` §1 (radius jalan).
 - Lakukan: jalan masuk dari timur (ke padang) & selatan (ke hutan) radius 14; jalan kampung 10–12; setapak ke tiap pintu 8–9. Setiap pintu terhubung jalan; hapus setapak buntu yang tidak menuju apa-apa (atau beri tujuan: bangku/papan).
