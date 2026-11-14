@@ -199,9 +199,9 @@ _pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali d
 _Jurus: dash, tebasan putar, nova es_
 `.updSkills()` 4 · `.spin()` 12 · `.dash()` 20 · `.nova()` 27
 
-## src/systems/spell_fx.js (114 baris)
-_Efek khusus jurus: Kabut Racun, Cahaya Pulih, Lentera Suci (T322)_
-`.spellFx()` 4
+## src/systems/spell_fx.js (159 baris)
+_Efek visual sihir: lingkar rune, proyektil, ledakan, dan aura (T318-T322)_
+`RUNE_COL` 3 · `.runeCircle()` 11 · `.spellFx()` 32
 
 ## src/systems/learn.js (71 baris)
 _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipakai (tingkat I–III)._

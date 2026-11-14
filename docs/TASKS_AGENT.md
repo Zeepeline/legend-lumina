@@ -1991,12 +1991,12 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; dash tepat waktu → siluet biru & warna dingin singkat. (selesai di v1.30.1)
 
-### [ ] T318. **Lingkar rune saat merapal jurus** — referensi: Diablo, Tales of
+### [x] T318. **Lingkar rune saat merapal jurus** — referensi: Diablo, Tales of
 - File: file baru `src/systems/spell_fx.js` (daftarkan di index.html setelah combat_fx.js). Baca dulu: `castSpell()` di `src/systems/learn.js` (BACA).
 - Lakukan: bungkus `castSpell`: sebelum efek jurus, gambar lingkar rune berputar di bawah Arka (warna per sekolah sihir: api oranye, es biru, alam hijau, cahaya emas) 0,35 s, lalu memudar.
 - Batasan: jangan ubah biaya MP/efek jurus.
 - Jika SUDAH ada → tandai [x] "sudah ada".
-- Cek: `npm run check`; rapal jurus apa pun → lingkar muncul.
+- Cek: `npm run check`; rapal jurus apa pun → lingkar muncul. (selesai di v1.30.1)
 
 ### [ ] T319. **Bola Api: inti menyala, ekor, ledakan** — referensi: Diablo II (Fire Ball), Hades
 - File: `src/systems/spell_fx.js`. Baca dulu: proyektil Bola Api (`JURUS.fire`; grep di learn.js/combat.js).
