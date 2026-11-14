@@ -169,7 +169,10 @@ Object.assign(World.prototype, {
     const heavy = e.boss || e.D.ai === 'golem' || e.D.ai === 'turret';
     const canKb = !hasPoise || breakPoise || isStagger;
     if (canKb) {
-      const kb = heavy ? (e.D.ai === 'turret' ? 0 : 40) : 175;
+      const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword';
+      const wMul = wt === 'axe' ? 1.4 : wt === 'spear' ? 1.15 : 1;
+      const kbScale = Math.max(0.3, wMul / (1 + Math.max(0, (e.D.r - 8)) / 10));
+      const kb = (heavy ? (e.D.ai === 'turret' ? 0 : 40) : 175) * kbScale;
       e.kb = heavy ? .06 : .17; e.kbx = nx * kb; e.kby = ny * kb;
     } else { e.kb = 0; }
     // squash saat terkena

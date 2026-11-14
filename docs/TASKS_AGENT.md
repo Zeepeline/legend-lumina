@@ -1690,7 +1690,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; golem: 3 pukulan tidak tersentak, pukulan ke-3 membuatnya terhuyung.
 
-### [ ] T274. **Dorongan sesuai berat musuh & senjata** — referensi: Zelda: A Link to the Past, Hyper Light Drifter
+### [x] T274. **Dorongan sesuai berat musuh & senjata** — referensi: Zelda: A Link to the Past, Hyper Light Drifter
+- Selesai: kalkulasi dorongan knockback `kbScale` di `hitEnemy()` memperhitungkan bobot tipe senjata (`axe` 1.4, `spear` 1.15, `sword` 1.0) dan massa radius tubuh musuh `1 + (e.D.r - 8) / 10` dengan batas minimal 0.3x.
 - File: `src/systems/combat.js`. Baca dulu: `hitEnemy()` bagian dorongan (knockback).
 - Lakukan: skala dorongan = dasar × (kapak 1,4 / pedang 1 / tombak 1,15) ÷ (1 + (e.D.r − 8) / 10), minimal 0,3×. Pukulan ke-3 kombo ×1,3.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
