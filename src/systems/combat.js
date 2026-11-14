@@ -55,8 +55,9 @@ Object.assign(World.prototype, {
             const finalCrit = crit || isBackstab;
             const finalDmg = st.atk * W.mul * cMul * (isBackstab ? 1.8 : 1);
             if (isBackstab && e.hp > 0) {
-              popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 16, 'PUNGGUNG!', 'crit');
-              sfx('crit');
+              popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 16, 'DARI BELAKANG!', 'purp');
+              sfx('crit'); this.hitStop(0.07, 18); this.camShake(100, .005);
+              S.st = S.st || {}; S.st.backstabs = (S.st.backstabs || 0) + 1;
             }
             this.hitEnemy(e, finalDmg, finalCrit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
             const frz = (ITEMS[S.eq.wpn] || {}).frz; if (frz && Math.random() < frz) this.freezeEnemy(e, 1.2);

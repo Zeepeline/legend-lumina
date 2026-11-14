@@ -1757,7 +1757,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; tangkis serangan serigala → jelas terasa & serigala terhuyung.
 
-### [ ] T283. **Serangan dari belakang terlihat** — referensi: Dark Souls (backstab), Dishonored
+### [x] T283. **Serangan dari belakang terlihat** — referensi: Dark Souls (backstab), Dishonored
+- Selesai: serangan dari belakang (backstab) memunculkan teks pop ungu 'DARI BELAKANG!', memicu hitstop 70ms, getaran kamera halus, dan mencatat progres statistik `S.st.backstabs`.
 - File: `src/systems/combat.js`. Baca dulu: tempat `S.st.backstabs` bertambah (grep `backstabs`).
 - Lakukan: tampilkan pop "DARI BELAKANG!" (ungu) + hitstop 70 ms + getar kamera kecil.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.

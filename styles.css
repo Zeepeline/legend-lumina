@@ -48,7 +48,7 @@ body{font-family:'Pixelify Sans','Courier New',monospace;color:#3b2618}
 #boss .bar{width:180px;height:8px;margin-top:1px}
 #boss .bar>i{background:linear-gradient(#ff9a8a,#c8282a)}
 .pop{position:absolute;font-weight:700;font-size:11px;color:#fff;text-shadow:1px 1px 0 #000,-1px 0 0 #000,0 -1px 0 #000,1px 0 0 #000;pointer-events:none;transform:translate(-50%,-50%);white-space:nowrap;animation:pop .9s ease-out forwards}
-.pop.hurt{color:#ff6a6a}.pop.heal{color:#8dff9f}.pop.mpc{color:#8fd8ff}.pop.crit{color:#ffe66b;font-size:14px}.pop.gold{color:#ffe27a;font-size:9px}.pop.xp{color:#c8e8ff;font-size:8px}
+.pop.hurt{color:#ff6a6a}.pop.heal{color:#8dff9f}.pop.mpc{color:#8fd8ff}.pop.crit{color:#ffe66b;font-size:14px}.pop.gold{color:#ffe27a;font-size:9px}.pop.xp{color:#c8e8ff;font-size:8px}.pop.purp{color:#d88aff;font-size:12px}
 @keyframes pop{0%{opacity:0;margin-top:4px;scale:.5}15%{opacity:1;margin-top:-5px;scale:1.25}30%{margin-top:-6px;scale:1}75%{opacity:1}100%{opacity:0;margin-top:-18px}}
 .banner{position:absolute;left:50%;top:44px;transform:translateX(-50%);padding:3px 14px;font-size:12px;font-weight:700;white-space:nowrap;animation:bin .35s ease-out;transition:opacity .5s;text-align:center;color:#3b2618}
 .banner small{display:block;font-size:8px;font-weight:400;color:#8a5a32;letter-spacing:2px}
