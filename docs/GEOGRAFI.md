@@ -51,24 +51,39 @@ jalan utama boleh memakai jembatan yang sudah ada (`river.bridge` di hutan). Jan
 `npm run check` 0 masalah · tidak ada objek/NPC/musuh/peti di air · pintu & jalan keluar tidak tertutup · air menyambung di tepi wilayah
 (cek koordinat global kedua sisi, selisih ≤ 20 px) · ikuti `docs/PLACEMENT_RULES.md`.
 
-## 7. Perencanaan permukiman ala city builder (TheoTown / Cities: Skylines)
-Rumah tidak ditaruh sembarangan: tiap bangunan punya **fungsi (zona)**, memancarkan **pengaruh** (bising/bau/nyaman), butuh **layanan** dalam
-jangkauan, dan dihubungkan **jalan bertingkat** agar arus warga (rumah→kerja→pasar) tidak macet. Data: `src/data/zoning.js` (tabel di bawah).
+## 7. Tata kota & desa abad pertengahan (prinsip city builder, wujud medieval)
+Prinsipnya diambil dari city builder (TheoTown / Cities: Skylines): **fungsi menentukan letak**, pengaruh buruk dijauhkan, layanan terjangkau,
+jalan bertingkat. Tapi WUJUDNYA abad pertengahan. Kota medieval tidak punya peraturan zonasi. Kota tumbuh alami mengelilingi kuil, pasar,
+gerbang dan sungai. Perajin sejenis berkumpul dalam satu gilda, dan usaha berbau didorong ke pinggir atau ke hilir. Data: `src/data/zoning.js`.
 
-**Zona (warna di tampilan `?zona=1`):**
-| Zona | Isi (contoh objek) | Letak |
+**Yang TIDAK dipakai (terlalu modern):** grid kotak-kotak; zona hunian murni terpisah dari toko; taman kota sebagai pusat; jalan lurus semua.
+
+**Kawasan (warna di tampilan `?zona=1`):**
+| Kawasan | Isi (contoh objek) | Letak |
 |---|---|---|
-| Hunian (hijau) | rumah warga | inti yang terlindung; dekat taman/sumur/kuil; jauh dari bising & bau |
-| Dagang (biru) | toko, kios, kedai, penginapan | di jalan utama & alun-alun (butuh dilewati orang); boleh jadi **penyangga** antara kerja & hunian |
-| Kerja (kuning) | pandai besi, gudang, penggilingan/kincir, tambang, penyamakan | di pinggir, dekat gerbang/jalan utama agar gerobak tidak melintasi hunian |
-| Tani (cokelat) | kebun, ladang, kandang | pinggiran, berpagar, akses jalan kampung |
-| Umum (ungu) | balai, kuil, akademi, pos jaga, sumur, alun-alun, taman | tersebar sesuai jangkauan layanan |
-Urutan ideal dari luar ke dalam: **Kerja/Tani → Dagang/Taman → Hunian**. Pola selang-seling rumah–toko–rumah dihindari kecuali warung kecil.
+| Rumah-toko (hijau) | houseA–D + kios/papan toko di depan; penginapan, kedai | **berderet rapat di sepanjang jalan utama**; toko di bawah, tinggal di atas |
+| Gilda perajin (kuning) | anvil, forge, bellows, potterswheel, woodenloom, crafttable | satu **jalan/gang khusus** per kerajinan ("Gang Pandai Besi"), dekat pasar/gerbang |
+| Usaha kotor (cokelat) | penyamakan, pencelupan, jagal, kandang, hay, windmill (bising) | **di luar tembok atau di hilir sungai**, searah angin menjauh dari kota |
+| Tani (cokelat muda) | ladang, kebun, fence, hay, kandang ayam/babi | di luar tembok/pinggir desa; kebun kecil boleh di halaman belakang rumah |
+| Pusat umum (ungu) | kuil/shrine/altar, alun-alun pasar (market, fountain/well), balai gilda, bell, board | **inti kota**: kuil + pasar berdampingan di pertemuan jalan utama |
+| Pertahanan (abu) | cwall, gatehouse, pos jaga, brazier/lamp | tembok mengelilingi inti; gerbang di ujung tiap jalan utama |
+| Kawasan atas (emas) | rumah besar, akademi, rumah bangsawan | tanah **lebih tinggi** (utara benua: Kota Lumina/Akademi), lebih lega & tenang |
 
-**Pengaruh (radius px, diukur dari tengah bangunan):** pandai besi bising 120 · penyamakan/kandang bau 140 · penggilingan bising 100 ·
-pasar/kedai ramai 80 · taman/pohon rindang nyaman 100 · kuil tenang 120. Rumah di dalam radius bising/bau = **tidak puas**.
-**Jangkauan layanan (setiap rumah harus masuk):** sumur/air 220 · pos jaga/penjaga 320 · toko kebutuhan/pasar 320 · kuil/penyembuh 420 · taman/alun-alun 260.
-**Jalan bertingkat (radius `paths`):** utama 14–16 (gerbang ↔ alun-alun ↔ pasar ↔ zona kerja) · penghubung 10–12 (antar-blok) · lokal 8–9 (hanya ke pintu).
-Jalan lokal TIDAK boleh menjadi jalan pintas antara dua jalan utama (cegah "lalu lintas tembus" di hunian). Titik sempit yang dilewati > 6 rute
-rumah→kerja NPC = macet → lebarkan atau beri jalur alternatif.
-**Kepuasan rumah** = 100 − 30 (tiap pengaruh buruk) − 15 (tiap layanan tak terjangkau) + 10 (taman dalam jangkauan), batas 0–100. Target rata-rata ≥ 75.
+**Kavling memanjang (burgage plot):** tiap rumah di jalan utama = kavling sempit-panjang (lebar 56–80 px menghadap jalan, dalam 140–200 px).
+Depan: pintu/kios menempel jalan (≤ 24 px). Belakang: halaman berisi 1–3 dari sumur, woodpile, barrel/crate, kebun kecil, kandang ayam, jemuran.
+Gang belakang (radius 8) boleh menyusuri ujung kavling. Ini yang membuat kota terasa padat dan hidup tanpa menaruh rumah sembarangan.
+
+**Pola jalan:** jalan utama (radius 14–16) dari **tiap gerbang ke alun-alun pasar**; nama jalan = nama gerbang ("Jalan Gerbang Timur").
+Alun-alun pasar berbentuk **baji/segitiga atau melebar** di pertemuan jalan, bukan kotak sempurna. Jalan penghubung (10–12) dan gang (8–9) **berliku**
+(belok tiap 120–200 px, lebar tak seragam). Gang boleh buntu ke halaman; gang tidak boleh menjadi jalan pintas antara dua jalan utama.
+Jembatan/arung di tempat sungai menyempit; pasar sering dekat jembatan.
+
+**Pengaruh (radius px):** pandai besi bising 120 · penyamakan/pencelupan/jagal/kandang bau 140 (bau mengalir ke **hilir**: radius ×1.5 ke arah aliran) ·
+kincir bising 100 · pasar/kedai ramai 80 (baik untuk toko, buruk bila tepat di sebelah rumah kawasan atas) · kuil tenang 120 · pohon rindang/halaman 60 nyaman.
+**Layanan (setiap rumah harus masuk):** sumur 220 · pos jaga/penjaga malam 320 · pasar/toko 320 · kuil/shrine 420 · kedai 360.
+Kota besar: **tiap distrik punya kedai dan shrine sendiri** (Pasar, Akademi, Kota Bawah masing-masing).
+**Kepuasan rumah** = 100 − 30 (tiap pengaruh buruk) − 15 (tiap layanan tak terjangkau) + 10 (halaman belakang berisi) + 5 (dekat kuil), batas 0–100.
+Target rata-rata ≥ 75; kawasan atas ≥ 85; Kota Bawah boleh 60–70 (miskin & padat itu cerita, asal tetap terlayani sumur & penjaga).
+
+**Desa vs kota:** desa = tanpa tembok batu (pagar kayu), satu jalan utama + alun-alun kecil dengan sumur & shrine, rumah renggang dengan halaman besar,
+ladang langsung di belakang. Kota = tembok + gerbang, rumah-toko berdempet, ≥ 1 gang gilda, usaha kotor di luar tembok/hilir.
