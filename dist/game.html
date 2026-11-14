@@ -15060,15 +15060,20 @@ function sfxAt(n, x, y, sc) {
   setTimeout(() => { try { out.disconnect(); g.disconnect(); } catch (_) { } }, 1500);
 }
 // bunyi langkah per jenis tanah
+let _stepLeft = false;
 function stepSound(kind) {
-  if (!AU.ctx || !OPT.steps) return; const t = AU.ctx.currentTime, D = AU.sfx;
+  if (!AU.ctx || !OPT.steps) return;
+  const t = AU.ctx.currentTime, D = AU.sfx;
+  _stepLeft = !_stepLeft;
+  const pMul = 1 + (Math.random() * 0.12 - 0.06);
+  const vMul = _stepLeft ? 0.92 : 1.05;
   switch (kind) {
-    case 'snow': noise(t, .07, 2600, .22, 1400); break;
-    case 'stone': noise(t, .025, 2200, .18); tone(180, t, .02, 'square', .05, D); break;
-    case 'wood': tone(140, t, .04, 'triangle', .35, D); noise(t, .02, 700, .1); break;
-    case 'water': noise(t, .09, 900, .25, 2400); break;
-    case 'dirt': noise(t, .04, 600, .2); break;
-    default: noise(t, .05, 1500, .14, 900); // rumput
+    case 'snow': noise(t, .07, 2600 * pMul, .22 * vMul, 1400 * pMul); break;
+    case 'stone': noise(t, .025, 2200 * pMul, .18 * vMul); tone(180 * pMul, t, .02, 'square', .05 * vMul, D); break;
+    case 'wood': tone(140 * pMul, t, .04, 'triangle', .35 * vMul, D); noise(t, .02, 700 * pMul, .1 * vMul); break;
+    case 'water': noise(t, .09, 900 * pMul, .25 * vMul, 2400 * pMul); break;
+    case 'dirt': noise(t, .04, 600 * pMul, .2 * vMul); break;
+    default: noise(t, .05, 1500 * pMul, .14 * vMul, 900 * pMul); // rumput
   }
 }
 function segD(px, py, x1, y1, x2, y2) { const vx = x2 - x1, vy = y2 - y1, l = vx * vx + vy * vy || 1, u = clamp(((px - x1) * vx + (py - y1) * vy) / l, 0, 1); return Math.hypot(px - x1 - vx * u, py - y1 - vy * u); }

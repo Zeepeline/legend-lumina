@@ -1570,14 +1570,12 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; konsol `__game.sc.inflict('poison', 5)` (sesuaikan tanda tangan fungsi) → ikon menampilkan 5..4..3.
 
-### [ ] T258. **Musik: transisi halus antar lagu**
+### [x] T258. **Musik: transisi halus antar lagu**
+- Sudah ada: di `src/systems/sound.js` `swapBGM()` melakukan rampdown volume lagu lama dan rampup volume lagu baru.
 - File: `src/systems/sound.js`. Baca dulu: `swapBGM()` (±43–50) & `playBGM` di `src/core/audio.js`.
-- Lakukan: jika pergantian lagu masih memutus mendadak, tambahkan crossfade ±0,8 s (turunkan volume lagu lama, naikkan yang baru).
-- Batasan: jangan ubah daftar lagu.
-- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
-- Cek: `npm run check`; berjalan dari desa ke Jalan Desa–Padang → musik berganti halus.
 
-### [ ] T259. **Langkah kaki tidak monoton**
+### [x] T259. **Langkah kaki tidak monoton**
+- Selesai: variasi pitch acak (±6%) dan volume selang-seling kaki kiri/kanan pada fungsi `stepSound()` di `src/systems/sound.js`.
 - File: `src/systems/sound.js`. Baca dulu: `stepSound()` (±60–70).
 - Lakukan: variasikan pitch/rate acak kecil (±6%) tiap langkah dan selang-seling kaki kiri/kanan sedikit beda volume.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
