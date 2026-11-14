@@ -79,17 +79,17 @@ _Efek: tebasan, api, proyektil, cahaya, bayangan_
 _Lantai & perabot interior_
 `FURN` 4 · `drawFurn()` 5 · `genRoom()` 15 · `artMusicBox()` 28
 
-## src/world/objects.js (152 baris)
+## src/world/objects.js (164 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 151
+`OBJ` 7 · `MAPS` 163
 
 ## src/world/spawn/spawn_1.js (398 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 `OBJ_SPAWN` 3 · obj `shrine` 5 · obj `cavemouth` 8 · obj `sign` 11 · obj `forge` 14 · obj `pebbles` 18 · obj `telescope` 26 · obj `altar` 34 · obj `fieldoven` 42 · obj `dripstone` 50 · obj `frostflower` 58 · obj `totem` 66 · obj `pigeons` 74 · obj `teatable` 82 · obj `lotuspad` 90 · obj `dockboat` 98 · obj `coffeeshrub` 153 · obj `coffeekettle` 161 · obj `orchidrock` 169 · obj `canaryperch` 177 · obj `woodlandshrine` 185 · obj `bellows` 193 · obj `ringbooth` 201 · obj `archerytarget` 209 · obj `lakelighthouse` 217 · obj `streetdrum` 225 · obj `dummy` 233 · obj `pot` 241 · obj `well` 251 · obj `apple1` 266 · obj `bench` 327 · obj `bell` 343 · obj `campfire` 351 · obj `alchemytable` 361 · obj `scenicbench` 370 · obj `mailbox` 388
 
-## src/world/spawn/spawn_2.js (272 baris)
+## src/world/spawn/spawn_2.js (296 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 200 · obj `cryst` 203 · obj `lamp` 206 · obj `viewpoint` 209 · obj `lumina_shard` 243
+obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 200 · obj `treeA` 203 · obj `goblin_torch` 211 · obj `goblin_cauldron` 214 · obj `cryst` 223 · obj `lamp` 226 · obj `viewpoint` 229 · obj `lumina_shard` 263
 
 ## src/world/ground.js (279 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
@@ -99,7 +99,7 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _Peta: Desa Lumina_
 
 
-## src/world/maps/forest.js (58 baris)
+## src/world/maps/forest.js (69 baris)
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
@@ -175,9 +175,9 @@ _Cek pencapaian_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 15 · `shadowIndex()` 16
 
-## src/gfx/textures.js (122 baris)
+## src/gfx/textures.js (125 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
-`ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 12 · `addStrip()` 13 · `darkTree()` 14 · `NPC_W` 16 · `regPortrait()` 17 · `regChar()` 22 · `buildTextures()` 38
+`ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 15 · `addStrip()` 16 · `darkTree()` 17 · `NPC_W` 19 · `regPortrait()` 20 · `regChar()` 25 · `buildTextures()` 41
 
 ## src/scene/world.js (394 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
@@ -223,9 +223,9 @@ _Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Ray
 _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif._
 `WARPS` 3 · `.spawnWarp()` 9 · `.useWarp()` 15
 
-## src/ai/enemies.js (242 baris)
+## src/ai/enemies.js (288 baris)
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
-`.updEnemy()` 4 · `.charAnim()` 235
+`.updEnemy()` 4 · `.charAnim()` 281
 
 ## src/ai/bosses.js (109 baris)
 _AI boss & alur pertarungan boss_
@@ -299,7 +299,7 @@ _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 `.playArcheryChallenge()` 4
 
-## src/systems/story.js (131 baris)
+## src/systems/story.js (135 baris)
 _Segel kuil, Mochi hilang, kristal, peti harta_
 `.touchBarrier()` 4 · `.takeMochi()` 15 · `.useCrystal()` 19 · `.openChest()` 32 · `interactRunePillar()` 82
 
@@ -315,9 +315,9 @@ _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, m
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
 `.updInteractHint()` 6 · `.updEnemyBars()` 23 · `.retryBoss()` 33 · `levelUpDetail()` 39 · `.setTimeout()` 45 · `TIPS` 58 · `showTip()` 69 · `.updTips()` 75 · `.updMinimap()` 84 · `.swapWeapon()` 108 · `.updStamina()` 119 · `.tryClimb()` 130 · `.tryGlide()` 156 · `.stopGlide()` 182 · `applyPadOpt()` 188
 
-## src/systems/feel.js (64 baris)
+## src/systems/feel.js (68 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
-`ELITE_RATE` 4 · `DODGERS` 5 · `markOver()` 6 · `dangerEdge()` 12 · `.makeElite()` 18 · `.updFeel()` 26 · `.dangerFrom()` 56 · `.hurtAnim()` 62
+`ELITE_RATE` 4 · `DODGERS` 5 · `markOver()` 6 · `dangerEdge()` 12 · `.makeElite()` 18 · `.updFeel()` 30 · `.dangerFrom()` 60 · `.hurtAnim()` 66
 
 ## src/systems/sound.js (98 baris)
 _Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#911),_
@@ -439,11 +439,11 @@ _Layar judul_
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
 `exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 20 · `plEnemies()` 22 · `NEIGH` 69
 
-## src/gfx/gptassets.js (13 baris)
+## src/gfx/gptassets.js (24 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
 `GPT_SWAP` 4 · `GPT_LOOK` 5 · `applyGptSwap()` 10
 
-## src/gfx/gptmonsters.js (42 baris)
+## src/gfx/gptmonsters.js (94 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 

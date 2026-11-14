@@ -193,7 +193,10 @@ class World extends Phaser.Scene {
     if (!D.fly) this.physics.add.collider(s, this.walls);
     s.setCollideWorldBounds(true);
     if (D.ai === 'turret') s.setImmovable(true);
-    if (!D.ch) { s.play(D.tex + '_mv'); s.anims.setProgress(Math.random()); } else s.anims.stop();
+    if (!D.ch) {
+      if (this.anims.exists(D.tex + '_mv')) { s.play(D.tex + '_mv'); s.anims.setProgress(Math.random()); }
+      else if (this.anims.exists(D.tex + '_idle')) { s.play(D.tex + '_idle'); }
+    } else s.anims.stop();
     const e = { D, type, spr: s, sc: D.scale || 1, hp: D.hp, max: D.hp, st: 'idle', t: rnd(.2, 1.2), home: { x, y }, ph: rnd(0, 6), shootT: rnd(1, 2.5), flash: 0, kb: 0, cd: 0, boss: BOSS_AI.includes(D.ai), sh: this.add.image(x, y, D.scale ? 'shadowb' : 'shadow').setAlpha(.22) };
     if (type === 'gold_slime') {
       s.setTint(0xffd700);
