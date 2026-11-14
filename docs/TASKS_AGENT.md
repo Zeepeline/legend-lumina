@@ -1959,7 +1959,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; tebas → busur terlihat seperti sapuan bergerak, bukan sekali kedip.
 
-### [ ] T313. **Efek khas per senjata** — referensi: Hades (tiap senjata punya bahasa visual sendiri)
+### [x] T313. **Efek khas per senjata** — referensi: Hades (tiap senjata punya bahasa visual sendiri)
 - File: `src/systems/combat_fx.js`. Baca dulu: `slashFx()`.
 - Lakukan: tombak: garis tusuk + cincin debu di ujung; kapak: akhir kombo membuat retakan tanah (garis cokelat bercabang, pudar 0,6 s); busur: panah meninggalkan jejak tipis & percikan saat kena (bungkus `shootArrow`).
 - Jika SUDAH ada → tandai [x] "sudah ada".
@@ -2029,7 +2029,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; bakar & racuni slime → efeknya tampak di atasnya.
 
-### [ ] T324. **Percikan kena sesuai bahan musuh** — referensi: Hollow Knight, Dead Cells
+### [x] T324. **Percikan kena sesuai bahan musuh** — referensi: Hollow Knight, Dead Cells
 - File: `src/systems/combat_fx.js`. Baca dulu: `hitFx()`.
 - Lakukan: jenis percikan: slime → cipratan warna slime; golem/mimic → bunga api & serpihan batu; tengkorak/hantu → debu tulang/kabut; binatang → percikan putih biasa. Tentukan dari id/tekstur musuh.
 - Jika SUDAH ada → tandai [x] "sudah ada".

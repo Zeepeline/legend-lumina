@@ -18685,6 +18685,18 @@ Object.assign(World.prototype, {
     const tipX = ox + Math.cos(ang) * (24 * s), tipY = oy + Math.sin(ang) * (24 * s);
     if (this.sparkle) this.sparkle(tipX, tipY, 'spark', 3);
     if (fin) this.cameras.main.shake(70, .003);
+    if (wt === 'axe' && fin) {
+      const gx = ox + dx * 14, gy = oy + dy * 10;
+      const crack = this.add.graphics().setDepth(gy - 2);
+      crack.lineStyle(2, 0x5a3418, 0.9);
+      crack.beginPath();
+      crack.moveTo(gx - dx * 8, gy - dy * 8); crack.lineTo(gx, gy);
+      crack.lineTo(gx + dx * 12 + dy * 8, gy + dy * 12 - dx * 8);
+      crack.moveTo(gx, gy); crack.lineTo(gx + dx * 14 - dy * 8, gy + dy * 14 + dx * 8);
+      crack.strokePath();
+      this.tweens.add({ targets: crack, alpha: 0, duration: 600, ease: 'Quad.easeIn', onComplete: () => crack.destroy() });
+      sfxAt('boom', gx, gy, this);
+    }
   },
 
   nearFoe(r) {
@@ -18716,7 +18728,19 @@ Object.assign(World.prototype, {
       targets: ring, scale: crit ? .8 : .55, alpha: 0, duration: 140,
       onComplete: () => ring.destroy()
     });
-    this.sparkle(s.x, y, 'spark', crit ? 8 : 4);
+    // Percikan kena sesuai bahan musuh (T324)
+    const t = e.type || '', tex = e.D?.tex || '';
+    if (t.includes('slime') || tex.includes('slime')) {
+      const col = t.includes('gold') ? 'doto' : 'dotg';
+      this.sparkle(s.x, y, col, crit ? 10 : 5);
+    } else if (t.includes('golem') || t.includes('mimic') || tex.includes('golem')) {
+      this.sparkle(s.x, y, 'spark', crit ? 12 : 7);
+      this.sparkle(s.x, y, 'dot', crit ? 6 : 3);
+    } else if (t.includes('skel') || t.includes('ghost') || t.includes('witch') || tex.includes('skel')) {
+      this.sparkle(s.x, y, 'doto', crit ? 8 : 4);
+    } else {
+      this.sparkle(s.x, y, 'spark', crit ? 8 : 4);
+    }
     if (crit) this.cameras.main.shake(60, .0025);
   },
 
@@ -18838,6 +18862,21 @@ Object.assign(World.prototype, {
       }
       const cur = this.pl.angle || 0;
       this.pl.angle = cur + (targetAngle - cur) * Math.min(1, (dl / 1000) * 14);
+    }
+  };
+
+  const shoot0 = W.shootArrow;
+  W.shootArrow = function () {
+    shoot0.apply(this, arguments);
+    const arrow = this.shots[this.shots.length - 1];
+    if (arrow && arrow.kind === 'arrow') {
+      const origX = arrow.gx, origY = arrow.gy;
+      this.time.addEvent({
+        delay: 50, repeat: 8,
+        callback: () => {
+          if (arrow.s?.active && this.sparkle) this.sparkle(arrow.s.x, arrow.s.y, 'dot', 1);
+        }
+      });
     }
   };
 }

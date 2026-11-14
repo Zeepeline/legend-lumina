@@ -111,7 +111,19 @@ Object.assign(World.prototype, {
       targets: ring, scale: crit ? .8 : .55, alpha: 0, duration: 140,
       onComplete: () => ring.destroy()
     });
-    this.sparkle(s.x, y, 'spark', crit ? 8 : 4);
+    // Percikan kena sesuai bahan musuh (T324)
+    const t = e.type || '', tex = e.D?.tex || '';
+    if (t.includes('slime') || tex.includes('slime')) {
+      const col = t.includes('gold') ? 'doto' : 'dotg';
+      this.sparkle(s.x, y, col, crit ? 10 : 5);
+    } else if (t.includes('golem') || t.includes('mimic') || tex.includes('golem')) {
+      this.sparkle(s.x, y, 'spark', crit ? 12 : 7);
+      this.sparkle(s.x, y, 'dot', crit ? 6 : 3);
+    } else if (t.includes('skel') || t.includes('ghost') || t.includes('witch') || tex.includes('skel')) {
+      this.sparkle(s.x, y, 'doto', crit ? 8 : 4);
+    } else {
+      this.sparkle(s.x, y, 'spark', crit ? 8 : 4);
+    }
     if (crit) this.cameras.main.shake(60, .0025);
   },
 
