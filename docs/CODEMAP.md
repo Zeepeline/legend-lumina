@@ -319,9 +319,9 @@ _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, m
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
 `.updInteractHint()` 6 · `.updEnemyBars()` 30 · `.retryBoss()` 56 · `levelUpDetail()` 62 · `.setTimeout()` 68 · `TIPS` 81 · `showTip()` 92 · `.updTips()` 111 · `.updPeaceHud()` 121 · `.updMinimap()` 126 · `.swapWeapon()` 160 · `.updStamina()` 171 · `.tryClimb()` 182 · `.tryGlide()` 208 · `.stopGlide()` 234 · `applyPadOpt()` 240
 
-## src/systems/feel.js (119 baris)
+## src/systems/feel.js (149 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
-`ELITE_RATE` 4 · `DODGERS` 5 · `markOver()` 6 · `dangerEdge()` 12 · `.makeElite()` 18 · `.updFeel()` 30 · `.dangerFrom()` 96 · `.hurtAnim()` 102 · `.hasLineOfSight()` 104
+`ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 110 · `.hurtAnim()` 116 · `.hasLineOfSight()` 118 · `_spawnEnemy` 134
 
 ## src/systems/sound.js (107 baris)
 _Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#911),_

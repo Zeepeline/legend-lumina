@@ -1919,7 +1919,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; berlari lurus di depan pemanah → sebagian panah mengenai jalur larimu.
 
-### [ ] T307. **Musuh lebih tangguh sesuai wilayah & level** — referensi: Dark Souls (tingkat area), Diablo (level monster)
+### [x] T307. **Musuh lebih tangguh sesuai wilayah & level** — referensi: Dark Souls (tingkat area), Diablo (level monster)
 - File: `src/ai/enemies.js` atau `src/scene/world.js` `spawnEnemy` (pilih SATU, catat). Baca dulu: tempat HP/ATK musuh dibuat saat spawn (grep `spawnEnemy(`).
 - Lakukan: saat spawn: pengali `k = 1 + 0,06 × max(0, S.lv − levelWilayah)` (maks 1,4) untuk HP & DEF, dengan `levelWilayah` = konstanta per id wilayah (desa 1, hutan 3, padang 5, sungai 6, rawa 8, salju 10, kota 12; tulis tabelnya di file yang sama). Elite ×1,25 tambahan.
 - Batasan: jangan ubah tabel `ENEMY`; EXP tidak ikut naik.
