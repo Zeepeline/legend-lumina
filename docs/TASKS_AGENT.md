@@ -2004,7 +2004,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; rapal Bola Api ke slime → ledakan jelas.
 
-### [ ] T320. **Nova Es: cincin kristal & serpihan** — referensi: Path of Exile (Frost Nova)
+### [x] T320. **Nova Es: cincin kristal & serpihan** — referensi: Path of Exile (Frost Nova)
 - File: `src/systems/spell_fx.js`. Baca dulu: `nova()` di `src/systems/skills.js` (BACA).
 - Lakukan: bungkus `nova`: cincin biru mengembang + 12 serpihan kristal melesat keluar + kabut dingin di tanah 0,8 s; musuh yang beku diberi lapisan es (tint biru muda berkilau).
 - Jika SUDAH ada → tandai [x] "sudah ada".

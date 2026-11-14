@@ -94,6 +94,18 @@ Object.assign(World.prototype, {
       this.tweens.add({ targets: crack, alpha: 0, duration: 600, ease: 'Quad.easeIn', onComplete: () => crack.destroy() });
       sfxAt('boom', gx, gy, this);
     }
+    if (wt === 'axe' && fin) {
+      const gx = ox + dx * 14, gy = oy + dy * 10;
+      const crack = this.add.graphics().setDepth(gy - 2);
+      crack.lineStyle(2, 0x5a3418, 0.9);
+      crack.beginPath();
+      crack.moveTo(gx - dx * 8, gy - dy * 8); crack.lineTo(gx, gy);
+      crack.lineTo(gx + dx * 12 + dy * 8, gy + dy * 12 - dx * 8);
+      crack.moveTo(gx, gy); crack.lineTo(gx + dx * 14 - dy * 8, gy + dy * 14 + dx * 8);
+      crack.strokePath();
+      this.tweens.add({ targets: crack, alpha: 0, duration: 600, ease: 'Quad.easeIn', onComplete: () => crack.destroy() });
+      sfxAt('boom', gx, gy, this);
+    }
   },
 
   nearFoe(r) {

@@ -77,4 +77,37 @@ Object.assign(World.prototype, {
     });
     return r;
   };
+
+  // Nova Es: cincin kristal & serpihan (T320)
+  const nova0 = W.nova;
+  W.nova = function () {
+    const pl = this.pl;
+    const r = nova0.apply(this, arguments);
+    if (!pl) return r;
+    // Cincin biru mengembang
+    const ring = this.add.graphics().setDepth(pl.y + 3);
+    const ro = { r: 10 };
+    this.tweens.add({
+      targets: ro, r: 72, duration: 380, ease: 'Cubic.easeOut',
+      onUpdate: () => {
+        ring.clear();
+        ring.lineStyle(3, 0x7dd3fc, 1 - ro.r / 72);
+        ring.strokeCircle(pl.x, pl.y - 6, ro.r);
+      },
+      onComplete: () => ring.destroy()
+    });
+    // 12 serpihan kristal melesat keluar
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * 6.28;
+      const shard = this.add.image(pl.x, pl.y - 6, 'doto').setTint(0xbae6fd).setScale(1.2).setDepth(pl.y + 4);
+      this.tweens.add({
+        targets: shard, x: pl.x + Math.cos(a) * 64, y: pl.y - 6 + Math.sin(a) * 48, alpha: 0, scale: 0.4,
+        duration: 350, ease: 'Quad.easeOut', onComplete: () => shard.destroy()
+      });
+    }
+    // Kabut dingin di tanah 0,8 s
+    const fog = this.add.ellipse(pl.x, pl.y - 4, 110, 60, 0xe0f2fe, 0.35).setDepth(pl.y + 1);
+    this.tweens.add({ targets: fog, alpha: 0, duration: 800, ease: 'Sine.easeIn', onComplete: () => fog.destroy() });
+    return r;
+  };
 }
