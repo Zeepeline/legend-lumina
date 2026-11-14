@@ -19121,16 +19121,23 @@ async function sellMenu() {
     };
     const getItemSell = id => Math.round((ITEMS[id].sell || 1) * pouchBonus * getTrendMul(id));
 
-    // Fitur #36: Jual Cepat Barang Sampah (monster drops biasa yang tidak dikunci)
-    const junkList = mats.filter(id => ITEMS[id].junk && !S.locked?.[id]);
+    // Fitur #36 / T237: Jual Semua Bahan Sampah Biasa Sekaligus
+    const isCommonMat = id => {
+      const it = ITEMS[id];
+      if (!it || it.k !== 'mat' || !it.sell) return false;
+      if (typeof rarity === 'function' && rarity(id) > 0) return false;
+      return it.junk || (it.sell <= 12 && !it.quest);
+    };
+    const junkList = mats.filter(id => isCommonMat(id) && !S.locked?.[id]);
     const junkTotal = junkList.reduce((acc, id) => acc + getItemSell(id) * S.inv[id], 0);
+    const junkItemCount = junkList.reduce((acc, id) => acc + S.inv[id], 0);
 
     const trendNames = ['Pekan Ikan Segar (+40%)', 'Pekan Hasil Alam (+50%)', 'Pekan Logam & Permata (+35%)'];
     const curTrend = trendNames[weekIdx];
 
     const items = [];
     if (junkList.length > 0) {
-      items.push({ t: `⚡ Jual Semua Sampah (${junkList.length} jenis)`, r: `+${junkTotal} G` });
+      items.push({ t: `⚡ Jual Semua Bahan Biasa (${junkItemCount} buah)`, r: `+${junkTotal} G` });
     }
     items.push(...mats.map(id => {
       const isLocked = S.locked && S.locked[id];
@@ -19163,8 +19170,8 @@ async function sellMenu() {
     sel = r;
 
     if (junkList.length > 0 && r === 0) {
-      // Eksekusi Jual Semua Sampah
-      if (await ask(`Jual semua sampah (${junkList.length} jenis) seharga ${junkTotal} G?`)) {
+      // Eksekusi Jual Semua Bahan Sampah Biasa
+      if (await ask(`Jual semua bahan biasa (${junkItemCount} buah) seharga ${junkTotal} G?`)) {
         S.buyback = S.buyback || [];
         for (const id of junkList) {
           S.buyback.unshift({ id, n: S.inv[id], price: ITEMS[id].sell });
@@ -19176,7 +19183,7 @@ async function sellMenu() {
         S.st.goldEarned = (S.st.goldEarned || 0) + junkTotal;
         sfx('coin');
         updHud();
-        await say(`Berhasil menjual semua barang sampah! Kamu mendapatkan ${junkTotal} G.`);
+        await say(`Berhasil menjual semua bahan biasa! Kamu mendapatkan ${junkTotal} G.`);
       }
       continue;
     }

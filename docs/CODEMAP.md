@@ -415,9 +415,9 @@ _Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)_
 _Percakapan NPC, toko, bengkel, penginapan_
 `.npcHasQuest()` 4 · `.talkNpc()` 9 · `.offerPet()` 168 · `.shop()` 172 · `.smithy()` 217 · `.innTalk()` 262 · `.talkArenaMaster()` 273 · `.startCityArena()` 310 · `.talkNightMerchant()` 374 · `.talkCourier()` 388 · `.talkAuctioneer()` 422
 
-## src/ui/shop.js (370 baris)
+## src/ui/shop.js (377 baris)
 _Menu beli, jual, tempa_
-`icon` 4 · `ownedEq` 5 · `buyMenu()` 6 · `buybackMenu()` 86 · `sellMenu()` 121 · `forgeMenu()` 223 · `cookMenu()` 245 · `upgCost()` 310 · `upgradeMenu()` 311
+`icon` 4 · `ownedEq` 5 · `buyMenu()` 6 · `buybackMenu()` 86 · `sellMenu()` 121 · `forgeMenu()` 230 · `cookMenu()` 252 · `upgCost()` 317 · `upgradeMenu()` 318
 
 ## src/ui/socket.js (76 baris)
 _Menu Pasang Permata (#23)_

@@ -1435,7 +1435,7 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; beli Ramuan ×5 di toko desa → emas berkurang 5× harga, tas +5.
 
-### [ ] T237. **Toko: jual semua bahan sampah sekaligus**
+### [x] T237. **Toko: jual semua bahan sampah sekaligus**
 - File: `src/ui/shop.js`. Baca dulu: `sellMenu()` (±97–198).
 - Lakukan: tambah pilihan paling atas "Jual semua bahan biasa" yang menjual semua item `k: 'mat'` dengan kelangkaan biasa (lihat `rarity()` di polish.js, BACA saja) setelah konfirmasi `ask('Jual N bahan seharga X G?')`.
 - Batasan: jangan menjual bahan langka/misi/perlengkapan.
