@@ -5940,9 +5940,27 @@ async function ask(q, name, yes = 'Ya', no = 'Tidak') {
   const r = await choose({ items: [{ t: yes }, { t: no }], right: 8, bottom: 62 });
   w.remove(); G.lock--; return r === 0;
 }
+const BANNER_QUEUE = [];
+let BANNER_BUSY = false;
+function processBannerQueue() {
+  if (BANNER_BUSY || !BANNER_QUEUE.length) return;
+  BANNER_BUSY = true;
+  const item = BANNER_QUEUE.shift();
+  const b = win('banner' + (item.big ? ' big' : ''), (item.sub ? `<small>${item.sub}</small>` : '') + item.text);
+  if (item.onCreated) item.onCreated(b);
+  setTimeout(() => b.classList.add('out'), item.ms);
+  setTimeout(() => {
+    b.remove();
+    BANNER_BUSY = false;
+    processBannerQueue();
+  }, item.ms + 600);
+}
 function banner(text, sub, big, ms = 1800) {
-  const b = win('banner' + (big ? ' big' : ''), (sub ? `<small>${sub}</small>` : '') + text);
-  setTimeout(() => b.classList.add('out'), ms); setTimeout(() => b.remove(), ms + 600); return b;
+  let createdEl = null;
+  if (BANNER_QUEUE.length >= 3) BANNER_QUEUE.shift();
+  BANNER_QUEUE.push({ text, sub, big, ms, onCreated: el => { createdEl = el; } });
+  processBannerQueue();
+  return createdEl;
 }
 
 // ---- angka melayang (menempel di dunia) ----

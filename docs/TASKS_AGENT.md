@@ -1449,32 +1449,32 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; buka tas → tab Bahan, urutkan Harga → tutup → buka lagi: tab & urutan sama.
 
-### [ ] T239. **Tas: perbandingan stat saat memilih perlengkapan**
+### [x] T239. **Tas: perbandingan stat saat memilih perlengkapan** (sudah ada: fungsi cmp(id))
 - File: `src/ui/bag.js`. Baca dulu: bagian `openBag()` yang menampilkan detail item senjata/zirah.
 - Lakukan: di detail item perlengkapan, tampilkan selisih terhadap yang sedang dipakai, contoh `ATK 12 (▲+4)` hijau / `(▼-2)` merah. Ambil stat dari `ITEMS[id]` & `ITEMS[S.eq.<slot>]`.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; lihat Pedang Besi saat memakai pedang kayu → tampak ▲.
 
-### [ ] T240. **Tas: pencarian juga mencocokkan deskripsi**
+### [x] T240. **Tas: pencarian juga mencocokkan deskripsi** (sudah ada: mencocokkan ITEMS[id].d)
 - File: `src/ui/bag.js`. Baca dulu: `BAG_SEARCH` dan filter pencarian di `openBag()`.
 - Lakukan: filter pencarian mencocokkan nama ATAU `ITEMS[id].d` (huruf kecil, tanpa aksen).
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; cari kata "HP" → ramuan muncul walau namanya tidak memuat "HP".
 
-### [ ] T241. **Jurnal: misi aktif di atas, misi selesai diredupkan**
+### [x] T241. **Jurnal: misi aktif di atas, misi selesai diredupkan** (sudah ada: .qr.done dengan centang dan redup)
 - File: `src/ui/bag.js`. Baca dulu: `openQuests()` (±224–260).
 - Lakukan: urutkan: misi utama aktif → sampingan aktif → selesai. Misi selesai diberi kelas CSS redup (opacity .55) dan tanda ✓; tambahkan aturan CSS di `styles.css`.
 - Batasan: jangan mengubah teks misi.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; jurnal dengan 1 misi selesai → muncul di bawah & redup.
 
-### [ ] T242. **Dialog: ketuk untuk menampilkan teks penuh**
+### [x] T242. **Dialog: ketuk untuk menampilkan teks penuh** (sudah ada: finish() pada tap pertama, tutup pada tap kedua)
 - File: `src/ui/widgets.js`. Baca dulu: `say()` (baris ±16–35).
 - Lakukan: jika teks diketik huruf demi huruf, ketukan/tombol aksi pertama menampilkan seluruh teks seketika; ketukan kedua baru menutup. Jika `say` tidak mengetik bertahap, tandai sudah ada/tidak relevan.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; dialog panjang Tetua Bram: tekan sekali → teks penuh, tekan lagi → lanjut.
 
-### [ ] T243. **Banner antre (tidak menumpuk)**
+### [x] T243. **Banner antre (tidak menumpuk)**
 - File: `src/ui/widgets.js`. Baca dulu: `banner()` (±82–85).
 - Lakukan: simpan antrean; banner baru menunggu banner sebelumnya selesai (ms + 600) sebelum muncul. Batasi antrean maks 3 (yang lama dibuang).
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
