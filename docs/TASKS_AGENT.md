@@ -1726,7 +1726,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; pukul satu slime dalam kelompok → teman dekatnya ikut bergerak setelah sejenak.
 
-### [ ] T279. **Binatang kabur saat sekarat** — referensi: Monster Hunter, Far Cry
+### [x] T279. **Binatang kabur saat sekarat** — referensi: Monster Hunter, Far Cry
+- Selesai: serigala dan babi hutan yang pertama kali HP-nya < 20% memiliki peluang 40% memunculkan ekspresi '!?' dan kabur menjauh dengan kecepatan +20% selama 1,5 detik sebelum kembali bertarung.
 - File: `src/ai/enemies.js`. Baca dulu: cabang AI serigala/babi hutan (`'lunge'`/`'charge'`; cek `ENEMY.wolf.ai`, `ENEMY.boar.ai`).
 - Lakukan: pertama kali HP < 20%: 40% peluang kabur menjauh 1,5 s (lebih cepat 20%), lalu kembali menyerang. Tampilkan pop kecil "!?".
 - Batasan: hanya serigala & babi hutan.

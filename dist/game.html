@@ -8642,9 +8642,18 @@ Object.assign(World.prototype, {
       }
     }
     e.t -= dt; e.cd -= dt;
-    if (this.atkTok && this.atkTok.has(e)) {
-      e.tokT = (e.tokT || 0) + dt;
-      if (e.tokT > 2.2) { this.atkTok.delete(e); e.tokT = 0; }
+    if (this.atkTok && this.atkTok.has(e)) { e.tokT = (e.tokT || 0) + dt; if (e.tokT > 2.2) { this.atkTok.delete(e); e.tokT = 0; } }
+    // Insting binatang kabur saat sekarat (#T279)
+    if ((e.type === 'wolf' || e.type === 'boar') && !e.fleeChecked && e.hp < e.max * 0.2) {
+      e.fleeChecked = true;
+      if (Math.random() < 0.4) { e.fleeing = 1.5; popWorld(s.x, s.y - s.displayHeight - 6, '!?', 'xp'); }
+    }
+    if (e.fleeing > 0) {
+      e.fleeing -= dt; if (this.atkTok) this.atkTok.delete(e);
+      const fx = s.x - pl.x, fy = s.y - pl.y, fl = Math.hypot(fx, fy) || 1;
+      s.setVelocity((fx / fl) * D.spd * 1.2, (fy / fl) * D.spd * 1.2); s.flipX = fx < 0;
+      if (D.ch) this.charAnim(e);
+      return;
     }
     // Panggilan Bala Bantuan Musuh Terdesak (#9)
     if (!e.calledBackup && !e.boss && (e.type === 'goblin' || e.type === 'wolf' || e.type === 'boar') && e.hp < e.max * 0.35 && aggro) {
@@ -8661,19 +8670,10 @@ Object.assign(World.prototype, {
       return;
     }
     if (e.st === 'calling') { s.setVelocity(0); return; }
-
     // Musuh teralihkan oleh Petasan Pengalih (#410)
     if (e.distracted > 0) {
-      e.distracted -= dt;
-      const dtx = (e.distractTx || s.x) - s.x;
-      const dty = (e.distractTy || s.y) - s.y;
-      const dtl = Math.hypot(dtx, dty) || 1;
-      s.flipX = dtx > 0;
-      if (dtl > 18) {
-        s.setVelocity((dtx / dtl) * D.spd * 0.7, (dty / dtl) * D.spd * 0.7);
-      } else {
-        s.setVelocity(0, 0);
-      }
+      e.distracted -= dt; const dtx = (e.distractTx || s.x) - s.x, dty = (e.distractTy || s.y) - s.y, dtl = Math.hypot(dtx, dty) || 1;
+      s.flipX = dtx > 0; s.setVelocity(dtl > 18 ? (dtx / dtl) * D.spd * 0.7 : 0, dtl > 18 ? (dty / dtl) * D.spd * 0.7 : 0);
       return;
     }
 
