@@ -2272,6 +2272,142 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Lakukan: setelah tugas-tugas geografi di atas: tambahkan §6 "Status" berisi daftar peta yang sudah punya sungai/penanda/alun-alun, dan yang belum beserta alasannya (maks 15 baris).
 - Cek: `npm run check` (0 masalah); dokumen menggambarkan keadaan nyata.
 
+## J. GELOMBANG 9 — kepadatan kota vs desa & permukiman yang HIDUP ala Stoneshard (T362–T384)
+File BARU milik agen: `src/npc/crowd.js`, `src/systems/townlife.js`. Pengecualian kunci: `src/npc/brain.js` untuk tugas yang menyebutnya. Kinerja HP penting: semua yang bergerak/berpartikel hanya aktif dekat kamera. Uji di `?benua=1` siang, sore, malam, & hujan.
+
+### [ ] T362. **Ukur kepadatan permukiman (alat)** — referensi: GEOGRAFI §1
+- File: skrip sementara di `/tmp` (BUKAN di repo). Baca dulu: `mapObjects(M)` & `OBJ` (konsol game).
+- Lakukan: jalankan game (Playwright) lalu hitung per peta `village, kgate, kpasar, kakademi, kbawah`: luas (Mpx² = w×h/1e6), jumlah bangunan (objek dengan `OBJ[t].fade` atau nama rumah/toko), NPC, pohon sebaran, per Mpx². Simpan hasil awal sebagai catatan di bawah tugas ini.
+- Cek: `npm run check` (0 masalah); tabel awal tercatat (desa ±8 bangunan & 14 NPC per Mpx², pasar ±6 & 6).
+
+### [ ] T363. **Kota: kurangi pohon sebaran otomatis** — referensi: Kota bukan hutan (Skyrim, Stoneshard Brynn)
+- File: `src/world/maps/city.js` (peta kgate, kpasar, kakademi, kbawah). Baca dulu: pengaturan sebaran/tepi pohon peta itu (grep `trees`, `border`, `scatter` di city.js & `mapObjects` di `src/world/ground.js` BACA).
+- Lakukan: matikan/kurangi pohon sebaran acak di dalam kota (sisakan tepi luar & taman). Target: pohon ≤ 20% dari total objek peta.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan
+- Cek: `npm run check` (0 masalah); Akademi tidak lagi terlihat seperti hutan.
+
+### [ ] T364. **Distrik Pasar: tambah kios & rumah dagang** — referensi: Pasar Brynn (Stoneshard), Diablo
+- File: `src/world/maps/city.js` peta `kpasar`. Baca dulu: objek bangunan/kios/tenda yang sudah ada di `src/world/objects.js`.
+- Lakukan: tambah bangunan/kios dari jenis yang SUDAH ada sampai ±18–25 bangunan per Mpx² (≈ 35–45 untuk peta 1,92 Mpx²), deret rapat dengan lorong 40–48 px.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan; jangan membuat gambar baru
+- Cek: `npm run check` (0 masalah); ukur ulang dengan alat → masuk target.
+
+### [ ] T365. **Kota Bawah: rumah berdempetan** — referensi: Kota tua, Bloodborne (Yharnam)
+- File: `src/world/maps/city.js` peta `kbawah`. Baca dulu: objek rumah yang ada.
+- Lakukan: tambah rumah sampai ±25–30 per Mpx² (≈ 30–36 untuk 1,2 Mpx²), dempet kiri-kanan dengan gang 32–40 px, pintu tetap tercapai.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan
+- Cek: `npm run check` (0 masalah); ukur ulang → masuk target; tidak ada pintu tertutup.
+
+### [ ] T366. **Gerbang Kota & Akademi: bangunan sesuai fungsi** — referensi: Whiterun (Skyrim)
+- File: `src/world/maps/city.js` peta `kgate`, `kakademi`. Baca dulu: objek bangunan yang ada.
+- Lakukan: kgate → ±12–16 bangunan/Mpx² (pos jaga, penginapan gerbang, gudang); kakademi → ±8–12 bangunan besar/Mpx², tata simetris.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan
+- Cek: `npm run check` (0 masalah); ukur ulang → masuk target.
+
+### [ ] T367. **Warga latar ringan (sistem)** — referensi: Stoneshard (warga kota), Crowd di Assassin's Creed
+- File: file baru `src/npc/crowd.js` (daftarkan di index.html setelah `src/npc/brain.js`). Baca dulu: cara NPC biasa dibuat (`spawnNpc`) & pola `lines` warga kota (`cityLines` di `src/world/maps/city.js`).
+- Lakukan: buat `spawnCrowd(n, area)` yang memunculkan N warga ringan: sprite karakter acak dari `CHARS` (warna acak), berjalan antar titik acak di jalan (`M.paths`) kecepatan 18–28, berhenti 1–4 s, dan saat ditekan A menampilkan 1 kalimat dari `cityLines`. TIDAK memakai otak `brain.js` & tidak disimpan di save. Maks 12 per peta; yang > 500 px dari kamera tidak di-update.
+- Batasan: kinerja HP: buat objek/efek hanya bila dekat kamera (≤ 500 px) & hancurkan saat jauh
+- Cek: `npm run check` (0 masalah); konsol `__game.sc.spawnCrowd(8)` di pasar → 8 warga berjalan; FPS tidak turun jelas.
+
+### [ ] T368. **Pasang warga latar di permukiman** — referensi: Stoneshard, Crimson Desert (permukiman ramai)
+- File: `src/npc/crowd.js` + data peta (`crowd: N` di `src/world/maps/city.js`, `village.js`). Baca dulu: hasil tugas sebelumnya.
+- Lakukan: tambahkan field `crowd` per peta: pasar 12, kota bawah 8, gerbang 6, akademi 5, desa 3; panggil `spawnCrowd(M.crowd)` saat peta dibuat (mode benua: saat wilayah dimasuki, mengikuti `benuaAmbient` sebagai contoh, tanpa mengubah benua_scene.js — bungkus dari crowd.js). Malam hari: jumlah dikali 0,3.
+- Batasan: kinerja HP: buat objek/efek hanya bila dekat kamera (≤ 500 px) & hancurkan saat jauh
+- Cek: `npm run check` (0 masalah); pasar terasa ramai siang, sepi malam.
+
+### [ ] T369. **Ukur ulang & rangkum kepadatan** — referensi: —
+- File: catatan di bawah tugas ini + `docs/GEOGRAFI.md` §6. Baca dulu: alat dari tugas "Ukur kepadatan".
+- Lakukan: ukur lagi semua peta permukiman, bandingkan dengan target (pasar NPC+warga 20–28/Mpx², kota bawah bangunan 25–30/Mpx², desa tetap). Tulis tabel sebelum/sesudah.
+- Cek: `npm run check` (0 masalah); tabel tersimpan.
+
+### [ ] T370. **Sepulang kerja mampir ke kedai** — referensi: Stoneshard (perajin Osbrook minum dulu sebelum tidur)
+- File: `src/npc/brain.js` (pengecualian kunci tugas ini). Baca dulu: `npcBrain` bagian malam (±baris 46–60) & lokasi penginapan desa/kota.
+- Lakukan: jam 18:00–21:00, NPC dewasa non-penjaga punya 50% peluang pergi ke depan/dalam penginapan terdekat (titik meja/bangku penginapan) sebelum pulang; ikon 🍺 kecil saat di sana.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan
+- Cek: `npm run check` (0 masalah); sore hari beberapa warga berkumpul di penginapan.
+
+### [ ] T371. **Toko buka-tutup terlihat** — referensi: Stoneshard (toko ditutup sebelum pulang)
+- File: `src/systems/season.js` (`shopShut`) + `src/world/spawn/*.js` (BACA cara objek dibuat). Baca dulu: `shopShut()` & objek toko di peta.
+- Lakukan: saat toko tutup, tampilkan papan kecil "TUTUP" (teks di objek `sign` sementara atau label Phaser) di depan pintu toko; saat buka, papan hilang dan pedagang berdiri di depan kios.
+- Cek: `npm run check` (0 masalah); jam 22:00 di desa → papan TUTUP di toko.
+
+### [ ] T372. **Jendela menyala di malam hari** — referensi: Stardew, Stoneshard
+- File: file baru `src/systems/townlife.js` (daftarkan setelah `src/systems/ambient.js`). Baca dulu: objek rumah di `src/world/objects.js` (`fade`, `chim`) & cara cahaya malam (`this.lights`) dipakai.
+- Lakukan: malam hari, tiap rumah dekat kamera mendapat 1–2 titik cahaya hangat di posisi jendela (tambahkan ke `this.lights` dengan flag `win`) dan berkedip pelan; padam bertahap setelah 23:00 (acak per rumah).
+- Batasan: kinerja HP: buat objek/efek hanya bila dekat kamera (≤ 500 px) & hancurkan saat jauh
+- Cek: `npm run check` (0 masalah); malam di desa → jendela rumah menyala, lalu satu per satu padam.
+
+### [ ] T373. **Asap & percikan bengkel pandai besi** — referensi: Wanderfolk (bengkel memercikkan bunga api), Stoneshard
+- File: `src/systems/townlife.js`. Baca dulu: objek bengkel/landasan (grep `anvil`, `forge` di objects.js/maps).
+- Lakukan: siang hari saat pandai besi bekerja di dekat landasan: percikan bunga api tiap 1–2 s + suara denting pelan (`sfxAt` di sound.js) bila Arka ≤ 200 px.
+- Batasan: kinerja HP: buat objek/efek hanya bila dekat kamera (≤ 500 px) & hancurkan saat jauh
+- Cek: `npm run check` (0 masalah); dekati bengkel siang hari → terdengar & terlihat menempa.
+
+### [ ] T374. **Hewan desa berkeliaran** — referensi: Stardew, Zelda (ayam Kakariko)
+- File: `src/systems/townlife.js`. Baca dulu: hewan yang ada di `src/systems/ambient.js`/`assets/img/ani_*` & `spawnCritter` (BACA).
+- Lakukan: desa: 3–5 ayam dekat kebun/kandang, 1 anjing yang mengikuti anak-anak, kucing di atap/ambang; kota: burung merpati di alun-alun yang terbang saat Arka berlari. Pakai hewan/tekstur yang sudah ada.
+- Batasan: kinerja HP: buat objek/efek hanya bila dekat kamera (≤ 500 px) & hancurkan saat jauh; jangan menambah gambar baru
+- Cek: `npm run check` (0 masalah); desa & alun-alun kota punya hewan bergerak.
+
+### [ ] T375. **Obrolan antar-NPC terlihat** — referensi: Stoneshard, Crimson Desert (warga mengobrol)
+- File: `src/npc/brain.js` (pengecualian) + `src/npc/npcs.js` (`NPC_BARKS`). Baca dulu: aksi `'chat'` di brain.js.
+- Lakukan: saat dua NPC melakukan `chat`, bergantian tampilkan gelembung pendek (dari `NPC_BARKS` masing-masing) di atas kepala selama 2 s, maks 1 gelembung per pasangan per 6 s, hanya bila ≤ 300 px dari Arka.
+- Batasan: kinerja HP: buat objek/efek hanya bila dekat kamera (≤ 500 px) & hancurkan saat jauh
+- Cek: `npm run check` (0 masalah); dekati dua warga yang mengobrol → gelembung bergantian.
+
+### [ ] T376. **Teriakan pedagang di pasar** — referensi: Pasar (Witcher 3, Stoneshard Brynn)
+- File: `src/systems/townlife.js`. Baca dulu: NPC peran `vendor` (NPC_ROLE di brain.js, BACA) & `cityLines`.
+- Lakukan: pedagang di pasar sesekali (tiap 8–15 s, acak) menampilkan gelembung teriakan dagang ("Roti hangat!", "Kain halus, murah!" — tulis 10 kalimat baru di `townlife.js`) bila Arka ≤ 250 px.
+- Batasan: kinerja HP: buat objek/efek hanya bila dekat kamera (≤ 500 px) & hancurkan saat jauh
+- Cek: `npm run check` (0 masalah); berjalan di pasar → terdengar 'suara' pedagang.
+
+### [ ] T377. **Suara keramaian per zona** — referensi: Witcher 3 (ambience kota), Stardew
+- File: `src/systems/sound.js` (BACA `updSound`) + `src/systems/townlife.js`. Baca dulu: cara suara latar diputar (`sfx`, `sfxAt`, file audio yang ada di `src/core/audio.js`).
+- Lakukan: di pasar & alun-alun siang hari: lapisan dengung keramaian pelan (pakai suara yang ada atau rangkaian bunyi kecil acak), volume naik saat ke tengah pasar; malam diganti jangkrik/suara malam yang ada.
+- Batasan: volume rendah; ikuti pengaturan volume yang ada
+- Cek: `npm run check` (0 masalah); masuk pasar → suara ramai; malam → tenang.
+
+### [ ] T378. **Penjaga berpatroli membawa obor di malam hari** — referensi: Stoneshard (penjaga Osbrook), Skyrim
+- File: `src/npc/brain.js` (pengecualian) + `src/systems/townlife.js`. Baca dulu: peran `guard`/`gate` di brain.js.
+- Lakukan: malam hari penjaga berpatroli di rute jalan utama (titik `M.paths`) dan membawa cahaya kecil yang ikut bergerak (`this.lights` mengikuti sprite).
+- Batasan: kinerja HP: buat objek/efek hanya bila dekat kamera (≤ 500 px) & hancurkan saat jauh
+- Cek: `npm run check` (0 masalah); malam di gerbang kota → cahaya obor bergerak berpatroli.
+
+### [ ] T379. **Reaksi terhadap hujan** — referensi: Stoneshard (cuaca), Zelda
+- File: `src/npc/brain.js` (pengecualian). Baca dulu: variabel cuaca (`this.weather`) & keputusan tujuan NPC.
+- Lakukan: saat hujan: warga dewasa non-penjaga berjalan lebih cepat ke tempat berteduh (pintu rumah/penginapan/atap pasar) atau pulang; anak-anak 30% tetap bermain (gembira). Warga latar berkurang 70%.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan
+- Cek: `npm run check` (0 masalah); hujan turun → jalanan desa menyepi.
+
+### [ ] T380. **Pagi hari: membuka toko & menyapu** — referensi: Stoneshard (rutinitas harian)
+- File: `src/npc/brain.js` (pengecualian). Baca dulu: rutinitas `work` peran vendor/inn/smith.
+- Lakukan: 06:00–08:00: pedagang/pemilik penginapan berdiri di depan pintu dengan ikon 🧹 (menyapu) beberapa detik sebelum mulai `work`; pandai besi menyalakan tungku (asap cerobong mulai keluar).
+- Cek: `npm run check` (0 masalah); datang pagi → terlihat persiapan membuka usaha.
+
+### [ ] T381. **Jejak kehidupan: barang di depan rumah** — referensi: Horizon (detail kecil bercerita), Stardew
+- File: `src/world/maps/village.js`, `city.js`. Baca dulu: objek hiasan yang ada (tong, peti, jemuran/pot/bunga, kayu bakar — grep di objects.js).
+- Lakukan: tiap rumah punya 1–3 benda yang menunjukkan penghuninya (petani: cangkul/jerami; pemburu: kayu & kulit; pedagang: peti barang). Letakkan di samping pintu, bukan di jalan.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan; hanya objek yang sudah ada
+- Cek: `npm run check` (0 masalah); berjalan di desa → setiap rumah punya cerita kecil.
+
+### [ ] T382. **Anak-anak bermain kejar-kejaran** — referensi: Crimson Desert (anak-anak bermain), Zelda
+- File: `src/npc/brain.js` (pengecualian). Baca dulu: aksi `'play'`.
+- Lakukan: jika ≥ 2 NPC anak dalam 120 px, mereka sesekali bermain kejar-kejaran (satu mengejar, lainnya berlari zig-zag 6–10 s) di alun-alun/area terbuka, lalu kembali ke rutinitas.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan
+- Cek: `npm run check` (0 masalah); siang di desa → anak-anak berlarian.
+
+### [ ] T383. **Sorot balik ruang dalam: kehidupan di interior** — referensi: Wanderfolk (bara perapian, lilin kuil)
+- File: `src/systems/townlife.js`. Baca dulu: peta interior di `src/world/maps/interiors.js` (penginapan, kuil, rumah).
+- Lakukan: penginapan: bara kecil melayang dari perapian; kuil: partikel cahaya lilin lembut; rumah: kepulan uap dari panci. Hanya saat di peta interior itu.
+- Batasan: kinerja HP: buat objek/efek hanya bila dekat kamera (≤ 500 px) & hancurkan saat jauh
+- Cek: `npm run check` (0 masalah); masuk penginapan → perapian terasa hidup.
+
+### [ ] T384. **Rangkum suasana hidup** — referensi: —
+- File: `docs/NPC_RULES.md` (bagian baru di akhir, maks 15 baris). Baca dulu: —.
+- Lakukan: catat sistem kehidupan kota yang baru (warga latar, kedai sore, jendela malam, hujan, pagi, patroli obor) dan file tempatnya, agar agen berikutnya tidak membuat ulang.
+- Cek: `npm run check` (0 masalah); dokumen terbarui.
+
 ---
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
 memasang BESTIARY_TEXT ke layar Bestiari, buang petak objek jauh di mode benua, hapus mode lama. Rincian: `docs/GAME_DESIGN.md` (akhir) & `docs/HANDOFF_OPENWORLD.md`.
