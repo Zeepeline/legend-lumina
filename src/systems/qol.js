@@ -99,7 +99,17 @@ Object.assign(World.prototype, {
     const M = this.M; let c = document.getElementById('mini');
     const hasModal = document.querySelector('.win, .dlg') != null;
     if (!OPT.mini || G.title || M.indoor || G.lock || hasModal) { if (c) c.style.display = 'none'; return; }
-    if (!c) { c = document.createElement('canvas'); c.id = 'mini'; c.width = 96; c.height = 96; UI.appendChild(c); c.onpointerdown = ev => { ev.stopPropagation(); if (!G.lock) openMap(this); }; }
+    if (!c) {
+      c = document.createElement('canvas'); c.id = 'mini'; c.width = 96; c.height = 96;
+      try { if (localStorage.getItem('lumina_mini') === '1') c.classList.add('big'); } catch (_) {}
+      UI.appendChild(c);
+      c.onpointerdown = ev => {
+        ev.stopPropagation();
+        const big = c.classList.toggle('big');
+        try { localStorage.setItem('lumina_mini', big ? '1' : '0'); } catch (_) {}
+        sfx('cur');
+      };
+    }
     c.style.display = '';
     this.miniT = (this.miniT || 0) - dt; if (this.miniT > 0) return; this.miniT = .25;
     const W = 96, k = W / Math.max(M.w, M.h), ox = (W - M.w * k) / 2, oy = (W - M.h * k) / 2, x = c.getContext('2d');

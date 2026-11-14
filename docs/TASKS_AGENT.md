@@ -1589,7 +1589,8 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; klik tautan → tips tidak muncul lagi setelah muat ulang.
 
-### [ ] T261. **Peta mini: ketuk untuk memperbesar**
+### [x] T261. **Peta mini: ketuk untuk memperbesar**
+- Selesai: ketuk canvas `#mini` mengalihkan kelas `.big` (104x104px), memainkan sfx cur, dan menyimpan pilihan ke `localStorage.lumina_mini`.
 - File: `src/systems/qol.js` + `styles.css`. Baca dulu: `updMinimap()` (±84–107) dan elemen DOM peta mini.
 - Lakukan: ketuk peta mini → beralih ukuran normal/2× (kelas CSS `big`), simpan pilihan di `localStorage.lumina_mini`.
 - Batasan: jangan ubah cara menggambar isi peta mini.

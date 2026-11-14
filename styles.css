@@ -180,6 +180,7 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 @keyframes tipin{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}
 /* peta mini */
 #mini{position:absolute;left:4px;top:44px;width:52px;height:52px;border:1px solid #e8c050;border-radius:4px;background:rgba(20,16,30,.55);z-index:1;pointer-events:auto;image-rendering:pixelated}
+#mini.big{width:104px;height:104px;z-index:10;box-shadow:0 3px 8px rgba(0,0,0,.5)}
 /* ukuran & transparansi tombol (#74) */
 #pad .btn{scale:var(--bs,1);opacity:var(--ba,1)}
 /* penanda bahaya dari luar layar */
