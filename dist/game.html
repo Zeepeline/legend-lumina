@@ -5653,8 +5653,20 @@ MAPS.swamp = {
   paths: [[0, 480, 220, 480, 11], [640, 0, 640, 160, 14], [640, 160, 420, 300, 13], [420, 300, 300, 520, 13], [640, 160, 880, 320, 13], [880, 320, 960, 560, 13],
     [300, 520, 560, 700, 13], [960, 560, 700, 720, 13], [560, 700, 640, 820, 13], [700, 720, 640, 820, 13]],
   discs: [[60, 480, 40], [640, 840, 92], [300, 520, 46], [960, 560, 46], [640, 150, 34]],
-  ponds: [[620, 440, 120, 66], [180, 770, 110, 60], [1080, 800, 120, 64], [1090, 200, 90, 50], [190, 200, 90, 50]],
-  objs: [['stele', 330, 504, { lore: 'prasasti_rawa' }], ['totem', 480, 290], ['lotuspad', 340, 530], ['lotuspad', 660, 480], ['sign', 676, 130, { text: 'RAWA SENJA\nKabut di sini bukan kabut biasa...' }], ['rock', 560, 300], ['log', 760, 600], ['stump', 380, 660], ['mush', 500, 560], ['mush', 820, 480], ['rock', 880, 700], ['bones', 600, 780], ['bones', 700, 800]],
+  ponds: [
+    [620, 440, 120, 66], [180, 770, 110, 60], [1080, 800, 120, 64], [1090, 200, 90, 50], [190, 200, 90, 50],
+    // Muara Delta Sungai Senja (T343): masuk dari barat (0, 600) memecah ke utara (620, 440) dan selatan (180, 770)
+    [0, 600, 30, 24],
+    // Cabang selatan ke kolam (180, 770)
+    [50, 640, 26, 22], [100, 680, 26, 22], [140, 720, 26, 22],
+    // Cabang utara ke kolam tengah (620, 440)
+    [60, 580, 26, 22], [120, 560, 26, 22], [180, 545, 26, 22], [240, 530, 26, 22],
+    // Celah arungan di (300, 520)
+    [370, 490, 28, 24], [440, 465, 30, 24], [510, 450, 32, 26],
+  ],
+  objs: [['stele', 330, 504, { lore: 'prasasti_rawa' }], ['totem', 480, 290], ['lotuspad', 340, 530], ['lotuspad', 660, 480], ['sign', 676, 130, { text: 'RAWA SENJA\nKabut di sini bukan kabut biasa...' }], ['rock', 560, 300], ['log', 760, 600], ['stump', 380, 660], ['mush', 500, 560], ['mush', 820, 480], ['rock', 880, 700], ['bones', 600, 780], ['bones', 700, 800],
+    // Batu loncatan arungan delta rawa (T343)
+    ['pebbles', 300, 520], ['pebbles', 310, 525]],
   chests: [{ id: 's1', x: 300, y: 516, item: 'hipotion2' }, { id: 's2', x: 960, y: 556, item: 'ether3' }, { id: 's3', x: 640, y: 884, item: 'mring', needFlag: 'witch' }],
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 450], [0, 510, 40, 450], [1240, 0, 40, 960], [0, 930, 1280, 30]],
   exits: [{ x: 0, y: 450, w: 12, h: 60, to: 'river', tx: 2540, ty: 480, dir: 'left', label: 'Jalur Sungai' }, { x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }],
@@ -21581,7 +21593,10 @@ const PERALIHAN = [
   ['forest', 'deepwood', 'forest', 'Rimba Peralihan'], ['forest', 'river', 'forest', 'Hulu Sungai Senja', [
     [0, 586, 32, 18], [40, 588, 34, 20], [80, 590, 34, 22], [120, 592, 34, 22], [160, 594, 34, 22],
     [200, 596, 34, 22], [240, 598, 34, 22], [280, 600, 34, 22], [320, 600, 34, 22], [360, 600, 34, 20], [400, 600, 32, 18],
-  ]], ['river', 'swamp', 'swamp', 'Muara Rawa'],
+  ]], ['river', 'swamp', 'swamp', 'Muara Rawa', [
+    [0, 600, 36, 24], [50, 600, 36, 24], [100, 600, 36, 24], [150, 600, 36, 24], [200, 600, 36, 24],
+    [250, 600, 36, 24], [300, 600, 36, 24], [350, 600, 36, 24], [400, 600, 36, 24],
+  ]],
 ];
 const SIDE_OF = (M, e) => e.x < 20 ? 'W' : e.x + e.w > M.w - 20 ? 'E' : e.y < 20 ? 'N' : e.y + e.h > M.h - 20 ? 'S' : null;
 // monster peralihan: jenis dari kedua wilayah yang diapit, ditaruh di samping jalan (tidak di jalan, tidak di pintu)

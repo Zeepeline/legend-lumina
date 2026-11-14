@@ -111,7 +111,7 @@ _Peta: Padang Angin_
 _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 
 
-## src/world/maps/swamp.js (26 baris)
+## src/world/maps/swamp.js (38 baris)
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
@@ -455,9 +455,9 @@ _Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)_
 _Layar judul_
 `titleScreen()` 4
 
-## src/world/layout.js (125 baris)
+## src/world/layout.js (128 baris)
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
-`exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 29 · `plEnemies()` 31 · `NEIGH` 80
+`exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 32 · `plEnemies()` 34 · `NEIGH` 83
 
 ## src/gfx/gptassets.js (36 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_

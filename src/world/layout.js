@@ -24,7 +24,10 @@ const PERALIHAN = [
   ['forest', 'deepwood', 'forest', 'Rimba Peralihan'], ['forest', 'river', 'forest', 'Hulu Sungai Senja', [
     [0, 586, 32, 18], [40, 588, 34, 20], [80, 590, 34, 22], [120, 592, 34, 22], [160, 594, 34, 22],
     [200, 596, 34, 22], [240, 598, 34, 22], [280, 600, 34, 22], [320, 600, 34, 22], [360, 600, 34, 20], [400, 600, 32, 18],
-  ]], ['river', 'swamp', 'swamp', 'Muara Rawa'],
+  ]], ['river', 'swamp', 'swamp', 'Muara Rawa', [
+    [0, 600, 36, 24], [50, 600, 36, 24], [100, 600, 36, 24], [150, 600, 36, 24], [200, 600, 36, 24],
+    [250, 600, 36, 24], [300, 600, 36, 24], [350, 600, 36, 24], [400, 600, 36, 24],
+  ]],
 ];
 const SIDE_OF = (M, e) => e.x < 20 ? 'W' : e.x + e.w > M.w - 20 ? 'E' : e.y < 20 ? 'N' : e.y + e.h > M.h - 20 ? 'S' : null;
 // monster peralihan: jenis dari kedua wilayah yang diapit, ditaruh di samping jalan (tidak di jalan, tidak di pintu)

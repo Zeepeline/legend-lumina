@@ -2161,7 +2161,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); alat cek air: tersambung dua sisi.
 
-### [ ] T343. **Muara: Sungai Senja ke Rawa Senja + delta** — referensi: GEOGRAFI §3 (delta = satu-satunya percabangan)
+### [x] T343. **Muara: Sungai Senja ke Rawa Senja + delta** — referensi: GEOGRAFI §3 (delta = satu-satunya percabangan)
 - File: `src/world/layout.js` entri `pl_river_swamp` + `src/world/maps/swamp.js` (`ponds`). Baca dulu: `docs/GEOGRAFI.md` §3; `WORLD_POS.swamp` = [7552, 4112].
 - Lakukan: peralihan: aliran di y global ≈ 4712. Rawa: masuk dari tepi kiri di y lokal ≈ 600 lalu MEMECAH menjadi 2–3 alur sempit yang berakhir di genangan rawa yang sudah ada.
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
