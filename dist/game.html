@@ -8624,8 +8624,15 @@ Object.assign(World.prototype, {
     if (this.enemyStatus(e, dt)) return;
 
     const dx = pl.x - s.x, dy = pl.y - s.y, d = Math.hypot(dx, dy) || 1;
-    const aggro = !pl.dead && d < (e.boss ? 420 : 120);
     const hx = e.home.x - s.x, hy = e.home.y - s.y, hd = Math.hypot(hx, hy) || 1;
+    if (!e.boss && (hd > 280 || (e.leash && hd > 18) || (d > 320 && hd > 60))) {
+      e.leash = true; if (this.atkTok) this.atkTok.delete(e);
+      s.setVelocity((hx / hd) * D.spd * 1.2, (hy / hd) * D.spd * 1.2); s.flipX = hx > 0;
+      if (D.ch) this.charAnim(e);
+      return;
+    }
+    if (e.leash) { e.leash = false; e.hp = e.max; popWorld(s.x, s.y - 14, 'pulih!', 'heal'); }
+    const aggro = !pl.dead && d < (e.boss ? 420 : 120);
     e.t -= dt; e.cd -= dt;
     if (this.atkTok && this.atkTok.has(e)) {
       e.tokT = (e.tokT || 0) + dt;

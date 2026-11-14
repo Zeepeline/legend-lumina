@@ -1711,7 +1711,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; tebas slime di tepi jangkauan berulang kali → tiap ayunan maks 1 angka damage per musuh.
 
-### [ ] T277. **Musuh kembali ke posisi asal (leash)** — referensi: World of Warcraft, Dark Souls
+### [x] T277. **Musuh kembali ke posisi asal (leash)** — referensi: World of Warcraft, Dark Souls
+- Selesai: musuh biasa non-boss yang mengejar > 280px dari `e.home` atau pemain berjarak > 320px memasuki mode `e.leash`, melepaskan token serang, berjalan pulang ke titik asal tanpa menyerang, dan memulihkan HP ke penuh setibanya di rumah.
 - File: `src/ai/enemies.js`. Baca dulu: awal `updEnemy()` & tempat posisi awal musuh disimpan (grep `home` atau `hx`).
 - Lakukan: jika musuh mengejar > 280 px dari posisi asalnya atau pemain > 320 px darinya, musuh berhenti mengejar, berjalan pulang, dan memulihkan HP ke penuh dalam 2 s setelah tiba. Selama pulang ia tidak menyerang.
 - Batasan: boss tidak terpengaruh.
