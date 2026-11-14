@@ -200,11 +200,25 @@ Object.assign(OBJ_SPAWN, {
   windmill(s, x, y, opt, d, type) {
     { const b = this.add.image(x, y - 70, 'blades').setDepth(y + 1); this.tweens.add({ targets: b, angle: 360, duration: 7000, repeat: -1 }); this.fades.push({ s: b, l: x - 36, r: x + 36, t: y - 110, b: y - 22 }); }
   },
-  treeA(s, x, y) {
-    if (this.anims.exists('treeA_sway')) {
-      s.play({ key: 'treeA_sway', startFrame: Math.abs(Math.round(x * 7 + y * 13)) % 8 });
+  treeA(s, x, y, opt, d, type) {
+    const k = (d && d.key) || type || 'i_treeA';
+    const animKey = k === 'treeAd' ? 'treeAd_sway' : (k === 'treeSn' ? 'treeSn_sway' : 'treeA_sway');
+    if (this.anims.exists(animKey)) {
+      s.play({ key: animKey, startFrame: Math.abs(Math.round(x * 7 + y * 13)) % 8 });
       s.anims.timeScale = 0.85 + (Math.abs(Math.sin(x * 12.9898 + y * 78.233)) * 0.3);
     }
+  },
+  goblin_torch(s, x, y) {
+    this.lights.push({ x, y: y - 24, big: 1 });
+  },
+  goblin_cauldron(s, x, y) {
+    this.lights.push({ x, y: y - 10 });
+    this.inter.push({
+      x, y: y + 2, r: 24,
+      fn: async () => {
+        await say('Kuali besar berisi ramuan misterius bangsa goblin yang mendidih kehijauan.');
+      }
+    });
   },
   cryst(s, x, y, opt, d, type) {
     this.lights.push({ x, y: y - 8 });
@@ -273,5 +287,9 @@ OBJ_SPAWN.stele = OBJ_SPAWN.sign;
 OBJ_SPAWN.bloom = OBJ_SPAWN.pot;
 OBJ_SPAWN.apple2 = OBJ_SPAWN.apple1;
 OBJ_SPAWN.orange1 = OBJ_SPAWN.apple1;
+OBJ_SPAWN.treeAd = OBJ_SPAWN.treeA;
+OBJ_SPAWN.treeBd = OBJ_SPAWN.treeA;
+OBJ_SPAWN.treeSn = OBJ_SPAWN.treeA;
+OBJ_SPAWN.treeSw = OBJ_SPAWN.treeA;
 OBJ_SPAWN.benchWood = OBJ_SPAWN.bench;
 OBJ_SPAWN.crystp = OBJ_SPAWN.cryst;

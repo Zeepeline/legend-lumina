@@ -72,4 +72,20 @@ function applyGptMonsters(sc) {
     regWE('wolf_elite_hd_mv', 7, 13, 10, -1);
     if (ENEMY.bounty_wolf) { ENEMY.bounty_wolf.tex = 'wolf_elite_hd'; ENEMY.bounty_wolf.scale = 0.56; }
   }
+  const ghd = IMGEL.mon_goblin_hd;
+  if (ghd) {
+    if (!T.exists('goblin_hd')) sc.textures.addSpriteSheet('goblin_hd', ghd, { frameWidth: 120, frameHeight: 84 });
+    const regG = (k, st, ed, fps, r) => {
+      if (!A.exists(k)) A.create({ key: k, frames: A.generateFrameNumbers('goblin_hd', { start: st, end: ed }), frameRate: fps, repeat: r });
+    };
+    regG('goblin_hd_idle', 0, 9, 8, -1);
+    regG('goblin_hd_walk', 10, 19, 10, -1);
+    regG('goblin_hd_run', 20, 29, 12, -1);
+    regG('goblin_hd_bite', 30, 33, 10, 0);
+    regG('goblin_hd_slash', 40, 45, 11, 0);
+    regG('goblin_hd_hurt', 50, 55, 10, 0);
+    regG('goblin_hd_die', 60, 64, 8, 0);
+    regG('goblin_hd_mv', 10, 19, 10, -1);
+    if (ENEMY.goblin) { ENEMY.goblin.tex = 'goblin_hd'; ENEMY.goblin.scale = 0.46; delete ENEMY.goblin.ch; }
+  }
 }

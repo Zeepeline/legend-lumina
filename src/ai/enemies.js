@@ -164,24 +164,42 @@ Object.assign(World.prototype, {
         if (aggro && e.shootT <= 0 && d < 160) { e.shootT = 2.4; this.eShoot(e, 'seed', [-.32, 0, .32], D.atk); this.tweens.add({ targets: s, scaleY: 1.15, duration: 100, yoyo: true }); }
         s.anims.timeScale = aggro ? 1.6 : .6; break;
       case 'shaman': {
-        // Dukun Goblin (#183): Menjaga jarak dan memulihkan HP kawan
+        // Dukun Goblin (#183): Menjaga jarak, merapal sihir, memulihkan HP kawan
+        if (e.st === 'cast') {
+          s.setVelocity(0);
+          if (e.t <= 0) {
+            e.st = 'idle';
+            if (s.anims) s.play('goblin_shaman_idle', true);
+          }
+          break;
+        }
         if (aggro && d < 65) s.setVelocity(-dx / d * D.spd, -dy / d * D.spd);
         else if (aggro && d > 120) s.setVelocity(dx / d * D.spd, dy / d * D.spd);
         else wander(D.spd * .4);
         e.healT = (e.healT || 3.5) - dt;
         if (e.healT <= 0) {
           e.healT = 4.0;
-          const allies = this.enemies.filter(o => o.hp > 0 && Math.hypot(s.x - o.spr.x, s.y - o.spr.y) < 110);
+          const allies = this.enemies.filter(o => o.hp > 0 && Math.hypot(s.x - o.spr.x, s.y - o.spr.y) < 120);
           if (allies.length > 0) {
             sfxAt('heal', s.x, s.y, this);
             this.sparkle(s.x, s.y - 12, 'dotg', 10);
+            e.st = 'cast'; e.t = 0.55;
+            if (s.anims && s.anims.animationManager.exists('goblin_shaman_cast')) s.play('goblin_shaman_cast', true);
             for (const al of allies) {
-              al.hp = Math.min(al.max, al.hp + 15);
-              popWorld(al.spr.x, al.spr.y - 20, '+15 HP', 'heal');
+              al.hp = Math.min(al.max, al.hp + 18);
+              popWorld(al.spr.x, al.spr.y - 20, '+18 HP', 'heal');
             }
           }
         }
         if (D.ch) this.charAnim(e);
+        else {
+          const vx = s.body.velocity.x, vy = s.body.velocity.y;
+          if (Math.abs(vx) > 3) s.flipX = vx > 0;
+          if (s.anims && e.st !== 'cast') {
+            const mv = Math.hypot(vx, vy) > 5;
+            s.play(mv ? 'goblin_shaman_walk' : 'goblin_shaman_idle', true);
+          }
+        }
         break;
       }
       case 'walk':
@@ -199,20 +217,25 @@ Object.assign(World.prototype, {
         if (D.side) s.flipX = s.body.velocity.x > 0; break;
       case 'lunge': {
         const isWolfHd = D.tex === 'wolf_hd' || D.tex === 'wolf_elite_hd';
+        const isGoblinHd = D.tex === 'goblin_hd';
+        const isHd = isWolfHd || isGoblinHd;
         if (e.st === 'idle' || e.st === 'chase') {
           if (aggro) {
             e.st = 'chase'; s.setVelocity(dx / d * D.spd, dy / d * D.spd);
-            if (isWolfHd && s.anims) s.play(D.tex + '_run', true);
+            if (isHd && s.anims) s.play(D.tex + '_run', true);
             if (d < (D.side ? 48 : 34) && e.t <= 0) {
               e.st = 'wind'; e.t = D.side ? .28 : .42; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
               if (isWolfHd && s.anims) {
                 e.atkAnim = D.tex + (Math.random() < 0.5 ? '_bite' : '_pounce');
                 s.play(e.atkAnim, true);
+              } else if (isGoblinHd && s.anims) {
+                e.atkAnim = D.tex + (Math.random() < 0.5 ? '_slash' : '_bite');
+                s.play(e.atkAnim, true);
               } else s.setTint(0xffa07a);
             }
           } else {
             wander(28);
-            if (isWolfHd && s.anims) {
+            if (isHd && s.anims) {
               const mv = Math.hypot(s.body.velocity.x, s.body.velocity.y) > 4;
               s.play(D.tex + (mv ? '_walk' : '_idle'), true);
             }
@@ -222,7 +245,7 @@ Object.assign(World.prototype, {
         } else if (e.st === 'lunge') {
           if (e.t <= 0) {
             e.st = 'rec'; e.t = .5; s.setVelocity(0);
-            if (isWolfHd && s.anims) s.play(D.tex + '_idle', true);
+            if (isHd && s.anims) s.play(D.tex + '_idle', true);
           }
         } else if (e.st === 'rec') {
           if (e.t <= 0) { e.st = 'chase'; e.t = .35; }
