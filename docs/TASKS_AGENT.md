@@ -2125,7 +2125,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); jalan utama padang tetap bisa dilalui lewat arungan; bangunan tidak terendam.
 
-### [ ] T337. **Sungai Senja 4: Dataran Senja (peralihan padang→rawa)** — referensi: GEOGRAFI §3
+### [x] T337. **Sungai Senja 4: Dataran Senja (peralihan padang→rawa)** — referensi: GEOGRAFI §3
 - File: `src/world/layout.js` entri `pl_meadow_swamp` (`ponds`). Baca dulu: hasil tugas "Peralihan bisa punya air".
 - Lakukan: aliran dari tepi atas ke tepi bawah di x global ≈ 5600 (x lokal = 5600 − x kiri peta peralihan).
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar

@@ -21538,7 +21538,10 @@ const PERALIHAN = [
   ['meadow', 'snow', 'meadow', 'Lereng Puncak Beku', [
     [736, 0, 28, 28], [734, 40, 28, 28], [732, 80, 30, 30], [730, 120, 30, 30], [728, 160, 32, 32],
     [728, 240, 32, 32], [726, 280, 34, 34], [726, 320, 34, 34], [726, 360, 34, 34], [726, 400, 34, 34],
-  ]], ['meadow', 'swamp', 'meadow', 'Dataran Senja'],
+  ]], ['meadow', 'swamp', 'meadow', 'Dataran Senja', [
+    [1176, 0, 42, 38], [1174, 50, 44, 40], [1172, 100, 44, 40], [1170, 150, 44, 40], [1170, 190, 40, 36],
+    [1172, 290, 40, 36], [1174, 330, 44, 40], [1176, 380, 44, 40], [1176, 430, 44, 40], [1176, 472, 44, 40],
+  ]],
   ['forest', 'deepwood', 'forest', 'Rimba Peralihan'], ['forest', 'river', 'forest', 'Hulu Sungai Senja'], ['river', 'swamp', 'swamp', 'Muara Rawa'],
 ];
 const SIDE_OF = (M, e) => e.x < 20 ? 'W' : e.x + e.w > M.w - 20 ? 'E' : e.y < 20 ? 'N' : e.y + e.h > M.h - 20 ? 'S' : null;
