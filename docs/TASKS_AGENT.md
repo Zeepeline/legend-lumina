@@ -2143,7 +2143,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); dua aliran bertemu jadi satu, tidak ada percabangan.
 
-### [ ] T340. **Anak Sungai Cermin: keluar dari Danau Cermin** — referensi: GEOGRAFI §3
+### [x] T340. **Anak Sungai Cermin: keluar dari Danau Cermin** — referensi: GEOGRAFI §3
 - File: `src/world/maps/lake.js` (`ponds`). Baca dulu: `docs/GEOGRAFI.md` §3; `WORLD_POS.lake` = [1600, 3090], danau = elips (560, 500, 330, 210).
 - Lakukan: aliran keluar dari sisi tenggara danau menuju tepi bawah di x lokal ≈ 1332 (global 2932). rx/ry 22–28. Arungan di jalan.
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar

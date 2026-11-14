@@ -119,7 +119,7 @@ _Peta: Rawa Senja (bab 2, Morgath)_
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 
-## src/world/maps/lake.js (26 baris)
+## src/world/maps/lake.js (36 baris)
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
