@@ -1650,6 +1650,191 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; lihat di HP dengan kecerahan tinggi.
 
+## G. GELOMBANG 6 — tempur & pengalaman melawan monster ala RPG top (T270–T297)
+Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Pengecualian kunci sama seperti gelombang 5: boleh mengubah file yang disebut di tugasnya (combat.js, feel.js, polish.js, ai/enemies.js, ai/bosses.js, sound.js). Uji di mode benua: `?benua=1`.
+
+### [ ] T270. **Token serangan: maks 2 musuh menyerang bersamaan** — referensi: Batman Arkham, Assassin's Creed, Hades
+- File: `src/ai/enemies.js`. Baca dulu: `updEnemy()` cabang `'walk'`, `'lunge'`, `'charge'` (cari tempat musuh mulai ancang-ancang/menyerang).
+- Lakukan: buat `this.atkTok = this.atkTok || new Set()`. Sebelum musuh jarak dekat MULAI ancang-ancang, wajib `this.atkTok.size < 2` lalu `add(e)`; lepas (`delete(e)`) saat serangan selesai, musuh mati, atau lebih dari 2 s. Musuh tanpa token mengitari pemain pada jarak ±48 px.
+- Batasan: musuh jarak jauh & boss tidak memakai token.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; lawan 5 slime/serigala sekaligus → paling banyak 2 yang menyerang bersamaan, sisanya berputar.
+
+### [ ] T271. **Ancang-ancang konsisten di semua serangan jarak dekat** — referensi: Dark Souls, Hades (telegraf jelas)
+- File: `src/ai/enemies.js` (+ `src/systems/feel.js` BACA saja). Baca dulu: `markOver()` & `dangerFrom()` di feel.js; cabang `'lunge'`, `'charge'`, `'golem'`, `'elite_brute'` di updEnemy.
+- Lakukan: pastikan setiap cabang itu menampilkan tanda "!" (`markOver`) minimal 0,35 s sebelum damage, dan musuh berkedip/berhenti sejenak saat ancang-ancang. Catat cabang yang sebelumnya tanpa tanda.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; lawan serigala, babi hutan, golem → selalu ada "!" sebelum serangan.
+
+### [ ] T272. **Lingkaran bahaya untuk serangan area** — referensi: Hades, Monster Hunter
+- File: `src/systems/combat.js`. Baca dulu: `shockwave()` (±310) dan pemanggilnya (grep `shockwave(`).
+- Lakukan: 0,5 s sebelum damage area, gambar elips merah transparan seukuran jangkauannya di tanah (depth di bawah karakter) yang mengisi dari tengah; damage terjadi saat terisi penuh.
+- Batasan: jangan ubah damage/jangkauan.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; golem menghantam tanah → lingkaran merah muncul lebih dulu, bisa dihindari.
+
+### [ ] T273. **Ketahanan (poise) musuh besar** — referensi: Dark Souls, Elden Ring
+- File: `src/systems/combat.js`. Baca dulu: `hitEnemy()` (±144–175), bagian knockback/sentak.
+- Lakukan: musuh dengan `e.D.r >= 12` atau elite punya `e.poise` (awal = 3 untuk besar, 5 untuk elite/boss). Tiap pukulan mengurangi 1; selama poise > 0 musuh TIDAK tersentak/terdorong. Saat 0 → terhuyung 0,8 s (berhenti, berkedip), damage +25% selama terhuyung, lalu poise penuh lagi.
+- Batasan: slime & musuh kecil tetap tersentak tiap pukulan.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; golem: 3 pukulan tidak tersentak, pukulan ke-3 membuatnya terhuyung.
+
+### [ ] T274. **Dorongan sesuai berat musuh & senjata** — referensi: Zelda: A Link to the Past, Hyper Light Drifter
+- File: `src/systems/combat.js`. Baca dulu: `hitEnemy()` bagian dorongan (knockback).
+- Lakukan: skala dorongan = dasar × (kapak 1,4 / pedang 1 / tombak 1,15) ÷ (1 + (e.D.r − 8) / 10), minimal 0,3×. Pukulan ke-3 kombo ×1,3.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; slime terlempar jauh, golem hampir tidak bergeser; kapak lebih kuat dari pedang.
+
+### [ ] T275. **Hitstop bertingkat** — referensi: Hades, Monster Hunter
+- File: `src/systems/combat.js`. Baca dulu: `hitStop()` (±139) & pemanggilnya di `hitEnemy`/`killEnemy`.
+- Lakukan: durasi: pukulan biasa 35 ms, akhir kombo 60 ms, kritikal 80 ms, membunuh 90 ms. Jangan menumpuk: jika hitstop masih berjalan, ambil yang terbesar.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; rasakan: kill & kritikal terasa 'berat', pukulan biasa tetap lincah.
+
+### [ ] T276. **Satu ayunan = satu kena per musuh** — referensi: Hollow Knight
+- File: `src/systems/combat.js`. Baca dulu: `attack()` (±12–88) bagian deteksi kena.
+- Lakukan: beri tiap ayunan id (`this.swingId++`); simpan `e.lastSwing`; jika sama, lewati. Cegah satu tebasan mengenai musuh yang sama dua kali.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; tebas slime di tepi jangkauan berulang kali → tiap ayunan maks 1 angka damage per musuh.
+
+### [ ] T277. **Musuh kembali ke posisi asal (leash)** — referensi: World of Warcraft, Dark Souls
+- File: `src/ai/enemies.js`. Baca dulu: awal `updEnemy()` & tempat posisi awal musuh disimpan (grep `home` atau `hx`).
+- Lakukan: jika musuh mengejar > 280 px dari posisi asalnya atau pemain > 320 px darinya, musuh berhenti mengejar, berjalan pulang, dan memulihkan HP ke penuh dalam 2 s setelah tiba. Selama pulang ia tidak menyerang.
+- Batasan: boss tidak terpengaruh.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; pancing serigala jauh lalu lari → serigala pulang, HP pulih.
+
+### [ ] T278. **Aggro berkelompok** — referensi: Diablo (pack)
+- File: `src/ai/enemies.js`. Baca dulu: bagian saat musuh mulai mengejar (status aggro; grep `aggro`).
+- Lakukan: saat satu musuh mulai mengejar, musuh sejenis dalam 90 px yang masih diam ikut mengejar setelah jeda 0,3 s (sekali saja).
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; pukul satu slime dalam kelompok → teman dekatnya ikut bergerak setelah sejenak.
+
+### [ ] T279. **Binatang kabur saat sekarat** — referensi: Monster Hunter, Far Cry
+- File: `src/ai/enemies.js`. Baca dulu: cabang AI serigala/babi hutan (`'lunge'`/`'charge'`; cek `ENEMY.wolf.ai`, `ENEMY.boar.ai`).
+- Lakukan: pertama kali HP < 20%: 40% peluang kabur menjauh 1,5 s (lebih cepat 20%), lalu kembali menyerang. Tampilkan pop kecil "!?".
+- Batasan: hanya serigala & babi hutan.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; lawan serigala sampai sekarat → kadang kabur sebentar.
+
+### [ ] T280. **Penembak menjaga jarak & bergeser** — referensi: Diablo (pemanah), Enter the Gungeon
+- File: `src/ai/enemies.js`. Baca dulu: cabang `'shoot'` dan `'turret'`.
+- Lakukan: `'shoot'`: jika pemain < 70 px → mundur; di antara tembakan bergeser menyamping 0,6 s (arah acak). `'turret'` tidak berubah.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; lawan goblin pemanah → ia mundur saat didekati & tidak berdiri diam.
+
+### [ ] T281. **Proyektil musuh mudah dibaca** — referensi: Enter the Gungeon, Hades
+- File: `src/systems/combat.js`. Baca dulu: `eShoot()` (±302) & `updShots()` (±317).
+- Lakukan: proyektil musuh diberi lingkar terang tipis (blend ADD, warna sesuai jenis) + bayangan kecil di tanah; 0,1 s pertama bergerak 50% lebih lambat agar terlihat keluar.
+- Batasan: kecepatan setelah 0,1 s tetap.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; panah/bola sihir musuh terlihat jelas di rumput & malam hari.
+
+### [ ] T282. **Tangkis (parry) terasa memuaskan** — referensi: Sekiro, Hollow Knight
+- File: `src/systems/polish.js`. Baca dulu: `PARRY_WIN` (±27) & pembungkus `_hurtPlayer` (±30) tempat tangkis berhasil.
+- Lakukan: saat tangkis berhasil: lingkar cahaya putih membesar dari Arka, suara `sfx('parry')` atau yang ada, perlambatan waktu 0,15 s (`this.time.timeScale` & `physics.world.timeScale`, kembalikan setelahnya), musuh penyerang terhuyung 0,6 s.
+- Batasan: jangan ubah jendela waktu tangkis.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; tangkis serangan serigala → jelas terasa & serigala terhuyung.
+
+### [ ] T283. **Serangan dari belakang terlihat** — referensi: Dark Souls (backstab), Dishonored
+- File: `src/systems/combat.js`. Baca dulu: tempat `S.st.backstabs` bertambah (grep `backstabs`).
+- Lakukan: tampilkan pop "DARI BELAKANG!" (ungu) + hitstop 70 ms + getar kamera kecil.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; serang musuh dari belakang → teks muncul.
+
+### [ ] T284. **Penyangga input serangan (buffer)** — referensi: Hades, Devil May Cry
+- File: `src/systems/combat.js`. Baca dulu: awal `attack()` (cek `atkCd`).
+- Lakukan: jika serangan ditekan saat `pl.atkCd` tinggal ≤ 0,15 s, jangan diabaikan: simpan `this.atkBuf = true` lalu panggil `attack()` lagi via `this.time.delayedCall(pl.atkCd * 1000 + 5, …)` (sekali, tanpa menumpuk).
+- Batasan: jangan mengubah lama cooldown.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; tekan SERANG cepat berirama → kombo 3 pukulan tidak 'tertelan'.
+
+### [ ] T285. **Menghindar tepat waktu (perfect dodge)** — referensi: Bayonetta, Monster Hunter
+- File: `src/systems/combat.js`. Baca dulu: `hurtPlayer()` (±292) bagian saat pemain kebal (`inv`).
+- Lakukan: jika serangan mengenai saat Arka kebal KARENA dash (≤ 0,2 s setelah dash dimulai): pop "Lolos!", perlambatan 0,12 s, dan +10 stamina. Maks sekali per dash.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; dash tepat saat serigala menerjang → "Lolos!".
+
+### [ ] T286. **Bola EXP terbang ke Arka** — referensi: Diablo, Hades
+- File: `src/systems/combat.js`. Baca dulu: `killEnemy()` (±176) & `gainExp()` (±280).
+- Lakukan: saat musuh mati, munculkan 3–6 titik cahaya kecil di posisinya yang melesat ke Arka (tween 0,35–0,5 s, kurva). EXP tetap ditambahkan seperti sekarang (boleh saat titik pertama tiba).
+- Batasan: jumlah EXP tidak berubah.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; bunuh slime → titik cahaya terbang ke Arka.
+
+### [ ] T287. **Cahaya tegak untuk barang langka** — referensi: Diablo, Borderlands
+- File: `src/systems/combat.js`. Baca dulu: `drop()` (±252) (+ `rarity()` di polish.js, BACA saja).
+- Lakukan: barang dengan kelangkaan di atas biasa: berkas cahaya vertikal tipis (warna sesuai kelangkaan) di atasnya + suara kecil saat jatuh; hilang saat diambil.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; konsol buat drop item langka → ada berkas cahaya.
+
+### [ ] T288. **Koin & bahan biasa tertarik ke Arka** — referensi: Hades, Diablo
+- File: `src/systems/combat.js`. Baca dulu: `updPicks()` (±258–279).
+- Lakukan: koin & bahan biasa dalam 52 px bergerak ke arah Arka (makin dekat makin cepat) lalu diambil seperti biasa. Barang langka tetap harus didatangi.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; bunuh musuh → koin meluncur ke Arka.
+
+### [ ] T289. **Sifat elite (affix)** — referensi: Diablo III
+- File: `src/systems/feel.js` + `src/systems/combat.js`. Baca dulu: `makeElite()` (feel.js ±18–29), `killEnemy()`.
+- Lakukan: elite mendapat 1 sifat acak: "Cepat" (kecepatan +30%), "Keras" (DEF +50%), "Membara" (pukulannya membakar: `inflict` status bakar), "Beranak" (saat mati memunculkan 2 slime kecil). Nama sifat tampil di bawah nama elite.
+- Batasan: sifat Beranak hanya untuk elite non-boss.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; temui elite → sifatnya terlihat & berlaku.
+
+### [ ] T290. **Musuh baru tidak muncul di depan mata** — referensi: Dark Souls, Diablo
+- File: `src/ai/enemies.js` atau tempat respawn musuh (grep `respawn`). Baca dulu: kode respawn musuh.
+- Lakukan: saat musuh muncul kembali, lewati/ tunda jika posisinya di dalam layar kamera atau < 140 px dari Arka.
+- Batasan: jika tidak ada sistem respawn → tandai catatan.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; bunuh slime lalu tunggu di dekatnya → ia tidak muncul tepat di depanmu.
+
+### [ ] T291. **Kartu perkenalan boss** — referensi: Hades, Hollow Knight
+- File: `src/ai/bosses.js`. Baca dulu: `startBoss()` (±78–91).
+- Lakukan: saat boss mulai: nama besar + gelar kecil (dari data boss bila ada) di tengah layar 1,6 s, kamera sedikit memperbesar (zoom 1,08) lalu kembali, input pemain dikunci 0,8 s (`G.lock++/--` dalam finally).
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; masuk arena boss → kartu nama tampil, permainan lanjut normal.
+
+### [ ] T292. **Fase kedua boss di 50% HP** — referensi: Dark Souls, Elden Ring
+- File: `src/ai/bosses.js` + `src/systems/combat.js`. Baca dulu: `updBoss()` & `hitEnemy()`.
+- Lakukan: saat HP boss pertama kali < 50%: kebal 1 s, kilat & gelombang kejut visual (tanpa damage), banner kecil "BANGKIT!", lalu kecepatan & laju serangan +20% (`e.phase2 = true`, dipakai di AI boss).
+- Batasan: HP & damage boss tidak berubah.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; lawan boss ratu jamur → di 50% terjadi transisi, setelahnya lebih agresif.
+
+### [ ] T293. **Tanda kelemahan elemen** — referensi: Pokémon, Final Fantasy
+- File: `src/systems/polish.js`. Baca dulu: `ELEM`, `WEAK`, pembungkus `_hitEnemy` (±8–18).
+- Lakukan: saat serangan mengenai kelemahan musuh: pop "LEMAH!" (warna `ELEM_COL`) di atas angka damage; jika musuh tahan: "TAHAN" abu-abu.
+- Batasan: jangan ubah pengali damage.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; pakai senjata api ke slime es → "LEMAH!".
+
+### [ ] T294. **Mode Santai: ancang-ancang lebih lama** — referensi: Celeste (assist mode), Hades (God mode)
+- File: `src/ai/enemies.js`. Baca dulu: tempat durasi ancang-ancang musuh (hasil tugas "Ancang-ancang konsisten").
+- Lakukan: jika `OPT.diff === 0`, kalikan durasi ancang-ancang ×1,3 dan jeda antar serangan ×1,2.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; pengaturan Santai → musuh lebih mudah dibaca.
+
+### [ ] T295. **Musuh terakhir: gerak lambat singkat** — referensi: God of War, Hades (room clear)
+- File: `src/systems/combat.js`. Baca dulu: `killEnemy()`.
+- Lakukan: jika setelah membunuh tidak ada lagi musuh yang sedang mengejar dalam 220 px dan sebelumnya ≥ 3 musuh bertarung, lakukan perlambatan 0,25 s + suara kecil.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; kalahkan kelompok 3 slime → yang terakhir memberi momen lambat singkat.
+
+### [ ] T296. **Audit kepadatan kawanan musuh** — referensi: Diablo, Zelda (penempatan musuh)
+- File: `src/world/maps/*.js` (larik `enemies`). Baca dulu: daftar `enemies` tiap peta luar ruang.
+- Lakukan: hitung dengan skrip kecil (di `/tmp`, bukan di repo) kelompok musuh dalam radius 150 px. Jika > 5 musuh dalam satu kelompok atau musuh berada < 120 px dari pintu masuk/teleport, geser beberapa ke ruang terbuka terdekat. Catat perubahan di bawah tugas ini.
+- Batasan: jangan menambah/menghapus musuh, hanya menggeser.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; `npm run check` 0 masalah; berjalan di hutan tidak 'dikeroyok' tepat di pintu masuk.
+
+### [ ] T297. **Musik tempur selesai dengan halus** — referensi: Hades, Ori
+- File: `src/systems/sound.js`. Baca dulu: `swapBGM()` (±43) & logika masuk/keluar tempur (grep `combat` di sound.js).
+- Lakukan: keluar dari musik tempur hanya setelah 4 s tanpa musuh yang mengejar, dengan fade 1 s; jangan bolak-balik bila musuh baru mengejar dalam 2 s.
+- Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
+- Cek: `npm run check`; kalahkan musuh lalu diam → musik kembali halus, tidak berkedip-kedip.
+
 ---
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
 memasang BESTIARY_TEXT ke layar Bestiari, buang petak objek jauh di mode benua, hapus mode lama. Rincian: `docs/GAME_DESIGN.md` (akhir) & `docs/HANDOFF_OPENWORLD.md`.
