@@ -1888,7 +1888,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; lawan elite → waktunya tidak selalu sama.
 
-### [ ] T302. **Serangan berantai (kombo musuh)** — referensi: Monster Hunter, Hollow Knight
+### [x] T302. **Serangan berantai (kombo musuh)** — referensi: Monster Hunter, Hollow Knight
 - File: `src/ai/enemies.js`. Baca dulu: cabang `'lunge'` (serigala) & `'elite_brute'` (kepala goblin).
 - Lakukan: serigala: setelah terjangan pertama, 40% peluang terjangan kedua 0,25 s kemudian. Kepala goblin: rangkaian 3 ayunan dengan jeda 0,3 s, ayunan ke-3 lebih lebar. Setelah kombo selesai musuh lelah 0,8 s (jendela balas).
 - Jika SUDAH ada → tandai [x] "sudah ada".

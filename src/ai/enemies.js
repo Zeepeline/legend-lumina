@@ -324,17 +324,18 @@ Object.assign(World.prototype, {
           if (e.t <= 0) { e.st = 'lunge'; e.t = .25; s.clearTint(); s.setVelocity(e.lx * 210, e.ly * 210); sfxAt('swing', s.x, s.y, this); }
         } else if (e.st === 'lunge') {
           if (e.t <= 0) {
-            if (this.atkTok) this.atkTok.delete(e);
-            e.st = 'rec'; e.t = .5; s.setVelocity(0);
-            if (isHd && s.anims) s.play(D.tex + '_idle', true);
+            if (!e.chained && (e.type === 'wolf' || e.type === 'wolfs') && Math.random() < .4) {
+              e.chained = true; e.st = 'wind'; e.t = .25; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
+            } else {
+              e.chained = false; if (this.atkTok) this.atkTok.delete(e);
+              e.st = 'rec'; e.t = .8; s.setVelocity(0); if (isHd && s.anims) s.play(D.tex + '_idle', true);
+            }
           }
         } else if (e.st === 'rec') {
           if (e.t <= 0) { e.st = 'chase'; e.t = .35; }
         }
         if (D.ch) this.charAnim(e);
-        else if (Math.abs(e.st === 'wind' || e.st === 'lunge' ? e.lx : s.body.velocity.x) > 2) {
-          s.flipX = (e.st === 'wind' || e.st === 'lunge' ? e.lx : s.body.velocity.x) > 0;
-        }
+        else if (Math.abs(e.st === 'wind' || e.st === 'lunge' ? e.lx : s.body.velocity.x) > 2) s.flipX = (e.st === 'wind' || e.st === 'lunge' ? e.lx : s.body.velocity.x) > 0;
         break;
       }
       case 'charge':

@@ -41,16 +41,21 @@ Object.assign(World.prototype, {
         if (isElite && s.anims && s.anims.animationManager.exists('goblin_elite_smash')) {
           s.play('goblin_elite_smash', true);
         }
-        this.time.delayedCall(380, () => {
+        const doSmash = (step) => {
           if (e.hp <= 0) return;
-          sfxAt('boom', s.x, s.y, this);
-          this.camShake(240, .009);
-          this.sparkle(s.x, s.y - 6, 'dotw', 16);
-          if (Math.hypot(pl.x - s.x, pl.y - s.y) < 64) {
-            this.hurtPlayer(D.atk * 1.5, s.x, s.y);
-            popWorld(pl.x, pl.y - 20, 'HANTAMAN!', 'crit');
+          sfxAt('boom', s.x, s.y, this); this.camShake(240, .009); this.sparkle(s.x, s.y - 6, 'dotw', 16);
+          const reach = step === 3 ? 80 : 64, mul = step === 3 ? 1.7 : 1.35;
+          if (Math.hypot(pl.x - s.x, pl.y - s.y) < reach) {
+            this.hurtPlayer(D.atk * mul, s.x, s.y);
+            popWorld(pl.x, pl.y - 20, step === 3 ? 'HANTAMAN BESAR!' : 'HANTAMAN!', 'crit');
           }
-        });
+          if (step < 3) {
+            this.time.delayedCall(300, () => doSmash(step + 1));
+          } else {
+            e.st = 'rec'; e.t = 0.8; s.setVelocity(0);
+          }
+        };
+        this.time.delayedCall(380, () => doSmash(1));
         return;
       } else if (d < 150 && Math.random() < 0.65) {
         e.skillCd = rnd(3.5, 5.5);
