@@ -1528,7 +1528,8 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; di HP: sentuh mana saja di kiri bawah → joystick muncul di sana.
 
-### [ ] T251. **Getar halus saat menekan tombol aksi (opsional)**
+### [x] T251. **Getar halus saat menekan tombol aksi (opsional)**
+- Selesai: panggil `haptic(8)` via `navigator.vibrate` saat tombol aksi SERANG/DASH/SIHIR disentuh jika `localStorage.lumina_haptic !== '0'`.
 - File: `src/core/input.js`. Baca dulu: bagian penanganan tombol sentuh di `enableTouch()`.
 - Lakukan: panggil `navigator.vibrate(8)` (try/catch) saat tombol SERANG/DASH/SIHIR ditekan, HANYA jika `localStorage.lumina_haptic !== '0'`.
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
