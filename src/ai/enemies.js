@@ -169,7 +169,7 @@ Object.assign(World.prototype, {
           s.setVelocity(0);
           if (e.t <= 0) {
             e.st = 'idle';
-            if (s.anims) s.play('goblin_shaman_idle', true);
+            if (s.anims && s.anims.animationManager.exists('goblin_shaman_idle')) s.play('goblin_shaman_idle', true);
           }
           break;
         }
@@ -197,7 +197,8 @@ Object.assign(World.prototype, {
           if (Math.abs(vx) > 3) s.flipX = vx > 0;
           if (s.anims && e.st !== 'cast') {
             const mv = Math.hypot(vx, vy) > 5;
-            s.play(mv ? 'goblin_shaman_walk' : 'goblin_shaman_idle', true);
+            const animKey = mv ? 'goblin_shaman_walk' : 'goblin_shaman_idle';
+            if (s.anims.animationManager.exists(animKey)) s.play(animKey, true);
           }
         }
         break;

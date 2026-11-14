@@ -6419,7 +6419,7 @@ const ENEMY = {
   king_slime: { name: 'Raja Slime Mahkota', tex: 'slime', hp: 130, atk: 11, def: 4, spd: 46, exp: 60, gold: [45, 80], r: 12, ai: 'hop', scale: 1.65, drop: ['amethyst_gem', .4] },
   // Skuad Taktis Goblin: Pemanah & Dukun (#181 & #183)
   goblin_archer: { name: 'Goblin Pemanah', tex: 'ch_goblin', hp: 26, atk: 8, def: 2, spd: 48, exp: 18, gold: [4, 8], r: 7, ai: 'shoot', proj: 'arrow', ch: 1, drop: ['sarrow', .5] },
-  goblin_shaman: { name: 'Dukun Goblin', tex: 'ch_goblin', hp: 42, atk: 8, def: 4, spd: 42, exp: 35, gold: [8, 16], r: 8, ai: 'shaman', drop: ['herb', .7] },
+  goblin_shaman: { name: 'Dukun Goblin', tex: 'ch_goblin', hp: 42, atk: 8, def: 4, spd: 42, exp: 35, gold: [8, 16], r: 8, ai: 'shaman', ch: 1, drop: ['herb', .7] },
 };
 const PROJ = { spore: { key: 'spore', spd: 72, fx: ['poison', 4, .5] }, seed: { key: 'seed', spd: 84 }, bone: { key: 'bone', spd: 96, spin: 1 }, rock: { key: 'rockshot', spd: 110, spin: 1 }, venom: { key: 'venom', spd: 96, fx: ['poison', 5, .6] }, ice: { key: 'icebolt', spd: 112, fx: ['chill', 3, .7] }, arrow: { key: 'spore', spd: 90 } };
 const BOSS_AI = ['boss', 'gboss', 'qboss', 'sboss', 'wboss', 'dboss'];
@@ -8548,7 +8548,7 @@ Object.assign(World.prototype, {
           s.setVelocity(0);
           if (e.t <= 0) {
             e.st = 'idle';
-            if (s.anims) s.play('goblin_shaman_idle', true);
+            if (s.anims && s.anims.animationManager.exists('goblin_shaman_idle')) s.play('goblin_shaman_idle', true);
           }
           break;
         }
@@ -8576,7 +8576,8 @@ Object.assign(World.prototype, {
           if (Math.abs(vx) > 3) s.flipX = vx > 0;
           if (s.anims && e.st !== 'cast') {
             const mv = Math.hypot(vx, vy) > 5;
-            s.play(mv ? 'goblin_shaman_walk' : 'goblin_shaman_idle', true);
+            const animKey = mv ? 'goblin_shaman_walk' : 'goblin_shaman_idle';
+            if (s.anims.animationManager.exists(animKey)) s.play(animKey, true);
           }
         }
         break;
