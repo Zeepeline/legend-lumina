@@ -2716,7 +2716,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; jangan membuat gambar/objek baru
 - Cek: `npm run check` (0 masalah); masuk tiap wilayah → penanda terlihat dalam 1–2 layar.
 
-### [ ] T357. **Hadiah di sekitar penanda & sudut pandang** — referensi: BotW (gravitasi), Elden Ring
+### [x] T357. **Hadiah di sekitar penanda & sudut pandang** — referensi: BotW (gravitasi), Elden Ring
 
 - File: peta yang punya penanda / sudut pandang `vp_*` (grep `vp_` di maps). Baca dulu: posisi penanda & `vp_*`; format peti (`chests`) & daun obat di peta.
 - Lakukan: dalam 120 px dari tiap penanda/sudut pandang letakkan satu hal menarik yang SUDAH ada jenisnya: peti kecil, prasasti lore yang sudah ada, atau tanaman obat. Maks 1 per penanda.

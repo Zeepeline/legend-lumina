@@ -42,6 +42,7 @@ MAPS.meadow = {
     ['treeA', 150, 450], ['apple2', 620, 300], ['orange1', 900, 260], ['treeB', 1300, 600], ['apple1', 1100, 900],
     ['viewpoint', 300, 110, { id: 'vp_meadow', name: 'Bukit Kincir Angin' }],
     ['lumina_shard', 300, 70, { id: 'ls_meadow_hill' }],
+    ['mush', 260, 110],
     // Batu loncatan arungan & hiasan tepi Sungai Senja (T336 & T345)
     ['pebbles', 690, 465], ['pebbles', 680, 475],
     ['pebbles', 1000, 890], ['pebbles', 990, 900],

@@ -103,7 +103,7 @@ _Peta: Desa Lumina_
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
-## src/world/maps/meadow.js (81 baris)
+## src/world/maps/meadow.js (82 baris)
 _Peta: Padang Angin_
 
 
@@ -111,7 +111,7 @@ _Peta: Padang Angin_
 _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 
 
-## src/world/maps/swamp.js (39 baris)
+## src/world/maps/swamp.js (40 baris)
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
