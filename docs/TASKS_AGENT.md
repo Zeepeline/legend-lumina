@@ -2409,6 +2409,98 @@ File BARU milik agen: `src/npc/crowd.js`, `src/systems/townlife.js`. Pengecualia
 - Lakukan: catat sistem kehidupan kota yang baru (warga latar, kedai sore, jendela malam, hujan, pagi, patroli obor) dan file tempatnya, agar agen berikutnya tidak membuat ulang.
 - Cek: `npm run check` (0 masalah); dokumen terbarui.
 
+## K. GELOMBANG 10 — perencanaan kota & desa ala city builder (zonasi, layanan, jalan, kepuasan) (T385–T400)
+Wajib baca `docs/GEOGRAFI.md` §7. File BARU milik agen: `src/data/zoning.js`, `tools/check-zoning.js`, `src/systems/zoning_view.js`. Kerjakan berurutan: data → alat → tampilan → tata ulang per peta. Sebagian besar perubahan = DATA peta.
+
+### [ ] T385. **Data zonasi: fungsi & pengaruh tiap jenis bangunan** — referensi: TheoTown (RCI), Cities: Skylines
+- File: file baru `src/data/zoning.js` (daftarkan di index.html setelah `src/world/objects.js`). Baca dulu: `docs/GEOGRAFI.md` §7; daftar kunci bangunan di `src/world/objects.js`.
+- Lakukan: buat `const ZONE_OF = { <tipeObj>: 'hunian'|'dagang'|'kerja'|'tani'|'umum', … }` untuk SEMUA jenis bangunan/kios/kandang/sumur/kuil yang ada, `const INFLU = { tipe: { bising: r } | { bau: r } | { nyaman: r } }` dan `const SERVICE = { sumur: 220, … }` sesuai §7. Tipe yang ragu → catat di bawah tugas.
+- Cek: `npm run check` (0 masalah); konsol `ZONE_OF.houseA === 'hunian'`; tidak ada error.
+
+### [ ] T386. **Alat cek zonasi (laporan)** — referensi: Cities: Skylines (peta pengaruh & layanan)
+- File: file baru `tools/check-zoning.js` (meniru cara `tools/check-layout.js` memuat data peta). Baca dulu: `docs/GEOGRAFI.md` §7 & `src/data/zoning.js`.
+- Lakukan: untuk peta `village, kgate, kpasar, kakademi, kbawah` (dan peta yang punya ≥ 4 rumah): hitung per rumah: pengaruh buruk yang mengenai, layanan yang tak terjangkau, skor kepuasan (rumus §7); daftar toko yang tidak menempel jalan utama (> 40 px dari path radius ≥ 14); bangunan kerja yang jalannya ke gerbang melewati blok hunian. Cetak ringkasan per peta + rata-rata kepuasan. Tambahkan ke `npm run check` sebagai PERINGATAN (tidak menggagalkan).
+- Cek: `npm run check` (0 masalah); `node tools/check-zoning.js` mencetak tabel; skor awal tercatat di bawah tugas ini.
+
+### [ ] T387. **Tampilan zona di dalam game (`?zona=1`)** — referensi: TheoTown/Cities: Skylines (lapisan info)
+- File: file baru `src/systems/zoning_view.js`. Baca dulu: `src/data/zoning.js`; cara menggambar grafik di scene (`this.add.graphics`).
+- Lakukan: jika URL memuat `zona=1`: gambar persegi semi-transparan berwarna zona di bawah tiap bangunan, lingkaran radius pengaruh (merah bising, cokelat bau, hijau nyaman), dan label skor kepuasan kecil di atas tiap rumah. Hanya untuk perancang; tidak aktif tanpa parameter.
+- Cek: `npm run check` (0 masalah); buka `?benua=1&zona=1` di desa → zona & radius terlihat.
+
+### [ ] T388. **Desa Lumina: tata ulang zonasi** — referensi: TheoTown (Kerja/Tani → Dagang/Taman → Hunian)
+- File: `src/world/maps/village.js`. Baca dulu: `docs/GEOGRAFI.md` §7 + laporan `check-zoning`.
+- Lakukan: susun ulang: bengkel pandai besi & gudang di sisi jalan masuk (timur/selatan) sebagai zona kerja; kebun/kandang di pinggir berpagar; toko & penginapan di sepanjang jalan utama menuju alun-alun sebagai penyangga; rumah warga berkelompok di sisi tenang dekat sumur/kuil/taman. Pastikan jalan lokal hunian tidak menjadi jalan pintas.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md`; bangunan yang dipakai misi/NPC cerita boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
+- Cek: `npm run check` (0 masalah); `check-zoning`: rata-rata kepuasan desa ≥ 75, tidak ada rumah dalam radius bising bengkel.
+
+### [ ] T389. **Desa Lumina: layanan menjangkau semua rumah** — referensi: TheoTown (radius layanan)
+- File: `src/world/maps/village.js`. Baca dulu: laporan `check-zoning` (rumah tanpa layanan).
+- Lakukan: tambah/geser sumur, pos jaga kecil, taman kecil (bangku + pohon + bunga) agar SETIAP rumah terjangkau sumur 220, pos jaga 320, toko 320, kuil 420, taman 260.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md`; bangunan yang dipakai misi/NPC cerita boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
+- Cek: `npm run check` (0 masalah); `check-zoning`: 0 rumah tanpa layanan di desa.
+
+### [ ] T390. **Gerbang Kota: zona kerja & logistik di gerbang** — referensi: TheoTown (industri butuh akses jalan besar)
+- File: `src/world/maps/city.js` peta `kgate`. Baca dulu: `docs/GEOGRAFI.md` §7.
+- Lakukan: gudang, kandang kuda/gerobak, bengkel kereta di dekat gerbang & jalan utama; hunian penjaga di sisi; jalan utama lurus tembus ke kota.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md`; bangunan yang dipakai misi/NPC cerita boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
+- Cek: `npm run check` (0 masalah); `check-zoning`: bangunan kerja tidak melintasi hunian.
+
+### [ ] T391. **Distrik Pasar: jalan utama dagang & penyangga** — referensi: Cities: Skylines (komersial di jalan ramai)
+- File: `src/world/maps/city.js` peta `kpasar`. Baca dulu: `docs/GEOGRAFI.md` §7.
+- Lakukan: semua kios/toko menempel jalan utama atau plaza; rumah pedagang di belakang deret toko (lantai atas/belakang), dengan jalan lokal sendiri; tidak ada kios di gang hunian.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md`; bangunan yang dipakai misi/NPC cerita boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
+- Cek: `npm run check` (0 masalah); `check-zoning`: 0 toko jauh dari jalan utama; kepuasan hunian ≥ 70 (pasar memang ramai).
+
+### [ ] T392. **Distrik Akademi: zona umum tenang** — referensi: Perencanaan kampus
+- File: `src/world/maps/city.js` peta `kakademi`. Baca dulu: `docs/GEOGRAFI.md` §7.
+- Lakukan: akademi & perpustakaan di pusat, dikelilingi taman (nyaman); asrama/hunian di sisi tenang; tidak ada bengkel/kandang dalam 160 px dari akademi.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md`; bangunan yang dipakai misi/NPC cerita boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
+- Cek: `npm run check` (0 masalah); `check-zoning`: kepuasan ≥ 85.
+
+### [ ] T393. **Kota Bawah: hunian padat tapi tetap terlayani** — referensi: Kota tua (kepadatan tinggi)
+- File: `src/world/maps/city.js` peta `kbawah`. Baca dulu: `docs/GEOGRAFI.md` §7.
+- Lakukan: boleh padat & kepuasan lebih rendah (target ≥ 55), TETAPI setiap rumah wajib terjangkau sumur & pos jaga; penyamakan/gudang bau di ujung hilir (dekat tepi peta), bukan di tengah hunian.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md`; bangunan yang dipakai misi/NPC cerita boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
+- Cek: `npm run check` (0 masalah); `check-zoning`: 0 rumah tanpa sumur/pos jaga.
+
+### [ ] T394. **Desa Kincir & permukiman kecil lain** — referensi: Desa pertanian (zona tani)
+- File: peta yang memuat Desa Kincir (grep `Kincir` di `src/world/maps/`) & permukiman kecil lain. Baca dulu: `docs/GEOGRAFI.md` §7.
+- Lakukan: kincir/penggilingan (kerja, bising 100) di tepi dekat ladang & sungai; rumah petani berkelompok ≥ 100 px dari kincir; ladang berpagar di sekeliling.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md`; bangunan yang dipakai misi/NPC cerita boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
+- Cek: `npm run check` (0 masalah); `check-zoning` tanpa pelanggaran besar.
+
+### [ ] T395. **Hierarki jalan & cegah lalu lintas tembus** — referensi: Cities: Skylines (arteri–kolektor–lokal)
+- File: `src/world/maps/village.js`, `city.js` (`paths`). Baca dulu: `docs/GEOGRAFI.md` §7 (jalan bertingkat).
+- Lakukan: tetapkan radius jalan sesuai tingkat. Jika jalan lokal menghubungkan dua jalan utama melewati hunian, ubah jadi buntu (berakhir di halaman/taman) atau lingkaran kecil kembali ke jalan yang sama.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md`; bangunan yang dipakai misi/NPC cerita boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
+- Cek: `npm run check` (0 masalah); `check-zoning` (tambahkan cek sederhana: setapak radius ≤ 9 yang ujung-ujungnya menyentuh dua jalan radius ≥ 14) → 0.
+
+### [ ] T396. **Rumah & tempat kerja NPC sesuai zona** — referensi: Stardew/TheoTown (perjalanan rumah→kerja)
+- File: data `npcs` di peta permukiman + `src/npc/brain.js` (BACA `npcBrainInit`, home/work). Baca dulu: posisi `home`/`work` NPC.
+- Lakukan: pastikan posisi awal (rumah) NPC dewasa berada di zona hunian dan titik kerjanya di zona sesuai perannya (pandai besi → kerja, pedagang → dagang, petani → tani). Geser posisi awal NPC (data peta) bila tidak sesuai; JANGAN ubah NPC cerita yang posisinya terkait misi tanpa mencatat.
+- Cek: `npm run check` (0 masalah); konsol: tiap NPC dewasa, rumah di hunian & kerja di zonanya.
+
+### [ ] T397. **Deteksi titik macet rute warga** — referensi: Cities: Skylines (peta lalu lintas)
+- File: `tools/check-zoning.js`. Baca dulu: rute garis lurus/sepanjang `paths` dari rumah → kerja tiap NPC & warga latar.
+- Lakukan: hitung berapa rute melewati tiap titik sempit (lebar ruang jalan < 48 px di antara objek bertabrakan). Laporkan titik dengan > 6 rute. Untuk tiap titik macet: lebarkan (geser hiasan) atau tambah jalan alternatif di data peta.
+- Batasan: ikuti `docs/PLACEMENT_RULES.md`; bangunan yang dipakai misi/NPC cerita boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
+- Cek: `npm run check` (0 masalah); laporan: 0 titik macet di desa & pasar.
+
+### [ ] T398. **Warga bereaksi pada kepuasan** — referensi: TheoTown (warga mengeluh), Stardew
+- File: `src/npc/npcs.js` (`NPC_BARKS`) + `src/systems/townlife.js`. Baca dulu: skor kepuasan (hitung saat peta dibuat dengan rumus §7, simpan per rumah).
+- Lakukan: warga yang rumahnya kepuasan < 50 kadang berkata keluhan sesuai sebab ("Dentang bengkel tiap pagi…", "Sumurnya jauh sekali."); kepuasan ≥ 85: kalimat senang ("Taman ini bikin betah."). Tulis 12 kalimat baru di townlife.js.
+- Cek: `npm run check` (0 masalah); dekati warga rumah tak puas → keluhan sesuai sebabnya.
+
+### [ ] T399. **Cek kota terasa 'direncanakan' (uji pemain)** — referensi: —
+- File: catatan di bawah tugas ini. Baca dulu: `?benua=1&zona=1` lalu tanpa `zona`.
+- Lakukan: jalan dari gerbang kota ke pasar, akademi, kota bawah, lalu desa. Catat: apakah fungsi tiap area langsung terbaca tanpa overlay? apakah ada gang buntu menjebak/rute berputar jauh? Beri 3 perbaikan kecil paling berdampak & kerjakan bila < 40 baris data.
+- Cek: `npm run check` (0 masalah); catatan berisi temuan & perbaikan.
+
+### [ ] T400. **Perbarui GEOGRAFI §7 dengan hasil akhir** — referensi: —
+- File: `docs/GEOGRAFI.md` §7 (tambahkan sub-bagian "Status"). Baca dulu: laporan akhir `check-zoning`.
+- Lakukan: tabel per peta: kepuasan rata-rata, rumah tanpa layanan, titik macet — sebelum/sesudah.
+- Cek: `npm run check` (0 masalah); dokumen terbarui.
+
 ---
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
 memasang BESTIARY_TEXT ke layar Bestiari, buang petak objek jauh di mode benua, hapus mode lama. Rincian: `docs/GAME_DESIGN.md` (akhir) & `docs/HANDOFF_OPENWORLD.md`.

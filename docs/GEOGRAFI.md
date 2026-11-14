@@ -50,3 +50,25 @@ jalan utama boleh memakai jembatan yang sudah ada (`river.bridge` di hutan). Jan
 ## 5. Checklist sebelum push perubahan peta
 `npm run check` 0 masalah · tidak ada objek/NPC/musuh/peti di air · pintu & jalan keluar tidak tertutup · air menyambung di tepi wilayah
 (cek koordinat global kedua sisi, selisih ≤ 20 px) · ikuti `docs/PLACEMENT_RULES.md`.
+
+## 7. Perencanaan permukiman ala city builder (TheoTown / Cities: Skylines)
+Rumah tidak ditaruh sembarangan: tiap bangunan punya **fungsi (zona)**, memancarkan **pengaruh** (bising/bau/nyaman), butuh **layanan** dalam
+jangkauan, dan dihubungkan **jalan bertingkat** agar arus warga (rumah→kerja→pasar) tidak macet. Data: `src/data/zoning.js` (tabel di bawah).
+
+**Zona (warna di tampilan `?zona=1`):**
+| Zona | Isi (contoh objek) | Letak |
+|---|---|---|
+| Hunian (hijau) | rumah warga | inti yang terlindung; dekat taman/sumur/kuil; jauh dari bising & bau |
+| Dagang (biru) | toko, kios, kedai, penginapan | di jalan utama & alun-alun (butuh dilewati orang); boleh jadi **penyangga** antara kerja & hunian |
+| Kerja (kuning) | pandai besi, gudang, penggilingan/kincir, tambang, penyamakan | di pinggir, dekat gerbang/jalan utama agar gerobak tidak melintasi hunian |
+| Tani (cokelat) | kebun, ladang, kandang | pinggiran, berpagar, akses jalan kampung |
+| Umum (ungu) | balai, kuil, akademi, pos jaga, sumur, alun-alun, taman | tersebar sesuai jangkauan layanan |
+Urutan ideal dari luar ke dalam: **Kerja/Tani → Dagang/Taman → Hunian**. Pola selang-seling rumah–toko–rumah dihindari kecuali warung kecil.
+
+**Pengaruh (radius px, diukur dari tengah bangunan):** pandai besi bising 120 · penyamakan/kandang bau 140 · penggilingan bising 100 ·
+pasar/kedai ramai 80 · taman/pohon rindang nyaman 100 · kuil tenang 120. Rumah di dalam radius bising/bau = **tidak puas**.
+**Jangkauan layanan (setiap rumah harus masuk):** sumur/air 220 · pos jaga/penjaga 320 · toko kebutuhan/pasar 320 · kuil/penyembuh 420 · taman/alun-alun 260.
+**Jalan bertingkat (radius `paths`):** utama 14–16 (gerbang ↔ alun-alun ↔ pasar ↔ zona kerja) · penghubung 10–12 (antar-blok) · lokal 8–9 (hanya ke pintu).
+Jalan lokal TIDAK boleh menjadi jalan pintas antara dua jalan utama (cegah "lalu lintas tembus" di hunian). Titik sempit yang dilewati > 6 rute
+rumah→kerja NPC = macet → lebarkan atau beri jalur alternatif.
+**Kepuasan rumah** = 100 − 30 (tiap pengaruh buruk) − 15 (tiap layanan tak terjangkau) + 10 (taman dalam jangkauan), batas 0–100. Target rata-rata ≥ 75.
