@@ -2754,10 +2754,18 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 
 File BARU milik agen: `src/npc/crowd.js`, `src/systems/townlife.js`. Pengecualian kunci: `src/npc/brain.js` untuk tugas yang menyebutnya. Kinerja HP penting: semua yang bergerak/berpartikel hanya aktif dekat kamera. Uji di `?benua=1` siang, sore, malam, & hujan.
 
-### [ ] T362. **Ukur kepadatan permukiman (alat)** — referensi: GEOGRAFI §1
+### [x] T362. **Ukur kepadatan permukiman (alat)** — referensi: GEOGRAFI §1
 
 - File: skrip sementara di `/tmp` (BUKAN di repo). Baca dulu: `mapObjects(M)` & `OBJ` (konsol game).
 - Lakukan: jalankan game (Playwright) lalu hitung per peta `village, kgate, kpasar, kakademi, kbawah`: luas (Mpx² = w×h/1e6), jumlah bangunan (objek dengan `OBJ[t].fade` atau nama rumah/toko), NPC, pohon sebaran, per Mpx². Simpan hasil awal sebagai catatan di bawah tugas ini.
+- Hasil pengukuran awal kepadatan permukiman (baseline):
+  | Peta | Luas (Mpx²) | Bangunan | NPC | Pohon (n) | Bangunan/Mpx² | NPC/Mpx² | Pohon/Mpx² |
+  |---|---|---|---|---|---|---|---|
+  | village | 0.73 | 24 | 10 | 0 | 32.9 | 13.7 | 0.0 |
+  | kgate | 1.08 | 6 | 5 | 160 | 5.6 | 4.6 | 148.1 |
+  | kpasar | 1.92 | 17 | 11 | 120 | 8.9 | 5.7 | 62.5 |
+  | kakademi | 1.40 | 5 | 5 | 260 | 3.6 | 3.6 | 185.7 |
+  | kbawah | 1.20 | 13 | 7 | 80 | 10.8 | 5.8 | 66.7 |
 - Cek: `npm run check` (0 masalah); tabel awal tercatat (desa ±8 bangunan & 14 NPC per Mpx², pasar ±6 & 6).
 
 ### [ ] T363. **Kota: kurangi pohon sebaran otomatis** — referensi: Kota bukan hutan (Skyrim, Stoneshard Brynn)
