@@ -2681,7 +2681,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); dari Jalan Raya Lama, gerbang terlihat sebagai tujuan jelas.
 
-### [ ] T352. **Distrik Pasar: padat & hidup** — referensi: Pasar abad pertengahan, Diablo (Tristram)
+### [x] T352. **Distrik Pasar: padat & hidup** — referensi: Pasar abad pertengahan, Diablo (Tristram)
 
 - File: `src/world/maps/city.js` peta `kpasar`. Baca dulu: `objs` kios/tenda, `paths`.
 - Lakukan: susun kios dalam deret dengan lorong 40–48 px, plaza terbuka di tengah, peti/tong/karung di samping kios (bukan di lorong).
