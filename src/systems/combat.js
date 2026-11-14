@@ -238,9 +238,9 @@ Object.assign(World.prototype, {
       sfxAt('magic', x, y, this);
       popWorld(x, y - 24, '💧 MEMBELAH DIRI!', 'crit');
       this.time.delayedCall(200, () => {
-        this.addEnemy('slime', x - 16, y - 10);
-        this.addEnemy('slime', x + 16, y - 10);
-        this.addEnemy('slime', x, y + 14);
+        this.spawnEnemy('slime', x - 16, y - 10);
+        this.spawnEnemy('slime', x + 16, y - 10);
+        this.spawnEnemy('slime', x, y + 14);
       });
     }
     if (e.boss) this.bossDown(e); else achCheck(this);

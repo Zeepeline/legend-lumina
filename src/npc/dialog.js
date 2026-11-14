@@ -312,7 +312,7 @@ Object.assign(World.prototype, {
     playBGM('boss');
     sfx('warn');
     const spawnEnemy = (type, x, y) => {
-      this.addEnemy(type, x, y);
+      this.spawnEnemy(type, x, y);
     };
     
     // Wave 1

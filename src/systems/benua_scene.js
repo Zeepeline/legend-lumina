@@ -128,13 +128,16 @@ for (const k of ['wildCanopyTex', 'updWilds', 'makeWild']) World.prototype[k] = 
 for (const k of ['updMinimap', 'updFog']) {
   const f0 = World.prototype[k];
   World.prototype[k] = function (dt) {
-    if (!this.M.benua || !this.regId) return f0.call(this, dt);
+    if (!this.M.benua) return f0.call(this, dt);
+    const rid = this.regId || (typeof regionAt === 'function' ? regionAt(this.pl.x, this.pl.y) : null) || 'village';
+    if (!MAPS[rid] || !WORLD_POS[rid]) return f0.call(this, dt);
     this['_' + k] = (this['_' + k] || 0) - dt; if (this['_' + k] > 0) return; this['_' + k] = .25;
-    const [ox, oy] = WORLD_POS[this.regId], keep = { M: this.M, pl: this.pl, npcs: this.npcs, enemies: this.enemies, qGoal: this.qGoal };
+    const [ox, oy] = WORLD_POS[rid], keep = { M: this.M, pl: this.pl, npcs: this.npcs, enemies: this.enemies, qGoal: this.qGoal };
     const loc = s => ({ x: s.x - ox, y: s.y - oy, visible: s.visible });
-    this.M = MAPS[this.regId]; this.pl = loc(keep.pl);
+    this.M = MAPS[rid]; this.pl = loc(keep.pl);
     if (k === 'updMinimap') {
-      this.npcs = keep.npcs.map(n => ({ spr: loc(n.spr) })); this.enemies = keep.enemies.map(e => ({ hp: e.hp, spr: loc(e.spr) }));
+      this.npcs = (keep.npcs || []).map(n => ({ spr: loc(n.spr) }));
+      this.enemies = (keep.enemies || []).map(e => ({ hp: e.hp, spr: loc(e.spr) }));
       this.qGoal = keep.qGoal && { x: keep.qGoal.x - ox, y: keep.qGoal.y - oy };
     }
     try { return f0.call(this, 1); } finally { Object.assign(this, keep); }
@@ -144,12 +147,14 @@ for (const k of ['updMinimap', 'updFog']) {
 {
   const openMapNew0 = openMapNew;
   openMapNew = function (sc) { // eslint-disable-line no-global-assign
-    if (!sc || !sc.M || !sc.M.benua || !sc.regId) return openMapNew0(sc);
-    const [ox, oy] = WORLD_POS[sc.regId], loc = s => ({ x: s.x - ox, y: s.y - oy, visible: s.visible });
+    if (!sc || !sc.M || !sc.M.benua) return openMapNew0(sc);
+    const rid = sc.regId || (typeof regionAt === 'function' ? regionAt(sc.pl.x, sc.pl.y) : null) || 'village';
+    if (!MAPS[rid] || !WORLD_POS[rid]) return openMapNew0(sc);
+    const [ox, oy] = WORLD_POS[rid], loc = s => ({ x: s.x - ox, y: s.y - oy, visible: s.visible });
     const view = Object.create(sc, {
-      M: { value: MAPS[sc.regId] }, pl: { value: Object.assign(loc(sc.pl), { dir: sc.pl.dir }) },
-      npcs: { value: sc.npcs.map(n => Object.assign({}, n, { spr: loc(n.spr) })) },
-      enemies: { value: sc.enemies.map(e => Object.assign({}, e, { spr: loc(e.spr) })) },
+      M: { value: MAPS[rid] }, pl: { value: Object.assign(loc(sc.pl), { dir: sc.pl.dir }) },
+      npcs: { value: (sc.npcs || []).map(n => Object.assign({}, n, { spr: loc(n.spr) })) },
+      enemies: { value: (sc.enemies || []).map(e => Object.assign({}, e, { spr: loc(e.spr) })) },
     });
     return openMapNew0(view);
   };

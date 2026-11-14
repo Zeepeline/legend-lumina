@@ -32,5 +32,11 @@ function questTarget(M) {
   if (!goal) return null; if (M.benua) return benuaTarget(goal); if (M.id === goal[0]) return { x: goal[1], y: goal[2] };
   const nx = routeNext(M.id, goal[0]); if (!nx) return null; const ex = (M.exits || []).find(e => e.to === nx); return ex && { x: ex.x + ex.w / 2, y: ex.y + ex.h / 2 };
 }
-// peta besar ada di systems/explore.js (kabut, ikon, harta, zoom)
-function openMap(sc) { return openMapNew(sc); }
+// peta besar ada di systems/explore.js dan worldmap.js
+function openMap(sc) {
+  // Jika di mode benua / luar ruang, buka peta benua seluruh dunia yang interaktif
+  if (sc && ((sc.M && sc.M.benua) || (typeof isOutdoorRegion === 'function' && isOutdoorRegion(sc.M?.id)))) {
+    return openWorldMap(sc);
+  }
+  return openMapNew(sc);
+}

@@ -391,7 +391,7 @@ _Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi a
 _MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALIGUS dalam satu scene `World` berkoordinat_
 `BENUA` 7 · `OBJ_CELL` 16 · `isOutdoorRegion()` 17 · `regionAt()` 18 · `shiftDeep()` 23 · `BENUA_SHIFT` 35 · `BFIELD` 37 · `benuaField()` 38 · `regionClone()` 45 · `buildBenua()` 50 · `benuaData()` 93 · `benuaLocalize()` 100 · `benuaTarget()` 105
 
-## src/systems/benua_scene.js (157 baris)
+## src/systems/benua_scene.js (162 baris)
 _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat Arka berada, teleport tanpa memuat ulang._
 `KEMBARA_POS` 20 · `.initBenua()` 25 · `.withRegion()` 39 · `.spawnRegionFx()` 44 · `.streamObjs()` 69 · `.benuaAmbient()` 88 · `.benuaWeather()` 98 · `.updBenua()` 104
 
@@ -403,8 +403,8 @@ _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.m
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
 `CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 48 · `.hitFx()` 58 · `.rollFx()` 81 · `.updLowHp()` 86
 
-## src/ui/worldmap.js (175 baris)
-_Peta benua Lumina (overlay utuh semua wilayah)_
+## src/ui/worldmap.js (343 baris)
+_Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)_
 `openWorldMap()` 3
 
 ## src/npc/dialog.js (473 baris)
@@ -419,7 +419,7 @@ _Menu beli, jual, tempa_
 _Tas (inventaris) & buku misi_
 `BAG_TABS` 4 · `BAG_SORT` 5 · `BAG_SEARCH` 6 · `openBag()` 7 · `openQuests()` 224
 
-## src/ui/map.js (37 baris)
+## src/ui/map.js (43 baris)
 _Layar peta & navigasi tujuan misi_
 `MINI` 4 · `WORLD` 5 · `buildMini()` 6 · `routeNext()` 23 · `questTarget()` 28 · `openMap()` 36
 
