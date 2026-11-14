@@ -1926,7 +1926,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; pemain level 15 di hutan → slime perlu lebih banyak pukulan dari sebelumnya.
 
-### [ ] T308. **Pilihan kesulitan 'Sulit'** — referensi: Hades (Heat), Dark Souls
+### [x] T308. **Pilihan kesulitan 'Sulit'** — referensi: Hades (Heat), Dark Souls
 - File: file yang menyimpan `OPT.diff` & menu pengaturan (grep `OPT.diff`). Baca dulu: pilihan kesulitan yang ada.
 - Lakukan: tambahkan nilai `OPT.diff = 2` ("Sulit"): musuh HP ×1,3, ATK ×1,2, jeda serangan −15%, Botol Cahaya maks −1. Terapkan di titik yang sama dengan tugas sebelumnya.
 - Batasan: nilai bawaan tetap Normal.
