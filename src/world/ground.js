@@ -117,7 +117,8 @@ function genGround(M, rect) {
     }
     return { m: d2 - d1, id, v: (x - fx) + (y - fy) };
   };
-  const water = (i, t, x, y) => { let c = GP.ice ? (t > .82 ? '#e8f8ff' : t > .55 ? '#c4e8f8' : '#a8d8f0') : t > .82 ? '#7cd0f0' : t > .55 ? '#4aa6e0' : '#3a8ed0'; const rp = Math.sin(x * .15 + y * .9) + Math.sin(x * .05 - y * .3) * 1.3; if (rp > 1.85 && t < .8) c = '#a8e8ff'; put(i, h2r(c)); };
+  const VW = VERDANT[M.ground] && !GP.ice && verdantTiles();
+  const water = (i, t, x, y) => { if (VW) { put(i, verdantWater(t, x + GX, y + GY)); return; } let c = GP.ice ? (t > .82 ? '#e8f8ff' : t > .55 ? '#c4e8f8' : '#a8d8f0') : t > .82 ? '#7cd0f0' : t > .55 ? '#4aa6e0' : '#3a8ed0'; const rp = Math.sin(x * .15 + y * .9) + Math.sin(x * .05 - y * .3) * 1.3; if (rp > 1.85 && t < .8) c = '#a8e8ff'; put(i, h2r(c)); };
   for (let y = RY; y < RY + RH; y++) for (let x = RX; x < RX + RW; x++) {
     const i = ((y - RY) * RW + (x - RX)) * 4;
     if (R) {
@@ -128,10 +129,11 @@ function genGround(M, rect) {
         const ly = (y + 1000) % 6; put(i, ly === 0 ? h2r('#6e4222') : ly === 1 ? h2r('#c8945a') : h2r('#a8703e'), (hash(x >> 3, Math.floor((y + 1000) / 6), 5) - .5) * .12); continue;
       }
       if (dv < hw) { water(i, dv / hw, x, y); continue; }
-      if (dv < hw + 4) { put(i, h2r(dv < hw + 1.5 ? '#8a7a5a' : '#cdb684')); continue; }
+      if (VW && dv < hw + 4) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }
+      else if (dv < hw + 4) { put(i, h2r(dv < hw + 1.5 ? '#8a7a5a' : '#cdb684')); continue; }
     }
     let inPond = false;
-    for (const P of ponds) { const e = pondE(P, x, y); if (e < 1) { water(i, e, x, y); inPond = true; break; } if (e < 1 + 5 / P[3]) { put(i, h2r(e < 1 + 2 / P[3] ? '#8a7a5a' : '#d6c08c')); inPond = true; break; } }
+    for (const P of ponds) { const e = pondE(P, x, y); if (e < 1) { water(i, e, x, y); inPond = true; break; } if (VW && e < 1 + 5 / P[3]) { const b = verdantBank(M, (e - 1) * P[3], x + GX, y + GY, y < P[1]); if (b) { put(i, b); inPond = true; break; } continue; } if (e < 1 + 5 / P[3]) { put(i, h2r(e < 1 + 2 / P[3] ? '#8a7a5a' : '#d6c08c')); inPond = true; break; } }
     if (inPond) continue;
     const d = sd(x, y);
     if (cave) {
@@ -150,7 +152,7 @@ function genGround(M, rect) {
     }
     const n = vnoise(x + GX, y + GY, 26, 1) * .55 + vnoise(x + GX, y + GY, 8, 2) * .45;
     let k = n < .33 ? 0 : n < .5 ? 1 : n < .68 ? 2 : 3, f = 0;
-    if (glow) { const g = Math.max(0, 1 - Math.hypot(x - glow[0], (y - glow[1]) * 1.3) / glow[2]); f = g * g * .16; }
+    if (glow && !VW) { const g = Math.max(0, 1 - Math.hypot(x - glow[0], (y - glow[1]) * 1.3) / glow[2]); f = g * g * .16; }
     if (d < 2.2 && !(VERDANT[M.ground] && GP.path === 'dirt' && verdantTiles())) { put(i, EDGE, f * .5); continue; }
     if (d < 4 && hash(x, y, 4) > .5) k = Math.max(0, k - 1);
     const vc = VERDANT[M.ground] && verdantPix(M, x + GX, y + GY);
