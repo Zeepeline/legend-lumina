@@ -107,7 +107,7 @@ function genGround(M, rect) {
   const STONE = ['#eae2d6', '#ddd4c9', '#f1ebe1', '#d2c8bd'].map(h2r), MORT = h2r('#b5b8a2'), MORT2 = h2r('#9ea38a');
   const CSTONE = ['#5a5466', '#524c5e', '#625c6e', '#4a4456'].map(h2r), CMORT = h2r('#2a2630');
   const DIRT = ['#c9a46e', '#ba9460', '#d8b47e', '#ad8656'].map(h2r);
-  const EDGE = GP.edge ? h2r(GP.edge) : null, R = M.river, ponds = M.ponds || [];
+  const EDGE = GP.edge ? h2r(GP.edge) : null, R = M.river, ponds = M.ponds || [], PL = pondsNear(M, RX, RY, RX + RW, RY + RH);
   const put = (i, c, f = 0) => { let r = c[0], g = c[1], b = c[2]; if (f > 0) { r += (255 - r) * f; g += (255 - g) * f; b += (255 - b) * f; } else if (f < 0) { r *= 1 + f; g *= 1 + f; b *= 1 + f; } D[i] = r; D[i + 1] = g; D[i + 2] = b; D[i + 3] = 255; };
   const vor = (x, y, cell, s) => {
     const gx = Math.floor(x / cell), gy = Math.floor(y / cell); let d1 = 1e9, d2 = 1e9, id = 0, fx = 0, fy = 0;
@@ -133,7 +133,14 @@ function genGround(M, rect) {
       else if (dv < hw + 4) { put(i, h2r(dv < hw + 1.5 ? '#8a7a5a' : '#cdb684')); continue; }
     }
     let inPond = false;
-    for (const P of ponds) { const e = pondE(P, x, y); if (e < 1) { water(i, e, x, y); inPond = true; break; } if (VW && e < 1 + 5 / P[3]) { const b = verdantBank(M, (e - 1) * P[3], x + GX, y + GY, y < P[1]); if (b) { put(i, b); inPond = true; break; } continue; } if (e < 1 + 5 / P[3]) { put(i, h2r(e < 1 + 2 / P[3] ? '#8a7a5a' : '#d6c08c')); inPond = true; break; } }
+    if (PL.length) {
+      const we = waterE(PL, x, y, GX, GY), wr = waterE.r;
+      if (we < 1) { water(i, wr < 70 ? Math.max(we, .5) : we, x, y); continue; }
+      if (we < 1 + 5 / wr) {
+        if (VW) { const b = verdantBank(M, (we - 1) * wr, x + GX, y + GY, waterE(PL, x, y + 4, GX, GY) < we); if (b) { put(i, b); continue; } }
+        else { put(i, h2r(we < 1 + 2 / wr ? '#8a7a5a' : '#d6c08c')); continue; }
+      }
+    }
     if (inPond) continue;
     const d = sd(x, y);
     if (cave) {
@@ -166,7 +173,7 @@ function genGround(M, rect) {
   }
   const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);
   const out = (X, Y) => X < RX - 10 || X > RX + RW + 10 || Y < RY - 10 || Y > RY + RH + 10;
-  const near = (X, Y) => { if (R && Math.abs(Y - riverY(R, X)) < R.w / 2 + 6) return true; for (const P of ponds) if (pondE(P, X, Y) < 1.15) return true; return false; };
+  const near = (X, Y) => { if (R && Math.abs(Y - riverY(R, X)) < R.w / 2 + 6) return true; return ponds.length > 0 && waterE(ponds, X, Y, GX, GY) < 1.15; };
   if (cave) {
     for (let n = 0; n < W * H / 260; n++) { const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); if (out(X, Y)) continue; const d = sd(X, Y); if (d > 2 && d < 60 && hash(n, 3, 22) > .6) { const col = hash(n, 4, 22) > .5 ? '#9a6aff' : '#5ac8ff'; px(x, col, X, Y); px(x, shade(col, .5), X, Y - 1); } else if (d < -4) { px(x, '#6a6476', X, Y); } }
     return c;
@@ -198,7 +205,7 @@ function genGround(M, rect) {
     }
   }
   // teratai di kolam
-  if (!GP.ice) for (const P of ponds) for (let n = 0; n < 7; n++) { const a = hash(n, 1, 77) * 6.28, r = .3 + hash(n, 2, 77) * .5; const X = P[0] + Math.cos(a) * P[2] * r, Y = P[1] + Math.sin(a) * P[3] * r; ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5); if (n % 2) { px(x, '#ffb4d8', X + 1, Y - 1); px(x, '#ffffff', X + 2, Y - 1); } }
+  if (!GP.ice) for (const P of ponds) for (let n = 0; n < 7; n++) { const a = hash(n, 1, 77) * 6.28, r = .3 + hash(n, 2, 77) * .5; const X = P[0] + Math.cos(a) * P[2] * r, Y = P[1] + Math.sin(a) * P[3] * r; if (waterE(ponds, X, Y, GX, GY) > .8) continue; ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5); if (n % 2) { px(x, '#ffb4d8', X + 1, Y - 1); px(x, '#ffffff', X + 2, Y - 1); } }
   return c;
 }
 // kotak tabrakan dari grid (dinding gua, kolam)
@@ -209,7 +216,7 @@ function blockRects(M) {
     let run = -1;
     for (let gx = 0; gx <= Math.ceil(M.w / cs); gx++) {
       const x = gx * cs + 8, y = gy * cs + 8; let b = false;
-      if (gx < Math.ceil(M.w / cs)) { if (cave && sd(x, y) > 5) b = true; for (const P of ponds) if (pondE(P, x, y) < .94) b = true; }
+      if (gx < Math.ceil(M.w / cs)) { if (cave && sd(x, y) > 5) b = true; if (ponds.length && waterE(ponds, x, y, ...waterGXY(M)) < .94) b = true; }
       if (b && run < 0) run = gx; if (!b && run >= 0) { out.push([run * cs, gy * cs, (gx - run) * cs, cs]); run = -1; }
     }
   }
@@ -225,7 +232,7 @@ function scatter(M, spec) {
     if (spec.near) { if (d < spec.near[0] || d > spec.near[1]) return false; }
     else if (d < spec.min) return false;
     if (R && Math.abs(y - riverY(R, x)) < R.w / 2 + 14) return false;
-    for (const P of ponds) if (pondE(P, x, y) < 1.25) return false;
+    if (ponds.length && waterE(ponds, x, y, ...waterGXY(M)) < 1.25) return false;
     for (const o of M.objs) if (Math.hypot(o[1] - x, o[2] - y) < (OBJ[o[0]].mm ? 70 : 26)) return false;
     for (const c of M.chests || []) if (Math.hypot(c.x - x, c.y - y) < 30) return false;
     for (const f of M.fish || []) if (Math.hypot(f[0] - x, f[1] - y) < 34) return false;

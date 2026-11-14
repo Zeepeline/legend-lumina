@@ -5,7 +5,7 @@ const VERDANT = { forest: 1, meadow: 1, village: 1 };
 const VBAY = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const VDECO = ['tuft', 'sprout_a', 'sprout_b', 'sprout_c', 'flower_w', 'flower_w2', 'flower_w3', 'flower_b', 'flower_b2', 'flowers', 'flowers_w',
   'mushroom', 'pebble', 'pebbles', 'reeds', ...['w', 'p', 'y', 'v'].flatMap(c => [1, 2, 3].map(n => 'fl_' + c + n))];
-IMG_LIST.push('gnd_grass', 'gnd_grass_light', 'gnd_grass_dark', 'gnd_dirt', ...VDECO.map(k => 'deco_' + k));
+if (typeof IMG_LIST !== 'undefined') IMG_LIST.push('gnd_grass', 'gnd_grass_light', 'gnd_grass_dark', 'gnd_dirt', ...VDECO.map(k => 'deco_' + k));
 let VT = null;
 function verdantTiles() {
   if (VT) return VT;
