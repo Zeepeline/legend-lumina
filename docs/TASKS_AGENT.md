@@ -1901,7 +1901,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; berdiri di balik pohon besar → pemanah tidak menembak menembus, ia berpindah.
 
-### [ ] T304. **Dukun memprioritaskan menyembuhkan teman** — referensi: Dimraeth (bobot pilihan sihir), Diablo (Shaman)
+### [x] T304. **Dukun memprioritaskan menyembuhkan teman** — referensi: Dimraeth (bobot pilihan sihir), Diablo (Shaman)
 - File: `src/ai/enemies.js`. Baca dulu: cabang `'shaman'`.
 - Lakukan: jika ada teman dalam 140 px dengan HP < 60%, dukun menyembuhkan yang paling terluka (+20% HP maks, efek cahaya hijau) dengan jeda 4 s; selain itu menyerang seperti biasa. Tampilkan garis cahaya dukun→teman 0,3 s.
 - Jika SUDAH ada → tandai [x] "sudah ada".

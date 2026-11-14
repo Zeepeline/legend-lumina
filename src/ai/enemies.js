@@ -246,17 +246,19 @@ Object.assign(World.prototype, {
         else wander(D.spd * .4);
         e.healT = (e.healT || 3.5) - dt;
         if (e.healT <= 0) {
-          e.healT = 4.0;
-          const allies = this.enemies.filter(o => o.hp > 0 && Math.hypot(s.x - o.spr.x, s.y - o.spr.y) < 120);
-          if (allies.length > 0) {
-            sfxAt('heal', s.x, s.y, this);
-            this.sparkle(s.x, s.y - 12, 'dotg', 10);
-            e.st = 'cast'; e.t = 0.55;
+          const hurtAllies = this.enemies.filter(o => o !== e && o.hp > 0 && o.hp < o.max * .6 && Math.hypot(s.x - o.spr.x, s.y - o.spr.y) < 140)
+            .sort((a, b) => (a.hp / a.max) - (b.hp / b.max));
+          if (hurtAllies.length > 0) {
+            e.healT = 4.0; e.st = 'cast'; e.t = 0.55;
+            const al = hurtAllies[0], healAmt = Math.max(15, Math.round(al.max * 0.2));
+            al.hp = Math.min(al.max, al.hp + healAmt);
+            popWorld(al.spr.x, al.spr.y - 20, `+${healAmt} HP`, 'heal'); sfxAt('heal', s.x, s.y, this);
+            this.sparkle(al.spr.x, al.spr.y - 12, 'dotg', 10);
+            const line = this.add.graphics().setDepth(s.y + 10).lineStyle(2, 0x4aff7a, .85).lineBetween(s.x, s.y - 10, al.spr.x, al.spr.y - 10);
+            this.tweens.add({ targets: line, alpha: 0, duration: 300, onComplete: () => line.destroy() });
             if (s.anims && s.anims.animationManager.exists('goblin_shaman_cast')) s.play('goblin_shaman_cast', true);
-            for (const al of allies) {
-              al.hp = Math.min(al.max, al.hp + 18);
-              popWorld(al.spr.x, al.spr.y - 20, '+18 HP', 'heal');
-            }
+          } else if (aggro && d < 160) {
+            e.healT = 2.4; this.eShoot(e, 'venom', [0], D.atk);
           }
         }
         if (D.ch) this.charAnim(e);
