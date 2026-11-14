@@ -39,6 +39,8 @@ Object.assign(World.prototype, {
       }
     }
     e.t -= dt; e.cd -= dt;
+    const rel = (typeof OPT !== 'undefined' && OPT.diff === 0);
+    const wMul = rel ? 1.3 : 1, cdMul = rel ? 1.2 : 1;
     if (this.atkTok && this.atkTok.has(e)) { e.tokT = (e.tokT || 0) + dt; if (e.tokT > 2.2) { this.atkTok.delete(e); e.tokT = 0; } }
     // Insting binatang kabur saat sekarat (#T279)
     if ((e.type === 'wolf' || e.type === 'boar') && !e.fleeChecked && e.hp < e.max * 0.2) {
@@ -95,7 +97,7 @@ Object.assign(World.prototype, {
           if (!this.atkTok) this.atkTok = new Set();
           if (this.atkTok.size < 2) {
             this.atkTok.add(e); e.tokT = 0;
-            e.st = 'atk'; e.t = 0.65; e.cd = rnd(2.2, 3.8);
+            e.st = 'atk'; e.t = 0.65 * wMul; e.cd = rnd(2.2, 3.8) * cdMul;
             s.setVelocity((dx / d) * D.spd * 2.2, (dy / d) * D.spd * 2.2);
             s.play('slime_hd_atk', true); s.flipX = dx < 0;
             break;
@@ -194,9 +196,9 @@ Object.assign(World.prototype, {
         } else wander(D.spd * .5);
         e.shootT = (e.shootT || rnd(1.5, 2.5)) - dt;
         if (aggro && e.shootT <= 0 && d < 160) {
-          e.shootT = rnd(2.0, 3.0);
+          e.shootT = rnd(2.0, 3.0) * cdMul;
           if (isArcherHd && s.anims) {
-            e.st = 'shoot'; e.t = 0.55; s.setVelocity(0);
+            e.st = 'shoot'; e.t = 0.55 * wMul; s.setVelocity(0);
             s.flipX = dx > 0;
             const anim = Math.random() < 0.35 ? 'goblin_archer_hd_rain' : 'goblin_archer_hd_shoot';
             s.play(anim, true);
@@ -292,7 +294,7 @@ Object.assign(World.prototype, {
             const hasTok = this.atkTok.has(e);
             if (d < (D.side ? 48 : 34) && e.t <= 0) {
               if (hasTok || this.atkTok.size < 2) {
-                this.atkTok.add(e); e.tokT = 0; e.st = 'wind'; e.t = D.side ? .36 : .42; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
+                this.atkTok.add(e); e.tokT = 0; e.st = 'wind'; e.t = (D.side ? .36 : .42) * wMul; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
                 if (isWolfHd && s.anims) { e.atkAnim = D.tex + (Math.random() < 0.5 ? '_bite' : '_pounce'); s.play(e.atkAnim, true); }
                 else if (isGoblinHd && s.anims) { e.atkAnim = D.tex + (Math.random() < 0.5 ? '_slash' : '_bite'); s.play(e.atkAnim, true); }
                 else s.setTint(0xffa07a);
@@ -340,7 +342,7 @@ Object.assign(World.prototype, {
           if (aggro && d < 140 && e.cd <= 0) {
             if (hasTok || this.atkTok.size < 2) {
               this.atkTok.add(e); e.tokT = 0;
-              e.st = 'wind'; e.t = .6; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); s.flipX = dx > 0;
+              e.st = 'wind'; e.t = .6 * wMul; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); s.flipX = dx > 0;
             } else {
               e.st = 'circle';
               const ang = Math.atan2(dy, dx) + (this.enemies.indexOf(e) % 2 ? 1.4 : -1.4);
@@ -372,7 +374,7 @@ Object.assign(World.prototype, {
       case 'golem':
         if (e.st === 'wind') { s.setVelocity(0); if (e.t <= 0) { e.st = 'rec'; e.t = .9; s.clearTint(); this.shockwave(s.x, s.y, 42, D.atk); } }
         else if (e.st === 'rec') { s.setVelocity(0); if (e.t <= 0) e.st = 'chase'; }
-        else { if (aggro) s.setVelocity(dx / d * D.spd, dy / d * D.spd); else wander(D.spd * .6); if (aggro && d < 36 && e.cd <= 0) { e.st = 'wind'; e.t = .65; e.cd = 2.2; s.setTint(0xffa07a); sfxAt('jump', s.x, s.y, this); } }
+        else { if (aggro) s.setVelocity(dx / d * D.spd, dy / d * D.spd); else wander(D.spd * .6); if (aggro && d < 36 && e.cd <= 0) { e.st = 'wind'; e.t = .65 * wMul; e.cd = 2.2 * cdMul; s.setTint(0xffa07a); sfxAt('jump', s.x, s.y, this); } }
         s.flipX = dx > 0; break;
       case 'boss': case 'gboss': this.updBoss(e, dt, dx, dy, d); break;
       case 'qboss': this.updQueen(e, dt, dx, dy, d); break;

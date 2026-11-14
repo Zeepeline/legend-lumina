@@ -1805,7 +1805,7 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; temui elite → sifatnya terlihat & berlaku.
 
-### [ ] T290. **Musuh baru tidak muncul di depan mata** — referensi: Dark Souls, Diablo
+### [x] T290. **Musuh baru tidak muncul di depan mata** — referensi: Dark Souls, Diablo (tidak ada sistem respawn musuh berkala)
 - File: `src/ai/enemies.js` atau tempat respawn musuh (grep `respawn`). Baca dulu: kode respawn musuh.
 - Lakukan: saat musuh muncul kembali, lewati/ tunda jika posisinya di dalam layar kamera atau < 140 px dari Arka.
 - Batasan: jika tidak ada sistem respawn → tandai catatan.
@@ -1825,14 +1825,14 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; lawan boss ratu jamur → di 50% terjadi transisi, setelahnya lebih agresif.
 
-### [ ] T293. **Tanda kelemahan elemen** — referensi: Pokémon, Final Fantasy
+### [x] T293. **Tanda kelemahan elemen** — referensi: Pokémon, Final Fantasy (sudah ada di `src/systems/polish.js`)
 - File: `src/systems/polish.js`. Baca dulu: `ELEM`, `WEAK`, pembungkus `_hitEnemy` (±8–18).
 - Lakukan: saat serangan mengenai kelemahan musuh: pop "LEMAH!" (warna `ELEM_COL`) di atas angka damage; jika musuh tahan: "TAHAN" abu-abu.
 - Batasan: jangan ubah pengali damage.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; pakai senjata api ke slime es → "LEMAH!".
 
-### [ ] T294. **Mode Santai: ancang-ancang lebih lama** — referensi: Celeste (assist mode), Hades (God mode)
+### [x] T294. **Mode Santai: ancang-ancang lebih lama** — referensi: Celeste (assist mode), Hades (God mode)
 - File: `src/ai/enemies.js`. Baca dulu: tempat durasi ancang-ancang musuh (hasil tugas "Ancang-ancang konsisten").
 - Lakukan: jika `OPT.diff === 0`, kalikan durasi ancang-ancang ×1,3 dan jeda antar serangan ×1,2.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
