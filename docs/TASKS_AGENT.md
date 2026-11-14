@@ -1812,7 +1812,7 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; bunuh slime lalu tunggu di dekatnya → ia tidak muncul tepat di depanmu.
 
-### [ ] T291. **Kartu perkenalan boss** — referensi: Hades, Hollow Knight
+### [x] T291. **Kartu perkenalan boss** — referensi: Hades, Hollow Knight
 - File: `src/ai/bosses.js`. Baca dulu: `startBoss()` (±78–91).
 - Lakukan: saat boss mulai: nama besar + gelar kecil (dari data boss bila ada) di tengah layar 1,6 s, kamera sedikit memperbesar (zoom 1,08) lalu kembali, input pemain dikunci 0,8 s (`G.lock++/--` dalam finally).
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.

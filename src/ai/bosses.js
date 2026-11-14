@@ -85,6 +85,11 @@ Object.assign(World.prototype, {
     this.tweens.add({ targets: e.spr, alpha: 1, y: B.y - 20, duration: 500 }); this.sparkle(e.spr.x, B.y - 30, 'doto', 20);
     await sleep(700);
     for (const [n, t] of B.intro) await say(t, n || undefined);
+    const subTitle = B.sub || (B.type === 'goblin' ? 'RAJA GOBLIN' : B.type === 'witch'
+      ? 'PENYIHIR RAWA SENJA' : B.type === 'dragon' ? 'NAGA PUNCAK BEKU' : 'PENJAGA PURBA');
+    banner(e.D.name.toUpperCase(), subTitle, true, 1600);
+    this.tweens.add({ targets: cam, zoom: 1.08, duration: 400, yoyo: true, hold: 800, ease: 'Quad.easeInOut', onComplete: () => { cam.zoom = 1; } });
+    try { await sleep(800); } finally { /* G.lock dilepas di baris 98 */ }
     this.cx = cam.scrollX; this.cy = cam.scrollY; this.camFollow = true;
     playBGM('boss'); bossBar(e.D.name, 1);
     e.awake = true; e.t = 1.2; G.lock--;
