@@ -1425,6 +1425,231 @@ const UNLOAD_FAR = 1700, UNLOAD_EVERY = 1.5; // px dari Arka; detik antar-pemeri
 - Jalankan `PERF=1 npx playwright test tests/perf.spec.js` (CPU diperlambat 4×), lalu salin isi `test-results/perf.json` (rata-rata & frame terburuk) sebagai catatan di bawah tugas ini.
 - Jika ada ponsel: buka game, Chrome remote debugging → Performance, rekam 10 detik berjalan di desa; catat 3 fungsi JS teratas (Bottom-Up). Tidak perlu memperbaiki apa pun.
 
+## F. GELOMBANG 5 — PENINGKATAN fitur yang SUDAH ADA (T236–T269), bukan fitur baru
+Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tugasnya walau tercantum di daftar terkunci (sesi besar sedang tidak mengerjakannya). Tetap: satu tugas hanya menyentuh file yang disebut. Jangan menambah field ke `S`; pengaturan kecil pakai `localStorage.lumina_*` dalam try/catch.
+
+### [ ] T236. **Toko: beli dalam jumlah (1/5/10) untuk barang habis pakai**
+- File: `src/ui/shop.js`. Baca dulu: `buyMenu()` (baris ±6–61).
+- Lakukan: untuk item `k: 'use'`/ramuan/umpan/benih, setelah memilih item tampilkan `choose` jumlah ×1, ×5, ×10 (sembunyikan yang emasnya tidak cukup). Kurangi emas & tambah item sesuai jumlah dengan fungsi yang sudah dipakai `buyMenu`.
+- Batasan: senjata/zirah tetap dibeli satu-satu.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; beli Ramuan ×5 di toko desa → emas berkurang 5× harga, tas +5.
+
+### [ ] T237. **Toko: jual semua bahan sampah sekaligus**
+- File: `src/ui/shop.js`. Baca dulu: `sellMenu()` (±97–198).
+- Lakukan: tambah pilihan paling atas "Jual semua bahan biasa" yang menjual semua item `k: 'mat'` dengan kelangkaan biasa (lihat `rarity()` di polish.js, BACA saja) setelah konfirmasi `ask('Jual N bahan seharga X G?')`.
+- Batasan: jangan menjual bahan langka/misi/perlengkapan.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; punya 3 bahan biasa → satu kali konfirmasi, semua terjual, total emas benar.
+
+### [ ] T238. **Tas: ingat tab & urutan terakhir**
+- File: `src/ui/bag.js`. Baca dulu: `BAG_TABS`, `BAG_SORT`, `openBag()` awal fungsi.
+- Lakukan: simpan tab & urutan terakhir di `localStorage.lumina_bag` (JSON, dibungkus try/catch) saat berganti; saat `openBag()` dibuka, pulihkan.
+- Batasan: jangan menambah field ke `S`.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; buka tas → tab Bahan, urutkan Harga → tutup → buka lagi: tab & urutan sama.
+
+### [ ] T239. **Tas: perbandingan stat saat memilih perlengkapan**
+- File: `src/ui/bag.js`. Baca dulu: bagian `openBag()` yang menampilkan detail item senjata/zirah.
+- Lakukan: di detail item perlengkapan, tampilkan selisih terhadap yang sedang dipakai, contoh `ATK 12 (▲+4)` hijau / `(▼-2)` merah. Ambil stat dari `ITEMS[id]` & `ITEMS[S.eq.<slot>]`.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; lihat Pedang Besi saat memakai pedang kayu → tampak ▲.
+
+### [ ] T240. **Tas: pencarian juga mencocokkan deskripsi**
+- File: `src/ui/bag.js`. Baca dulu: `BAG_SEARCH` dan filter pencarian di `openBag()`.
+- Lakukan: filter pencarian mencocokkan nama ATAU `ITEMS[id].d` (huruf kecil, tanpa aksen).
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; cari kata "HP" → ramuan muncul walau namanya tidak memuat "HP".
+
+### [ ] T241. **Jurnal: misi aktif di atas, misi selesai diredupkan**
+- File: `src/ui/bag.js`. Baca dulu: `openQuests()` (±224–260).
+- Lakukan: urutkan: misi utama aktif → sampingan aktif → selesai. Misi selesai diberi kelas CSS redup (opacity .55) dan tanda ✓; tambahkan aturan CSS di `styles.css`.
+- Batasan: jangan mengubah teks misi.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; jurnal dengan 1 misi selesai → muncul di bawah & redup.
+
+### [ ] T242. **Dialog: ketuk untuk menampilkan teks penuh**
+- File: `src/ui/widgets.js`. Baca dulu: `say()` (baris ±16–35).
+- Lakukan: jika teks diketik huruf demi huruf, ketukan/tombol aksi pertama menampilkan seluruh teks seketika; ketukan kedua baru menutup. Jika `say` tidak mengetik bertahap, tandai sudah ada/tidak relevan.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; dialog panjang Tetua Bram: tekan sekali → teks penuh, tekan lagi → lanjut.
+
+### [ ] T243. **Banner antre (tidak menumpuk)**
+- File: `src/ui/widgets.js`. Baca dulu: `banner()` (±82–85).
+- Lakukan: simpan antrean; banner baru menunggu banner sebelumnya selesai (ms + 600) sebelum muncul. Batasi antrean maks 3 (yang lama dibuang).
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; konsol: `banner('A'); banner('B'); banner('C')` → muncul bergiliran, bukan bertumpuk.
+
+### [ ] T244. **HUD: bar HP 'bayangan' yang menyusul**
+- File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `buildHud()` & `updHud()` (±96–126).
+- Lakukan: tambah elemen bar kedua (warna putih/merah muda) di belakang bar HP yang menyusut perlahan (transition 0.6s, delay 0.25s) ke nilai baru, sehingga damage terlihat.
+- Batasan: jangan ubah ukuran/tata letak HUD.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; konsol `S.hp -= 30; updHud()` → bar utama langsung turun, bayangan menyusul.
+
+### [ ] T245. **Ikon simpan otomatis lebih jelas**
+- File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `autoSaveIcon()` (±131).
+- Lakukan: tampilkan teks kecil "Tersimpan" di samping ikon selama 1,2 s dengan fade in/out.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; tunggu simpan otomatis (45 s) atau konsol `saveGame(__game.sc); autoSaveIcon()`.
+
+### [ ] T246. **Angka damage kritikal lebih menonjol**
+- File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `popWorld()` & `POPS` (±88–95).
+- Lakukan: tipe pop kritikal (cari pemanggil `popWorld(..., 'crit')` dengan grep) tampil 1,4× lebih besar, kuning, dengan sedikit 'pop' skala. Jika tipe crit tidak ada, tandai catatan.
+- Batasan: jangan ubah cara damage dihitung.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; serang sampai kritikal → angka besar kuning.
+
+### [ ] T247. **Layar judul: info tiap slot simpan**
+- File: `src/ui/title.js`. Baca dulu: `titleScreen()`.
+- Lakukan: di daftar slot tampilkan: level, nama wilayah (`MAPS[s.map].name`), waktu main (jam:menit dari `s.st.playTime`). Baca data slot dari fungsi yang sudah dipakai layar judul.
+- Batasan: jangan ubah format save.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; slot berisi save → terlihat "Lv 6 · Desa Lumina · 1j 12m".
+
+### [ ] T248. **Kode simpan: tombol salin & pesan error jelas**
+- File: `src/ui/savecode.js`. Baca dulu: `codeDialog()` (±10–48).
+- Lakukan: tombol "Salin" memakai `navigator.clipboard.writeText` (try/catch, fallback pilih teks). Saat impor gagal, tampilkan alasan singkat (kode terpotong / bukan kode Lumina).
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; ekspor → Salin → tempel di impor → berhasil; tempel teks acak → pesan jelas.
+
+### [ ] T249. **Joystick: zona mati yang nyaman**
+- File: `src/core/input.js`. Baca dulu: `enableTouch()` (±23–59).
+- Lakukan: pastikan ada zona mati (deadzone) ±18% radius: di bawahnya vektor = 0. Jadikan konstanta `JOY_DEAD = .18` di atas fungsi.
+- Batasan: jangan ubah tata letak tombol.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; sentuhan sangat kecil di tengah joystick tidak membuat Arka bergeser.
+
+### [ ] T250. **Joystick mengambang (muncul di titik sentuh)**
+- File: `src/core/input.js` + `styles.css`. Baca dulu: `enableTouch()`.
+- Lakukan: sentuhan pertama di separuh kiri bawah layar memindahkan pusat joystick ke titik sentuh (dalam batas area kiri), kembali ke posisi semula saat dilepas.
+- Batasan: tombol kanan (SERANG/DASH/…) tidak boleh terpengaruh.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; di HP: sentuh mana saja di kiri bawah → joystick muncul di sana.
+
+### [ ] T251. **Getar halus saat menekan tombol aksi (opsional)**
+- File: `src/core/input.js`. Baca dulu: bagian penanganan tombol sentuh di `enableTouch()`.
+- Lakukan: panggil `navigator.vibrate(8)` (try/catch) saat tombol SERANG/DASH/SIHIR ditekan, HANYA jika `localStorage.lumina_haptic !== '0'`.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; Android: tekan SERANG → getar sangat singkat; konsol `localStorage.lumina_haptic='0'` → tidak getar.
+
+### [ ] T252. **Gamepad: Start = menu, Select = peta**
+- File: `src/core/input.js`. Baca dulu: `pollGamepad()` (±63–122) & `KEYMAP`.
+- Lakukan: petakan tombol standar 9 (Start) ke aksi menu dan 8 (Select/Back) ke peta, jika belum.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; colok gamepad, tekan Start → menu terbuka.
+
+### [ ] T253. **Mancing: zona tarik lebih jelas + getar**
+- File: `src/systems/fishing.js` + `styles.css`. Baca dulu: `tugGame()` (±42–93).
+- Lakukan: beri warna/garis tepi terang pada zona sukses, kedip saat penanda berada di dalam zona, dan `navigator.vibrate(15)` saat ikan menyentak (try/catch).
+- Batasan: jangan ubah tingkat kesulitan/angka.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; mancing di danau → zona jelas terlihat.
+
+### [ ] T254. **Buku Ikan: petunjuk ikan yang belum tertangkap**
+- File: `src/systems/fishing.js`. Baca dulu: `openFishLogNew()` (±94–107) & `FISH` (±21).
+- Lakukan: untuk ikan belum tertangkap tampilkan "???" + petunjuk samar dari datanya: wilayah & rentang jam (mis. "Danau, malam"). Ikan legendaris: hanya wilayah.
+- Batasan: jangan bocorkan nama ikan.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; Buku Ikan baru → baris ??? berisi petunjuk.
+
+### [ ] T255. **Pergantian musim terasa**
+- File: `src/systems/season.js`. Baca dulu: `updSeason()` (±55) & `SEASONS`.
+- Lakukan: saat hari berganti ke hari pertama musim baru, tampilkan `banner(namaMusim, 'MUSIM BARU')` sekali (catat musim terakhir di `this.lastSeasonShown`).
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; konsol majukan hari ke awal musim berikut → banner muncul sekali.
+
+### [ ] T256. **Toko tutup: pesan jam buka yang jelas**
+- File: `src/systems/season.js`. Baca dulu: `shopShut()` & `wrapShops()` (±26–37).
+- Lakukan: pesan saat toko tutup menyebut jam buka berikutnya, contoh "Toko tutup. Buka lagi pukul 07:00."
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; datangi toko jam 23:00 → pesan memuat jam buka.
+
+### [ ] T257. **Status: sisa durasi di ikon HUD**
+- File: `src/systems/status.js` + `styles.css`. Baca dulu: `updStatusHud()` (±60) & `STATUS`.
+- Lakukan: di ikon status (racun/terbakar/dingin) tampilkan angka detik tersisa kecil di pojok, diperbarui saat `updStatusHud`.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; konsol `__game.sc.inflict('poison', 5)` (sesuaikan tanda tangan fungsi) → ikon menampilkan 5..4..3.
+
+### [ ] T258. **Musik: transisi halus antar lagu**
+- File: `src/systems/sound.js`. Baca dulu: `swapBGM()` (±43–50) & `playBGM` di `src/core/audio.js`.
+- Lakukan: jika pergantian lagu masih memutus mendadak, tambahkan crossfade ±0,8 s (turunkan volume lagu lama, naikkan yang baru).
+- Batasan: jangan ubah daftar lagu.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; berjalan dari desa ke Jalan Desa–Padang → musik berganti halus.
+
+### [ ] T259. **Langkah kaki tidak monoton**
+- File: `src/systems/sound.js`. Baca dulu: `stepSound()` (±60–70).
+- Lakukan: variasikan pitch/rate acak kecil (±6%) tiap langkah dan selang-seling kaki kiri/kanan sedikit beda volume.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; berjalan 10 detik → suara langkah terasa alami.
+
+### [ ] T260. **Tips: pilihan matikan semua tips**
+- File: `src/systems/qol.js`. Baca dulu: `TIPS`, `showTip()`, `updTips()` (±58–83).
+- Lakukan: tambahkan tautan kecil "jangan tampilkan tips lagi" di kotak tip; simpan `localStorage.lumina_tips='0'`; `updTips` berhenti bila nilai itu ada.
+- Batasan: jangan ubah isi TIPS.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; klik tautan → tips tidak muncul lagi setelah muat ulang.
+
+### [ ] T261. **Peta mini: ketuk untuk memperbesar**
+- File: `src/systems/qol.js` + `styles.css`. Baca dulu: `updMinimap()` (±84–107) dan elemen DOM peta mini.
+- Lakukan: ketuk peta mini → beralih ukuran normal/2× (kelas CSS `big`), simpan pilihan di `localStorage.lumina_mini`.
+- Batasan: jangan ubah cara menggambar isi peta mini.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; ketuk peta mini → membesar; ketuk lagi → normal.
+
+### [ ] T262. **Petunjuk interaksi menyebut nama**
+- File: `src/systems/qol.js`. Baca dulu: `updInteractHint()` (±6–22).
+- Lakukan: selain ikon, tampilkan nama singkat target (nama NPC / jenis objek dari entri `inter` bila ada field nama) di bawah ikon, font kecil.
+- Batasan: jika entri interaksi tidak punya nama → tampilkan ikon saja.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; dekati Tetua Bram → muncul "Tetua Bram".
+
+### [ ] T263. **Bilah HP musuh: nama untuk elite & buronan**
+- File: `src/systems/qol.js`. Baca dulu: `updEnemyBars()` (±23–32).
+- Lakukan: untuk musuh elite (`e.elite`) dan buronan (`e.D.isBounty` atau sejenis; grep) tampilkan nama `e.D.name` di atas bilah HP.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; lawan musuh elite → namanya tampil.
+
+### [ ] T264. **Naik level: tampilkan stat sebelum → sesudah**
+- File: `src/systems/qol.js`. Baca dulu: `levelUpDetail()` (±39–44).
+- Lakukan: format setiap stat sebagai "HP 62 → 70" dengan angka baru hijau.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; konsol berikan EXP sampai naik level → rincian jelas.
+
+### [ ] T265. **Pencapaian: kabar progres 50% & 90%**
+- File: `src/systems/achievements.js`. Baca dulu: `achCheck()` (±4–11) & `ACH` di `src/data/quests.js` (BACA saja).
+- Lakukan: untuk pencapaian yang syaratnya counter `S.st.x >= N`, tampilkan toast kecil satu kali saat progres melewati 50% dan 90%. Catat yang sudah diumumkan di `localStorage.lumina_achprog` (JSON).
+- Batasan: jangan menambah field ke S.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; konsol `S.st.fish = 26; achCheck()` → toast "Kail Emas 50%" sekali.
+
+### [ ] T266. **Sapaan NPC tidak berulang**
+- File: `src/npc/npcs.js`. Baca dulu: bagian yang memilih kalimat dari `NPC_BARKS` (grep `NPC_BARKS[`).
+- Lakukan: jangan memilih kalimat yang sama dengan kalimat terakhir NPC itu (simpan indeks terakhir di objek NPC).
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; dekati NPC berkali-kali → kalimat berganti.
+
+### [ ] T267. **Peta benua: tombol perbesar/perkecil**
+- File: `src/ui/worldmap.js`. Baca dulu: `openWorldMap()`.
+- Lakukan: tambahkan tombol + / − yang mengubah skala gambar (0,5×–3×) dan bisa digeser (sudah ada geser? cek); pertahankan titik Arka terlihat saat memperbesar.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; buka Peta Benua → perbesar 2× → geser → tutup tanpa error.
+
+### [ ] T268. **Teks dialog mengikuti ukuran huruf pengaturan**
+- File: `styles.css`. Baca dulu: aturan CSS kotak dialog & opsi ukuran huruf di `src/systems/polish.js` (BACA saja, cari 'font').
+- Lakukan: pastikan kotak dialog, kartu misi, dan tip memakai variabel ukuran huruf yang sama dengan pengaturan, sehingga opsi ukuran huruf berpengaruh ke semuanya.
+- Batasan: hanya CSS.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; ubah ukuran huruf di Pengaturan → dialog ikut membesar.
+
+### [ ] T269. **Tombol sentuh terbaca di layar terang**
+- File: `styles.css`. Baca dulu: aturan tombol sentuh (SERANG, DASH, SIHIR, OBAT, MENU, PETA, TAS).
+- Lakukan: tambah garis tepi gelap 2px & bayangan teks agar label terbaca di bawah sinar matahari; jangan ubah ukuran/posisi.
+- Batasan: hanya CSS.
+- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
+- Cek: `npm run check`; lihat di HP dengan kecerahan tinggi.
+
 ---
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
 memasang BESTIARY_TEXT ke layar Bestiari, buang petak objek jauh di mode benua, hapus mode lama. Rincian: `docs/GAME_DESIGN.md` (akhir) & `docs/HANDOFF_OPENWORLD.md`.
