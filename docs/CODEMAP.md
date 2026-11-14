@@ -163,9 +163,9 @@ _Teks misi, tujuan misi, jurus, pencapaian_
 _Jurnal: catatan lore (LORE), misteri jangka panjang (MYSTERY), penyelidikan jangka menengah (midGoal). Lihat docs/GAME_DESIGN.md_
 `LORE` 4 · `MYSTERY` 37 · `midGoal()` 49 · `learn()` 58
 
-## src/systems/daynight.js (10 baris)
+## src/systems/daynight.js (25 baris)
 _Jam & siang-malam_
-`nightAmt()` 4 · `isNight()` 5 · `gameHours()` 6 · `lerpCol()` 7 · `_clk` 8 · `updClock()` 9
+`nightAmt()` 4 · `isNight()` 11 · `gameHours()` 12 · `lerpCol()` 13 · `_clk` 17 · `updClock()` 18
 
 ## src/systems/achievements.js (12 baris)
 _Cek pencapaian_
