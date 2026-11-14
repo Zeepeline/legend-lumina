@@ -103,7 +103,7 @@ _Peta: Desa Lumina_
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
-## src/world/maps/meadow.js (60 baris)
+## src/world/maps/meadow.js (66 baris)
 _Peta: Padang Angin_
 
 

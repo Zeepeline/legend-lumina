@@ -13,8 +13,10 @@ MAPS.meadow = {
   flowers: 1,
   objs: [
     // papan arah di persimpangan (fitur #674)
-    ['sign', 488, 500, { text: 'Papan arah: ↑ Puncak Beku · → Gua Batu & Rawa Senja · ← Desa Lumina' }], ['sign', 812, 440, { text: 'Papan arah: ↗ Gua Batu · ↘ Rawa Senja · ← Desa Lumina' }],
-    ['windmill', 300, 170], ['campfire', 380, 240], ['hay', 250, 220], ['hay', 352, 214], ['hay', 330, 240], ['fence', 230, 250], ['fence', 248, 250], ['fence', 340, 250], ['fence', 358, 250],
+    ['sign', 488, 500, { text: 'Papan arah: ↑ Puncak Beku · → Gua Batu & Rawa Senja · ← Desa Lumina' }],
+    ['sign', 812, 440, { text: 'Papan arah: ↗ Gua Batu · ↘ Rawa Senja · ← Desa Lumina' }],
+    ['windmill', 300, 170], ['campfire', 380, 240], ['hay', 250, 220], ['hay', 352, 214], ['hay', 330, 240],
+    ['fence', 230, 250], ['fence', 248, 250], ['fence', 340, 250], ['fence', 358, 250],
     ['houseA', 140, 252], ['houseB', 480, 246], ['crate', 214, 352], ['barrel', 232, 356], ['crate', 214, 396],
     ['sign', 420, 300, { text: 'DESA KINCIR\nLumbung gandum Benua Lumina.' }],
     ['teatable', 430, 246],
@@ -55,5 +57,9 @@ MAPS.meadow = {
     ['snake', 400, 760], ['boar', 260, 780], ['plant', 340, 920], ['bee', 200, 880],
     ['wolf', 1180, 880], ['boar', 1300, 820], ['plant', 1180, 700], ['slimer', 880, 860], ['wolf', 1100, 300], ['bee', 1260, 300],
   ],
-  trees: { n: 460, min: 30, sp: 34, types: [['treeA', .15], ['treeB', .12], ['apple1', .06], ['orange1', .04], ['bushG2', .2], ['bushG1', .13], ['rock', .3]] }, butterflies: 10,
+  trees: {
+    n: 460, min: 30, sp: 34,
+    types: [['treeA', .15], ['treeB', .12], ['apple1', .06], ['orange1', .04], ['bushG2', .2], ['bushG1', .13], ['rock', .3]]
+  },
+  butterflies: 10,
 };
