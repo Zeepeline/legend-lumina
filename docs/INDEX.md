@@ -43,3 +43,6 @@ _(tanpa sub-bagian)_
 
 ## WORLD_DESIGN.md — WORLD & REGION DESIGN RULES (745 baris, ~3300 token)
 Legenda Lumina 2 · 1. Fokus Pengembangan Saat Ini 8 · Desa 122 · Hutan Lumina 285
+
+## WORLD_REFACTOR.md — Blueprint Refactor Desain Dunia — Benua Lumina (55 baris, ~1300 token)
+1. Diagnosis (diukur dari data peta, 20 wilayah luar ruang) 6 · 2. Prinsip yang dipakai (dari saran pemilik, disesuaikan ke mesin game) 17 · 3. Perubahan mesin (bertahap, tiap tahap bisa dicek & dibatalkan) 25 · 4. Rencana per wilayah (tahap F) 35 · 5. Yang TIDAK diubah 48 · 6. Kriteria terima 51
