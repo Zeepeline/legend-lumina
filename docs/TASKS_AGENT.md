@@ -2646,7 +2646,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 2. **Keterhubungan Jalan:** 9 dari 10 bangunan terhubung langsung lewat segmen setapak. Satu pengecualian: Bengkel Tempa (`forge` di 964, 560) berada di selatan jalan utama timur (`y=492`), disarankan diberi setapak cabang pendek pada T348.
 3. **Jalan Buntu:** Tidak ditemukan jalan buntu menjebak; semua percabangan berakhir di pintu bangunan atau pintu keluar wilayah (`lake`, `forest`, `meadow`).
 
-### [ ] T347. **Desa: alun-alun sebagai pusat** — referensi: Stardew (alun-alun Pelican Town), urban planning
+### [x] T347. **Desa: alun-alun sebagai pusat** — referensi: Stardew (alun-alun Pelican Town), urban planning
 
 - File: `src/world/maps/village.js`. Baca dulu: catatan audit desa.
 - Lakukan: jadikan satu ruang terbuka di tengah (dekat rumah tetua) sebagai alun-alun: lantai `discs` (cakram tanah/batu yang sudah dipakai peta), sumur atau lampu di tengah, 2 bangku, papan (`sign`). Jalan-jalan desa bermuara ke sini.

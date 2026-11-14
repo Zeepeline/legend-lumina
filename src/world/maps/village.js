@@ -13,7 +13,7 @@ MAPS.village = {
     [104, 480, 104, 492, 9], [920, 480, 920, 492, 9],
   ],
   rings: [[512, 266, 122, 80, 26]],
-  discs: [[512, 476, 60]],
+  discs: [[512, 476, 78], [512, 380, 42]],
   gardens: [[342, 548, 122, 54, 0], [562, 548, 122, 54, 1]],
   objs: [
     ['bigtree', 512, 300, { ok: 'rumah pohon Tetua Bram; pintunya memang di batang pohon' }],
