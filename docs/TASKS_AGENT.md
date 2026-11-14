@@ -1907,7 +1907,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; lukai goblin di dekat dukun → dukun menyembuhkannya; jadi target utama yang masuk akal.
 
-### [ ] T305. **Musuh makin agresif saat Arka sekarat** — referensi: Bloodborne (tekanan)
+### [x] T305. **Musuh makin agresif saat Arka sekarat** — referensi: Bloodborne (tekanan)
 - File: `src/ai/enemies.js`. Baca dulu: bagian jeda antar serangan di updEnemy.
 - Lakukan: jika HP Arka < 30%, jeda antar serangan musuh dalam 120 px −20% (tidak berlaku mode Santai).
 - Jika SUDAH ada → tandai [x] "sudah ada".

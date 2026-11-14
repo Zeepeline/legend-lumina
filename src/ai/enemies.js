@@ -40,12 +40,12 @@ Object.assign(World.prototype, {
     }
     e.t -= dt; e.cd -= dt;
     const rel = (typeof OPT !== 'undefined' && OPT.diff === 0);
-    const wMul = rel ? 1.3 : 1, cdMul = rel ? 1.2 : 1;
+    const lowHp = !rel && typeof S !== 'undefined' && typeof stat === 'function' && S.hp < stat().maxhp * 0.3 && d < 120;
+    const wMul = rel ? 1.3 : 1, cdMul = (rel ? 1.2 : 1) * (lowHp ? 0.8 : 1);
     if (this.atkTok && this.atkTok.has(e)) { e.tokT = (e.tokT || 0) + dt; if (e.tokT > 2.2) { this.atkTok.delete(e); e.tokT = 0; } }
     // Insting binatang kabur saat sekarat (#T279)
     if ((e.type === 'wolf' || e.type === 'boar') && !e.fleeChecked && e.hp < e.max * 0.2) {
-      e.fleeChecked = true;
-      if (Math.random() < 0.4) { e.fleeing = 1.5; popWorld(s.x, s.y - s.displayHeight - 6, '!?', 'xp'); }
+      e.fleeChecked = true; if (Math.random() < 0.4) { e.fleeing = 1.5; popWorld(s.x, s.y - s.displayHeight - 6, '!?', 'xp'); }
     }
     if (e.fleeing > 0) {
       e.fleeing -= dt; if (this.atkTok) this.atkTok.delete(e);
