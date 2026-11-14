@@ -42,7 +42,7 @@ const ENEMY = {
   // Raja Slime Membelah Diri (#197)
   king_slime: { name: 'Raja Slime Mahkota', tex: 'slime', hp: 130, atk: 11, def: 4, spd: 46, exp: 60, gold: [45, 80], r: 12, ai: 'hop', scale: 1.65, drop: ['amethyst_gem', .4] },
   // Skuad Taktis Goblin: Pemanah & Dukun (#181 & #183)
-  goblin_archer: { name: 'Goblin Pemanah', tex: 'ch_goblin', hp: 26, atk: 8, def: 2, spd: 48, exp: 18, gold: [4, 8], r: 7, ai: 'shoot', proj: 'arrow', ch: 1, drop: ['sarrow', .5] },
+  goblin_archer: { name: 'Goblin Pemanah', tex: 'goblin_archer_hd', scale: 0.46, hp: 28, atk: 9, def: 2, spd: 50, exp: 20, gold: [5, 10], r: 7, ai: 'shoot', proj: 'arrow', drop: ['sarrow', .5] },
   goblin_shaman: { name: 'Dukun Goblin', tex: 'ch_goblin', hp: 42, atk: 8, def: 4, spd: 42, exp: 35, gold: [8, 16], r: 8, ai: 'shaman', ch: 1, drop: ['herb', .7] },
 };
 const PROJ = { spore: { key: 'spore', spd: 72, fx: ['poison', 4, .5] }, seed: { key: 'seed', spd: 84 }, bone: { key: 'bone', spd: 96, spin: 1 }, rock: { key: 'rockshot', spd: 110, spin: 1 }, venom: { key: 'venom', spd: 96, fx: ['poison', 5, .6] }, ice: { key: 'icebolt', spd: 112, fx: ['chill', 3, .7] }, arrow: { key: 'spore', spd: 90 } };

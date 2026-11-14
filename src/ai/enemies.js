@@ -153,12 +153,59 @@ Object.assign(World.prototype, {
         const vx = tx - s.x, vy = ty - s.y, vl = Math.hypot(vx, vy) || 1, sp = D.spd * (e.faded ? 1.5 : 1);
         s.setVelocity(vx / vl * sp, vy / vl * sp); s.flipX = vx > 0; break;
       }
-      case 'shoot':
-        if (D.ch) { if (aggro && d > 70) s.setVelocity(dx / d * D.spd, dy / d * D.spd); else if (aggro && d < 46) s.setVelocity(-dx / d * D.spd, -dy / d * D.spd); else if (aggro) s.setVelocity(0); else wander(D.spd * .6); }
-        else if (e.t <= 0) { e.t = rnd(1, 2); const a = aggro && d > 55 ? Math.atan2(dy, dx) : rnd(0, 6.28); const go = aggro || hd < 50; s.setVelocity(go ? Math.cos(a) * D.spd : hx / hd * D.spd, go ? Math.sin(a) * D.spd : hy / hd * D.spd); }
-        e.shootT -= dt;
-        if (aggro && e.shootT <= 0 && d < 150) { e.shootT = rnd(1.8, 2.8); if (!D.ch) s.setVelocity(0); this.eShoot(e, D.proj, D.proj === 'bone' ? [-.12, .12] : [0], D.atk); this.tweens.add({ targets: s, scaleY: sc * .85, scaleX: sc * 1.15, duration: 90, yoyo: true }); }
-        if (D.ch) this.charAnim(e); break;
+      case 'shoot': {
+        const isArcherHd = D.tex === 'goblin_archer_hd';
+        if (e.st === 'shoot') {
+          s.setVelocity(0);
+          if (e.t <= 0) { e.st = 'idle'; }
+          break;
+        }
+        if (D.ch) {
+          if (aggro && d > 70) s.setVelocity(dx / d * D.spd, dy / d * D.spd);
+          else if (aggro && d < 46) s.setVelocity(-dx / d * D.spd, -dy / d * D.spd);
+          else if (aggro) s.setVelocity(0);
+          else wander(D.spd * .6);
+        } else {
+          if (aggro) {
+            if (d > 110) s.setVelocity(dx / d * D.spd, dy / d * D.spd);
+            else if (d < 55) s.setVelocity(-dx / d * D.spd, -dy / d * D.spd);
+            else s.setVelocity(0);
+          } else wander(D.spd * .5);
+        }
+        e.shootT = (e.shootT || rnd(1.5, 2.5)) - dt;
+        if (aggro && e.shootT <= 0 && d < 160) {
+          e.shootT = rnd(2.0, 3.0);
+          if (isArcherHd && s.anims) {
+            e.st = 'shoot'; e.t = 0.55; s.setVelocity(0);
+            s.flipX = dx > 0;
+            const anim = Math.random() < 0.35 ? 'goblin_archer_hd_rain' : 'goblin_archer_hd_shoot';
+            s.play(anim, true);
+            this.time.delayedCall(260, () => {
+              if (s.active && e.hp > 0) {
+                if (anim === 'goblin_archer_hd_rain') {
+                  this.eShoot(e, 'arrow', [-0.25, 0, 0.25], D.atk);
+                } else {
+                  this.eShoot(e, 'arrow', [0], D.atk);
+                }
+              }
+            });
+          } else {
+            if (!D.ch) s.setVelocity(0);
+            this.eShoot(e, D.proj || 'arrow', D.proj === 'bone' ? [-.12, .12] : [0], D.atk);
+            this.tweens.add({ targets: s, scaleY: sc * .85, scaleX: sc * 1.15, duration: 90, yoyo: true });
+          }
+        }
+        if (D.ch) this.charAnim(e);
+        else if (isArcherHd && s.anims && e.st !== 'shoot') {
+          const vx = s.body.velocity.x, vy = s.body.velocity.y;
+          if (Math.abs(vx) > 3) s.flipX = vx > 0;
+          const mv = Math.hypot(vx, vy) > 4;
+          if (aggro && mv) s.play('goblin_archer_hd_run', true);
+          else if (mv) s.play('goblin_archer_hd_walk', true);
+          else s.play('goblin_archer_hd_idle', true);
+        }
+        break;
+      }
       case 'turret':
         s.setVelocity(0); e.shootT -= dt; s.flipX = dx > 0;
         if (aggro && e.shootT <= 0 && d < 160) { e.shootT = 2.4; this.eShoot(e, 'seed', [-.32, 0, .32], D.atk); this.tweens.add({ targets: s, scaleY: 1.15, duration: 100, yoyo: true }); }

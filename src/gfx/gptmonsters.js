@@ -88,4 +88,25 @@ function applyGptMonsters(sc) {
     regG('goblin_hd_mv', 10, 19, 10, -1);
     if (ENEMY.goblin) { ENEMY.goblin.tex = 'goblin_hd'; ENEMY.goblin.scale = 0.46; delete ENEMY.goblin.ch; }
   }
+  const gahd = IMGEL.mon_goblin_archer_hd;
+  if (gahd) {
+    if (!T.exists('goblin_archer_hd')) sc.textures.addSpriteSheet('goblin_archer_hd', gahd, { frameWidth: 120, frameHeight: 84 });
+    const regGA = (k, st, ed, fps, r) => {
+      if (!A.exists(k)) A.create({ key: k, frames: A.generateFrameNumbers('goblin_archer_hd', { start: st, end: ed }), frameRate: fps, repeat: r });
+    };
+    regGA('goblin_archer_hd_idle', 0, 7, 8, -1);
+    regGA('goblin_archer_hd_walk', 8, 15, 9, -1);
+    regGA('goblin_archer_hd_run', 16, 24, 11, -1);
+    regGA('goblin_archer_hd_shoot', 25, 29, 9, 0);
+    regGA('goblin_archer_hd_rain', 30, 34, 9, 0);
+    regGA('goblin_archer_hd_melee', 35, 40, 9, 0);
+    regGA('goblin_archer_hd_hurt', 41, 45, 8, 0);
+    regGA('goblin_archer_hd_die', 46, 50, 8, 0);
+    regGA('goblin_archer_hd_mv', 8, 15, 9, -1);
+    if (ENEMY.goblin_archer) {
+      ENEMY.goblin_archer.tex = 'goblin_archer_hd';
+      ENEMY.goblin_archer.scale = 0.46;
+      delete ENEMY.goblin_archer.ch;
+    }
+  }
 }

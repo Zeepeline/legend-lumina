@@ -7,7 +7,7 @@ const IMG_LIST = [
   "apple1", "bench", "bigtree", "bushG1", "bushG2", "bushP", "bushP2", "bushW",
   "fountain", "houseA", "houseB", "houseC", "market", "orange1", "planter", "pot",
   "treeA", "treeWoodsPine", "stumpWoods",
-  "lampPost", "crateCart", "benchWood", "hero_custom", "mon_slime_hd", "mon_wolf_hd", "mon_wolf_elite_hd", "mon_goblin_hd",
+  "lampPost", "crateCart", "benchWood", "hero_custom", "mon_slime_hd", "mon_wolf_hd", "mon_wolf_elite_hd", "mon_goblin_hd", "mon_goblin_archer_hd",
   "mon_goblin_shaman",
   "goblin_fortress", "goblin_gate", "goblin_hut", "goblin_tower", "goblin_cage", "goblin_forge", "goblin_shrine",
   "goblin_cauldron", "goblin_totem", "goblin_torch", "goblin_wagon", "goblin_banner"
