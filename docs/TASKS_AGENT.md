@@ -2709,7 +2709,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; benda alam liar (api unggun) hanya di luar permukiman
 - Cek: `npm run check` (0 masalah); jalan panjang terasa punya cerita.
 
-### [ ] T356. **Satu penanda besar per wilayah** — referensi: BotW (gravitasi), GEOGRAFI §4
+### [x] T356. **Satu penanda besar per wilayah** — referensi: BotW (gravitasi), GEOGRAFI §4
 
 - File: peta wilayah di tabel GEOGRAFI §4 (`src/world/maps/*.js`). Baca dulu: `docs/GEOGRAFI.md` §4; daftar objek tinggi di `src/world/objects.js`.
 - Lakukan: untuk tiap wilayah pastikan ada penanda dari tabel (pakai objek yang sudah ada; kalau tidak ada yang cocok, tulis catatan). Letakkan di titik yang terlihat dari jalan masuk wilayah.
