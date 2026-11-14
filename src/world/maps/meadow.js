@@ -38,6 +38,8 @@ MAPS.meadow = {
     ['sign', 660, 90, { text: 'Utara: PUNCAK BEKU\nDingin menusuk. Bawa Penawar & Ramuan.' }],
     ['sign', 1150, 230, { text: 'GUA BATU\nTempat Golem Purba tidur. Jangan berisik!' }],
     ['rock', 560, 380], ['rock', 900, 600], ['rock', 1100, 520], ['log', 630, 350], ['stump', 380, 600], ['rock', 180, 700],
+    ['rock', 350, 310], ['bushG1', 378, 320], ['pebbles', 350, 326],
+    ['rock', 860, 410], ['bushy', 876, 416], ['pebbles', 848, 418],
     ['bushy', 520, 560], ['bushv', 980, 400], ['bushP', 760, 560], ['bushW', 600, 600], ['bushG1', 380, 520],
     ['treeA', 150, 450], ['apple2', 620, 300], ['orange1', 900, 260], ['treeB', 1300, 600], ['apple1', 1100, 900],
     ['viewpoint', 300, 110, { id: 'vp_meadow', name: 'Bukit Kincir Angin' }],

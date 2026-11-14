@@ -99,11 +99,11 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _Peta: Desa Lumina_
 
 
-## src/world/maps/forest.js (86 baris)
+## src/world/maps/forest.js (87 baris)
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
-## src/world/maps/meadow.js (82 baris)
+## src/world/maps/meadow.js (84 baris)
 _Peta: Padang Angin_
 
 
@@ -115,7 +115,7 @@ _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
-## src/world/maps/snow.js (47 baris)
+## src/world/maps/snow.js (48 baris)
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 

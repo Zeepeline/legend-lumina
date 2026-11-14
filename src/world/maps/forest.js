@@ -34,6 +34,7 @@ MAPS.forest = {
     ['rock', 520, 820], ['stump', 760, 900], ['rock', 520, 1050], ['rock', 760, 1060], ['mush', 300, 300], ['mush', 370, 710],
     ['mush', 860, 800], ['mush', 140, 760], ['bushy', 600, 236], ['bushv', 460, 360], ['bushy', 800, 700], ['bushv', 280, 700],
     ['rock', 1080, 900], ['log', 980, 880], ['mush', 1050, 820],
+    ['rockWoods', 760, 260], ['bushv', 780, 266], ['pebbles', 750, 274],
     ['deadtree', 280, 240],
     ['viewpoint', 1010, 260, { id: 'vp_forest', name: 'Tebing Pengawas Hutan' }],
     ['lumina_shard', 1010, 210, { id: 'ls_forest_cliff' }],

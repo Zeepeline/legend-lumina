@@ -2723,7 +2723,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; jangan menambah item/lore baru di data
 - Cek: `npm run check` (0 masalah); mendekati penanda selalu ada sesuatu yang didapat.
 
-### [ ] T358. **Aturan segitiga: gugus batu & bukit** — referensi: BotW (aturan segitiga)
+### [x] T358. **Aturan segitiga: gugus batu & bukit** — referensi: BotW (aturan segitiga)
 
 - File: `src/world/maps/meadow.js`, `forest.js`, `snow.js`, `swamp.js`. Baca dulu: objek batu/semak besar yang ada.
 - Lakukan: di tiap wilayah, buat 2–3 gugus batu/semak dengan ukuran BERAGAM (besar–sedang–kecil) yang menutup sebagian pandangan ke penanda/rahasia dari jalan utama, sehingga pemain berbelok untuk melihat.
