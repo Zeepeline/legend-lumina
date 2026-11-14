@@ -443,9 +443,9 @@ _Layar judul_
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
 `exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 20 · `plEnemies()` 22 · `NEIGH` 69
 
-## src/gfx/gptassets.js (24 baris)
+## src/gfx/gptassets.js (36 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
-`GPT_SWAP` 4 · `GPT_LOOK` 5 · `applyGptSwap()` 10
+`GPT_SWAP` 4 · `GPT_LOOK` 10 · `applyGptSwap()` 22
 
 ## src/gfx/gptmonsters.js (135 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._
