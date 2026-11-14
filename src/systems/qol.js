@@ -68,12 +68,26 @@ const TIPS = [
 ];
 function showTip(html) {
   let e = document.getElementById('tip'); if (e) e.remove();
-  e = document.createElement('div'); e.id = 'tip'; e.innerHTML = '💡 ' + html + '<small>ketuk untuk tutup</small>'; UI.appendChild(e);
-  const close = () => { e.classList.add('off'); setTimeout(() => e.remove(), 300); }; e.onpointerdown = ev => { ev.stopPropagation(); close(); }; setTimeout(close, 7000);
+  e = document.createElement('div'); e.id = 'tip';
+  e.innerHTML = '💡 ' + html
+    + '<small>ketuk untuk tutup · <span class="tip-off" style="text-decoration:underline;cursor:pointer">jangan tampilkan tips lagi</span></small>';
+  UI.appendChild(e);
+  const close = () => { e.classList.add('off'); setTimeout(() => e.remove(), 300); };
+  const offBtn = e.querySelector('.tip-off');
+  if (offBtn) {
+    offBtn.onpointerdown = ev => {
+      ev.stopPropagation();
+      try { localStorage.setItem('lumina_tips', '0'); } catch (_) { }
+      if (S.tipsDone) S.tipsDone.all = 1;
+      close();
+    };
+  }
+  e.onpointerdown = ev => { ev.stopPropagation(); close(); }; setTimeout(close, 7000);
 }
 Object.assign(World.prototype, {
   updTips(dt) {
     if (G.lock) { const t = document.getElementById('tip'); if (t) t.remove(); }
+    try { if (localStorage.getItem('lumina_tips') === '0') return; } catch (_) { }
     if (G.title || G.lock || !OPT.tips || !S.tipsDone || S.tipsDone.all || this.M.indoor && S.stage > 0) return;
     this.tipT = (this.tipT || 2) - dt; if (this.tipT > 0) return; this.tipT = 1;
     if (document.getElementById('tip')) return;

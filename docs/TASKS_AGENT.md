@@ -1581,7 +1581,8 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; berjalan 10 detik → suara langkah terasa alami.
 
-### [ ] T260. **Tips: pilihan matikan semua tips**
+### [x] T260. **Tips: pilihan matikan semua tips**
+- Selesai: tautan "jangan tampilkan tips lagi" di kotak tip menyimpan `localStorage.lumina_tips='0'` dan menghentikan `updTips()`.
 - File: `src/systems/qol.js`. Baca dulu: `TIPS`, `showTip()`, `updTips()` (±58–83).
 - Lakukan: tambahkan tautan kecil "jangan tampilkan tips lagi" di kotak tip; simpan `localStorage.lumina_tips='0'`; `updTips` berhenti bila nilai itu ada.
 - Batasan: jangan ubah isi TIPS.
