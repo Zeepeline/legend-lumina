@@ -29,14 +29,14 @@ Object.assign(World.prototype, {
     if (wt === 'spear') { sw.setRotation(ang).setPosition(ox - dx * 6, oy + 2); this.tweens.add({ targets: sw, x: ox + dx * 10, y: oy + 2 + dy * 10, duration: 90, yoyo: true, onComplete: () => sw.setVisible(false) }); }
     else { sw.setRotation(ang - (wt === 'axe' ? 1.8 : 1.3)); this.tweens.add({ targets: sw, rotation: ang + (wt === 'axe' ? 1.8 : 1.2), duration: wt === 'axe' ? 230 : 150, ease: wt === 'axe' ? 'Quad.easeIn' : 'Linear', onComplete: () => sw.setVisible(false) }); }
     pl.anims.stop(); pl.setFrame((pl.dir === 'left' || pl.dir === 'right' ? 'side' : pl.dir) + '3');
-    const st = stat(), hit = new Set();
+    const st = stat(), hit = new Set(), curSwing = (this.swingId = (this.swingId || 0) + 1);
     const doHit = () => {
       for (const [k, r] of W.pts) {
         const hx = pl.x + dx * k, hy = pl.y - 6 + dy * k;
         for (const e of this.enemies) {
-          if (e.hp <= 0 || hit.has(e)) continue; const ey = e.spr.y - e.D.r * e.sc * .8 - (e.D.fly ? 6 : 0);
+          if (e.hp <= 0 || hit.has(e) || e.lastSwing === curSwing) continue; const ey = e.spr.y - e.D.r * e.sc * .8 - (e.D.fly ? 6 : 0);
           if (Math.hypot(e.spr.x - hx, ey - hy) < r + e.D.r * e.sc) {
-            hit.add(e); const crit = Math.random() < W.crit + (st.crit || 0); const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1;
+            hit.add(e); e.lastSwing = curSwing; const crit = Math.random() < W.crit + (st.crit || 0); const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1;
             // Deteksi Serangan dari Belakang / Backstab (#13)
             let isBackstab = false;
             if (e.dir && pl.dir) {

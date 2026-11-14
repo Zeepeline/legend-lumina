@@ -1704,7 +1704,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; rasakan: kill & kritikal terasa 'berat', pukulan biasa tetap lincah.
 
-### [ ] T276. **Satu ayunan = satu kena per musuh** — referensi: Hollow Knight
+### [x] T276. **Satu ayunan = satu kena per musuh** — referensi: Hollow Knight
+- Selesai: tiap ayunan serangan senjata diberi id unik (`this.swingId++`), dicatat ke `e.lastSwing`, dan dicegah menerima lebih dari 1 hit per ayunan di `attack()`.
 - File: `src/systems/combat.js`. Baca dulu: `attack()` (±12–88) bagian deteksi kena.
 - Lakukan: beri tiap ayunan id (`this.swingId++`); simpan `e.lastSwing`; jika sama, lewati. Cegah satu tebasan mengenai musuh yang sama dua kali.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
