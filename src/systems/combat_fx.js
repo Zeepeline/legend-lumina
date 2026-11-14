@@ -67,7 +67,21 @@ Object.assign(World.prototype, {
     // 3 percikan kecil di ujung busur (T312)
     const tipX = ox + Math.cos(ang) * (24 * s), tipY = oy + Math.sin(ang) * (24 * s);
     if (this.sparkle) this.sparkle(tipX, tipY, 'spark', 3);
-    if (fin) this.cameras.main.shake(70, .003);
+    if (fin) {
+      this.cameras.main.shake(70, .003);
+      if (!OPT.lite) {
+        const flash = this.add.rectangle(0, 0, VW, VH, 0xffffff, 0.25)
+          .setOrigin(0, 0).setScrollFactor(0).setDepth(9999).setBlendMode(Phaser.BlendModes.ADD);
+        this.tweens.add({ targets: flash, alpha: 0, duration: 80, onComplete: () => flash.destroy() });
+      }
+      const radial = this.add.graphics().setDepth(depth + 1);
+      radial.lineStyle(1.5, 0xffffff, 0.9);
+      for (let i = 0; i < 6; i++) {
+        const rAng = (i / 6) * Math.PI * 2 + ang, rIn = 6, rOut = 18;
+        radial.lineBetween(tipX + Math.cos(rAng) * rIn, tipY + Math.sin(rAng) * rIn, tipX + Math.cos(rAng) * rOut, tipY + Math.sin(rAng) * rOut);
+      }
+      this.tweens.add({ targets: radial, alpha: 0, scale: 1.3, duration: 120, ease: 'Quad.easeOut', onComplete: () => radial.destroy() });
+    }
     if (wt === 'axe' && fin) {
       const gx = ox + dx * 14, gy = oy + dy * 10;
       const crack = this.add.graphics().setDepth(gy - 2);

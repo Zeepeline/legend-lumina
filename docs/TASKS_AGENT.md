@@ -1965,7 +1965,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; coba ketiga senjata → masing-masing berbeda.
 
-### [ ] T314. **Kilat akhir kombo** — referensi: Devil May Cry, Hollow Knight
+### [x] T314. **Kilat akhir kombo** — referensi: Devil May Cry, Hollow Knight
 - File: `src/systems/combat_fx.js`. Baca dulu: `slashFx()` bagian `fin`.
 - Lakukan: pada pukulan ke-3: kilat putih layar 1 frame (persegi `setScrollFactor(0)` alpha .25 → 0 dalam 80 ms) + 6 garis radial pendek dari titik kena.
 - Batasan: matikan kilat bila `OPT.lite` (hemat baterai) aktif.
@@ -2016,7 +2016,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; Tebasan Putar → pusaran terlihat penuh.
 
-### [ ] T322. **Kabut Racun, Cahaya Pulih, Lentera Suci** — referensi: Divinity (awan racun), Final Fantasy (Cure), Diablo (Holy)
+### [x] T322. **Kabut Racun, Cahaya Pulih, Lentera Suci** — referensi: Divinity (awan racun), Final Fantasy (Cure), Diablo (Holy)
 - File: `src/systems/spell_fx.js`. Baca dulu: bagian ketiga jurus itu di `castSpell()` (BACA).
 - Lakukan: Kabut Racun: gelembung hijau naik & awan berdenyut; Cahaya Pulih: pilar cahaya hijau-emas + daun melayang ke atas; Lentera Suci: sinar silang emas + titik cahaya mengorbit Arka 1 s.
 - Batasan: satu commit boleh berisi ketiganya bila < 80 baris.

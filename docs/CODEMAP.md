@@ -199,7 +199,11 @@ _pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali d
 _Jurus: dash, tebasan putar, nova es_
 `.updSkills()` 4 · `.spin()` 12 · `.dash()` 20 · `.nova()` 27
 
-## src/systems/learn.js (70 baris)
+## src/systems/spell_fx.js (51 baris)
+_Efek khusus jurus: Kabut Racun, Cahaya Pulih, Lentera Suci (T322)_
+`.spellFx()` 4
+
+## src/systems/learn.js (71 baris)
 _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipakai (tingkat I–III)._
 `JURUS` 4 · `MASTERY` 13 · `tierOf` 14 · `learned` 15 · `useJurus()` 16 · `canTeach` 20 · `.learnTalk()` 23 · `.castSpell()` 38
 
@@ -407,9 +411,9 @@ _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat 
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
 `SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 120
 
-## src/systems/combat_fx.js (266 baris)
+## src/systems/combat_fx.js (280 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
-`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 85 · `.hitFx()` 95 · `.rollFx()` 130 · `.updLowHp()` 135
+`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 99 · `.hitFx()` 109 · `.rollFx()` 144 · `.updLowHp()` 149
 
 ## src/ui/worldmap.js (343 baris)
 _Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)_
