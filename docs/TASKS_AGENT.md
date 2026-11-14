@@ -1985,11 +1985,11 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; dash → terlihat cepat & tajam. (selesai di v1.30.1)
 
-### [ ] T317. **Menghindar sempurna: siluet biru & waktu melambat** — referensi: Bayonetta (Witch Time), Nier Automata
+### [x] T317. **Menghindar sempurna: siluet biru & waktu melambat** — referensi: Bayonetta (Witch Time), Nier Automata
 - File: `src/systems/combat_fx.js`. Baca dulu: hasil tugas "Menghindar tepat waktu" (gelombang 6).
 - Lakukan: saat perfect dodge: siluet biru Arka tertinggal di posisi semula 0,4 s, layar sedikit kebiruan (overlay alpha .12) selama perlambatan.
 - Jika SUDAH ada → tandai [x] "sudah ada".
-- Cek: `npm run check`; dash tepat waktu → siluet biru & warna dingin singkat.
+- Cek: `npm run check`; dash tepat waktu → siluet biru & warna dingin singkat. (selesai di v1.30.1)
 
 ### [ ] T318. **Lingkar rune saat merapal jurus** — referensi: Diablo, Tales of
 - File: file baru `src/systems/spell_fx.js` (daftarkan di index.html setelah combat_fx.js). Baca dulu: `castSpell()` di `src/systems/learn.js` (BACA).

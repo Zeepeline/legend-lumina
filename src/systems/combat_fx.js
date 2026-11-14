@@ -277,7 +277,20 @@ Object.assign(World.prototype, {
   const hurt0 = W.hurtPlayer;
   W.hurtPlayer = function (atk, sx, sy, fx) {
     const pl = this.pl, prevParries = S?.parries || 0, hp0 = S.hp;
+    const wasDodged = pl && pl.perfectDodged;
+    const px = pl ? pl.x : 0, py = pl ? pl.y : 0;
     const r = hurt0.apply(this, arguments);
+    if (pl && !wasDodged && pl.perfectDodged) {
+      // T317: Menghindar sempurna siluet biru & overlay waktu melambat
+      const ghost = this.add.image(px, py, pl.texture.key, pl.frame.name)
+        .setOrigin(.5, 1).setFlipX(pl.flipX).setTint(0x40b0ff).setAlpha(0.75).setDepth(py - 1)
+        .setBlendMode(Phaser.BlendModes.ADD);
+      this.tweens.add({ targets: ghost, alpha: 0, scale: 1.1, duration: 400, onComplete: () => ghost.destroy() });
+      if (!OPT.lite) {
+        const tint = this.add.rectangle(0, 0, VW, VH, 0x184890, 0.12).setOrigin(0, 0).setScrollFactor(0).setDepth(9997);
+        this.tweens.add({ targets: tint, alpha: 0, duration: 200, delay: 100, onComplete: () => tint.destroy() });
+      }
+    }
     if ((S?.parries || 0) > prevParries && pl) {
       const bx = (pl.x + (sx || pl.x)) / 2, by = (pl.y + (sy || pl.y)) / 2;
       this.hitStop(.12, 50);

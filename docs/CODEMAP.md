@@ -139,7 +139,7 @@ _Interior: penginapan, rumah pohon, rumah Lina_
 _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
 `UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 36 · `choose()` 40 · `ask()` 76 · `BANNER_QUEUE` 82 · `BANNER_BUSY` 83 · `processBannerQueue()` 84 · `banner()` 97 · `POPS` 106 · `popWorld()` 107 · `updPops()` 111 · `HUD` 114 · `buildHud()` 115 · `updHud()` 129 · `hudPeaceT` 180 · `updHudFade()` 181 · `showHud()` 196 · `bossBar()` 201 · `autoSaveIcon()` 217
 
-## src/ui/spellbar.js (53 baris)
+## src/ui/spellbar.js (54 baris)
 _Bilah 5 slot jurus dengan cooldown (T327)_
 `SPELLBAR` 3 · `buildSpellbar()` 4 · `updSpellbar()` 12
 
@@ -411,9 +411,9 @@ _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat 
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
 `SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 120
 
-## src/systems/combat_fx.js (333 baris)
+## src/systems/combat_fx.js (358 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
-`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 99 · `.hitFx()` 109 · `.rollFx()` 144 · `.updLowHp()` 176
+`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 111 · `.hitFx()` 121 · `.rollFx()` 156 · `.updLowHp()` 188
 
 ## src/ui/worldmap.js (343 baris)
 _Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)_
