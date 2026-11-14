@@ -303,9 +303,9 @@ _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 `.playArcheryChallenge()` 4
 
-## src/systems/story.js (135 baris)
+## src/systems/story.js (149 baris)
 _Segel kuil, Mochi hilang, kristal, peti harta_
-`.touchBarrier()` 4 · `.takeMochi()` 15 · `.useCrystal()` 19 · `.openChest()` 32 · `interactRunePillar()` 82
+`.touchBarrier()` 4 · `.takeMochi()` 20 · `.useCrystal()` 24 · `.openChest()` 37 · `interactRunePillar()` 96
 
 ## src/npc/npcs.js (126 baris)
 _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_

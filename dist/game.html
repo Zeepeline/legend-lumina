@@ -14186,7 +14186,12 @@ Object.assign(World.prototype, {
   async touchBarrier() {
     const n = S.inv.seal || 0;
     if (S.stage < 2) return talk(null, ['Dinding cahaya ungu menutup jalan ke kuil. Ada tiga lubang berbentuk kepingan di tengahnya.']);
-    if (n < 3) return talk(null, [`Segel ini butuh 3 Pecahan Segel. Kamu punya ${n}/3.`, 'Pemimpin monster di hutan menyimpannya: perkemahan goblin (timur), kebun jamur (barat daya), sarang ular (tenggara).']);
+    if (n < 3) {
+      return talk(null, [
+        `Segel ini butuh 3 Pecahan Segel. Kamu punya ${n}/3.`,
+        'Pemimpin monster di hutan menyimpannya: perkemahan goblin (timur), kebun jamur (barat daya), sarang ular (tenggara).'
+      ]);
+    }
     G.lock++; addItem('seal', -3); S.flags.seal_open = 1; S.stage = 3; updHud();
     sfx('heal'); this.cameras.main.flash(500, 220, 200, 255); this.sparkle(this.barrier.s.x, this.barrier.s.y - 20, 'dot', 30);
     this.tweens.add({ targets: this.barrier.s, alpha: 0, scaleY: 1.6, duration: 700, onComplete: () => this.barrier.s.destroy() });
@@ -14251,10 +14256,19 @@ Object.assign(World.prototype, {
     }
     S.flags[c.id] = true; spr.setTexture('chesto'); sfx('chest'); G.lock++;
     this.sparkle(c.x, c.y - 10, 'doto', 12); await sleep(300);
-    const G2 = { iron: ['isword', 1], ether2: ['ether', 2], ether3: ['ether', 3], potion2: ['potion', 2], potion3: ['potion', 3], hipotion2: ['hipotion', 2], ring: ['ring', 1], shield: ['cshield', 1], key: ['key', 1], mring: ['mring', 1], antidote3: ['antidote', 3], fspear: ['fspear', 1] }[c.item] || (ITEMS[c.item] && [c.item, 1]);
+    const G2 = {
+      iron: ['isword', 1], ether2: ['ether', 2], ether3: ['ether', 3], potion2: ['potion', 2], potion3: ['potion', 3],
+      hipotion2: ['hipotion', 2], ring: ['ring', 1], shield: ['cshield', 1], key: ['key', 1], mring: ['mring', 1],
+      antidote3: ['antidote', 3], fspear: ['fspear', 1]
+    }[c.item] || (ITEMS[c.item] && [c.item, 1]);
     let msg;
     if (c.item.startsWith('gold')) { const n = +c.item.slice(4); S.gold += n; msg = `Dapat ${n} G!`; }
-    else { addItem(G2[0], G2[1]); const it = ITEMS[G2[0]]; msg = `Dapat ${it.n}${G2[1] > 1 ? ' x' + G2[1] : ''}!` + (it.k === 'wpn' || it.k === 'arm' || it.k === 'acc' ? ' Pasang lewat TAS.' : ''); }
+    else {
+      addItem(G2[0], G2[1]);
+      const it = ITEMS[G2[0]];
+      msg = `Dapat ${it.n}${G2[1] > 1 ? ' x' + G2[1] : ''}!` +
+        (it.k === 'wpn' || it.k === 'arm' || it.k === 'acc' ? ' Pasang lewat TAS.' : '');
+    }
     updHud(); await say(msg); G.lock--;
   },
 });
