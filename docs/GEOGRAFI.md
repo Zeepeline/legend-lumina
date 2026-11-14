@@ -51,6 +51,12 @@ jalan utama boleh memakai jembatan yang sudah ada (`river.bridge` di hutan). Jan
 `npm run check` 0 masalah · tidak ada objek/NPC/musuh/peti di air · pintu & jalan keluar tidak tertutup · air menyambung di tepi wilayah
 (cek koordinat global kedua sisi, selisih ≤ 20 px) · ikuti `docs/PLACEMENT_RULES.md`.
 
+## 6. Status Implementasi Geografi (Gelombang 8 T332–T360)
+- **Sistem Sungai Senja & Anak Sungai:** Aliran air kontinu dari hulu mata air Puncak Beku (`snow`), lereng (`pl_meadow_snow`), membelah Padang Angin (`meadow`), Dataran Senja (`pl_meadow_swamp`), Jalur Sungai Senja (`river`), hingga muara delta Rawa Senja (`swamp`). Dilengkapi Anak Sungai Cermin dari Danau Cermin (`lake`) melintasi Hutan Lumina (`forest`) dan menyatu di konfluensi Sungai Senja.
+- **Tata Letak Permukiman:** Alun-alun sentral Desa Lumina dengan hierarki jalan (arteri 14–16, kampung 10–12, setapak 8–9) dan klaster fungsi teratur (bengkel, kandang, penginapan).
+- **Kota Lumina:** Gerbang simetris megah (`kgate`), pasar niaga padat (`kpasar`), distrik akademi berwibawa (`kakademi`), labirin gang sempit Kota Bawah (`kbawah`), serta pos kafilah Jalan Raya Lama (`road`).
+- **Eksplorasi & Ekologi:** Penanda visual utama (BotW gravity) di tiap wilayah, hadiah eksplorasi dalam radius 120 px, aturan segitiga gugus batu penghalang pandang, konsistensi flora bioma, dan tebing undakan elevasi bertingkat dengan celah tanjakan bebas hambatan.
+
 ## 7. Tata kota & desa abad pertengahan (prinsip city builder, wujud medieval)
 Prinsipnya diambil dari city builder (TheoTown / Cities: Skylines): **fungsi menentukan letak**, pengaruh buruk dijauhkan, layanan terjangkau,
 jalan bertingkat. Tapi WUJUDNYA abad pertengahan. Kota medieval tidak punya peraturan zonasi. Kota tumbuh alami mengelilingi kuil, pasar,

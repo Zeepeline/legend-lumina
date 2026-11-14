@@ -2744,7 +2744,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); dari padang ke lereng salju terasa 'naik'.
 
-### [ ] T361. **Rangkum perubahan geografi** — referensi: —
+### [x] T361. **Rangkum perubahan geografi** — referensi: —
 
 - File: `docs/GEOGRAFI.md` (bagian baru §6 di akhir). Baca dulu: —.
 - Lakukan: setelah tugas-tugas geografi di atas: tambahkan §6 "Status" berisi daftar peta yang sudah punya sungai/penanda/alun-alun, dan yang belum beserta alasannya (maks 15 baris).
