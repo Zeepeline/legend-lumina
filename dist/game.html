@@ -16481,6 +16481,20 @@ World.prototype.hitEnemy = function (e, base, crit, nx, ny) {
     const weakLabel = OPT.colorblind ? (k > 1 ? '[LEMAH!]' : '[KEBAL]') : (k > 1 ? 'LEMAH!' : 'tahan');
     popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 14, weakLabel, k > 1 ? (OPT.colorblind ? '#00e5ff' : ELEM_COL[el] || '#ffe66b') : '#a8a8b8');
   }
+  // Musuh bertameng menangkis dari depan (T300)
+  const isShieldBearer = (e.type === 'goblin' || e.type === 'gchief' || e.type === 'goblin_elite');
+  const wt = (typeof ITEMS !== 'undefined' && typeof S !== 'undefined' && (ITEMS[S.eq?.wpn] || {}).wt) || 'sword';
+  const isBypass = (e.staggerT || 0) > 0 || wt === 'axe' || (this.pl?.combo === 3);
+  if (isShieldBearer && !isBypass && e.hp > 0 && nx != null && ny != null) {
+    const fDirX = e.spr.body && Math.abs(e.spr.body.velocity.x) > 5 ? Math.sign(e.spr.body.velocity.x) : (e.spr.flipX ? 1 : -1);
+    const fDirY = e.spr.body && Math.abs(e.spr.body.velocity.y) > 5 ? Math.sign(e.spr.body.velocity.y) : 0;
+    const dot = (nx * fDirX + ny * fDirY);
+    if (dot < -0.34) {
+      base = Math.max(1, Math.round(base * 0.3));
+      popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 16, 'Tertahan', '#c8c8d8');
+      if (this.sparkle) this.sparkle(e.spr.x, e.spr.y - 10, 'dot', 6);
+    }
+  }
   return _hitEnemy.call(this, e, base * k, crit, nx, ny);
 };
 // sumber elemen: bola api = api (proyektil ditandai _curShot di updShots), nova = es, bom = api

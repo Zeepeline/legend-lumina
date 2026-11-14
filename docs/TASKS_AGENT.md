@@ -1874,7 +1874,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; serang goblin berulang dari depan → kadang ia mengelak.
 
-### [ ] T300. **Musuh bertameng menangkis dari depan** — referensi: Dark Souls (tameng), Zelda (Darknut)
+### [x] T300. **Musuh bertameng menangkis dari depan** — referensi: Dark Souls (tameng), Zelda (Darknut)
 - File: `src/ai/enemies.js` + `src/systems/combat.js`. Baca dulu: `hitEnemy()` & data goblin di `src/data/enemies.js` (BACA).
 - Lakukan: goblin & kepala goblin: pukulan dari arah depannya (sudut < 70° dari arah hadap) dikurangi 70% dan muncul percikan + teks "Tertahan"; pukulan samping/belakang, akhir kombo, atau kapak menembus. Arah hadap = arah gerak terakhir musuh.
 - Batasan: tidak berlaku bila goblin sedang terhuyung.
