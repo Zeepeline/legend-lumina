@@ -1535,13 +1535,12 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; Android: tekan SERANG → getar sangat singkat; konsol `localStorage.lumina_haptic='0'` → tidak getar.
 
-### [ ] T252. **Gamepad: Start = menu, Select = peta**
+### [x] T252. **Gamepad: Start = menu, Select = peta**
+- Sudah ada: di `src/core/input.js` `btnMap`: `8: 'map'`, `9: 'menu'`.
 - File: `src/core/input.js`. Baca dulu: `pollGamepad()` (±63–122) & `KEYMAP`.
-- Lakukan: petakan tombol standar 9 (Start) ke aksi menu dan 8 (Select/Back) ke peta, jika belum.
-- Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
-- Cek: `npm run check`; colok gamepad, tekan Start → menu terbuka.
 
-### [ ] T253. **Mancing: zona tarik lebih jelas + getar**
+### [x] T253. **Mancing: zona tarik lebih jelas + getar**
+- Selesai: visual bar gulung lebih kontras dengan efek active pulse saat hold aman, dan haptic getar 15ms saat ikan menyentak.
 - File: `src/systems/fishing.js` + `styles.css`. Baca dulu: `tugGame()` (±42–93).
 - Lakukan: beri warna/garis tepi terang pada zona sukses, kedip saat penanda berada di dalam zona, dan `navigator.vibrate(15)` saat ikan menyentak (try/catch).
 - Batasan: jangan ubah tingkat kesulitan/angka.

@@ -343,9 +343,9 @@ _Gelombang 7: Rumah Arka (#46), peti penyimpanan (#32), perluasan (#492), tata p
 _Gelombang 8: peternakan (#47), kandang ayam (#514), kandang sapi (#515), kasih sayang hewan (#519),_
 `SEEDS` 16 · `STOCK` 22 · `RANCH_MAX` 27 · `farmInit()` 28 · `today` 29 · `rnTextures()` 31 · `.spawnRanch()` 41 · `.spawnStock()` 56 · `.updRanch()` 62 · `.tendStock()` 75 · `.ranchMenu()` 90 · `plotHours()` 109
 
-## src/systems/fishing.js (133 baris)
+## src/systems/fishing.js (149 baris)
 _Gelombang 9: mancing tarik-ulur (#51, #571), ikan per jam (#572) & cuaca (#573), ukuran & rekor (#575),_
-`FISH` 21 · `inHours` 34 · `fishPool()` 35 · `pickFish()` 39 · `logFish()` 40 · `tugGame()` 42 · `openFishLogNew()` 94 · `artTank()` 108 · `_furnTex` 109 · `_useFurn` 111 · `_pfs` 129 · `_rfs` 131
+`FISH` 21 · `inHours` 34 · `fishPool()` 35 · `pickFish()` 39 · `logFish()` 40 · `tugGame()` 42 · `openFishLogNew()` 110 · `artTank()` 124 · `_furnTex` 125 · `_useFurn` 127 · `_pfs` 145 · `_rfs` 147
 
 ## src/systems/season.js (60 baris)
 _Gelombang 10: kalender (#701), nama hari (#702), libur toko (#703), jam toko (#704),_

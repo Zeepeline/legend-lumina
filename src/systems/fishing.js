@@ -41,7 +41,10 @@ function logFish(id, cm) { S.fishLog = S.fishLog || {}; let e = S.fishLog[id]; i
 // mini-game tarik-ulur: tahan A untuk menggulung (tegangan naik), lepas saat ikan menyentak
 function tugGame(F) {
   return new Promise(res => {
-    const w = document.createElement('div'); w.id = 'tug'; w.innerHTML = `<div class="tg-h">${F.leg ? '★ IKAN LEGENDARIS! ★' : 'Tarik!'} <small>tahan SERANG untuk menggulung · lepas saat tali merah</small></div><div class="tg-row"><span>Tali</span><div class="tg-bar"><i class="tg-t"></i></div></div><div class="tg-row"><span>Gulung</span><div class="tg-bar"><i class="tg-p"></i></div></div>`;
+    const w = document.createElement('div'); w.id = 'tug';
+    w.innerHTML = `<div class="tg-h">${F.leg ? '★ IKAN LEGENDARIS! ★' : 'Tarik!'} <small>tahan SERANG untuk menggulung · lepas saat tali merah</small></div>`
+      + `<div class="tg-row"><span>Tali</span><div class="tg-bar"><i class="tg-t"></i></div></div>`
+      + `<div class="tg-row"><span>Gulung</span><div class="tg-bar prog"><i class="tg-p"></i></div></div>`;
     UI.appendChild(w);
     let ten = 20, prog = 0, pull = 0, pullT = 1, time = 0, held = false, last = performance.now(), done = false;
     const prev = UIH, h = () => { }; h.tap = true; UIH = h; // tekanan ditelan; status tahan dibaca dari Input.keys.a / jari di kotak ini
@@ -49,12 +52,25 @@ function tugGame(F) {
     const tick = () => {
       if (done) return; const now = performance.now(), dt = Math.min(.05, (now - last) / 1000); last = now; time += dt;
       const hold = held || Input.keys.a;
-      pullT -= dt; if (pullT <= 0) { pull = pull ? 0 : 1; pullT = pull ? rnd(.5, .9 + F.d * .15) : rnd(.8, 1.8 - F.d * .15); }
+      pullT -= dt;
+      if (pullT <= 0) {
+        const nextPull = pull ? 0 : 1;
+        if (!pull && nextPull) {
+          try {
+            if (localStorage.getItem('lumina_haptic') !== '0' && navigator.vibrate) navigator.vibrate(15);
+          } catch (_) { }
+        }
+        pull = nextPull;
+        pullT = pull ? rnd(.5, .9 + F.d * .15) : rnd(.8, 1.8 - F.d * .15);
+      }
       const k = .55 + F.d * .22;
       if (hold) { prog += dt * (pull ? 6 : 22) / k; ten += dt * (pull ? 95 : 22) * k; } else { ten -= dt * 55; prog -= dt * (pull ? 7 * k : 1.5); }
       ten = clamp(ten, 0, 100); prog = clamp(prog, 0, 100);
       w.querySelector('.tg-t').style.width = ten + '%'; w.querySelector('.tg-t').classList.toggle('hot', ten > 75 || pull);
-      w.querySelector('.tg-p').style.width = prog + '%'; w.classList.toggle('pull', !!pull);
+      const pEl = w.querySelector('.tg-p');
+      pEl.style.width = prog + '%';
+      pEl.classList.toggle('active', hold && !pull);
+      w.classList.toggle('pull', !!pull);
       if (pull && Math.random() < dt * 6) sfx('cur');
       const end = r => { done = true; UIH = prev; window.removeEventListener('pointerup', up); w.remove(); res(r); };
       if (ten >= 100) return end('snap'); if (prog >= 100) return end('ok'); if (time > 14 + F.d * 2) return end('lost');

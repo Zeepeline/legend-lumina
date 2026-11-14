@@ -205,8 +205,11 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #tug .tg-h{font-weight:700;color:#9ad0f0;margin-bottom:4px}#tug .tg-h small{display:block;font-weight:400;font-size:8px;color:#a8b8c8}
 #tug .tg-row{display:flex;align-items:center;gap:6px;margin:3px 0}#tug .tg-row span{width:40px;font-size:9px}
 #tug .tg-bar{flex:1;height:9px;background:#0a141e;border-radius:5px;overflow:hidden;border:1px solid #2a4a6a}
+#tug .tg-bar.prog{border-color:#3ea85a;box-shadow:inset 0 0 4px rgba(60,180,90,.3)}
 #tug .tg-t{display:block;height:100%;background:#ffd84a;transition:background .1s}#tug .tg-t.hot{background:#e84a3a}
-#tug .tg-p{display:block;height:100%;background:#5fbf68}
+#tug .tg-p{display:block;height:100%;background:linear-gradient(90deg,#42a856,#72d880);box-shadow:0 0 6px #5fbf68}
+#tug .tg-p.active{animation:tgpulse .35s alternate infinite ease-in-out}
+@keyframes tgpulse{from{filter:brightness(1)}to{filter:brightness(1.4);box-shadow:0 0 10px #7ef590}}
 #tug.pull{animation:tugshake .12s infinite}@keyframes tugshake{0%,100%{margin-left:0}50%{margin-left:2px}}
 .bc .fic{height:22px;display:flex;align-items:center;justify-content:center;font-size:14px}.bc .fic img{width:20px;height:20px;image-rendering:pixelated}
 .bc .fx{font-size:8px;color:#7a5a3a;margin-top:1px}.bc .fh{font-size:7px;line-height:1.25;color:#8a7a6a;margin-top:2px}
