@@ -1779,7 +1779,7 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; dash tepat saat serigala menerjang → "Lolos!".
 
-### [ ] T286. **Bola EXP terbang ke Arka** — referensi: Diablo, Hades
+### [x] T286. **Bola EXP terbang ke Arka** — referensi: Diablo, Hades
 - File: `src/systems/combat.js`. Baca dulu: `killEnemy()` (±176) & `gainExp()` (±280).
 - Lakukan: saat musuh mati, munculkan 3–6 titik cahaya kecil di posisinya yang melesat ke Arka (tween 0,35–0,5 s, kurva). EXP tetap ditambahkan seperti sekarang (boleh saat titik pertama tiba).
 - Batasan: jumlah EXP tidak berubah.

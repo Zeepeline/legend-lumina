@@ -290,12 +290,16 @@ Object.assign(World.prototype, {
     this.picks = this.picks.filter(p => !p.got);
   },
   gainExp(n, x, y) {
-    S.exp += n; popWorld(x, y - 22, '+' + n + ' EXP', 'xp');
-    let up = false; while (S.exp >= need(S.lv)) { S.exp -= need(S.lv); S.lv++; up = true; } if (up) { attrInit(); this.time.delayedCall(3600, () => popWorld(this.pl.x, this.pl.y - 36, '+3 poin atribut (MENU)', 'xp')); }
+    S.exp += n; popWorld(x, y - 22, '+' + n + ' EXP', 'xp'); const pl = this.pl;
+    for (let i = 0, c = ri(3, 5); i < c; i++) {
+      const orb = this.add.image(x + rnd(-8, 8), y + rnd(-8, 8), 'doto').setTint(0x8ae8ff).setScale(rnd(.8, 1.3)).setDepth(y + 10);
+      this.tweens.add({ targets: orb, x: { value: () => pl.x, ease: 'Quad.easeIn' }, y: { value: () => pl.y - 10, ease: 'Quad.easeIn' }, duration: rnd(350, 480), onComplete: () => { orb.destroy(); this.sparkle(pl.x, pl.y - 10, 'doto', 1); } });
+    }
+    let up = false; while (S.exp >= need(S.lv)) { S.exp -= need(S.lv); S.lv++; up = true; }
     if (up) {
-      const old = S.lv - 1; let k = 0; for (const J of []) if (S.lv >= J.lv && !S.flags['sk' + J.lv]) { S.flags['sk' + J.lv] = 1; this.time.delayedCall(1800 + k++ * 2200, () => { banner(J.n, 'JURUS BARU', false, 2000); popWorld(this.pl.x, this.pl.y - 36, J.d, 'xp'); }); }
-      const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; sfx('lvl'); banner('LEVEL ' + S.lv + '!', 'NAIK LEVEL', true, 1600); this.time.delayedCall(1700, () => levelUpDetail(old));
-      const pl = this.pl, g = this.add.graphics().setDepth(pl.y + 2), o = { r: 4 };
+      attrInit(); this.time.delayedCall(3600, () => popWorld(this.pl.x, this.pl.y - 36, '+3 poin atribut (MENU)', 'xp'));
+      const old = S.lv - 1, st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; sfx('lvl'); banner('LEVEL ' + S.lv + '!', 'NAIK LEVEL', true, 1600);
+      this.time.delayedCall(1700, () => levelUpDetail(old)); const g = this.add.graphics().setDepth(pl.y + 2), o = { r: 4 };
       this.tweens.add({ targets: o, r: 34, duration: 600, onUpdate: () => { g.clear(); g.lineStyle(2, 0xffe27a, 1 - o.r / 34).strokeEllipse(pl.x, pl.y - 2, o.r * 2, o.r); }, onComplete: () => g.destroy() });
       this.sparkle(pl.x, pl.y - 12, 'doto', 18);
     }
