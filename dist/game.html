@@ -14140,7 +14140,11 @@ Object.assign(World.prototype, {
         updHud();
         sfx('coin');
 
-        await say('Sersan Wira merapikan busur latihan:\n"Tarik string busur dengan tenang, rasakan hembusan angin, dan lepaskan panah tepat ke titik tengah!"', 'Sersan Wira');
+        await say(
+          'Sersan Wira merapikan busur latihan:\n' +
+          '"Tarik string busur dengan tenang, rasakan hembusan angin, dan lepaskan panah tepat ke titik tengah!"',
+          'Sersan Wira'
+        );
 
         let totalScore = 0;
         for (let shotIdx = 1; shotIdx <= 3; shotIdx++) {
@@ -14197,7 +14201,11 @@ Object.assign(World.prototype, {
           updHud();
 
           popWorld(tx, ty - 26, '🏆 JUARA MEMANAH! (+35 G & +15 EXP)', 'gold');
-          await say('LUAR BIASA! Total skormu ' + totalScore + ' poin! Tembakanmu setajam mata elang pengintai gerbang! Sersan Wira menyerahkan hadiah utama (+35 G & +15 EXP tempur)!', 'Juara Memanah');
+          await say(
+            'LUAR BIASA! Total skormu ' + totalScore + ' poin! Tembakanmu setajam mata elang pengintai gerbang! ' +
+            'Sersan Wira menyerahkan hadiah utama (+35 G & +15 EXP tempur)!',
+            'Juara Memanah'
+          );
         } else if (totalScore >= 40) {
           const rewardGold = 15;
           S.gold += rewardGold;
@@ -14210,11 +14218,23 @@ Object.assign(World.prototype, {
           updHud();
           sfx('chest');
           popWorld(tx, ty - 22, 'Dapat 1 Ramuan! (' + totalScore + ' Poin)', 'gold');
-          await say('Total skormu ' + totalScore + ' poin. Latihan yang bagus untuk melatih fokus! Sersan Wira memberimu 1x Ramuan untuk memulihkan tenaga.', 'Latihan Panah');
+          await say(
+            'Total skormu ' + totalScore + ' poin. Latihan yang bagus untuk melatih fokus! ' +
+            'Sersan Wira memberimu 1x Ramuan untuk memulihkan tenaga.',
+            'Latihan Panah'
+          );
         }
       }
     } else if (opt === 1) {
-      await say('Aturan Lapangan Tembak:\n- Biaya 10 G untuk 3 anak panah latihan.\n- Lingkar Luar: 10 Poin.\n- Lingkar Dalam: 20 Poin.\n- Titik Pusat (Bullseye): 30 Poin.\n- Skor 70+: Hadiah Utama 35 G & 15 EXP!', 'Papan Aturan');
+      await say(
+        'Aturan Lapangan Tembak:\n' +
+        '- Biaya 10 G untuk 3 anak panah latihan.\n' +
+        '- Lingkar Luar: 10 Poin.\n' +
+        '- Lingkar Dalam: 20 Poin.\n' +
+        '- Titik Pusat (Bullseye): 30 Poin.\n' +
+        '- Skor 70+: Hadiah Utama 35 G & 15 EXP!',
+        'Papan Aturan'
+      );
     }
 
     this._playingArchery = false;

@@ -299,7 +299,7 @@ _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 `.playStoneSkipping()` 4 · `.playStreetDrum()` 134 · `.pumpBlacksmithBellows()` 228 · `.playRingToss()` 300
 
-## src/systems/life/minigame_5.js (106 baris)
+## src/systems/life/minigame_5.js (126 baris)
 _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 `.playArcheryChallenge()` 4
 
