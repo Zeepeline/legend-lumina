@@ -44,10 +44,33 @@ const JOY_DEAD = .18;
     const d = L < .55 ? null : Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
     if (d !== lastDir) { clearInterval(rep); lastDir = d; if (d) { Input.q.push('j' + d); rep = setInterval(() => Input.q.push('j' + d), 190); } }
   }
-  function end() { pid = null; Input.joy.x = Input.joy.y = 0; knob.style.transform = ''; clearInterval(rep); lastDir = null; }
-  joy.addEventListener('pointerdown', e => { e.preventDefault(); auInit(); pid = e.pointerId; try { joy.setPointerCapture(pid); } catch (_) { } upd(e); });
+  function end() {
+    pid = null; Input.joy.x = Input.joy.y = 0; knob.style.transform = ''; clearInterval(rep); lastDir = null;
+    joy.style.left = ''; joy.style.top = ''; joy.style.bottom = '';
+  }
+  function startJoy(e) {
+    e.preventDefault(); auInit(); pid = e.pointerId;
+    const R = 70;
+    const pRect = pad ? pad.getBoundingClientRect() : { left: 0, top: 0 };
+    joy.style.left = (e.clientX - pRect.left - R) + 'px';
+    joy.style.top = (e.clientY - pRect.top - R) + 'px';
+    joy.style.bottom = 'auto';
+    try { joy.setPointerCapture(pid); } catch (_) { }
+    upd(e);
+  }
+  joy.addEventListener('pointerdown', startJoy);
   joy.addEventListener('pointermove', e => { if (e.pointerId === pid) upd(e); });
   joy.addEventListener('pointerup', end); joy.addEventListener('pointercancel', end); joy.addEventListener('lostpointercapture', end);
+  const pad = $('pad');
+  if (pad) {
+    pad.addEventListener('pointerdown', e => {
+      if (pid !== null || e.target.closest('.btn') || e.target.closest('#joy')) return;
+      const vw = innerWidth, vh = innerHeight;
+      if (e.clientX < vw * 0.48 && e.clientY > vh * 0.35) {
+        startJoy(e);
+      }
+    });
+  }
   // tombol SIHIR: tarik untuk membidik, lepas untuk menembak; ketuk = bidik otomatis
   (function () {
     const b = $('bB'); let pid = null, cx = 0, cy = 0;

@@ -1520,7 +1520,8 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; sentuhan sangat kecil di tengah joystick tidak membuat Arka bergeser.
 
-### [ ] T250. **Joystick mengambang (muncul di titik sentuh)**
+### [x] T250. **Joystick mengambang (muncul di titik sentuh)**
+- Selesai: sentuhan pertama di separuh kiri bawah layar memusatkan `#joy` ke titik sentuh, dan kembali ke default saat dilepas.
 - File: `src/core/input.js` + `styles.css`. Baca dulu: `enableTouch()`.
 - Lakukan: sentuhan pertama di separuh kiri bawah layar memindahkan pusat joystick ke titik sentuh (dalam batas area kiri), kembali ke posisi semula saat dilepas.
 - Batasan: tombol kanan (SERANG/DASH/…) tidak boleh terpengaruh.

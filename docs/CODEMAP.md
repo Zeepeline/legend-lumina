@@ -11,9 +11,9 @@ _Konstanta layar & util kecil_
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
 `AU` 4 · `NI` 5 · `nf()` 6 · `parseSeq()` 7 · `bossBass` 8 · `TRACKS` 9 · `auInit()` 31 · `tone()` 42 · `sweep()` 43 · `noise()` 44 · `playBGM()` 45 · `_lastSfx` 55 · `sfx()` 56
 
-## src/core/input.js (160 baris)
+## src/core/input.js (183 baris)
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
-`Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 8 · `enableTouch()` 23 · `JOY_DEAD` 26 · `UISCALE` 67 · `PAD_STATE` 69 · `pollGamepad()` 70 · `layout()` 130
+`Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 8 · `enableTouch()` 23 · `JOY_DEAD` 26 · `UISCALE` 90 · `PAD_STATE` 92 · `pollGamepad()` 93 · `layout()` 153
 
 ## src/art/base.js (75 baris)
 _Dasar gambar: kanvas, warna, aturan gaya (toneC, garis tepi berwarna), renderMap_
@@ -203,9 +203,9 @@ _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipak
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
 `ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 212 · `.ripple()` 213 · `artQuestArrow()` 216 · `.updQuestGuide()` 223
 
-## src/systems/status.js (99 baris)
+## src/systems/status.js (67 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
-`STATUS` 5 · `.inflict()` 12 · `.cure()` 21 · `.speedMul()` 22 · `.updStatus()` 27 · `.enemyStatus()` 61 · `.burnEnemy()` 84 · `.freezeEnemy()` 85 · `updStatusHud()` 92
+`STATUS` 5 · `.inflict()` 12 · `.cure()` 21 · `.speedMul()` 22 · `.updStatus()` 27 · `.enemyStatus()` 40 · `.burnEnemy()` 56 · `.freezeEnemy()` 57 · `updStatusHud()` 60
 
 ## src/systems/chapter3.js (107 baris)
 _Bab 3: obor kuno, gerbang es, Naga Es Kryos (AI 'dboss')_
