@@ -2789,7 +2789,7 @@ File BARU milik agen: `src/npc/crowd.js`, `src/systems/townlife.js`. Pengecualia
 - Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan
 - Cek: `npm run check` (0 masalah); ukur ulang → masuk target; tidak ada pintu tertutup.
 
-### [ ] T366. **Gerbang Kota & Akademi: bangunan sesuai fungsi** — referensi: Whiterun (Skyrim)
+### [x] T366. **Gerbang Kota & Akademi: bangunan sesuai fungsi** — referensi: Whiterun (Skyrim)
 
 - File: `src/world/maps/city.js` peta `kgate`, `kakademi`. Baca dulu: objek bangunan yang ada.
 - Lakukan: kgate → ±12–16 bangunan/Mpx² (pos jaga, penginapan gerbang, gudang); kakademi → ±8–12 bangunan besar/Mpx², tata simetris.
