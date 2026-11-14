@@ -1764,7 +1764,8 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; serang musuh dari belakang → teks muncul.
 
-### [ ] T284. **Penyangga input serangan (buffer)** — referensi: Hades, Devil May Cry
+### [x] T284. **Penyangga input serangan (buffer)** — referensi: Hades, Devil May Cry
+- Selesai: input tombol serangan saat `pl.atkCd <= 0.15s` disimpan dalam `this.atkBuf` dan dieksekusi via `delayedCall` tepat saat cooldown habis, sehingga kombo 3 pukulan tidak pernah tertelan saat ditekan cepat.
 - File: `src/systems/combat.js`. Baca dulu: awal `attack()` (cek `atkCd`).
 - Lakukan: jika serangan ditekan saat `pl.atkCd` tinggal ≤ 0,15 s, jangan diabaikan: simpan `this.atkBuf = true` lalu panggil `attack()` lagi via `this.time.delayedCall(pl.atkCd * 1000 + 5, …)` (sekali, tanpa menumpuk).
 - Batasan: jangan mengubah lama cooldown.

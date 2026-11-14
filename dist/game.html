@@ -7442,7 +7442,15 @@ const WEAPON_STYLE = {
 Object.assign(World.prototype, {
   // Gaya serang per jenis senjata (ITEMS[..].wt): sword (default), spear, axe, bow
   attack() {
-    const pl = this.pl; if (pl.atkCd > 0) return;
+    const pl = this.pl;
+    if (pl.atkCd > 0) {
+      if (pl.atkCd <= 0.15 && !this.atkBuf) {
+        this.atkBuf = true;
+        this.time.delayedCall(pl.atkCd * 1000 + 5, () => { this.atkBuf = false; if (!this.pl.dead && !G.lock) this.attack(); });
+      }
+      return;
+    }
+    this.atkBuf = false;
     const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword', W = WEAPON_STYLE[wt];
     pl.atkCd = W.cd; pl.atkT = W.lock; sfx(wt === 'bow' ? 'jump' : 'swing');
     if (wt === 'bow') return this.shootArrow();
@@ -7478,14 +7486,9 @@ Object.assign(World.prototype, {
                 isBackstab = true;
               }
             }
-            const curWpnId = S.eq?.wpn; // dipakai efek Belati Rembulan, permata & senjata legendaris di bawah
-            // Belati Rembulan Danau (selalu kritikal saat malam)
-            const isNightTime = S.time >= 19 || S.time < 5;
-            if (curWpnId === 'leg_moon' && isNightTime) {
-              isBackstab = true;
-            }
-            const finalCrit = crit || isBackstab;
-            const finalDmg = st.atk * W.mul * cMul * (isBackstab ? 1.8 : 1);
+            const curWpnId = S.eq?.wpn, isNightTime = S.time >= 19 || S.time < 5;
+            if (curWpnId === 'leg_moon' && isNightTime) isBackstab = true;
+            const finalCrit = crit || isBackstab, finalDmg = st.atk * W.mul * cMul * (isBackstab ? 1.8 : 1);
             if (isBackstab && e.hp > 0) {
               popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 16, 'DARI BELAKANG!', 'purp');
               sfx('crit'); this.hitStop(0.07, 18); this.camShake(100, .005);
@@ -7493,21 +7496,11 @@ Object.assign(World.prototype, {
             }
             this.hitEnemy(e, finalDmg, finalCrit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
             const frz = (ITEMS[S.eq.wpn] || {}).frz; if (frz && Math.random() < frz) this.freezeEnemy(e, 1.2);
-            // Efek Permata Senjata (#23)
             const curGem = curWpnId && S.socket && S.socket[curWpnId];
-            // Efek Senjata Legendaris (#33)
-            if (curWpnId === 'leg_sun') {
-              this.sparkle(e.spr.x, e.spr.y - 10, 'doto', 6);
-              if (typeof applyStatus === 'function') applyStatus(e, 'burn', 3);
-            } else if (curWpnId === 'leg_quake') {
-              this.camShake(100, .005);
-              sfx('boom');
-            }
-            if (curGem === 'shard' && Math.random() < 0.25) {
-              this.freezeEnemy(e, 1.2);
-            } else if (curGem === 'spore' && typeof applyStatus === 'function') {
-              applyStatus(e, 'poison', 4);
-            } else if (curGem === 'amethyst_gem' && finalCrit) {
+            if (curWpnId === 'leg_sun') { this.sparkle(e.spr.x, e.spr.y - 10, 'doto', 6); if (typeof applyStatus === 'function') applyStatus(e, 'burn', 3); }
+            else if (curWpnId === 'leg_quake') { this.camShake(100, .005); sfx('boom'); }
+            if (curGem === 'shard' && Math.random() < 0.25) this.freezeEnemy(e, 1.2);
+            else if (curGem === 'spore' && typeof applyStatus === 'function') applyStatus(e, 'poison', 4); else if (curGem === 'amethyst_gem' && finalCrit) {
               const healAmt = 3;
               S.hp = Math.min(stat().maxhp, S.hp + healAmt);
               popWorld(pl.x, pl.y - 20, `+${healAmt} HP (Hisap)`, 'heal');
