@@ -135,9 +135,9 @@ _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina
 _Interior: penginapan, rumah pohon, rumah Lina_
 `makeRoom()` 4
 
-## src/ui/widgets.js (186 baris)
+## src/ui/widgets.js (199 baris)
 _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
-`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 36 · `choose()` 40 · `ask()` 76 · `BANNER_QUEUE` 82 · `BANNER_BUSY` 83 · `processBannerQueue()` 84 · `banner()` 97 · `POPS` 106 · `popWorld()` 107 · `updPops()` 111 · `HUD` 114 · `buildHud()` 115 · `updHud()` 124 · `hudPeaceT` 165 · `updHudFade()` 166 · `showHud()` 181 · `bossBar()` 182 · `autoSaveIcon()` 185
+`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 36 · `choose()` 40 · `ask()` 76 · `BANNER_QUEUE` 82 · `BANNER_BUSY` 83 · `processBannerQueue()` 84 · `banner()` 97 · `POPS` 106 · `popWorld()` 107 · `updPops()` 111 · `HUD` 114 · `buildHud()` 115 · `updHud()` 124 · `hudPeaceT` 165 · `updHudFade()` 166 · `showHud()` 181 · `bossBar()` 182 · `autoSaveIcon()` 198
 
 ## src/core/state.js (136 baris)
 _Status pemain (S), simpan/muat, rumus stat_
@@ -319,9 +319,9 @@ _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, m
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
 `.updInteractHint()` 6 · `.updEnemyBars()` 30 · `.retryBoss()` 56 · `levelUpDetail()` 62 · `.setTimeout()` 68 · `TIPS` 81 · `showTip()` 92 · `.updTips()` 111 · `.updPeaceHud()` 121 · `.updMinimap()` 126 · `.swapWeapon()` 160 · `.updStamina()` 171 · `.tryClimb()` 182 · `.tryGlide()` 208 · `.stopGlide()` 234 · `applyPadOpt()` 240
 
-## src/systems/feel.js (149 baris)
+## src/systems/feel.js (173 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
-`ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 110 · `.hurtAnim()` 116 · `.hasLineOfSight()` 118 · `_spawnEnemy` 134
+`ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 118 · `.hurtAnim()` 124 · `.hasLineOfSight()` 126 · `_spawnEnemy` 142 · `_killEnemy` 158
 
 ## src/systems/sound.js (107 baris)
 _Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#911),_
@@ -399,9 +399,9 @@ _MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALI
 _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat Arka berada, teleport tanpa memuat ulang._
 `KEMBARA_POS` 20 · `.initBenua()` 25 · `.withRegion()` 39 · `.spawnRegionFx()` 44 · `.streamObjs()` 69 · `.benuaAmbient()` 88 · `.benuaWeather()` 98 · `.updBenua()` 104
 
-## src/systems/souls.js (127 baris)
+## src/systems/souls.js (122 baris)
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
-`SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 125
+`SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 120
 
 ## src/systems/combat_fx.js (202 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._

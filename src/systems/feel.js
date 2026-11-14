@@ -47,6 +47,14 @@ Object.assign(World.prototype, {
     if (e.aura) e.aura.setPosition(s.x, s.y).setDepth(s.y - 1);
     if (e.boss) return;
     const pl = this.pl, d = Math.hypot(pl.x - s.x, pl.y - s.y);
+    // status elite mengamuk saat temannya tumbang (T310)
+    if (e.elite && (e.enrageT || 0) > 0) {
+      e.enrageT -= dt;
+      e.spdM = (e.spdM || 1) * 1.25;
+      if (e.cd > 0) e.cd -= dt * 0.25;
+      if (e.flash <= 0) s.setTint(Math.sin(this.t * 12) > 0 ? 0xff5555 : 0xffa07a);
+      if (e.enrageT <= 0) s.clearTint();
+    }
     // penetapan peran kelompok bila >= 3 musuh mengejar Arka (T298)
     this.roleT = (this.roleT || 0) - dt;
     if (this.roleT <= 0) {
@@ -145,4 +153,20 @@ World.prototype.spawnEnemy = function (type, x, y) {
     }
   }
   return e;
+};
+// Elite mengamuk saat kawan biasa tumbang di dekatnya (T310)
+const _killEnemy = World.prototype.killEnemy;
+World.prototype.killEnemy = function (e) {
+  const x = e.spr?.x, y = e.spr?.y;
+  _killEnemy.call(this, e);
+  if (x != null && y != null && this.enemies) {
+    for (const o of this.enemies) {
+      if (o !== e && o.elite && !o.boss && o.hp > 0 && Math.hypot(o.spr.x - x, o.spr.y - y) < 150) {
+        o.enrageT = 6.0;
+        popWorld(o.spr.x, o.spr.y - 24, 'MENGAMUK!', 'crit');
+        sfxAt('roar', o.spr.x, o.spr.y, this);
+        markOver(this, o, '!!', '#ff3a3a');
+      }
+    }
+  }
 };

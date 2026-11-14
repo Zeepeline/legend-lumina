@@ -1939,7 +1939,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; Nova Es lalu tebas akhir kombo → angka besar + pecahan es.
 
-### [ ] T310. **Elite mengamuk saat temannya tumbang** — referensi: Diablo (Frenzy), Monster Hunter (enrage)
+### [x] T310. **Elite mengamuk saat temannya tumbang** — referensi: Diablo (Frenzy), Monster Hunter (enrage)
 - File: `src/ai/enemies.js` + `src/systems/combat.js`. Baca dulu: `killEnemy()`.
 - Lakukan: saat musuh mati, elite dalam 150 px menjadi 'mengamuk' 6 s: tint merah berdenyut, kecepatan +25%, jeda serangan −20%.
 - Jika SUDAH ada → tandai [x] "sudah ada".
@@ -2056,7 +2056,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; pelajari 2 jurus → keduanya tampil; ketuk → tombol SIHIR memakai jurus itu.
 
-### [ ] T328. **Bilah HP boss ala souls** — referensi: Dark Souls, Dimraeth (boss = pengalaman utama)
+### [x] T328. **Bilah HP boss ala souls** — referensi: Dark Souls, Dimraeth (boss = pengalaman utama)
 - File: `src/ui/widgets.js` + `styles.css`. Baca dulu: `bossBar()` (±153).
 - Lakukan: bilah lebar di bawah tengah layar, nama boss di atas kiri bilah, garis penanda di 50% (fase 2), bayangan HP putih yang menyusul (seperti tugas HUD bayangan), muncul dengan fade.
 - Jika SUDAH ada → tandai [x] "sudah ada".
