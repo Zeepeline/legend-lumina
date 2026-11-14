@@ -170,11 +170,26 @@ World.prototype.spawnEnemy = function (type, x, y, opt) {
   }
   return e;
 };
-// Elite mengamuk saat kawan biasa tumbang di dekatnya (T310)
+// Elite mengamuk saat kawan biasa tumbang (T310) & Slow-mo musuh terakhir kawanan (T295)
 const _killEnemy = World.prototype.killEnemy;
 World.prototype.killEnemy = function (e) {
-  const x = e.spr?.x, y = e.spr?.y;
+  const x = e.spr?.x, y = e.spr?.y, pl = this.pl;
+  let activeBefore = 0;
+  if (pl && this.enemies) {
+    activeBefore = this.enemies.filter(o => o.hp > 0 && !o.boss && Math.hypot(o.spr.x - pl.x, o.spr.y - pl.y) < 220).length;
+  }
   _killEnemy.call(this, e);
+  if (pl && activeBefore >= 3 && this.enemies) {
+    const remain = this.enemies.filter(o => o.hp > 0 && !o.boss && Math.hypot(o.spr.x - pl.x, o.spr.y - pl.y) < 220).length;
+    if (remain === 0) {
+      this.time.timeScale = 0.25;
+      this.physics.world.timeScale = 0.25;
+      if (typeof sfx === 'function') sfx('crit');
+      setTimeout(() => {
+        if (this.time) { this.time.timeScale = 1; this.physics.world.timeScale = 1; }
+      }, 250);
+    }
+  }
   if (x != null && y != null && this.enemies) {
     for (const o of this.enemies) {
       if (o !== e && o.elite && !o.boss && o.hp > 0 && Math.hypot(o.spr.x - x, o.spr.y - y) < 150) {

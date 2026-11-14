@@ -1838,11 +1838,11 @@ Kerjakan SETELAH gelombang 3 (T212–T223, efek tebasan) bila memungkinkan. Peng
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
 - Cek: `npm run check`; pengaturan Santai → musuh lebih mudah dibaca.
 
-### [ ] T295. **Musuh terakhir: gerak lambat singkat** — referensi: God of War, Hades (room clear)
-- File: `src/systems/combat.js`. Baca dulu: `killEnemy()`.
+### [x] T295. **Musuh terakhir: gerak lambat singkat** — referensi: God of War, Hades (room clear)
+- File: `src/systems/feel.js`. Baca dulu: `killEnemy()`.
 - Lakukan: jika setelah membunuh tidak ada lagi musuh yang sedang mengejar dalam 220 px dan sebelumnya ≥ 3 musuh bertarung, lakukan perlambatan 0,25 s + suara kecil.
 - Jika SUDAH ada → tandai [x] "sudah ada". Angka keseimbangan (hp/atk/exp di `ENEMY`) JANGAN diubah kecuali tugas memintanya.
-- Cek: `npm run check`; kalahkan kelompok 3 slime → yang terakhir memberi momen lambat singkat.
+- Cek: `npm run check`; kalahkan kelompok 3 slime → yang terakhir memberi momen lambat singkat. (selesai di v1.30.1)
 
 ### [x] T296. **Audit kepadatan kawanan musuh** — referensi: Diablo, Zelda (penempatan musuh) (hasil audit: tidak ada kluster >5 musuh & 0 musuh dekat portal)
 - File: `src/world/maps/*.js` (larik `enemies`). Baca dulu: daftar `enemies` tiap peta luar ruang.
