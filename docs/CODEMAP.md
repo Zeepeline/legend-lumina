@@ -423,9 +423,9 @@ _Menu beli, jual, tempa_
 _Menu Pasang Permata (#23)_
 `socketMenu()` 3
 
-## src/ui/bag.js (261 baris)
+## src/ui/bag.js (307 baris)
 _Tas (inventaris) & buku misi_
-`BAG_TABS` 4 · `BAG_SORT` 5 · `BAG_SEARCH` 6 · `openBag()` 7 · `openQuests()` 224
+`BAG_TABS` 4 · `BAG_SORT` 5 · `BAG_SEARCH` 6 · `saveBagPrefs()` 7 · `loadBagPrefs()` 12 · `openBag()` 19 · `openQuests()` 262
 
 ## src/ui/map.js (43 baris)
 _Layar peta & navigasi tujuan misi_

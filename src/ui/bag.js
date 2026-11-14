@@ -4,9 +4,26 @@
 const BAG_TABS = [['use', 'Pakai'], ['eq', 'Perlengkapan'], ['mat', 'Bahan'], ['key', 'Penting']];
 let BAG_SORT = 0;
 let BAG_SEARCH = '';
+function saveBagPrefs(tab) {
+  try {
+    localStorage.setItem('lumina_bag', JSON.stringify({ tab, sort: BAG_SORT }));
+  } catch (e) {}
+}
+function loadBagPrefs() {
+  try {
+    const raw = localStorage.getItem('lumina_bag');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return null;
+}
 async function openBag(sc) {
   G.lock++; sfx('ok');
-  const w = win('act', ''); w.id = 'bagw'; let tab = 0, sel = 0;
+  const prefs = loadBagPrefs();
+  let tab = (prefs && typeof prefs.tab === 'number' && prefs.tab >= 0 && prefs.tab < BAG_TABS.length) ? prefs.tab : 0;
+  if (prefs && typeof prefs.sort === 'number' && prefs.sort >= 0 && prefs.sort < 4) {
+    BAG_SORT = prefs.sort;
+  }
+  const w = win('act', ''); w.id = 'bagw'; let sel = 0;
   function list() {
     const k = BAG_TABS[tab][0];
     let L = Object.keys(S.inv).filter(id => S.inv[id] > 0 && (k === 'eq' ? ['wpn', 'arm', 'acc'].includes(ITEMS[id].k) : ITEMS[id].k === k));
@@ -48,7 +65,14 @@ async function openBag(sc) {
      ${setsBadge}
      <div class="st2">Serang <b>${st.atk}</b> · Tahan <b>${st.def}</b><br>Sihir <b>${st.mag}</b> · Lari <b>${st.spd}</b><br>HP <b>${S.hp}/${st.maxhp}</b>${altWpnText}</div></div></div>
      <div class="bd">${L.length ? ITEMS[L[sel]].d + cmp(L[sel]) + hint(L[sel]) + srcText : '◀ ▶ ganti kategori · A pilih · DASH kunci/buka · 1/2/3 Preset · [C] Pakai Terbaik · B tutup'}</div>`;
-    const so = w.querySelector('.srt'); if (so) so.onpointerdown = ev => { ev.stopPropagation(); BAG_SORT = (BAG_SORT + 1) % 4; sfx('cur'); draw(); };
+    const so = w.querySelector('.srt');
+    if (so) so.onpointerdown = ev => {
+      ev.stopPropagation();
+      BAG_SORT = (BAG_SORT + 1) % 4;
+      saveBagPrefs(tab);
+      sfx('cur');
+      draw();
+    };
     const sBtn = w.querySelector('.bag-do-search');
     if (sBtn) sBtn.onpointerdown = async ev => {
       ev.stopPropagation();
@@ -66,7 +90,15 @@ async function openBag(sc) {
     };
     const cBtn = w.querySelector('.bag-clear-search');
     if (cBtn) cBtn.onpointerdown = ev => { ev.stopPropagation(); BAG_SEARCH = ''; sfx('back'); draw(); };
-    w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
+    const tbs = w.querySelectorAll('.tb');
+    tbs.forEach(e => e.onpointerdown = ev => {
+      ev.stopPropagation();
+      tab = +e.dataset.t;
+      sel = 0;
+      saveBagPrefs(tab);
+      sfx('cur');
+      draw();
+    });
     w.querySelectorAll('.bi').forEach(e => e.onpointerdown = ev => {
       ev.stopPropagation();
       const i = +e.dataset.i;
@@ -185,7 +217,13 @@ async function openBag(sc) {
   await new Promise(res => {
     const prev = UIH;
     const h = k => {
-      if (k === 'left' || k === 'right') { tab = (tab + (k === 'left' ? 3 : 1)) % 4; sel = 0; sfx('cur'); draw(); }
+      if (k === 'left' || k === 'right') {
+        tab = (tab + (k === 'left' ? 3 : 1)) % 4;
+        sel = 0;
+        saveBagPrefs(tab);
+        sfx('cur');
+        draw();
+      }
       else if (k === 'up' || k === 'down') { const n = list().length; if (n) { sel = (sel + (k === 'up' ? n - 1 : 1)) % n; sfx('cur'); draw(); } }
       else if (k === 'a') act();
       else if (k === 'swap') {
@@ -241,7 +279,15 @@ async function openQuests() {
     else if (tab === 1) body = myst.length ? myst.map(m => { const a = m.ans(); return `<div class="qr${a ? ' done' : ''}"><b>${a ? '💡' : '❓'} ${m.q}</b>${a ? '<br>' + a : m.hint ? '<br>' + m.hint() : ''}</div>`; }).join('') : '<i>Belum ada misteri yang tercatat.</i>';
     else body = lore.length ? lore.map((k, i) => `<div class="qr jl${i === sel ? ' sel' : ''}" data-i="${i}"><b>${LORE[k][1]}</b> <small>· ${LORE[k][0]}</small>${i === sel ? '<br>' + LORE[k][2] : ''}</div>`).join('') : '<i>Belum ada catatan. Baca prasasti, dengarkan penduduk, perhatikan sekitar.</i>';
     w.innerHTML = `<div class="bt">${tabs.map((n, i) => `<span class="tb${i === tab ? ' on' : ''}" data-t="${i}">${n}</span>`).join('')}<span class="gold">B: tutup</span></div><div class="jb">${body}</div>`;
-    w.querySelectorAll('.tb').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); tab = +e.dataset.t; sel = 0; sfx('cur'); draw(); });
+    const tbs = w.querySelectorAll('.tb');
+    tbs.forEach(e => e.onpointerdown = ev => {
+      ev.stopPropagation();
+      tab = +e.dataset.t;
+      sel = 0;
+      saveBagPrefs(tab);
+      sfx('cur');
+      draw();
+    });
     w.querySelectorAll('.jl').forEach(e => e.onpointerdown = ev => { ev.stopPropagation(); sel = +e.dataset.i; sfx('cur'); draw(); });
     const s = w.querySelector('.jl.sel'); if (s) s.scrollIntoView({ block: 'nearest' });
   }
