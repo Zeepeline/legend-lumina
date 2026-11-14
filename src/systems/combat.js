@@ -164,7 +164,7 @@ Object.assign(World.prototype, {
     // squash saat terkena
     this.tweens.add({ targets: e.spr, scaleX: e.sc * 1.2, scaleY: e.sc * .82, duration: 60, yoyo: true });
     if (e.st === 'wind' && !e.boss) e.st = 'chase';
-    if ((e.D?.tex === 'slime_hd' || e.D?.tex === 'wolf_hd') && e.spr?.anims && e.hp > 0) {
+    if ((e.D?.tex === 'slime_hd' || e.D?.tex === 'wolf_hd' || e.D?.tex === 'wolf_elite_hd') && e.spr?.anims && e.hp > 0) {
       e.hurtT = 0.32; e.spr.play(e.D.tex + '_hurt', true);
     }
     const sp = this.add.image(e.spr.x + rnd(-3, 3), e.spr.y - e.spr.displayHeight / 2, 'spark').setDepth(e.spr.y + 5); this.tweens.add({ targets: sp, scale: 1.8, alpha: 0, duration: 200, onComplete: () => sp.destroy() });
@@ -200,7 +200,7 @@ Object.assign(World.prototype, {
     this.sparkle(x, y - 8, 'dot', 14);
     for (let i = 0; i < 4; i++) this.time.delayedCall(i * 40, () => this.puff(x + rnd(-8, 8), y - rnd(0, 10)));
     this.tweens.killTweensOf(e.spr);
-    if ((e.D?.tex === 'slime_hd' || e.D?.tex === 'wolf_hd') && e.spr?.anims) {
+    if ((e.D?.tex === 'slime_hd' || e.D?.tex === 'wolf_hd' || e.D?.tex === 'wolf_elite_hd') && e.spr?.anims) {
       e.spr.play(e.D.tex + '_die', true);
       this.time.delayedCall(650, () => { if (e.spr?.active) { e.spr.destroy(); e.sh?.destroy(); } });
     } else {

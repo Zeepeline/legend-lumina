@@ -55,4 +55,21 @@ function applyGptMonsters(sc) {
     regW('wolf_hd_mv', 7, 13, 10, -1);
     if (ENEMY.wolf) { ENEMY.wolf.tex = 'wolf_hd'; ENEMY.wolf.scale = 0.44; }
   }
+  const wehd = IMGEL.mon_wolf_elite_hd;
+  if (wehd) {
+    if (!T.exists('wolf_elite_hd')) sc.textures.addSpriteSheet('wolf_elite_hd', wehd, { frameWidth: 168, frameHeight: 116 });
+    const regWE = (k, st, ed, fps, r) => {
+      if (!A.exists(k)) A.create({ key: k, frames: A.generateFrameNumbers('wolf_elite_hd', { start: st, end: ed }), frameRate: fps, repeat: r });
+    };
+    regWE('wolf_elite_hd_idle', 0, 6, 8, -1);
+    regWE('wolf_elite_hd_walk', 7, 13, 10, -1);
+    regWE('wolf_elite_hd_run', 14, 19, 12, -1);
+    regWE('wolf_elite_hd_bite', 21, 25, 11, 0);
+    regWE('wolf_elite_hd_pounce', 28, 31, 10, 0);
+    regWE('wolf_elite_hd_hurt', 35, 39, 10, 0);
+    regWE('wolf_elite_hd_die', 42, 46, 8, 0);
+    regWE('wolf_elite_hd_howl', 49, 52, 8, 0);
+    regWE('wolf_elite_hd_mv', 7, 13, 10, -1);
+    if (ENEMY.bounty_wolf) { ENEMY.bounty_wolf.tex = 'wolf_elite_hd'; ENEMY.bounty_wolf.scale = 0.56; }
+  }
 }

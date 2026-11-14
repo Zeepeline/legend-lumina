@@ -18,7 +18,11 @@ Object.assign(World.prototype, {
   makeElite(e) {
     e.elite = true; e.hp = e.max = Math.round(e.max * 2.2);
     e.D = Object.assign({}, e.D, { atk: Math.round(e.D.atk * 1.3), exp: e.D.exp * 3, gold: (e.D.gold || [1, 2]).map(g => g * 3), name: (e.D.name || '') + ' Elit' });
-    e.sc *= 1.15; e.spr.setScale(e.sc); e.eT = 3;
+    if (e.type === 'wolf' && this.textures.exists('wolf_elite_hd')) {
+      e.D.tex = 'wolf_elite_hd'; e.sc = 0.52;
+      e.spr.setTexture('wolf_elite_hd'); e.spr.play('wolf_elite_hd_idle', true);
+    } else e.sc *= 1.15;
+    e.spr.setScale(e.sc); e.eT = 3;
     e.aura = this.add.ellipse(e.spr.x, e.spr.y, 26 * e.sc, 10 * e.sc, 0xffd84a, .35).setDepth(e.spr.y - 1);
     this.tweens.add({ targets: e.aura, alpha: .1, scaleX: 1.3, scaleY: 1.3, duration: 600, yoyo: true, repeat: -1 });
   },

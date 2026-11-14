@@ -21,7 +21,7 @@ Object.assign(World.prototype, {
       e.calledBackup = true;
       e.st = 'calling';
       s.setVelocity(0);
-      if (D.tex === 'wolf_hd' && s.anims) s.play('wolf_hd_howl', true);
+      if ((D.tex === 'wolf_hd' || D.tex === 'wolf_elite_hd') && s.anims) s.play(D.tex + '_howl', true);
       popWorld(s.x, s.y - 20, 'BAHAYA! MENGGELAR BANTUAN!', 'crit');
       sfxAt('crit', s.x, s.y, this);
       this.time.delayedCall(650, () => {
@@ -197,23 +197,24 @@ Object.assign(World.prototype, {
           s.setVelocity(Math.cos(baseAng) * D.spd, Math.sin(baseAng) * D.spd);
         } else wander(D.spd * .6);
         if (D.side) s.flipX = s.body.velocity.x > 0; break;
-      case 'lunge':
+      case 'lunge': {
+        const isWolfHd = D.tex === 'wolf_hd' || D.tex === 'wolf_elite_hd';
         if (e.st === 'idle' || e.st === 'chase') {
           if (aggro) {
             e.st = 'chase'; s.setVelocity(dx / d * D.spd, dy / d * D.spd);
-            if (D.tex === 'wolf_hd' && s.anims) s.play('wolf_hd_run', true);
+            if (isWolfHd && s.anims) s.play(D.tex + '_run', true);
             if (d < (D.side ? 48 : 34) && e.t <= 0) {
               e.st = 'wind'; e.t = D.side ? .28 : .42; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
-              if (D.tex === 'wolf_hd' && s.anims) {
-                e.atkAnim = Math.random() < 0.5 ? 'wolf_hd_bite' : 'wolf_hd_pounce';
+              if (isWolfHd && s.anims) {
+                e.atkAnim = D.tex + (Math.random() < 0.5 ? '_bite' : '_pounce');
                 s.play(e.atkAnim, true);
               } else s.setTint(0xffa07a);
             }
           } else {
             wander(28);
-            if (D.tex === 'wolf_hd' && s.anims) {
+            if (isWolfHd && s.anims) {
               const mv = Math.hypot(s.body.velocity.x, s.body.velocity.y) > 4;
-              s.play(mv ? 'wolf_hd_walk' : 'wolf_hd_idle', true);
+              s.play(D.tex + (mv ? '_walk' : '_idle'), true);
             }
           }
         } else if (e.st === 'wind') {
@@ -221,7 +222,7 @@ Object.assign(World.prototype, {
         } else if (e.st === 'lunge') {
           if (e.t <= 0) {
             e.st = 'rec'; e.t = .5; s.setVelocity(0);
-            if (D.tex === 'wolf_hd' && s.anims) s.play('wolf_hd_idle', true);
+            if (isWolfHd && s.anims) s.play(D.tex + '_idle', true);
           }
         } else if (e.st === 'rec') {
           if (e.t <= 0) { e.st = 'chase'; e.t = .35; }
@@ -231,6 +232,7 @@ Object.assign(World.prototype, {
           s.flipX = (e.st === 'wind' || e.st === 'lunge' ? e.lx : s.body.velocity.x) > 0;
         }
         break;
+      }
       case 'charge':
         if (e.st === 'idle' || e.st === 'chase') {
           if (aggro && d < 140 && e.cd <= 0) { e.st = 'wind'; e.t = .6; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); s.flipX = dx > 0; }

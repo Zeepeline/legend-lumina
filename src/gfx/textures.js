@@ -7,7 +7,7 @@ const IMG_LIST = [
   "apple1", "apple2", "bench", "bigtree", "bushG1", "bushG2", "bushP", "bushP2", "bushW",
   "fountain", "houseA", "houseB", "houseC", "market", "orange1", "planter", "pot",
   "treeA", "treeB", "treeWoodsPine", "stumpWoods",
-  "lampPost", "crateCart", "benchWood", "hero_custom", "mon_slime_hd", "mon_wolf_hd"
+  "lampPost", "crateCart", "benchWood", "hero_custom", "mon_slime_hd", "mon_wolf_hd", "mon_wolf_elite_hd"
 , 'npc_elder', 'npc_smith', 'npc_merchant', 'npc_farmer', 'npc_inn', 'npc_guard', 'npc_hunter', 'npc_hermit', 'npc_nila', 'npc_joko', 'npc_girl', 'npc_child', 'npc_woman', 'npc_mom', 'npc_ratih', 'npc_wati', 'npc_darma', 'npc_bayu', 'npc_lestari', 'npc_gun', 'npc_priest', 'ani_rabbit', 'ani_squirrel', 'ani_deer', 'ani_owl', 'ani_duck'];
 function loadImgs() { return Promise.all(IMG_LIST.map(k => new Promise(r => { const i = new Image(); i.onload = () => { IMGEL[k] = i; r(); }; i.onerror = () => { console.error('Gagal memuat gambar', k); r(); }; i.src = (window.IMG_INLINE && IMG_INLINE[k]) || 'assets/img/' + k + '.png'; }))); }
 function addStrip(scene, key, st) { const t = scene.textures.addCanvas(key, st.c); for (let i = 0; i < st.n; i++) t.add(i, 0, i * st.fw, 0, st.fw, st.fh); }
