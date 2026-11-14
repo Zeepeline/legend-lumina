@@ -27,6 +27,12 @@ World.prototype.hitEnemy = function (e, base, crit, nx, ny) {
       if (this.sparkle) this.sparkle(e.spr.x, e.spr.y - 10, 'dot', 6);
     }
   }
+  // Sinergi status: Beku + pukulan berat = Pecah (T309)
+  if (e.frz > 0 && e.hp > 0 && (wt === 'axe' || this.pl?.combo === 3)) {
+    base = Math.round(base * 1.5); e.frz = 0;
+    popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 20, 'PECAH!', '#8ad8ff');
+    sfx('crit'); if (this.sparkle) this.sparkle(e.spr.x, e.spr.y - 10, 'dotw', 14);
+  }
   return _hitEnemy.call(this, e, base * k, crit, nx, ny);
 };
 // sumber elemen: bola api = api (proyektil ditandai _curShot di updShots), nova = es, bom = api

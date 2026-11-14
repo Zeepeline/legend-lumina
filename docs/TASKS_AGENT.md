@@ -1933,7 +1933,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; pilih Sulit di Pengaturan → pertarungan terasa lebih berat.
 
-### [ ] T309. **Sinergi status: beku + pukulan berat = pecah** — referensi: Dimraeth (contoh: beku lalu lembing es), Divinity
+### [x] T309. **Sinergi status: beku + pukulan berat = pecah** — referensi: Dimraeth (contoh: beku lalu lembing es), Divinity
 - File: `src/systems/status.js` + `src/systems/combat.js`. Baca dulu: `freezeEnemy()`, `burnEnemy()`, `hitEnemy()`.
 - Lakukan: musuh beku yang terkena akhir kombo atau kapak: damage +50%, efek pecahan es, status beku hilang. Musuh terbakar yang terkena Kabut Racun: ledakan kecil 1× (damage 30% ATK sihir).
 - Jika SUDAH ada → tandai [x] "sudah ada".

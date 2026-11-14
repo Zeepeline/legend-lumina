@@ -135,9 +135,9 @@ _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina
 _Interior: penginapan, rumah pohon, rumah Lina_
 `makeRoom()` 4
 
-## src/ui/widgets.js (174 baris)
+## src/ui/widgets.js (186 baris)
 _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
-`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 36 · `choose()` 40 · `ask()` 76 · `BANNER_QUEUE` 82 · `BANNER_BUSY` 83 · `processBannerQueue()` 84 · `banner()` 97 · `POPS` 106 · `popWorld()` 107 · `updPops()` 111 · `HUD` 114 · `buildHud()` 115 · `updHud()` 124 · `hudPeaceT` 153 · `updHudFade()` 154 · `showHud()` 169 · `bossBar()` 170 · `autoSaveIcon()` 173
+`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 36 · `choose()` 40 · `ask()` 76 · `BANNER_QUEUE` 82 · `BANNER_BUSY` 83 · `processBannerQueue()` 84 · `banner()` 97 · `POPS` 106 · `popWorld()` 107 · `updPops()` 111 · `HUD` 114 · `buildHud()` 115 · `updHud()` 124 · `hudPeaceT` 165 · `updHudFade()` 166 · `showHud()` 181 · `bossBar()` 182 · `autoSaveIcon()` 185
 
 ## src/core/state.js (136 baris)
 _Status pemain (S), simpan/muat, rumus stat_
@@ -195,7 +195,7 @@ _Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah_
 _Jurus: dash, tebasan putar, nova es_
 `.updSkills()` 4 · `.spin()` 12 · `.dash()` 20 · `.nova()` 27
 
-## src/systems/learn.js (58 baris)
+## src/systems/learn.js (70 baris)
 _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipakai (tingkat I–III)._
 `JURUS` 4 · `MASTERY` 13 · `tierOf` 14 · `learned` 15 · `useJurus()` 16 · `canTeach` 20 · `.learnTalk()` 23 · `.castSpell()` 38
 
@@ -351,9 +351,9 @@ _Gelombang 9: mancing tarik-ulur (#51, #571), ikan per jam (#572) & cuaca (#573)
 _Gelombang 10: kalender (#701), nama hari (#702), libur toko (#703), jam toko (#704),_
 `DAYS` 4 · `SEASONS` 5 · `SEASON_DAYS` 11 · `dayName` 12 · `seasonIdx` 13 · `season` 14 · `dateTxt` 15 · `_updClock` 17 · `_plotHours` 20 · `_logFish` 23 · `shopShut()` 26 · `wrapShops()` 32 · `sleepToMorning()` 38 · `.spawnSeason()` 40 · `.updSeason()` 55
 
-## src/systems/polish.js (160 baris)
+## src/systems/polish.js (166 baris)
 _Gelombang 11: hemat baterai (#99), tangkis (#3), kelemahan elemen (#5), kunci target (#6),_
-`ELEM` 5 · `WEAK` 6 · `ELEM_COL` 7 · `_hitEnemy` 8 · `_updShots` 33 · `_eShoot` 36 · `_nova` 53 · `_useTool` 55 · `PARRY_WIN` 58 · `_attack` 59 · `_hurtPlayer` 61 · `.initLock()` 92 · `.setLock()` 97 · `.cycleLock()` 98 · `.updLock()` 99 · `_aim` 106 · `RARE_N` 109 · `rarity()` 110 · `TOAST` 112 · `toastItem()` 113 · `_addItem` 120 · `applyFont()` 123 · `applyLite()` 124 · `applyScreenFilter()` 127 · `.initPolish()` 158
+`ELEM` 5 · `WEAK` 6 · `ELEM_COL` 7 · `_hitEnemy` 8 · `_updShots` 39 · `_eShoot` 42 · `_nova` 59 · `_useTool` 61 · `PARRY_WIN` 64 · `_attack` 65 · `_hurtPlayer` 67 · `.initLock()` 98 · `.setLock()` 103 · `.cycleLock()` 104 · `.updLock()` 105 · `_aim` 112 · `RARE_N` 115 · `rarity()` 116 · `TOAST` 118 · `toastItem()` 119 · `_addItem` 126 · `applyFont()` 129 · `applyLite()` 130 · `applyScreenFilter()` 133 · `.initPolish()` 164
 
 ## src/systems/economy/economy_1.js (399 baris)
 _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (1) — isi: lihat docs/CODEMAP.md_

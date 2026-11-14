@@ -7938,7 +7938,19 @@ Object.assign(World.prototype, {
     for (const e of this.enemies) {
       if (e.hp <= 0) continue; const dx = e.spr.x - pl.x, dy = e.spr.y - pl.y, d = Math.hypot(dx, dy) || 1;
       if (d > R + e.D.r * e.sc) continue;
-      if (id === 'venom') { this.hitEnemy(e, st.mag * .5, false, dx / d * .3, dy / d * .3); this.burnEnemy(e, st.mag * (.18 + .07 * t), 3 + t); e.slow = 2; }
+      if (id === 'venom') {
+        if ((e.burn || 0) > 0) {
+          e.burn = 0;
+          const blast = Math.round(st.mag * 0.3);
+          e.hp -= blast;
+          popWorld(e.spr.x, e.spr.y - 28, 'LEDAKAN!', 'crit');
+          sfxAt('boom', e.spr.x, e.spr.y, this);
+          this.puff(e.spr.x, e.spr.y);
+        }
+        this.hitEnemy(e, st.mag * .5, false, dx / d * .3, dy / d * .3);
+        this.burnEnemy(e, st.mag * (.18 + .07 * t), 3 + t);
+        e.slow = 2;
+      }
       else { const spirit = /ghost|wisp/.test(e.D.tex); this.hitEnemy(e, st.mag * (1.1 + .25 * t) * (spirit ? 2.5 : 1), spirit, dx / d, dy / d); }
     }
   },
@@ -16557,6 +16569,12 @@ World.prototype.hitEnemy = function (e, base, crit, nx, ny) {
       popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 16, 'Tertahan', '#c8c8d8');
       if (this.sparkle) this.sparkle(e.spr.x, e.spr.y - 10, 'dot', 6);
     }
+  }
+  // Sinergi status: Beku + pukulan berat = Pecah (T309)
+  if (e.frz > 0 && e.hp > 0 && (wt === 'axe' || this.pl?.combo === 3)) {
+    base = Math.round(base * 1.5); e.frz = 0;
+    popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 20, 'PECAH!', '#8ad8ff');
+    sfx('crit'); if (this.sparkle) this.sparkle(e.spr.x, e.spr.y - 10, 'dotw', 14);
   }
   return _hitEnemy.call(this, e, base * k, crit, nx, ny);
 };

@@ -50,7 +50,19 @@ Object.assign(World.prototype, {
     for (const e of this.enemies) {
       if (e.hp <= 0) continue; const dx = e.spr.x - pl.x, dy = e.spr.y - pl.y, d = Math.hypot(dx, dy) || 1;
       if (d > R + e.D.r * e.sc) continue;
-      if (id === 'venom') { this.hitEnemy(e, st.mag * .5, false, dx / d * .3, dy / d * .3); this.burnEnemy(e, st.mag * (.18 + .07 * t), 3 + t); e.slow = 2; }
+      if (id === 'venom') {
+        if ((e.burn || 0) > 0) {
+          e.burn = 0;
+          const blast = Math.round(st.mag * 0.3);
+          e.hp -= blast;
+          popWorld(e.spr.x, e.spr.y - 28, 'LEDAKAN!', 'crit');
+          sfxAt('boom', e.spr.x, e.spr.y, this);
+          this.puff(e.spr.x, e.spr.y);
+        }
+        this.hitEnemy(e, st.mag * .5, false, dx / d * .3, dy / d * .3);
+        this.burnEnemy(e, st.mag * (.18 + .07 * t), 3 + t);
+        e.slow = 2;
+      }
       else { const spirit = /ghost|wisp/.test(e.D.tex); this.hitEnemy(e, st.mag * (1.1 + .25 * t) * (spirit ? 2.5 : 1), spirit, dx / d, dy / d); }
     }
   },
