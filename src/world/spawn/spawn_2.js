@@ -177,9 +177,9 @@ Object.assign(OBJ_SPAWN, {
     });
   },
   rune_pillar(s, x, y, opt, d, type) {
-    const pElem = d.elem || 'fire'; // 'fire', 'ice', 'light'
+    const pElem = (opt && opt.elem) || d.elem || 'fire'; // 'fire', 'ice', 'light'
     const pColor = pElem === 'fire' ? 0xff6644 : pElem === 'ice' ? 0x66ccff : 0xffea00;
-    s.setTint(pColor);
+    s.setTint((S.runePillars && S.runePillars.lit && S.runePillars.lit[pElem]) || (S.runePillars && S.runePillars.solved) ? 0xffffff : pColor);
     this.inter.push({
       x, y: y + 4, r: 22,
       fn: async () => {
@@ -199,6 +199,12 @@ Object.assign(OBJ_SPAWN, {
   },
   windmill(s, x, y, opt, d, type) {
     { const b = this.add.image(x, y - 70, 'blades').setDepth(y + 1); this.tweens.add({ targets: b, angle: 360, duration: 7000, repeat: -1 }); this.fades.push({ s: b, l: x - 36, r: x + 36, t: y - 110, b: y - 22 }); }
+  },
+  treeA(s, x, y) {
+    if (this.anims.exists('treeA_sway')) {
+      s.play({ key: 'treeA_sway', startFrame: Math.abs(Math.round(x * 7 + y * 13)) % 8 });
+      s.anims.timeScale = 0.85 + (Math.abs(Math.sin(x * 12.9898 + y * 78.233)) * 0.3);
+    }
   },
   cryst(s, x, y, opt, d, type) {
     this.lights.push({ x, y: y - 8 });

@@ -82,7 +82,9 @@ Object.assign(World.prototype, {
 async function interactRunePillar(sc, spr, elem, x, y) {
   if (G.lock > 0) return;
   G.lock++;
-  S.runePillars = S.runePillars || { step: 0, lit: {}, solved: false };
+  S.runePillars = S.runePillars || {};
+  S.runePillars.lit = S.runePillars.lit || {};
+  if (S.runePillars.step == null) S.runePillars.step = 0;
 
   if (S.runePillars.solved) {
     G.lock--;
@@ -106,10 +108,12 @@ async function interactRunePillar(sc, spr, elem, x, y) {
       sfx('save');
       sc.cameras.main.flash(300, 255, 255, 230);
       sc.camShake(180, 0.008);
-      // Munculkan peti harta kuno di tengah altar (520, 290)
-      const secretChest = { id: 'aurel_rune_chest', x: 520, y: 290, item: 'leg_sun' };
+      // Munculkan peti harta kuno di tengah altar Reruntuhan Aurel (sesuaikan offset di mode benua)
+      const [ox, oy] = (sc.M && sc.M.benua && typeof WORLD_POS !== 'undefined' && WORLD_POS.deepwood) ? WORLD_POS.deepwood : [0, 0];
+      const cx = 520 + ox, cy = 290 + oy;
+      const secretChest = { id: 'aurel_rune_chest', x: cx, y: cy, item: 'leg_sun' };
       const sp = sc.spawnChest(secretChest);
-      sc.sparkle(520, 280, 'doto', 24);
+      sc.sparkle(cx, cy - 10, 'doto', 24);
       sp.setAlpha(0);
       sc.tweens.add({ targets: sp, alpha: 1, duration: 600 });
       saveGame(sc);
