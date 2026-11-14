@@ -143,7 +143,34 @@ Object.assign(World.prototype, {
 
   rollFx() {
     const pl = this.pl;
+    if (!pl || pl.dead) return;
     this.sparkle(pl.x, pl.y - 2, 'dot', 5);
+    // T316: Dash garis angin & kedip awal-akhir (Celeste/Hyper Light Drifter)
+    pl.setTintFill(0xffffff);
+    this.time.delayedCall(40, () => { if (pl && !pl.dead && !pl.flash) pl.clearTint(); });
+    const dv = DIRV[pl.dir] || [0, 1];
+    const dx = dv[0], dy = dv[1];
+    const wg = this.add.graphics().setDepth(pl.y - 1);
+    wg.lineStyle(1.5, 0xe8f4ff, 0.85);
+    const px = pl.x, py = pl.y - 6;
+    const perpX = -dy, perpY = dx;
+    [-7, -2.5, 2.5, 7].forEach(off => {
+      const sx = px + perpX * off - dx * 4;
+      const sy = py + perpY * off - dy * 4;
+      wg.lineBetween(sx, sy, sx - dx * 20, sy - dy * 20);
+    });
+    this.tweens.add({ targets: wg, alpha: 0, duration: 150, onComplete: () => wg.destroy() });
+    this.time.addEvent({
+      delay: 40, repeat: 3,
+      callback: () => { if (pl && !pl.dead && this.puff) this.puff(pl.x, pl.y); }
+    });
+    this.time.delayedCall(160, () => {
+      if (pl && !pl.dead && !pl.flash) {
+        pl.setTintFill(0xffffff);
+        this.time.delayedCall(40, () => { if (pl && !pl.dead && !pl.flash) pl.clearTint(); });
+        if (this.puff) this.puff(pl.x, pl.y);
+      }
+    });
   },
 
   updLowHp(dt) {

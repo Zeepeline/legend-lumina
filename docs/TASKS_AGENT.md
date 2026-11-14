@@ -1979,11 +1979,11 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; tangkis serangan → terasa 'TING!' yang memuaskan. (selesai di v1.30.1)
 
-### [ ] T316. **Dash: garis angin & kedip awal-akhir** — referensi: Celeste, Hyper Light Drifter
+### [x] T316. **Dash: garis angin & kedip awal-akhir** — referensi: Celeste, Hyper Light Drifter
 - File: `src/systems/combat_fx.js`. Baca dulu: pembungkus `W.dash` & `rollFx()`.
 - Lakukan: saat dash: 4 garis angin tipis di belakang Arka (searah gerak, pudar 150 ms), kedip putih singkat di titik awal & akhir, jejak debu tiap 40 ms selama dash.
 - Jika SUDAH ada → tandai [x] "sudah ada".
-- Cek: `npm run check`; dash → terlihat cepat & tajam.
+- Cek: `npm run check`; dash → terlihat cepat & tajam. (selesai di v1.30.1)
 
 ### [ ] T317. **Menghindar sempurna: siluet biru & waktu melambat** — referensi: Bayonetta (Witch Time), Nier Automata
 - File: `src/systems/combat_fx.js`. Baca dulu: hasil tugas "Menghindar tepat waktu" (gelombang 6).

@@ -8082,6 +8082,39 @@ Object.assign(World.prototype, {
     });
     return r;
   };
+
+  // Nova Es: cincin kristal & serpihan (T320)
+  const nova0 = W.nova;
+  W.nova = function () {
+    const pl = this.pl;
+    const r = nova0.apply(this, arguments);
+    if (!pl) return r;
+    // Cincin biru mengembang
+    const ring = this.add.graphics().setDepth(pl.y + 3);
+    const ro = { r: 10 };
+    this.tweens.add({
+      targets: ro, r: 72, duration: 380, ease: 'Cubic.easeOut',
+      onUpdate: () => {
+        ring.clear();
+        ring.lineStyle(3, 0x7dd3fc, 1 - ro.r / 72);
+        ring.strokeCircle(pl.x, pl.y - 6, ro.r);
+      },
+      onComplete: () => ring.destroy()
+    });
+    // 12 serpihan kristal melesat keluar
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * 6.28;
+      const shard = this.add.image(pl.x, pl.y - 6, 'doto').setTint(0xbae6fd).setScale(1.2).setDepth(pl.y + 4);
+      this.tweens.add({
+        targets: shard, x: pl.x + Math.cos(a) * 64, y: pl.y - 6 + Math.sin(a) * 48, alpha: 0, scale: 0.4,
+        duration: 350, ease: 'Quad.easeOut', onComplete: () => shard.destroy()
+      });
+    }
+    // Kabut dingin di tanah 0,8 s
+    const fog = this.add.ellipse(pl.x, pl.y - 4, 110, 60, 0xe0f2fe, 0.35).setDepth(pl.y + 1);
+    this.tweens.add({ targets: fog, alpha: 0, duration: 800, ease: 'Sine.easeIn', onComplete: () => fog.destroy() });
+    return r;
+  };
 }
 
 'use strict';
@@ -18854,7 +18887,34 @@ Object.assign(World.prototype, {
 
   rollFx() {
     const pl = this.pl;
+    if (!pl || pl.dead) return;
     this.sparkle(pl.x, pl.y - 2, 'dot', 5);
+    // T316: Dash garis angin & kedip awal-akhir (Celeste/Hyper Light Drifter)
+    pl.setTintFill(0xffffff);
+    this.time.delayedCall(40, () => { if (pl && !pl.dead && !pl.flash) pl.clearTint(); });
+    const dv = DIRV[pl.dir] || [0, 1];
+    const dx = dv[0], dy = dv[1];
+    const wg = this.add.graphics().setDepth(pl.y - 1);
+    wg.lineStyle(1.5, 0xe8f4ff, 0.85);
+    const px = pl.x, py = pl.y - 6;
+    const perpX = -dy, perpY = dx;
+    [-7, -2.5, 2.5, 7].forEach(off => {
+      const sx = px + perpX * off - dx * 4;
+      const sy = py + perpY * off - dy * 4;
+      wg.lineBetween(sx, sy, sx - dx * 20, sy - dy * 20);
+    });
+    this.tweens.add({ targets: wg, alpha: 0, duration: 150, onComplete: () => wg.destroy() });
+    this.time.addEvent({
+      delay: 40, repeat: 3,
+      callback: () => { if (pl && !pl.dead && this.puff) this.puff(pl.x, pl.y); }
+    });
+    this.time.delayedCall(160, () => {
+      if (pl && !pl.dead && !pl.flash) {
+        pl.setTintFill(0xffffff);
+        this.time.delayedCall(40, () => { if (pl && !pl.dead && !pl.flash) pl.clearTint(); });
+        if (this.puff) this.puff(pl.x, pl.y);
+      }
+    });
   },
 
   updLowHp(dt) {
