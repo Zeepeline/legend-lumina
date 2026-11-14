@@ -12668,9 +12668,20 @@ Object.assign(World.prototype, {
         updHud();
         sfx('chest');
         popWorld(lx, ly - 48, '+1 Mutiara Danau Cermin!', 'gold');
-        await say('Cahaya mercusuar membelah kabut danau dengan megah, memantulkan berkas keemasan di atas permukaan air bagai jutaan cermin!\nKakek penjaga mercusuar meneteskan air mata haru:\n"Akhirnya mercusuar ini menyala kembali setelah sekian lama padam... Terimalah Mutiara Danau Cermin ini sebagai tanda terima kasih para pelaut danau!" (+1 Mutiara Danau Cermin & MP Penuh)!', 'Lentera Danau');
+        await say(
+          'Cahaya mercusuar membelah kabut danau dengan megah, memantulkan berkas keemasan di atas permukaan air bagai jutaan cermin!\n' +
+          'Kakek penjaga mercusuar meneteskan air mata haru:\n' +
+          '"Akhirnya mercusuar ini menyala kembali setelah sekian lama padam... ' +
+          'Terimalah Mutiara Danau Cermin ini sebagai tanda terima kasih para pelaut danau!" ' +
+          '(+1 Mutiara Danau Cermin & MP Penuh)!',
+          'Lentera Danau'
+        );
       } else {
-        await say('Sorotan cahaya mercusuar memantul anggun di atas tenangnya Danau Cermin. Jiwamu dipenuhi ketenangan dan kejernihan batin (MP Penuh)!', 'Mercusuar Danau');
+        await say(
+          'Sorotan cahaya mercusuar memantul anggun di atas tenangnya Danau Cermin. ' +
+          'Jiwamu dipenuhi ketenangan dan kejernihan batin (MP Penuh)!',
+          'Mercusuar Danau'
+        );
       }
     } else if (opt === 1) {
       // Look from balcony
@@ -12683,7 +12694,11 @@ Object.assign(World.prototype, {
       S.mp = Math.min(st.maxmp, S.mp + 25);
       updHud();
       popWorld(this.pl.x, this.pl.y - 20, 'Panorama Indah (+25 HP/MP)', 'gold');
-      await say('Dari balkon kayu mercusuar, hembusan angin sejuk bertiup lembut. Permukaan danau terbentang luas memantulkan awan putih yang berarak damai (+25 HP, +25 MP)!', 'Balkon Mercusuar');
+      await say(
+        'Dari balkon kayu mercusuar, hembusan angin sejuk bertiup lembut. ' +
+        'Permukaan danau terbentang luas memantulkan awan putih yang berarak damai (+25 HP, +25 MP)!',
+        'Balkon Mercusuar'
+      );
     }
 
     this._inLighthouse = false;

@@ -279,7 +279,7 @@ _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
 _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
 `.feedCityPigeons()` 4 · `.interactTeaTable()` 60 · `.interactLotusPond()` 110 · `.interactLakeBoat()` 170 · `.whistleToCanary()` 246 · `.interactWoodlandShrine()` 296
 
-## src/systems/life/interact_8.js (69 baris)
+## src/systems/life/interact_8.js (84 baris)
 _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
 `.interactLighthouse()` 4
 
