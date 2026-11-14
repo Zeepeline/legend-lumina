@@ -95,6 +95,8 @@ function buildTextures(sc) {
   for (const k of ['slime', 'slimeb', 'slimer', 'slimei', 'bat', 'batc', 'shroom', 'squeen', 'cat0', 'cat1', 'cat2', 'fox0', 'wolf', 'boar', 'bee', 'snake', 'plant', 'ghost', 'golem', 'wisp', 'frog', 'slimep', 'wolfs', 'slimef', 'salam', 'golemi', 'snakei', 'chick0', 'chick1', 'chick2', 'duck0', 'duck1'])
     A.create({ key: k + '_mv', frames: fr2(k, 2), frameRate: k === 'bat' || k === 'batc' || k === 'bee' ? 12 : k === 'wolf' || k === 'wolfs' ? 8 : 5, repeat: -1 });
   for (const k of ['fly', 'fly2']) A.create({ key: k, frames: fr2(k, 2), frameRate: 8, repeat: -1 });
+  for (const k in CHARS) for (const d of ['down', 'up', 'side']) A.create({ key: k + '_' + d, frames: [1, 0, 2, 0].map(f => ({ key: 'ch_' + k, frame: d + f })), frameRate: 8, repeat: -1 });
+  if (typeof applyGptSwap === 'function') applyGptSwap(T, A);
   // Daftarkan otomatis objek yang teksturnya belum ada: cari fungsi global art<Nama> yang cocok (tanpa peduli huruf besar), atau alias gambar
   const ALIAS = { i_cart: 'i_crateCart', i_treePine: 'i_treeWoodsPine', i_treeOak: 'i_stumpWoods', i_rockWoods: 'rock' };
   const artFns = Object.keys(window).filter(n => /^art[A-Z]/.test(n) && typeof window[n] === 'function');
@@ -105,8 +107,6 @@ function buildTextures(sc) {
     const al = ALIAS[o.key]; if (al && T.exists(al)) { T.addImage(o.key, T.get(al).getSourceImage()); continue; }
     console.warn('Objek tanpa tekstur:', k, '→', o.key);
   }
-  for (const k in CHARS) for (const d of ['down', 'up', 'side']) A.create({ key: k + '_' + d, frames: [1, 0, 2, 0].map(f => ({ key: 'ch_' + k, frame: d + f })), frameRate: 8, repeat: -1 });
-  if (typeof applyGptSwap === 'function') applyGptSwap(T, A);
   if (typeof applyGptMonsters === 'function') applyGptMonsters(sc); /* sprite monster GPT (gfx/gptmonsters.js) */
   if (IMGEL.mon_slime_hd) {
     if (!T.exists('slime_hd')) sc.textures.addSpriteSheet('slime_hd', IMGEL.mon_slime_hd, { frameWidth: 100, frameHeight: 100 });
