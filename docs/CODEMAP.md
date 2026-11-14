@@ -207,9 +207,9 @@ _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipak
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
 `ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 212 · `.ripple()` 213 · `artQuestArrow()` 216 · `.updQuestGuide()` 223
 
-## src/systems/status.js (93 baris)
+## src/systems/status.js (105 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
-`STATUS` 5 · `.inflict()` 12 · `.cure()` 21 · `.speedMul()` 22 · `.updStatus()` 27 · `.enemyStatus()` 58 · `.burnEnemy()` 74 · `.freezeEnemy()` 75 · `updStatusHud()` 78
+`STATUS` 5 · `.inflict()` 12 · `.cure()` 21 · `.speedMul()` 22 · `.updStatus()` 27 · `.enemyStatus()` 58 · `.poisonEnemy()` 85 · `.burnEnemy()` 86 · `.freezeEnemy()` 87 · `updStatusHud()` 90
 
 ## src/systems/chapter3.js (107 baris)
 _Bab 3: obor kuno, gerbang es, Naga Es Kryos (AI 'dboss')_

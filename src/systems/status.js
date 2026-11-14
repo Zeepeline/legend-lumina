@@ -60,17 +60,29 @@ Object.assign(World.prototype, {
     if (e.burn > 0) {
       e.burn -= dt; e.burnT = (e.burnT || 0) - dt;
       if (e.burnT <= 0) { e.burnT = .5; const d = Math.max(1, Math.round(e.burnDmg - e.D.def * .3)); e.hp -= d; popWorld(s.x + rnd(-5, 5), s.y - s.displayHeight - 4, '' + d, 'crit'); if (e.boss) bossBar(e.D.name, e.hp / e.max); if (e.hp <= 0) { this.killEnemy(e); return true; } }
-      if (Math.random() < dt * 8) this.sparkle(s.x + rnd(-5, 5), s.y - rnd(4, s.displayHeight), 'doto', 1);
+      if (Math.random() < dt * 10) {
+        this.sparkle(s.x + rnd(-4, 4), s.y - rnd(6, s.displayHeight), 'doto', 1);
+        if (Math.random() < 0.5) this.sparkle(s.x + rnd(-4, 4), s.y - s.displayHeight - rnd(2, 8), 'spark', 1);
+      }
       if (e.flash <= 0 && !(e.frz > 0)) s.setTint(0xffb080);
       if (e.burn <= 0 && e.flash <= 0) s.clearTint();
     }
+    if (e.poison > 0) {
+      e.poison -= dt; e.poiT = (e.poiT || 0) - dt;
+      if (e.poiT <= 0) { e.poiT = .8; const d = Math.max(1, Math.round((e.poiDmg || 2) - e.D.def * .2)); e.hp -= d; popWorld(s.x + rnd(-5, 5), s.y - s.displayHeight - 4, '' + d, 'hurt'); if (e.boss) bossBar(e.D.name, e.hp / e.max); if (e.hp <= 0) { this.killEnemy(e); return true; } }
+      if (Math.random() < dt * 6) this.sparkle(s.x + rnd(-4, 4), s.y - s.displayHeight - rnd(2, 6), 'dotg', 1);
+      if (e.flash <= 0 && !(e.frz > 0) && !(e.burn > 0)) s.setTint(0xa0f080);
+      if (e.poison <= 0 && e.flash <= 0) s.clearTint();
+    }
     if (e.frz > 0) {
       e.frz -= dt; s.setVelocity(0); s.anims.pause(); if (e.flash <= 0) s.setTint(0x9ad8ff);
+      if (Math.random() < dt * 4) this.sparkle(s.x + rnd(-6, 6), s.y - rnd(4, s.displayHeight), 'dot', 1);
       if (e.frz <= 0) { s.anims.resume(); s.clearTint(); }
       return e.frz > 0;
     }
     return false;
   },
+  poisonEnemy(e, dmg, sec = 3) { if (e.hp <= 0) return; e.poison = Math.max(e.poison || 0, sec); e.poiDmg = dmg; },
   burnEnemy(e, dmg, sec = 2) { if (e.hp <= 0) return; e.burn = Math.max(e.burn || 0, sec); e.burnDmg = dmg; },
   freezeEnemy(e, sec) { if (e.hp <= 0) return; if (!(e.frz > 0)) popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 10, 'beku!', 'mpc'); e.frz = e.boss ? sec * .3 : sec; },
 });

@@ -2023,7 +2023,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; rapal ketiganya → masing-masing punya ciri sendiri.
 
-### [ ] T323. **Efek status di musuh** — referensi: Divinity, Diablo
+### [x] T323. **Efek status di musuh** — referensi: Divinity, Diablo
 - File: `src/systems/spell_fx.js` (+ `src/systems/status.js` BACA). Baca dulu: `enemyStatus()`/`updStatus()`.
 - Lakukan: terbakar: 2 partikel api naik berkedip; beku: kilau es & gerak 0 visual; racun: gelembung hijau kecil. Buat sekali per musuh berstatus, hancurkan saat status habis.
 - Jika SUDAH ada → tandai [x] "sudah ada".
