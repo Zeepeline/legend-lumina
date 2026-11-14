@@ -8927,7 +8927,9 @@ Object.assign(World.prototype, {
             const hasTok = this.atkTok.has(e);
             if (d < (D.side ? 48 : 34) && e.t <= 0) {
               if (hasTok || this.atkTok.size < 2) {
-                this.atkTok.add(e); e.tokT = 0; e.st = 'wind'; e.t = (D.side ? .36 : .42) * wMul; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
+                this.atkTok.add(e); e.tokT = 0; e.st = 'wind';
+                e.t = e.elite ? (rel ? rnd(.35, .6) : rnd(.35, .75)) : ((D.side ? .36 : .42) * wMul);
+                s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
                 if (isWolfHd && s.anims) { e.atkAnim = D.tex + (Math.random() < 0.5 ? '_bite' : '_pounce'); s.play(e.atkAnim, true); }
                 else if (isGoblinHd && s.anims) { e.atkAnim = D.tex + (Math.random() < 0.5 ? '_slash' : '_bite'); s.play(e.atkAnim, true); }
                 else s.setTint(0xffa07a);
@@ -9060,10 +9062,11 @@ Object.assign(World.prototype, {
       return;
     }
     // Jurus Smash (Palu Berduri & Shockwave) atau Charge (Terjang)
+    const isRel = typeof OPT !== 'undefined' && OPT.diff === 0;
     if (aggro && e.skillCd <= 0) {
       if (d < 50) {
         e.skillCd = rnd(3.2, 5.0);
-        e.st = 'smash'; e.t = 0.75;
+        e.st = 'smash'; e.t = isRel ? rnd(0.38, 0.6) : rnd(0.35, 0.75);
         s.setVelocity(0); s.flipX = dx < 0;
         markOver(this, e, '!', '#ffd84a');
         if (isElite && s.anims && s.anims.animationManager.exists('goblin_elite_smash')) {
@@ -9082,7 +9085,7 @@ Object.assign(World.prototype, {
         return;
       } else if (d < 150 && Math.random() < 0.65) {
         e.skillCd = rnd(3.5, 5.5);
-        e.st = 'cwind'; e.t = 0.38;
+        e.st = 'cwind'; e.t = isRel ? rnd(0.35, 0.55) : rnd(0.35, 0.75);
         s.setVelocity(0); s.flipX = dx < 0;
         sfxAt('roar', s.x, s.y, this);
         const ang = Math.atan2(dy, dx);
@@ -9144,9 +9147,11 @@ Object.assign(World.prototype, {
       e.st = 'chase'; s.setVelocity(dx / d * spd, dy / d * spd);
       if (e.t <= 0) {
         const r = Math.random(); s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; e.tx = this.pl.x; e.ty = this.pl.y; sfx('jump');
-        if ((golem || e.p2) && r < .38) { e.st = 'throw'; e.t = .5; s.setTint(0xb0a0ff); }
-        else if (r < .7) { e.st = 'swind'; e.t = e.p2 ? .4 : .55; s.setTint(0xffc04a); }
-        else { e.st = 'cwind'; e.t = e.p2 ? .45 : .6; s.setTint(0xff7a5a); }
+        const isRel = typeof OPT !== 'undefined' && OPT.diff === 0;
+        const bWind = () => isRel ? rnd(.35, .6) : rnd(.35, .75);
+        if ((golem || e.p2) && r < .38) { e.st = 'throw'; e.t = bWind(); s.setTint(0xb0a0ff); }
+        else if (r < .7) { e.st = 'swind'; e.t = bWind(); s.setTint(0xffc04a); }
+        else { e.st = 'cwind'; e.t = bWind(); s.setTint(0xff7a5a); }
       }
     } else if (e.st === 'throw') {
       if (e.t <= 0) { s.clearTint(); this.eShoot(e, golem ? 'rock' : 'bone', e.p2 ? [-.5, -.25, 0, .25, .5] : [-.35, 0, .35], D.atk - 4); e.st = 'rec'; e.t = .7; }

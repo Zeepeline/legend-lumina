@@ -294,7 +294,9 @@ Object.assign(World.prototype, {
             const hasTok = this.atkTok.has(e);
             if (d < (D.side ? 48 : 34) && e.t <= 0) {
               if (hasTok || this.atkTok.size < 2) {
-                this.atkTok.add(e); e.tokT = 0; e.st = 'wind'; e.t = (D.side ? .36 : .42) * wMul; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
+                this.atkTok.add(e); e.tokT = 0; e.st = 'wind';
+                e.t = e.elite ? (rel ? rnd(.35, .6) : rnd(.35, .75)) : ((D.side ? .36 : .42) * wMul);
+                s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
                 if (isWolfHd && s.anims) { e.atkAnim = D.tex + (Math.random() < 0.5 ? '_bite' : '_pounce'); s.play(e.atkAnim, true); }
                 else if (isGoblinHd && s.anims) { e.atkAnim = D.tex + (Math.random() < 0.5 ? '_slash' : '_bite'); s.play(e.atkAnim, true); }
                 else s.setTint(0xffa07a);

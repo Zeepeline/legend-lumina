@@ -31,10 +31,11 @@ Object.assign(World.prototype, {
       return;
     }
     // Jurus Smash (Palu Berduri & Shockwave) atau Charge (Terjang)
+    const isRel = typeof OPT !== 'undefined' && OPT.diff === 0;
     if (aggro && e.skillCd <= 0) {
       if (d < 50) {
         e.skillCd = rnd(3.2, 5.0);
-        e.st = 'smash'; e.t = 0.75;
+        e.st = 'smash'; e.t = isRel ? rnd(0.38, 0.6) : rnd(0.35, 0.75);
         s.setVelocity(0); s.flipX = dx < 0;
         markOver(this, e, '!', '#ffd84a');
         if (isElite && s.anims && s.anims.animationManager.exists('goblin_elite_smash')) {
@@ -53,7 +54,7 @@ Object.assign(World.prototype, {
         return;
       } else if (d < 150 && Math.random() < 0.65) {
         e.skillCd = rnd(3.5, 5.5);
-        e.st = 'cwind'; e.t = 0.38;
+        e.st = 'cwind'; e.t = isRel ? rnd(0.35, 0.55) : rnd(0.35, 0.75);
         s.setVelocity(0); s.flipX = dx < 0;
         sfxAt('roar', s.x, s.y, this);
         const ang = Math.atan2(dy, dx);

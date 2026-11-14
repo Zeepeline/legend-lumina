@@ -1881,7 +1881,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; pukul goblin dari depan → damage kecil; dari samping → normal.
 
-### [ ] T301. **Ancang-ancang tipuan (tempo bervariasi)** — referensi: Elden Ring (delayed attacks)
+### [x] T301. **Ancang-ancang tipuan (tempo bervariasi)** — referensi: Elden Ring (delayed attacks)
 - File: `src/ai/enemies.js`. Baca dulu: durasi ancang-ancang di cabang `'lunge'`/`'charge'`/`'elite_brute'`.
 - Lakukan: musuh elite & boss mengacak durasi ancang-ancang antara 0,35–0,75 s (musuh biasa tetap tetap), jadi pemain harus membaca, bukan menghafal ritme.
 - Batasan: mode Santai: maks 0,6 s & tetap ada tanda "!".

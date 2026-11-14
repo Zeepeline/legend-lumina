@@ -223,17 +223,17 @@ _Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Ray
 _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif._
 `WARPS` 3 · `.spawnWarp()` 9 · `.useWarp()` 15
 
-## src/ai/enemies.js (396 baris)
+## src/ai/enemies.js (398 baris)
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
-`.updEnemy()` 4 · `.charAnim()` 389
+`.updEnemy()` 4 · `.charAnim()` 391
 
-## src/ai/elite_brute.js (89 baris)
+## src/ai/elite_brute.js (90 baris)
 _AI untuk musuh Brute Elite (Goblin Brute Elite, dsb)_
 `.updEliteBrute()` 4
 
-## src/ai/bosses.js (123 baris)
+## src/ai/bosses.js (125 baris)
 _AI boss & alur pertarungan boss_
-`.summon()` 4 · `.triggerPhase2()` 9 · `.updBoss()` 19 · `.updQueen()` 45 · `.updSnake()` 58 · `.updWitch()` 70 · `.startBoss()` 87 · `.bossDown()` 106
+`.summon()` 4 · `.triggerPhase2()` 9 · `.updBoss()` 19 · `.updQueen()` 47 · `.updSnake()` 60 · `.updWitch()` 72 · `.startBoss()` 89 · `.bossDown()` 108
 
 ## src/systems/life/core.js (374 baris)
 _Objek interaktif dunia: core — isi: lihat docs/CODEMAP.md_

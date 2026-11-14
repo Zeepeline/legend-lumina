@@ -26,9 +26,11 @@ Object.assign(World.prototype, {
       e.st = 'chase'; s.setVelocity(dx / d * spd, dy / d * spd);
       if (e.t <= 0) {
         const r = Math.random(); s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; e.tx = this.pl.x; e.ty = this.pl.y; sfx('jump');
-        if ((golem || e.p2) && r < .38) { e.st = 'throw'; e.t = .5; s.setTint(0xb0a0ff); }
-        else if (r < .7) { e.st = 'swind'; e.t = e.p2 ? .4 : .55; s.setTint(0xffc04a); }
-        else { e.st = 'cwind'; e.t = e.p2 ? .45 : .6; s.setTint(0xff7a5a); }
+        const isRel = typeof OPT !== 'undefined' && OPT.diff === 0;
+        const bWind = () => isRel ? rnd(.35, .6) : rnd(.35, .75);
+        if ((golem || e.p2) && r < .38) { e.st = 'throw'; e.t = bWind(); s.setTint(0xb0a0ff); }
+        else if (r < .7) { e.st = 'swind'; e.t = bWind(); s.setTint(0xffc04a); }
+        else { e.st = 'cwind'; e.t = bWind(); s.setTint(0xff7a5a); }
       }
     } else if (e.st === 'throw') {
       if (e.t <= 0) { s.clearTint(); this.eShoot(e, golem ? 'rock' : 'bone', e.p2 ? [-.5, -.25, 0, .25, .5] : [-.35, 0, .35], D.atk - 4); e.st = 'rec'; e.t = .7; }
