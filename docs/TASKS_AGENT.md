@@ -2131,7 +2131,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); alat cek air: menyambung ke `meadow` & `river`.
 
-### [ ] T338. **Sungai Senja 5: alur utama Jalur Sungai Senja** — referensi: GEOGRAFI §3 (sungai bergabung, tidak bercabang)
+### [x] T338. **Sungai Senja 5: alur utama Jalur Sungai Senja** — referensi: GEOGRAFI §3 (sungai bergabung, tidak bercabang)
 - File: `src/world/maps/wild.js` peta `river` (`ponds` baris ±43). Baca dulu: `docs/GEOGRAFI.md` §3; `WORLD_POS.river` = [4552, 4112], ukuran 2600×1000.
 - Lakukan: ganti elips lama yang terpisah-pisah dengan alur menyambung: masuk dari atas di x lokal ≈ 1048, turun ke (1048, 600), lalu berkelok ke TIMUR sampai tepi kanan di y lokal ≈ 600. Pertahankan arungan di dekat `brokenbridge` (1420, 560) & kincir (1800, 160). Pindahkan objek yang kini terendam ke tepi sungai terdekat.
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar; jangan hapus objek, hanya geser
