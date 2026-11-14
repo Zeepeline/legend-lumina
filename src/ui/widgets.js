@@ -135,7 +135,19 @@ function updHud() {
   const mp = $('hMp'); mp.firstChild.style.width = (S.mp / st.maxmp * 100) + '%'; mp.lastChild.textContent = S.mp + '/' + st.maxmp;
   const sta = $('hSta'); if (sta) { const curSta = S.sta != null ? S.sta : st.maxsta; sta.firstChild.style.width = (curSta / st.maxsta * 100) + '%'; }
   $('hXp').firstChild.style.width = (S.exp / need(S.lv) * 100) + '%';
-  $('hGold').textContent = Math.floor(S.gold || 0); $('hPot').textContent = (S.inv.potion || 0) + (S.inv.hipotion || 0);
+  $('hGold').textContent = Math.floor(S.gold || 0);
+  const potEl = $('hPot');
+  if (potEl) {
+    const F = (typeof flaskOf === 'function') ? flaskOf() : null;
+    const pCount = (S.inv.potion || 0) + (S.inv.hipotion || 0);
+    if (F) {
+      let dots = '';
+      for (let i = 0; i < F.max; i++) dots += (i < F.n) ? '●' : '○';
+      potEl.innerHTML = `<span class="f-dots">${dots}</span><small class="p-num">${pCount}</small>`;
+    } else {
+      potEl.textContent = pCount;
+    }
+  }
   const compEl = $('hCompass');
   if (compEl && G.scene?.pl) {
     const cardMap = { up: 'U', down: 'S', left: 'B', right: 'T' };

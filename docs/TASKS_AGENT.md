@@ -2062,7 +2062,7 @@ Urutan: kerjakan gelombang 3 & 6 dulu (beberapa tugas di sini memakainya). File 
 - Jika SUDAH ada → tandai [x] "sudah ada".
 - Cek: `npm run check`; masuk arena boss → bilah gaya souls.
 
-### [ ] T329. **Ikon Botol Cahaya ala Estus** — referensi: Dark Souls (Estus Flask)
+### [x] T329. **Ikon Botol Cahaya ala Estus** — referensi: Dark Souls (Estus Flask)
 - File: `styles.css` + elemen `hPot` (cari di `src/ui/widgets.js`). Baca dulu: pembungkus HUD `soulHudWrap` di `src/systems/souls.js` (BACA saja).
 - Lakukan: tampilkan botol sebagai ikon botol bercahaya dengan titik-titik isi (●●○) di atas tombol OBAT, bukan teks "2/3 · 3". Ramuan biasa sebagai angka kecil di pojok.
 - Batasan: logika botol di souls.js tidak diubah.

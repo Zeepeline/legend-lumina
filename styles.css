@@ -41,6 +41,9 @@ body{font-family:'Pixelify Sans','Courier New',monospace;color:#3b2618}
 #hud2{position:absolute;right:4px;top:4px;display:flex;gap:6px;align-items:center;background:rgba(30,20,12,.62);border:1px solid rgba(255,230,180,.35);border-radius:4px;padding:2px 6px;color:#fff;font-size:10px;transition:opacity .3s;z-index:2}
 #hud2 img{width:10px;height:10px;image-rendering:pixelated;vertical-align:-1px;margin-right:2px}
 #hud2 .pt img{width:9px;height:11px}
+#hud2 .pt b{display:inline-flex;align-items:center;gap:3px}
+#hud2 .f-dots{color:#ffe27a;letter-spacing:1px;font-size:9px;text-shadow:0 0 4px #ffc83b}
+#hud2 .p-num{font-size:7.5px;color:#a0f080;opacity:.85;font-weight:400}
 #hSt{display:flex;gap:3px;align-items:center;margin-top:2px}
 #hSt .stic{display:inline-flex;align-items:center;font-size:8px;padding:1px 3px;border-radius:2px;background:rgba(20,15,10,.85)}
 #hSt .stic.buff{border:1px solid #4ade80}

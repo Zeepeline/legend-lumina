@@ -114,7 +114,12 @@ function soulHudWrap() {
   const u0 = updHud;
   updHud = function () { // eslint-disable-line no-global-assign
     const r = u0.apply(this, arguments), e = document.getElementById('hPot'), F = flaskOf();
-    if (e) e.textContent = F.n + '/' + F.max + ' · ' + ((S.inv.potion || 0) + (S.inv.hipotion || 0));
+    if (e && F) {
+      let dots = '';
+      for (let i = 0; i < F.max; i++) dots += (i < F.n) ? '●' : '○';
+      const pCount = (S.inv.potion || 0) + (S.inv.hipotion || 0);
+      e.innerHTML = `<span class="f-dots">${dots}</span><small class="p-num">${pCount}</small>`;
+    }
     return r;
   };
   updHud();
