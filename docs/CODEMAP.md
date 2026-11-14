@@ -315,9 +315,9 @@ _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_
 _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, mengobrol, duduk, berpatroli), pulang saat malam._
 `NPC_ROLE` 4 · `STORY_NPC` 11 · `WORK` 13 · `SEATS` 27 · `SOCIAL` 28 · `IDLE_ICON` 29 · `.npcBrainInit()` 32 · `.npcEmote()` 44 · `.npcPickGoal()` 45 · `.npcWalkAnim()` 66 · `.npcBrain()` 67 · `.npcActStart()` 89 · `.npcActTick()` 94
 
-## src/systems/qol.js (216 baris)
+## src/systems/qol.js (223 baris)
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
-`.updInteractHint()` 6 · `.updEnemyBars()` 23 · `.retryBoss()` 33 · `levelUpDetail()` 39 · `.setTimeout()` 45 · `TIPS` 58 · `showTip()` 69 · `.updTips()` 88 · `.updMinimap()` 98 · `.swapWeapon()` 132 · `.updStamina()` 143 · `.tryClimb()` 154 · `.tryGlide()` 180 · `.stopGlide()` 206 · `applyPadOpt()` 212
+`.updInteractHint()` 6 · `.updEnemyBars()` 30 · `.retryBoss()` 40 · `levelUpDetail()` 46 · `.setTimeout()` 52 · `TIPS` 65 · `showTip()` 76 · `.updTips()` 95 · `.updMinimap()` 105 · `.swapWeapon()` 139 · `.updStamina()` 150 · `.tryClimb()` 161 · `.tryGlide()` 187 · `.stopGlide()` 213 · `applyPadOpt()` 219
 
 ## src/systems/feel.js (68 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_

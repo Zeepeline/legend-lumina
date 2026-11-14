@@ -4,7 +4,12 @@
 Object.assign(World.prototype, {
   // ikon kecil di atas benda/NPC yang bisa disentuh, plus label tombol aksi berubah
   updInteractHint() {
-    if (!this.iHint) { this.iHint = this.add.text(0, 0, '', { fontFamily: 'sans-serif', fontSize: '12px', stroke: '#2a1c14', strokeThickness: 3, color: '#fff3c0' }).setOrigin(.5, 1).setDepth(1.98e5); this.iHintT = 0; }
+    if (!this.iHint) {
+      this.iHint = this.add.text(0, 0, '', {
+        fontFamily: 'sans-serif', fontSize: '11px', stroke: '#2a1c14', strokeThickness: 3, color: '#fff3c0', align: 'center'
+      }).setOrigin(.5, 1).setDepth(1.98e5);
+      this.iHintT = 0;
+    }
     this.iHintT -= this.dt || .016; if (this.iHintT > 0) return; this.iHintT = .12;
     const f = this.front(11); let best = null, bd = 1e9;
     if (!G.lock && !this.pl.dead) for (const it of this.inter) {
@@ -15,8 +20,10 @@ Object.assign(World.prototype, {
     if (!best) { this.iHint.setVisible(false); if (btn && btn.dataset.ctx) { btn.innerHTML = '⚔<small>SERANG</small>'; delete btn.dataset.ctx; } return; }
     const npc = best.npc, src = String(best.fn), kind = npc ? 'bicara' : /openChest/.test(src) ? 'buka' : /enterRoom|goto/.test(src) ? 'masuk' : /Lore|text|readLore/.test(src) ? 'baca' : /harvest|fish|garden|pick/i.test(src) ? 'ambil' : 'periksa';
     const icon = { bicara: '💬', buka: '🗝', masuk: '🚪', baca: '📜', ambil: '✋', periksa: '❕' }[kind];
+    const name = npc ? (npc.n?.name || '') : (best.name || best.label || '');
+    const txt = name ? `${icon}\n${name}` : icon;
     const x = npc ? npc.spr.x : best.rect ? best.rect[0] + best.rect[2] / 2 : best.x, y = npc ? npc.spr.y - 34 : (best.rect ? best.rect[1] : best.y - 18);
-    this.iHint.setText(icon).setPosition(x, y + Math.sin(this.t * 5) * 1.5).setVisible(true);
+    this.iHint.setText(txt).setPosition(x, y + Math.sin(this.t * 5) * 1.5).setVisible(true);
     if (btn && btn.dataset.ctx !== kind) { btn.dataset.ctx = kind; btn.innerHTML = icon + '<small>' + kind.toUpperCase() + '</small>'; }
   },
   // bilah HP kecil di atas musuh yang sudah terluka (bukan boss; boss punya bilah sendiri)

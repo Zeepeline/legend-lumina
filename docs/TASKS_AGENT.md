@@ -1597,7 +1597,8 @@ Pengecualian kunci: tugas di bagian ini BOLEH mengubah file yang disebut di tuga
 - Jika ternyata SUDAH ada → tandai [x] dengan catatan "sudah ada", selesai.
 - Cek: `npm run check`; ketuk peta mini → membesar; ketuk lagi → normal.
 
-### [ ] T262. **Petunjuk interaksi menyebut nama**
+### [x] T262. **Petunjuk interaksi menyebut nama**
+- Selesai: `this.iHint` menampilkan nama target di baris bawah ikon (misal `${icon}\n${name}`) bila target NPC atau objek memiliki properti nama/label.
 - File: `src/systems/qol.js`. Baca dulu: `updInteractHint()` (±6–22).
 - Lakukan: selain ikon, tampilkan nama singkat target (nama NPC / jenis objek dari entri `inter` bila ada field nama) di bawah ikon, font kecil.
 - Batasan: jika entri interaksi tidak punya nama → tampilkan ikon saja.
