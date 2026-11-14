@@ -2688,7 +2688,7 @@ Wajib baca `docs/GEOGRAFI.md` dulu. Kerjakan berurutan (sungai bergantung satu s
 - Batasan: tidak ada objek/NPC/musuh/peti di atas air; jangan menutup pintu/jalan keluar
 - Cek: `npm run check` (0 masalah); berjalan di pasar terasa ramai tapi tidak tersangkut.
 
-### [ ] T353. **Distrik Akademi: rapi & simetris** — referensi: Arsitektur akademi/klasik
+### [x] T353. **Distrik Akademi: rapi & simetris** — referensi: Arsitektur akademi/klasik
 
 - File: `src/world/maps/city.js` peta `kakademi`. Baca dulu: `objs`, `paths`.
 - Lakukan: tata simetris pada sumbu tengah: jalan lurus ke gedung utama, taman berpagar di kiri-kanan, menara jam (`clockworktower`) sebagai penanda di ujung sumbu bila objeknya ada.
