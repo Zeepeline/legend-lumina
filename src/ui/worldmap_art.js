@@ -20,7 +20,7 @@ function worldOverview(M) {
     if (R && Math.abs(py - riverY(R, px)) < R.w / 2) col = (px >= R.bridge[0] && px <= R.bridge[1]) ? [168, 112, 62] : WAT[1];
     if (!col && ponds.length) {
       const e = waterE(ponds, px, py, GX, GY);
-      if (e < 1) col = sd(px, py) < 0 ? [168, 112, 62] : WAT[e > .82 ? 2 : e > .5 || waterE.r < 70 ? 1 : 0];
+      if (e < 1) col = sd(px, py) < 0 ? [168, 112, 62] : WAT[e > .82 ? 2 : e > .5 || waterE.r < 92 ? 1 : 0];
     }
     if (!col && sd(px, py) < 0) col = PATH;
     if (!col) {

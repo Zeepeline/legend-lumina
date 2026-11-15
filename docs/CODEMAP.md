@@ -99,9 +99,9 @@ obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 8
 _Generator tanah, tabrakan grid, penyebar pohon_
 `riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `BLEND_W` 41 · `WILD_G` 42 · `edgeSegs()` 43 · `edgeBlend()` 72 · `TILE_CACHE` 91 · `getTileData()` 92 · `genGround()` 101 · `blockRects()` 217 · `scatter()` 233 · `openSides()` 268 · `borderTrees()` 281 · `ringObjects()` 304 · `mapObjects()` 309 · `mapWalls()` 313
 
-## src/world/water.js (66 baris)
+## src/world/water.js (86 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
-`pondsBase()` 6 · `WGLOB` 22 · `waterGlobal()` 23 · `pondsAll()` 37 · `pondsNear()` 46 · `waterE()` 49 · `waterGXY()` 65
+`WATER_WIDEN` 6 · `pondsBase()` 7 · `WGLOB` 25 · `waterGlobal()` 26 · `pondsAll()` 40 · `pondsNear()` 49 · `waterE()` 52 · `waterGXY()` 68 · `WATER_MOVABLE` 71 · `waterRelocate()` 72
 
 ## src/world/maps/village.js (115 baris)
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
@@ -479,9 +479,13 @@ _Layar judul_
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
 `exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 32 · `plEnemies()` 34 · `NEIGH` 88
 
-## src/world/organic.js (34 baris)
+## src/world/organic.js (37 baris)
 _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),_
 `ORG_SKIP` 5 · `ORG_FILL` 6 · `orgPlanned()` 7 · `orgCurve()` 9
+
+## src/systems/waterflow.js (60 baris)
+_Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
+`FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `.updFlow()` 33 · `_updFlow0` 54
 
 ## src/gfx/gptassets.js (52 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_

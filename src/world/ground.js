@@ -139,7 +139,7 @@ function genGround(M, rect) {
       if (we < 1) {
         const ds = sd(x, y);
         if (ds < 1.5) { if (ds > -1.5) { put(i, h2r('#5e3b20')); continue; } const ly = (y + 1000) % 6; put(i, h2r(ly === 0 ? '#6e4222' : ly === 1 ? '#c8945a' : '#a8703e')); continue; }
-        water(i, wr < 70 ? Math.max(we, .5) : we, x, y); continue;
+        water(i, wr < 92 ? Math.max(we, .5) : we, x, y); continue;
       }
       if (we < 1 + (VW ? 13 : 5) / wr) {
         if (VW) { const b = verdantBank(M, (we - 1) * wr, x + GX, y + GY, waterE(PL, x, y + 4, GX, GY) < we); if (b) { put(i, b); continue; } }

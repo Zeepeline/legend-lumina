@@ -20,7 +20,9 @@ function orgCurve(a, b, c, d, r, seed) {
 }
 (function organicWorld() {
   for (const id in MAPS) {
-    const M = MAPS[id]; if (orgPlanned(M) || M._paths0) continue;
+    const M = MAPS[id];
+    if (M.river && !M._rw0) { M._rw0 = M.river.w; M.river.w = Math.round(M.river.w * WATER_WIDEN); } /* sungai berliku ikut dilebarkan */
+    if (orgPlanned(M) || M._paths0) continue;
     M._paths0 = M.paths || []; M._discs0 = M.discs || [];
     M.paths = M._paths0.flatMap((p, i) => orgCurve(p[0], p[1], p[2], p[3], p[4] || 12, i * 31 + id.length));
     M.discs = M._discs0.map(D => {
@@ -31,3 +33,4 @@ function orgCurve(a, b, c, d, r, seed) {
     });
   }
 })();
+waterRelocate();

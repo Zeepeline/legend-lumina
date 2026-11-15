@@ -3,12 +3,15 @@
 // lalu garis pantai diberi liuk noise (teluk & tanjung). Dipakai untuk gambar tanah, tabrakan, dan sebaran objek.
 // waterE(...) < 1 = air. Setelah dipanggil: waterE.r = jari-jari elips terdekat (px), waterE.cy = pusat y-nya.
 // Elips berurutan yang kecil (sungai) & berdekatan (< 220 px) disambung dengan elips perantara agar alur tidak putus.
+const WATER_WIDEN = 1.3;
 function pondsBase(M) {
   if (M._pondsB && M._pondsB.src === M.ponds) return M._pondsB;
-  const P = M.ponds || [], out = [];
+  // sungai (elips kecil ≤ 70 px) dilebarkan 1.3× agar terasa seperti sungai, bukan parit; danau besar tetap
+  const P0 = M.ponds || [], small = Q => Q && Math.min(Q[2], Q[3]) <= 70, near = (a, b) => small(b) && Math.hypot(a[0] - b[0], a[1] - b[1]) < 220;
+  const P = P0.map((Q, i) => small(Q) && (near(Q, P0[i - 1]) || near(Q, P0[i + 1])) ? [Q[0], Q[1], Math.round(Q[2] * WATER_WIDEN), Math.round(Q[3] * WATER_WIDEN)] : Q), out = [];
   for (let i = 0; i < P.length; i++) {
     const a = P[i], b = P[i + 1]; out.push(a);
-    if (!b || Math.min(a[2], a[3]) > 70 || Math.min(b[2], b[3]) > 70) continue;
+    if (!b || Math.min(a[2], a[3]) > 70 * WATER_WIDEN || Math.min(b[2], b[3]) > 70 * WATER_WIDEN) continue;
     const d = Math.hypot(b[0] - a[0], b[1] - a[1]); if (d > 220) continue;
     const step = Math.min(a[2], a[3], b[2], b[3]) * .8, n = Math.ceil(d / step);
     for (let k = 1; k < n; k++) {
@@ -63,3 +66,20 @@ function waterE(L, x, y, GX = 0, GY = 0) {
 }
 // posisi global peta (untuk noise yang menyambung antarwilayah)
 function waterGXY(M) { return (typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id]) || [0, 0]; }
+
+// hiasan & musuh yang tercebur karena sungai dilebarkan digeser ke darat terdekat (kuil, prasasti, pintu, peti TIDAK digeser)
+const WATER_MOVABLE = /bush|mush|apple|orange|pear|flower|bloom|bones|stump|log|tree|pine|rock|herb|grass|fern/i;
+function waterRelocate() {
+  for (const id in MAPS) {
+    const M = MAPS[id]; if (M.indoor || !(M.ponds || M.river)) continue;
+    const L = pondsBase(M), [GX, GY] = waterGXY(M), R = M.river;
+    const wet = (x, y, m) => (L.length && waterE(L, x, y, GX, GY) < 1 + m / Math.max(waterE.r || 30, 1)) || (R && Math.abs(y - riverY(R, x)) < R.w / 2 + m);
+    const fix = o => { if (!wet(o[1], o[2], 6)) return;
+      for (let r = 10; r <= 160; r += 10) for (let a = 0; a < 12; a++) {
+        const x = o[1] + Math.cos(a * .5236) * r, y = o[2] + Math.sin(a * .5236) * r;
+        if (x > 20 && y > 20 && x < M.w - 20 && y < M.h - 20 && !wet(x, y, 14)) { o[1] = Math.round(x); o[2] = Math.round(y); return; }
+      } };
+    for (const o of M.objs || []) if (Array.isArray(o) && WATER_MOVABLE.test(o[0])) fix(o);
+    for (const e of M.enemies || []) if (Array.isArray(e)) fix(e);
+  }
+}
