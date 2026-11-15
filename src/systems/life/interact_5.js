@@ -84,9 +84,11 @@ Object.assign(World.prototype, {
     const isNight = (typeof isNightTime === "function") ? isNightTime() : false;
     let forecast = "";
     if (isNight) {
-      forecast = "Malam ini langit cerah bertabur bintang perak. Angin sejuk bertiup stabil, waktu yang tepat untuk berburu ikan malam atau menatap rasi bintang di Akademi.";
+      forecast = "Malam ini langit cerah bertabur bintang perak. Angin sejuk bertiup stabil, " +
+        "waktu yang tepat untuk berburu ikan malam atau menatap rasi bintang di Akademi.";
     } else {
-      forecast = "Angin berhembus stabil dari arah padang. Udara kaya akan kelembapan tanah subur, sangat baik untuk pertumbuhan sayur kebun dan perjalanan kafilah.";
+      forecast = "Angin berhembus stabil dari arah padang. Udara kaya akan kelembapan tanah subur, " +
+        "sangat baik untuk pertumbuhan sayur kebun dan perjalanan kafilah.";
     }
 
     await say("Ramalan Cuaca Padang Angin", [
@@ -282,7 +284,11 @@ Object.assign(World.prototype, {
           { t: 'Lempar Koin Harapan', r: '5 G', d: 'Memohon berkah keberuntungan petualang' },
           { t: 'Tinggalkan' }
         ],
-        foot: (i) => ['Membasuh wajah dengan mata air alami, pulihkan 25 HP & MP.', 'Melempar koin ke dasar air mancur untuk memohon berkah petualangan.', 'Kembali menjelajah.'][i]
+        foot: (i) => [
+          'Membasuh wajah dengan mata air alami, pulihkan 25 HP & MP.',
+          'Melempar koin ke dasar air mancur untuk memohon berkah petualangan.',
+          'Kembali menjelajah.'
+        ][i]
       });
       if (act < 0 || act === 2) break;
       if (act === 0) {
@@ -317,9 +323,17 @@ Object.assign(World.prototype, {
             addItem('ring', 1);
             sfx('chest');
             updHud();
-            await say('Koin berdenting di dasar air mancur... pantulan air memperlihatkan sesuatu yang berkilau! Kamu menemukan Cincin Pelindung terselip di sela batu air mancur!', 'Berkah Harapan');
+            await say(
+              'Koin berdenting di dasar air mancur... pantulan air memperlihatkan sesuatu yang berkilau! ' +
+              'Kamu menemukan Cincin Pelindung terselip di sela batu air mancur!',
+              'Berkah Harapan'
+            );
           } else {
-            await say('Koin berdenting pelan di dasar air mancur. Permukaan air memancarkan kilau keemasan yang menenangkan jiwa! Kamu merasakan berkah kekuatan petualang selama 5 menit.', 'Berkah Harapan');
+            await say(
+              'Koin berdenting pelan di dasar air mancur. Permukaan air memancarkan kilau keemasan ' +
+              'yang menenangkan jiwa! Kamu merasakan berkah kekuatan petualang selama 5 menit.',
+              'Berkah Harapan'
+            );
           }
         }
       }

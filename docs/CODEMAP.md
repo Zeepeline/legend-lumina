@@ -287,9 +287,9 @@ _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
 _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
 `.interactStreetViolin()` 4 · `.interactWiseOwl()` 103 · `.interactClockworkTower()` 183 · `.interactTempleKoiPond()` 249
 
-## src/systems/life/interact_5.js (387 baris)
+## src/systems/life/interact_5.js (401 baris)
 _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
-`.interactWeatherVane()` 4 · `.interactWishingBoat()` 97 · `.interactCampfire()` 209 · `.interactFountain()` 275 · `.ringVillageBell()` 329
+`.interactWeatherVane()` 4 · `.interactWishingBoat()` 99 · `.interactCampfire()` 211 · `.interactFountain()` 277 · `.ringVillageBell()` 343
 
 ## src/systems/life/interact_6.js (365 baris)
 _Objek interaktif dunia: interact — isi: lihat docs/CODEMAP.md_
