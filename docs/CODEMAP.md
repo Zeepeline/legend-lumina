@@ -383,9 +383,9 @@ _Gelombang 11: hemat baterai (#99), tangkis (#3), kelemahan elemen (#5), kunci t
 _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (1) — isi: lihat docs/CODEMAP.md_
 `TITLES` 5 · `checkTitles()` 22 · `BOARD_POOL` 36 · `getBoardQuests()` 48 · `openNoticeBoard()` 57 · `MERCHANT_SCHEDULE` 140 · `isMerchantHere()` 148 · `getMerchantStock()` 155 · `talkKangKembara()` 159 · `openRecipeBook()` 188 · `openStatsAndTitles()` 237 · `DAILY_FEATS_DEF` 317 · `getDailyFeats()` 325 · `openDailyFeats()` 334
 
-## src/systems/economy/economy_2.js (384 baris)
+## src/systems/economy/economy_2.js (408 baris)
 _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (2) — isi: lihat docs/CODEMAP.md_
-`MAIL_LIST` 3 · `openMailbox()` 11 · `CODEX_FLORA` 72 · `CODEX_FAUNA` 73 · `CODEX_BUGS` 74 · `CODEX_MINERAL` 75 · `openEncyclopedia()` 77 · `ALCHEMY_FORMULAS` 144 · `openAlchemyTable()` 151 · `openVillageVault()` 228 · `openHallOfFame()` 296 · `MEMORY_BOSSES` 342 · `openMemoryTrials()` 348
+`MAIL_LIST` 3 · `openMailbox()` 31 · `CODEX_FLORA` 92 · `CODEX_FAUNA` 93 · `CODEX_BUGS` 94 · `CODEX_MINERAL` 95 · `openEncyclopedia()` 97 · `ALCHEMY_FORMULAS` 164 · `openAlchemyTable()` 171 · `openVillageVault()` 248 · `openHallOfFame()` 316 · `MEMORY_BOSSES` 362 · `openMemoryTrials()` 368
 
 ## src/systems/economy/economy_3.js (151 baris)
 _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (3) — isi: lihat docs/CODEMAP.md_

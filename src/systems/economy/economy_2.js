@@ -1,11 +1,31 @@
 'use strict';
 // Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (2) — isi: lihat docs/CODEMAP.md
 const MAIL_LIST = [
-  { id: 'elder_start', from: 'Tetua Bram', title: 'Awal Perjalanan', text: 'Arka, langkahmu membanggakan desa. Teruslah berlatih dan jaga dirimu di rimba.', gift: { gold: 50 }, cond: () => S.stage >= 0 },
-  { id: 'lina_mochi', from: 'Lina & Mochi', title: 'Terima Kasih Mochi', text: 'Arka! Mochi mengeong senang sekali sejak kamu tolong. Ini ada buah beri manis untuk bekalmu.', gift: { item: 'berry', n: 3 }, cond: () => S.side?.mochi >= 3 || S.pet },
-  { id: 'rina_dapur', from: 'Bu Rina', title: 'Salam Dapur Penginapan', text: 'Aroma masakanmu tercium harum. Petualang butuh sayur segar agar staminanya tetap prima!', gift: { item: 'veg', n: 2 }, cond: () => (S.st?.cooked || 0) >= 1 },
-  { id: 'darto_lendir', from: 'Pak Darto', title: 'Bantuan Slime', text: 'Pagar kebunku sekarang kokoh berkat perekat lendir itu. Ini ramuan besar simpananku untukmu.', gift: { item: 'hipotion', n: 1 }, cond: () => S.side?.darto >= 2 || S.stage >= 3 },
-  { id: 'kembara_jalan', from: 'Kang Kembara', title: 'Salam Sang Pengelana', text: 'Dunia ini luas, kawan! Aku berdagang keliling dari desa hingga kota sesuai hari. Semoga sukses!', gift: { gold: 40 }, cond: () => S.day >= 2 }
+  {
+    id: 'elder_start', from: 'Tetua Bram', title: 'Awal Perjalanan',
+    text: 'Arka, langkahmu membanggakan desa. Teruslah berlatih dan jaga dirimu di rimba.',
+    gift: { gold: 50 }, cond: () => S.stage >= 0
+  },
+  {
+    id: 'lina_mochi', from: 'Lina & Mochi', title: 'Terima Kasih Mochi',
+    text: 'Arka! Mochi mengeong senang sekali sejak kamu tolong. Ini ada buah beri manis untuk bekalmu.',
+    gift: { item: 'berry', n: 3 }, cond: () => S.side?.mochi >= 3 || S.pet
+  },
+  {
+    id: 'rina_dapur', from: 'Bu Rina', title: 'Salam Dapur Penginapan',
+    text: 'Aroma masakanmu tercium harum. Petualang butuh sayur segar agar staminanya tetap prima!',
+    gift: { item: 'veg', n: 2 }, cond: () => (S.st?.cooked || 0) >= 1
+  },
+  {
+    id: 'darto_lendir', from: 'Pak Darto', title: 'Bantuan Slime',
+    text: 'Pagar kebunku sekarang kokoh berkat perekat lendir itu. Ini ramuan besar simpananku untukmu.',
+    gift: { item: 'hipotion', n: 1 }, cond: () => S.side?.darto >= 2 || S.stage >= 3
+  },
+  {
+    id: 'kembara_jalan', from: 'Kang Kembara', title: 'Salam Sang Pengelana',
+    text: 'Dunia ini luas, kawan! Aku berdagang keliling dari desa hingga kota sesuai hari. Semoga sukses!',
+    gift: { gold: 40 }, cond: () => S.day >= 2
+  }
 ];
 
 async function openMailbox() {
@@ -365,7 +385,11 @@ async function openMemoryTrials(sc) {
     head: 'Cermin Ingatan · Kuil Suci',
     x: 25, y: 30, w: 270,
     items: available,
-    foot: i => i < MEMORY_BOSSES.length ? 'Tantang kembali kenangan boss masa lalu dalam wujud lebih kuat!' : 'Pantulan cermin suci merekam jejak musuh-musuh kuat.'
+    foot: i => (
+      i < MEMORY_BOSSES.length
+        ? 'Tantang kembali kenangan boss masa lalu dalam wujud lebih kuat!'
+        : 'Pantulan cermin suci merekam jejak musuh-musuh kuat.'
+    )
   });
 
   if (r < 0 || r >= MEMORY_BOSSES.length) {
