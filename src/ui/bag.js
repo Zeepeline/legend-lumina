@@ -26,13 +26,13 @@ async function openBag(sc) {
   const w = win('act', ''); w.id = 'bagw'; let sel = 0;
   function list() {
     const k = BAG_TABS[tab][0];
-    let L = Object.keys(S.inv).filter(id => S.inv[id] > 0 && (k === 'eq' ? ['wpn', 'arm', 'acc'].includes(ITEMS[id].k) : ITEMS[id].k === k));
+    let L = Object.keys(S.inv).filter(id => S.inv[id] > 0 && ITEMS[id] && (k === 'eq' ? ['wpn', 'arm', 'acc'].includes(ITEMS[id].k) : ITEMS[id].k === k));
     if (BAG_SEARCH) {
       const q = BAG_SEARCH.toLowerCase().trim();
-      L = L.filter(id => ITEMS[id].n.toLowerCase().includes(q) || (ITEMS[id].d && ITEMS[id].d.toLowerCase().includes(q)));
+      L = L.filter(id => ITEMS[id] && (ITEMS[id].n.toLowerCase().includes(q) || (ITEMS[id].d && ITEMS[id].d.toLowerCase().includes(q))));
     }
     const val = id => ITEMS[id].price || (ITEMS[id].sell || 0) * 2, got = id => (S.got && S.got[id]) || 0;
-    return BAG_SORT === 1 ? L.sort((a, b) => val(b) - val(a)) : BAG_SORT === 2 ? L.sort((a, b) => got(b) - got(a)) : BAG_SORT === 3 ? L.sort((a, b) => ITEMS[a].n.localeCompare(ITEMS[b].n)) : L;
+    return BAG_SORT === 1 ? L.sort((a, b) => val(b) - val(a)) : BAG_SORT === 2 ? L.sort((a, b) => got(b) - got(a)) : BAG_SORT === 3 ? L.sort((a, b) => (ITEMS[a]?.n || '').localeCompare(ITEMS[b]?.n || '')) : L;
   }
   function isEq(id) { return Object.values(S.eq).includes(id); }
   function draw() {

@@ -26,7 +26,7 @@ function makeSD(M, rect) {
 }
 function pondE(P, x, y) { return Math.hypot((x - P[0]) / P[2], (y - P[1]) / P[3]); }
 const GROUND = {
-  village: { g: ['#427a36', '#4c8c3e', '#589c44', '#68ac4c'], edge: '#38682a', path: 'stone', tuft: '#346428', tuft2: '#7ac456' },
+  village: { g: ['#427a36', '#4c8c3e', '#589c44', '#68ac4c'], edge: '#38682a', path: 'dirt', tuft: '#346428', tuft2: '#7ac456' },
   forest: { g: ['#3a6c2e', '#447c34', '#508e3a', '#5ea042'], edge: '#2e5824', path: 'dirt', tuft: '#2c5422', tuft2: '#70b448' },
   meadow: { g: ['#468238', '#52943e', '#60a648', '#72ba54'], edge: '#3a6c2c', path: 'dirt', tuft: '#386828', tuft2: '#86cc5c' },
   swamp: { g: ['#4a6a4a', '#567a50', '#628858', '#507048'], edge: '#3e5a3e', path: 'dirt', tuft: '#3a5a3a', tuft2: '#8ab070' },

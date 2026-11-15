@@ -18,11 +18,24 @@ const GPT_LOOK = {
   "ka1": "g037", "ka2": "g075", "ka3": "g063", "ka4": "g032", "ka5": "g077", "kb1": "g073",
   "kb2": "g052", "kb3": "g012", "kb4": "g056"
 };
+IMG_LIST.push('gpt_v_village_well', 'gpt_v_house_brown_cottage', 'gpt_v_house_red_cottage');
 IMG_LIST.push(...GPT_SWAP.map(k => 'gpt_' + k), ...[...new Set(Object.values(GPT_LOOK))].map(k => 'npc_' + k));
 for (const k of new Set(Object.values(GPT_LOOK))) if (!CHARS[k]) CHARS[k] = CHARS.child; // gambar asli dari npc_<k>.png (regPortrait)
 // NPC berwajah kembar mendapat karakter sendiri (berdasarkan id)
 for (const id in MAPS) for (const n of MAPS[id].npcs || []) if (GPT_LOOK[n.id] && !(n.id === 'inn')) n.ch = GPT_LOOK[n.id];
 function applyGptSwap(T, A) {
+  for (const hk of ['gpt_v_house_brown_cottage', 'gpt_v_house_red_cottage']) {
+    if (IMGEL[hk]) {
+      if (T.exists(hk)) T.remove(hk);
+      const th = T.addImage(hk, IMGEL[hk]);
+      th.add(0, 0, 0, 0, IMGEL[hk].width, IMGEL[hk].height);
+    }
+  }
+  if (IMGEL['gpt_v_village_well']) {
+    if (T.exists('well')) T.remove('well');
+    const tw = T.addImage('well', IMGEL['gpt_v_village_well']);
+    tw.add(0, 0, 0, 0, IMGEL['gpt_v_village_well'].width, IMGEL['gpt_v_village_well'].height);
+  }
   for (const k of GPT_SWAP) {
     const img = IMGEL['gpt_' + k]; if (!img) continue;
     if (T.exists(k)) T.remove(k);
@@ -30,7 +43,7 @@ function applyGptSwap(T, A) {
     if ((k === 'i_treeA' || k === 'treeAd' || k === 'treeSn') && img.width > img.height * 4) {
       const fw = img.width / 8, animKey = k + '_sway';
       for (let i = 0; i < 8; i++) t.add(i, 0, i * fw, 0, fw, img.height);
-      if (A && !A.exists(animKey)) A.create({ key: animKey, frames: [...Array(8).keys()].map(i => ({ key: k, frame: i })), frameRate: 6, repeat: -1 });
+      if (A && !A.exists(animKey)) A.create({ key: animKey, frames: [...Array(8).keys()].map(i => ({ key: k, frame: i })), frameRate: 4, repeat: -1 });
     } else {
       t.add(0, 0, 0, 0, img.width, img.height);
     }

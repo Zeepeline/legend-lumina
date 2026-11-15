@@ -17,6 +17,7 @@ function say(text, name) {
   if (Array.isArray(name)) return talk(text, name);
   if (Array.isArray(text)) return talk(name || null, text);
   DLG_LOG.push({ name: name || '', text: String(text) }); if (DLG_LOG.length > 60) DLG_LOG.shift();
+  if (typeof setBgmDuck === 'function') setBgmDuck(0.45);
   return new Promise(res => {
     const prev = UIH;
     const w = win('dlg act', (name ? `<div class="nm">${name}</div>` : '') + '<div class="tx"></div><div class="more">▼</div>');
@@ -27,7 +28,9 @@ function say(text, name) {
     const h = k => {
       if (k !== 'a' && k !== 'b' && k !== 'tap') return;
       if (!done) { finish(); return; }
-      w.remove(); UIH = prev; res();
+      w.remove(); UIH = prev;
+      if (typeof setBgmDuck === 'function' && !document.querySelector('.dlg')) setBgmDuck(1.0);
+      res();
     };
     h.tap = true; UIH = h;
     w.addEventListener('pointerdown', e => { e.stopPropagation(); press('tap'); });

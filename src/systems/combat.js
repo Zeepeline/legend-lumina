@@ -279,7 +279,7 @@ Object.assign(World.prototype, {
       if (d < 12) {
         p.got = true; p.s.destroy();
         if (p.kind === 'coin') { S.gold += p.val; sfx('coin'); popWorld(pl.x, pl.y - 30, '+' + p.val + 'G', 'gold'); }
-        else { addItem(p.val); sfx('chest'); popWorld(pl.x, pl.y - 30, '+' + ITEMS[p.val].n, 'heal'); }
+        else { addItem(p.val); sfx('chest'); const itemN = ITEMS[p.val] ? ITEMS[p.val].n : p.val; popWorld(pl.x, pl.y - 30, '+' + itemN, 'heal'); }
         updHud();
       }
     }

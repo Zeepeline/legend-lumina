@@ -7,9 +7,9 @@ Format: `nama` baris. Urutan file = urutan muat di index.html.
 _Konstanta layar & util kecil_
 `VW` 6 · `VH` 7 · `rnd` 12 · `ri` 13 · `pick` 14 · `clamp` 15 · `sleep` 16 · `$` 17 · `SCREEN` 18
 
-## src/core/audio.js (106 baris)
+## src/core/audio.js (141 baris)
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
-`AU` 4 · `NI` 5 · `nf()` 6 · `parseSeq()` 7 · `bossBass` 8 · `TRACKS` 9 · `auInit()` 31 · `tone()` 42 · `sweep()` 43 · `noise()` 44 · `playBGM()` 45 · `_lastSfx` 55 · `sfx()` 56
+`AU_FILES` 4 · `AU` 10 · `NI` 11 · `nf()` 12 · `parseSeq()` 13 · `bossBass` 14 · `TRACKS` 15 · `auInit()` 37 · `tone()` 48 · `sweep()` 49 · `noise()` 50 · `stopAudioTag()` 51 · `playBGM()` 57 · `_lastSfx` 90 · `sfx()` 91
 
 ## src/core/input.js (270 baris)
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
@@ -79,15 +79,15 @@ _Efek: tebasan, api, proyektil, cahaya, bayangan_
 _Lantai & perabot interior_
 `FURN` 4 · `drawFurn()` 5 · `genRoom()` 15 · `artMusicBox()` 28
 
-## src/world/objects.js (175 baris)
+## src/world/objects.js (177 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 174
+`OBJ` 7 · `MAPS` 176
 
 ## src/world/spawn/spawn_1.js (398 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 `OBJ_SPAWN` 3 · obj `shrine` 5 · obj `cavemouth` 8 · obj `sign` 11 · obj `forge` 14 · obj `pebbles` 18 · obj `telescope` 26 · obj `altar` 34 · obj `fieldoven` 42 · obj `dripstone` 50 · obj `frostflower` 58 · obj `totem` 66 · obj `pigeons` 74 · obj `teatable` 82 · obj `lotuspad` 90 · obj `dockboat` 98 · obj `coffeeshrub` 153 · obj `coffeekettle` 161 · obj `orchidrock` 169 · obj `canaryperch` 177 · obj `woodlandshrine` 185 · obj `bellows` 193 · obj `ringbooth` 201 · obj `archerytarget` 209 · obj `lakelighthouse` 217 · obj `streetdrum` 225 · obj `dummy` 233 · obj `pot` 241 · obj `well` 251 · obj `apple1` 266 · obj `bench` 327 · obj `bell` 343 · obj `campfire` 351 · obj `alchemytable` 361 · obj `scenicbench` 370 · obj `mailbox` 388
 
-## src/world/spawn/spawn_2.js (303 baris)
+## src/world/spawn/spawn_2.js (304 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 203 · obj `treeA` 210 · obj `goblin_torch` 218 · obj `goblin_cauldron` 221 · obj `cryst` 230 · obj `lamp` 233 · obj `viewpoint` 236 · obj `lumina_shard` 270
 
@@ -99,8 +99,8 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
 `pondsBase()` 6 · `WGLOB` 22 · `waterGlobal()` 23 · `pondsAll()` 37 · `pondsNear()` 46 · `waterE()` 49 · `waterGXY()` 65
 
-## src/world/maps/village.js (88 baris)
-_Peta: Desa Lumina_
+## src/world/maps/village.js (115 baris)
+_Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
 
 
 ## src/world/maps/forest.js (87 baris)
@@ -147,13 +147,13 @@ _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
 _Bilah 5 slot jurus dengan cooldown (T327)_
 `SPELLBAR` 3 · `buildSpellbar()` 4 · `updSpellbar()` 12
 
-## src/core/state.js (150 baris)
+## src/core/state.js (156 baris)
 _Status pemain (S), simpan/muat, rumus stat_
-`SAVE_BASE` 6 · `slotKey` 7 · `SAVE_SLOT` 8 · `SAVE_KEY` 9 · `setSlot()` 10 · `slotInfo()` 12 · `DIRV` 27 · `S` 28 · `OPT_KEY` 30 · `DIFF` 32 · `GAME_VERSION` 33 · `OPT` 34 · `saveOpt()` 35 · `applyOpt()` 36 · `newState()` 37 · `eqv()` 38 · `UPG` 44 · `itemName` 45 · `BUFF` 47 · `buffOn` 48 · `stat()` 49 · `need()` 85 · `has` 86 · `addItem()` 87 · `hasSave()` 96 · `saveGame()` 97 · `readSaveRaw()` 108 · `loadSave()` 112
+`SAVE_BASE` 6 · `slotKey` 7 · `SAVE_SLOT` 8 · `SAVE_KEY` 9 · `setSlot()` 10 · `slotInfo()` 12 · `DIRV` 27 · `S` 28 · `OPT_KEY` 30 · `DIFF` 32 · `GAME_VERSION` 33 · `OPT` 34 · `saveOpt()` 35 · `applyOpt()` 36 · `newState()` 43 · `eqv()` 44 · `UPG` 50 · `itemName` 51 · `BUFF` 53 · `buffOn` 54 · `stat()` 55 · `need()` 91 · `has` 92 · `addItem()` 93 · `hasSave()` 102 · `saveGame()` 103 · `readSaveRaw()` 114 · `loadSave()` 118
 
-## src/data/items.js (270 baris)
+## src/data/items.js (274 baris)
 _Data item & resep tempa_
-`ITEMS` 4 · `ICON_OF` 182 · `COOK` 208 · `RECIPES` 216 · `SETS` 224 · `activeSets()` 259
+`ITEMS` 4 · `ICON_OF` 186 · `COOK` 212 · `RECIPES` 220 · `SETS` 228 · `activeSets()` 263
 
 ## src/data/enemies.js (55 baris)
 _Data musuh & proyektil_
@@ -343,9 +343,9 @@ _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–85
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
 `ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 130 · `.hurtAnim()` 136 · `.hasLineOfSight()` 138 · `_spawnEnemy` 154 · `_killEnemy` 174
 
-## src/systems/sound.js (107 baris)
+## src/systems/sound.js (116 baris)
 _Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#911),_
-`bgmFor()` 33 · `swapBGM()` 43 · `sfxAt()` 55 · `_stepLeft` 64 · `stepSound()` 65 · `segD()` 80 · `.groundAt()` 82 · `.updSound()` 92
+`bgmFor()` 33 · `swapBGM()` 43 · `sfxAt()` 64 · `_stepLeft` 73 · `stepSound()` 74 · `segD()` 89 · `.groundAt()` 91 · `.updSound()` 101
 
 ## src/systems/craft.js (265 baris)
 _Gelombang 5: poin atribut (#16), kerajinan (#26), bom & alat lempar (#29, #407),_
@@ -475,9 +475,9 @@ _Layar judul_
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
 `exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 32 · `plEnemies()` 34 · `NEIGH` 84
 
-## src/gfx/gptassets.js (39 baris)
+## src/gfx/gptassets.js (52 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
-`GPT_SWAP` 4 · `GPT_LOOK` 13 · `applyGptSwap()` 25
+`GPT_SWAP` 4 · `GPT_LOOK` 13 · `applyGptSwap()` 26
 
 ## src/gfx/gptmonsters.js (153 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._

@@ -150,6 +150,10 @@ const ITEMS = {
   flower_bouquet: { n: 'Buket Bunga Segar', k: 'use', hp: 30, mp: 30, price: 35, sell: 20, d: 'Rangkaian bunga aster mekar harum penenang pikiran. Hadiah manis untuk sahabat.', src: 'Kebun bunga rumah Arka' },
 
   // Fitur #420: Peleburan Logam
+  iron: {
+    n: 'Besi Tempa', k: 'mat', price: 40, sell: 20,
+    d: 'Logam besi olahan siap pakai untuk bahan tempa senjata dan zirah kokoh.', src: 'Hadiah Pak Besi & Hutan Lumina'
+  },
   iron_bar: { n: 'Batangan Besi', k: 'mat', price: 60, sell: 35, d: 'Batangan besi murni hasil peleburan bijih di tungku. Bahan tempa zirah kokoh.', src: 'Peleburan: 3 Bijih Batu di tungku' },
   crystal_bar: { n: 'Batangan Kristal', k: 'mat', price: 80, sell: 48, d: 'Batangan kristal biru toska yang berkilau sejuk. Bahan pedang dan pusaka sakti.', src: 'Peleburan: 3 Pecahan Kristal di tungku' },
 

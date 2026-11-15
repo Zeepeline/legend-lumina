@@ -1,7 +1,19 @@
 'use strict';
 // Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)
 // ---------------- AUDIO (chiptune WebAudio) ----------------
-const AU = { ctx: null, on: true, cur: null, seq: null };
+const AU_FILES = {
+  town: 'assets/music/Whispering Breezes Village.mp3',
+  townN: 'assets/music/Whispering Breezes Village.mp3',
+  meadow: 'assets/music/Whispering Breezes Village.mp3',
+  city: 'assets/music/Whispering Breezes Village.mp3',
+  forest: 'assets/music/Mysterious & Haunting Forest Exploration.mp3',
+  deepwood: 'assets/music/Mysterious & Haunting Forest Exploration.mp3',
+  swamp: 'assets/music/Mysterious & Haunting Forest Exploration.mp3',
+  cave: 'assets/music/Mysterious & Haunting Forest Exploration.mp3',
+  boss: 'assets/music/Epic Boss Awakening.mp3',
+  battle: 'assets/music/Clash of Destiny.mp3'
+};
+const AU = { ctx: null, on: true, cur: null, seq: null, tag: null, tagCur: null };
 const NI = { C: 0, 'C#': 1, D: 2, 'D#': 3, E: 4, F: 5, 'F#': 6, G: 7, 'G#': 8, A: 9, 'A#': 10, B: 11 };
 function nf(n) { if (n === 'R') return 0; const m = n.match(/^([A-G]#?)(\d)$/); return 440 * Math.pow(2, (NI[m[1]] + (m[2] - 4) * 12 - 9) / 12); }
 function parseSeq(s) { return s.trim().split(/\s+/).map(t => { const [n, b] = t.split(':'); return { f: nf(n), b: +b }; }); }
@@ -42,14 +54,82 @@ function auInit() {
 function tone(f, t, d, type, vol, dest) { if (!f) return; const o = AU.ctx.createOscillator(), gn = AU.ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(vol, t + .01); gn.gain.setValueAtTime(vol, t + Math.max(.012, d - .04)); gn.gain.linearRampToValueAtTime(0, t + d); o.connect(gn); gn.connect(dest); o.start(t); o.stop(t + d + .03); }
 function sweep(f0, f1, t, d, type, vol) { const o = AU.ctx.createOscillator(), gn = AU.ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + d); gn.gain.setValueAtTime(vol, t); gn.gain.linearRampToValueAtTime(0, t + d); o.connect(gn); gn.connect(_sfxDest || AU.sfx); o.start(t); o.stop(t + d + .02); }
 function noise(t, d, freq, vol, f1) { const s = AU.ctx.createBufferSource(); s.buffer = AU.noise; const f = AU.ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(freq, t); if (f1) f.frequency.exponentialRampToValueAtTime(f1, t + d); f.Q.value = .9; const gn = AU.ctx.createGain(); gn.gain.setValueAtTime(vol, t); gn.gain.exponentialRampToValueAtTime(.001, t + d); s.connect(f); f.connect(gn); gn.connect(_sfxDest || AU.sfx); s.start(t); s.stop(t + d + .02); }
+const _AUDIO_POOL = {};
+const BGM_BASE_VOL = {
+  town: 0.38,
+  townN: 0.34,
+  meadow: 0.36,
+  city: 0.36,
+  forest: 0.40,
+  deepwood: 0.40,
+  swamp: 0.38,
+  cave: 0.38,
+  battle: 0.48,
+  boss: 0.52
+};
+let _bgmDuck = 1.0;
+function setBgmDuck(factor = 1.0) {
+  _bgmDuck = factor;
+  if (typeof applyOpt === 'function') applyOpt();
+}
+function stopAudioTag() {
+  if (AU.tag) {
+    try { AU.tag.pause(); } catch (_) {}
+    AU.tag = null; AU.tagCur = null;
+  }
+  AU.seq = null; // Bersihkan antrean chiptune lama
+}
 function playBGM(name) {
-  if (AU.cur === name && (AU.seq || !AU.ctx)) return;
-  AU.cur = name; AU.seq = null; if (!AU.ctx || !name) return;
-  const tr = TRACKS[name], t0 = AU.ctx.currentTime + .08;
+  if (!name) { AU.cur = null; stopAudioTag(); return; }
+  if (AU.cur === name && (AU.tag && !AU.tag.paused)) return;
+  AU.cur = name; AU.seq = null;
+  
+  if (AU_FILES[name]) {
+    stopAudioTag();
+    try {
+      if (!_AUDIO_POOL[name]) {
+        _AUDIO_POOL[name] = new Audio(encodeURI(AU_FILES[name]));
+        _AUDIO_POOL[name].loop = true;
+      }
+      const a = _AUDIO_POOL[name];
+      const base = BGM_BASE_VOL[name] || 0.25;
+      const volMul = typeof OPT !== 'undefined' ? OPT.mus / 3 : 1;
+      a.volume = Math.max(0, Math.min(1, base * volMul * _bgmDuck * (AU.on ? 1 : 0)));
+      AU.tag = a;
+      AU.tagCur = name;
+      const playPromise = a.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Browser autoplay policy blocked until first user interaction
+          const resumeAudioOnGesture = () => {
+            if (AU.tag && AU.tag.paused) {
+              AU.tag.play().catch(() => {});
+            }
+            window.removeEventListener('pointerdown', resumeAudioOnGesture);
+            window.removeEventListener('keydown', resumeAudioOnGesture);
+          };
+          window.addEventListener('pointerdown', resumeAudioOnGesture, { once: true });
+          window.addEventListener('keydown', resumeAudioOnGesture, { once: true });
+        });
+      }
+      return;
+    } catch (_) {
+      stopAudioTag();
+    }
+  } else {
+    stopAudioTag();
+  }
+
+  // Hentikan agar tidak tercampur: jika track ada di AU_FILES, JANGAN pernah membunyikan chiptune lama
+  if (AU_FILES[name]) return;
+  
+  // Sisa trek non-musik (hanya jingle kemenangan/kekalahan sesaat victory/lose jika ada)
+  const tr = TRACKS[name]; if (!tr) return;
+  const t0 = AU.ctx.currentTime + .08;
   AU.seq = { tr, vs: tr.v.map(v => ({ n: v.n, i: 0, t: t0, type: v.type, vol: v.vol, done: false })) };
 }
 setInterval(() => {
-  const q = AU.seq; if (!q || !AU.ctx) return; const sp = 60 / q.tr.bpm;
+  if (AU.tag) return; const q = AU.seq; if (!q || !AU.ctx) return; const sp = 60 / q.tr.bpm;
   for (const v of q.vs) { while (!v.done && v.t < AU.ctx.currentTime + .3) { const n = v.n[v.i]; const d = n.b * sp; tone(n.f, v.t, d * .9, v.type, v.vol, AU.music); v.t += d; v.i++; if (v.i >= v.n.length) { if (q.tr.loop) v.i = 0; else v.done = true; } } }
 }, 60);
 let _lastSfx = {}, _sfxDest = null;

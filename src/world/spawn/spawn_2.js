@@ -295,6 +295,7 @@ OBJ_SPAWN.bloom = OBJ_SPAWN.pot;
 OBJ_SPAWN.apple2 = OBJ_SPAWN.apple1;
 OBJ_SPAWN.orange1 = OBJ_SPAWN.apple1;
 OBJ_SPAWN.treeAd = OBJ_SPAWN.treeA;
+OBJ_SPAWN.treeOak = OBJ_SPAWN.treeA;
 OBJ_SPAWN.treeBd = OBJ_SPAWN.treeA;
 OBJ_SPAWN.treeSn = OBJ_SPAWN.treeA;
 OBJ_SPAWN.treeSw = OBJ_SPAWN.treeA;

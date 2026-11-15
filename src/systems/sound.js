@@ -46,6 +46,15 @@ function swapBGM(name, fadeSec = 1) {
   const g = AU.music.gain, v = .09 * OPT.mus / 3, t = AU.ctx.currentTime;
   const fo = Math.min(.5, fadeSec * .5), fi = Math.max(.5, fadeSec * .5);
   g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + fo);
+  if (AU.tag) {
+    const startVol = AU.tag.volume;
+    let fadeStep = 0;
+    const fInt = setInterval(() => {
+      fadeStep++;
+      if (AU.tag) AU.tag.volume = Math.max(0, startVol * (1 - fadeStep / 10));
+      if (fadeStep >= 10) clearInterval(fInt);
+    }, Math.round(fo * 100));
+  }
   setTimeout(() => {
     playBGM(name); if (!AU.ctx) return;
     const t2 = AU.ctx.currentTime; g.cancelScheduledValues(t2); g.setValueAtTime(0, t2); g.linearRampToValueAtTime(v, t2 + fi);

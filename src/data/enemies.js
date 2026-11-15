@@ -46,7 +46,7 @@ const ENEMY = {
   goblin_shaman: { name: 'Dukun Goblin', tex: 'ch_goblin', hp: 42, atk: 8, def: 4, spd: 42, exp: 35, gold: [8, 16], r: 8, ai: 'shaman', ch: 1, drop: ['herb', .7] },
   goblin_elite: {
     name: 'Goblin Brute Elite', tex: 'ch_goblin', hp: 160, atk: 22, def: 8, spd: 54, exp: 90, gold: [25, 45], r: 14,
-    ai: 'elite_brute', ch: 1, scale: 1.0, drop: ['iron', .8]
+    ai: 'elite_brute', ch: 1, scale: 1.0, drop: ['ore', .8]
   },
 };
 const PROJ = { spore: { key: 'spore', spd: 72, fx: ['poison', 4, .5] }, seed: { key: 'seed', spd: 84 }, bone: { key: 'bone', spd: 96, spin: 1 }, rock: { key: 'rockshot', spd: 110, spin: 1 }, venom: { key: 'venom', spd: 96, fx: ['poison', 5, .6] }, ice: { key: 'icebolt', spd: 112, fx: ['chill', 3, .7] }, arrow: { key: 'spore', spd: 90 } };
