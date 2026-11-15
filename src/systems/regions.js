@@ -8,7 +8,7 @@ const REG = new Map(); // id peta → scene pasif
 let regSeq = 0;
 function regionsOn() { return !window.REGIONS_OFF && !BENUA; }
 function wposOf(id) { return WORLD_POS[id]; }
-function relXY(from, to) { const a = wposOf(from.M.id), b = wposOf(to.M.id); return [a[0] - b[0], a[1] - b[1]]; } // titik di `from` → koordinat `to`
+function relXY(from, to) { const a = wposOf(from.M.id), b = wposOf(to.M.id); return a && b ? [a[0] - b[0], a[1] - b[1]] : null; } // titik di `from` → koordinat `to`
 function removeRegions(except) { for (const [id, s] of REG) { if (s === except) continue; REG.delete(id); try { s.scene.remove(); } catch (_) { } } }
 Object.assign(World.prototype, {
   // ---- wilayah pasif ----
@@ -20,7 +20,8 @@ Object.assign(World.prototype, {
   },
   updPassive(dt) {
     const A = G.scene; if (!A || A === this || !A.pl || !A.M || !wposOf(A.M.id)) return;
-    const [dx, dy] = relXY(A, this), pl = this.pl, ap = A.pl;
+    const rr = relXY(A, this); if (!rr) return;
+    const [dx, dy] = rr, pl = this.pl, ap = A.pl;
     pl.x = ap.x + dx; pl.y = ap.y + dy; pl.dead = ap.dead; pl.inv = ap.inv; pl.dir = ap.dir;
     const locked = !!UIH || G.lock > 0 || A.trans || G.title;
     for (const o of this.npcs) this.updNpc(o, dt, locked);
@@ -57,7 +58,7 @@ Object.assign(World.prototype, {
   // batas kamera & dunia fisika = gabungan wilayah aktif + wilayah yang termuat (koordinat lokal aktif)
   regBounds() {
     const M = this.M, b = { x0: 0, y0: 0, x1: M.w, y1: M.h };
-    for (const s of REG.values()) { if (!s.M) continue; const [dx, dy] = relXY(s, this); b.x0 = Math.min(b.x0, dx); b.y0 = Math.min(b.y0, dy); b.x1 = Math.max(b.x1, dx + s.M.w); b.y1 = Math.max(b.y1, dy + s.M.h); }
+    for (const s of REG.values()) { if (!s.M) continue; const rr = relXY(s, this); if (!rr) continue; const [dx, dy] = rr; b.x0 = Math.min(b.x0, dx); b.y0 = Math.min(b.y0, dy); b.x1 = Math.max(b.x1, dx + s.M.w); b.y1 = Math.max(b.y1, dy + s.M.h); }
     this.camB = b; this.cameras.main.setBounds(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0); this.physics.world.setBounds(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0);
   },
   // ---- serah-terima kendali ke wilayah yang sudah berjalan ----

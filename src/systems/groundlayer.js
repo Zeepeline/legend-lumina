@@ -34,10 +34,12 @@ Object.assign(World.prototype, {
     const cam = this.cameras.main;
     for (const s of REG.values()) {
       if (!s.sys || !s.cameras) continue;
-      const [dx, dy] = relXY(this, s); s.cameras.main.setScroll(cam.scrollX + dx, cam.scrollY + dy);
+      const d = relXY(this, s); if (!d) continue; /* ruang dalam tidak punya posisi dunia */
+      s.cameras.main.setScroll(cam.scrollX + d[0], cam.scrollY + d[1]);
     }
     if (!glOn(this.M)) return;
-    const gl = this.glScene(), P = WORLD_POS[this.M.id]; if (!gl || !gl.cameras) return;
+    const P = WORLD_POS[this.M.id]; if (!P) return;
+    const gl = this.glScene(); if (!gl || !gl.cameras) return;
     gl.cameras.main.setScroll(cam.scrollX + P[0], cam.scrollY + P[1]);
     if (this.scene.manager.getIndex('GL') !== 0) this.scene.manager.sendToBack('GL');
   },

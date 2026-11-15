@@ -7,9 +7,9 @@ Format: `nama` baris. Urutan file = urutan muat di index.html.
 _Konstanta layar & util kecil_
 `VW` 6 · `VH` 7 · `rnd` 12 · `ri` 13 · `pick` 14 · `clamp` 15 · `sleep` 16 · `$` 17 · `SCREEN` 18
 
-## src/core/audio.js (186 baris)
+## src/core/audio.js (189 baris)
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
-`AU_FILES` 4 · `AU` 16 · `NI` 17 · `nf()` 18 · `parseSeq()` 19 · `bossBass` 20 · `TRACKS` 21 · `auInit()` 43 · `tone()` 54 · `sweep()` 55 · `noise()` 56 · `_AUDIO_POOL` 57 · `BGM_BASE_VOL` 58 · `_bgmDuck` 70 · `setBgmDuck()` 71 · `stopAudioTag()` 75 · `playBGM()` 82 · `_lastSfx` 135 · `sfx()` 136
+`AU_FILES` 4 · `AU` 16 · `NI` 17 · `nf()` 18 · `parseSeq()` 19 · `bossBass` 20 · `TRACKS` 21 · `auInit()` 43 · `tone()` 54 · `sweep()` 55 · `noise()` 56 · `_AUDIO_POOL` 57 · `BGM_BASE_VOL` 58 · `_bgmDuck` 70 · `setBgmDuck()` 71 · `stopAudioTag()` 75 · `playBGM()` 82 · `_lastSfx` 138 · `sfx()` 139
 
 ## src/core/input.js (281 baris)
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
@@ -403,11 +403,11 @@ _Gelombang B: tanah per chunk (streaming). Hanya potongan di sekitar layar yang 
 _Dunia terbuka Tahap 1: wilayah tetangga digambar menempel di tepi wilayah aktif (tanah + objek),_
 `OW_BAND` 5 · `.initOpen()` 7 · `.owSeamless()` 35 · `.updCross()` 36
 
-## src/systems/regions.js (95 baris)
+## src/systems/regions.js (96 baris)
 _Dunia satu peta (langkah 1): wilayah di sekitar Arka berjalan BERSAMAAN sebagai scene World pasif_
-`REG_LOAD` 6 · `REG` 7 · `regSeq` 8 · `regionsOn()` 9 · `wposOf()` 10 · `relXY()` 11 · `removeRegions()` 12 · `.initPassive()` 15 · `.updPassive()` 21 · `.updRegions()` 37 · `.addRegion()` 51 · `.regBounds()` 58 · `.owHandoff()` 64 · `_hurtRegion` 86 · `_gotoRegion` 93
+`REG_LOAD` 6 · `REG` 7 · `regSeq` 8 · `regionsOn()` 9 · `wposOf()` 10 · `relXY()` 11 · `removeRegions()` 12 · `.initPassive()` 15 · `.updPassive()` 21 · `.updRegions()` 38 · `.addRegion()` 52 · `.regBounds()` 59 · `.owHandoff()` 65 · `_hurtRegion` 87 · `_gotoRegion` 94
 
-## src/systems/groundlayer.js (49 baris)
+## src/systems/groundlayer.js (51 baris)
 _Lapisan tanah bersama (scene 'GL', selalu paling bawah): tanah SEMUA wilayah luar ruang yang dimuat + hutan pengisi celah,_
 `glOn()` 24 · `.glScene()` 26 · `.syncCams()` 32
 

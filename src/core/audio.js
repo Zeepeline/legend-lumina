@@ -85,18 +85,21 @@ function playBGM(name) {
   AU.cur = name; AU.seq = null;
   
   if (AU_FILES[name]) {
-    stopAudioTag();
+    // satu pemutar per FILE (bukan per area): desa → padang → kota memakai lagu yang sama, jadi lagu berlanjut tanpa mulai ulang
+    const file = AU_FILES[name], same = AU.tag && AU.tag === _AUDIO_POOL[file] && !AU.tag.paused;
+    if (!same) stopAudioTag();
     try {
-      if (!_AUDIO_POOL[name]) {
-        _AUDIO_POOL[name] = new Audio(encodeURI(AU_FILES[name]));
-        _AUDIO_POOL[name].loop = true;
+      if (!_AUDIO_POOL[file]) {
+        _AUDIO_POOL[file] = new Audio(encodeURI(file));
+        _AUDIO_POOL[file].loop = true;
       }
-      const a = _AUDIO_POOL[name];
+      const a = _AUDIO_POOL[file];
       const base = BGM_BASE_VOL[name] || 0.25;
       const volMul = typeof OPT !== 'undefined' ? OPT.mus / 3 : 1;
       a.volume = Math.max(0, Math.min(1, base * volMul * _bgmDuck * (AU.on ? 1 : 0)));
       AU.tag = a;
       AU.tagCur = name;
+      if (same) return;
       const playPromise = a.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {

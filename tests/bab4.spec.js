@@ -25,7 +25,7 @@ test('jurnal, desa kincir, bab 4', async ({ page }) => {
   await h.talkTo(page, 'girl'); expect((await h.S(page)).stage).toBe(15);
   for (const id of ['farmer', 'merchant', 'child']) { await h.talkTo(page, id); await h.flush(page); }
   st = await h.S(page); expect(st.stage).toBe(16); expect(st.lore.mimpi).toBe(1);
-  await h.G(page, () => { const sc = window.__game.sc; sc.npcs.forEach(n => { n.n.wander = 0; n.spr.setPosition(n.spr.x, n.spr.y); }); sc.pl.setPosition(560, 368); sc.pl.dir = 'up'; window.__game.S.time = 10; });
+  await h.G(page, () => { const sc = window.__game.sc; sc.npcs.forEach(n => { n.n.wander = 0; n.spr.setPosition(n.spr.x, n.spr.y); }); sc.pl.setPosition(570, 300); sc.pl.dir = 'up'; window.__game.S.time = 10; });
   await h.press(page, 'a', 1, 500); await h.flush(page);       // baca prasasti → tanya tunggu malam
   await h.press(page, 'a', 1, 2200); await h.flush(page); await page.waitForTimeout(800); await h.flush(page);
   st = await h.S(page); expect(st.stage).toBe(17); expect(st.lore.visi_pohon).toBe(1);

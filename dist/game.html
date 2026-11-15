@@ -400,18 +400,21 @@ function playBGM(name) {
   AU.cur = name; AU.seq = null;
   
   if (AU_FILES[name]) {
-    stopAudioTag();
+    // satu pemutar per FILE (bukan per area): desa → padang → kota memakai lagu yang sama, jadi lagu berlanjut tanpa mulai ulang
+    const file = AU_FILES[name], same = AU.tag && AU.tag === _AUDIO_POOL[file] && !AU.tag.paused;
+    if (!same) stopAudioTag();
     try {
-      if (!_AUDIO_POOL[name]) {
-        _AUDIO_POOL[name] = new Audio(encodeURI(AU_FILES[name]));
-        _AUDIO_POOL[name].loop = true;
+      if (!_AUDIO_POOL[file]) {
+        _AUDIO_POOL[file] = new Audio(encodeURI(file));
+        _AUDIO_POOL[file].loop = true;
       }
-      const a = _AUDIO_POOL[name];
+      const a = _AUDIO_POOL[file];
       const base = BGM_BASE_VOL[name] || 0.25;
       const volMul = typeof OPT !== 'undefined' ? OPT.mus / 3 : 1;
       a.volume = Math.max(0, Math.min(1, base * volMul * _bgmDuck * (AU.on ? 1 : 0)));
       AU.tag = a;
       AU.tagCur = name;
+      if (same) return;
       const playPromise = a.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
@@ -6905,7 +6908,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.38.0';
+const GAME_VERSION = '1.38.1';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() {
@@ -19613,7 +19616,7 @@ const REG = new Map(); // id peta → scene pasif
 let regSeq = 0;
 function regionsOn() { return !window.REGIONS_OFF && !BENUA; }
 function wposOf(id) { return WORLD_POS[id]; }
-function relXY(from, to) { const a = wposOf(from.M.id), b = wposOf(to.M.id); return [a[0] - b[0], a[1] - b[1]]; } // titik di `from` → koordinat `to`
+function relXY(from, to) { const a = wposOf(from.M.id), b = wposOf(to.M.id); return a && b ? [a[0] - b[0], a[1] - b[1]] : null; } // titik di `from` → koordinat `to`
 function removeRegions(except) { for (const [id, s] of REG) { if (s === except) continue; REG.delete(id); try { s.scene.remove(); } catch (_) { } } }
 Object.assign(World.prototype, {
   // ---- wilayah pasif ----
@@ -19625,7 +19628,8 @@ Object.assign(World.prototype, {
   },
   updPassive(dt) {
     const A = G.scene; if (!A || A === this || !A.pl || !A.M || !wposOf(A.M.id)) return;
-    const [dx, dy] = relXY(A, this), pl = this.pl, ap = A.pl;
+    const rr = relXY(A, this); if (!rr) return;
+    const [dx, dy] = rr, pl = this.pl, ap = A.pl;
     pl.x = ap.x + dx; pl.y = ap.y + dy; pl.dead = ap.dead; pl.inv = ap.inv; pl.dir = ap.dir;
     const locked = !!UIH || G.lock > 0 || A.trans || G.title;
     for (const o of this.npcs) this.updNpc(o, dt, locked);
@@ -19662,7 +19666,7 @@ Object.assign(World.prototype, {
   // batas kamera & dunia fisika = gabungan wilayah aktif + wilayah yang termuat (koordinat lokal aktif)
   regBounds() {
     const M = this.M, b = { x0: 0, y0: 0, x1: M.w, y1: M.h };
-    for (const s of REG.values()) { if (!s.M) continue; const [dx, dy] = relXY(s, this); b.x0 = Math.min(b.x0, dx); b.y0 = Math.min(b.y0, dy); b.x1 = Math.max(b.x1, dx + s.M.w); b.y1 = Math.max(b.y1, dy + s.M.h); }
+    for (const s of REG.values()) { if (!s.M) continue; const rr = relXY(s, this); if (!rr) continue; const [dx, dy] = rr; b.x0 = Math.min(b.x0, dx); b.y0 = Math.min(b.y0, dy); b.x1 = Math.max(b.x1, dx + s.M.w); b.y1 = Math.max(b.y1, dy + s.M.h); }
     this.camB = b; this.cameras.main.setBounds(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0); this.physics.world.setBounds(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0);
   },
   // ---- serah-terima kendali ke wilayah yang sudah berjalan ----
@@ -19734,10 +19738,12 @@ Object.assign(World.prototype, {
     const cam = this.cameras.main;
     for (const s of REG.values()) {
       if (!s.sys || !s.cameras) continue;
-      const [dx, dy] = relXY(this, s); s.cameras.main.setScroll(cam.scrollX + dx, cam.scrollY + dy);
+      const d = relXY(this, s); if (!d) continue; /* ruang dalam tidak punya posisi dunia */
+      s.cameras.main.setScroll(cam.scrollX + d[0], cam.scrollY + d[1]);
     }
     if (!glOn(this.M)) return;
-    const gl = this.glScene(), P = WORLD_POS[this.M.id]; if (!gl || !gl.cameras) return;
+    const P = WORLD_POS[this.M.id]; if (!P) return;
+    const gl = this.glScene(); if (!gl || !gl.cameras) return;
     gl.cameras.main.setScroll(cam.scrollX + P[0], cam.scrollY + P[1]);
     if (this.scene.manager.getIndex('GL') !== 0) this.scene.manager.sendToBack('GL');
   },
