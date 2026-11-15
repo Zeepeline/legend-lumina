@@ -169,29 +169,50 @@ Object.assign(World.prototype, {
     this.cameras.main.shake(90, .0035);
   },
 
+  enemyWindFx(e, isWolf, isGob) {
+    const s = e.spr, D = e.D; if (!s || !s.active) return;
+    s.setVelocity(-e.lx * 16, -e.ly * 16);
+    if (isWolf && s.anims) { e.atkAnim = D.tex + (Math.random() < .5 ? '_bite' : '_pounce'); s.anims.stop(); s.setFrame(22); }
+    else if (isGob && s.anims) { e.atkAnim = D.tex + (Math.random() < .65 ? '_slash' : '_bite'); s.anims.stop(); s.setFrame(41); }
+    else s.setTint(0xffa07a);
+  },
+  enemySlashFx(e, isWolf, isGob) {
+    const s = e.spr; if (!s || !s.active) return;
+    if ((isWolf || isGob) && s.anims && e.atkAnim) s.play({ key: e.atkAnim, startFrame: 2 }, true);
+    if (!this.textures.exists('vfx_swing_combo')) return;
+    const ang = Math.atan2(e.ly || 0, e.lx || 1), sRow = isWolf ? 0 : (e.atkAnim?.endsWith('_bite') ? 1 : 0);
+    const vfx = this.add.sprite(s.x + (e.lx || 0) * 6, s.y - 9 + (e.ly || 0) * 4, 'vfx_swing_combo', sRow * 4 + 1)
+      .setOrigin(14 / 48, 18 / 36).setRotation(ang).setFlipY((e.lx || 0) < 0)
+      .setScale(isWolf ? .95 : .88).setTint(isWolf ? 0xd8f0ff : 0xffe4d8).setDepth(s.y + 3);
+    vfx.play('vfx_swing_' + sRow); vfx.once('animationcomplete', () => vfx.destroy());
+  },
+  enemySmashFx(e, step) {
+    const s = e.spr; if (!s || !s.active) return;
+    if (s.anims) { s.anims.stop(); s.setFrame(27); }
+    const dir = s.flipX ? -1 : 1, ix = s.x + dir * 16, iy = s.y + 1;
+    if (this.textures.exists('vfx_swing_combo')) {
+      const sm = this.add.sprite(s.x + dir * 4, s.y - 16, 'vfx_swing_combo', 4 * 4 + 1)
+        .setOrigin(14 / 48, 18 / 36).setFlipX(dir < 0).setScale(step === 3 ? 1.45 : 1.25).setTint(0xffe0a8).setDepth(s.y + 4);
+      sm.play('vfx_swing_4'); sm.once('animationcomplete', () => sm.destroy());
+    }
+    if (this.textures.exists('vfx_charge_spin')) {
+      const gw = this.add.sprite(ix, iy, 'vfx_charge_spin', step === 3 ? 2 : 1).setOrigin(.5, 32 / 48).setScale(step === 3 ? 1.25 : .95, 1).setDepth(s.y - .2);
+      this.tweens.add({ targets: gw, scaleX: (step === 3 ? 1.55 : 1.2), alpha: 0, duration: 240, onComplete: () => gw.destroy() });
+    }
+  },
   rollFx() {
-    const pl = this.pl;
-    if (!pl || pl.dead) return;
+    const pl = this.pl; if (!pl || pl.dead) return;
     this.sparkle(pl.x, pl.y - 2, 'dot', 5);
-    // T316: Dash garis angin & kedip awal-akhir (Celeste/Hyper Light Drifter)
     pl.setTintFill(0xffffff);
     this.time.delayedCall(40, () => { if (pl && !pl.dead && !pl.flash) pl.clearTint(); });
-    const dv = DIRV[pl.dir] || [0, 1];
-    const dx = dv[0], dy = dv[1];
-    const wg = this.add.graphics().setDepth(pl.y - 1);
-    wg.lineStyle(1.5, 0xe8f4ff, 0.85);
-    const px = pl.x, py = pl.y - 6;
-    const perpX = -dy, perpY = dx;
+    const [dx, dy] = DIRV[pl.dir] || [0, 1], px = pl.x, py = pl.y - 6, perpX = -dy, perpY = dx;
+    const wg = this.add.graphics().setDepth(pl.y - 1).lineStyle(1.5, 0xe8f4ff, 0.85);
     [-7, -2.5, 2.5, 7].forEach(off => {
-      const sx = px + perpX * off - dx * 4;
-      const sy = py + perpY * off - dy * 4;
+      const sx = px + perpX * off - dx * 4, sy = py + perpY * off - dy * 4;
       wg.lineBetween(sx, sy, sx - dx * 20, sy - dy * 20);
     });
     this.tweens.add({ targets: wg, alpha: 0, duration: 150, onComplete: () => wg.destroy() });
-    this.time.addEvent({
-      delay: 40, repeat: 3,
-      callback: () => { if (pl && !pl.dead && this.puff) this.puff(pl.x, pl.y); }
-    });
+    this.time.addEvent({ delay: 40, repeat: 3, callback: () => { if (pl && !pl.dead && this.puff) this.puff(pl.x, pl.y); } });
     this.time.delayedCall(160, () => {
       if (pl && !pl.dead && !pl.flash) {
         pl.setTintFill(0xffffff);

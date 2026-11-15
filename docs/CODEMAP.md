@@ -239,11 +239,11 @@ _Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Ray
 _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif._
 `WARPS` 3 · `.spawnWarp()` 9 · `.useWarp()` 15
 
-## src/ai/enemies.js (400 baris)
+## src/ai/enemies.js (399 baris)
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
-`.updEnemy()` 4 · `.charAnim()` 393
+`.updEnemy()` 4 · `.charAnim()` 392
 
-## src/ai/elite_brute.js (95 baris)
+## src/ai/elite_brute.js (96 baris)
 _AI untuk musuh Brute Elite (Goblin Brute Elite, dsb)_
 `.updEliteBrute()` 4
 
@@ -427,9 +427,9 @@ _Mode benua: buang petak objek yang jauh dari Arka (memori). Mencatat semua yang
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
 `SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 120
 
-## src/systems/combat_fx.js (374 baris)
+## src/systems/combat_fx.js (395 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
-`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 87 · `.hitFx()` 97 · `.updChargeFx()` 131 · `.clearChargeFx()` 146 · `.spinFx()` 151 · `.rollFx()` 172 · `.updLowHp()` 204
+`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 87 · `.hitFx()` 97 · `.updChargeFx()` 131 · `.clearChargeFx()` 146 · `.spinFx()` 151 · `.enemyWindFx()` 172 · `.enemySlashFx()` 179 · `.enemySmashFx()` 189 · `.rollFx()` 203 · `.updLowHp()` 225
 
 ## src/ui/worldmap_art.js (67 baris)
 _Gambar ringkas berwarna tiap wilayah untuk Peta Benua (1 piksel = WOV_K piksel dunia):_

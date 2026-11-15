@@ -43,7 +43,8 @@ Object.assign(World.prototype, {
         }
         const doSmash = (step) => {
           if (e.hp <= 0) return;
-          sfxAt('boom', s.x, s.y, this); this.camShake(240, .009); this.sparkle(s.x, s.y - 6, 'dotw', 16);
+          sfxAt('boom', s.x, s.y, this); this.camShake(240, .009);
+          if (this.enemySmashFx) this.enemySmashFx(e, step);
           const reach = step === 3 ? 80 : 64, mul = step === 3 ? 1.7 : 1.35;
           if (Math.hypot(pl.x - s.x, pl.y - s.y) < reach) {
             this.hurtPlayer(D.atk * mul, s.x, s.y);

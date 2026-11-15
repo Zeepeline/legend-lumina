@@ -84,10 +84,7 @@ Object.assign(World.prototype, {
         s.setVelocity(Math.cos(fleeAng) * D.spd, Math.sin(fleeAng) * D.spd);
         e.fleeT = (e.fleeT || 12) - dt;
         if (e.fleeT <= 0 && e.hp > 0) {
-          e.hp = 0;
-          this.puff(s.x, s.y);
-          s.destroy();
-          e.sh.destroy();
+          e.hp = 0; this.puff(s.x, s.y); s.destroy(); e.sh.destroy();
           popWorld(s.x, s.y - 12, 'Slime Emas Kabur!', 'mpc');
         }
         break;
@@ -298,8 +295,7 @@ Object.assign(World.prototype, {
                 this.atkTok.add(e); e.tokT = 0; e.st = 'wind';
                 e.t = e.elite ? (rel ? rnd(.35, .6) : rnd(.35, .75)) : ((D.side ? .36 : .42) * wMul);
                 s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
-                if (isWolfHd && s.anims) { e.atkAnim = D.tex + (Math.random() < 0.5 ? '_bite' : '_pounce'); s.play(e.atkAnim, true); }
-                else if (isGoblinHd && s.anims) { e.atkAnim = D.tex + (Math.random() < 0.5 ? '_slash' : '_bite'); s.play(e.atkAnim, true); }
+                if (this.enemyWindFx) this.enemyWindFx(e, isWolfHd, isGoblinHd);
                 else s.setTint(0xffa07a);
               } else {
                 e.st = 'circle'; const ang = Math.atan2(dy, dx) + (this.enemies.indexOf(e) % 2 ? 1.4 : -1.4);
@@ -322,7 +318,10 @@ Object.assign(World.prototype, {
             if (isHd && s.anims) { const mv = Math.hypot(s.body.velocity.x, s.body.velocity.y) > 4; s.play(D.tex + (mv ? '_walk' : '_idle'), true); }
           }
         } else if (e.st === 'wind') {
-          if (e.t <= 0) { e.st = 'lunge'; e.t = .25; s.clearTint(); s.setVelocity(e.lx * 210, e.ly * 210); sfxAt('swing', s.x, s.y, this); }
+          if (e.t <= 0) {
+            e.st = 'lunge'; e.t = .25; s.clearTint(); s.setVelocity(e.lx * 210, e.ly * 210);
+            sfxAt('swing', s.x, s.y, this); if (this.enemySlashFx) this.enemySlashFx(e, isWolfHd, isGoblinHd);
+          }
         } else if (e.st === 'lunge') {
           if (e.t <= 0) {
             if (!e.chained && (e.type === 'wolf' || e.type === 'wolfs') && Math.random() < .4) {
