@@ -1,5 +1,5 @@
 # Blueprint Refactor Desain Dunia — Benua Lumina
-Status: **USULAN, menunggu persetujuan pemilik.** Belum ada perubahan peta. Dasar: saran "World Design Refactor" pemilik (dunia fantasi yang
+Status: **DISETUJUI & DIPASANG v1.35.0 (tahap A–F).** Hasil: `assets/reference/wref_hasil_v135.png`. Dasar: saran "World Design Refactor" pemilik (dunia fantasi yang
 masuk akal, bukan diagram). Pratinjau sebelum (kiri) | sesudah (kanan): `assets/reference/wref_cmp_barat.png`, `wref_cmp_timur.png`
 (prototipe disuntik saat tes, bukan kode game).
 
@@ -52,3 +52,13 @@ Ukuran peta & batas main · posisi kota/desa/dungeon/NPC/pintu · aset gambar (t
 Dari Peta Benua (tombol PETA → Peta Benua) dunia terlihat seperti daratan fantasi yang bisa dijelajah: tidak ada pola lingkaran berulang,
 tidak ada jaringan memancar simetris, jalan alam tidak lurus sejajar sumbu, tepi hutan tidak lurus. `npm run check` 0 masalah,
 `check-layout` tanpa masalah baru, semua pintu & misi tetap tercapai (tes `openworld`, `bab*`).
+
+## 7. Yang sudah dipasang (v1.35.0) — wajib dibaca sebelum mengubah peta
+- `src/world/organic.js` (dimuat setelah `layout.js`): di peta ber-jalan TANAH, `M.paths` diganti ruas berkelok (asli di `M._paths0`),
+  lapangan > 26 px tanpa isi penting dikecilkan ke 55% (berisi bangunan/NPC/peti: 85%, asli di `M._discs0`). Peta batu, `kgate`, `kakademi` tidak disentuh.
+  → Saat menulis data peta, tulis jalan LURUS seperti biasa; mesin yang membelokkan. Objek di dekat jalan: cek `node tools/check-layout.js`.
+- `makeSD` (ground.js): tepi jalan & lapangan di peta organik diberi noise ±5 px.
+- `borderTrees`: tepi hutan diberi 0–3 baris pohon tambahan ke dalam (teluk & tanjung). `scatter`: pohon berkelompok (masker noise skala 170 px).
+- `buildPeralihan` (layout.js): jalan peralihan = kurva Bezier 12 ruas, bukan huruf L.
+- Data: Puncak Beku (jalur zig-zag + 2 cabang di ketinggian berbeda), Rawa Senja (bukan cincin; pintu barat kini tersambung),
+  Hutan Dalam (lapangan reruntuhan tak beraturan; `ruinRing` = jejak dinding persegi runtuh).

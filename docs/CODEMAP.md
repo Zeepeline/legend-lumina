@@ -7,9 +7,9 @@ Format: `nama` baris. Urutan file = urutan muat di index.html.
 _Konstanta layar & util kecil_
 `VW` 6 · `VH` 7 · `rnd` 12 · `ri` 13 · `pick` 14 · `clamp` 15 · `sleep` 16 · `$` 17 · `SCREEN` 18
 
-## src/core/audio.js (141 baris)
+## src/core/audio.js (186 baris)
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
-`AU_FILES` 4 · `AU` 10 · `NI` 11 · `nf()` 12 · `parseSeq()` 13 · `bossBass` 14 · `TRACKS` 15 · `auInit()` 37 · `tone()` 48 · `sweep()` 49 · `noise()` 50 · `stopAudioTag()` 51 · `playBGM()` 57 · `_lastSfx` 90 · `sfx()` 91
+`AU_FILES` 4 · `AU` 16 · `NI` 17 · `nf()` 18 · `parseSeq()` 19 · `bossBass` 20 · `TRACKS` 21 · `auInit()` 43 · `tone()` 54 · `sweep()` 55 · `noise()` 56 · `_AUDIO_POOL` 57 · `BGM_BASE_VOL` 58 · `_bgmDuck` 70 · `setBgmDuck()` 71 · `stopAudioTag()` 75 · `playBGM()` 82 · `_lastSfx` 135 · `sfx()` 136
 
 ## src/core/input.js (270 baris)
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
@@ -91,9 +91,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 203 · obj `treeA` 210 · obj `goblin_torch` 218 · obj `goblin_cauldron` 221 · obj `cryst` 230 · obj `lamp` 233 · obj `viewpoint` 236 · obj `lumina_shard` 270
 
-## src/world/ground.js (315 baris)
+## src/world/ground.js (325 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `TILE_CACHE` 90 · `getTileData()` 91 · `genGround()` 100 · `blockRects()` 216 · `scatter()` 232 · `openSides()` 265 · `borderTrees()` 278 · `ringObjects()` 294 · `mapObjects()` 299 · `mapWalls()` 303
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `BLEND_W` 41 · `WILD_G` 42 · `edgeSegs()` 43 · `edgeBlend()` 72 · `TILE_CACHE` 91 · `getTileData()` 92 · `genGround()` 101 · `blockRects()` 217 · `scatter()` 233 · `openSides()` 268 · `borderTrees()` 281 · `ringObjects()` 304 · `mapObjects()` 309 · `mapWalls()` 313
 
 ## src/world/water.js (66 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
@@ -115,11 +115,11 @@ _Peta: Padang Angin_
 _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 
 
-## src/world/maps/swamp.js (40 baris)
+## src/world/maps/swamp.js (42 baris)
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
-## src/world/maps/snow.js (49 baris)
+## src/world/maps/snow.js (52 baris)
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 
@@ -131,25 +131,25 @@ _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan k
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 
-## src/world/maps/wild.js (114 baris)
+## src/world/maps/wild.js (120 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
-`ruinRing` 4
+`ruinRing` 5
 
 ## src/world/maps/interiors.js (60 baris)
 _Interior: penginapan, rumah pohon, rumah Lina_
 `makeRoom()` 4
 
-## src/ui/widgets.js (218 baris)
+## src/ui/widgets.js (221 baris)
 _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
-`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 36 · `choose()` 40 · `ask()` 76 · `BANNER_QUEUE` 82 · `BANNER_BUSY` 83 · `processBannerQueue()` 84 · `banner()` 97 · `POPS` 106 · `popWorld()` 107 · `updPops()` 111 · `HUD` 114 · `buildHud()` 115 · `updHud()` 129 · `hudPeaceT` 180 · `updHudFade()` 181 · `showHud()` 196 · `bossBar()` 201 · `autoSaveIcon()` 217
+`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 39 · `choose()` 43 · `ask()` 79 · `BANNER_QUEUE` 85 · `BANNER_BUSY` 86 · `processBannerQueue()` 87 · `banner()` 100 · `POPS` 109 · `popWorld()` 110 · `updPops()` 114 · `HUD` 117 · `buildHud()` 118 · `updHud()` 132 · `hudPeaceT` 183 · `updHudFade()` 184 · `showHud()` 199 · `bossBar()` 204 · `autoSaveIcon()` 220
 
 ## src/ui/spellbar.js (54 baris)
 _Bilah 5 slot jurus dengan cooldown (T327)_
 `SPELLBAR` 3 · `buildSpellbar()` 4 · `updSpellbar()` 12
 
-## src/core/state.js (156 baris)
+## src/core/state.js (160 baris)
 _Status pemain (S), simpan/muat, rumus stat_
-`SAVE_BASE` 6 · `slotKey` 7 · `SAVE_SLOT` 8 · `SAVE_KEY` 9 · `setSlot()` 10 · `slotInfo()` 12 · `DIRV` 27 · `S` 28 · `OPT_KEY` 30 · `DIFF` 32 · `GAME_VERSION` 33 · `OPT` 34 · `saveOpt()` 35 · `applyOpt()` 36 · `newState()` 43 · `eqv()` 44 · `UPG` 50 · `itemName` 51 · `BUFF` 53 · `buffOn` 54 · `stat()` 55 · `need()` 91 · `has` 92 · `addItem()` 93 · `hasSave()` 102 · `saveGame()` 103 · `readSaveRaw()` 114 · `loadSave()` 118
+`SAVE_BASE` 6 · `slotKey` 7 · `SAVE_SLOT` 8 · `SAVE_KEY` 9 · `setSlot()` 10 · `slotInfo()` 12 · `DIRV` 27 · `S` 28 · `OPT_KEY` 30 · `DIFF` 32 · `GAME_VERSION` 33 · `OPT` 34 · `saveOpt()` 35 · `applyOpt()` 36 · `newState()` 47 · `eqv()` 48 · `UPG` 54 · `itemName` 55 · `BUFF` 57 · `buffOn` 58 · `stat()` 59 · `need()` 95 · `has` 96 · `addItem()` 97 · `hasSave()` 106 · `saveGame()` 107 · `readSaveRaw()` 118 · `loadSave()` 122
 
 ## src/data/items.js (274 baris)
 _Data item & resep tempa_
@@ -471,9 +471,13 @@ _Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)_
 _Layar judul_
 `titleScreen()` 4
 
-## src/world/layout.js (129 baris)
+## src/world/layout.js (133 baris)
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
-`exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 32 · `plEnemies()` 34 · `NEIGH` 84
+`exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 32 · `plEnemies()` 34 · `NEIGH` 88
+
+## src/world/organic.js (34 baris)
+_Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),_
+`ORG_SKIP` 5 · `ORG_FILL` 6 · `orgPlanned()` 7 · `orgCurve()` 9
 
 ## src/gfx/gptassets.js (52 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_

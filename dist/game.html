@@ -5268,15 +5268,16 @@ function makeSD(M, rect) {
     discs = discs.filter(([cx, cy, r]) => cx + r >= x0 && cx - r <= x1 && cy + r >= y0 && cy - r <= y1);
     rings = rings.filter(([cx, cy, rx, ry, w]) => cx + rx + w >= x0 && cx - rx - w <= x1 && cy + ry + w >= y0 && cy - ry - w <= y1);
   }
+  const org = !!M._paths0;
   return (x, y) => {
-    let d = 1e9;
+    let d = org ? (vnoise(x, y, 22, 77) - .5) * 8 + (vnoise(x, y, 7, 78) - .5) * 3 : 0; const d0 = d; d = 1e9;
     for (const [x1, y1, x2, y2, r] of caps) {
       const dx = x2 - x1, dy = y2 - y1, L = dx * dx + dy * dy; let t = L ? ((x - x1) * dx + (y - y1) * dy) / L : 0; t = t < 0 ? 0 : t > 1 ? 1 : t;
       const ex = x - (x1 + dx * t), ey = y - (y1 + dy * t); const v = Math.sqrt(ex * ex + ey * ey) - r; if (v < d) d = v;
     }
     for (const [cx, cy, r] of discs) { const v = Math.hypot(x - cx, y - cy) - r; if (v < d) d = v; }
     for (const [cx, cy, rx, ry, w] of rings) { const e = Math.hypot((x - cx) / rx, (y - cy) / ry); const v = Math.abs(e - 1) * (rx + ry) / 2 - w / 2; if (v < d) d = v; }
-    return d;
+    return d + d0;
   };
 }
 function pondE(P, x, y) { return Math.hypot((x - P[0]) / P[2], (y - P[1]) / P[3]); }
@@ -5505,8 +5506,10 @@ function scatter(M, spec) {
     for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < (spec.sp || 24)) return false;
     return true;
   };
-  for (let n = 0; n < spec.n; n++) {
+  const clump = !!M._paths0 && !spec.near, tries = clump ? Math.round(spec.n * 1.7) : spec.n;
+  for (let n = 0; n < tries; n++) {
     const x = 20 + hash(n, 1, 31 + M.w) * (M.w - 40), y = 40 + hash(n, 2, 31 + M.w) * (M.h - 40);
+    if (clump && hash(n, 8, 31) > Math.min(1, Math.max(.08, (vnoise(x, y, 170, 93) - .3) * 2.4))) continue;
     const edge = !spec.near && (x < 70 || x > M.w - 70 || y > M.h - 50);
     if (edge && sd(x, y) < 10) continue;
     if (!edge && !ok(x, y)) continue; if (edge && !ok2(x, y)) continue;
@@ -5543,6 +5546,13 @@ function borderTrees(M) {
   }
   if (!open.S) for (let y = b.bottom + 16; y < M.h + 50; y += 20) for (let x = 50 + ((y / 20) % 2) * 14; x < M.w - 40; x += 28) {
     if (inGap(b.gap, x)) continue; n++; out.push([tp(n, 43), x, y]);
+  }
+  if (M._paths0) { // tahap D: tepi hutan tak lurus (teluk & tanjung pohon ke dalam)
+    const deep = v => Math.floor(Math.max(0, vnoise(v, M.w, 150, 91) - .3) * 6), add = (x, y, s2) => { n++; out.push([tp(n, s2), Math.round(x + (hash(n, 4, s2) - .5) * 16), Math.round(y + (hash(n, 5, s2) - .5) * 12)]); };
+    if (!open.N) for (let x = 20; x < M.w - 20; x += 30) { if (inGap(b.gapT, x)) continue; for (let k = 1; k <= deep(x); k++) add(x, b.top + 6 + k * 22, 44); }
+    if (!open.S) for (let x = 50; x < M.w - 40; x += 28) { if (inGap(b.gap, x)) continue; for (let k = 1; k <= deep(x + 999); k++) add(x, b.bottom + 6 - k * 22, 45); }
+    if (!open.W) for (let y = b.top + 20; y < M.h; y += 24) { if (inGap(b.gapL, y)) continue; for (let k = 1; k <= deep(y + 1999); k++) add(36 + k * 24, y, 46); }
+    if (!open.E) for (let y = b.top + 20; y < M.h; y += 24) { if (inGap(b.gapR, y)) continue; for (let k = 1; k <= deep(y + 2999); k++) add(M.w - 36 - k * 24, y, 47); }
   }
   return out;
 }
@@ -5967,8 +5977,10 @@ MAPS.cave = {
 // ---------------- RAWA SENJA (bab 2) ----------------
 MAPS.swamp = {
   id: 'swamp', name: 'Rawa Senja', w: 1280, h: 960, bgm: 'cave', ground: 'swamp',
-  paths: [[0, 480, 220, 480, 11], [640, 0, 640, 160, 14], [640, 160, 420, 300, 13], [420, 300, 300, 520, 13], [640, 160, 880, 320, 13], [880, 320, 960, 560, 13],
-    [300, 520, 560, 700, 13], [960, 560, 700, 720, 13], [560, 700, 640, 820, 13], [700, 720, 640, 820, 13]],
+  // WORLD_REFACTOR tahap F: bukan cincin; jalan papan berliku gerbang utara → prasasti → arena, cabang timur buntu, pintu barat tersambung
+  paths: [[0, 480, 150, 500, 11], [150, 500, 300, 520, 11], [640, 0, 640, 160, 14], [640, 160, 560, 260, 13], [560, 260, 460, 330, 13],
+    [460, 330, 380, 430, 13], [380, 430, 300, 520, 13], [300, 520, 420, 640, 13], [420, 640, 560, 720, 13], [560, 720, 640, 820, 13],
+    [640, 160, 780, 250, 12], [780, 250, 880, 360, 12], [880, 360, 960, 560, 12]],
   discs: [[60, 480, 40], [640, 840, 92], [300, 520, 46], [960, 560, 46], [640, 150, 34]],
   ponds: [
     [620, 440, 120, 66], [180, 770, 110, 60], [1080, 800, 120, 64], [1090, 200, 90, 50], [190, 200, 90, 50],
@@ -6006,8 +6018,11 @@ MAPS.swamp = {
 // Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)
 MAPS.snow = {
   id: 'snow', name: 'Puncak Beku', w: 1280, h: 1200, bgm: 'cave', ground: 'snow',
-  paths: [[640, 1200, 640, 1000, 14], [640, 1000, 400, 860, 13], [400, 860, 260, 760, 13], [640, 1000, 860, 840, 13], [860, 840, 1020, 720, 13],
-    [640, 1000, 640, 560, 13], [640, 560, 640, 380, 14], [640, 380, 640, 230, 14]],
+  // WORLD_REFACTOR tahap F: jalur mendaki zig-zag (ujung & tujuan tetap), cabang obor lepas di ketinggian berbeda
+  paths: [[640, 1200, 610, 1100, 14], [610, 1100, 560, 1000, 14], [560, 1000, 605, 900, 14], [605, 900, 575, 800, 14], [575, 800, 620, 690, 14],
+    [620, 690, 640, 560, 13], [640, 560, 595, 460, 13], [595, 460, 625, 380, 14], [625, 380, 640, 230, 14],
+    [560, 1000, 430, 935, 12], [430, 935, 320, 840, 12], [320, 840, 260, 760, 12],
+    [605, 900, 690, 860, 12], [690, 860, 820, 830, 12], [820, 830, 930, 790, 12], [930, 790, 1020, 720, 12]],
   discs: [[640, 230, 100], [640, 560, 50], [260, 760, 48], [1020, 720, 48], [640, 1080, 44]],
   ponds: [[380, 1000, 80, 44], [900, 500, 110, 56], [300, 470, 80, 46],
     // Hulu Sungai Senja: mata air pegunungan (700, 150) -> tepi bawah (650, 1200) (T333)
@@ -6021,7 +6036,7 @@ MAPS.snow = {
     ['stele', 700, 120, { ok: 'mata air suci Sungai Senja' }],
     ['pebbles', 750, 925], ['pebbles', 740, 935],
     ['frostflower', 740, 150], ['frostflower', 670, 440], ['pebbles', 680, 690], ['pebbles', 785, 780],
-    ['rock', 520, 640], ['rock', 780, 660], ['stump', 440, 940], ['log', 820, 960], ['bones', 600, 300], ['bones', 680, 320],
+    ['rock', 520, 640], ['rock', 780, 660], ['stump', 470, 990], ['log', 820, 960], ['bones', 600, 300], ['bones', 680, 320],
     ['rock', 530, 1140], ['rock', 750, 1140], ['pebbles', 510, 1150], ['pebbles', 770, 1150],
     ['rock', 560, 480], ['bushW', 580, 486], ['pebbles', 550, 492],
     ['frostflower', 480, 840], ['frostflower', 800, 780],
@@ -6264,12 +6279,18 @@ MAPS.kbawah = {
 'use strict';
 // Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja
 // World Design Review: docs/BENUA_LUMINA.md (Hutan Lumina: Hutan Dalam & Reruntuhan Aurel; Sungai Senja)
-const ruinRing = (cx, cy, r, n) => [...Array(n)].map((_, i) => { const a = i / n * Math.PI * 2; return [i % 3 ? 'rock' : 'stalag', Math.round(cx + Math.cos(a) * r), Math.round(cy + Math.sin(a) * r * .6)]; });
+// reruntuhan: jejak dinding persegi yang runtuh sebagian (bukan cincin bundar) — WORLD_REFACTOR tahap F
+const ruinRing = (cx, cy, r, n) => { const w = r, h = r * .6, P = 4 * (w + h), out = [];
+  for (let i = 0; i < n + Math.ceil(n / 3); i++) { if (i % 4 === 3) continue; let d = i / (n + Math.ceil(n / 3)) * P, x, y;
+    if (d < 2 * w) { x = cx - w + d; y = cy - h; } else if ((d -= 2 * w) < 2 * h) { x = cx + w; y = cy - h + d; }
+    else if ((d -= 2 * h) < 2 * w) { x = cx + w - d; y = cy + h; } else { d -= 2 * w; x = cx - w; y = cy + h - d; }
+    out.push([i % 3 ? 'rock' : 'stalag', Math.round(x), Math.round(y)]); }
+  return out; };
 MAPS.deepwood = {
   id: 'deepwood', name: 'Hutan Dalam', w: 2400, h: 1800, bgm: 'field', ground: 'forest', scale: 2.2,
   paths: [[2400, 730, 1900, 730, 13], [1900, 730, 1500, 980, 12], [1500, 980, 1100, 900, 12], [1100, 900, 700, 560, 12], [700, 560, 520, 420, 12],
     [1500, 980, 1600, 1400, 10], [1600, 1400, 1200, 1580, 10], [1100, 900, 900, 1300, 10], [1900, 730, 2000, 360, 10]],
-  discs: [[520, 400, 210], [2000, 330, 90], [1600, 1420, 80], [900, 1320, 70], [1500, 980, 60], [1960, 760, 50]],
+  discs: [[520, 400, 150], [420, 470, 95], [630, 330, 105], [560, 520, 70], [2000, 330, 90], [1600, 1420, 80], [900, 1320, 70], [1500, 980, 60], [1960, 760, 50]],
   ponds: [[1250, 470, 150, 70], [1420, 560, 90, 50], [330, 1250, 160, 90], [1900, 1500, 140, 70]],
   objs: [
     // Reruntuhan Aurel (barat laut): cincin batu, kuil runtuh, prasasti
@@ -6278,7 +6299,7 @@ MAPS.deepwood = {
     ['rune_pillar', 520, 250, { elem: 'ice' }],
     ['rune_pillar', 560, 270, { elem: 'light' }],
     ['stele', 520, 220, { text: 'TEKA-TEKI PILAR AUREL:\n"Kekuatan fajar menyala lebih dahulu (Api),\ndibekukan badai salju (Es),\nlalu disinari lentera suci abadi (Cahaya)."' }],
-    ['root', 380, 520], ['root', 680, 300], ['root', 300, 380], ['root', 560, 560], ['root', 470, 250], ...ruinRing(520, 400, 95, 9),
+    ['root', 380, 520], ['root', 700, 262], ['root', 300, 380], ['root', 560, 560], ['root', 470, 250], ...ruinRing(520, 400, 95, 9),
     ['stalag', 360, 420], ['rock', 450, 470], ['rock', 600, 330], ['mush', 340, 470], ['mush', 700, 520], ['mush', 480, 300], ['bushG2', 410, 560], ['bushG2', 650, 250],
     // Pohon Tua raksasa (timur laut)
     ['bigtree', 2000, 330], ['stele', 2070, 380, { lore: 'pohon_tua' }],
@@ -6742,7 +6763,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.34.1';
+const GAME_VERSION = '1.35.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() {
@@ -22580,7 +22601,11 @@ function plEnemies(A, B, paths) {
     const exits = [door(la, sideA, a, inside(A, ea, 34)), door(lb, sb, b, inside(B, eb, 34))];
     // jalan setapak berbentuk L yang menyambung kedua pintu
     const mid = vert ? (la[1] + lb[1]) / 2 : (la[0] + lb[0]) / 2;
-    const paths = vert ? [[la[0], la[1], la[0], mid, 14], [la[0], mid, lb[0], mid, 14], [lb[0], mid, lb[0], lb[1], 14]] : [[la[0], la[1], mid, la[1], 14], [mid, la[1], mid, lb[1], 14], [mid, lb[1], lb[0], lb[1], 14]];
+    // tahap C (WORLD_REFACTOR): kurva S halus (Bezier kubik) antara dua pintu, bukan huruf L
+    const c1 = vert ? [la[0], mid] : [mid, la[1]], c2 = vert ? [lb[0], mid] : [mid, lb[1]], paths = [], bz = t => {
+      const u = 1 - t; return [u * u * u * la[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * lb[0], u * u * u * la[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * lb[1]];
+    };
+    for (let i = 0, p = la; i < 12; i++) { const q = bz((i + 1) / 12); paths.push([Math.round(p[0]), Math.round(p[1]), Math.round(q[0]), Math.round(q[1]), 14]); p = q; }
     const topX = sideA === 'N' ? la[0] : lb[0], botX = sideA === 'N' ? lb[0] : la[0]; // pintu atas/bawah (A bisa di atas atau di bawah)
     const border = vert ? { top: 40, bottom: H - 40, gapT: [topX - 40, topX + 40], gap: [botX - 40, botX + 40], types: ground === 'forest' ? ['pined', 'pine', 'round'] : ['treeAd', 'treeBd', 'treeA'] }
       : { top: 40, bottom: H - 40, gapL: sideA === 'W' ? [la[1] - 40, la[1] + 40] : [lb[1] - 40, lb[1] + 40], gapR: sideA === 'E' ? [la[1] - 40, la[1] + 40] : [lb[1] - 40, lb[1] + 40], types: ground === 'forest' ? ['pined', 'pine', 'round'] : ['treeAd', 'treeBd', 'treeA'] };
@@ -22639,6 +22664,40 @@ const NEIGH = {}; // id → [{ to, side, ox, oy, ex }]
         }
       }
     }
+  }
+})();
+
+'use strict';
+// Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),
+// lapangan bundar tanpa isi penting dikecilkan. Jalan batu (desa, kota, kampus, benteng) tetap lurus = direncanakan.
+// Data asli disimpan di M._paths0 / M._discs0. Tepi tak beraturan: noise di makeSD (ground.js), tepi hutan & rumpun: ground.js.
+const ORG_SKIP = new Set(['kgate', 'kakademi']);
+const ORG_FILL = /tree|pine|rock|bush|stump|log|flower|bloom|pebble|mush|hay|fence|grass|bramble|lamp|sign|board|bench/i;
+function orgPlanned(M) { const GP = typeof GROUND !== 'undefined' && GROUND[M.ground]; return !!(M.indoor || !GP || GP.path !== 'dirt' || ORG_SKIP.has(M.id)); }
+// satu ruas lurus → beberapa ruas yang berkelok halus (amplitudo ≤ 9% panjang, maks 46 px), titik ujung tetap
+function orgCurve(a, b, c, d, r, seed) {
+  const L = Math.hypot(c - a, d - b); if (L < 100) return [[a, b, c, d, r]];
+  const n = Math.max(2, Math.round(L / 55)), nx = -(d - b) / L, ny = (c - a) / L;
+  const s = hash(Math.round(a) + seed, Math.round(b), 5), A = Math.min(L * .09, 46) * (s < .5 ? 1 : -1), f = 1.1 + s * 1.4, out = [];
+  let px = a, py = b;
+  for (let i = 1; i <= n; i++) {
+    const t = i / n, w = i === n ? 0 : Math.sin(t * Math.PI) * Math.sin(t * Math.PI * f + s * 6) * A;
+    const qx = i === n ? c : a + (c - a) * t + nx * w, qy = i === n ? d : b + (d - b) * t + ny * w;
+    out.push([Math.round(px), Math.round(py), Math.round(qx), Math.round(qy), Math.round(r * (.88 + .24 * hash(i, seed, 7)))]); px = qx; py = qy;
+  }
+  return out;
+}
+(function organicWorld() {
+  for (const id in MAPS) {
+    const M = MAPS[id]; if (orgPlanned(M) || M._paths0) continue;
+    M._paths0 = M.paths || []; M._discs0 = M.discs || [];
+    M.paths = M._paths0.flatMap((p, i) => orgCurve(p[0], p[1], p[2], p[3], p[4] || 12, i * 31 + id.length));
+    M.discs = M._discs0.map(D => {
+      const [x, y, r] = D; if (r <= 26) return D; // batu warp & lapangan kecil tetap
+      const poi = (M.objs || []).some(o => !ORG_FILL.test(o[0]) && Math.hypot(o[1] - x, o[2] - y) < r) ||
+        (M.npcs || []).some(n => Math.hypot(n.x - x, n.y - y) < r) || (M.chests || []).some(c => Math.hypot(c.x - x, c.y - y) < r);
+      return [x, y, Math.round(r * (poi ? .85 : .55)), ...D.slice(3)];
+    });
   }
 })();
 

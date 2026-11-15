@@ -13,15 +13,16 @@ function makeSD(M, rect) {
     discs = discs.filter(([cx, cy, r]) => cx + r >= x0 && cx - r <= x1 && cy + r >= y0 && cy - r <= y1);
     rings = rings.filter(([cx, cy, rx, ry, w]) => cx + rx + w >= x0 && cx - rx - w <= x1 && cy + ry + w >= y0 && cy - ry - w <= y1);
   }
+  const org = !!M._paths0;
   return (x, y) => {
-    let d = 1e9;
+    let d = org ? (vnoise(x, y, 22, 77) - .5) * 8 + (vnoise(x, y, 7, 78) - .5) * 3 : 0; const d0 = d; d = 1e9;
     for (const [x1, y1, x2, y2, r] of caps) {
       const dx = x2 - x1, dy = y2 - y1, L = dx * dx + dy * dy; let t = L ? ((x - x1) * dx + (y - y1) * dy) / L : 0; t = t < 0 ? 0 : t > 1 ? 1 : t;
       const ex = x - (x1 + dx * t), ey = y - (y1 + dy * t); const v = Math.sqrt(ex * ex + ey * ey) - r; if (v < d) d = v;
     }
     for (const [cx, cy, r] of discs) { const v = Math.hypot(x - cx, y - cy) - r; if (v < d) d = v; }
     for (const [cx, cy, rx, ry, w] of rings) { const e = Math.hypot((x - cx) / rx, (y - cy) / ry); const v = Math.abs(e - 1) * (rx + ry) / 2 - w / 2; if (v < d) d = v; }
-    return d;
+    return d + d0;
   };
 }
 function pondE(P, x, y) { return Math.hypot((x - P[0]) / P[2], (y - P[1]) / P[3]); }
@@ -250,8 +251,10 @@ function scatter(M, spec) {
     for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < (spec.sp || 24)) return false;
     return true;
   };
-  for (let n = 0; n < spec.n; n++) {
+  const clump = !!M._paths0 && !spec.near, tries = clump ? Math.round(spec.n * 1.7) : spec.n;
+  for (let n = 0; n < tries; n++) {
     const x = 20 + hash(n, 1, 31 + M.w) * (M.w - 40), y = 40 + hash(n, 2, 31 + M.w) * (M.h - 40);
+    if (clump && hash(n, 8, 31) > Math.min(1, Math.max(.08, (vnoise(x, y, 170, 93) - .3) * 2.4))) continue;
     const edge = !spec.near && (x < 70 || x > M.w - 70 || y > M.h - 50);
     if (edge && sd(x, y) < 10) continue;
     if (!edge && !ok(x, y)) continue; if (edge && !ok2(x, y)) continue;
@@ -288,6 +291,13 @@ function borderTrees(M) {
   }
   if (!open.S) for (let y = b.bottom + 16; y < M.h + 50; y += 20) for (let x = 50 + ((y / 20) % 2) * 14; x < M.w - 40; x += 28) {
     if (inGap(b.gap, x)) continue; n++; out.push([tp(n, 43), x, y]);
+  }
+  if (M._paths0) { // tahap D: tepi hutan tak lurus (teluk & tanjung pohon ke dalam)
+    const deep = v => Math.floor(Math.max(0, vnoise(v, M.w, 150, 91) - .3) * 6), add = (x, y, s2) => { n++; out.push([tp(n, s2), Math.round(x + (hash(n, 4, s2) - .5) * 16), Math.round(y + (hash(n, 5, s2) - .5) * 12)]); };
+    if (!open.N) for (let x = 20; x < M.w - 20; x += 30) { if (inGap(b.gapT, x)) continue; for (let k = 1; k <= deep(x); k++) add(x, b.top + 6 + k * 22, 44); }
+    if (!open.S) for (let x = 50; x < M.w - 40; x += 28) { if (inGap(b.gap, x)) continue; for (let k = 1; k <= deep(x + 999); k++) add(x, b.bottom + 6 - k * 22, 45); }
+    if (!open.W) for (let y = b.top + 20; y < M.h; y += 24) { if (inGap(b.gapL, y)) continue; for (let k = 1; k <= deep(y + 1999); k++) add(36 + k * 24, y, 46); }
+    if (!open.E) for (let y = b.top + 20; y < M.h; y += 24) { if (inGap(b.gapR, y)) continue; for (let k = 1; k <= deep(y + 2999); k++) add(M.w - 36 - k * 24, y, 47); }
   }
   return out;
 }

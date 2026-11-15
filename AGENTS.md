@@ -55,4 +55,5 @@ Proyek: action RPG top-down untuk browser/HP, **Phaser 3.80.1**, skrip klasik gl
 - **Dunia terbuka:** posisi global + peralihan + streaming tanah + wilayah pasif & handoff + kamera lintas wilayah (v1.27.x). Lanjutan: `docs/HANDOFF_OPENWORLD.md`.
 - **Souls-lite (arah Dimraeth):** stamina serang/berguling, Botol Cahaya, Jejak Cahaya saat kalah (`systems/souls.js`, v1.30.0). Roadmap pilar: `docs/GAME_DESIGN.md` bagian akhir.
 - **Sprite monster GPT:** 30 monster dari lembar pemilik dibersihkan (`tools/gpt_monsters.py` → `assets/img/mon_*.png`, dipasang `gfx/gptmonsters.js`); 8 musuh khusus/boss kini punya sprite sendiri (`g_<id>`). Humanoid (goblin, tengkorak, Morgath, mimic) belum.
+- **Desain dunia organik (v1.35.0):** jalan tanah berliku otomatis, lapangan/tepi hutan/pohon alami, sungai menyambung (`world/organic.js`, `world/water.js`). Aturan: `docs/WORLD_REFACTOR.md` §7.
 - **Berikutnya:** konten ekspansi Bab 6 (`BENUA_LUMINA.md` bag. 7) & eksplorasi teka-teki kuil kuno.

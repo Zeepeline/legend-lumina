@@ -65,7 +65,11 @@ function plEnemies(A, B, paths) {
     const exits = [door(la, sideA, a, inside(A, ea, 34)), door(lb, sb, b, inside(B, eb, 34))];
     // jalan setapak berbentuk L yang menyambung kedua pintu
     const mid = vert ? (la[1] + lb[1]) / 2 : (la[0] + lb[0]) / 2;
-    const paths = vert ? [[la[0], la[1], la[0], mid, 14], [la[0], mid, lb[0], mid, 14], [lb[0], mid, lb[0], lb[1], 14]] : [[la[0], la[1], mid, la[1], 14], [mid, la[1], mid, lb[1], 14], [mid, lb[1], lb[0], lb[1], 14]];
+    // tahap C (WORLD_REFACTOR): kurva S halus (Bezier kubik) antara dua pintu, bukan huruf L
+    const c1 = vert ? [la[0], mid] : [mid, la[1]], c2 = vert ? [lb[0], mid] : [mid, lb[1]], paths = [], bz = t => {
+      const u = 1 - t; return [u * u * u * la[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * lb[0], u * u * u * la[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * lb[1]];
+    };
+    for (let i = 0, p = la; i < 12; i++) { const q = bz((i + 1) / 12); paths.push([Math.round(p[0]), Math.round(p[1]), Math.round(q[0]), Math.round(q[1]), 14]); p = q; }
     const topX = sideA === 'N' ? la[0] : lb[0], botX = sideA === 'N' ? lb[0] : la[0]; // pintu atas/bawah (A bisa di atas atau di bawah)
     const border = vert ? { top: 40, bottom: H - 40, gapT: [topX - 40, topX + 40], gap: [botX - 40, botX + 40], types: ground === 'forest' ? ['pined', 'pine', 'round'] : ['treeAd', 'treeBd', 'treeA'] }
       : { top: 40, bottom: H - 40, gapL: sideA === 'W' ? [la[1] - 40, la[1] + 40] : [lb[1] - 40, lb[1] + 40], gapR: sideA === 'E' ? [la[1] - 40, la[1] + 40] : [lb[1] - 40, lb[1] + 40], types: ground === 'forest' ? ['pined', 'pine', 'round'] : ['treeAd', 'treeBd', 'treeA'] };

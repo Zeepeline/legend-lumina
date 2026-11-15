@@ -1,12 +1,18 @@
 'use strict';
 // Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja
 // World Design Review: docs/BENUA_LUMINA.md (Hutan Lumina: Hutan Dalam & Reruntuhan Aurel; Sungai Senja)
-const ruinRing = (cx, cy, r, n) => [...Array(n)].map((_, i) => { const a = i / n * Math.PI * 2; return [i % 3 ? 'rock' : 'stalag', Math.round(cx + Math.cos(a) * r), Math.round(cy + Math.sin(a) * r * .6)]; });
+// reruntuhan: jejak dinding persegi yang runtuh sebagian (bukan cincin bundar) — WORLD_REFACTOR tahap F
+const ruinRing = (cx, cy, r, n) => { const w = r, h = r * .6, P = 4 * (w + h), out = [];
+  for (let i = 0; i < n + Math.ceil(n / 3); i++) { if (i % 4 === 3) continue; let d = i / (n + Math.ceil(n / 3)) * P, x, y;
+    if (d < 2 * w) { x = cx - w + d; y = cy - h; } else if ((d -= 2 * w) < 2 * h) { x = cx + w; y = cy - h + d; }
+    else if ((d -= 2 * h) < 2 * w) { x = cx + w - d; y = cy + h; } else { d -= 2 * w; x = cx - w; y = cy + h - d; }
+    out.push([i % 3 ? 'rock' : 'stalag', Math.round(x), Math.round(y)]); }
+  return out; };
 MAPS.deepwood = {
   id: 'deepwood', name: 'Hutan Dalam', w: 2400, h: 1800, bgm: 'field', ground: 'forest', scale: 2.2,
   paths: [[2400, 730, 1900, 730, 13], [1900, 730, 1500, 980, 12], [1500, 980, 1100, 900, 12], [1100, 900, 700, 560, 12], [700, 560, 520, 420, 12],
     [1500, 980, 1600, 1400, 10], [1600, 1400, 1200, 1580, 10], [1100, 900, 900, 1300, 10], [1900, 730, 2000, 360, 10]],
-  discs: [[520, 400, 210], [2000, 330, 90], [1600, 1420, 80], [900, 1320, 70], [1500, 980, 60], [1960, 760, 50]],
+  discs: [[520, 400, 150], [420, 470, 95], [630, 330, 105], [560, 520, 70], [2000, 330, 90], [1600, 1420, 80], [900, 1320, 70], [1500, 980, 60], [1960, 760, 50]],
   ponds: [[1250, 470, 150, 70], [1420, 560, 90, 50], [330, 1250, 160, 90], [1900, 1500, 140, 70]],
   objs: [
     // Reruntuhan Aurel (barat laut): cincin batu, kuil runtuh, prasasti
@@ -15,7 +21,7 @@ MAPS.deepwood = {
     ['rune_pillar', 520, 250, { elem: 'ice' }],
     ['rune_pillar', 560, 270, { elem: 'light' }],
     ['stele', 520, 220, { text: 'TEKA-TEKI PILAR AUREL:\n"Kekuatan fajar menyala lebih dahulu (Api),\ndibekukan badai salju (Es),\nlalu disinari lentera suci abadi (Cahaya)."' }],
-    ['root', 380, 520], ['root', 680, 300], ['root', 300, 380], ['root', 560, 560], ['root', 470, 250], ...ruinRing(520, 400, 95, 9),
+    ['root', 380, 520], ['root', 700, 262], ['root', 300, 380], ['root', 560, 560], ['root', 470, 250], ...ruinRing(520, 400, 95, 9),
     ['stalag', 360, 420], ['rock', 450, 470], ['rock', 600, 330], ['mush', 340, 470], ['mush', 700, 520], ['mush', 480, 300], ['bushG2', 410, 560], ['bushG2', 650, 250],
     // Pohon Tua raksasa (timur laut)
     ['bigtree', 2000, 330], ['stele', 2070, 380, { lore: 'pohon_tua' }],
