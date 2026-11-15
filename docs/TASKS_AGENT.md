@@ -890,7 +890,7 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.
 
-### [ ] T137. **Pecah baris > 160 karakter di `src/world/maps/lake.js`**
+### [x] T137. **Pecah baris > 160 karakter di `src/world/maps/lake.js`**
 
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/world/maps/lake.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
@@ -3264,7 +3264,7 @@ rumah pohon Tetua Bram 513,66), sumur (512, 345), NPC cerita (`elder`, `guard`, 
   - Hutan Dalam: 71% (benteng di 420, 1500)
   - Jalur Sungai Senja: 71% (benteng di 2320, 140)
 
-### [ ] T428. **Markas Hutan Lumina: perkemahan di tepi tebing** — referensi: Kingdom Come (kemah Cuman), Witcher 3 (kemah bandit)
+### [x] T428. **Markas Hutan Lumina: perkemahan di tepi tebing** — referensi: Kingdom Come (kemah Cuman), Witcher 3 (kemah bandit)
 - File: `src/world/maps/forest.js` (objek `goblin_*`, `discs` 950/1050/1140, 300, `enemies` di sekitarnya). Baca dulu: `viewpoint` (1010, 260) & peti `c1` (1060, 300).
 - Lakukan: identitas = kemah perang di tepi tebing timur laut. Benteng menempel ke tepi tebing (geser ±80 px ke timur laut), BUKAN di tengah.
   Pagar/palisade mengelilingi 3 sisi mengikuti bentuk tanah (pakai `goblin_gate` + `fence`/batang kayu), gerbang utama menghadap barat daya ke
@@ -3273,7 +3273,7 @@ rumah pohon Tetua Bram 513,66), sumur (512, 345), NPC cerita (`elder`, `guard`, 
 - Batasan: `viewpoint`, `lumina_shard`, peti `c1` tetap; obor/panji/totem TIDAK berderet satu garis.
 - Cek: `check-camps` skor simetri < 25%, 0 masalah pohon; `check-layout` 0 masalah.
 
-### [ ] T429. **Markas Hutan Dalam: kampung ritual Suku Akar Gelap** — referensi: Skyrim (kemah Forsworn), Zelda BotW (kamp Bokoblin)
+### [x] T429. **Markas Hutan Dalam: kampung ritual Suku Akar Gelap** — referensi: Skyrim (kemah Forsworn), Zelda BotW (kamp Bokoblin)
 - File: `src/world/maps/wild.js` (±baris 34–45, objek di sekitar 420, 1550). Baca dulu: `ruinRing` & lapangan reruntuhan Aurel (WORLD_REFACTOR §7).
 - Lakukan: identitas = kampung dukun di antara akar raksasa. Pusat = altar ritual (`goblin_shrine`) — lingkaran batu/tulang di sekitarnya BOLEH (ritual).
   Benteng bersandar ke dinding akar/batu di sisi barat (bukan di tengah). Gubuk tersebar membentuk busur mengikuti kontur, beda jarak 60–120 px.
