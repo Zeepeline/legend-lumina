@@ -22,7 +22,7 @@ MAPS.meadow = {
     [1060, 930, 48, 42], [1110, 970, 50, 44], [1150, 1005, 50, 44], [1176, 1040, 50, 44],
   ],
   flowers: 1,
-  objs: [
+  objs: [['dock', 640, 822], ['boat', 692, 798],
     // papan arah di persimpangan (fitur #674)
     ['sign', 488, 500, { text: 'Papan arah: ↑ Puncak Beku · → Gua Batu & Rawa Senja · ← Desa Lumina' }],
     ['sign', 812, 440, { text: 'Papan arah: ↗ Gua Batu · ↘ Rawa Senja · ← Desa Lumina' }],

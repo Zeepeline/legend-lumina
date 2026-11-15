@@ -2055,6 +2055,34 @@ function artFossilBed() {
 }
 
 'use strict';
+// Dermaga papan berlentera & perahu kayu (gaya tepi air Verdant; referensi pemilik: kolam bertepi batu + dermaga + perahu).
+// Titik pasang (origin .5, 1) = pangkal dermaga di darat; papan menjorok ke utara (ke air).
+function artDock() {
+  const [c, x] = mk(44, 58);
+  for (const px of [6, 34]) for (const py of [8, 30]) { fr(x, '#3e2614', px, py, 5, 14); fr(x, '#2a1a0e', px, py + 12, 5, 2); } // tiang masuk air
+  fr(x, '#3b2618', 3, 4, 38, 46);                                             // garis luar
+  for (let i = 0; i < 9; i++) {                                               // papan melintang
+    const y = 5 + i * 5; fr(x, i % 2 ? '#a8703e' : '#b67d48', 4, y, 36, 4); fr(x, '#c8945a', 4, y, 36, 1); fr(x, '#6e4222', 4, y + 4, 36, 1);
+    fr(x, '#6e4222', 11 + (i % 3) * 9, y + 1, 1, 2);                          // paku & serat
+  }
+  fr(x, '#5e3b20', 3, 49, 38, 6); fr(x, '#7a5230', 3, 49, 38, 2);             // pangkal di tepi
+  fr(x, '#4a2e18', 34, 0, 4, 22); fr(x, '#6e4222', 35, 0, 2, 22);             // tiang lentera
+  fr(x, '#4a2e18', 26, 1, 10, 2); fr(x, '#3b2618', 27, 3, 1, 3);              // lengan lentera
+  fr(x, '#2a1a0e', 25, 6, 5, 6); fr(x, '#ffd36a', 26, 7, 3, 4); fr(x, '#fff3c4', 27, 8, 1, 2); // lentera menyala
+  return c;
+}
+function artBoat() {
+  const [c, x] = mk(40, 20), g = x;
+  g.fillStyle = 'rgba(20,50,100,.35)'; g.beginPath(); g.ellipse(20, 13, 19, 6, 0, 0, 6.29); g.fill();          // bayangan di air
+  g.fillStyle = '#3b2618'; g.beginPath(); g.ellipse(20, 10, 18, 7, 0, 0, 6.29); g.fill();                     // garis luar lambung
+  g.fillStyle = '#8a5a32'; g.beginPath(); g.ellipse(20, 10, 16.5, 5.8, 0, 0, 6.29); g.fill();
+  g.fillStyle = '#5e3b20'; g.beginPath(); g.ellipse(20, 10.5, 13, 3.8, 0, 0, 6.29); g.fill();                 // dalam perahu
+  for (const bx of [13, 26]) { fr(x, '#a8703e', bx, 6, 3, 9); fr(x, '#c8945a', bx, 6, 1, 9); }                 // bangku
+  fr(x, '#c8945a', 8, 4, 24, 1);                                                                                 // tepi atas terang
+  return c;
+}
+
+'use strict';
 // Gambar bangunan & properti buatan kode (1) — isi: lihat docs/CODEMAP.md
 function artHouse(v) {
   const W = 86, H = 108, [c, x] = mk(W, H);
@@ -4448,6 +4476,8 @@ const OBJ = {
   totem: { key: 'totem', col: [16, 8, 0], sh: [12, 3], fade: 1 },
   pigeons: { key: 'pigeons', col: [16, 8, 0], sh: [12, 3], fade: 1 },
   teatable: { key: 'teatable', col: [20, 10, 0], sh: [14, 3], fade: 1 },
+  dock: { key: 'dock', col: [40, 6, 0], sh: [0, 0] },
+  boat: { key: 'boat', col: [0, 0, 0], sh: [0, 0], fade: 1 },
   lotuspad: { key: 'lotuspad', col: [16, 8, 0], sh: [12, 3], fade: 1 },
   dockboat: { key: 'dockboat', col: [32, 12, 0], sh: [18, 4], fade: 1 },
   coffeeshrub: { key: 'coffeeshrub', col: [14, 8, 0], sh: [10, 3], fade: 1 },
@@ -5385,7 +5415,7 @@ function genGround(M, rect) {
         const ly = (y + 1000) % 6; put(i, ly === 0 ? h2r('#6e4222') : ly === 1 ? h2r('#c8945a') : h2r('#a8703e'), (hash(x >> 3, Math.floor((y + 1000) / 6), 5) - .5) * .12); continue;
       }
       if (dv < hw) { water(i, dv / hw, x, y); continue; }
-      if (VW && dv < hw + 4) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }
+      if (VW && dv < hw + 13) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }
       else if (dv < hw + 4) { put(i, h2r(dv < hw + 1.5 ? '#8a7a5a' : '#cdb684')); continue; }
     }
     let inPond = false;
@@ -5396,7 +5426,7 @@ function genGround(M, rect) {
         if (ds < 1.5) { if (ds > -1.5) { put(i, h2r('#5e3b20')); continue; } const ly = (y + 1000) % 6; put(i, h2r(ly === 0 ? '#6e4222' : ly === 1 ? '#c8945a' : '#a8703e')); continue; }
         water(i, wr < 70 ? Math.max(we, .5) : we, x, y); continue;
       }
-      if (we < 1 + 5 / wr) {
+      if (we < 1 + (VW ? 13 : 5) / wr) {
         if (VW) { const b = verdantBank(M, (we - 1) * wr, x + GX, y + GY, waterE(PL, x, y + 4, GX, GY) < we); if (b) { put(i, b); continue; } }
         else { put(i, h2r(we < 1 + 2 / wr ? '#8a7a5a' : '#d6c08c')); continue; }
       }
@@ -5433,7 +5463,7 @@ function genGround(M, rect) {
   }
   const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);
   const out = (X, Y) => X < RX - 10 || X > RX + RW + 10 || Y < RY - 10 || Y > RY + RH + 10;
-  const near = (X, Y) => { if (R && Math.abs(Y - riverY(R, X)) < R.w / 2 + 6) return true; return ponds.length > 0 && waterE(ponds, X, Y, GX, GY) < 1.15; };
+  const near = (X, Y) => { if (R && Math.abs(Y - riverY(R, X)) < R.w / 2 + 6) return true; return ponds.length > 0 && waterE(ponds, X, Y, GX, GY) < 1 + 14 / Math.max(waterE.r, 1); };
   if (cave) {
     for (let n = 0; n < W * H / 260; n++) { const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); if (out(X, Y)) continue; const d = sd(X, Y); if (d > 2 && d < 60 && hash(n, 3, 22) > .6) { const col = hash(n, 4, 22) > .5 ? '#9a6aff' : '#5ac8ff'; px(x, col, X, Y); px(x, shade(col, .5), X, Y - 1); } else if (d < -4) { px(x, '#6a6476', X, Y); } }
     return c;
@@ -5870,7 +5900,7 @@ MAPS.meadow = {
     [1060, 930, 48, 42], [1110, 970, 50, 44], [1150, 1005, 50, 44], [1176, 1040, 50, 44],
   ],
   flowers: 1,
-  objs: [
+  objs: [['dock', 640, 822], ['boat', 692, 798],
     // papan arah di persimpangan (fitur #674)
     ['sign', 488, 500, { text: 'Papan arah: ↑ Puncak Beku · → Gua Batu & Rawa Senja · ← Desa Lumina' }],
     ['sign', 812, 440, { text: 'Papan arah: ↗ Gua Batu · ↘ Rawa Senja · ← Desa Lumina' }],
@@ -6088,7 +6118,7 @@ MAPS.lake = {
   objs: [['shrine', 560, 520], ['campfire', 1110, 560], ['pebbles', 890, 500], ['pebbles', 230, 480], ['dockboat', 980, 520], ['dockboat', 250, 560], ['lakelighthouse', 1140, 430], ['rock', 470, 470, { ok: 'cincin batu pulau kuil di tengah danau' }], ['rock', 650, 470, { ok: 'cincin batu pulau kuil di tengah danau' }], ['rock', 520, 560, { ok: 'cincin batu pulau kuil di tengah danau' }], ['rock', 610, 565, { ok: 'cincin batu pulau kuil di tengah danau' }],
     // Batu loncatan arungan anak sungai cermin (T340) & hiasan tepi air (T345)
     ['pebbles', 840, 705], ['pebbles', 850, 715],
-    ['lotuspad', 750, 600], ['lotuspad', 450, 420], ['pebbles', 990, 850], ['bushG1', 1092, 936],
+    ['dock', 560, 724], ['boat', 610, 700], ['lotuspad', 750, 600], ['lotuspad', 450, 420], ['pebbles', 990, 850], ['bushG1', 1092, 936],
     ['houseC', 1120, 300], ['barrel', 1180, 300], ['crate', 1060, 300], ['fence', 1150, 340], ['fence', 1168, 340],
     ['stele', 1010, 452, { text: 'Prasasti Danau Cermin:\n"Cahaya lahir di utara, tumbuh di selatan, lalu pulang di barat. Hanya cahaya yang pulang yang boleh menyeberang."' }],
     ['sign', 880, 200, { text: 'Jalan ke KOTA LUMINA (utara)\nPerbaikan longsor oleh Dewan Kota.', lore: 'kota_lumina' }],
@@ -6763,7 +6793,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.35.0';
+const GAME_VERSION = '1.36.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() {
@@ -7690,7 +7720,7 @@ function buildTextures(sc) {
   one('treeAd', darkTree(IMGEL.treeA)); one('treeBd', darkTree(IMGEL.treeA));
   one('pear', artFruitTree('pear', 3)); one('round', artRoundTree(4)); one('pine', artPine(5)); one('pined', artPine(6, 1));
   one('bush', artBush(1)); one('bushy', artBush(5, 'yellow')); one('bushv', artBush(4, 'purple'));
-  one('barrel', artBarrel()); one('crate', artCrate()); one('sign', artSign()); one('fence', artFence()); one('lamp', artLamp());
+  one('barrel', artBarrel()); one('crate', artCrate()); one('sign', artSign()); one('fence', artFence()); one('lamp', artLamp()); one('dock', artDock()); one('boat', artBoat());
   one('board', artBoard()); one('campfire', artCampfire());
   one('rock', artRock(1)); one('log', artLog()); one('stump', artStump()); one('mush', artMushDeco()); one('shrine', artShrine());
   one('chest', artChest(false)); one('chesto', artChest(true)); one('hay', artHay()); one('windmill', artWindmill()); one('blades', artBlades());
@@ -7851,10 +7881,10 @@ function verdantBase(x, M, rect) {
   }
 }
 // air sungai & danau gaya Verdant: biru-hijau dalam, tepi dangkal berdither, riak garis pendek (X, Y global; t 0 = tengah, 1 = tepi)
-const VWC = { deep: [40, 96, 126], mid: [52, 122, 150], shal: [80, 156, 168], line: [150, 212, 214], spark: [218, 244, 238] };
+const VWC = { deep: [46, 110, 186], mid: [58, 134, 212], shal: [94, 168, 228], line: [40, 94, 172], spark: [196, 230, 248] };
 function verdantWater(t, X, Y) {
-  const b = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5, v = t + b * .07 + vnoise(X, Y, 64, 21) * .25 - .12;
-  let c = v > .8 ? VWC.shal : v > .45 ? VWC.mid : VWC.deep;
+  const b = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5, v = t + b * .035 + vnoise(X, Y, 64, 21) * .2 - .1;
+  let c = v > .84 ? VWC.shal : v > .3 ? VWC.mid : VWC.deep;
   const cx = Math.floor(X / 14), cy = Math.floor(Y / 7);
   if (t < .85 && hash(cx, cy, 91) < .22) {
     const x0 = cx * 14 + Math.floor(hash(cx, cy, 92) * 8), y0 = cy * 7 + Math.floor(hash(cx, cy, 93) * 5), L = 2 + Math.floor(hash(cx, cy, 94) * 4);
@@ -7862,11 +7892,28 @@ function verdantWater(t, X, Y) {
   }
   return c;
 }
-// tepi air: sisi utara = dinding tanah kecil (terlihat dari selatan), sisi selatan = garis gelap tipis; null = rumput biasa
+// tepi air alami: batu bulat beragam ukuran (sel Voronoi), lebar bibir naik-turun, sebagian tanpa batu (rumput langsung ke air).
+// d = jarak px di luar air; north = air ada di selatan titik ini (tepi utara: batu lebih tebal). null = rumput biasa.
+const VSTONE = { hi: [196, 192, 186], mid: [156, 152, 150], lo: [118, 114, 116], gap: [66, 66, 64] };
+function vCobble(X, Y) {
+  const C = 8, gx = Math.floor(X / C), gy = Math.floor(Y / C); let f1 = 99, f2 = 99, dy1 = 0, dx1 = 0;
+  for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
+    const cx = (gx + i) * C + hash(gx + i, gy + j, 41) * C, cy = (gy + j) * C + hash(gx + i, gy + j, 42) * C, dd = Math.hypot(X - cx, Y - cy);
+    if (dd < f1) { f2 = f1; f1 = dd; dx1 = X - cx; dy1 = Y - cy; } else if (dd < f2) f2 = dd;
+  }
+  if (f2 - f1 < .8) return VSTONE.gap;                       // celah antarbatu
+  return dy1 + dx1 * .4 < -1.6 ? VSTONE.hi : dy1 > 1.8 ? VSTONE.lo : VSTONE.mid;
+}
 function verdantBank(M, d, X, Y, north) {
-  if (d < 1.2) return [36, 60, 40];
-  if (north && d < 3.6) return (VBAY[(Y & 3) * 4 + (X & 3)] < 6 ? [82, 64, 44] : [106, 84, 56]);
-  if (!north && d < 2.4) { const c = verdantPix(M, X, Y); return c && c.map(v => v * .72); }
+  const n = vnoise(X, Y, 46, 61), rw = n < .3 ? 0 : (north ? 3.5 : 2) + (n - .3) * (north ? 12 : 9) + (hash(X >> 2, Y >> 2, 63) - .5) * 1.6;
+  if (rw <= 0) {                                               // tanpa batu: rumput tepi + garis basah tipis
+    if (d < 1) return [40, 74, 46];
+    if (d < 3.2) { const c = verdantPix(M, X, Y); return c && c.map((v, k) => Math.min(255, v * (k === 1 ? 1.12 : 1.04))); }
+    return null;
+  }
+  if (d < rw - 1) return vCobble(X, Y);
+  if (d < rw) return VSTONE.gap;                               // garis luar batu
+  if (d < rw + 2.6) { const c = verdantPix(M, X, Y); return c && c.map((v, k) => Math.min(255, v * (k === 1 ? 1.14 : 1.05))); } // bibir rumput terang
   return null;
 }
 

@@ -72,6 +72,8 @@ const OBJ = {
   totem: { key: 'totem', col: [16, 8, 0], sh: [12, 3], fade: 1 },
   pigeons: { key: 'pigeons', col: [16, 8, 0], sh: [12, 3], fade: 1 },
   teatable: { key: 'teatable', col: [20, 10, 0], sh: [14, 3], fade: 1 },
+  dock: { key: 'dock', col: [40, 6, 0], sh: [0, 0] },
+  boat: { key: 'boat', col: [0, 0, 0], sh: [0, 0], fade: 1 },
   lotuspad: { key: 'lotuspad', col: [16, 8, 0], sh: [12, 3], fade: 1 },
   dockboat: { key: 'dockboat', col: [32, 12, 0], sh: [18, 4], fade: 1 },
   coffeeshrub: { key: 'coffeeshrub', col: [14, 8, 0], sh: [10, 3], fade: 1 },

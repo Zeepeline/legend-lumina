@@ -56,7 +56,7 @@ function buildTextures(sc) {
   one('treeAd', darkTree(IMGEL.treeA)); one('treeBd', darkTree(IMGEL.treeA));
   one('pear', artFruitTree('pear', 3)); one('round', artRoundTree(4)); one('pine', artPine(5)); one('pined', artPine(6, 1));
   one('bush', artBush(1)); one('bushy', artBush(5, 'yellow')); one('bushv', artBush(4, 'purple'));
-  one('barrel', artBarrel()); one('crate', artCrate()); one('sign', artSign()); one('fence', artFence()); one('lamp', artLamp());
+  one('barrel', artBarrel()); one('crate', artCrate()); one('sign', artSign()); one('fence', artFence()); one('lamp', artLamp()); one('dock', artDock()); one('boat', artBoat());
   one('board', artBoard()); one('campfire', artCampfire());
   one('rock', artRock(1)); one('log', artLog()); one('stump', artStump()); one('mush', artMushDeco()); one('shrine', artShrine());
   one('chest', artChest(false)); one('chesto', artChest(true)); one('hay', artHay()); one('windmill', artWindmill()); one('blades', artBlades());

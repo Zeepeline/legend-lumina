@@ -67,10 +67,10 @@ function verdantBase(x, M, rect) {
   }
 }
 // air sungai & danau gaya Verdant: biru-hijau dalam, tepi dangkal berdither, riak garis pendek (X, Y global; t 0 = tengah, 1 = tepi)
-const VWC = { deep: [40, 96, 126], mid: [52, 122, 150], shal: [80, 156, 168], line: [150, 212, 214], spark: [218, 244, 238] };
+const VWC = { deep: [46, 110, 186], mid: [58, 134, 212], shal: [94, 168, 228], line: [40, 94, 172], spark: [196, 230, 248] };
 function verdantWater(t, X, Y) {
-  const b = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5, v = t + b * .07 + vnoise(X, Y, 64, 21) * .25 - .12;
-  let c = v > .8 ? VWC.shal : v > .45 ? VWC.mid : VWC.deep;
+  const b = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5, v = t + b * .035 + vnoise(X, Y, 64, 21) * .2 - .1;
+  let c = v > .84 ? VWC.shal : v > .3 ? VWC.mid : VWC.deep;
   const cx = Math.floor(X / 14), cy = Math.floor(Y / 7);
   if (t < .85 && hash(cx, cy, 91) < .22) {
     const x0 = cx * 14 + Math.floor(hash(cx, cy, 92) * 8), y0 = cy * 7 + Math.floor(hash(cx, cy, 93) * 5), L = 2 + Math.floor(hash(cx, cy, 94) * 4);
@@ -78,10 +78,27 @@ function verdantWater(t, X, Y) {
   }
   return c;
 }
-// tepi air: sisi utara = dinding tanah kecil (terlihat dari selatan), sisi selatan = garis gelap tipis; null = rumput biasa
+// tepi air alami: batu bulat beragam ukuran (sel Voronoi), lebar bibir naik-turun, sebagian tanpa batu (rumput langsung ke air).
+// d = jarak px di luar air; north = air ada di selatan titik ini (tepi utara: batu lebih tebal). null = rumput biasa.
+const VSTONE = { hi: [196, 192, 186], mid: [156, 152, 150], lo: [118, 114, 116], gap: [66, 66, 64] };
+function vCobble(X, Y) {
+  const C = 8, gx = Math.floor(X / C), gy = Math.floor(Y / C); let f1 = 99, f2 = 99, dy1 = 0, dx1 = 0;
+  for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
+    const cx = (gx + i) * C + hash(gx + i, gy + j, 41) * C, cy = (gy + j) * C + hash(gx + i, gy + j, 42) * C, dd = Math.hypot(X - cx, Y - cy);
+    if (dd < f1) { f2 = f1; f1 = dd; dx1 = X - cx; dy1 = Y - cy; } else if (dd < f2) f2 = dd;
+  }
+  if (f2 - f1 < .8) return VSTONE.gap;                       // celah antarbatu
+  return dy1 + dx1 * .4 < -1.6 ? VSTONE.hi : dy1 > 1.8 ? VSTONE.lo : VSTONE.mid;
+}
 function verdantBank(M, d, X, Y, north) {
-  if (d < 1.2) return [36, 60, 40];
-  if (north && d < 3.6) return (VBAY[(Y & 3) * 4 + (X & 3)] < 6 ? [82, 64, 44] : [106, 84, 56]);
-  if (!north && d < 2.4) { const c = verdantPix(M, X, Y); return c && c.map(v => v * .72); }
+  const n = vnoise(X, Y, 46, 61), rw = n < .3 ? 0 : (north ? 3.5 : 2) + (n - .3) * (north ? 12 : 9) + (hash(X >> 2, Y >> 2, 63) - .5) * 1.6;
+  if (rw <= 0) {                                               // tanpa batu: rumput tepi + garis basah tipis
+    if (d < 1) return [40, 74, 46];
+    if (d < 3.2) { const c = verdantPix(M, X, Y); return c && c.map((v, k) => Math.min(255, v * (k === 1 ? 1.12 : 1.04))); }
+    return null;
+  }
+  if (d < rw - 1) return vCobble(X, Y);
+  if (d < rw) return VSTONE.gap;                               // garis luar batu
+  if (d < rw + 2.6) { const c = verdantPix(M, X, Y); return c && c.map((v, k) => Math.min(255, v * (k === 1 ? 1.14 : 1.05))); } // bibir rumput terang
   return null;
 }

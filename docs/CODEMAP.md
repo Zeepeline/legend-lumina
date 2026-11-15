@@ -35,6 +35,10 @@ _Gambar alam buatan kode (3) — isi: lihat docs/CODEMAP.md_
 _Gambar alam buatan kode (4) — isi: lihat docs/CODEMAP.md_
 `artFossilBed()` 3
 
+## src/art/nature/dock.js (28 baris)
+_Dermaga papan berlentera & perahu kayu (gaya tepi air Verdant; referensi pemilik: kolam bertepi batu + dermaga + perahu)._
+`artDock()` 4 · `artBoat()` 18
+
 ## src/art/buildings/buildings_1.js (389 baris)
 _Gambar bangunan & properti buatan kode (1) — isi: lihat docs/CODEMAP.md_
 `artHouse()` 3 · `artFountain()` 81 · `artWell()` 106 · `artStall()` 118 · `artBoard()` 134 · `artCampfire()` 147 · `artBench()` 162 · `artBarrel()` 163 · `artCrate()` 164 · `artSign()` 165 · `artFence()` 166 · `artLamp()` 167 · `artShrine()` 169 · `artCrystal()` 178 · `artChest()` 193 · `artWindmill()` 199 · `artBlades()` 207 · `artPond()` 217 · `artBarrier()` 218 · `artAnvil()` 219 · `artForge()` 220 · `artGate()` 221 · `artBoulder()` 222 · `artPlate()` 223 · `artBell()` 224 · `artDummy()` 242 · `artTelescope()` 265 · `artShrineAltar()` 289 · `artFieldOven()` 325 · `artDripStalactite()` 353
@@ -79,9 +83,9 @@ _Efek: tebasan, api, proyektil, cahaya, bayangan_
 _Lantai & perabot interior_
 `FURN` 4 · `drawFurn()` 5 · `genRoom()` 15 · `artMusicBox()` 28
 
-## src/world/objects.js (177 baris)
+## src/world/objects.js (179 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 176
+`OBJ` 7 · `MAPS` 178
 
 ## src/world/spawn/spawn_1.js (398 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
@@ -187,9 +191,9 @@ _Panggang bayangan objek ke tekstur tanah_
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 16 · `addStrip()` 17 · `darkTree()` 22 · `NPC_W` 24 · `regPortrait()` 25 · `regChar()` 30 · `buildTextures()` 46
 
-## src/world/ground_verdant.js (88 baris)
+## src/world/ground_verdant.js (105 baris)
 _Tanah Verdant (Padang, Hutan, Desa) meniru assets/reference/target_padang.png._
-`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `VT` 9 · `verdantTiles()` 10 · `vMod` 16 · `vDirtN` 18 · `vDirtT` 19 · `verdantPix()` 21 · `verdantDeco()` 33 · `VBASE` 54 · `verdantBase()` 55 · `VWC` 70 · `verdantWater()` 71 · `verdantBank()` 82
+`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `VT` 9 · `verdantTiles()` 10 · `vMod` 16 · `vDirtN` 18 · `vDirtT` 19 · `verdantPix()` 21 · `verdantDeco()` 33 · `VBASE` 54 · `verdantBase()` 55 · `VWC` 70 · `verdantWater()` 71 · `VSTONE` 83 · `vCobble()` 84 · `verdantBank()` 93
 
 ## src/scene/world.js (397 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._

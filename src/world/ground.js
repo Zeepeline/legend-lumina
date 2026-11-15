@@ -130,7 +130,7 @@ function genGround(M, rect) {
         const ly = (y + 1000) % 6; put(i, ly === 0 ? h2r('#6e4222') : ly === 1 ? h2r('#c8945a') : h2r('#a8703e'), (hash(x >> 3, Math.floor((y + 1000) / 6), 5) - .5) * .12); continue;
       }
       if (dv < hw) { water(i, dv / hw, x, y); continue; }
-      if (VW && dv < hw + 4) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }
+      if (VW && dv < hw + 13) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }
       else if (dv < hw + 4) { put(i, h2r(dv < hw + 1.5 ? '#8a7a5a' : '#cdb684')); continue; }
     }
     let inPond = false;
@@ -141,7 +141,7 @@ function genGround(M, rect) {
         if (ds < 1.5) { if (ds > -1.5) { put(i, h2r('#5e3b20')); continue; } const ly = (y + 1000) % 6; put(i, h2r(ly === 0 ? '#6e4222' : ly === 1 ? '#c8945a' : '#a8703e')); continue; }
         water(i, wr < 70 ? Math.max(we, .5) : we, x, y); continue;
       }
-      if (we < 1 + 5 / wr) {
+      if (we < 1 + (VW ? 13 : 5) / wr) {
         if (VW) { const b = verdantBank(M, (we - 1) * wr, x + GX, y + GY, waterE(PL, x, y + 4, GX, GY) < we); if (b) { put(i, b); continue; } }
         else { put(i, h2r(we < 1 + 2 / wr ? '#8a7a5a' : '#d6c08c')); continue; }
       }
@@ -178,7 +178,7 @@ function genGround(M, rect) {
   }
   const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);
   const out = (X, Y) => X < RX - 10 || X > RX + RW + 10 || Y < RY - 10 || Y > RY + RH + 10;
-  const near = (X, Y) => { if (R && Math.abs(Y - riverY(R, X)) < R.w / 2 + 6) return true; return ponds.length > 0 && waterE(ponds, X, Y, GX, GY) < 1.15; };
+  const near = (X, Y) => { if (R && Math.abs(Y - riverY(R, X)) < R.w / 2 + 6) return true; return ponds.length > 0 && waterE(ponds, X, Y, GX, GY) < 1 + 14 / Math.max(waterE.r, 1); };
   if (cave) {
     for (let n = 0; n < W * H / 260; n++) { const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); if (out(X, Y)) continue; const d = sd(X, Y); if (d > 2 && d < 60 && hash(n, 3, 22) > .6) { const col = hash(n, 4, 22) > .5 ? '#9a6aff' : '#5ac8ff'; px(x, col, X, Y); px(x, shade(col, .5), X, Y - 1); } else if (d < -4) { px(x, '#6a6476', X, Y); } }
     return c;
