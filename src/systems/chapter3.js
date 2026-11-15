@@ -57,17 +57,27 @@ Object.assign(World.prototype, {
   async lightTorch(i) {
     if (S.flags['torch' + i]) return talk(null, ['Api obor kuno menyala hangat. Salju di sekitarnya mulai mencair.']);
     if (S.stage < 11) return talk(null, ['Obor batu kuno. Dingin dan padam... ada ukiran naga di tepinya.']);
-    S.flags['torch' + i] = 1; sfx('fire'); this.torchS[i].setVisible(true).setScale(.2); this.tweens.add({ targets: this.torchS[i], scale: 1.2, duration: 400 });
+    S.flags['torch' + i] = 1; sfx('fire');
+    this.torchS[i].setVisible(true).setScale(.2);
+    this.tweens.add({ targets: this.torchS[i], scale: 1.2, duration: 400 });
     const [x, y] = this.M.torches[i]; this.sparkle(x, y - 14, 'doto', 16);
     const n = [0, 1, 2].filter(k => S.flags['torch' + k]).length;
     if (n < 3) {
       banner('Obor Kuno ' + n + '/3', 'MENYALA', false, 1600);
       await sleep(600); sfx('roar'); popWorld(x, y - 30, 'Penjaga bangkit!', 'hurt');
-      for (const t of ['wolfs', 'wolfs']) { const a = rnd(0, 6.28), m = this.spawnEnemy(t, x + Math.cos(a) * 46, y + Math.sin(a) * 30); this.sparkle(m.spr.x, m.spr.y - 6, 'dot', 8); }
+      for (const t of ['wolfs', 'wolfs']) {
+        const a = rnd(0, 6.28), m = this.spawnEnemy(t, x + Math.cos(a) * 46, y + Math.sin(a) * 30);
+        this.sparkle(m.spr.x, m.spr.y - 6, 'dot', 8);
+      }
       updHud(); return;
     }
     S.stage = 12; updHud(); banner('Gerbang es mencair!', 'OBOR 3/3', true, 2200);
-    await sleep(900); await talk(null, ['Di sisi obor terakhir ada relief yang tersingkap salju yang mencair: seorang wanita mengangkat tangan bercahaya. Di telapaknya... tanda daun, sama seperti tanganmu.']); learn('relief_obor');
+    await sleep(900);
+    await talk(null, [
+      'Di sisi obor terakhir ada relief yang tersingkap salju yang mencair: seorang wanita mengangkat ' +
+      'tangan bercahaya. Di telapaknya... tanda daun, sama seperti tanganmu.'
+    ]);
+    learn('relief_obor');
     await sleep(800); this.openIceGate(); await say('Ketiga obor menyala! Gerbang es di utara mencair. Naga Es menunggu di puncak.');
     saveGame(this);
   },
@@ -97,9 +107,25 @@ Object.assign(World.prototype, {
         else { e.st = 'ring'; e.t = .6; s.setTint(0x8ad0ff); }
       }
     } else if (e.st === 'wind') { if (e.t <= 0) { e.st = 'dash'; e.t = .55; s.clearTint(); s.setVelocity(e.lx * 280 * m, e.ly * 280 * m); sfx('swing'); } }
-    else if (e.st === 'dash') { if (e.t <= 0 || s.body.blocked.left || s.body.blocked.right || s.body.blocked.up || s.body.blocked.down) { e.st = 'rec'; e.t = .6; s.setVelocity(0); } }
-    else if (e.st === 'breath') { if (e.t <= 0) { s.clearTint(); this.eShoot(e, 'ice', e.summoned ? [-.5, -.3, -.1, .1, .3, .5] : [-.36, -.12, .12, .36], D.atk - 6); e.st = 'rec'; e.t = .55; } }
-    else if (e.st === 'ring') { if (e.t <= 0) { s.clearTint(); this.eShoot(e, 'ice', [...Array(10).keys()].map(i => i / 10 * Math.PI * 2 + this.t), D.atk - 8, true); e.st = 'rec'; e.t = .7; } }
+    else if (e.st === 'dash') {
+      if (e.t <= 0 || s.body.blocked.left || s.body.blocked.right || s.body.blocked.up || s.body.blocked.down) {
+        e.st = 'rec'; e.t = .6; s.setVelocity(0);
+      }
+    }
+    else if (e.st === 'breath') {
+      if (e.t <= 0) {
+        s.clearTint();
+        this.eShoot(e, 'ice', e.summoned ? [-.5, -.3, -.1, .1, .3, .5] : [-.36, -.12, .12, .36], D.atk - 6);
+        e.st = 'rec'; e.t = .55;
+      }
+    }
+    else if (e.st === 'ring') {
+      if (e.t <= 0) {
+        s.clearTint();
+        this.eShoot(e, 'ice', [...Array(10).keys()].map(i => i / 10 * Math.PI * 2 + this.t), D.atk - 8, true);
+        e.st = 'rec'; e.t = .7;
+      }
+    }
     else if (e.st === 'stomp') { if (e.t <= 0) { s.clearTint(); this.shockwave(s.x, s.y, 78, D.atk); e.st = 'rec'; e.t = .8; } }
     else if (e.st === 'rec') { s.setVelocity(0); if (e.t <= 0) { e.st = 'chase'; e.t = rnd(1, 1.7) / m; } }
   },

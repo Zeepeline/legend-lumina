@@ -227,9 +227,9 @@ _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
 `STATUS` 5 · `.inflict()` 12 · `.cure()` 23 · `.speedMul()` 24 · `.updStatus()` 29 · `.enemyStatus()` 60 · `.poisonEnemy()` 101 · `.burnEnemy()` 102 · `.freezeEnemy()` 103 · `updStatusHud()` 110
 
-## src/systems/chapter3.js (107 baris)
+## src/systems/chapter3.js (133 baris)
 _Bab 3: obor kuno, gerbang es, Naga Es Kryos (AI 'dboss')_
-`.spawnTorches()` 4 · `.spawnCaveTorches()` 13 · `.lightTorch()` 57 · `.spawnIceGate()` 74 · `.openIceGate()` 78 · `.updDragon()` 84
+`.spawnTorches()` 4 · `.spawnCaveTorches()` 13 · `.lightTorch()` 57 · `.spawnIceGate()` 84 · `.openIceGate()` 88 · `.updDragon()` 94
 
 ## src/systems/chapter4.js (140 baris)
 _Bab 4 "Bisikan di Bawah Akar" (investigasi, tanpa boss) + Desa Kincir + prasasti lore. Lihat docs/GAME_DESIGN.md & docs/BENUA_LUMINA.md_
