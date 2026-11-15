@@ -3318,6 +3318,172 @@ rumah pohon Tetua Bram 513,66), sumur (512, 345), NPC cerita (`elder`, `guard`, 
 - Lakukan: simpan tangkapan layar kamera zoom .5 untuk desa & 3 markas (sebelum: ambil dari commit sebelum T421 / T428).
 - Cek: file ada & dirujuk dari WORLD_REFACTOR §4.
 
+## N. GELOMBANG 13 — perubahan yang PALING TERLIHAT MATA (T437–T462)
+Urutan dampak (pemilik setuju): **(1) gaya gambar seragam → (2) tebing & ketinggian → (4) cahaya & suasana → (5) HUD → (3) peralihan bioma → (6) pantulan air**.
+Tiap tugas kecil & berdiri sendiri. Setelah tiap tugas: `npm run check`, `node tools/check-layout.js` (0 masalah), 1 tangkapan layar di HP/viewport 390×844.
+Jangan ubah mesin tanah/air Claude (`ground_verdant.js`, `water.js`, `organic.js`) kecuali tugas menyebutnya.
+
+### (1) Gaya gambar seragam — objek lama hasil kode vs aset GPT/Verdant
+### [ ] T437. **Lembar audit semua objek** — referensi: —
+- File: file baru `tools/obj-sheet.spec.js` (tes Playwright sekali jalan, BUKAN masuk suite) → `assets/reference/audit_objek.png`.
+- Baca dulu: `src/world/objects.js` (`OBJ`: `key`), `src/gfx/gptassets.js` (daftar `GPT_SWAP` = sudah diganti aset GPT).
+- Lakukan: buka game, ambil setiap `OBJ[t].key` dari `__game.sc.textures`, gambar ke satu kanvas grid (sel 96×96, latar rumput #4f8a3c) dengan label
+  nama + "GPT" atau "KODE" + jumlah kemunculan di peta luar ruang (hitung dari `mapObjects(MAPS[id])`). Urutkan: KODE dengan kemunculan terbanyak dulu.
+- Cek: gambar audit ada; tulis 15 objek KODE teratas di bawah tugas ini (nama, jumlah, ukuran px).
+
+### [ ] T438. **Daftar permintaan aset untuk pemilik** — referensi: `assets/reference/target_padang.png` (gaya acuan)
+- File: file baru `docs/ASET_DIMINTA.md`. Baca dulu: hasil T437, `docs/ART_BIBLE.md`, `docs/ASSET_RULES.md`.
+- Lakukan: untuk 15 objek KODE teratas tulis tabel: nama, ukuran target (px), arah pandang (top-down 3/4 seperti Verdant), catatan bentuk, dan
+  SATU kalimat prompt siap tempel ke GPT ("pixel art top-down 3/4, palette Verdant Forest, transparent background, objek X, Y px"). Kelompokkan
+  jadi 2 lembar sprite (maks 8 objek/lembar) agar pemilik cukup membuat 2 gambar.
+- Cek: dokumen ada; beri tahu pemilik di catatan serah-terima bahwa lembar ditunggu.
+
+### [ ] T439. **Selaraskan warna objek KODE ke palet Verdant (sementara)** — referensi: palette swap
+- File: `src/gfx/textures.js` (setelah semua `one(...)` dibuat). Baca dulu: fungsi `one`, palet `gnd_grass` (ambil 7 warna dari `assets/img/gnd_grass.png`).
+- Lakukan: fungsi `toVerdant(canvas)`: tiap piksel hijau (g > r+20 & g > b+10) dipetakan ke warna hijau Verdant terdekat (kecerahan sama);
+  cokelat kayu → palet kayu dari `gpt_verdant_log`. Terapkan HANYA pada objek KODE di daftar T437 yang bukan karakter/musuh. Bisa dimatikan `?verdantpal=0`.
+- Cek: tangkapan layar Padang sebelum/sesudah: semak & pohon lama tidak lagi "neon" dibanding pohon Verdant.
+
+### [ ] T440. **Garis luar seragam** — referensi: Verdant (garis luar gelap 1 px berwarna, bukan hitam)
+- File: `src/gfx/textures.js`. Baca dulu: fungsi `outline` di `src/art/monsters.js`.
+- Lakukan: objek KODE (bukan karakter) diberi garis luar 1 px warna = warna tetangga ×0.45 (bukan hitam murni), seperti aset Verdant.
+- Cek: tangkapan layar objek lama & Verdant bersebelahan tampak satu gaya.
+
+### [ ] T441. **Pasang lembar aset baru dari pemilik** — referensi: —
+- File: `assets/raw/…` (dari pemilik) → `tools/prep_gpt_assets.py` → `assets/img/gpt_*.png`, `GPT_SWAP` di `gptassets.js`.
+- Lakukan: HANYA setelah pemilik mengirim lembar T438. Potong per objek (latar transparan, tanpa bingkai — lihat aturan pola tanah gelombang 11),
+  skala agar 1 piksel seni ≈ 1,15 px game seperti Verdant, daftarkan di `GPT_SWAP`. Lolos `VALIDATION_RULES`.
+- Cek: `audit_objek.png` dibuat ulang: objek terpasang kini bertanda GPT.
+
+### (2) Tebing & ketinggian — aset `verdant_cliff_straight/corner/slope` sudah ada (110×75, 110×90, 110×66) tapi belum dipakai
+### [ ] T442. **Data tebing: `M.cliffs`** — referensi: Stardew Valley (tebing tambang), Zelda ALttP (dataran tinggi)
+- File: file baru `src/world/cliffs.js` (muat setelah `src/world/organic.js` di `index.html`). Baca dulu: `OBJ.verdant_cliff_*` di `objects.js`, `mapObjects`.
+- Lakukan: format `M.cliffs = [[x1, y1, x2, y2, 'S'|'N'|'E'|'W'], ...]` (garis tepi dataran tinggi + arah muka tebing). Saat dimuat, ubah tiap garis
+  jadi deretan `verdant_cliff_straight` tiap 100 px (dibalik/`flip` sesuai arah), `verdant_cliff_corner` di sambungan, dan `verdant_cliff_slope`
+  di titik yang dilewati `paths` (tanjakan = bisa dilewati). Tambahkan dinding tabrakan (`walls`) sepanjang garis kecuali di tanjakan.
+- Cek: peta uji kecil: 1 garis tebing tampil rapi, tanjakan bisa dilalui, sisanya tidak.
+
+### [ ] T443. **Tebing Pengawas Hutan** — referensi: nama tempat sudah ada (`viewpoint` 1010, 260 di `forest.js`)
+- File: `src/world/maps/forest.js` (`cliffs`). Baca dulu: posisi markas goblin (T428) & `viewpoint`.
+- Lakukan: dataran tinggi timur laut hutan: garis tebing muka selatan dari (760, 420) ke (1240, 430) berkelok 2–3 titik; tanjakan di jalan menuju
+  markas. Viewpoint di tepi tebing. Bila T428 belum, koordinasikan: markas berada DI ATAS dataran tinggi.
+- Cek: `check-layout` 0 masalah; masuk markas hanya lewat tanjakan / jalur menyelinap.
+
+### [ ] T444. **Tebing sungai di Padang Angin** — referensi: target_padang.png (pojok kanan atas)
+- File: `src/world/maps/meadow.js` (`cliffs`). Baca dulu: alur sungai (`ponds`, `GEOGRAFI.md` §3).
+- Lakukan: 2–3 ruas tebing rendah (200–400 px) di sisi barat sungai bagian utara (sungai mengalir di lembah), tanjakan di jembatan/arungan.
+- Cek: `check-layout` 0 masalah; jalan & jembatan tetap bisa dilewati.
+
+### [ ] T445. **Terasering Puncak Beku & tebing Jalan Raya** — referensi: Celeste/Skyrim (gunung bertingkat)
+- File: `src/world/maps/snow.js`, `city.js` peta `road` (`cliffs`). Baca dulu: jalur zig-zag Puncak Beku (WORLD_REFACTOR §7).
+- Lakukan: Puncak Beku: 2 tingkat tebing melintang (y≈760 & y≈420), tanjakan tepat di jalur zig-zag. Tebing dengan aset Verdant DIWARNAI ULANG
+  ke salju (pakai sistem pewarnaan salju pohon pemilik di `tools/`/`gptassets.js`). Jalan Raya: tebing timur sepanjang markas perompak (T430).
+- Cek: `check-layout` 0 masalah; tes jalan ke puncak tetap bisa (jalan kaki manual).
+
+### (4) Cahaya & suasana — malam sudah ada (`world.js` ±baris 330: lubang cahaya `erase`), tapi cahaya tidak berwarna
+### [ ] T446. **Cahaya hangat berwarna di malam hari** — referensi: Eastward, Sea of Stars
+- File: `src/scene/world.js` blok `if (this.night)` (BACA saja) + file baru `src/systems/lightglow.js`.
+- Lakukan: untuk tiap `this.lights` di layar, sprite lingkaran gradien oranye (#ffb050 → transparan, r 40/60/90 sesuai `small`/`big`) dengan
+  `setBlendMode(Phaser.BlendModes.ADD)`, depth tepat di atas `this.night`, alpha = `clamp((nightAmt() - .1) * 1.4, 0, .6)`, berkedip ±8%.
+  Pool sprite (maks 24), jangan membuat sprite baru tiap frame.
+- Cek: malam (`S.time = 22`): lentera & obor memancarkan cahaya oranye hangat, bukan hanya lubang terang.
+
+### [ ] T447. **Bayangan awan berjalan** — referensi: Octopath, BotW
+- File: file baru `src/systems/cloudshadow.js`. Baca dulu: cara `this.night` dibuat (RenderTexture layar).
+- Lakukan: 3–4 gambar bayangan awan (elips lembut gelap, 300–600 px, alpha .10–.16) bergerak pelan (8–14 px/dtk) mengikuti arah angin, posisi
+  dunia (ikut kamera), depth di atas tanah & di bawah objek tinggi (`-8.9e5`). Hanya siang, luar ruang, cuaca cerah/berawan. Opsi `OPT.lite` mematikan.
+- Cek: berdiri diam 20 dtk: bayangan awan melintas di tanah, tidak berkedip.
+
+### [ ] T448. **Bayangan daun bergoyang di bawah pohon** — referensi: target_padang.png, Stardew (bayangan pohon)
+- File: `src/world/spawn/` (pohon `treeA`, `verdant_tree`). Baca dulu: `OBJ_SPAWN.treeA` (animasi wind sway).
+- Lakukan: di bawah tiap pohon besar: elips bayangan bertekstur bintik (gambar 64×32 dibuat sekali di kanvas) alpha .22, bergoyang ±2 px
+  sinkron dengan wind sway pohon. Hanya pohon di layar (pakai `setVisible` saat jauh).
+- Cek: tangkapan layar: tanah di bawah pohon lebih gelap berbintik, bergerak halus.
+
+### [ ] T449. **Kabut tipis di rawa & Hutan Dalam** — referensi: Dark Souls (Blighttown), Hollow Knight
+- File: file baru `src/systems/fog.js`. Baca dulu: `benuaAmbient(id)` di `benua_scene.js` (dipanggil saat ganti wilayah).
+- Lakukan: 2 lapis tekstur kabut (noise lembut 256×256, `tileSprite` DILARANG ≥ 1024 — iOS! pakai beberapa image 256 px) bergeser lambat
+  berlawanan arah, alpha .18–.28, hanya di wilayah `swamp` & `deepwood`, lebih tebal pagi & malam.
+- Cek: masuk Rawa Senja: kabut terlihat; FPS di HP tidak turun > 5.
+
+### [ ] T450. **Sinar matahari pagi di hutan** — referensi: Ori, Sea of Stars
+- File: `src/systems/fog.js` (lanjutan T449). Baca dulu: `S.time`.
+- Lakukan: jam 6–9 di `forest`/`deepwood`: 3–5 berkas cahaya miring (trapesium gradien kuning pucat, ADD, alpha .08–.14) berayun pelan.
+- Cek: `S.time = 7` di hutan: berkas cahaya terlihat; jam 12 hilang.
+
+### (5) HUD seragam & ringkas — `#hud` & `#quest` di `styles.css` (±baris 29, 186), isi di `src/ui/widgets.js` (±baris 177)
+### [ ] T451. **Panel HP/stamina/mana bergaya kayu** — referensi: tombol MENU/PETA (gaya kayu yang sudah ada), Dimraeth
+- File: `styles.css` (`#hud`, `.bar`). Baca dulu: gaya `.wmb` di `src/ui/worldmap_art.js` (gradien kayu, border #3b2618, bayangan bawah).
+- Lakukan: bingkai `#hud` kayu gelap + sudut membulat 10 px + bayangan 0 3px 0; batang HP/stamina/mana: tepi 1 px gelap, sorot atas 1 px terang,
+  ujung membulat; angka pakai font piksel. Ukuran TIDAK bertambah.
+- Cek: tangkapan layar HP 390×844: HUD satu gaya dengan tombol bawah.
+
+### [ ] T452. **Panel misi ringkas & bisa dilipat** — referensi: Hollow Knight (HUD minim)
+- File: `styles.css` (`#quest`), `src/ui/widgets.js` (pembuat isi `#quest`). Baca dulu: `updQuest`/fungsi yang mengisi `q.innerHTML`.
+- Lakukan: tampilan default 1 baris (ikon ★ + judul dipotong "…", maks lebar 46% layar); ketuk = buka 3 baris (perilaku "ketuk: Jurnal" pindah ke
+  tombol kecil 📖). Otomatis terbuka 4 dtk saat tujuan berubah lalu melipat. Gaya kayu seperti T451.
+- Cek: di HP panel misi tidak lagi menutupi kanan atas layar game.
+
+### [ ] T453. **Jam, koin, ramuan jadi satu pita** — referensi: Stardew (pita jam)
+- File: `styles.css`, `src/ui/widgets.js` (elemen jam/koin di pojok kanan atas). Baca dulu: elemen yang memuat "08:20", koin, ramuan.
+- Lakukan: satu pita kayu tipis (tinggi ≤ 22 px) berisi ikon + angka, ikon cuaca di kiri. Hapus kotak gelap terpisah.
+- Cek: tangkapan layar: pojok kanan atas rapi, satu gaya.
+
+### [ ] T454. **Bingkai peta mini** — referensi: —
+- File: `src/systems/qol.js` (peta mini) atau `styles.css`. Baca dulu: elemen peta mini.
+- Lakukan: bingkai kayu bundar/membulat + kompas U kecil; warna tanah peta mini pakai warna `worldOverview` (`src/ui/worldmap_art.js`) agar sama dengan Peta Benua.
+- Cek: peta mini & Peta Benua satu gaya.
+
+### (3) Peralihan bioma — tepi tanah sudah dicampur (`edgeBlend`, `BLEND_W = 150` di `ground.js` ±baris 41) tapi objek berganti mendadak
+### [ ] T455. **Pita peralihan lebih lebar untuk bioma yang kontras** — referensi: BotW (salju ke rumput)
+- File: `src/world/ground.js` (`BLEND_W`, `edgeBlend`). Baca dulu: komentar di atas `BLEND_W`.
+- Lakukan: lebar pita tergantung pasangan: salju↔lainnya 320 px, rawa↔lainnya 240 px, lainnya tetap 150. Pindahkan `BLEND_W` jadi fungsi
+  `blendW(gA, gB)`. Peluang warna tetangga naik halus (sudah ada) — jangan ubah rumusnya.
+- Cek: Peta Benua: tepi Puncak Beku & Rawa tidak lagi garis lurus.
+
+### [ ] T456. **Objek peralihan: salju tipis, pinus, gundukan** — referensi: —
+- File: `src/world/ground.js` (`scatter`) + data `trees` di `meadow.js` (sisi Puncak Beku) & `pl_meadow_snow` (peralihan, `layout.js`). Baca dulu: `scatter`.
+- Lakukan: dalam 400 px dari tepi bioma salju: peluang pohon berganti bertahap `verdant_tree` → `pine` (linier terhadap jarak), tambah bercak salju
+  (gambar elips putih berdither, digambar di kanvas tanah seperti ornamen `verdantDeco`) makin rapat ke arah salju. Sisi rawa: genangan kecil & alang-alang.
+- Cek: berjalan Padang → Puncak Beku: salju & pinus muncul bertahap, tidak mendadak.
+
+### [ ] T457. **Warna langit/cahaya ikut bioma** — referensi: —
+- File: `src/systems/benua_scene.js` (`updBenua`, BACA), file baru kecil `src/systems/biometint.js`.
+- Lakukan: lapisan warna layar sangat tipis (alpha ≤ .06): salju = biru dingin, rawa = hijau keruh, gurun/kota = netral; berpindah halus 2 dtk saat
+  ganti wilayah.
+- Cek: masuk Puncak Beku terasa dingin tanpa layar berubah drastis.
+
+### [ ] T458. **Cek Peta Benua setelah peralihan** — referensi: —
+- File: catatan di bawah tugas ini. Baca dulu: `worldOverview` di `src/ui/worldmap_art.js`.
+- Lakukan: buka Peta Benua, simpan tangkapan layar ke `assets/reference/benua_peralihan.png`, catat perbatasan yang masih tajam.
+- Cek: catatan ada.
+
+### (6) Pantulan air — kerjakan PALING AKHIR (paling sulit)
+### [ ] T459. **Pantulan pohon & rumah di air (dipanggang ke tanah)** — referensi: Sea of Stars, Eastward
+- File: `src/world/ground_verdant.js` (fungsi baru `verdantReflect`), dipanggil di `bakeGround` (`src/gfx/bake.js`) setelah `verdantBase`.
+- Baca dulu: `bakeGround`, `pondsAll`/`waterE` di `src/world/water.js`, `mapObjects`.
+- Lakukan: untuk objek pohon/rumah yang dasarnya ≤ 40 px DI ATAS air (air di selatannya): gambar salinan terbalik vertikal (`scale(1,-1)`) ke kanvas
+  sementara seukuran potongan, alpha .28, warna digeser biru (`globalCompositeOperation = 'multiply'` dengan #5a8ad0), lalu tempel HANYA di piksel air
+  (`'destination-in'` dengan topeng air dari `waterE < 1`). Sedikit gelombang: geser tiap baris ±1 px dengan sin(y).
+- Cek: Danau Cermin & kolam Padang: pohon di tepi utara terpantul samar; tidak ada pantulan di daratan; waktu muat potongan tanah naik < 20%.
+
+### [ ] T460. **Pantulan karakter (sederhana)** — referensi: —
+- File: file baru `src/systems/reflect.js`. Baca dulu: T459.
+- Lakukan: saat pemain berdiri ≤ 30 px di utara air: sprite kedua terbalik (`setFlipY`), alpha .25, tint biru, di bawah pemain, hanya bila titik
+  pantulnya air (`waterFlowAt`/`waterE`). Satu sprite saja, bukan per musuh.
+- Cek: berjalan di tepi danau: pantulan Arka terlihat dan hilang saat menjauh.
+
+### [ ] T461. **Uji kinerja di HP** — referensi: —
+- File: catatan. Baca dulu: opsi `OPT.lite`.
+- Lakukan: buka `?fps=1` di HP, catat FPS di Desa, Padang, Rawa (siang & malam) sebelum/sesudah gelombang 13. Fitur yang menurunkan FPS > 8 →
+  matikan otomatis bila `OPT.lite`.
+- Cek: tabel FPS di catatan.
+
+### [ ] T462. **Dokumentasi gelombang 13** — referensi: —
+- File: `AGENTS.md` (1 baris Status), `docs/ART_BIBLE.md` (bagian cahaya & tebing). Baca dulu: —.
+- Lakukan: tulis singkat sistem baru (cliffs, lightglow, cloudshadow, fog, reflect) + cara mematikannya.
+- Cek: `npm run check` 0 masalah.
+
 ---
 
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
