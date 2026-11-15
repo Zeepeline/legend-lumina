@@ -223,9 +223,9 @@ _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipak
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
 `ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 215 · `.ripple()` 216 · `.spawnRainEmitters()` 230 · `.rainSplash()` 242 · `.updRainFx()` 250 · `artQuestArrow()` 323 · `.updQuestGuide()` 330
 
-## src/systems/status.js (107 baris)
+## src/systems/status.js (125 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
-`STATUS` 5 · `.inflict()` 12 · `.cure()` 23 · `.speedMul()` 24 · `.updStatus()` 29 · `.enemyStatus()` 60 · `.poisonEnemy()` 87 · `.burnEnemy()` 88 · `.freezeEnemy()` 89 · `updStatusHud()` 92
+`STATUS` 5 · `.inflict()` 12 · `.cure()` 23 · `.speedMul()` 24 · `.updStatus()` 29 · `.enemyStatus()` 60 · `.poisonEnemy()` 101 · `.burnEnemy()` 102 · `.freezeEnemy()` 103 · `updStatusHud()` 110
 
 ## src/systems/chapter3.js (107 baris)
 _Bab 3: obor kuno, gerbang es, Naga Es Kryos (AI 'dboss')_

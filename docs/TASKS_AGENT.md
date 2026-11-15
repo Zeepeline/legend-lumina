@@ -878,7 +878,7 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.
 
-### [ ] T135. **Pecah baris > 160 karakter di `src/systems/status.js`**
+### [x] T135. **Pecah baris > 160 karakter di `src/systems/status.js`**
 
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/systems/status.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
@@ -3252,12 +3252,17 @@ rumah pohon Tetua Bram 513,66), sumur (512, 345), NPC cerita (`elder`, `guard`, 
   bercabang dulu ke bengkel lalu ke pelataran, jalan barat lewat kebun lalu masuk dari barat daya. Setapak pintu tetap radius 8–11.
 - Cek: `check-layout` 0 masalah; NPC `wander` tidak tersangkut (amati 2 menit).
 
-### [ ] T427. **Alat cek markas & simetri** — referensi: —
+### [x] T427. **Alat cek markas & simetri** — referensi: —
 - File: file baru `tools/check-camps.js` (pola memuat peta seperti `tools/check-layout.js`), daftarkan di `npm run check` sebagai PERINGATAN.
 - Lakukan: untuk tiap peta berisi `goblin_fortress`: (a) skor simetri = % objek `goblin_*` yang punya pasangan bertipe sama di posisi cermin terhadap
   x benteng (selisih ≤ 20 px) → peringatan bila > 40%; (b) pohon/semak dalam 40 px dari objek `goblin_*` → MASALAH; (c) musuh: lebih dari 3 dalam
   radius 80 px → peringatan; (d) cetak ringkasan per markas.
-- Cek: `node tools/check-camps.js` mencetak 3 markas dengan skor simetri awal (catat di bawah tugas ini).
+- Cek: `node tools/check-camps.js` mencetak markas dengan skor simetri awal:
+- Skor simetri awal:
+  - Hutan Lumina: 48% (benteng di 1040, 220)
+  - Jalan Raya Lama: 71% (benteng di 700, 1020)
+  - Hutan Dalam: 71% (benteng di 420, 1500)
+  - Jalur Sungai Senja: 71% (benteng di 2320, 140)
 
 ### [ ] T428. **Markas Hutan Lumina: perkemahan di tepi tebing** — referensi: Kingdom Come (kemah Cuman), Witcher 3 (kemah bandit)
 - File: `src/world/maps/forest.js` (objek `goblin_*`, `discs` 950/1050/1140, 300, `enemies` di sekitarnya). Baca dulu: `viewpoint` (1010, 260) & peti `c1` (1060, 300).
