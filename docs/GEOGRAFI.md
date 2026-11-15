@@ -94,3 +94,15 @@ Target rata-rata ≥ 75; kawasan atas ≥ 85; Kota Bawah boleh 60–70 (miskin &
 
 **Desa vs kota:** desa = tanpa tembok batu (pagar kayu), satu jalan utama + alun-alun kecil dengan sumur & shrine, rumah renggang dengan halaman besar,
 ladang langsung di belakang. Kota = tembok + gerbang, rumah-toko berdempet, ≥ 1 gang gilda, usaha kotor di luar tembok/hilir.
+
+---
+
+---
+
+## §8 Pola tanah (Verdant Ground)
+
+1. Menggunakan petak dasar gnd_grass, gnd_grass_light, gnd_grass_dark, dan gnd_dirt dari tileset Verdant.
+2. Pola tanah dan bercak alami dibuat menggunakan fungsi posisi murni (vnoise) tanpa grid kaku.
+3. Transisi antar wilayah bertanah sama menggunakan koordinat global (GX, GY) agar tidak ada garis batas sambungan.
+4. Pembuatan variasi petak baru dilakukan dengan tools/gen_ground.py (cukup sesuaikan palet dan seed warna).
+5. Ornamen dekorasi tanah (deco_*) ditabur secara prosedural berdasarkan hash posisi tanpa membebani performa.

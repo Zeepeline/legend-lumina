@@ -19,9 +19,9 @@ Panduan standar untuk merancang tata letak desa (*village / town layout*), jalan
 
 Desa fantasi klasik yang hidup dan asri memiliki prinsip:
 1. **Tidak Ada Garis Siku-Siku Kaku 90°**: Jalanan desa bukan jalan kota modern berpaving grid. Jalan setapak tanah liat (*dirt roads*) harus meliuk lembut mengikuti kontur tanah dan pekarangan alami.
-2. **Pusat Desa Berorientasi Komunal (Radial-Organic)**:
-   - Titik tengah berupa **Sumur Desa bertutup genteng** (`gpt_v_village_well.png`) atau pohon keramat, dikelilingi pelataran cincin tanah melingkar (`rings`).
-   - Rumah-rumah warga menghadap ke arah alun-alun sumur membentuk klaster radial.
+2. **Pusat Desa Alami (Village Green / Pelataran Asimetris)**:
+   - Titik tengah berupa **Sumur Desa bertutup genteng** (`gpt_v_village_well.png`), dikelilingi pelataran tanah tak beraturan (`discs` bertumpuk asimetris, bukan `rings` bundar sempurna).
+   - Rumah-rumah warga berkelompok di sepanjang jalan utama (*street village* Eropa), bukan melingkar rata seperti diagram. Jalan bertemu di pelataran dari arah tak simetris.
 3. **Pekarangan & Kebun di Samping Rumah**:
    - Lahan tani / kebun sayur (seperti kebun wortel Bu Lastri) diletakkan di **samping rumah**, bukan di tengah jalan atau memotong sirkulasi warga.
    - Pagar kayu (`fence`) membingkai kebun secara rapi dan menyisakan celah masuk.
@@ -103,3 +103,17 @@ Setiap kali melakukan penyesuaian pada peta desa:
 4. Jangan menambahkan baris kode lebih dari 160 karakter (`node tools/check-size.js`).
 5. Jalankan `python3 tools/bundle.py` dan naikkan versi `sw.js` agar perubahan langsung terlihat di browser.
 
+
+---
+
+## 6. Halaman Belakang Tiap Rumah (Burgage Plot)
+- Setiap rumah warga memiliki pekarangan belakang (sisi jauh dari jalan) yang fungsional dan hidup:
+  - Tumpukan kayu bakar (`woodpile` / `log`), tong air (`barrel`), peti perkakas (`crate`), pot tanaman (`pot`), atau jerami (`hay`).
+  - Pagar kayu (`fence`) 2–4 segmen membentuk huruf L terbuka (bukan kotak kaku tertutup).
+
+---
+
+## 7. Zona Fungsi Desa (GEOGRAFI §7)
+- **Zona Bersih & Tenang**: Permukiman warga, penginapan, dan rumah tetua diposisikan terpisah dari sumber bising/bau.
+- **Zona Bising & Kerja**: Bengkel pandai besi (`smith`), kandang hewan (`ranch`), dan penempaan ditaruh di sisi luar/tepi hilir agar asap dan kebisingan tidak mengganggu pusat desa.
+- **Zona Pertanian & Perairan**: Lahan tani dan kebun ditaruh di tepian luar pekarangan dekat sumber air.

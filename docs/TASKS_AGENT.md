@@ -3289,7 +3289,7 @@ rumah pohon Tetua Bram 513,66), sumur (512, 345), NPC cerita (`elder`, `guard`, 
 - Batasan: jalan raya tetap bisa dilalui (bisa berbelok mengitari pos); NPC kafilah tidak digeser.
 - Cek: `check-camps` skor simetri < 25%; `check-layout` 0 masalah; berjalan menyusuri jalan tidak tersangkut.
 
-### [ ] T431. **Penempatan musuh markas yang masuk akal** — referensi: Far Cry (pos musuh), Zelda BotW
+### [x] T431. **Penempatan musuh markas yang masuk akal** — referensi: Far Cry (pos musuh), Zelda BotW
 - File: `forest.js`, `wild.js`, `city.js` (`enemies` di sekitar markas). Baca dulu: `src/ai/enemies.js` (cari `leash`, cara musuh menjaga posisi).
 - Lakukan: per markas: 2 penjaga di gerbang, pemanah di dekat menara, dukun di dekat altar/kuali, elite di depan pintu benteng, 1–2 musuh di luar pagar
   di jalan masuk (penjaga depan). Tidak lebih dari 3 musuh dalam radius 80 px saat muncul. Jumlah total musuh per markas TIDAK bertambah.

@@ -145,6 +145,7 @@ const OBJ = {
   log: { key: 'log', col: [28, 6, 0], sh: [14, 3] },
   stump: { key: 'stump', col: [14, 5, 0], sh: [8, 2] },
   mush: { key: 'mush' },
+  reeds: { key: 'deco_reeds', col: [8, 4, 0], sh: [10, 3] },
   hay: { key: 'hay', col: [22, 8, 0], sh: [12, 3] },
   windmill: { key: 'windmill', col: [40, 22, 0], sh: [26, 5], fade: 1, mm: 1 },
   goblin_fortress: { key: 'i_goblin_fortress', col: [140, 38, 2], sh: [70, 10], fade: 1, mm: 1 },
