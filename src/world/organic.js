@@ -34,3 +34,17 @@ function orgCurve(a, b, c, d, r, seed) {
   }
 })();
 waterRelocate();
+// pintu perbatasan yang dilintasi air: jalan pendek dari pintu ke dalam → jembatan otomatis & bisa dilewati
+(function exitBridges() {
+  for (const id in MAPS) {
+    const M = MAPS[id]; if (M.indoor || !(M.ponds || M.river)) continue;
+    const L = pondsBase(M), [GX, GY] = waterGXY(M), R = M.river;
+    const wet = (x, y) => (L.length && waterE(L, x, y, GX, GY) < 1.25) || (R && Math.abs(y - riverY(R, x)) < R.w / 2 + 8);
+    for (const ex of mapDoors(M)) {
+      const cx = ex.x + ex.w / 2, cy = ex.y + ex.h / 2, dx = cx < 24 ? 1 : cx > M.w - 24 ? -1 : 0, dy = cy < 24 ? 1 : cy > M.h - 24 ? -1 : 0;
+      if (!dx && !dy) continue;
+      let hit = false; for (let t = 0; t <= 110; t += 10) if (wet(cx + dx * t, cy + dy * t)) { hit = true; break; }
+      if (hit) (M.paths = M.paths || []).push([Math.round(cx), Math.round(cy), Math.round(cx + dx * 120), Math.round(cy + dy * 120), 13]);
+    }
+  }
+})();

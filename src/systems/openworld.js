@@ -7,8 +7,10 @@ Object.assign(World.prototype, {
   initOpen(data) {
     const M = this.M; this.owN = []; this.owObjs = [];
     this.camB = { x0: 0, y0: 0, x1: M.w, y1: M.h };
-    if (G.title || M.indoor || !NEIGH[M.id] || !this.gStream || this.passive) return;
+    if (G.title || M.indoor || !NEIGH[M.id] || this.passive) return;
+    /* mode wilayah ganda: sambungan TIDAK bergantung pada gStream (gStream sengaja mati saat lapisan tanah bersama GL aktif) */
     if (regionsOn()) { this.owN = NEIGH[M.id].slice(); this.cameras.main.setBackgroundColor('rgba(0,0,0,0)'); this.regT = 0; return; } // wilayah tetangga dijalankan systems/regions.js
+    if (!this.gStream) return;
     for (const n of NEIGH[M.id]) {
       const B = MAPS[n.to]; this.owN.push(n);
       this.gL.push(gLayer(B, n.ox, n.oy));

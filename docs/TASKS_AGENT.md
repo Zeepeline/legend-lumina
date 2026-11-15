@@ -3387,7 +3387,7 @@ round→treeAd, bushG1/G2/bushy→semak Verdant, stump→verdant_stump, pinus di
 - Cek: `check-layout` 0 masalah; tes jalan ke puncak tetap bisa (jalan kaki manual).
 
 ### (4) Cahaya & suasana — malam sudah ada (`world.js` ±baris 330: lubang cahaya `erase`), tapi cahaya tidak berwarna
-### [ ] T446. **Cahaya hangat berwarna di malam hari** — referensi: Eastward, Sea of Stars
+### [x] T446. **Cahaya hangat berwarna di malam hari** (dipasang Claude v1.39.0, `src/systems/atmos.js`) — referensi: Eastward, Sea of Stars
 - File: `src/scene/world.js` blok `if (this.night)` (BACA saja) + file baru `src/systems/lightglow.js`.
 - Lakukan: untuk tiap `this.lights` di layar, sprite lingkaran gradien oranye (#ffb050 → transparan, r 40/60/90 sesuai `small`/`big`) dengan
   `setBlendMode(Phaser.BlendModes.ADD)`, depth tepat di atas `this.night`, alpha = `clamp((nightAmt() - .1) * 1.4, 0, .6)`, berkedip ±8%.
@@ -3406,7 +3406,7 @@ round→treeAd, bushG1/G2/bushy→semak Verdant, stump→verdant_stump, pinus di
   sinkron dengan wind sway pohon. Hanya pohon di layar (pakai `setVisible` saat jauh).
 - Cek: tangkapan layar: tanah di bawah pohon lebih gelap berbintik, bergerak halus.
 
-### [ ] T449. **Kabut tipis di rawa & Hutan Dalam** — referensi: Dark Souls (Blighttown), Hollow Knight
+### [x] T449. **Kabut tipis di rawa & Hutan Dalam** (dipasang Claude v1.39.0: cuaca kabut umum + lapisan berlapis, `src/systems/atmos.js`) — referensi: Dark Souls (Blighttown), Hollow Knight
 - File: file baru `src/systems/fog.js`. Baca dulu: `benuaAmbient(id)` di `benua_scene.js` (dipanggil saat ganti wilayah).
 - Lakukan: 2 lapis tekstur kabut (noise lembut 256×256, `tileSprite` DILARANG ≥ 1024 — iOS! pakai beberapa image 256 px) bergeser lambat
   berlawanan arah, alpha .18–.28, hanya di wilayah `swamp` & `deepwood`, lebih tebal pagi & malam.
@@ -3418,7 +3418,7 @@ round→treeAd, bushG1/G2/bushy→semak Verdant, stump→verdant_stump, pinus di
 - Cek: `S.time = 7` di hutan: berkas cahaya terlihat; jam 12 hilang.
 
 ### (5) HUD seragam & ringkas — `#hud` & `#quest` di `styles.css` (±baris 29, 186), isi di `src/ui/widgets.js` (±baris 177)
-### [ ] T451. **Panel HP/stamina/mana bergaya kayu** — referensi: tombol MENU/PETA (gaya kayu yang sudah ada), Dimraeth
+### [ ] T451. **Panel HP/stamina/mana bergaya kayu** — CATATAN: sejak v1.39.0 bawaan = layar penuh mendatar (`body.full`, CSS di akhir `styles.css`); uji di 844×390 — referensi: tombol MENU/PETA (gaya kayu yang sudah ada), Dimraeth
 - File: `styles.css` (`#hud`, `.bar`). Baca dulu: gaya `.wmb` di `src/ui/worldmap_art.js` (gradien kayu, border #3b2618, bayangan bawah).
 - Lakukan: bingkai `#hud` kayu gelap + sudut membulat 10 px + bayangan 0 3px 0; batang HP/stamina/mana: tepi 1 px gelap, sorot atas 1 px terang,
   ujung membulat; angka pakai font piksel. Ukuran TIDAK bertambah.

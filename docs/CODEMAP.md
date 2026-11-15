@@ -95,13 +95,13 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 203 · obj `treeA` 210 · obj `goblin_torch` 218 · obj `goblin_cauldron` 221 · obj `cryst` 230 · obj `lamp` 233 · obj `viewpoint` 236 · obj `lumina_shard` 270
 
-## src/world/ground.js (325 baris)
+## src/world/ground.js (327 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `BLEND_W` 41 · `WILD_G` 42 · `edgeSegs()` 43 · `edgeBlend()` 72 · `TILE_CACHE` 91 · `getTileData()` 92 · `genGround()` 101 · `blockRects()` 217 · `scatter()` 233 · `openSides()` 268 · `borderTrees()` 281 · `ringObjects()` 304 · `mapObjects()` 309 · `mapWalls()` 313
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `BLEND_W` 41 · `WILD_G` 42 · `edgeSegs()` 43 · `edgeBlend()` 72 · `TILE_CACHE` 91 · `getTileData()` 92 · `genGround()` 101 · `blockRects()` 217 · `scatter()` 233 · `openSides()` 268 · `borderTrees()` 281 · `ringObjects()` 306 · `mapObjects()` 311 · `mapWalls()` 315
 
-## src/world/water.js (86 baris)
+## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
-`WATER_WIDEN` 6 · `pondsBase()` 7 · `WGLOB` 25 · `waterGlobal()` 26 · `pondsAll()` 40 · `pondsNear()` 49 · `waterE()` 52 · `waterGXY()` 68 · `WATER_MOVABLE` 71 · `waterRelocate()` 72
+`WATER_WIDEN` 6 · `pondsBase()` 7 · `WGLOB` 25 · `waterGlobal()` 26 · `pondsAll()` 40 · `pondsNear()` 49 · `waterE()` 52 · `mapDoors()` 69 · `waterGXY()` 70 · `WATER_MOVABLE` 73 · `waterRelocate()` 74
 
 ## src/world/maps/village.js (120 baris)
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
@@ -151,9 +151,9 @@ _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
 _Bilah 5 slot jurus dengan cooldown (T327)_
 `SPELLBAR` 3 · `buildSpellbar()` 4 · `updSpellbar()` 12
 
-## src/core/state.js (157 baris)
+## src/core/state.js (159 baris)
 _Status pemain (S), simpan/muat, rumus stat_
-`SAVE_BASE` 6 · `slotKey` 7 · `SAVE_SLOT` 8 · `SAVE_KEY` 9 · `setSlot()` 10 · `slotInfo()` 12 · `DIRV` 27 · `S` 28 · `OPT_KEY` 30 · `DIFF` 32 · `GAME_VERSION` 33 · `OPT` 34 · `saveOpt()` 35 · `applyOpt()` 36 · `newState()` 44 · `eqv()` 45 · `UPG` 51 · `itemName` 52 · `BUFF` 54 · `buffOn` 55 · `stat()` 56 · `need()` 92 · `has` 93 · `addItem()` 94 · `hasSave()` 103 · `saveGame()` 104 · `readSaveRaw()` 115 · `loadSave()` 119
+`SAVE_BASE` 6 · `slotKey` 7 · `SAVE_SLOT` 8 · `SAVE_KEY` 9 · `setSlot()` 10 · `slotInfo()` 12 · `DIRV` 27 · `S` 28 · `OPT_KEY` 30 · `DIFF` 33 · `GAME_VERSION` 35 · `OPT` 36 · `saveOpt()` 37 · `applyOpt()` 38 · `newState()` 46 · `eqv()` 47 · `UPG` 53 · `itemName` 54 · `BUFF` 56 · `buffOn` 57 · `stat()` 58 · `need()` 94 · `has` 95 · `addItem()` 96 · `hasSave()` 105 · `saveGame()` 106 · `readSaveRaw()` 117 · `loadSave()` 121
 
 ## src/data/items.js (274 baris)
 _Data item & resep tempa_
@@ -195,9 +195,9 @@ _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 _Tanah Verdant (Padang, Hutan, Desa) meniru assets/reference/target_padang.png._
 `VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `VT` 9 · `verdantTiles()` 10 · `vMod` 16 · `vDirtN` 18 · `vDirtT` 19 · `verdantPix()` 21 · `verdantDeco()` 33 · `VBASE` 54 · `verdantBase()` 55 · `VWC` 70 · `verdantWater()` 71 · `VSTONE` 83 · `vCobble()` 84 · `verdantBank()` 93
 
-## src/scene/world.js (397 baris)
+## src/scene/world.js (398 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
-`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 210 · `.update()` 211 · `.puff()` 313 · `.camStep()` 314 · `.pump()` 361 · `.front()` 370 · `.actionA()` 371 · `.sparkle()` 381 · `.checkZones()` 385
+`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 211 · `.update()` 212 · `.puff()` 314 · `.camStep()` 315 · `.pump()` 362 · `.front()` 371 · `.actionA()` 372 · `.sparkle()` 382 · `.checkZones()` 386
 
 ## src/systems/scene_nav.js (14 baris)
 _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._
@@ -399,9 +399,9 @@ _Gelombang A (performa): culling objek di luar layar, entitas jauh "tidur", peng
 _Gelombang B: tanah per chunk (streaming). Hanya potongan di sekitar layar yang dibuat, sisanya dibuat_
 `GT` 5 · `GTC` 6 · `GOV` 7 · `gtKey()` 8 · `groundOverview()` 9 · `gLayer()` 16 · `.initGround()` 18 · `.gFillView()` 28 · `.gNeed()` 30 · `.gEnsure()` 38 · `.updGround()` 51
 
-## src/systems/openworld.js (53 baris)
+## src/systems/openworld.js (55 baris)
 _Dunia terbuka Tahap 1: wilayah tetangga digambar menempel di tepi wilayah aktif (tanah + objek),_
-`OW_BAND` 5 · `.initOpen()` 7 · `.owSeamless()` 35 · `.updCross()` 36
+`OW_BAND` 5 · `.initOpen()` 7 · `.owSeamless()` 37 · `.updCross()` 38
 
 ## src/systems/regions.js (96 baris)
 _Dunia satu peta (langkah 1): wilayah di sekitar Arka berjalan BERSAMAAN sebagai scene World pasif_
@@ -479,7 +479,7 @@ _Layar judul_
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
 `exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 32 · `plEnemies()` 34 · `NEIGH` 88
 
-## src/world/organic.js (37 baris)
+## src/world/organic.js (51 baris)
 _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),_
 `ORG_SKIP` 5 · `ORG_FILL` 6 · `orgPlanned()` 7 · `orgCurve()` 9
 

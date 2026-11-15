@@ -20,7 +20,7 @@ Object.assign(World.prototype, {
       return;
     }
     if (e.leash) { e.leash = false; e.hp = e.max; popWorld(s.x, s.y - 14, 'pulih!', 'heal'); }
-    const aggro = !pl.dead && (d < (e.boss ? 420 : 120) || e.packAggro);
+    const aggro = !pl.dead && (d < (e.boss ? 420 : DIFF[OPT.diff].sight) || e.packAggro);
     if (aggro && !e.wasAggro && !e.boss) {
       e.wasAggro = true;
       for (const o of this.enemies) {
@@ -32,7 +32,7 @@ Object.assign(World.prototype, {
     e.t -= dt; e.cd -= dt;
     const rel = (typeof OPT !== 'undefined' && OPT.diff === 0), hard = (typeof OPT !== 'undefined' && OPT.diff === 2);
     const lowHp = !rel && typeof S !== 'undefined' && typeof stat === 'function' && S.hp < stat().maxhp * 0.3 && d < 120;
-    const wMul = rel ? 1.3 : 1, cdMul = (rel ? 1.2 : hard ? 0.85 : 1) * (lowHp ? 0.8 : 1);
+    const wMul = rel ? 1.3 : 1, cdMul = DIFF[OPT.diff].cd * (lowHp ? 0.8 : 1);
     if (this.atkTok && this.atkTok.has(e)) { e.tokT = (e.tokT || 0) + dt; if (e.tokT > 2.2) { this.atkTok.delete(e); e.tokT = 0; } }
     // Insting binatang kabur saat sekarat (#T279)
     if ((e.type === 'wolf' || e.type === 'boar') && !e.fleeChecked && e.hp < e.max * 0.2) {
@@ -83,7 +83,7 @@ Object.assign(World.prototype, {
       case 'hop':
         if (D.tex === 'slime_hd' && aggro && d < 65 && (e.cd || 0) <= 0 && e.st !== 'atk') {
           if (!this.atkTok) this.atkTok = new Set();
-          if (this.atkTok.size < 2) {
+          if (this.atkTok.size < DIFF[OPT.diff].tok) {
             this.atkTok.add(e); e.tokT = 0; e.st = 'atk'; e.t = 0.68 * wMul; e.cd = rnd(2.2, 3.8) * cdMul;
             const lx = dx / d, ly = dy / d; s.setVelocity(0); s.flipX = dx < 0;
             if (s.anims) { s.anims.stop(); s.setFrame(15); }
@@ -285,7 +285,7 @@ Object.assign(World.prototype, {
             if (!this.atkTok) this.atkTok = new Set();
             const hasTok = this.atkTok.has(e);
             if (d < (D.side ? 48 : 34) && e.t <= 0) {
-              if (hasTok || this.atkTok.size < 2) {
+              if (hasTok || this.atkTok.size < DIFF[OPT.diff].tok) {
                 this.atkTok.add(e); e.tokT = 0; e.st = 'wind';
                 e.t = e.elite ? (rel ? rnd(.35, .6) : rnd(.35, .75)) : ((D.side ? .36 : .42) * wMul);
                 s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
@@ -297,7 +297,7 @@ Object.assign(World.prototype, {
                 if (isHd && s.anims) s.play(D.tex + '_walk', true);
               }
             } else if (e.st === 'circle') {
-              if (this.atkTok.size < 2) e.st = 'chase';
+              if (this.atkTok.size < DIFF[OPT.diff].tok) e.st = 'chase';
               else {
                 const ang = Math.atan2(dy, dx) + (this.enemies.indexOf(e) % 2 ? 1.4 : -1.4);
                 s.setVelocity(Math.cos(ang) * D.spd * .7, Math.sin(ang) * D.spd * .7);
@@ -337,7 +337,7 @@ Object.assign(World.prototype, {
           if (!this.atkTok) this.atkTok = new Set();
           const hasTok = this.atkTok.has(e);
           if (aggro && d < 140 && e.cd <= 0) {
-            if (hasTok || this.atkTok.size < 2) {
+            if (hasTok || this.atkTok.size < DIFF[OPT.diff].tok) {
               this.atkTok.add(e); e.tokT = 0;
               e.st = 'wind'; e.t = .6 * wMul; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); s.flipX = dx > 0;
             } else {
@@ -346,7 +346,7 @@ Object.assign(World.prototype, {
               s.setVelocity(Math.cos(ang) * D.spd * .6, Math.sin(ang) * D.spd * .6);
             }
           } else if (e.st === 'circle') {
-            if (this.atkTok.size < 2) e.st = 'chase';
+            if (this.atkTok.size < DIFF[OPT.diff].tok) e.st = 'chase';
             else {
               const ang = Math.atan2(dy, dx) + (this.enemies.indexOf(e) % 2 ? 1.4 : -1.4);
               s.setVelocity(Math.cos(ang) * D.spd * .6, Math.sin(ang) * D.spd * .6);

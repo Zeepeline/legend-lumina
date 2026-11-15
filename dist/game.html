@@ -5643,7 +5643,7 @@ function scatter(M, spec) {
     for (const B of M.bosses || []) { const z = B.zone; if (x > z[0] - 20 && x < z[0] + z[2] + 20 && y > z[1] - 20 && y < z[1] + z[3] + 30) return false; }
     if (M.ring && Math.hypot(x - M.ring.cx, y - M.ring.cy) < M.ring.r + 22) return false;
     if (M.mochi && Math.hypot(x - M.mochi.x, y - M.mochi.y) < 30) return false;
-    for (const ex of M.exits || []) if (x > ex.x - 30 && x < ex.x + ex.w + 30 && y > ex.y - 30 && y < ex.y + ex.h + 50) return false;
+    for (const ex of mapDoors(M)) if (x > ex.x - 64 && x < ex.x + ex.w + 64 && y > ex.y - 64 && y < ex.y + ex.h + 72) return false; /* jalur pintu bebas */
     for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < (spec.sp || 24)) return false;
     return true;
   };
@@ -5658,7 +5658,7 @@ function scatter(M, spec) {
     for (const [t, p] of spec.types) { if (r < p) { type = t; break; } r -= p; }
     out.push([type, Math.round(x), Math.round(y)]);
   }
-  function ok2(x, y) { for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < 20) return false; for (const ex of M.exits || []) if (x > ex.x - 30 && x < ex.x + ex.w + 30 && y > ex.y - 30 && y < ex.y + ex.h + 50) return false; return true; }
+  function ok2(x, y) { for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < 20) return false; for (const ex of mapDoors(M)) if (x > ex.x - 64 && x < ex.x + ex.w + 64 && y > ex.y - 64 && y < ex.y + ex.h + 72) return false; return true; }
   return out;
 }
 function openSides(M) {
@@ -5695,7 +5695,9 @@ function borderTrees(M) {
     if (!open.W) for (let y = b.top + 20; y < M.h; y += 24) { if (inGap(b.gapL, y)) continue; for (let k = 1; k <= deep(y + 1999); k++) add(36 + k * 24, y, 46); }
     if (!open.E) for (let y = b.top + 20; y < M.h; y += 24) { if (inGap(b.gapR, y)) continue; for (let k = 1; k <= deep(y + 2999); k++) add(M.w - 36 - k * 24, y, 47); }
   }
-  return out;
+  /* jalur pintu perbatasan selalu bebas pohon tepi (termasuk baris tambahan tahap D) */
+  const exs = mapDoors(M);
+  return out.filter(o => !exs.some(ex => o[1] > ex.x - 56 && o[1] < ex.x + ex.w + 56 && o[2] > ex.y - 56 && o[2] < ex.y + ex.h + 64));
 }
 function ringObjects(M) {
   const R = M.ring; if (!R) return []; const out = [];
@@ -5786,19 +5788,22 @@ function waterE(L, x, y, GX = 0, GY = 0) {
   return s + (n - .5) * 2 * A / r;
 }
 // posisi global peta (untuk noise yang menyambung antarwilayah)
+// semua pintu peta: pintu biasa (M.exits) + sambungan perbatasan antarwilayah (NEIGH[...].ex)
+function mapDoors(M) { return [...(M.exits || []), ...((typeof NEIGH !== 'undefined' && NEIGH[M.id]) || []).map(n => n.ex).filter(Boolean)]; }
 function waterGXY(M) { return (typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id]) || [0, 0]; }
 
 // hiasan & musuh yang tercebur karena sungai dilebarkan digeser ke darat terdekat (kuil, prasasti, pintu, peti TIDAK digeser)
 const WATER_MOVABLE = /bush|mush|apple|orange|pear|flower|bloom|bones|stump|log|tree|pine|rock|herb|grass|fern/i;
 function waterRelocate() {
   for (const id in MAPS) {
-    const M = MAPS[id]; if (M.indoor || !(M.ponds || M.river)) continue;
+    const M = MAPS[id]; if (M.indoor) continue;
     const L = pondsBase(M), [GX, GY] = waterGXY(M), R = M.river;
     const wet = (x, y, m) => (L.length && waterE(L, x, y, GX, GY) < 1 + m / Math.max(waterE.r || 30, 1)) || (R && Math.abs(y - riverY(R, x)) < R.w / 2 + m);
-    const fix = o => { if (!wet(o[1], o[2], 6)) return;
+    const door = (x, y) => mapDoors(M).some(ex => x > ex.x - 56 && x < ex.x + ex.w + 56 && y > ex.y - 56 && y < ex.y + ex.h + 64);
+    const fix = o => { if (!wet(o[1], o[2], 6) && !door(o[1], o[2])) return;
       for (let r = 10; r <= 160; r += 10) for (let a = 0; a < 12; a++) {
         const x = o[1] + Math.cos(a * .5236) * r, y = o[2] + Math.sin(a * .5236) * r;
-        if (x > 20 && y > 20 && x < M.w - 20 && y < M.h - 20 && !wet(x, y, 14)) { o[1] = Math.round(x); o[2] = Math.round(y); return; }
+        if (x > 20 && y > 20 && x < M.w - 20 && y < M.h - 20 && !wet(x, y, 14) && !door(x, y)) { o[1] = Math.round(x); o[2] = Math.round(y); return; }
       } };
     for (const o of M.objs || []) if (Array.isArray(o) && WATER_MOVABLE.test(o[0])) fix(o);
     for (const e of M.enemies || []) if (Array.isArray(e)) fix(e);
@@ -6980,8 +6985,10 @@ let S = null;
 // Pengaturan perangkat (bukan bagian save game): musik/efek 0-4, getar, goyang layar
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
-const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.39.0';
+// sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
+const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
+  { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
+const GAME_VERSION = '1.40.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() {
@@ -8336,6 +8343,7 @@ class World extends Phaser.Scene {
     let D = ENEMY[type]; const K = (this.M.scale || 1) * DIFF[OPT.diff].hp;
     if (K !== 1 && BOSS_AI.includes(D.ai)) D = Object.assign({}, D, { hp: Math.round(D.hp * DIFF[OPT.diff].hp) });
     else if (K !== 1) D = Object.assign({}, D, { hp: Math.round(D.hp * K), atk: Math.round(D.atk * (1 + (K - 1) * .55)), def: Math.round((D.def || 0) * (1 + (K - 1) * .5)), exp: Math.round(D.exp * K * .9), gold: D.gold && D.gold.map(g => Math.round(g * (1 + (K - 1) * .5))) });
+    if (!BOSS_AI.includes(D.ai) && D.spd && DIFF[OPT.diff].spd !== 1) D = Object.assign({}, D, { spd: Math.round(D.spd * DIFF[OPT.diff].spd) });
     const s = this.physics.add.sprite(x, y, D.tex, D.ch ? 'down0' : 0).setOrigin(.5, 1).setDepth(y);
     if (D.scale) s.setScale(D.scale);
     if (D.ch) s.body.setSize(10, 7).setOffset(5, CH_FH - 8);
@@ -10176,7 +10184,7 @@ Object.assign(World.prototype, {
       return;
     }
     if (e.leash) { e.leash = false; e.hp = e.max; popWorld(s.x, s.y - 14, 'pulih!', 'heal'); }
-    const aggro = !pl.dead && (d < (e.boss ? 420 : 120) || e.packAggro);
+    const aggro = !pl.dead && (d < (e.boss ? 420 : DIFF[OPT.diff].sight) || e.packAggro);
     if (aggro && !e.wasAggro && !e.boss) {
       e.wasAggro = true;
       for (const o of this.enemies) {
@@ -10188,7 +10196,7 @@ Object.assign(World.prototype, {
     e.t -= dt; e.cd -= dt;
     const rel = (typeof OPT !== 'undefined' && OPT.diff === 0), hard = (typeof OPT !== 'undefined' && OPT.diff === 2);
     const lowHp = !rel && typeof S !== 'undefined' && typeof stat === 'function' && S.hp < stat().maxhp * 0.3 && d < 120;
-    const wMul = rel ? 1.3 : 1, cdMul = (rel ? 1.2 : hard ? 0.85 : 1) * (lowHp ? 0.8 : 1);
+    const wMul = rel ? 1.3 : 1, cdMul = DIFF[OPT.diff].cd * (lowHp ? 0.8 : 1);
     if (this.atkTok && this.atkTok.has(e)) { e.tokT = (e.tokT || 0) + dt; if (e.tokT > 2.2) { this.atkTok.delete(e); e.tokT = 0; } }
     // Insting binatang kabur saat sekarat (#T279)
     if ((e.type === 'wolf' || e.type === 'boar') && !e.fleeChecked && e.hp < e.max * 0.2) {
@@ -10239,7 +10247,7 @@ Object.assign(World.prototype, {
       case 'hop':
         if (D.tex === 'slime_hd' && aggro && d < 65 && (e.cd || 0) <= 0 && e.st !== 'atk') {
           if (!this.atkTok) this.atkTok = new Set();
-          if (this.atkTok.size < 2) {
+          if (this.atkTok.size < DIFF[OPT.diff].tok) {
             this.atkTok.add(e); e.tokT = 0; e.st = 'atk'; e.t = 0.68 * wMul; e.cd = rnd(2.2, 3.8) * cdMul;
             const lx = dx / d, ly = dy / d; s.setVelocity(0); s.flipX = dx < 0;
             if (s.anims) { s.anims.stop(); s.setFrame(15); }
@@ -10441,7 +10449,7 @@ Object.assign(World.prototype, {
             if (!this.atkTok) this.atkTok = new Set();
             const hasTok = this.atkTok.has(e);
             if (d < (D.side ? 48 : 34) && e.t <= 0) {
-              if (hasTok || this.atkTok.size < 2) {
+              if (hasTok || this.atkTok.size < DIFF[OPT.diff].tok) {
                 this.atkTok.add(e); e.tokT = 0; e.st = 'wind';
                 e.t = e.elite ? (rel ? rnd(.35, .6) : rnd(.35, .75)) : ((D.side ? .36 : .42) * wMul);
                 s.setVelocity(0); e.lx = dx / d; e.ly = dy / d;
@@ -10453,7 +10461,7 @@ Object.assign(World.prototype, {
                 if (isHd && s.anims) s.play(D.tex + '_walk', true);
               }
             } else if (e.st === 'circle') {
-              if (this.atkTok.size < 2) e.st = 'chase';
+              if (this.atkTok.size < DIFF[OPT.diff].tok) e.st = 'chase';
               else {
                 const ang = Math.atan2(dy, dx) + (this.enemies.indexOf(e) % 2 ? 1.4 : -1.4);
                 s.setVelocity(Math.cos(ang) * D.spd * .7, Math.sin(ang) * D.spd * .7);
@@ -10493,7 +10501,7 @@ Object.assign(World.prototype, {
           if (!this.atkTok) this.atkTok = new Set();
           const hasTok = this.atkTok.has(e);
           if (aggro && d < 140 && e.cd <= 0) {
-            if (hasTok || this.atkTok.size < 2) {
+            if (hasTok || this.atkTok.size < DIFF[OPT.diff].tok) {
               this.atkTok.add(e); e.tokT = 0;
               e.st = 'wind'; e.t = .6 * wMul; s.setVelocity(0); e.lx = dx / d; e.ly = dy / d; s.setTint(0xffa07a); s.flipX = dx > 0;
             } else {
@@ -10502,7 +10510,7 @@ Object.assign(World.prototype, {
               s.setVelocity(Math.cos(ang) * D.spd * .6, Math.sin(ang) * D.spd * .6);
             }
           } else if (e.st === 'circle') {
-            if (this.atkTok.size < 2) e.st = 'chase';
+            if (this.atkTok.size < DIFF[OPT.diff].tok) e.st = 'chase';
             else {
               const ang = Math.atan2(dy, dx) + (this.enemies.indexOf(e) % 2 ? 1.4 : -1.4);
               s.setVelocity(Math.cos(ang) * D.spd * .6, Math.sin(ang) * D.spd * .6);
@@ -19630,8 +19638,10 @@ Object.assign(World.prototype, {
   initOpen(data) {
     const M = this.M; this.owN = []; this.owObjs = [];
     this.camB = { x0: 0, y0: 0, x1: M.w, y1: M.h };
-    if (G.title || M.indoor || !NEIGH[M.id] || !this.gStream || this.passive) return;
+    if (G.title || M.indoor || !NEIGH[M.id] || this.passive) return;
+    /* mode wilayah ganda: sambungan TIDAK bergantung pada gStream (gStream sengaja mati saat lapisan tanah bersama GL aktif) */
     if (regionsOn()) { this.owN = NEIGH[M.id].slice(); this.cameras.main.setBackgroundColor('rgba(0,0,0,0)'); this.regT = 0; return; } // wilayah tetangga dijalankan systems/regions.js
+    if (!this.gStream) return;
     for (const n of NEIGH[M.id]) {
       const B = MAPS[n.to]; this.owN.push(n);
       this.gL.push(gLayer(B, n.ox, n.oy));
@@ -23069,6 +23079,20 @@ function orgCurve(a, b, c, d, r, seed) {
   }
 })();
 waterRelocate();
+// pintu perbatasan yang dilintasi air: jalan pendek dari pintu ke dalam → jembatan otomatis & bisa dilewati
+(function exitBridges() {
+  for (const id in MAPS) {
+    const M = MAPS[id]; if (M.indoor || !(M.ponds || M.river)) continue;
+    const L = pondsBase(M), [GX, GY] = waterGXY(M), R = M.river;
+    const wet = (x, y) => (L.length && waterE(L, x, y, GX, GY) < 1.25) || (R && Math.abs(y - riverY(R, x)) < R.w / 2 + 8);
+    for (const ex of mapDoors(M)) {
+      const cx = ex.x + ex.w / 2, cy = ex.y + ex.h / 2, dx = cx < 24 ? 1 : cx > M.w - 24 ? -1 : 0, dy = cy < 24 ? 1 : cy > M.h - 24 ? -1 : 0;
+      if (!dx && !dy) continue;
+      let hit = false; for (let t = 0; t <= 110; t += 10) if (wet(cx + dx * t, cy + dy * t)) { hit = true; break; }
+      if (hit) (M.paths = M.paths || []).push([Math.round(cx), Math.round(cy), Math.round(cx + dx * 120), Math.round(cy + dy * 120), 13]);
+    }
+  }
+})();
 
 'use strict';
 // Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,

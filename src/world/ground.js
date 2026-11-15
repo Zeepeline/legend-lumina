@@ -247,7 +247,7 @@ function scatter(M, spec) {
     for (const B of M.bosses || []) { const z = B.zone; if (x > z[0] - 20 && x < z[0] + z[2] + 20 && y > z[1] - 20 && y < z[1] + z[3] + 30) return false; }
     if (M.ring && Math.hypot(x - M.ring.cx, y - M.ring.cy) < M.ring.r + 22) return false;
     if (M.mochi && Math.hypot(x - M.mochi.x, y - M.mochi.y) < 30) return false;
-    for (const ex of M.exits || []) if (x > ex.x - 30 && x < ex.x + ex.w + 30 && y > ex.y - 30 && y < ex.y + ex.h + 50) return false;
+    for (const ex of mapDoors(M)) if (x > ex.x - 64 && x < ex.x + ex.w + 64 && y > ex.y - 64 && y < ex.y + ex.h + 72) return false; /* jalur pintu bebas */
     for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < (spec.sp || 24)) return false;
     return true;
   };
@@ -262,7 +262,7 @@ function scatter(M, spec) {
     for (const [t, p] of spec.types) { if (r < p) { type = t; break; } r -= p; }
     out.push([type, Math.round(x), Math.round(y)]);
   }
-  function ok2(x, y) { for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < 20) return false; for (const ex of M.exits || []) if (x > ex.x - 30 && x < ex.x + ex.w + 30 && y > ex.y - 30 && y < ex.y + ex.h + 50) return false; return true; }
+  function ok2(x, y) { for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < 20) return false; for (const ex of mapDoors(M)) if (x > ex.x - 64 && x < ex.x + ex.w + 64 && y > ex.y - 64 && y < ex.y + ex.h + 72) return false; return true; }
   return out;
 }
 function openSides(M) {
@@ -299,7 +299,9 @@ function borderTrees(M) {
     if (!open.W) for (let y = b.top + 20; y < M.h; y += 24) { if (inGap(b.gapL, y)) continue; for (let k = 1; k <= deep(y + 1999); k++) add(36 + k * 24, y, 46); }
     if (!open.E) for (let y = b.top + 20; y < M.h; y += 24) { if (inGap(b.gapR, y)) continue; for (let k = 1; k <= deep(y + 2999); k++) add(M.w - 36 - k * 24, y, 47); }
   }
-  return out;
+  /* jalur pintu perbatasan selalu bebas pohon tepi (termasuk baris tambahan tahap D) */
+  const exs = mapDoors(M);
+  return out.filter(o => !exs.some(ex => o[1] > ex.x - 56 && o[1] < ex.x + ex.w + 56 && o[2] > ex.y - 56 && o[2] < ex.y + ex.h + 64));
 }
 function ringObjects(M) {
   const R = M.ring; if (!R) return []; const out = [];

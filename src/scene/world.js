@@ -186,6 +186,7 @@ class World extends Phaser.Scene {
     let D = ENEMY[type]; const K = (this.M.scale || 1) * DIFF[OPT.diff].hp;
     if (K !== 1 && BOSS_AI.includes(D.ai)) D = Object.assign({}, D, { hp: Math.round(D.hp * DIFF[OPT.diff].hp) });
     else if (K !== 1) D = Object.assign({}, D, { hp: Math.round(D.hp * K), atk: Math.round(D.atk * (1 + (K - 1) * .55)), def: Math.round((D.def || 0) * (1 + (K - 1) * .5)), exp: Math.round(D.exp * K * .9), gold: D.gold && D.gold.map(g => Math.round(g * (1 + (K - 1) * .5))) });
+    if (!BOSS_AI.includes(D.ai) && D.spd && DIFF[OPT.diff].spd !== 1) D = Object.assign({}, D, { spd: Math.round(D.spd * DIFF[OPT.diff].spd) });
     const s = this.physics.add.sprite(x, y, D.tex, D.ch ? 'down0' : 0).setOrigin(.5, 1).setDepth(y);
     if (D.scale) s.setScale(D.scale);
     if (D.ch) s.body.setSize(10, 7).setOffset(5, CH_FH - 8);

@@ -57,4 +57,5 @@ Proyek: action RPG top-down untuk browser/HP, **Phaser 3.80.1**, skrip klasik gl
 - **Sprite monster GPT:** 30 monster dari lembar pemilik dibersihkan (`tools/gpt_monsters.py` → `assets/img/mon_*.png`, dipasang `gfx/gptmonsters.js`); 8 musuh khusus/boss kini punya sprite sendiri (`g_<id>`). Humanoid (goblin, tengkorak, Morgath, mimic) belum.
 - **Desain dunia organik (v1.35.0):** jalan tanah berliku otomatis, lapangan/tepi hutan/pohon alami, sungai menyambung (`world/organic.js`, `world/water.js`). Aturan: `docs/WORLD_REFACTOR.md` §7.
 - **Patokan gaya aset (v1.38.0):** pohon `treeA`/`treeAd`/`treeSn` + set Verdant. `round`, semak neon (`bushG1/G2`, `bushy`), `stump` dialihkan, pinus diwarnai ulang (`gfx/style_unify.js`). Aset baru WAJIB senada treeA.
+- **Layar & suasana (v1.39.0):** bawaan layar penuh mendatar + kontrol transparan (`body.full`, `LAYOUT_FULL`/`VW` dinamis di `core/util.js`); cuaca kabut & cahaya malam (`systems/atmos.js`); musik lewat WebAudio + suara hujan (`core/audio.js`); kesulitan di `DIFF` (`core/state.js`).
 - **Berikutnya:** konten ekspansi Bab 6 (`BENUA_LUMINA.md` bag. 7) & eksplorasi teka-teki kuil kuno.

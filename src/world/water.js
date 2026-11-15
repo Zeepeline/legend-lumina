@@ -65,19 +65,22 @@ function waterE(L, x, y, GX = 0, GY = 0) {
   return s + (n - .5) * 2 * A / r;
 }
 // posisi global peta (untuk noise yang menyambung antarwilayah)
+// semua pintu peta: pintu biasa (M.exits) + sambungan perbatasan antarwilayah (NEIGH[...].ex)
+function mapDoors(M) { return [...(M.exits || []), ...((typeof NEIGH !== 'undefined' && NEIGH[M.id]) || []).map(n => n.ex).filter(Boolean)]; }
 function waterGXY(M) { return (typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id]) || [0, 0]; }
 
 // hiasan & musuh yang tercebur karena sungai dilebarkan digeser ke darat terdekat (kuil, prasasti, pintu, peti TIDAK digeser)
 const WATER_MOVABLE = /bush|mush|apple|orange|pear|flower|bloom|bones|stump|log|tree|pine|rock|herb|grass|fern/i;
 function waterRelocate() {
   for (const id in MAPS) {
-    const M = MAPS[id]; if (M.indoor || !(M.ponds || M.river)) continue;
+    const M = MAPS[id]; if (M.indoor) continue;
     const L = pondsBase(M), [GX, GY] = waterGXY(M), R = M.river;
     const wet = (x, y, m) => (L.length && waterE(L, x, y, GX, GY) < 1 + m / Math.max(waterE.r || 30, 1)) || (R && Math.abs(y - riverY(R, x)) < R.w / 2 + m);
-    const fix = o => { if (!wet(o[1], o[2], 6)) return;
+    const door = (x, y) => mapDoors(M).some(ex => x > ex.x - 56 && x < ex.x + ex.w + 56 && y > ex.y - 56 && y < ex.y + ex.h + 64);
+    const fix = o => { if (!wet(o[1], o[2], 6) && !door(o[1], o[2])) return;
       for (let r = 10; r <= 160; r += 10) for (let a = 0; a < 12; a++) {
         const x = o[1] + Math.cos(a * .5236) * r, y = o[2] + Math.sin(a * .5236) * r;
-        if (x > 20 && y > 20 && x < M.w - 20 && y < M.h - 20 && !wet(x, y, 14)) { o[1] = Math.round(x); o[2] = Math.round(y); return; }
+        if (x > 20 && y > 20 && x < M.w - 20 && y < M.h - 20 && !wet(x, y, 14) && !door(x, y)) { o[1] = Math.round(x); o[2] = Math.round(y); return; }
       } };
     for (const o of M.objs || []) if (Array.isArray(o) && WATER_MOVABLE.test(o[0])) fix(o);
     for (const e of M.enemies || []) if (Array.isArray(e)) fix(e);
