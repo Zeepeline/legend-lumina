@@ -9,10 +9,23 @@ Object.assign(OBJ_SPAWN, {
     { s.setDepth(y - 30); this.wall(x - 46, y - 40, 22, 40); this.wall(x + 24, y - 40, 22, 40); }
   },
   sign(s, x, y, opt, d, type) {
-    this.inter.push({ x, y: y + 2, r: 14, fn: async () => { if (opt.lore && !opt.text) return this.readLore(opt.lore); await talk(null, [opt.text]); if (opt.lore) learn(opt.lore); } });
+    this.inter.push({
+      x, y: y + 2, r: 14,
+      fn: async () => {
+        if (opt.lore && !opt.text) return this.readLore(opt.lore);
+        await talk(null, [opt.text]);
+        if (opt.lore) learn(opt.lore);
+      }
+    });
   },
   forge(s, x, y, opt, d, type) {
-    this.add.particles(x, y - 22, 'doto', { lifespan: 700, speedY: { min: -30, max: -12 }, speedX: { min: -8, max: 8 }, alpha: { start: 1, end: 0 }, frequency: 160 }).setDepth(y + 1);
+    this.add.particles(x, y - 22, 'doto', {
+      lifespan: 700,
+      speedY: { min: -30, max: -12 },
+      speedX: { min: -8, max: 8 },
+      alpha: { start: 1, end: 0 },
+      frequency: 160
+    }).setDepth(y + 1);
     this.lights.push({ x, y: y - 14, big: 1 });
   },
   pebbles(s, x, y, opt, d, type) {
@@ -316,7 +329,10 @@ Object.assign(OBJ_SPAWN, {
           updHud();
           addItem('honey', 1);
           popWorld(this.pl.x, this.pl.y - 18, `-${dmg} HP (Sengatan Lebah!)`, 'crit');
-          await say(`DENGG!! Kawanan lebah liar terusik dari sarangnya dan menyengatmu (-${dmg} HP), namun kamu berhasil mengamankan Sarang Madu Liar! (+1 Madu Liar)`);
+          await say(
+            `DENGG!! Kawanan lebah liar terusik dari sarangnya dan menyengatmu (-${dmg} HP), ` +
+            `namun kamu berhasil mengamankan Sarang Madu Liar! (+1 Madu Liar)`
+          );
         } else {
           await say('Kamu menggoyang pohon. Dedaunan berguguran tertiup angin sepoi-sepoi, namun belum ada buah yang jatuh.');
         }
@@ -350,7 +366,14 @@ Object.assign(OBJ_SPAWN, {
   },
   campfire(s, x, y, opt, d, type) {
     this.lights.push({ x, y: y - 12, big: 1 });
-    this.add.particles(x, y - 14, 'doto', { lifespan: 600, speedY: { min: -24, max: -8 }, speedX: { min: -6, max: 6 }, scale: { start: .9, end: 0 }, alpha: { start: 1, end: 0 }, frequency: 120 }).setDepth(y + 1);
+    this.add.particles(x, y - 14, 'doto', {
+      lifespan: 600,
+      speedY: { min: -24, max: -8 },
+      speedX: { min: -6, max: 6 },
+      scale: { start: .9, end: 0 },
+      alpha: { start: 1, end: 0 },
+      frequency: 120
+    }).setDepth(y + 1);
     this.inter.push({
       x, y: y + 4, r: 24,
       fn: async () => {

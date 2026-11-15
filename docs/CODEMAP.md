@@ -87,9 +87,9 @@ _Lantai & perabot interior_
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
 `OBJ` 7 · `MAPS` 179
 
-## src/world/spawn/spawn_1.js (398 baris)
+## src/world/spawn/spawn_1.js (421 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-`OBJ_SPAWN` 3 · obj `shrine` 5 · obj `cavemouth` 8 · obj `sign` 11 · obj `forge` 14 · obj `pebbles` 18 · obj `telescope` 26 · obj `altar` 34 · obj `fieldoven` 42 · obj `dripstone` 50 · obj `frostflower` 58 · obj `totem` 66 · obj `pigeons` 74 · obj `teatable` 82 · obj `lotuspad` 90 · obj `dockboat` 98 · obj `coffeeshrub` 153 · obj `coffeekettle` 161 · obj `orchidrock` 169 · obj `canaryperch` 177 · obj `woodlandshrine` 185 · obj `bellows` 193 · obj `ringbooth` 201 · obj `archerytarget` 209 · obj `lakelighthouse` 217 · obj `streetdrum` 225 · obj `dummy` 233 · obj `pot` 241 · obj `well` 251 · obj `apple1` 266 · obj `bench` 327 · obj `bell` 343 · obj `campfire` 351 · obj `alchemytable` 361 · obj `scenicbench` 370 · obj `mailbox` 388
+`OBJ_SPAWN` 3 · obj `shrine` 5 · obj `cavemouth` 8 · obj `sign` 11 · obj `forge` 21 · obj `pebbles` 31 · obj `telescope` 39 · obj `altar` 47 · obj `fieldoven` 55 · obj `dripstone` 63 · obj `frostflower` 71 · obj `totem` 79 · obj `pigeons` 87 · obj `teatable` 95 · obj `lotuspad` 103 · obj `dockboat` 111 · obj `coffeeshrub` 166 · obj `coffeekettle` 174 · obj `orchidrock` 182 · obj `canaryperch` 190 · obj `woodlandshrine` 198 · obj `bellows` 206 · obj `ringbooth` 214 · obj `archerytarget` 222 · obj `lakelighthouse` 230 · obj `streetdrum` 238 · obj `dummy` 246 · obj `pot` 254 · obj `well` 264 · obj `apple1` 279 · obj `bench` 343 · obj `bell` 359 · obj `campfire` 367 · obj `alchemytable` 384 · obj `scenicbench` 393 · obj `mailbox` 411
 
 ## src/world/spawn/spawn_2.js (304 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_

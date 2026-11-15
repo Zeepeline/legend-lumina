@@ -896,7 +896,7 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.
 
-### [ ] T138. **Pecah baris > 160 karakter di `src/world/spawn/spawn_1.js`**
+### [x] T138. **Pecah baris > 160 karakter di `src/world/spawn/spawn_1.js`**
 
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/world/spawn/spawn_1.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
@@ -3281,7 +3281,7 @@ rumah pohon Tetua Bram 513,66), sumur (512, 345), NPC cerita (`elder`, `guard`, 
   Tambah `root`/`deadtree`/`bones` di sekeliling sebagai pagar alami.
 - Cek: `check-camps` skor simetri < 25%; tangkapan layar terlihat berbeda total dari markas Hutan Lumina.
 
-### [ ] T430. **Markas Jalan Raya Lama: pos rampok di tebing jalan** — referensi: Mount & Blade (sarang bandit), Red Dead (kemah pencuri)
+### [x] T430. **Markas Jalan Raya Lama: pos rampok di tebing jalan** — referensi: Mount & Blade (sarang bandit), Red Dead (kemah pencuri)
 - File: `src/world/maps/city.js` peta `road` (±baris 30–52). Baca dulu: `paths` jalan raya & NPC `kafilah` (410, 1250).
 - Lakukan: identitas = pos penghadang di tebing timur jalan. Gerbang/palang (`goblin_gate`) berdiri DI SAMPING jalan sebagai pos tol; gerobak
   rampasan (`goblin_wagon`) + tumpukan peti & tong curian berderet tak rapi di bahu jalan; kurungan dekat gerobak (tawanan kafilah). Benteng di
