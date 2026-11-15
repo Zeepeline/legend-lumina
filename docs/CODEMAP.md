@@ -167,9 +167,9 @@ _Data musuh & proyektil_
 _Teks bestiari per musuh (id = kunci ENEMY): habitat & tips melawan. Dipasang ke layar Bestiari oleh sesi besar._
 `BESTIARY_TEXT` 3
 
-## src/data/quests.js (43 baris)
+## src/data/quests.js (89 baris)
 _Teks misi, tujuan misi, jurus, pencapaian_
-`STAGE_TXT` 3 · `STAGE_GOAL` 4 · `SKILLS` 5 · `ACH` 6
+`STAGE_TXT` 3 · `STAGE_GOAL` 33 · `SKILLS` 41 · `ACH` 46
 
 ## src/data/lore.js (65 baris)
 _Jurnal: catatan lore (LORE), misteri jangka panjang (MYSTERY), penyelidikan jangka menengah (midGoal). Lihat docs/GAME_DESIGN.md_
