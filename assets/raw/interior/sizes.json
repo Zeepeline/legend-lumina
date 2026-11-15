@@ -1,0 +1,234 @@
+{
+"room1": [
+127,
+111
+],
+"room2": [
+136,
+112
+],
+"room3": [
+127,
+109
+],
+"fireplace": [
+28,
+44
+],
+"bed_red": [
+28,
+39
+],
+"bed_blue": [
+28,
+39
+],
+"wardrobe": [
+26,
+37
+],
+"bookshelf": [
+31,
+38
+],
+"hutch": [
+24,
+32
+],
+"chest": [
+20,
+27
+],
+"chest_iron": [
+21,
+28
+],
+"cupboard": [
+23,
+26
+],
+"barrel": [
+18,
+27
+],
+"stove": [
+23,
+35
+],
+"jarshelf": [
+37,
+29
+],
+"workbench": [
+40,
+27
+],
+"bench": [
+47,
+26
+],
+"table_flower": [
+55,
+31
+],
+"table_tea": [
+38,
+33
+],
+"flowerstand": [
+10,
+30
+],
+"drawer": [
+28,
+33
+],
+"table_cloth": [
+40,
+26
+],
+"chair": [
+16,
+25
+],
+"table_round": [
+22,
+24
+],
+"stool_sq": [
+18,
+23
+],
+"stool": [
+15,
+23
+],
+"crate": [
+22,
+24
+],
+"stool_low": [
+19,
+21
+],
+"rug_red": [
+34,
+36
+],
+"rug_green": [
+44,
+36
+],
+"rug_blue": [
+41,
+33
+],
+"planter_flowers": [
+23,
+33
+],
+"candlestand": [
+14,
+35
+],
+"bookcase_low": [
+33,
+34
+],
+"cupboard_fruit": [
+22,
+35
+],
+"pots": [
+24,
+19
+],
+"bucket": [
+14,
+16
+],
+"tub": [
+15,
+17
+],
+"utensil_rack": [
+32,
+23
+],
+"sofa": [
+36,
+29
+],
+"bucket2": [
+18,
+20
+],
+"sack": [
+19,
+20
+],
+"box_small": [
+19,
+16
+],
+"washtub": [
+21,
+18
+],
+"plant_palm": [
+21,
+32
+],
+"pot_flower_w": [
+18,
+29
+],
+"pot_flower_r": [
+19,
+27
+],
+"planter_box": [
+25,
+26
+],
+"plant_tall": [
+21,
+34
+],
+"painting": [
+33,
+23
+],
+"clock": [
+18,
+38
+],
+"banner_red": [
+19,
+36
+],
+"banner_blue": [
+19,
+35
+],
+"plant_table": [
+27,
+24
+],
+"lantern": [
+13,
+22
+],
+"plant_small": [
+16,
+24
+],
+"stairs": [
+37,
+39
+],
+"door": [
+34,
+41
+]
+}

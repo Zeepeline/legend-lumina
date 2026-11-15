@@ -17,6 +17,7 @@ function fogSheetTex(sc) {
 Object.assign(World.prototype, {
   updAtmos(dt) {
     if (G.title || !this.M) return;
+    if (this.M.indoor && this._bgM !== this.M) { this._bgM = this.M; this.cameras.main.setBackgroundColor('#0e0907'); } /* luar ruangan sempit: gelap, bukan hijau */
     const outdoor = !this.M.indoor && !this.M.dark, n = typeof nightAmt === 'function' ? nightAmt() : 0;
     if (this._atmosM !== this.M || !this._fogL || !this._fogL[0].active) {
       (this._fogL || []).forEach(o => o.destroy()); (this._glP || []).forEach(o => o.destroy()); fogSheetTex(this);

@@ -187,7 +187,7 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 23 · `shadowIndex()` 24
 
-## src/gfx/textures.js (150 baris)
+## src/gfx/textures.js (151 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 16 · `addStrip()` 17 · `darkTree()` 22 · `NPC_W` 24 · `regPortrait()` 25 · `regChar()` 30 · `buildTextures()` 46
 
@@ -195,9 +195,13 @@ _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 _Tanah Verdant (Padang, Hutan, Desa) meniru assets/reference/target_padang.png._
 `VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `VT` 9 · `verdantTiles()` 10 · `vMod` 16 · `vDirtN` 18 · `vDirtT` 19 · `verdantPix()` 21 · `verdantDeco()` 33 · `VBASE` 54 · `verdantBase()` 55 · `VWC` 70 · `verdantWater()` 71 · `VSTONE` 83 · `vCobble()` 84 · `verdantBank()` 93
 
-## src/scene/world.js (398 baris)
+## src/world/interior_sheet.js (81 baris)
+_Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._
+`INT_SIZE` 5 · `INT_FLAT` 14 · `INT_RUG` 16 · `intDims()` 17 · `rug9()` 18 · `genRoomSheet()` 29 · `_genRoom0` 70 · `sheetWalls()` 73 · `regIntTex()` 80
+
+## src/scene/world.js (399 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
-`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 211 · `.update()` 212 · `.puff()` 314 · `.camStep()` 315 · `.pump()` 362 · `.front()` 371 · `.actionA()` 372 · `.sparkle()` 382 · `.checkZones()` 386
+`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 211 · `.update()` 212 · `.puff()` 314 · `.camStep()` 315 · `.pump()` 363 · `.front()` 372 · `.actionA()` 373 · `.sparkle()` 383 · `.checkZones()` 387
 
 ## src/systems/scene_nav.js (14 baris)
 _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._
@@ -363,6 +367,10 @@ _Gelombang 6: kabut peta (#61), rahasia (#63), peta harta (#66), lubang galian (
 _Gelombang 7: Rumah Arka (#46), peti penyimpanan (#32), perluasan (#492), tata perabot bebas (#493),_
 `HOME_PRICE` 4 · `FCAT` 5 · `ROOM_IN` 19 · `homeInit()` 21 · `furnTex()` 31 · `.spawnHome()` 37 · `.placeFurnSprite()` 75 · `.removeFurnSprite()` 82 · `.useFurn()` 83 · `.useTrophyShelf()` 111 · `.homeMenu()` 147 · `.chooseHomeStyle()` 171 · `.pickCatalog()` 196 · `.pickPlaced()` 205 · `.startCarry()` 209 · `.furnOk()` 213 · `.updCarry()` 223 · `.carryKey()` 229 · `openBox()` 300
 
+## src/world/interior_layouts.js (48 baris)
+_Tata letak interior gaya lembar pemilik (lihat src/world/interior_sheet.js). Koordinat perabot = [nama, x tengah, y dasar, balik?]._
+`INT_LAYOUT` 4 · `HOME_DEF2` 38 · `_homeInit0` 39
+
 ## src/systems/ranch.js (119 baris)
 _Gelombang 8: peternakan (#47), kandang ayam (#514), kandang sapi (#515), kasih sayang hewan (#519),_
 `SEEDS` 16 · `STOCK` 22 · `RANCH_MAX` 27 · `farmInit()` 28 · `today` 29 · `rnTextures()` 31 · `.spawnRanch()` 41 · `.spawnStock()` 56 · `.updRanch()` 62 · `.tendStock()` 75 · `.ranchMenu()` 90 · `plotHours()` 109
@@ -487,7 +495,7 @@ _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TA
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
 `FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `.updFlow()` 33 · `_updFlow0` 54
 
-## src/systems/atmos.js (56 baris)
+## src/systems/atmos.js (57 baris)
 _Suasana cahaya & kabut (wilayah aktif saja):_
 `ATMOS_POOL` 5 · `fogSheetTex()` 6 · `.updAtmos()` 18
 

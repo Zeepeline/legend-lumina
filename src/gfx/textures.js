@@ -107,6 +107,7 @@ function buildTextures(sc) {
   for (const k of ['fly', 'fly2']) A.create({ key: k, frames: fr2(k, 2), frameRate: 8, repeat: -1 });
   for (const k in CHARS) for (const d of ['down', 'up', 'side']) A.create({ key: k + '_' + d, frames: [1, 0, 2, 0].map(f => ({ key: 'ch_' + k, frame: d + f })), frameRate: 8, repeat: -1 });
   if (typeof applyGptSwap === 'function') applyGptSwap(T, A);
+  if (typeof regIntTex === 'function') regIntTex(T);
   // Daftarkan otomatis objek yang teksturnya belum ada: cari fungsi global art<Nama> yang cocok (tanpa peduli huruf besar), atau alias gambar
   const ALIAS = { i_cart: 'i_crateCart', i_treePine: 'i_treeWoodsPine', i_treeOak: 'i_stumpWoods', i_rockWoods: 'rock' };
   const artFns = Object.keys(window).filter(n => /^art[A-Z]/.test(n) && typeof window[n] === 'function');
