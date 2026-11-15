@@ -3,21 +3,12 @@
 Object.assign(World.prototype, {
   updEnemy(e, dt, locked) {
     const s = e.spr, D = e.D, pl = this.pl, sc = e.sc;
-    if (e.hp <= 0) {
-      if (this.atkTok) this.atkTok.delete(e);
-      s.setVelocity(0); return;
-    }
+    if (e.hp <= 0) { if (this.atkTok) this.atkTok.delete(e); s.setVelocity(0); return; }
     e.sh.setPosition(s.x, s.y - 1 + (D.fly ? 10 : 0)).setDepth(s.y - .5); s.setDepth(s.y + (D.fly ? 12 : 0));
     if (e.flash > 0) { e.flash -= dt; if (e.flash <= 0) { s.clearTint(); if (['wind', 'swind', 'cwind', 'throw'].includes(e.st)) s.setTint(0xffa07a); else if (e.p2) s.setTint(0xffb8a8); } }
-    if (e.kb > 0) {
-      if (this.atkTok) this.atkTok.delete(e);
-      e.kb -= dt; s.setVelocity(e.kbx, e.kby); return;
-    }
+    if (e.kb > 0) { if (this.atkTok) this.atkTok.delete(e); e.kb -= dt; s.setVelocity(e.kbx, e.kby); return; }
     if (locked) { s.setVelocity(0); return; }
-    if (e.hurtT > 0) {
-      if (this.atkTok) this.atkTok.delete(e);
-      e.hurtT -= dt; s.setVelocity(0); return;
-    }
+    if (e.hurtT > 0) { if (this.atkTok) this.atkTok.delete(e); e.hurtT -= dt; s.setVelocity(0); return; }
     if (this.enemyStatus(e, dt)) return;
 
     const dx = pl.x - s.x, dy = pl.y - s.y, d = Math.hypot(dx, dy) || 1;
@@ -93,18 +84,25 @@ Object.assign(World.prototype, {
         if (D.tex === 'slime_hd' && aggro && d < 65 && (e.cd || 0) <= 0 && e.st !== 'atk') {
           if (!this.atkTok) this.atkTok = new Set();
           if (this.atkTok.size < 2) {
-            this.atkTok.add(e); e.tokT = 0;
-            e.st = 'atk'; e.t = 0.65 * wMul; e.cd = rnd(2.2, 3.8) * cdMul;
-            s.setVelocity((dx / d) * D.spd * 2.2, (dy / d) * D.spd * 2.2);
-            s.play('slime_hd_atk', true); s.flipX = dx < 0;
+            this.atkTok.add(e); e.tokT = 0; e.st = 'atk'; e.t = 0.68 * wMul; e.cd = rnd(2.2, 3.8) * cdMul;
+            const lx = dx / d, ly = dy / d; s.setVelocity(0); s.flipX = dx < 0;
+            if (s.anims) { s.anims.stop(); s.setFrame(15); }
+            this.time.delayedCall(180 * wMul, () => {
+              if (!s.active || e.hp <= 0 || e.st !== 'atk') return;
+              s.setVelocity(lx * D.spd * 2.5, ly * D.spd * 2.5);
+              if (s.anims) s.play({ key: 'slime_hd_atk', startFrame: 2 }, true);
+            });
+            this.time.delayedCall(440 * wMul, () => {
+              if (!s.active || e.hp <= 0 || e.st !== 'atk') return;
+              s.setVelocity(0); this.enemyRingFx?.(s.x, s.y + 1, 0x55ccff, .85);
+            });
             break;
           }
         }
         if (e.st === 'atk') {
           if (e.t <= 0) {
             if (this.atkTok) this.atkTok.delete(e);
-            e.st = 'idle'; e.t = rnd(.5, 1); s.setVelocity(0);
-            s.play('slime_hd_idle', true); this.puff(s.x, s.y);
+            e.st = 'idle'; e.t = rnd(.5, 1); s.setVelocity(0); s.play('slime_hd_idle', true); this.puff(s.x, s.y);
           }
           break;
         }
@@ -119,9 +117,7 @@ Object.assign(World.prototype, {
             if (D.tex === 'slime_hd') {
               if (s.anims) s.play('slime_hd_hop', true);
               if (s.body.velocity.x < -3) s.flipX = true; else if (s.body.velocity.x > 3) s.flipX = false;
-            } else {
-              this.tweens.add({ targets: s, scaleX: sc * .85, scaleY: sc * 1.2, duration: 120, yoyo: true });
-            }
+            } else this.tweens.add({ targets: s, scaleX: sc * .85, scaleY: sc * 1.2, duration: 120, yoyo: true });
           }
         }
         if (D.tex === 'slime_hd' && !s.anims.isPlaying && e.st !== 'atk') s.play(e.st === 'hop' ? 'slime_hd_hop' : 'slime_hd_idle', true);
@@ -130,18 +126,11 @@ Object.assign(World.prototype, {
         // Serangan Menukik Musuh Terbang (#7)
         if (aggro && d >= 40 && d <= 95 && !e.swoopCooldown && e.st !== 'swoop' && e.st !== 'recover') {
           if (!e.swoopPrep) {
-            e.swoopPrep = 0.25; // ancang-ancang sekejap
-            s.setVelocity(0, -15);
-            this.sparkle(s.x, s.y - 8, 'spark', 4);
+            e.swoopPrep = 0.25; s.setVelocity(0, -15); this.sparkle(s.x, s.y - 8, 'spark', 4);
           } else {
             e.swoopPrep -= dt;
             if (e.swoopPrep <= 0) {
-              e.swoopPrep = 0;
-              e.st = 'swoop';
-              e.swoopT = 0.55;
-              e.swoopTx = pl.x;
-              e.swoopTy = pl.y;
-              sfx('swing');
+              e.swoopPrep = 0; e.st = 'swoop'; e.swoopT = 0.55; e.swoopTx = pl.x; e.swoopTy = pl.y; sfx('swing');
               this.tweens.add({ targets: s, scaleY: sc * 1.3, scaleX: sc * 0.8, duration: 120, yoyo: true });
             }
           }
@@ -149,20 +138,12 @@ Object.assign(World.prototype, {
         if (e.st === 'swoop') {
           e.swoopT -= dt;
           const svx = e.swoopTx - s.x, svy = e.swoopTy - s.y, svl = Math.hypot(svx, svy) || 1;
-          s.setVelocity((svx / svl) * D.spd * 2.2, (svy / svl) * D.spd * 2.2);
-          s.flipX = svx > 0;
-          if (e.swoopT <= 0 || svl < 14) {
-            e.st = 'recover';
-            e.swoopT = 0.4;
-            e.swoopCooldown = 2.5; // jeda antar-menukik
-            s.setVelocity(0, -D.spd * 0.8);
-          }
+          s.setVelocity((svx / svl) * D.spd * 2.2, (svy / svl) * D.spd * 2.2); s.flipX = svx > 0;
+          if (e.swoopT <= 0 || svl < 14) { e.st = 'recover'; e.swoopT = 0.4; e.swoopCooldown = 2.5; s.setVelocity(0, -D.spd * 0.8); }
           break;
         }
         if (e.st === 'recover') {
-          e.swoopT -= dt;
-          s.setVelocity(0, -D.spd * 0.6);
-          if (e.swoopT <= 0) e.st = null;
+          e.swoopT -= dt; s.setVelocity(0, -D.spd * 0.6); if (e.swoopT <= 0) e.st = null;
           break;
         }
         if (e.swoopCooldown > 0) e.swoopCooldown -= dt;
@@ -180,7 +161,21 @@ Object.assign(World.prototype, {
       }
       case 'shoot': {
         const isArcherHd = D.tex === 'goblin_archer_hd';
-        if (e.st === 'shoot') { s.setVelocity(0); if (e.t <= 0) e.st = 'idle'; break; }
+        if (e.meleeCd > 0) e.meleeCd -= dt;
+        if (e.st === 'shoot') { if (e.t <= 0) { e.st = 'idle'; s.setVelocity(0); } break; }
+        // Sabetan Belati + Backstep saat Arka masuk jarak dekat (goblin_archer_hd_melee)
+        if (isArcherHd && aggro && d < 42 && (e.meleeCd || 0) <= 0 && s.anims) {
+          e.st = 'shoot'; e.t = 0.48 * wMul; e.meleeCd = 2.4 * cdMul; s.setVelocity(0); s.flipX = dx < 0;
+          e.lx = dx / d; e.ly = dy / d; e.atkAnim = 'goblin_archer_hd_melee'; s.anims.stop(); s.setFrame(36);
+          this.time.delayedCall(150 * wMul, () => {
+            if (!s.active || e.hp <= 0 || e.st !== 'shoot') return;
+            s.play({ key: 'goblin_archer_hd_melee', startFrame: 3 }, true);
+            this.enemySlashFx?.(e, false, true); sfxAt('swing', s.x, s.y, this);
+            s.setVelocity(-e.lx * D.spd * 2.1, -e.ly * D.spd * 2.1);
+            if (!pl.dead && pl.inv <= 0 && Math.hypot(pl.x - s.x, pl.y - s.y) < 44) this.hurtPlayer(D.atk, s.x, s.y, D.fx);
+          });
+          break;
+        }
         if (aggro) {
           if (d < 70) s.setVelocity((-dx / d) * D.spd, (-dy / d) * D.spd);
           else if (d > 120) s.setVelocity((dx / d) * D.spd, (dy / d) * D.spd);
@@ -189,22 +184,23 @@ Object.assign(World.prototype, {
             if (e.strafeT <= 0) { e.strafeT = 0.6; e.strafeDir = Math.random() < 0.5 ? 1 : -1; }
             s.setVelocity((-dy / d * e.strafeDir) * D.spd * 0.7, (dx / d * e.strafeDir) * D.spd * 0.7);
           }
-          s.flipX = dx > 0;
+          s.flipX = isArcherHd ? dx < 0 : dx > 0;
         } else wander(D.spd * .5);
         e.shootT = (e.shootT || rnd(1.5, 2.5)) - dt;
         if (aggro && e.shootT <= 0 && d < 160) {
           if (this.hasLineOfSight && !this.hasLineOfSight(s.x, s.y, pl.x, pl.y)) {
-            e.shootT = 0.35;
-            const side = Math.random() < 0.5 ? 1 : -1;
+            e.shootT = 0.35; const side = Math.random() < 0.5 ? 1 : -1;
             s.setVelocity((-dy / d * side) * D.spd, (dx / d * side) * D.spd);
           } else {
             e.shootT = rnd(2.0, 3.0) * cdMul;
             if (isArcherHd && s.anims) {
-              e.st = 'shoot'; e.t = 0.55 * wMul; s.setVelocity(0); s.flipX = dx > 0;
-              const anim = Math.random() < 0.35 ? 'goblin_archer_hd_rain' : 'goblin_archer_hd_shoot';
-              s.play(anim, true);
-              this.time.delayedCall(260, () => {
-                if (s.active && e.hp > 0) this.eShoot(e, 'arrow', anim === 'goblin_archer_hd_rain' ? [-0.25, 0, 0.25] : [0], D.atk);
+              e.st = 'shoot'; e.t = 0.55 * wMul; s.setVelocity(0); s.flipX = dx < 0;
+              const isRain = Math.random() < 0.35, anim = isRain ? 'goblin_archer_hd_rain' : 'goblin_archer_hd_shoot';
+              s.anims.stop(); s.setFrame(isRain ? 31 : 27);
+              this.time.delayedCall(200 * wMul, () => {
+                if (!s.active || e.hp <= 0) return;
+                s.play({ key: anim, startFrame: 2 }, true);
+                this.eShoot(e, 'arrow', isRain ? [-0.25, 0, 0.25] : [0], D.atk);
               });
             } else {
               if (!D.ch) s.setVelocity(0);
@@ -216,11 +212,9 @@ Object.assign(World.prototype, {
         if (D.ch) this.charAnim(e);
         else if (isArcherHd && s.anims && e.st !== 'shoot') {
           const vx = s.body.velocity.x, vy = s.body.velocity.y;
-          if (Math.abs(vx) > 3) s.flipX = vx > 0;
+          if (Math.abs(vx) > 3) s.flipX = vx < 0;
           const mv = Math.hypot(vx, vy) > 4;
-          if (aggro && mv) s.play('goblin_archer_hd_run', true);
-          else if (mv) s.play('goblin_archer_hd_walk', true);
-          else s.play('goblin_archer_hd_idle', true);
+          s.play(aggro && mv ? 'goblin_archer_hd_run' : (mv ? 'goblin_archer_hd_walk' : 'goblin_archer_hd_idle'), true);
         }
         break;
       }
@@ -234,7 +228,7 @@ Object.assign(World.prototype, {
           s.setVelocity(0);
           if (e.t <= 0) {
             e.st = 'idle';
-            if (s.anims && s.anims.animationManager.exists('goblin_shaman_idle')) s.play('goblin_shaman_idle', true);
+            if (s.anims?.animationManager.exists('goblin_shaman_idle')) s.play('goblin_shaman_idle', true);
           }
           break;
         }
@@ -245,26 +239,32 @@ Object.assign(World.prototype, {
         if (e.healT <= 0) {
           const hurtAllies = this.enemies.filter(o => o !== e && o.hp > 0 && o.hp < o.max * .6 && Math.hypot(s.x - o.spr.x, s.y - o.spr.y) < 140)
             .sort((a, b) => (a.hp / a.max) - (b.hp / b.max));
-          if (hurtAllies.length > 0) {
-            e.healT = 4.0; e.st = 'cast'; e.t = 0.55;
-            const al = hurtAllies[0], healAmt = Math.max(15, Math.round(al.max * 0.2));
-            al.hp = Math.min(al.max, al.hp + healAmt);
-            popWorld(al.spr.x, al.spr.y - 20, `+${healAmt} HP`, 'heal'); sfxAt('heal', s.x, s.y, this);
-            this.sparkle(al.spr.x, al.spr.y - 12, 'dotg', 10);
-            const line = this.add.graphics().setDepth(s.y + 10).lineStyle(2, 0x4aff7a, .85).lineBetween(s.x, s.y - 10, al.spr.x, al.spr.y - 10);
-            this.tweens.add({ targets: line, alpha: 0, duration: 300, onComplete: () => line.destroy() });
-            if (s.anims && s.anims.animationManager.exists('goblin_shaman_cast')) s.play('goblin_shaman_cast', true);
-          } else if (aggro && d < 160) {
-            e.healT = 2.4; this.eShoot(e, 'venom', [0], D.atk);
+          if (hurtAllies.length > 0 || (aggro && d < 160)) {
+            const isHeal = hurtAllies.length > 0;
+            e.healT = isHeal ? 4.0 : 2.4; e.st = 'cast'; e.t = 0.56; s.setVelocity(0); s.flipX = dx < 0;
+            if (s.anims?.animationManager.exists('goblin_shaman_cast')) { s.anims.stop(); s.setFrame(17); }
+            this.sparkle(s.x, s.y - 14, isHeal ? 'dotg' : 'dotp', 4);
+            this.time.delayedCall(180, () => {
+              if (!s.active || e.hp <= 0) return;
+              if (s.anims?.animationManager.exists('goblin_shaman_cast')) s.play({ key: 'goblin_shaman_cast', startFrame: 2 }, true);
+              this.enemyRingFx?.(s.x, s.y + 1, isHeal ? 0x4aff7a : 0xc46eff, .78);
+              if (isHeal && hurtAllies[0]?.hp > 0 && hurtAllies[0].spr?.active) {
+                const al = hurtAllies[0], healAmt = Math.max(15, Math.round(al.max * 0.2));
+                al.hp = Math.min(al.max, al.hp + healAmt);
+                popWorld(al.spr.x, al.spr.y - 20, `+${healAmt} HP`, 'heal'); sfxAt('heal', s.x, s.y, this);
+                this.sparkle(al.spr.x, al.spr.y - 12, 'dotg', 10);
+                const line = this.add.graphics().setDepth(s.y + 10).lineStyle(2, 0x4aff7a, .85).lineBetween(s.x, s.y - 10, al.spr.x, al.spr.y - 10);
+                this.tweens.add({ targets: line, alpha: 0, duration: 300, onComplete: () => line.destroy() });
+              } else if (!isHeal) this.eShoot(e, 'venom', [0], D.atk);
+            });
           }
         }
         if (D.ch) this.charAnim(e);
         else {
           const vx = s.body.velocity.x, vy = s.body.velocity.y;
-          if (Math.abs(vx) > 3) s.flipX = vx > 0;
+          if (Math.abs(vx) > 3) s.flipX = vx < 0;
           if (s.anims && e.st !== 'cast') {
-            const mv = Math.hypot(vx, vy) > 5;
-            const animKey = mv ? 'goblin_shaman_walk' : 'goblin_shaman_idle';
+            const animKey = Math.hypot(vx, vy) > 5 ? 'goblin_shaman_walk' : 'goblin_shaman_idle';
             if (s.anims.animationManager.exists(animKey)) s.play(animKey, true);
           }
         }
@@ -273,14 +273,8 @@ Object.assign(World.prototype, {
       case 'elite_brute': this.updEliteBrute(e, dt, dx, dy, d, aggro); break;
       case 'walk':
         if (aggro) {
-          // Musuh Berkelompok & Pengepungan (#8)
-          let angleOffset = 0;
           const otherAggro = this.enemies.filter(o => o !== e && o.hp > 0 && Math.hypot(pl.x - o.spr.x, pl.y - o.spr.y) < 180);
-          if (otherAggro.length > 0) {
-            const myIdx = this.enemies.indexOf(e);
-            angleOffset = (myIdx % 2 === 0 ? 0.75 : -0.75);
-          }
-          const baseAng = Math.atan2(dy, dx) + angleOffset;
+          const baseAng = Math.atan2(dy, dx) + (otherAggro.length > 0 ? (this.enemies.indexOf(e) % 2 === 0 ? 0.75 : -0.75) : 0);
           s.setVelocity(Math.cos(baseAng) * D.spd, Math.sin(baseAng) * D.spd);
         } else wander(D.spd * .6);
         if (D.side) s.flipX = s.body.velocity.x > 0; break;

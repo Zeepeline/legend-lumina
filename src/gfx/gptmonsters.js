@@ -131,4 +131,22 @@ function applyGptMonsters(sc) {
       delete ENEMY.goblin_elite.ch;
     }
   }
+  const gsh = IMGEL.mon_goblin_shaman;
+  if (gsh) {
+    if (!T.exists('goblin_shaman')) sc.textures.addSpriteSheet('goblin_shaman', gsh, { frameWidth: 56, frameHeight: 48 });
+    const regGS = (k, st, ed, fps, r) => {
+      if (!A.exists(k)) A.create({ key: k, frames: A.generateFrameNumbers('goblin_shaman', { start: st, end: ed }), frameRate: fps, repeat: r });
+    };
+    regGS('goblin_shaman_idle', 0, 7, 8, -1);
+    regGS('goblin_shaman_walk', 8, 15, 9, -1);
+    regGS('goblin_shaman_cast', 16, 20, 10, 0);
+    regGS('goblin_shaman_hurt', 24, 26, 9, 0);
+    regGS('goblin_shaman_die', 32, 34, 8, 0);
+    regGS('goblin_shaman_mv', 8, 15, 9, -1);
+    if (ENEMY.goblin_shaman) {
+      ENEMY.goblin_shaman.tex = 'goblin_shaman';
+      ENEMY.goblin_shaman.scale = 0.78;
+      delete ENEMY.goblin_shaman.ch;
+    }
+  }
 }

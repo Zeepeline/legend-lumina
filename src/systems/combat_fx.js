@@ -200,6 +200,11 @@ Object.assign(World.prototype, {
       this.tweens.add({ targets: gw, scaleX: (step === 3 ? 1.55 : 1.2), alpha: 0, duration: 240, onComplete: () => gw.destroy() });
     }
   },
+  enemyRingFx(x, y, tint, sc = .85) {
+    if (!this.textures.exists('vfx_charge_spin')) return;
+    const gw = this.add.sprite(x, y, 'vfx_charge_spin', 1).setOrigin(.5, 32 / 48).setScale(sc, sc * .55).setTint(tint).setDepth(y - .2);
+    this.tweens.add({ targets: gw, scaleX: sc * 1.35, scaleY: sc * .75, alpha: 0, duration: 240, onComplete: () => gw.destroy() });
+  },
   rollFx() {
     const pl = this.pl; if (!pl || pl.dead) return;
     this.sparkle(pl.x, pl.y - 2, 'dot', 5);
@@ -221,25 +226,14 @@ Object.assign(World.prototype, {
       }
     });
   },
-
-  updLowHp(dt) {
-    if (!this.lowHpG || !this.lowHpG.active) {
-      this.lowHpG = this.add.graphics().setScrollFactor(0).setDepth(2.5e5);
-    }
+  updLowHp() {
+    if (!this.lowHpG || !this.lowHpG.active) this.lowHpG = this.add.graphics().setScrollFactor(0).setDepth(2.5e5);
     const maxhp = (typeof stat === 'function') ? stat().maxhp : 100;
     if (S.hp < maxhp * .3 && S.hp > 0) {
-      this.lowHpG.setVisible(true);
-      this.lowHpG.clear();
-      const alpha = Math.max(0.05, .25 + .2 * Math.sin(this.t * 6));
-      this.lowHpG.fillStyle(0xcc1122, alpha);
+      this.lowHpG.setVisible(true).clear().fillStyle(0xcc1122, Math.max(0.05, .25 + .2 * Math.sin(this.t * 6)));
       const b = 14;
-      this.lowHpG.fillRect(0, 0, VW, b);
-      this.lowHpG.fillRect(0, VH - b, VW, b);
-      this.lowHpG.fillRect(0, b, b, VH - b * 2);
-      this.lowHpG.fillRect(VW - b, b, b, VH - b * 2);
-    } else {
-      this.lowHpG.setVisible(false);
-    }
+      this.lowHpG.fillRect(0, 0, VW, b).fillRect(0, VH - b, VW, b).fillRect(0, b, b, VH - b * 2).fillRect(VW - b, b, b, VH - b * 2);
+    } else this.lowHpG.setVisible(false);
   }
 });
 

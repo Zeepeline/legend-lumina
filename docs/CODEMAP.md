@@ -127,11 +127,11 @@ _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (152 baris)
+## src/world/maps/city.js (168 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 
-## src/world/maps/wild.js (81 baris)
+## src/world/maps/wild.js (114 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
 `ruinRing` 4
 
@@ -199,9 +199,9 @@ _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditam
 _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._
 `.goto()` 4 · `.guardStop()` 9
 
-## src/systems/combat.js (400 baris)
+## src/systems/combat.js (396 baris)
 _pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali dorongan_
-`WEAPON_STYLE` 3 · `.attack()` 11 · `.shootArrow()` 82 · `.aimAngle()` 95 · `.magic()` 104 · `.drink()` 118 · `.useItem()` 124 · `.hitStop()` 133 · `.hitEnemy()` 138 · `.killEnemy()` 188 · `.drop()` 264 · `.updPicks()` 270 · `.gainExp()` 292 · `.hurtPlayer()` 308 · `.eShoot()` 327 · `.shockwave()` 337 · `.updShots()` 370 · `.defeat()` 387
+`WEAPON_STYLE` 3 · `.attack()` 11 · `.shootArrow()` 82 · `.aimAngle()` 95 · `.magic()` 104 · `.drink()` 118 · `.useItem()` 124 · `.hitStop()` 133 · `.hitEnemy()` 138 · `.killEnemy()` 185 · `.drop()` 260 · `.updPicks()` 266 · `.gainExp()` 288 · `.hurtPlayer()` 304 · `.eShoot()` 323 · `.shockwave()` 333 · `.updShots()` 366 · `.defeat()` 383
 
 ## src/systems/skills.js (54 baris)
 _Jurus: dash, tebasan putar, nova es_
@@ -239,9 +239,9 @@ _Bab 5 "Kota Seribu Lentera" (perjalanan & kota, tanpa boss): longsor, Jalan Ray
 _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah instan ke patung lain yang aktif._
 `WARPS` 3 · `.spawnWarp()` 9 · `.useWarp()` 15
 
-## src/ai/enemies.js (399 baris)
+## src/ai/enemies.js (393 baris)
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
-`.updEnemy()` 4 · `.charAnim()` 392
+`.updEnemy()` 4 · `.charAnim()` 386
 
 ## src/ai/elite_brute.js (96 baris)
 _AI untuk musuh Brute Elite (Goblin Brute Elite, dsb)_
@@ -427,9 +427,9 @@ _Mode benua: buang petak objek yang jauh dari Arka (memori). Mencatat semua yang
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
 `SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 120
 
-## src/systems/combat_fx.js (395 baris)
+## src/systems/combat_fx.js (389 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
-`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 87 · `.hitFx()` 97 · `.updChargeFx()` 131 · `.clearChargeFx()` 146 · `.spinFx()` 151 · `.enemyWindFx()` 172 · `.enemySlashFx()` 179 · `.enemySmashFx()` 189 · `.rollFx()` 203 · `.updLowHp()` 225
+`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 87 · `.hitFx()` 97 · `.updChargeFx()` 131 · `.clearChargeFx()` 146 · `.spinFx()` 151 · `.enemyWindFx()` 172 · `.enemySlashFx()` 179 · `.enemySmashFx()` 189 · `.enemyRingFx()` 203 · `.rollFx()` 208 · `.updLowHp()` 229
 
 ## src/ui/worldmap_art.js (67 baris)
 _Gambar ringkas berwarna tiap wilayah untuk Peta Benua (1 piksel = WOV_K piksel dunia):_
@@ -479,7 +479,7 @@ _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung da
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
 `GPT_SWAP` 4 · `GPT_LOOK` 13 · `applyGptSwap()` 25
 
-## src/gfx/gptmonsters.js (135 baris)
+## src/gfx/gptmonsters.js (153 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
