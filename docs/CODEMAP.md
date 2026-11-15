@@ -119,7 +119,7 @@ _Peta: Padang Angin_
 _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 
 
-## src/world/maps/swamp.js (42 baris)
+## src/world/maps/swamp.js (59 baris)
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
