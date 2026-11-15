@@ -96,7 +96,10 @@ Object.assign(World.prototype, {
   },
   // cuaca per wilayah: kabut di rawa
   benuaWeather(id) {
-    const want = id === 'swamp' ? 'fog' : this.weather === 'fog' ? 'clear' : this.weather;
+    /* rawa selalu berkabut; keluar rawa → cuaca sebelum masuk rawa dikembalikan */
+    let want = this.weather;
+    if (id === 'swamp' && !this._swampFog) { this._swampFog = true; this._wxBefore = this.weather; want = 'fog'; }
+    else if (id !== 'swamp' && this._swampFog) { this._swampFog = false; want = this._wxBefore || 'clear'; }
     if (want === this.weather) return;
     this.weather = want; this.dropActiveFx(); this.makeActiveFx();
   },

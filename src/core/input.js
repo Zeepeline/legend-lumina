@@ -253,6 +253,10 @@ function layout() {
   let aw = vw - 10, ah = vh - 10;
   if (touch && !land) ah = vh - 222;
   if (!touch) ah = vh - 36;
+  // layar penuh mendatar: gambar mengisi seluruh layar; HP tegak → layar "putar HP"
+  document.body.classList.toggle('full', LAYOUT_FULL);
+  document.body.classList.toggle('rotate', LAYOUT_FULL && touch && !land);
+  if (LAYOUT_FULL) { aw = vw; ah = vh; }
   const s = Math.max(.6, Math.min(aw / VW, ah / VH));
   const w = Math.floor(VW * s), h = Math.floor(VH * s);
   SCREEN.style.width = w + 'px'; SCREEN.style.height = h + 'px'; UISCALE = w / VW; UI.style.transform = `scale(${UISCALE})`;
@@ -276,5 +280,12 @@ function layout() {
     padEl.style.setProperty('--btn-pad', btnPad + 'px');
   }
 }
-UI.style.height = VH + 'px';
+UI.style.height = VH + 'px'; UI.style.width = VW + 'px';
 addEventListener('resize', layout); layout();
+// sentuhan pertama: minta layar penuh & kunci mendatar (Android/PWA; iOS mengabaikan dengan aman)
+if (LAYOUT_FULL && IS_TOUCH) addEventListener('pointerdown', function goFull() {
+  removeEventListener('pointerdown', goFull);
+  try { const el = document.documentElement, rq = el.requestFullscreen || el.webkitRequestFullscreen;
+    const p = rq && !document.fullscreenElement ? rq.call(el, { navigationUI: 'hide' }) : null;
+    Promise.resolve(p).then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape')).catch(() => { }); } catch (_) { }
+}, { once: false });

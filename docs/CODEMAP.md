@@ -3,15 +3,15 @@
 Cari nama di sini (`grep -n "namaFungsi" docs/CODEMAP.md`), lalu buka file:baris itu saja.
 Format: `nama` baris. Urutan file = urutan muat di index.html.
 
-## src/core/util.js (19 baris)
+## src/core/util.js (26 baris)
 _Konstanta layar & util kecil_
-`VW` 6 · `VH` 7 · `rnd` 12 · `ri` 13 · `pick` 14 · `clamp` 15 · `sleep` 16 · `$` 17 · `SCREEN` 18
+`IS_TOUCH` 7 · `LAYOUT_FULL` 8 · `VW` 10 · `VH` 15 · `rnd` 19 · `ri` 20 · `pick` 21 · `clamp` 22 · `sleep` 23 · `$` 24 · `SCREEN` 25
 
 ## src/core/audio.js (209 baris)
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
 `AU_FILES` 4 · `AU` 18 · `NI` 19 · `nf()` 20 · `parseSeq()` 21 · `bossBass` 22 · `TRACKS` 23 · `auInit()` 45 · `tone()` 57 · `sweep()` 58 · `noise()` 59 · `_AUDIO_POOL` 60 · `BGM_BASE_VOL` 62 · `_bgmDuck` 63 · `routeTag()` 65 · `tagVolFor()` 69 · `tagSetVol()` 73 · `tagGetVol()` 74 · `setWeatherDuck()` 75 · `_rain` 77 · `rainSound()` 78 · `setBgmDuck()` 93 · `stopAudioTag()` 97 · `playBGM()` 104 · `_lastSfx` 158 · `sfx()` 159
 
-## src/core/input.js (281 baris)
+## src/core/input.js (292 baris)
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
 `Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 15 · `enableTouch()` 34 · `JOY_DEAD` 37 · `UISCALE` 188 · `PAD_STATE` 190 · `pollGamepad()` 191 · `layout()` 251
 
@@ -219,9 +219,9 @@ _Efek visual sihir: lingkar rune, proyektil, ledakan, dan aura (T318-T322)_
 _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipakai (tingkat I–III)._
 `JURUS` 4 · `MASTERY` 13 · `tierOf` 14 · `learned` 15 · `useJurus()` 16 · `canTeach` 20 · `.learnTalk()` 23 · `.castSpell()` 38
 
-## src/systems/ambient.js (341 baris)
+## src/systems/ambient.js (340 baris)
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
-`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 214 · `.ripple()` 215 · `.spawnRainEmitters()` 229 · `.rainSplash()` 241 · `.updRainFx()` 249 · `artQuestArrow()` 322 · `.updQuestGuide()` 329
+`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 213 · `.ripple()` 214 · `.spawnRainEmitters()` 228 · `.rainSplash()` 240 · `.updRainFx()` 248 · `artQuestArrow()` 321 · `.updQuestGuide()` 328
 
 ## src/systems/status.js (125 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
@@ -419,9 +419,9 @@ _Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi a
 _MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALIGUS dalam satu scene `World` berkoordinat_
 `BENUA` 7 · `OBJ_CELL` 16 · `isOutdoorRegion()` 17 · `regionAt()` 18 · `shiftDeep()` 23 · `BENUA_SHIFT` 35 · `BFIELD` 37 · `benuaField()` 38 · `regionClone()` 45 · `buildBenua()` 50 · `benuaData()` 93 · `benuaLocalize()` 100 · `benuaTarget()` 105
 
-## src/systems/benua_scene.js (162 baris)
+## src/systems/benua_scene.js (165 baris)
 _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat Arka berada, teleport tanpa memuat ulang._
-`KEMBARA_POS` 20 · `.initBenua()` 25 · `.withRegion()` 39 · `.spawnRegionFx()` 44 · `.streamObjs()` 69 · `.benuaAmbient()` 88 · `.benuaWeather()` 98 · `.updBenua()` 104
+`KEMBARA_POS` 20 · `.initBenua()` 25 · `.withRegion()` 39 · `.spawnRegionFx()` 44 · `.streamObjs()` 69 · `.benuaAmbient()` 88 · `.benuaWeather()` 98 · `.updBenua()` 107
 
 ## src/systems/benua_unload.js (49 baris)
 _Mode benua: buang petak objek yang jauh dari Arka (memori). Mencatat semua yang dibuat spawnObj per petak lalu menghancurkannya._
@@ -463,9 +463,9 @@ _Tas (inventaris) & buku misi_
 _Layar peta & navigasi tujuan misi_
 `MINI` 4 · `WORLD` 5 · `buildMini()` 6 · `routeNext()` 23 · `questTarget()` 28 · `openMap()` 36
 
-## src/ui/menus.js (391 baris)
+## src/ui/menus.js (393 baris)
 _Menu utama, jurus, bestiari, pencapaian_
-`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 93 · `enemyThumb()` 105 · `openBestiary()` 106 · `openFishLog()` 114 · `openAch()` 115 · `openDlgLog()` 121 · `chooseSlot()` 128 · `openDebugMenu()` 152 · `openPhotoMode()` 209 · `TALENT_DEFS` 277 · `getTalentPoints()` 304 · `openTalentTree()` 314
+`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 95 · `enemyThumb()` 107 · `openBestiary()` 108 · `openFishLog()` 116 · `openAch()` 117 · `openDlgLog()` 123 · `chooseSlot()` 130 · `openDebugMenu()` 154 · `openPhotoMode()` 211 · `TALENT_DEFS` 279 · `getTalentPoints()` 306 · `openTalentTree()` 316
 
 ## src/ui/savecode.js (49 baris)
 _Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)_
@@ -483,9 +483,13 @@ _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung da
 _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),_
 `ORG_SKIP` 5 · `ORG_FILL` 6 · `orgPlanned()` 7 · `orgCurve()` 9
 
-## src/systems/waterflow.js (61 baris)
+## src/systems/waterflow.js (62 baris)
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
 `FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `.updFlow()` 33 · `_updFlow0` 54
+
+## src/systems/atmos.js (56 baris)
+_Suasana cahaya & kabut (wilayah aktif saja):_
+`ATMOS_POOL` 5 · `fogSheetTex()` 6 · `.updAtmos()` 18
 
 ## src/gfx/gptassets.js (52 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_

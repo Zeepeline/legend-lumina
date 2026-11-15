@@ -153,16 +153,15 @@ Object.assign(World.prototype, {
       this._weatherT = (this._weatherT || 0) + dt;
       if (this._weatherT > 180) { // Cek tiap 3 menit
         this._weatherT = 0;
-        const willRain = Math.random() < 0.25;
-        if (willRain && this.weather !== 'rain') {
-          this.weather = 'rain';
+        // hujan 22%, kabut 18% (×2 pagi 04–09), sisanya cerah
+        const h = S.time || 12, r = Math.random(), fogP = (h >= 4 && h < 9) ? .36 : .18;
+        const next = r < .22 ? 'rain' : r < .22 + fogP ? 'fog' : 'clear';
+        if (next !== this.weather) {
+          const was = this.weather; this.weather = next;
           this.dropActiveFx(); this.makeActiveFx();
-          banner('Hujan turun membasahi tanah...', 'CUACA', false, 2000);
-        } else if (!willRain && this.weather === 'rain') {
-          this.weather = 'clear';
-          this.dropActiveFx(); this.makeActiveFx();
-          banner('Hujan telah reda. Langit kembali cerah.', 'CUACA', false, 2000);
-          playBGM(bgmFor(this.M));
+          if (next === 'rain') banner('Hujan turun membasahi tanah...', 'CUACA', false, 2000);
+          else if (next === 'fog') banner('Kabut tebal turun perlahan...', 'CUACA', false, 2000);
+          else banner(was === 'rain' ? 'Hujan telah reda. Langit kembali cerah.' : 'Kabut menipis. Pandangan kembali jelas.', 'CUACA', false, 2000);
         }
       }
     }

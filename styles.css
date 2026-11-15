@@ -254,3 +254,37 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #ui:has(.dlg) #mini,body:has(.dlg) #mini,
 #ui:has(.dlg) #quest,body:has(.dlg) #quest,
 #ui:has(.dlg) #hDate,body:has(.dlg) #hDate{display:none!important}
+/* ===== Layar penuh mendatar (bawaan): gambar mengisi layar, kontrol transparan di atasnya (gaya Genshin / Mobile Legends) ===== */
+body.full #app{gap:0;background:#000}
+body.full #screen{box-shadow:none;border-radius:0}
+body.full #keys{display:none}
+body.full #hud2{left:50%;right:auto;transform:translateX(-50%)}
+body.full #spellbar,body.touch.full #spellbar{bottom:4px}
+body.touch.full #pad{position:absolute;inset:0;max-width:none;width:auto;height:auto;pointer-events:none;
+ --sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px);--sb:env(safe-area-inset-bottom,0px)}
+body.touch.full #pad>*{pointer-events:auto}
+body.touch.full #pad .btn{background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.34),rgba(255,255,255,.10));
+ border:2px solid rgba(255,255,255,.55);box-shadow:0 2px 6px rgba(0,0,0,.35);color:#fff;text-shadow:0 1px 2px #000;backdrop-filter:blur(2px)}
+body.touch.full #pad .btn small{color:#fff;opacity:.9}
+body.touch.full #pad .btn:active,body.touch.full #pad .btn.on{background:radial-gradient(circle at 35% 30%,rgba(255,236,170,.6),rgba(255,200,90,.25))}
+body.touch.full #joy{left:calc(var(--sl) + 30px);top:auto;bottom:calc(var(--sb) + 22px);width:132px;height:132px;
+ background:radial-gradient(circle,rgba(255,255,255,.10) 0%,rgba(255,255,255,.04) 70%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.45)}
+body.touch.full #knob{left:38px;top:38px;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.75),rgba(220,235,220,.35));box-shadow:0 2px 6px rgba(0,0,0,.4)}
+body.touch.full #bA{right:calc(var(--sr) + 30px);top:auto;bottom:calc(var(--sb) + 30px);width:86px;height:86px;
+ background:radial-gradient(circle at 35% 30%,rgba(255,150,120,.55),rgba(200,60,40,.30))}
+body.touch.full #bB{right:calc(var(--sr) + 130px);top:auto;bottom:calc(var(--sb) + 18px);width:60px;height:60px}
+body.touch.full #bD{right:calc(var(--sr) + 122px);top:auto;bottom:calc(var(--sb) + 92px);width:54px;height:54px}
+body.touch.full #bI{right:calc(var(--sr) + 40px);top:auto;bottom:calc(var(--sb) + 128px);width:48px;height:48px}
+body.touch.full #bX1{right:calc(var(--sr) + 196px);top:auto;bottom:calc(var(--sb) + 24px)}
+body.touch.full #bX2{right:calc(var(--sr) + 190px);top:auto;bottom:calc(var(--sb) + 92px)}
+body.touch.full #bM,body.touch.full #bP,body.touch.full #bT{top:8px;bottom:auto;left:auto;width:58px;height:26px;border-radius:13px;font-size:10px;letter-spacing:1px}
+body.touch.full #bM{right:calc(var(--sr) + 10px)}
+body.touch.full #bP{right:calc(var(--sr) + 74px)}
+body.touch.full #bT{right:calc(var(--sr) + 138px)}
+/* HP tegak: minta diputar */
+#rotate{display:none}
+body.rotate #rotate{display:flex;position:fixed;inset:0;z-index:9999;background:#101a14;color:#fff3c4;flex-direction:column;align-items:center;
+ justify-content:center;gap:14px;font:700 16px 'Pixelify Sans',monospace;text-align:center;padding:24px}
+body.rotate #rotate i{font-style:normal;font-size:56px;animation:rotHint 1.6s ease-in-out infinite}
+@keyframes rotHint{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+body.full #hDate{left:50%;transform:translateX(-50%);top:21px}

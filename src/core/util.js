@@ -3,10 +3,17 @@
 // =====================================================================
 //  CORE: util, audio, input, layout
 // =====================================================================
-const VW = 384;
+// Tata letak: 'mendatar' (bawaan, layar penuh landscape + kontrol transparan di atas gambar, gaya Genshin/MLBB) atau 'tegak' (lama)
+const IS_TOUCH = matchMedia('(pointer:coarse)').matches || ('ontouchstart' in window && navigator.maxTouchPoints > 0);
+const LAYOUT_FULL = (() => { try { return localStorage.getItem('lumina_layout') !== 'tegak'; } catch (_) { return true; } })();
+// lebar dunia yang terlihat mengikuti rasio layar (16:9 s.d. ±21:9), tinggi tetap 216 → gambar mengisi layar tanpa pita hitam
+const VW = (() => {
+  if (!LAYOUT_FULL) return 384;
+  const r = IS_TOUCH ? Math.max(innerWidth, innerHeight) / Math.min(innerWidth, innerHeight) : innerWidth / innerHeight;
+  return Math.max(384, Math.min(512, Math.round(216 * r / 2) * 2));
+})();
 const VH = (() => {
-  const t = matchMedia('(pointer:coarse)').matches || ('ontouchstart' in window && navigator.maxTouchPoints > 0);
-  if (!t || innerWidth > innerHeight) return 216;
+  if (LAYOUT_FULL || !IS_TOUCH || innerWidth > innerHeight) return 216;
   return Math.max(216, Math.min(320, Math.round(VW * (innerHeight - 236) / (innerWidth - 10))));
 })();
 const rnd = (a, b) => a + Math.random() * (b - a);

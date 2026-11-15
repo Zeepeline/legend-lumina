@@ -55,6 +55,7 @@ const _updFlow0 = World.prototype.update;
 World.prototype.update = function (time, dms) {
   const r = _updFlow0.call(this, time, dms);
   if (!this.passive && this.dt) { try { this.updFlow(this.dt); } catch (e) { /* animasi air tidak boleh menghentikan game */ } }
+  if (!this.passive && this === G.scene && this.dt) { try { this.updAtmos(this.dt); } catch (e) { /* suasana tidak boleh menghentikan game */ } }
   if (!this.passive && this === G.scene) { const wet = this.weather === 'rain' && !(this.M && this.M.indoor) && !G.title; rainSound(wet); setWeatherDuck(wet ? .7 : 1); }
   return r;
 };

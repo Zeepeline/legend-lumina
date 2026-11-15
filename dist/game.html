@@ -272,11 +272,46 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #ui:has(.dlg) #mini,body:has(.dlg) #mini,
 #ui:has(.dlg) #quest,body:has(.dlg) #quest,
 #ui:has(.dlg) #hDate,body:has(.dlg) #hDate{display:none!important}
+/* ===== Layar penuh mendatar (bawaan): gambar mengisi layar, kontrol transparan di atasnya (gaya Genshin / Mobile Legends) ===== */
+body.full #app{gap:0;background:#000}
+body.full #screen{box-shadow:none;border-radius:0}
+body.full #keys{display:none}
+body.full #hud2{left:50%;right:auto;transform:translateX(-50%)}
+body.full #spellbar,body.touch.full #spellbar{bottom:4px}
+body.touch.full #pad{position:absolute;inset:0;max-width:none;width:auto;height:auto;pointer-events:none;
+ --sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px);--sb:env(safe-area-inset-bottom,0px)}
+body.touch.full #pad>*{pointer-events:auto}
+body.touch.full #pad .btn{background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.34),rgba(255,255,255,.10));
+ border:2px solid rgba(255,255,255,.55);box-shadow:0 2px 6px rgba(0,0,0,.35);color:#fff;text-shadow:0 1px 2px #000;backdrop-filter:blur(2px)}
+body.touch.full #pad .btn small{color:#fff;opacity:.9}
+body.touch.full #pad .btn:active,body.touch.full #pad .btn.on{background:radial-gradient(circle at 35% 30%,rgba(255,236,170,.6),rgba(255,200,90,.25))}
+body.touch.full #joy{left:calc(var(--sl) + 30px);top:auto;bottom:calc(var(--sb) + 22px);width:132px;height:132px;
+ background:radial-gradient(circle,rgba(255,255,255,.10) 0%,rgba(255,255,255,.04) 70%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.45)}
+body.touch.full #knob{left:38px;top:38px;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.75),rgba(220,235,220,.35));box-shadow:0 2px 6px rgba(0,0,0,.4)}
+body.touch.full #bA{right:calc(var(--sr) + 30px);top:auto;bottom:calc(var(--sb) + 30px);width:86px;height:86px;
+ background:radial-gradient(circle at 35% 30%,rgba(255,150,120,.55),rgba(200,60,40,.30))}
+body.touch.full #bB{right:calc(var(--sr) + 130px);top:auto;bottom:calc(var(--sb) + 18px);width:60px;height:60px}
+body.touch.full #bD{right:calc(var(--sr) + 122px);top:auto;bottom:calc(var(--sb) + 92px);width:54px;height:54px}
+body.touch.full #bI{right:calc(var(--sr) + 40px);top:auto;bottom:calc(var(--sb) + 128px);width:48px;height:48px}
+body.touch.full #bX1{right:calc(var(--sr) + 196px);top:auto;bottom:calc(var(--sb) + 24px)}
+body.touch.full #bX2{right:calc(var(--sr) + 190px);top:auto;bottom:calc(var(--sb) + 92px)}
+body.touch.full #bM,body.touch.full #bP,body.touch.full #bT{top:8px;bottom:auto;left:auto;width:58px;height:26px;border-radius:13px;font-size:10px;letter-spacing:1px}
+body.touch.full #bM{right:calc(var(--sr) + 10px)}
+body.touch.full #bP{right:calc(var(--sr) + 74px)}
+body.touch.full #bT{right:calc(var(--sr) + 138px)}
+/* HP tegak: minta diputar */
+#rotate{display:none}
+body.rotate #rotate{display:flex;position:fixed;inset:0;z-index:9999;background:#101a14;color:#fff3c4;flex-direction:column;align-items:center;
+ justify-content:center;gap:14px;font:700 16px 'Pixelify Sans',monospace;text-align:center;padding:24px}
+body.rotate #rotate i{font-style:normal;font-size:56px;animation:rotHint 1.6s ease-in-out infinite}
+@keyframes rotHint{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+body.full #hDate{left:50%;transform:translateX(-50%);top:21px}
 </style>
 </head>
 <body>
 <div id="app">
  <div id="screen"><div id="light"></div><div id="dark"></div><div id="ui"></div><div id="fade"></div></div>
+<div id="rotate"><i>📱</i>Putar HP-mu ke posisi mendatar<small style="font-size:11px;opacity:.7">Tata letak bisa diubah ke tegak di Menu → Pengaturan</small></div>
  <div id="pad">
   <div id="joy"><div id="knob"></div></div>
   <div class="btn" id="bA" data-k="a">⚔<small>SERANG</small></div>
@@ -299,10 +334,17 @@ window.IMG_INLINE = {"ani_deer": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA
 // =====================================================================
 //  CORE: util, audio, input, layout
 // =====================================================================
-const VW = 384;
+// Tata letak: 'mendatar' (bawaan, layar penuh landscape + kontrol transparan di atas gambar, gaya Genshin/MLBB) atau 'tegak' (lama)
+const IS_TOUCH = matchMedia('(pointer:coarse)').matches || ('ontouchstart' in window && navigator.maxTouchPoints > 0);
+const LAYOUT_FULL = (() => { try { return localStorage.getItem('lumina_layout') !== 'tegak'; } catch (_) { return true; } })();
+// lebar dunia yang terlihat mengikuti rasio layar (16:9 s.d. ±21:9), tinggi tetap 216 → gambar mengisi layar tanpa pita hitam
+const VW = (() => {
+  if (!LAYOUT_FULL) return 384;
+  const r = IS_TOUCH ? Math.max(innerWidth, innerHeight) / Math.min(innerWidth, innerHeight) : innerWidth / innerHeight;
+  return Math.max(384, Math.min(512, Math.round(216 * r / 2) * 2));
+})();
 const VH = (() => {
-  const t = matchMedia('(pointer:coarse)').matches || ('ontouchstart' in window && navigator.maxTouchPoints > 0);
-  if (!t || innerWidth > innerHeight) return 216;
+  if (LAYOUT_FULL || !IS_TOUCH || innerWidth > innerHeight) return 216;
   return Math.max(216, Math.min(320, Math.round(VW * (innerHeight - 236) / (innerWidth - 10))));
 })();
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -777,6 +819,10 @@ function layout() {
   let aw = vw - 10, ah = vh - 10;
   if (touch && !land) ah = vh - 222;
   if (!touch) ah = vh - 36;
+  // layar penuh mendatar: gambar mengisi seluruh layar; HP tegak → layar "putar HP"
+  document.body.classList.toggle('full', LAYOUT_FULL);
+  document.body.classList.toggle('rotate', LAYOUT_FULL && touch && !land);
+  if (LAYOUT_FULL) { aw = vw; ah = vh; }
   const s = Math.max(.6, Math.min(aw / VW, ah / VH));
   const w = Math.floor(VW * s), h = Math.floor(VH * s);
   SCREEN.style.width = w + 'px'; SCREEN.style.height = h + 'px'; UISCALE = w / VW; UI.style.transform = `scale(${UISCALE})`;
@@ -800,8 +846,15 @@ function layout() {
     padEl.style.setProperty('--btn-pad', btnPad + 'px');
   }
 }
-UI.style.height = VH + 'px';
+UI.style.height = VH + 'px'; UI.style.width = VW + 'px';
 addEventListener('resize', layout); layout();
+// sentuhan pertama: minta layar penuh & kunci mendatar (Android/PWA; iOS mengabaikan dengan aman)
+if (LAYOUT_FULL && IS_TOUCH) addEventListener('pointerdown', function goFull() {
+  removeEventListener('pointerdown', goFull);
+  try { const el = document.documentElement, rq = el.requestFullscreen || el.webkitRequestFullscreen;
+    const p = rq && !document.fullscreenElement ? rq.call(el, { navigationUI: 'hide' }) : null;
+    Promise.resolve(p).then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape')).catch(() => { }); } catch (_) { }
+}, { once: false });
 
 'use strict';
 // Dasar gambar: kanvas, warna, aturan gaya (toneC, garis tepi berwarna), renderMap
@@ -6928,7 +6981,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.38.2';
+const GAME_VERSION = '1.39.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() {
@@ -9400,16 +9453,15 @@ Object.assign(World.prototype, {
       this._weatherT = (this._weatherT || 0) + dt;
       if (this._weatherT > 180) { // Cek tiap 3 menit
         this._weatherT = 0;
-        const willRain = Math.random() < 0.25;
-        if (willRain && this.weather !== 'rain') {
-          this.weather = 'rain';
+        // hujan 22%, kabut 18% (×2 pagi 04–09), sisanya cerah
+        const h = S.time || 12, r = Math.random(), fogP = (h >= 4 && h < 9) ? .36 : .18;
+        const next = r < .22 ? 'rain' : r < .22 + fogP ? 'fog' : 'clear';
+        if (next !== this.weather) {
+          const was = this.weather; this.weather = next;
           this.dropActiveFx(); this.makeActiveFx();
-          banner('Hujan turun membasahi tanah...', 'CUACA', false, 2000);
-        } else if (!willRain && this.weather === 'rain') {
-          this.weather = 'clear';
-          this.dropActiveFx(); this.makeActiveFx();
-          banner('Hujan telah reda. Langit kembali cerah.', 'CUACA', false, 2000);
-          playBGM(bgmFor(this.M));
+          if (next === 'rain') banner('Hujan turun membasahi tanah...', 'CUACA', false, 2000);
+          else if (next === 'fog') banner('Kabut tebal turun perlahan...', 'CUACA', false, 2000);
+          else banner(was === 'rain' ? 'Hujan telah reda. Langit kembali cerah.' : 'Kabut menipis. Pandangan kembali jelas.', 'CUACA', false, 2000);
         }
       }
     }
@@ -20077,7 +20129,10 @@ Object.assign(World.prototype, {
   },
   // cuaca per wilayah: kabut di rawa
   benuaWeather(id) {
-    const want = id === 'swamp' ? 'fog' : this.weather === 'fog' ? 'clear' : this.weather;
+    /* rawa selalu berkabut; keluar rawa → cuaca sebelum masuk rawa dikembalikan */
+    let want = this.weather;
+    if (id === 'swamp' && !this._swampFog) { this._swampFog = true; this._wxBefore = this.weather; want = 'fog'; }
+    else if (id !== 'swamp' && this._swampFog) { this._swampFog = false; want = this._wxBefore || 'clear'; }
     if (want === this.weather) return;
     this.weather = want; this.dropActiveFx(); this.makeActiveFx();
   },
@@ -22441,6 +22496,8 @@ async function openSettings() {
     ['Ukuran tombol', () => ['Kecil', 'Normal', 'Besar', 'Sangat besar'][OPT.btnSize], () => { OPT.btnSize = (OPT.btnSize + 1) % 4; applyPadOpt(); }, 'Ukuran tombol layar sentuh'],
     ['Skala Tombol', () => ['80%', '100%', '120%', '140%'][OPT.btnScale || 1], () => { OPT.btnScale = ((OPT.btnScale || 1) + 1) % 4; if (typeof layout === 'function') layout(); }, 'Skala rasio ukuran tombol sentuh'],
     ['Margin Sudut', () => ['Rapat (8px)', 'Normal (16px)', 'Lebar (28px)'][OPT.btnPad || 1], () => { OPT.btnPad = ((OPT.btnPad || 1) + 1) % 3; if (typeof layout === 'function') layout(); }, 'Jarak tombol sentuh dari sudut layar'],
+    ['Tata letak layar', () => LAYOUT_FULL ? 'Mendatar penuh' : 'Tegak', () => { try { localStorage.setItem('lumina_layout', LAYOUT_FULL ? 'tegak' : 'mendatar'); } catch (_) { }
+      if (!G.title && G.scene) saveGame(G.scene); location.reload(); }, 'Mendatar penuh = gaya Genshin/MLBB. Game dimuat ulang (progres disimpan dulu).'],
     ['Transparansi tombol', () => ['Penuh', 'Sedikit', 'Banyak'][OPT.btnAlpha], () => { OPT.btnAlpha = (OPT.btnAlpha + 1) % 3; applyPadOpt(); }, 'Supaya tombol tidak menutupi layar'],
     ['Bilah HP musuh', () => onoff(OPT.hpbar), () => { OPT.hpbar = !OPT.hpbar; }, 'Bilah HP kecil di atas musuh'],
     ['Ekspor save', () => null, async () => { saveGame(G.scene); await codeDialog('out'); }, 'Salin kode save ke perangkat lain'],
@@ -23070,9 +23127,66 @@ const _updFlow0 = World.prototype.update;
 World.prototype.update = function (time, dms) {
   const r = _updFlow0.call(this, time, dms);
   if (!this.passive && this.dt) { try { this.updFlow(this.dt); } catch (e) { /* animasi air tidak boleh menghentikan game */ } }
+  if (!this.passive && this === G.scene && this.dt) { try { this.updAtmos(this.dt); } catch (e) { /* suasana tidak boleh menghentikan game */ } }
   if (!this.passive && this === G.scene) { const wet = this.weather === 'rain' && !(this.M && this.M.indoor) && !G.title; rainSound(wet); setWeatherDuck(wet ? .7 : 1); }
   return r;
 };
+
+'use strict';
+// Suasana cahaya & kabut (wilayah aktif saja):
+// - lapisan kabut berlapis (2 lembar noise lembut, parallax & bergeser) untuk cuaca 'fog'; lebih tebal pagi hari
+// - cahaya hangat berkedip untuk SEMUA lampu di layar saat malam (lampu besar sudah punya `this.glows`) + lentera kecil di sekitar Arka
+const ATMOS_POOL = 18;
+function fogSheetTex(sc) {
+  if (sc.textures.exists('fogsheet')) return;
+  const N = 256, [c, x] = mk(N, N), D = x.createImageData(N, N), d = D.data;
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {      // noise berulang mulus (tiled) 2 oktaf
+    const v = vnoise(i, j, 64, 301) * .65 + vnoise(i, j, 24, 302) * .35, w = (a, b) => vnoise(a, b, 64, 301) * .65 + vnoise(a, b, 24, 302) * .35;
+    const fx = i / N, fy = j / N, t = v * (1 - fx) * (1 - fy) + w(i - N, j) * fx * (1 - fy) + w(i, j - N) * (1 - fx) * fy + w(i - N, j - N) * fx * fy;
+    const a = Math.max(0, Math.min(1, (t - .32) * 2.2)), o = (j * N + i) * 4;
+    d[o] = 232; d[o + 1] = 238; d[o + 2] = 240; d[o + 3] = Math.round(a * 200);
+  }
+  x.putImageData(D, 0, 0); sc.textures.addCanvas('fogsheet', c);
+}
+Object.assign(World.prototype, {
+  updAtmos(dt) {
+    if (G.title || !this.M) return;
+    const outdoor = !this.M.indoor && !this.M.dark, n = typeof nightAmt === 'function' ? nightAmt() : 0;
+    if (this._atmosM !== this.M || !this._fogL || !this._fogL[0].active) {
+      (this._fogL || []).forEach(o => o.destroy()); (this._glP || []).forEach(o => o.destroy()); fogSheetTex(this);
+      this._fogL = [0, 1].map(k => this.add.tileSprite(0, 0, VW, VH, 'fogsheet').setOrigin(0).setScrollFactor(0).setDepth(1.9e5 + k).setAlpha(0)
+        .setTileScale(k ? 1.6 : 1.1));
+      this._glP = []; this._lant = null; this._atmosM = this.M; this._fogA = 0;
+    }
+    // kabut: target alpha menurut cuaca & jam (pagi lebih tebal), berubah halus
+    const h = S.time || 12, morning = h >= 4 && h < 9 ? 1 : h >= 17 && h < 20 ? .6 : .35;
+    const want = outdoor && this.weather === 'fog' ? .3 + .35 * morning : 0;
+    this._fogA += (want - this._fogA) * Math.min(1, dt * .8);
+    const cam = this.cameras.main;
+    this._fogL.forEach((f, k) => {
+      f.setAlpha(this._fogA * (k ? .7 : 1)).setVisible(this._fogA > .01);
+      f.tilePositionX = cam.scrollX * (k ? .55 : .3) + this.t * (k ? 7 : 4); f.tilePositionY = cam.scrollY * (k ? .55 : .3) + this.t * (k ? 1.5 : .8);
+      f.setTint(n > .3 ? 0x8090b8 : 0xffffff);
+    });
+    // cahaya hangat lampu kecil + lentera Arka saat malam
+    const ga = outdoor ? Math.max(0, Math.min(.6, (n - .12) * 1.4)) : 0, fogBoost = 1 + this._fogA * .8;
+    if (!this._lant) this._lant = this.add.image(0, 0, 'nlL').setTint(0xffd890).setBlendMode(Phaser.BlendModes.ADD).setDepth(2e5 + 2);
+    const pl = this.pl;
+    this._lant.setVisible(ga > 0 && !!pl).setAlpha(ga * .45);
+    if (pl) this._lant.setPosition(pl.x, pl.y - 12).setScale((.55 + Math.sin(this.t * 4) * .02) * fogBoost);
+    let used = 0;
+    if (ga > 0) {
+      const v = cam.worldView;
+      for (const L of this.lights) {
+        if (!L.small || used >= ATMOS_POOL || L.x < v.x - 40 || L.x > v.right + 40 || L.y < v.y - 40 || L.y > v.bottom + 40) continue;
+        const g = this._glP[used] || (this._glP[used] = this.add.image(0, 0, 'nlW').setTint(0xffb050).setBlendMode(Phaser.BlendModes.ADD).setDepth(2e5 + 1));
+        g.setVisible(true).setPosition(L.x, L.y).setScale(.9 * fogBoost).setAlpha(ga * (.85 + Math.sin(this.t * 5 + L.x) * .15)); used++;
+      }
+    }
+    for (let i = used; i < this._glP.length; i++) this._glP[i].setVisible(false);
+    if (this.glows && fogBoost > 1) for (const g of this.glows) g.setScale(fogBoost);
+  }
+});
 
 'use strict';
 // Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py
