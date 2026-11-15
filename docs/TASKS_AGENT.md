@@ -2948,14 +2948,14 @@ boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
   hijau tenang), skor kepuasan kecil di atas rumah. Tanpa parameter: tidak aktif sama sekali.
 - Cek: `npm run check` (0 masalah); `?benua=1&zona=1` di desa → kawasan & radius terlihat.
 
-### [ ] T388. **Desa Lumina: pola desa medieval** — referensi: Stardew Valley (Pelican Town), Kingdom Come (Samopesh)
+### [ ] T388. ~~DIGANTIKAN gelombang 12 (T420–T426)~~ **Desa Lumina: pola desa medieval** — referensi: Stardew Valley (Pelican Town), Kingdom Come (Samopesh)
 
 - File: `src/world/maps/village.js`. Baca dulu: §7 (Desa vs kota) + laporan `check-zoning`.
 - Lakukan: satu jalan utama dari gerbang timur ke alun-alun kecil (sumur + shrine/altar + papan pengumuman); rumah renggang di kiri-kanan jalan dengan
   halaman; bengkel pandai besi dekat gerbang/jalan masuk; kandang & hay di pinggir dekat ladang; pagar kayu, bukan tembok batu.
 - Cek: `npm run check` (0 masalah); `check-zoning`: kepuasan desa ≥ 75, tidak ada rumah dalam radius bising bengkel.
 
-### [ ] T389. **Desa Lumina: halaman belakang & layanan** — referensi: Stoneshard (desa Osbrook)
+### [ ] T389. ~~DIGANTIKAN gelombang 12 (T420–T426)~~ **Desa Lumina: halaman belakang & layanan** — referensi: Stoneshard (desa Osbrook)
 
 - File: `src/world/maps/village.js`. Baca dulu: laporan `check-zoning` (halaman kosong, rumah tanpa layanan).
 - Lakukan: tiap rumah diberi 1–3 isi halaman belakang (woodpile, barrel, crate, kebun kecil, kandang ayam). Tambah/geser sumur & pos jaga agar setiap rumah
@@ -3185,6 +3185,138 @@ BUKAN petak seamless. Diulang dengan `% 64` di `src/world/ground.js` (±baris 15
 - Lakukan: salin aturan 1–5 secara singkat + cara membuat petak baru dengan `tools/gen_ground.py` (ubah palet/seed), agar agen berikutnya tidak memotong
   petak dari lembar GPT lagi.
 - Cek: `npm run check` (0 masalah); dokumen terbarui.
+
+## M. GELOMBANG 12 — tata letak Desa Lumina & 3 markas goblin (T420–T436)
+**Dasar:** `docs/WORLD_REFACTOR.md` (dunia organik, bukan diagram) + `docs/GEOGRAFI.md` §7 (desa abad pertengahan). Gelombang ini MENGGANTIKAN T388–T389
+(Desa Lumina) di gelombang 10 — jangan kerjakan keduanya. Kerjakan berurutan. Setelah tiap tugas: `node tools/check-layout.js` (0 masalah),
+`npm run check`, tangkapan layar dengan kamera diperkecil (konsol: `__game.sc.cameras.main.setZoom(.5)`).
+
+**Hasil pengamatan Claude (v1.37.0) — inilah yang diperbaiki:**
+- **Desa Lumina** (`src/world/maps/village.js`, 1024×712): pelataran tanah berbentuk ELIPS SEMPURNA (`rings: [[512, 345, 102, 84, 24]]`) mengelilingi
+  sumur; 8 rumah tersebar MERATA melingkari sumur (pola jari-jari/radial); 4 jalan utama memancar dari cincin seperti bintang; bagian dalam cincin
+  rumput kosong (hanya 2 bangku); 30 `treeA` ditaruh berjarak hampir sama di pinggir peta; hanya 1 kebun (72×52); rumah tanpa halaman belakang;
+  bengkel Pak Besi (742, 411) bersebelahan rumah (bising, lihat §7).
+- **3 markas goblin memakai TEMPLATE CERMIN YANG SAMA:** benteng di tengah-atas, 2 menara ±150 px kiri-kanan, 2 gubuk ±120 px kiri-kanan,
+  gerbang di tengah-bawah, lalu obor/panji/totem berderet simetris. Lokasi: Hutan Lumina (`forest.js` ±baris 41–57, benteng 1040, 220),
+  Hutan Dalam/Suku Akar Gelap (`wild.js` ±baris 34–45, benteng 420, 1500), Jalan Raya Lama/Perompak Kafilah (`city.js` ±baris 30–52, benteng 700, 1020).
+  Di markas Hutan Lumina: lapangan tanah bulat besar (`discs` 950/1050/1140, 300), rumpun pohon menutupi pagar & gerbang, musuh menumpuk di tengah,
+  pagar hanya di sisi gerbang (3 sisi lain terbuka tanpa alasan).
+
+**Yang TIDAK boleh berubah:** semua `doors` & `exits`, posisi rumah yang punya pintu interior (`{ to: ... }`: Penginapan 630,213; Rumah Arka 512,556;
+rumah pohon Tetua Bram 513,66), sumur (512, 345), NPC cerita (`elder`, `guard`, `smith`, `merchant`) maks geser 60 px, peti (`chests`), `viewpoint`,
+`lumina_shard`, `crystal`, kandang (`ranch`). Rumah lain boleh digeser maks 120 px — pintunya (entri `doors` dengan koordinat sama) WAJIB ikut digeser.
+
+### [ ] T420. **Selaraskan skill desa dengan aturan dunia** — referensi: —
+- File: `.agents/skills/village-organic-layout/SKILL.md`. Baca dulu: `docs/WORLD_REFACTOR.md` §2 & §7, `docs/GEOGRAFI.md` §7 (Desa vs kota).
+- Lakukan: ubah prinsip 2 ("Radial-Organic") menjadi: pusat desa = pelataran TAK BERATURAN di sekitar sumur (bukan cincin/elips sempurna), rumah
+  berkelompok di sepanjang jalan utama (bukan melingkar rata), jalan bertemu di pelataran dari arah tak simetris. Tambah bagian "Halaman belakang"
+  (T423) & "Zona fungsi" (T424). Perbarui diagram bagian 2 setelah T421–T425 selesai. Catat: jalan TANAH dibelokkan otomatis oleh `world/organic.js`.
+- Cek: skill tidak lagi menyarankan `rings` melingkar sempurna.
+
+### [ ] T421. **Pelataran sumur tak beraturan** — referensi: alun-alun desa Inggris (village green), Stardew Valley (Pelican Town)
+- File: `src/world/maps/village.js` (`rings`, `discs`, objek sekitar 512, 345). Baca dulu: `makeSD` di `ground.js` (cara `rings`/`discs` digambar).
+- Lakukan: hapus `rings`; ganti `discs: [[512, 345, 42]]` dengan 3–4 lingkaran bertumpuk tak sama besar yang condong ke satu sisi, contoh
+  `[[512, 345, 62], [462, 330, 46], [566, 368, 52], [520, 300, 38]]`. Isi pelataran: 1 pohon desa besar di tepi pelataran (`treeA` atau `bigtree` kecil),
+  papan pengumuman, 2 bangku menghadap sumur tidak simetris, 1 kios/gerobak sayur kecil (`crateCart` atau `market` mini) di sisi timur.
+- Cek: `check-layout` 0 masalah; tangkapan layar: tidak ada cincin tanah bundar, pelataran terlihat seperti tanah lapang yang terinjak warga.
+
+### [ ] T422. **Rumah berkelompok di sepanjang jalan, bukan melingkar** — referensi: desa jalan (street village) Eropa
+- File: `village.js` (`objs` rumah, `doors`, `paths` setapak pintu). Baca dulu: daftar "TIDAK boleh berubah" di atas.
+- Lakukan: rumah yang boleh digeser (Pondok Kayu 180,215; Rumah Darto & Lina 355,213; Rumah Bu Lastri 245,390; Rumah Tepi Sungai 680,530) disusun
+  berderet 2–3 di sisi jalan timur (ke Padang) dan jalan barat daya (ke jembatan), jarak antar rumah 90–140 px, beda maju-mundur 10–30 px
+  (tidak segaris). Setapak pintu (radius 8–10) dari pintu ke jalan terdekat ≤ 36 px. NPC pemilik rumah ikut digeser.
+- Cek: `check-layout` 0 masalah; tes cerita awal (`tests/bab*.spec.js` yang ada di desa) lulus; tidak ada lagi 8 rumah mengelilingi sumur rata.
+
+### [ ] T423. **Halaman belakang tiap rumah** — referensi: Stoneshard (Osbrook), burgage plot (GEOGRAFI §7)
+- File: `village.js` (`objs`). Baca dulu: `docs/PLACEMENT_RULES.md` (jarak objek), objek yang ada: `woodpile`, `barrel`, `crate`, `fence`, `hay`, `pot`.
+- Lakukan: di BELAKANG (sisi jauh dari jalan) tiap rumah taruh 2–4 dari: tumpukan kayu, tong, peti, kebun kecil (`gardens` 40×30), jemuran (bila ada
+  objeknya; kalau tidak, lewati), kandang ayam kecil, pagar kayu 2–4 segmen membentuk huruf L terbuka (bukan kotak tertutup).
+- Cek: `check-layout` 0 masalah; setiap rumah punya halaman berisi; jalan tetap bebas.
+
+### [ ] T424. **Zona fungsi desa** — referensi: GEOGRAFI §7 (bising/bau dijauhkan, tani di pinggir)
+- File: `village.js`. Baca dulu: §7 tabel kawasan & radius pengaruh.
+- Lakukan: bengkel Pak Besi: tambah area kerja di sisi jalan timur (anvil/forge/bellows + tong air) menghadap jalan, ≥ 120 px dari rumah biasa —
+  geser rumah biasa di dekatnya (bukan bengkelnya). Tani: perluas kebun Bu Lastri jadi 2–3 petak di barat (`gardens`), orang-orangan sawah,
+  pagar dengan celah masuk. Kandang (`ranch` 840,310): tambah hay & tong di sekitarnya, jauh dari rumah ≥ 100 px.
+- Cek: `check-layout` 0 masalah; tangkapan layar: barat = kebun, timur = kerja/ternak, tengah = pelataran & rumah.
+
+### [ ] T425. **Pohon desa berumpun, ada padang terbuka** — referensi: target_padang.png (`assets/reference/`)
+- File: `village.js` (30 `treeA`). Baca dulu: skill desa bagian 4 (aturan tabrakan pohon).
+- Lakukan: susun ulang 30 `treeA` jadi 6–7 rumpun (2–5 pohon, jarak 34–60 px, posisi acak bukan baris) + 3–4 pohon tunggal di dekat rumah
+  (peneduh halaman). Sisakan 2 padang rumput terbuka ≥ 150×100 px. Jangan ada pohon di jalan, pintu, pelataran, atau kebun.
+- Cek: `check-layout` 0 masalah; tidak ada deretan pohon berjarak sama.
+
+### [ ] T426. **Jalan masuk pelataran tidak memancar** — referensi: WORLD_REFACTOR §2
+- File: `village.js` (`paths`). Baca dulu: komentar jalan di file.
+- Lakukan: 4 jalan utama tidak boleh bertemu tepat di titik-titik simetris pelataran. Jalan utara masuk dari sisi barat laut pelataran, jalan timur
+  bercabang dulu ke bengkel lalu ke pelataran, jalan barat lewat kebun lalu masuk dari barat daya. Setapak pintu tetap radius 8–11.
+- Cek: `check-layout` 0 masalah; NPC `wander` tidak tersangkut (amati 2 menit).
+
+### [ ] T427. **Alat cek markas & simetri** — referensi: —
+- File: file baru `tools/check-camps.js` (pola memuat peta seperti `tools/check-layout.js`), daftarkan di `npm run check` sebagai PERINGATAN.
+- Lakukan: untuk tiap peta berisi `goblin_fortress`: (a) skor simetri = % objek `goblin_*` yang punya pasangan bertipe sama di posisi cermin terhadap
+  x benteng (selisih ≤ 20 px) → peringatan bila > 40%; (b) pohon/semak dalam 40 px dari objek `goblin_*` → MASALAH; (c) musuh: lebih dari 3 dalam
+  radius 80 px → peringatan; (d) cetak ringkasan per markas.
+- Cek: `node tools/check-camps.js` mencetak 3 markas dengan skor simetri awal (catat di bawah tugas ini).
+
+### [ ] T428. **Markas Hutan Lumina: perkemahan di tepi tebing** — referensi: Kingdom Come (kemah Cuman), Witcher 3 (kemah bandit)
+- File: `src/world/maps/forest.js` (objek `goblin_*`, `discs` 950/1050/1140, 300, `enemies` di sekitarnya). Baca dulu: `viewpoint` (1010, 260) & peti `c1` (1060, 300).
+- Lakukan: identitas = kemah perang di tepi tebing timur laut. Benteng menempel ke tepi tebing (geser ±80 px ke timur laut), BUKAN di tengah.
+  Pagar/palisade mengelilingi 3 sisi mengikuti bentuk tanah (pakai `goblin_gate` + `fence`/batang kayu), gerbang utama menghadap barat daya ke
+  jalan, celah kecil kedua di timur. Gubuk & kuali berkelompok di barat, kurungan tersembunyi di belakang benteng, tempa dekat gerbang. Ganti 3
+  `discs` bulat jadi 4–5 lingkaran tak sama besar membentuk lapangan lonjong tak beraturan. Hapus/geser pohon yang menutupi pagar & gerbang.
+- Batasan: `viewpoint`, `lumina_shard`, peti `c1` tetap; obor/panji/totem TIDAK berderet satu garis.
+- Cek: `check-camps` skor simetri < 25%, 0 masalah pohon; `check-layout` 0 masalah.
+
+### [ ] T429. **Markas Hutan Dalam: kampung ritual Suku Akar Gelap** — referensi: Skyrim (kemah Forsworn), Zelda BotW (kamp Bokoblin)
+- File: `src/world/maps/wild.js` (±baris 34–45, objek di sekitar 420, 1550). Baca dulu: `ruinRing` & lapangan reruntuhan Aurel (WORLD_REFACTOR §7).
+- Lakukan: identitas = kampung dukun di antara akar raksasa. Pusat = altar ritual (`goblin_shrine`) — lingkaran batu/tulang di sekitarnya BOLEH (ritual).
+  Benteng bersandar ke dinding akar/batu di sisi barat (bukan di tengah). Gubuk tersebar membentuk busur mengikuti kontur, beda jarak 60–120 px.
+  Kuali di samping altar, kurungan di pinggir semak. Jalan masuk berliku dari utara; totem tengkorak di sepanjang jalan masuk (bukan sebaris di gerbang).
+  Tambah `root`/`deadtree`/`bones` di sekeliling sebagai pagar alami.
+- Cek: `check-camps` skor simetri < 25%; tangkapan layar terlihat berbeda total dari markas Hutan Lumina.
+
+### [ ] T430. **Markas Jalan Raya Lama: pos rampok di tebing jalan** — referensi: Mount & Blade (sarang bandit), Red Dead (kemah pencuri)
+- File: `src/world/maps/city.js` peta `road` (±baris 30–52). Baca dulu: `paths` jalan raya & NPC `kafilah` (410, 1250).
+- Lakukan: identitas = pos penghadang di tebing timur jalan. Gerbang/palang (`goblin_gate`) berdiri DI SAMPING jalan sebagai pos tol; gerobak
+  rampasan (`goblin_wagon`) + tumpukan peti & tong curian berderet tak rapi di bahu jalan; kurungan dekat gerobak (tawanan kafilah). Benteng di
+  atas tebing (lebih tinggi/jauh dari jalan), 1 menara melihat ke utara jalan dan 1 ke selatan (bukan kiri-kanan simetris). Gubuk di belakang benteng.
+- Batasan: jalan raya tetap bisa dilalui (bisa berbelok mengitari pos); NPC kafilah tidak digeser.
+- Cek: `check-camps` skor simetri < 25%; `check-layout` 0 masalah; berjalan menyusuri jalan tidak tersangkut.
+
+### [ ] T431. **Penempatan musuh markas yang masuk akal** — referensi: Far Cry (pos musuh), Zelda BotW
+- File: `forest.js`, `wild.js`, `city.js` (`enemies` di sekitar markas). Baca dulu: `src/ai/enemies.js` (cari `leash`, cara musuh menjaga posisi).
+- Lakukan: per markas: 2 penjaga di gerbang, pemanah di dekat menara, dukun di dekat altar/kuali, elite di depan pintu benteng, 1–2 musuh di luar pagar
+  di jalan masuk (penjaga depan). Tidak lebih dari 3 musuh dalam radius 80 px saat muncul. Jumlah total musuh per markas TIDAK bertambah.
+- Cek: `check-camps` tanpa peringatan musuh menumpuk; masuk markas → musuh menyerang bergelombang, bukan sekaligus.
+
+### [ ] T432. **Jalan masuk & penanda markas** — referensi: Dark Souls (penanda bahaya lingkungan), BotW (tengkorak & obor)
+- File: ketiga peta markas (`paths`, `objs`). Baca dulu: `paths` menuju markas.
+- Lakukan: tiap markas: 1 papan peringatan (`sign` "Wilayah Goblin — putar balik!") 250–400 px sebelum gerbang, 2–3 totem/tengkorak berjarak
+  120–200 px di sepanjang jalan masuk, obor di gerbang saja. Tambah 1 jalan setapak sempit alternatif (radius 8) masuk dari sisi lain (jalur menyelinap).
+- Cek: `check-layout` 0 masalah; dari jalan utama penanda terlihat sebelum markas.
+
+### [ ] T433. **Properti cerita khas tiap markas** — referensi: environmental storytelling (Dark Souls, Fallout)
+- File: ketiga peta markas (`objs`). Baca dulu: objek yang tersedia di `src/world/objects.js` (grep `goblin_`, `bones`, `crate`, `barrel`, `log`).
+- Lakukan: Hutan Lumina = trofi buruan (tulang, kulit di rak bila ada), kristal hijau di altar; Hutan Dalam = tulang ritual & akar membelit reruntuhan;
+  Jalan Raya = barang kafilah curian (peti, tong, gerobak rusak, roda lepas). 6–10 objek kecil per markas, berkelompok 2–4.
+- Cek: `check-layout` 0 masalah; tiap markas langsung dikenali temanya dari tangkapan layar.
+
+### [ ] T434. **Uji pemain & catatan** — referensi: —
+- File: catatan di bawah tugas ini. Baca dulu: —.
+- Lakukan: main dari Desa → Hutan Lumina (markas) → Hutan Dalam (markas) → Jalan Raya Lama (markas). Catat: desa terasa hidup & tidak melingkar?
+  tiap markas berbeda? ada yang tersangkut? 3 perbaikan kecil paling berdampak, kerjakan bila < 40 baris data.
+- Cek: catatan berisi jawaban & perbaikan.
+
+### [ ] T435. **Dokumentasi** — referensi: —
+- File: `docs/WORLD_REFACTOR.md` §4 (baris Desa Lumina & tambah baris 3 markas), skill desa bagian 2 (diagram baru).
+- Lakukan: tulis tata letak akhir (koordinat pusat, identitas, aturan khusus) agar agen berikutnya tidak mengembalikan pola melingkar/cermin.
+- Cek: `npm run check` 0 masalah.
+
+### [ ] T436. **Tangkapan layar sebelum/sesudah** — referensi: —
+- File: `assets/reference/layout_desa_sebelum.png`, `_sesudah.png`, `layout_markas_*.png`. Baca dulu: —.
+- Lakukan: simpan tangkapan layar kamera zoom .5 untuk desa & 3 markas (sebelum: ambil dari commit sebelum T421 / T428).
+- Cek: file ada & dirujuk dari WORLD_REFACTOR §4.
 
 ---
 
