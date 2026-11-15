@@ -7,9 +7,9 @@ Format: `nama` baris. Urutan file = urutan muat di index.html.
 _Konstanta layar & util kecil_
 `VW` 6 · `VH` 7 · `rnd` 12 · `ri` 13 · `pick` 14 · `clamp` 15 · `sleep` 16 · `$` 17 · `SCREEN` 18
 
-## src/core/audio.js (189 baris)
+## src/core/audio.js (209 baris)
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
-`AU_FILES` 4 · `AU` 16 · `NI` 17 · `nf()` 18 · `parseSeq()` 19 · `bossBass` 20 · `TRACKS` 21 · `auInit()` 43 · `tone()` 54 · `sweep()` 55 · `noise()` 56 · `_AUDIO_POOL` 57 · `BGM_BASE_VOL` 58 · `_bgmDuck` 70 · `setBgmDuck()` 71 · `stopAudioTag()` 75 · `playBGM()` 82 · `_lastSfx` 138 · `sfx()` 139
+`AU_FILES` 4 · `AU` 18 · `NI` 19 · `nf()` 20 · `parseSeq()` 21 · `bossBass` 22 · `TRACKS` 23 · `auInit()` 45 · `tone()` 57 · `sweep()` 58 · `noise()` 59 · `_AUDIO_POOL` 60 · `BGM_BASE_VOL` 62 · `_bgmDuck` 63 · `routeTag()` 65 · `tagVolFor()` 69 · `tagSetVol()` 73 · `tagGetVol()` 74 · `setWeatherDuck()` 75 · `_rain` 77 · `rainSound()` 78 · `setBgmDuck()` 93 · `stopAudioTag()` 97 · `playBGM()` 104 · `_lastSfx` 158 · `sfx()` 159
 
 ## src/core/input.js (281 baris)
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
@@ -151,9 +151,9 @@ _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
 _Bilah 5 slot jurus dengan cooldown (T327)_
 `SPELLBAR` 3 · `buildSpellbar()` 4 · `updSpellbar()` 12
 
-## src/core/state.js (160 baris)
+## src/core/state.js (157 baris)
 _Status pemain (S), simpan/muat, rumus stat_
-`SAVE_BASE` 6 · `slotKey` 7 · `SAVE_SLOT` 8 · `SAVE_KEY` 9 · `setSlot()` 10 · `slotInfo()` 12 · `DIRV` 27 · `S` 28 · `OPT_KEY` 30 · `DIFF` 32 · `GAME_VERSION` 33 · `OPT` 34 · `saveOpt()` 35 · `applyOpt()` 36 · `newState()` 47 · `eqv()` 48 · `UPG` 54 · `itemName` 55 · `BUFF` 57 · `buffOn` 58 · `stat()` 59 · `need()` 95 · `has` 96 · `addItem()` 97 · `hasSave()` 106 · `saveGame()` 107 · `readSaveRaw()` 118 · `loadSave()` 122
+`SAVE_BASE` 6 · `slotKey` 7 · `SAVE_SLOT` 8 · `SAVE_KEY` 9 · `setSlot()` 10 · `slotInfo()` 12 · `DIRV` 27 · `S` 28 · `OPT_KEY` 30 · `DIFF` 32 · `GAME_VERSION` 33 · `OPT` 34 · `saveOpt()` 35 · `applyOpt()` 36 · `newState()` 44 · `eqv()` 45 · `UPG` 51 · `itemName` 52 · `BUFF` 54 · `buffOn` 55 · `stat()` 56 · `need()` 92 · `has` 93 · `addItem()` 94 · `hasSave()` 103 · `saveGame()` 104 · `readSaveRaw()` 115 · `loadSave()` 119
 
 ## src/data/items.js (274 baris)
 _Data item & resep tempa_
@@ -219,9 +219,9 @@ _Efek visual sihir: lingkar rune, proyektil, ledakan, dan aura (T318-T322)_
 _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipakai (tingkat I–III)._
 `JURUS` 4 · `MASTERY` 13 · `tierOf` 14 · `learned` 15 · `useJurus()` 16 · `canTeach` 20 · `.learnTalk()` 23 · `.castSpell()` 38
 
-## src/systems/ambient.js (342 baris)
+## src/systems/ambient.js (341 baris)
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
-`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 215 · `.ripple()` 216 · `.spawnRainEmitters()` 230 · `.rainSplash()` 242 · `.updRainFx()` 250 · `artQuestArrow()` 323 · `.updQuestGuide()` 330
+`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 214 · `.ripple()` 215 · `.spawnRainEmitters()` 229 · `.rainSplash()` 241 · `.updRainFx()` 249 · `artQuestArrow()` 322 · `.updQuestGuide()` 329
 
 ## src/systems/status.js (125 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
@@ -483,7 +483,7 @@ _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung da
 _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),_
 `ORG_SKIP` 5 · `ORG_FILL` 6 · `orgPlanned()` 7 · `orgCurve()` 9
 
-## src/systems/waterflow.js (60 baris)
+## src/systems/waterflow.js (61 baris)
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
 `FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `.updFlow()` 33 · `_updFlow0` 54
 

@@ -11,7 +11,9 @@ const AU_FILES = {
   swamp: 'assets/music/Mysterious & Haunting Forest Exploration.mp3',
   cave: 'assets/music/Mysterious & Haunting Forest Exploration.mp3',
   boss: 'assets/music/Epic Boss Awakening.mp3',
-  battle: 'assets/music/Clash of Destiny.mp3'
+  battle: 'assets/music/Clash of Destiny.mp3',
+  field: 'assets/music/Whispering Breezes Village.mp3',   // jalan, danau, sungai, peralihan (dulu tanpa MP3 → sunyi/chiptune)
+  snow: 'assets/music/Mysterious & Haunting Forest Exploration.mp3'
 };
 const AU = { ctx: null, on: true, cur: null, seq: null, tag: null, tagCur: null };
 const NI = { C: 0, 'C#': 1, D: 2, 'D#': 3, E: 4, F: 5, 'F#': 6, G: 7, 'G#': 8, A: 9, 'A#': 10, B: 11 };
@@ -48,6 +50,7 @@ function auInit() {
     AU.music = AU.ctx.createGain(); AU.music.gain.value = .09; AU.music.connect(AU.master);
     AU.sfx = AU.ctx.createGain(); AU.sfx.gain.value = .2; AU.sfx.connect(AU.master); if (typeof applyOpt === 'function') applyOpt();
     const len = AU.ctx.sampleRate; AU.noise = AU.ctx.createBuffer(1, len, AU.ctx.sampleRate); const d = AU.noise.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    if (AU.tag) { routeTag(AU.tag); tagSetVol(AU.tag, tagVolFor(AU.tagCur)); }
     if (AU.cur) { const c = AU.cur; AU.cur = null; playBGM(c); }
   } catch (e) { AU.ctx = null; }
 }
@@ -55,19 +58,38 @@ function tone(f, t, d, type, vol, dest) { if (!f) return; const o = AU.ctx.creat
 function sweep(f0, f1, t, d, type, vol) { const o = AU.ctx.createOscillator(), gn = AU.ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + d); gn.gain.setValueAtTime(vol, t); gn.gain.linearRampToValueAtTime(0, t + d); o.connect(gn); gn.connect(_sfxDest || AU.sfx); o.start(t); o.stop(t + d + .02); }
 function noise(t, d, freq, vol, f1) { const s = AU.ctx.createBufferSource(); s.buffer = AU.noise; const f = AU.ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(freq, t); if (f1) f.frequency.exponentialRampToValueAtTime(f1, t + d); f.Q.value = .9; const gn = AU.ctx.createGain(); gn.gain.setValueAtTime(vol, t); gn.gain.exponentialRampToValueAtTime(.001, t + d); s.connect(f); f.connect(gn); gn.connect(_sfxDest || AU.sfx); s.start(t); s.stop(t + d + .02); }
 const _AUDIO_POOL = {};
-const BGM_BASE_VOL = {
-  town: 0.38,
-  townN: 0.34,
-  meadow: 0.36,
-  city: 0.36,
-  forest: 0.40,
-  deepwood: 0.40,
-  swamp: 0.38,
-  cave: 0.38,
-  battle: 0.48,
-  boss: 0.52
-};
-let _bgmDuck = 1.0;
+// volume dasar musik MP3: sengaja rendah agar SELALU di bawah efek suara & dialog (MP3 dimaster jauh lebih keras dari efek WebAudio)
+const BGM_BASE_VOL = { town: .18, townN: .16, meadow: .18, city: .18, field: .18, forest: .2, deepwood: .2, swamp: .2, cave: .2, snow: .18, battle: .22, boss: .25 };
+let _bgmDuck = 1.0, _wxDuck = 1.0;
+// musik MP3 dialirkan lewat WebAudio (iPhone/Safari mengabaikan audio.volume → dulu musik selalu 100% di iPhone)
+function routeTag(a) {
+  if (!a || a._g || !AU.ctx || !AU.ctx.createMediaElementSource) return;
+  try { a._src = AU.ctx.createMediaElementSource(a); a._g = AU.ctx.createGain(); a._src.connect(a._g); a._g.connect(AU.master); a.volume = 1; } catch (_) { a._g = null; }
+}
+function tagVolFor(name) {
+  const base = BGM_BASE_VOL[name] || .18, mus = typeof OPT !== 'undefined' ? OPT.mus / 3 : 1;
+  return Math.max(0, Math.min(1, base * mus * _bgmDuck * _wxDuck * (AU.on ? 1 : 0)));
+}
+function tagSetVol(a, v) { if (!a) return; if (a._g) a._g.gain.value = v; else a.volume = Math.max(0, Math.min(1, v)); }
+function tagGetVol(a) { return a ? (a._g ? a._g.gain.value : a.volume) : 0; }
+function setWeatherDuck(f) { if (_wxDuck === f) return; _wxDuck = f; if (AU.tag) tagSetVol(AU.tag, tagVolFor(AU.tagCur)); }
+// suara hujan: derau putih disaring (desis hujan) + tetesan acak; menyala/mati halus
+let _rain = null;
+function rainSound(on) {
+  if (!AU.ctx) return; const t = AU.ctx.currentTime, lvl = .06 * (typeof OPT !== 'undefined' ? OPT.sfx / 3 : 1);
+  if (on && !_rain) {
+    const s = AU.ctx.createBufferSource(); s.buffer = AU.noise; s.loop = true;
+    const hp = AU.ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 400;
+    const lp = AU.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600;
+    const g = AU.ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(lvl, t + 2);
+    s.connect(hp); hp.connect(lp); lp.connect(g); g.connect(AU.master); s.start();
+    _rain = { s, g, drip: setInterval(() => { if (AU.ctx && Math.random() < .7) noise(AU.ctx.currentTime, .03, 1800 + Math.random() * 2400, .05 + Math.random() * .05); }, 140) };
+  } else if (!on && _rain) {
+    const r = _rain; _rain = null; clearInterval(r.drip);
+    r.g.gain.cancelScheduledValues(t); r.g.gain.setValueAtTime(r.g.gain.value, t); r.g.gain.linearRampToValueAtTime(0, t + 1.5);
+    setTimeout(() => { try { r.s.stop(); } catch (_) { } }, 1700);
+  } else if (on && _rain) _rain.g.gain.value = Math.min(_rain.g.gain.value, lvl) || lvl;
+}
 function setBgmDuck(factor = 1.0) {
   _bgmDuck = factor;
   if (typeof applyOpt === 'function') applyOpt();
@@ -94,9 +116,7 @@ function playBGM(name) {
         _AUDIO_POOL[file].loop = true;
       }
       const a = _AUDIO_POOL[file];
-      const base = BGM_BASE_VOL[name] || 0.25;
-      const volMul = typeof OPT !== 'undefined' ? OPT.mus / 3 : 1;
-      a.volume = Math.max(0, Math.min(1, base * volMul * _bgmDuck * (AU.on ? 1 : 0)));
+      routeTag(a); tagSetVol(a, tagVolFor(name));
       AU.tag = a;
       AU.tagCur = name;
       if (same) return;

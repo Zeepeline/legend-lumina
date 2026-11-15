@@ -89,7 +89,7 @@ class World extends Phaser.Scene {
     this.events.once('shutdown', () => this.events.off('postupdate', this.camStep, this));
     this.mpT = 0;
     if (P) { this.initPassive(data); return; }
-    playBGM(G.title ? 'town' : this.weather === 'rain' ? null : bgmFor(M));
+    playBGM(G.title ? 'town' : bgmFor(M));
     if (!G.title) achCheck(this);
     FADE.style.opacity = 0;
     if (!G.title) { updHud(); showHud(true); if (!data.quiet) banner(M.name, M.id === 'village' ? 'SELAMAT DATANG DI' : 'MEMASUKI'); }

@@ -326,7 +326,9 @@ const AU_FILES = {
   swamp: 'assets/music/Mysterious & Haunting Forest Exploration.mp3',
   cave: 'assets/music/Mysterious & Haunting Forest Exploration.mp3',
   boss: 'assets/music/Epic Boss Awakening.mp3',
-  battle: 'assets/music/Clash of Destiny.mp3'
+  battle: 'assets/music/Clash of Destiny.mp3',
+  field: 'assets/music/Whispering Breezes Village.mp3',   // jalan, danau, sungai, peralihan (dulu tanpa MP3 → sunyi/chiptune)
+  snow: 'assets/music/Mysterious & Haunting Forest Exploration.mp3'
 };
 const AU = { ctx: null, on: true, cur: null, seq: null, tag: null, tagCur: null };
 const NI = { C: 0, 'C#': 1, D: 2, 'D#': 3, E: 4, F: 5, 'F#': 6, G: 7, 'G#': 8, A: 9, 'A#': 10, B: 11 };
@@ -363,6 +365,7 @@ function auInit() {
     AU.music = AU.ctx.createGain(); AU.music.gain.value = .09; AU.music.connect(AU.master);
     AU.sfx = AU.ctx.createGain(); AU.sfx.gain.value = .2; AU.sfx.connect(AU.master); if (typeof applyOpt === 'function') applyOpt();
     const len = AU.ctx.sampleRate; AU.noise = AU.ctx.createBuffer(1, len, AU.ctx.sampleRate); const d = AU.noise.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    if (AU.tag) { routeTag(AU.tag); tagSetVol(AU.tag, tagVolFor(AU.tagCur)); }
     if (AU.cur) { const c = AU.cur; AU.cur = null; playBGM(c); }
   } catch (e) { AU.ctx = null; }
 }
@@ -370,19 +373,38 @@ function tone(f, t, d, type, vol, dest) { if (!f) return; const o = AU.ctx.creat
 function sweep(f0, f1, t, d, type, vol) { const o = AU.ctx.createOscillator(), gn = AU.ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + d); gn.gain.setValueAtTime(vol, t); gn.gain.linearRampToValueAtTime(0, t + d); o.connect(gn); gn.connect(_sfxDest || AU.sfx); o.start(t); o.stop(t + d + .02); }
 function noise(t, d, freq, vol, f1) { const s = AU.ctx.createBufferSource(); s.buffer = AU.noise; const f = AU.ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(freq, t); if (f1) f.frequency.exponentialRampToValueAtTime(f1, t + d); f.Q.value = .9; const gn = AU.ctx.createGain(); gn.gain.setValueAtTime(vol, t); gn.gain.exponentialRampToValueAtTime(.001, t + d); s.connect(f); f.connect(gn); gn.connect(_sfxDest || AU.sfx); s.start(t); s.stop(t + d + .02); }
 const _AUDIO_POOL = {};
-const BGM_BASE_VOL = {
-  town: 0.38,
-  townN: 0.34,
-  meadow: 0.36,
-  city: 0.36,
-  forest: 0.40,
-  deepwood: 0.40,
-  swamp: 0.38,
-  cave: 0.38,
-  battle: 0.48,
-  boss: 0.52
-};
-let _bgmDuck = 1.0;
+// volume dasar musik MP3: sengaja rendah agar SELALU di bawah efek suara & dialog (MP3 dimaster jauh lebih keras dari efek WebAudio)
+const BGM_BASE_VOL = { town: .18, townN: .16, meadow: .18, city: .18, field: .18, forest: .2, deepwood: .2, swamp: .2, cave: .2, snow: .18, battle: .22, boss: .25 };
+let _bgmDuck = 1.0, _wxDuck = 1.0;
+// musik MP3 dialirkan lewat WebAudio (iPhone/Safari mengabaikan audio.volume → dulu musik selalu 100% di iPhone)
+function routeTag(a) {
+  if (!a || a._g || !AU.ctx || !AU.ctx.createMediaElementSource) return;
+  try { a._src = AU.ctx.createMediaElementSource(a); a._g = AU.ctx.createGain(); a._src.connect(a._g); a._g.connect(AU.master); a.volume = 1; } catch (_) { a._g = null; }
+}
+function tagVolFor(name) {
+  const base = BGM_BASE_VOL[name] || .18, mus = typeof OPT !== 'undefined' ? OPT.mus / 3 : 1;
+  return Math.max(0, Math.min(1, base * mus * _bgmDuck * _wxDuck * (AU.on ? 1 : 0)));
+}
+function tagSetVol(a, v) { if (!a) return; if (a._g) a._g.gain.value = v; else a.volume = Math.max(0, Math.min(1, v)); }
+function tagGetVol(a) { return a ? (a._g ? a._g.gain.value : a.volume) : 0; }
+function setWeatherDuck(f) { if (_wxDuck === f) return; _wxDuck = f; if (AU.tag) tagSetVol(AU.tag, tagVolFor(AU.tagCur)); }
+// suara hujan: derau putih disaring (desis hujan) + tetesan acak; menyala/mati halus
+let _rain = null;
+function rainSound(on) {
+  if (!AU.ctx) return; const t = AU.ctx.currentTime, lvl = .06 * (typeof OPT !== 'undefined' ? OPT.sfx / 3 : 1);
+  if (on && !_rain) {
+    const s = AU.ctx.createBufferSource(); s.buffer = AU.noise; s.loop = true;
+    const hp = AU.ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 400;
+    const lp = AU.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600;
+    const g = AU.ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(lvl, t + 2);
+    s.connect(hp); hp.connect(lp); lp.connect(g); g.connect(AU.master); s.start();
+    _rain = { s, g, drip: setInterval(() => { if (AU.ctx && Math.random() < .7) noise(AU.ctx.currentTime, .03, 1800 + Math.random() * 2400, .05 + Math.random() * .05); }, 140) };
+  } else if (!on && _rain) {
+    const r = _rain; _rain = null; clearInterval(r.drip);
+    r.g.gain.cancelScheduledValues(t); r.g.gain.setValueAtTime(r.g.gain.value, t); r.g.gain.linearRampToValueAtTime(0, t + 1.5);
+    setTimeout(() => { try { r.s.stop(); } catch (_) { } }, 1700);
+  } else if (on && _rain) _rain.g.gain.value = Math.min(_rain.g.gain.value, lvl) || lvl;
+}
 function setBgmDuck(factor = 1.0) {
   _bgmDuck = factor;
   if (typeof applyOpt === 'function') applyOpt();
@@ -409,9 +431,7 @@ function playBGM(name) {
         _AUDIO_POOL[file].loop = true;
       }
       const a = _AUDIO_POOL[file];
-      const base = BGM_BASE_VOL[name] || 0.25;
-      const volMul = typeof OPT !== 'undefined' ? OPT.mus / 3 : 1;
-      a.volume = Math.max(0, Math.min(1, base * volMul * _bgmDuck * (AU.on ? 1 : 0)));
+      routeTag(a); tagSetVol(a, tagVolFor(name));
       AU.tag = a;
       AU.tagCur = name;
       if (same) return;
@@ -6908,7 +6928,7 @@ let S = null;
 const OPT_KEY = 'legenda_lumina_opt';
 // Tingkat kesulitan (fitur #15): pengali kerusakan musuh & HP musuh
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75 }, { n: 'Normal', dmg: 1, hp: 1 }, { n: 'Sulit', dmg: 1.45, hp: 1.35 }];
-const GAME_VERSION = '1.38.1';
+const GAME_VERSION = '1.38.2';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() {
@@ -6917,10 +6937,7 @@ function applyOpt() {
   AU.music.gain.value = .09 * (OPT.mus / 3) * duck;
   AU.sfx.gain.value = .2 * OPT.sfx / 3;
   AU.master.gain.value = AU.on ? 1 : 0;
-  if (AU.tag) {
-    const base = (typeof BGM_BASE_VOL !== 'undefined' && BGM_BASE_VOL[AU.tagCur]) ? BGM_BASE_VOL[AU.tagCur] : 0.25;
-    AU.tag.volume = Math.max(0, Math.min(1, base * (OPT.mus / 3) * duck * (AU.on ? 1 : 0)));
-  }
+  if (AU.tag) tagSetVol(AU.tag, tagVolFor(AU.tagCur));
 }
 function newState() { return { lv: 1, exp: 0, hp: 42, mp: 14, sta: 100, gold: 20, inv: { potion: 3, ether: 1, wsword: 1, cloth: 1 }, eq: { wpn: 'wsword', arm: 'cloth', acc: null, altWpn: null }, stage: 0, side: { patok: 0, mochi: 0, darto: 0, joko: 0 }, flags: {}, seen: { village: 1 }, map: 'village', x: 512, y: 380, dir: 'up', time: 8, day: 1, kills: {}, ach: {}, st: { fish: 0, harvest: 0, kills: 0, bosses: 0, goldEarned: 0, steps: 0, crafted: 0, cooked: 0, mined: 0, barrels: 0, trees: 0, playTime: 0, backstabs: 0 }, garden: [null, null], pet: false, petDog: false, flowerPlots: [null, null], warps: { village: 1 }, up: {}, buff: {}, lore: {}, learn: {}, mast: {}, spell: null, bounties: {}, bountiesDone: {}, fishLog: {}, tipsDone: {}, locked: {}, titles: ['Petualang Pemula'], title: 'Petualang Pemula', boardDay: 0, boardDone: {}, loadouts: [null, null, null], buyback: [], pins: {}, socket: {}, dailyFeats: {}, newItems: {}, mail: [], readMail: {}, spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {}, shards: {}, bank: { gold: 0, day: 1 }, records: {}, outfit: 'default', runePillars: { step: 0, lit: {}, solved: false }, homeStyle: { floor: 'wood', wall: 'wood' }, arenaRank: 0, talents: { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] }, bento: [], courierTimer: null, auctionWon: {}, flask: { n: 3, max: 3 }, lost: null }; }
 function eqv(k) {
@@ -8169,7 +8186,7 @@ class World extends Phaser.Scene {
     this.events.once('shutdown', () => this.events.off('postupdate', this.camStep, this));
     this.mpT = 0;
     if (P) { this.initPassive(data); return; }
-    playBGM(G.title ? 'town' : this.weather === 'rain' ? null : bgmFor(M));
+    playBGM(G.title ? 'town' : bgmFor(M));
     if (!G.title) achCheck(this);
     FADE.style.opacity = 0;
     if (!G.title) { updHud(); showHud(true); if (!data.quiet) banner(M.name, M.id === 'village' ? 'SELAMAT DATANG DI' : 'MEMASUKI'); }
@@ -9388,7 +9405,6 @@ Object.assign(World.prototype, {
           this.weather = 'rain';
           this.dropActiveFx(); this.makeActiveFx();
           banner('Hujan turun membasahi tanah...', 'CUACA', false, 2000);
-          playBGM(null);
         } else if (!willRain && this.weather === 'rain') {
           this.weather = 'clear';
           this.dropActiveFx(); this.makeActiveFx();
@@ -17069,11 +17085,11 @@ function swapBGM(name, fadeSec = 1) {
   const fo = Math.min(.5, fadeSec * .5), fi = Math.max(.5, fadeSec * .5);
   g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + fo);
   if (AU.tag) {
-    const startVol = AU.tag.volume;
+    const startVol = tagGetVol(AU.tag);
     let fadeStep = 0;
     const fInt = setInterval(() => {
       fadeStep++;
-      if (AU.tag) AU.tag.volume = Math.max(0, startVol * (1 - fadeStep / 10));
+      if (AU.tag) tagSetVol(AU.tag, Math.max(0, startVol * (1 - fadeStep / 10)));
       if (fadeStep >= 10) clearInterval(fInt);
     }, Math.round(fo * 100));
   }
@@ -19688,7 +19704,7 @@ Object.assign(World.prototype, {
     B.makeActiveFx(); B.spawnSeason(); B.initPolish();
     B.camFollow = true; B.cx = cam.scrollX + dx; B.cy = cam.scrollY + dy; B.cameras.main.setScroll(Math.round(B.cx), Math.round(B.cy));
     B.scene.bringToTop(); B.regT = 0; B.regBounds();
-    if (B.weather !== 'rain') playBGM(bgmFor(B.M)); banner(B.M.name, 'MEMASUKI'); updHud(); achCheck(B);
+    playBGM(bgmFor(B.M)); banner(B.M.name, 'MEMASUKI'); updHud(); achCheck(B);
   },
 });
 // serangan monster wilayah pasif mengenai Arka di wilayah aktif
@@ -20080,7 +20096,7 @@ Object.assign(World.prototype, {
     const R = MAPS[id], was = this.regId; this.regId = id; this.R = R; S.map = id; S.seen[id] = 1;
     if (G.title) return;
     this.benuaWeather(id); this.benuaAmbient(id); this.ch5Enter(id);
-    if (!this.bossOn) playBGM(this.weather === 'rain' ? null : bgmFor(R));
+    if (!this.bossOn) playBGM(bgmFor(R));
     const lb = this.lastBanner; // banner tidak berulang saat bolak-balik di perbatasan
     if (was && (!lb || lb.id !== id || this.t - lb.t > 20)) {
       banner(R.name, id === 'village' ? 'SELAMAT DATANG DI' : 'MEMASUKI'); this.lastBanner = { id, t: this.t };
@@ -23054,6 +23070,7 @@ const _updFlow0 = World.prototype.update;
 World.prototype.update = function (time, dms) {
   const r = _updFlow0.call(this, time, dms);
   if (!this.passive && this.dt) { try { this.updFlow(this.dt); } catch (e) { /* animasi air tidak boleh menghentikan game */ } }
+  if (!this.passive && this === G.scene) { const wet = this.weather === 'rain' && !(this.M && this.M.indoor) && !G.title; rainSound(wet); setWeatherDuck(wet ? .7 : 1); }
   return r;
 };
 

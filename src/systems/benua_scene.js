@@ -115,7 +115,7 @@ Object.assign(World.prototype, {
     const R = MAPS[id], was = this.regId; this.regId = id; this.R = R; S.map = id; S.seen[id] = 1;
     if (G.title) return;
     this.benuaWeather(id); this.benuaAmbient(id); this.ch5Enter(id);
-    if (!this.bossOn) playBGM(this.weather === 'rain' ? null : bgmFor(R));
+    if (!this.bossOn) playBGM(bgmFor(R));
     const lb = this.lastBanner; // banner tidak berulang saat bolak-balik di perbatasan
     if (was && (!lb || lb.id !== id || this.t - lb.t > 20)) {
       banner(R.name, id === 'village' ? 'SELAMAT DATANG DI' : 'MEMASUKI'); this.lastBanner = { id, t: this.t };

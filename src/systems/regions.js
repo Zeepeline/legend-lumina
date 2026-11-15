@@ -80,7 +80,7 @@ Object.assign(World.prototype, {
     B.makeActiveFx(); B.spawnSeason(); B.initPolish();
     B.camFollow = true; B.cx = cam.scrollX + dx; B.cy = cam.scrollY + dy; B.cameras.main.setScroll(Math.round(B.cx), Math.round(B.cy));
     B.scene.bringToTop(); B.regT = 0; B.regBounds();
-    if (B.weather !== 'rain') playBGM(bgmFor(B.M)); banner(B.M.name, 'MEMASUKI'); updHud(); achCheck(B);
+    playBGM(bgmFor(B.M)); banner(B.M.name, 'MEMASUKI'); updHud(); achCheck(B);
   },
 });
 // serangan monster wilayah pasif mengenai Arka di wilayah aktif

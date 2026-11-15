@@ -158,7 +158,6 @@ Object.assign(World.prototype, {
           this.weather = 'rain';
           this.dropActiveFx(); this.makeActiveFx();
           banner('Hujan turun membasahi tanah...', 'CUACA', false, 2000);
-          playBGM(null);
         } else if (!willRain && this.weather === 'rain') {
           this.weather = 'clear';
           this.dropActiveFx(); this.makeActiveFx();

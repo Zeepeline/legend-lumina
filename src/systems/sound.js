@@ -47,11 +47,11 @@ function swapBGM(name, fadeSec = 1) {
   const fo = Math.min(.5, fadeSec * .5), fi = Math.max(.5, fadeSec * .5);
   g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + fo);
   if (AU.tag) {
-    const startVol = AU.tag.volume;
+    const startVol = tagGetVol(AU.tag);
     let fadeStep = 0;
     const fInt = setInterval(() => {
       fadeStep++;
-      if (AU.tag) AU.tag.volume = Math.max(0, startVol * (1 - fadeStep / 10));
+      if (AU.tag) tagSetVol(AU.tag, Math.max(0, startVol * (1 - fadeStep / 10)));
       if (fadeStep >= 10) clearInterval(fInt);
     }, Math.round(fo * 100));
   }
