@@ -23,5 +23,5 @@ BUILDING
 VEGETATION
 PROP
 MONSTER
-VFX
+VFX — Lihat aturan lengkap pembuatan efek tebasan, kombo 5 serangan, pemisahan *Whiff vs On-Hit*, dan *Charge Attack* di `docs/COMBAT_VFX_RULES.md` serta skill `.agents/skills/pixel-combat-vfx/SKILL.md`.
 UI

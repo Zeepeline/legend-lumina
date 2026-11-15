@@ -87,7 +87,25 @@ function artGlider() {
   fr(x, '#4ab0d8', 15, 6, 6, 3); // lambang Lumina di tengah kain
   return outline(c, '#2a1c14');
 }
-function artRain() { const [c, x] = mk(2, 7); fr(x, '#d8ecff', 1, 0, 1, 3); fr(x, '#d8ecff', 0, 3, 1, 4); return c; }
+function artRain() {
+  const [c, x] = mk(5, 16);
+  const g = x.createLinearGradient(0, 16, 4, 0);
+  g.addColorStop(0, 'rgba(235,248,255,.95)');
+  g.addColorStop(.55, 'rgba(200,232,255,.55)');
+  g.addColorStop(1, 'rgba(180,220,255,0)');
+  x.strokeStyle = g; x.lineWidth = 1.25; x.lineCap = 'round';
+  x.beginPath(); x.moveTo(.8, 15); x.lineTo(4.2, 1); x.stroke();
+  return c;
+}
+function artRainBg() {
+  const [c, x] = mk(3, 10);
+  const g = x.createLinearGradient(0, 10, 2.5, 0);
+  g.addColorStop(0, 'rgba(210,235,255,.65)');
+  g.addColorStop(1, 'rgba(180,220,255,0)');
+  x.strokeStyle = g; x.lineWidth = 1; x.lineCap = 'round';
+  x.beginPath(); x.moveTo(.5, 9.2); x.lineTo(2.5, .8); x.stroke();
+  return c;
+}
 // bayangan karakter lembut (gradasi, bukan elips keras)
 function artShadowSoft(w, h) { const [c, x] = mk(w, h); x.save(); x.scale(1, h / w); const g = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2); g.addColorStop(0, 'rgba(10,30,20,.85)'); g.addColorStop(.6, 'rgba(10,30,20,.5)'); g.addColorStop(1, 'rgba(10,30,20,0)'); x.fillStyle = g; x.fillRect(0, 0, w, w); x.restore(); return c; }
 function artFog() { const [c, x] = mk(96, 64); x.save(); x.scale(1, 64 / 96); const g = x.createRadialGradient(48, 48, 0, 48, 48, 48); g.addColorStop(0, 'rgba(230,240,235,.9)'); g.addColorStop(1, 'rgba(230,240,235,0)'); x.fillStyle = g; x.fillRect(0, 0, 96, 96); x.restore(); return c; }

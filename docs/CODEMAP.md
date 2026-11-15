@@ -11,9 +11,9 @@ _Konstanta layar & util kecil_
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
 `AU` 4 · `NI` 5 · `nf()` 6 · `parseSeq()` 7 · `bossBass` 8 · `TRACKS` 9 · `auInit()` 31 · `tone()` 42 · `sweep()` 43 · `noise()` 44 · `playBGM()` 45 · `_lastSfx` 55 · `sfx()` 56
 
-## src/core/input.js (212 baris)
+## src/core/input.js (270 baris)
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
-`Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 8 · `enableTouch()` 23 · `JOY_DEAD` 26 · `UISCALE` 119 · `PAD_STATE` 121 · `pollGamepad()` 122 · `layout()` 182
+`Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 8 · `enableTouch()` 23 · `JOY_DEAD` 26 · `UISCALE` 177 · `PAD_STATE` 179 · `pollGamepad()` 180 · `layout()` 240
 
 ## src/art/base.js (75 baris)
 _Dasar gambar: kanvas, warna, aturan gaya (toneC, garis tepi berwarna), renderMap_
@@ -71,9 +71,9 @@ _Monster versi garang: bentuk baru (mata menyala, taring, tanduk, duri) + pencah
 _Ikon item & senjata_
 `SWORD` 3 · `artSword()` 4 · `artSpear()` 9 · `artAxe()` 10 · `artBow()` 11 · `artArrow()` 12 · `artCoin()` 13 · `artPotion()` 18 · `artHeart()` 19 · `artShard()` 20 · `ICON_MAP` 22 · `ICONS_DEF` 49 · `iconFallback()` 108 · `artIcon()` 114
 
-## src/art/fx.js (106 baris)
+## src/art/fx.js (124 baris)
 _Efek: tebasan, api, proyektil, cahaya, bayangan_
-`artSlash()` 4 · `artFire()` 21 · `artSpore()` 31 · `artDot()` 32 · `artSmoke()` 33 · `artSpark()` 34 · `artButterfly()` 35 · `artShadow()` 40 · `artBone()` 41 · `artSeed()` 42 · `artRockShot()` 43 · `artBrazier()` 44 · `artIceGate()` 45 · `artIceBolt()` 46 · `artWarp()` 47 · `artStele()` 48 · `artBoat()` 49 · `artRelief()` 50 · `artSealDoor()` 51 · `artGatehouse()` 52 · `artCityWall()` 61 · `artAcademy()` 62 · `artRoot()` 73 · `artLight()` 76 · `artGlider()` 77 · `artRain()` 90 · `artShadowSoft()` 92 · `artFog()` 93 · `artRipple()` 94 · `artSprout()` 95 · `shadowCanvas()` 97 · `artLightP()` 105
+`artSlash()` 4 · `artFire()` 21 · `artSpore()` 31 · `artDot()` 32 · `artSmoke()` 33 · `artSpark()` 34 · `artButterfly()` 35 · `artShadow()` 40 · `artBone()` 41 · `artSeed()` 42 · `artRockShot()` 43 · `artBrazier()` 44 · `artIceGate()` 45 · `artIceBolt()` 46 · `artWarp()` 47 · `artStele()` 48 · `artBoat()` 49 · `artRelief()` 50 · `artSealDoor()` 51 · `artGatehouse()` 52 · `artCityWall()` 61 · `artAcademy()` 62 · `artRoot()` 73 · `artLight()` 76 · `artGlider()` 77 · `artRain()` 90 · `artRainBg()` 100 · `artShadowSoft()` 110 · `artFog()` 111 · `artRipple()` 112 · `artSprout()` 113 · `shadowCanvas()` 115 · `artLightP()` 123
 
 ## src/art/interior.js (62 baris)
 _Lantai & perabot interior_
@@ -183,9 +183,9 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 23 · `shadowIndex()` 24
 
-## src/gfx/textures.js (142 baris)
+## src/gfx/textures.js (150 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
-`ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 16 · `addStrip()` 17 · `darkTree()` 18 · `NPC_W` 20 · `regPortrait()` 21 · `regChar()` 26 · `buildTextures()` 42
+`ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 16 · `addStrip()` 17 · `darkTree()` 22 · `NPC_W` 24 · `regPortrait()` 25 · `regChar()` 30 · `buildTextures()` 46
 
 ## src/world/ground_verdant.js (88 baris)
 _Tanah Verdant (Padang, Hutan, Desa) meniru assets/reference/target_padang.png._
@@ -203,9 +203,9 @@ _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (g
 _pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali dorongan_
 `WEAPON_STYLE` 3 · `.attack()` 11 · `.shootArrow()` 82 · `.aimAngle()` 95 · `.magic()` 104 · `.drink()` 118 · `.useItem()` 124 · `.hitStop()` 133 · `.hitEnemy()` 138 · `.killEnemy()` 188 · `.drop()` 264 · `.updPicks()` 270 · `.gainExp()` 292 · `.hurtPlayer()` 308 · `.eShoot()` 327 · `.shockwave()` 337 · `.updShots()` 370 · `.defeat()` 387
 
-## src/systems/skills.js (37 baris)
+## src/systems/skills.js (54 baris)
 _Jurus: dash, tebasan putar, nova es_
-`.updSkills()` 4 · `.spin()` 12 · `.dash()` 20 · `.nova()` 27
+`.updSkills()` 4 · `.spin()` 18 · `.dash()` 37 · `.nova()` 44
 
 ## src/systems/spell_fx.js (218 baris)
 _Efek visual sihir: lingkar rune, proyektil, ledakan, dan aura (T318-T322)_
@@ -215,9 +215,9 @@ _Efek visual sihir: lingkar rune, proyektil, ledakan, dan aura (T318-T322)_
 _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipakai (tingkat I–III)._
 `JURUS` 4 · `MASTERY` 13 · `tierOf` 14 · `learned` 15 · `useJurus()` 16 · `canTeach` 20 · `.learnTalk()` 23 · `.castSpell()` 38
 
-## src/systems/ambient.js (235 baris)
+## src/systems/ambient.js (342 baris)
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
-`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 212 · `.ripple()` 213 · `artQuestArrow()` 216 · `.updQuestGuide()` 223
+`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 215 · `.ripple()` 216 · `.spawnRainEmitters()` 230 · `.rainSplash()` 242 · `.updRainFx()` 250 · `artQuestArrow()` 323 · `.updQuestGuide()` 330
 
 ## src/systems/status.js (107 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
@@ -427,9 +427,9 @@ _Mode benua: buang petak objek yang jauh dari Arka (memori). Mencatat semua yang
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
 `SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 120
 
-## src/systems/combat_fx.js (346 baris)
+## src/systems/combat_fx.js (374 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
-`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 87 · `.hitFx()` 97 · `.rollFx()` 144 · `.updLowHp()` 176
+`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 87 · `.hitFx()` 97 · `.updChargeFx()` 131 · `.clearChargeFx()` 146 · `.spinFx()` 151 · `.rollFx()` 172 · `.updLowHp()` 204
 
 ## src/ui/worldmap_art.js (67 baris)
 _Gambar ringkas berwarna tiap wilayah untuk Peta Benua (1 piksel = WOV_K piksel dunia):_

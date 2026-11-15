@@ -101,7 +101,7 @@ class World extends Phaser.Scene {
     if (M.dark) this.dark = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5);
     else if (!M.indoor) { this.night = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5); this.glows = this.lights.filter(L => !L.small).map(L => this.add.image(L.x, L.y, L.big ? 'nlL' : 'nlW').setTint(0xffc870).setBlendMode(Phaser.BlendModes.ADD).setDepth(2.01e5).setAlpha(0)); }
     if (S.pet && !M.indoor && !G.title) { this.pet = this.add.sprite(pl.x - 14, pl.y, 'cat2', 0).setOrigin(.5, 1); this.pet.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.18).setScale(.8, .7); } else this.pet = null;
-    if (this.weather === 'rain') this.add.particles(0, 0, 'rain', { x: { min: -40, max: VW + 40 }, y: -10, lifespan: 700, speedY: { min: 300, max: 360 }, speedX: { min: -70, max: -50 }, alpha: { start: .7, end: .3 }, frequency: 12, quantity: 2 }).setScrollFactor(0).setDepth(1.95e5);
+    if (this.weather === 'rain' && this.spawnRainEmitters) this.spawnRainEmitters();
     if (this.weather === 'fog') this.add.particles(0, 0, 'fog', { x: { min: -60, max: VW + 60 }, y: { min: -20, max: VH + 20 }, lifespan: 9000, speedX: { min: 4, max: 12 }, scale: { start: 1.6, end: 2.4 }, alpha: { start: 0, end: .2, ease: 'Sine.inOut' }, frequency: 500 }).setScrollFactor(0).setDepth(1.95e5);
     // partikel suasana
     const amb = this.weather === 'rain' ? null : { forest: ['leaf', 0xffffff, 900], meadow: ['petal', 0xffffff, 700], village: ['petal', 0xffffff, 1600], cave: ['dot', 0xb8a8ff, 500], swamp: ['dot', 0xa0ffc0, 600], snow: ['dot', 0xffffff, 220] }[M.id];
@@ -328,10 +328,10 @@ class World extends Phaser.Scene {
     }
     updPops(cam);
     if (this.night) {
-      const d = this.night, sx = cam.scrollX, sy = cam.scrollY, n = nightAmt(), rain = this.weather === 'rain' ? .16 : 0;
+      const d = this.night, sx = cam.scrollX, sy = cam.scrollY, n = nightAmt(), rain = this.weather === 'rain' ? .22 : 0;
       d.clear();
       if (n + rain > .02) {
-        const col = n > .05 ? lerpCol(0x40220c, 0x0a1238, clamp((n - .1) / .3, 0, 1)) : 0x1a2430;
+        const col = n > .05 ? lerpCol(0x40220c, 0x0a1238, clamp((n - .1) / .3, 0, 1)) : 0x16243a;
         d.fill(col, 1); d.setAlpha(Math.min(.74, n + rain));
         if (n > .12) {
           const pulse = Math.sin(this.t * 3) * 3;

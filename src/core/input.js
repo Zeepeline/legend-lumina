@@ -114,7 +114,65 @@ const JOY_DEAD = .18;
     const up = () => { b.classList.remove('on'); Input.keys[b.dataset.k] = false; };
     b.addEventListener('pointerup', up); b.addEventListener('pointerleave', up); b.addEventListener('pointercancel', up);
   });
-  SCREEN.addEventListener('pointerdown', () => auInit());
+  SCREEN.addEventListener('contextmenu', e => e.preventDefault());
+  SCREEN.addEventListener('pointerdown', e => {
+    auInit();
+    if (e.pointerType !== 'mouse' || e.target.closest('.win, #quest, #spellbar, #hud, #hud2')) return;
+    if (UIH) {
+      if (e.button === 2) press('b');
+      else if (e.button === 0 && !UIH.tap) press('a');
+      return;
+    }
+    const sc = typeof G !== 'undefined' && G.scene;
+    if (!sc || G.lock || G.title || sc.trans || sc.pl?.dead) return;
+    const r = SCREEN.getBoundingClientRect();
+    const sx = (e.clientX - r.left) / (r.width || 1) * VW;
+    const sy = (e.clientY - r.top) / (r.height || 1) * VH;
+    const cam = sc.cameras.main, wx = cam.scrollX + sx, wy = cam.scrollY + sy;
+    const pl = sc.pl, dx = wx - pl.x, dy = wy - (pl.y - 6);
+    if (e.button === 0) {
+      let nearInter = false;
+      for (const it of sc.inter || []) {
+        const ix = it.npc ? it.npc.spr.x : it.x, iy = it.npc ? it.npc.spr.y - 3 : it.y;
+        if (it.rect) {
+          const [rx, ry, rw, rh] = it.rect;
+          if (pl.x > rx - 16 && pl.x < rx + rw + 16 && pl.y > ry - 16 && pl.y < ry + rh + 16) { nearInter = true; break; }
+        } else if (Math.hypot(ix - pl.x, iy - pl.y) < (it.r || 16) + 14) {
+          nearInter = true;
+          if (Math.hypot(wx - ix, wy - iy) < 28) {
+            const idx = ix - pl.x, idy = iy - pl.y;
+            pl.dir = Math.abs(idx) > Math.abs(idy) ? (idx > 0 ? 'right' : 'left') : (idy > 0 ? 'down' : 'up');
+            pl.flipX = pl.dir === 'left';
+          }
+          break;
+        }
+      }
+      if (!nearInter && Math.hypot(dx, dy) > 4) {
+        pl.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+        pl.flipX = pl.dir === 'left';
+        pl.lastSide = dx >= 0 ? 'right' : 'left';
+        Input.castAng = Math.atan2(dy, dx);
+      }
+      Input.keys.a = true;
+      press('a');
+    } else if (e.button === 2) {
+      if (Math.hypot(dx, dy) > 4) {
+        pl.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+        pl.flipX = pl.dir === 'left';
+        pl.lastSide = dx >= 0 ? 'right' : 'left';
+        Input.castAng = Math.atan2(dy, dx);
+      }
+      Input.keys.b = true;
+      press('b');
+    } else if (e.button === 1) {
+      press('dash');
+    }
+  });
+  addEventListener('pointerup', e => {
+    if (e.pointerType !== 'mouse') return;
+    if (e.button === 0) Input.keys.a = false;
+    else if (e.button === 2) Input.keys.b = false;
+  });
 })();
 let UISCALE = 1;
 // Polling Gamepad API standar

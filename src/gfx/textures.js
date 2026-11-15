@@ -11,10 +11,14 @@ const IMG_LIST = [
   "mon_goblin_shaman", "mon_goblin_elite",
   "goblin_fortress", "goblin_gate", "goblin_hut", "goblin_tower", "goblin_cage", "goblin_forge", "goblin_shrine",
   "goblin_cauldron", "goblin_totem", "goblin_torch", "goblin_wagon", "goblin_banner",
-  "vfx_swing_combo", "vfx_hit_impact"
+  "vfx_swing_combo", "vfx_hit_impact", "vfx_charge_spin"
 , 'npc_elder', 'npc_smith', 'npc_merchant', 'npc_farmer', 'npc_inn', 'npc_guard', 'npc_hunter', 'npc_hermit', 'npc_nila', 'npc_joko', 'npc_girl', 'npc_child', 'npc_woman', 'npc_mom', 'npc_ratih', 'npc_wati', 'npc_darma', 'npc_bayu', 'npc_lestari', 'npc_gun', 'npc_priest', 'ani_rabbit', 'ani_squirrel', 'ani_deer', 'ani_owl', 'ani_duck'];
 function loadImgs() { return Promise.all(IMG_LIST.map(k => new Promise(r => { const i = new Image(); i.onload = () => { IMGEL[k] = i; r(); }; i.onerror = () => { console.error('Gagal memuat gambar', k); r(); }; i.src = (window.IMG_INLINE && IMG_INLINE[k]) || 'assets/img/' + k + '.png'; }))); }
-function addStrip(scene, key, st) { const t = scene.textures.addCanvas(key, st.c); for (let i = 0; i < st.n; i++) t.add(i, 0, i * st.fw, 0, st.fw, st.fh); }
+function addStrip(scene, key, st) {
+  if (scene.textures.exists(key)) return;
+  const t = scene.textures.addCanvas(key, st.c);
+  for (let i = 0; i < st.n; i++) t.add(i, 0, i * st.fw, 0, st.fw, st.fh);
+}
 function darkTree(img) { const [c, x] = mk(img.width, img.height); x.drawImage(img, 0, 0); const d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const hx = hsl2hex(hueToward(h, 165, 14), Math.min(1, s * 1.02), l * .78); const [r, g, b] = h2r(hx); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; }
 // Potret NPC dari aset pemilik (assets/img/npc_<ch>.png, 32×32). Frame dibuat dengan layout yang sama (down/up/side × 4).
 const NPC_W = 32, NPC_H = 32;
@@ -40,10 +44,10 @@ function regChar(T, k) {
   });
 }
 function buildTextures(sc) {
-  const T = sc.textures, one = (k, c) => T.addCanvas(k, c);
+  const T = sc.textures, one = (k, c) => { if (!T.exists(k)) T.addCanvas(k, c); };
   for (const k in IMGEL) {
     if (!IMGEL[k]) continue;
-    T.addImage('i_' + k, IMGEL[k]);
+    if (!T.exists('i_' + k)) T.addImage('i_' + k, IMGEL[k]);
     if (k.startsWith('gpt_')) {
       const bare = k.slice(4);
       if (!T.exists(bare)) T.addImage(bare, IMGEL[k]);
@@ -82,7 +86,7 @@ function buildTextures(sc) {
   one('leaf', (() => { const [c, x] = mk(5, 4); fr(x, '#85e07a', 1, 0, 3, 3); fr(x, '#44805f', 0, 2, 2, 2); return c; })());
   one('petal', (() => { const [c, x] = mk(4, 3); fr(x, '#ffc4e0', 0, 0, 3, 2); fr(x, '#ff9ac8', 1, 1, 3, 2); return c; })());
   addStrip(sc, 'fly', artButterfly()); addStrip(sc, 'fly2', (() => { const s = artButterfly(); const x = s.c.getContext('2d'); x.globalCompositeOperation = 'source-atop'; x.fillStyle = 'rgba(120,200,255,.75)'; x.fillRect(0, 0, s.c.width, s.c.height); return s; })());
-  one('shadow', artShadowSoft(16, 6)); one('shadowb', artShadowSoft(34, 11)); one('fog', artFog()); one('rain', artRain()); one('glider', artGlider()); addStrip(sc, 'ripple', artRipple()); one('sprout', artSprout(0)); one('ripe', artSprout(1));
+  one('shadow', artShadowSoft(16, 6)); one('shadowb', artShadowSoft(34, 11)); one('fog', artFog()); one('rain', artRain()); one('rain_bg', artRainBg()); one('glider', artGlider()); addStrip(sc, 'ripple', artRipple()); one('sprout', artSprout(0)); one('ripe', artSprout(1));
   addStrip(sc, 'wolfs', artMon('wolf', { G: '#e4ecf8', D: '#9aaecb', W: '#ffffff', E: '#4ad0ff', K: '#4a5a7a' })); addStrip(sc, 'slimef', artMon('slime', { G: '#ff8a3a', D: '#c0401a', L: '#fff0a0', E: '#3a1000' }));
   addStrip(sc, 'salam', artMon('snake', { G: '#e8642a', L: '#ffd060', E: '#2a0a00', R: '#ffe83a' })); addStrip(sc, 'golemi', artMon('golem', { R: '#a8cce6', D: '#6a8eb6', L: '#e2f4ff', E: '#ffffff', M: '#f4fbff', C: '#3a506e' }));
   addStrip(sc, 'snakei', artMon('snake', { G: '#9ad4f4', L: '#f0faff', E: '#1a2a5a', R: '#4a8aff' }));
@@ -136,6 +140,10 @@ function buildTextures(sc) {
     sc.textures.addSpriteSheet('vfx_hit_impact', IMGEL.vfx_hit_impact, { frameWidth: 48, frameHeight: 36 });
     A.create({ key: 'vfx_hit_0', frames: A.generateFrameNumbers('vfx_hit_impact', { start: 1, end: 4 }), frameRate: 28, repeat: 0 });
     A.create({ key: 'vfx_hit_1', frames: A.generateFrameNumbers('vfx_hit_impact', { start: 6, end: 9 }), frameRate: 25, repeat: 0 });
+  }
+  if (IMGEL.vfx_charge_spin && !T.exists('vfx_charge_spin')) {
+    sc.textures.addSpriteSheet('vfx_charge_spin', IMGEL.vfx_charge_spin, { frameWidth: 84, frameHeight: 48 });
+    A.create({ key: 'vfx_charge_release', frames: A.generateFrameNumbers('vfx_charge_spin', { start: 3, end: 6 }), frameRate: 22, repeat: 0 });
   }
   ICONS.coin = (() => { const s = artCoin(); const [c, x] = mk(10, 10); x.drawImage(s.c, 0, 0); return c.toDataURL(); })();
 }

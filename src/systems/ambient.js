@@ -156,15 +156,18 @@ Object.assign(World.prototype, {
         const willRain = Math.random() < 0.25;
         if (willRain && this.weather !== 'rain') {
           this.weather = 'rain';
+          this.dropActiveFx(); this.makeActiveFx();
           banner('Hujan turun membasahi tanah...', 'CUACA', false, 2000);
           playBGM(null);
         } else if (!willRain && this.weather === 'rain') {
           this.weather = 'clear';
+          this.dropActiveFx(); this.makeActiveFx();
           banner('Hujan telah reda. Langit kembali cerah.', 'CUACA', false, 2000);
           playBGM(bgmFor(this.M));
         }
       }
     }
+    if (this.updRainFx) this.updRainFx(dt);
     // Cuaca Ekstrem: Sambaran Petir di Padang Angin & Rawa Senja (#68)
     if (!this.M.indoor && !G.lock && !G.title && (this.M.id === 'meadow' || this.M.id === 'swamp')) {
       this._stormT = (this._stormT || 0) + dt;
@@ -210,7 +213,111 @@ Object.assign(World.prototype, {
     }
   },
   ambOff() { const v = this.cameras.main.worldView, M = this.M, side = Math.floor(Math.random() * 4); return [clamp(side === 0 ? v.x - 60 : side === 1 ? v.right + 60 : rnd(v.x, v.right), 40, M.w - 40), clamp(side === 2 ? v.y - 60 : side === 3 ? v.bottom + 60 : rnd(v.y, v.bottom), 60, M.h - 40)]; },
-  ripple(x, y) { const g = this.add.graphics().setDepth(y), o = { r: 2 }; this.tweens.add({ targets: o, r: 12, duration: 600, onUpdate: () => { g.clear(); g.lineStyle(1, 0xffffff, .8 - o.r / 15).strokeEllipse(x, y, o.r * 2, o.r); }, onComplete: () => g.destroy() }); },
+  ripple(x, y) {
+    const g = this.add.graphics().setDepth(y), o = { p: 0 };
+    this.tweens.add({
+      targets: o, p: 1, duration: 640,
+      onUpdate: () => {
+        const e = 1 - (1 - o.p) * (1 - o.p), rx = 2 + e * 10, ry = 1 + e * 5;
+        g.clear();
+        g.lineStyle(1, 0xdcf4ff, (1 - o.p) * .82).strokeEllipse(x, y, rx * 2, ry * 2);
+        if (o.p > .22 && o.p < .86) g.lineStyle(.8, 0xb8e4ff, (1 - o.p) * .42).strokeEllipse(x, y, rx * 1.1, ry * 1.1);
+        if (o.p < .2) g.fillStyle(0xffffff, (1 - o.p / .2) * .9).fillCircle(x, y - (1 - o.p * 5), .9);
+      },
+      onComplete: () => g.destroy()
+    });
+  },
+  spawnRainEmitters() {
+    this.add.particles(0, 0, 'rain_bg', {
+      x: { min: -40, max: VW + 50 }, y: -12, lifespan: 850,
+      speedY: { min: 230, max: 280 }, speedX: { min: -56, max: -42 },
+      alpha: { start: .38, end: .14 }, frequency: 14, quantity: 2
+    }).setScrollFactor(0).setDepth(1.94e5);
+    this.add.particles(0, 0, 'rain', {
+      x: { min: -40, max: VW + 60 }, y: -16, lifespan: 620,
+      speedY: { min: 350, max: 430 }, speedX: { min: -88, max: -66 },
+      alpha: { start: .82, end: .28 }, frequency: 10, quantity: 2
+    }).setScrollFactor(0).setDepth(1.95e5);
+  },
+  rainSplash(x, y) {
+    const beads = [], cnt = 3 + (Math.random() < .45 ? 1 : 0);
+    for (let i = 0; i < cnt; i++) {
+      const s = (i / (cnt - 1) - .5) * 2;
+      beads.push({ vx: s * rnd(13, 24) + rnd(-3, 3), vy: -rnd(20, 34), r: rnd(.7, 1.1) });
+    }
+    this._rainSp.push({ x, y, age: 0, max: rnd(.22, .3), beads });
+  },
+  updRainFx(dt) {
+    if (this.weather !== 'rain' || G.title || this.M.indoor || this.M.dark) {
+      if (this._rainG && this._rainG.active) this._rainG.clear();
+      if (this._rainFl && this._rainFl.active) this._rainFl.setAlpha(0);
+      return;
+    }
+    if (!this._rainG || !this._rainG.active) {
+      this._rainG = this.add.graphics().setDepth(1.93e5);
+      if (this.fxObjs) this.fxObjs.push(this._rainG);
+    }
+    if (!this._rainFl || !this._rainFl.active) {
+      this._rainFl = this.add.rectangle(0, 0, VW, VH, 0xd0e8ff, 1).setOrigin(0).setScrollFactor(0).setDepth(1.98e5).setAlpha(0);
+      if (this.fxObjs) this.fxObjs.push(this._rainFl);
+    }
+    this._rainSp = this._rainSp || [];
+    const v = this.cameras.main.worldView, rate = OPT.lite ? 24 : 58;
+    let acc = (this._rainAcc || 0) + dt * rate;
+    while (acc >= 1) {
+      acc -= 1;
+      const sx = rnd(v.x + 8, v.right - 8), sy = rnd(v.y + 12, v.bottom - 6);
+      if (this.groundAt && this.groundAt(sx, sy) === 'water') {
+        if (Math.random() < .65) this.ripple(sx, sy);
+      } else if (this._rainSp.length < (OPT.lite ? 28 : 64)) {
+        this.rainSplash(sx, sy);
+      }
+    }
+    this._rainAcc = acc;
+    if (this.M.ponds && this.M.ponds.length && Math.random() < dt * (OPT.lite ? 4 : 9)) {
+      const P = this.M.ponds[Math.floor(Math.random() * this.M.ponds.length)];
+      const a = rnd(0, 6.28), r = Math.sqrt(Math.random()) * .82;
+      const px = P[0] + Math.cos(a) * P[2] * r, py = P[1] + Math.sin(a) * P[3] * r;
+      if (px > v.x - 20 && px < v.right + 20 && py > v.y - 20 && py < v.bottom + 20) this.ripple(px, py);
+    }
+    const g = this._rainG; g.clear();
+    const grav = 140;
+    for (let i = this._rainSp.length - 1; i >= 0; i--) {
+      const s = this._rainSp[i]; s.age += dt;
+      if (s.age >= s.max) { this._rainSp.splice(i, 1); continue; }
+      const p = s.age / s.max, ma = Math.sin(p * Math.PI) * .42;
+      g.fillStyle(0xd2eeff, ma).fillEllipse(s.x, s.y, (2 + p * 3.6) * 2, (.65 + p * .75) * 2);
+      if (p < .32) g.fillStyle(0xffffff, (1 - p / .32) * .88).fillCircle(s.x, s.y - .4, .95);
+      for (const b of s.beads) {
+        const bx = s.x + b.vx * s.age, by = s.y + b.vy * s.age + .5 * grav * s.age * s.age;
+        const ba = Math.max(0, (1 - p * p) * .9), br = b.r * (1 - p * .4);
+        g.fillStyle(0xe6f6ff, ba).fillEllipse(bx, by, br * 2.1, br * 1.5);
+      }
+    }
+    if (this.bushes && !OPT.lite) {
+      for (const b of this.bushes) {
+        if (b.active && !b._swaying && b.x > v.x - 30 && b.x < v.right + 30 && b.y > v.y - 30 && b.y < v.bottom + 30) {
+          b.angle = Math.sin(this.t * 2.8 + b.x * .07 + b.y * .05) * 2.4;
+        }
+      }
+    }
+    this._ltCd = (this._ltCd == null ? rnd(9, 16) : this._ltCd - dt);
+    if (this._ltCd <= 0) {
+      this._ltCd = rnd(11, 20);
+      this._ltT = .45;
+      if (typeof AU !== 'undefined' && AU.ctx && typeof noise === 'function') {
+        try { noise(AU.ctx.currentTime + .18, .65, 190, .28, 70); } catch (_) {}
+      }
+    }
+    if (this._ltT > 0) {
+      this._ltT = Math.max(0, this._ltT - dt);
+      const el = .45 - this._ltT;
+      const fa = el < .07 ? .82 : el < .14 ? .16 : el < .23 ? .62 : Math.max(0, .62 * (1 - (el - .23) / .22));
+      this._rainFl.setAlpha(fa * .48);
+    } else if (this._rainFl.alpha > 0) {
+      this._rainFl.setAlpha(0);
+    }
+  },
 });
 // ---- penunjuk arah misi: panah di tepi layar bila tujuan di luar layar, bintang memantul bila terlihat ----
 function artQuestArrow(T) {

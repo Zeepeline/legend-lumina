@@ -125,20 +125,48 @@ Object.assign(World.prototype, {
       ring.setRotation(hitAng + vecOff);
       this.tweens.add({ targets: ring, scale: crit ? .8 : .55, alpha: 0, duration: 140, onComplete: () => ring.destroy() });
     }
-
-    // Percikan kena sesuai bahan musuh (T324)
-    const t = e.type || '', tex = e.D?.tex || '';
-    if (t.includes('slime') || tex.includes('slime')) {
-      const col = t.includes('gold') ? 'doto' : 'dotg';
-      this.sparkle(s.x, y, col, crit ? 8 : 4);
-    } else if (t.includes('golem') || t.includes('mimic') || tex.includes('golem')) {
-      this.sparkle(s.x, y, 'spark', crit ? 10 : 5);
-    } else if (t.includes('skel') || t.includes('ghost') || t.includes('witch') || tex.includes('skel')) {
-      this.sparkle(s.x, y, 'doto', crit ? 6 : 3);
-    } else {
-      this.sparkle(s.x, y, 'spark', crit ? 6 : 3);
-    }
     if (crit || fin) this.cameras.main.shake(65, .0028);
+  },
+
+  updChargeFx(holdT) {
+    const pl = this.pl; if (!pl || pl.dead) return;
+    const [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx), sgn = dx < 0 ? -1 : 1;
+    const sd = (pl.dir === 'left' || pl.dir === 'right') ? 'side' : pl.dir;
+    pl.anims.stop(); pl.atkPose = '1'; pl.setFrame(sd + '1');
+    const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword', tier = { wsword: 0 }[S.eq.wpn] ?? 1;
+    const sw = this.sword.setTexture(wt === 'spear' ? 'wspear' : wt === 'axe' ? 'waxe' : 'sword' + tier);
+    sw.setVisible(true).setPosition(pl.x - dx * 3, pl.y - 7).setFlipY(dx < 0).setDepth(pl.y + 2).setRotation(ang + 2.55 * sgn);
+    if (holdT >= .45) sw.setTintFill(0xffffff); else sw.clearTint();
+    if (this.textures.exists('vfx_charge_spin')) {
+      if (!this.chgWind || !this.chgWind.active) this.chgWind = this.add.sprite(pl.x, pl.y, 'vfx_charge_spin', 0).setOrigin(.5, 32 / 48);
+      const fIdx = holdT < .32 ? 0 : (holdT < .62 ? 1 : 2), wide = 1 + Math.min(.55, Math.max(0, holdT - .45) * .65);
+      this.chgWind.setPosition(pl.x, pl.y + 1).setFrame(fIdx).setScale(wide, 1).setDepth(pl.y - .2);
+    }
+  },
+  clearChargeFx() {
+    if (this.chgWind) { this.chgWind.destroy(); this.chgWind = null; }
+    if (this.sword && (!this.pl || this.pl.atkT <= 0)) { this.sword.clearTint(); this.sword.setVisible(false); }
+    if (this.pl) this.pl.atkPose = null;
+  },
+  spinFx(tt, hMul = 1) {
+    const pl = this.pl; if (!pl || pl.dead) return;
+    const [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx), sgn = dx < 0 ? -1 : 1;
+    const sd = (pl.dir === 'left' || pl.dir === 'right') ? 'side' : pl.dir, f0 = pl.flipX;
+    pl.atkPose = '2'; pl.setFrame(sd + '2');
+    this.time.delayedCall(75, () => { if (pl && !pl.dead) { pl.flipX = !f0; pl.setFrame(sd + '2'); } });
+    this.time.delayedCall(175, () => { if (pl && !pl.dead) { pl.flipX = f0; pl.atkPose = '3'; pl.setFrame(sd + '3'); } });
+    this.time.delayedCall(280, () => { if (pl) { pl.flipX = pl.dir === 'left'; pl.atkPose = null; } });
+    const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword', tier = { wsword: 0 }[S.eq.wpn] ?? 1;
+    const sw = this.sword.setTexture(wt === 'spear' ? 'wspear' : wt === 'axe' ? 'waxe' : 'sword' + tier);
+    sw.clearTint().setVisible(true).setPosition(pl.x, pl.y - 7).setFlipY(dx < 0).setDepth(pl.y + 4).setRotation(ang - 2.6 * sgn);
+    this.tweens.add({ targets: sw, rotation: ang + 3.8 * sgn, duration: 240, ease: 'Cubic.easeOut', onComplete: () => sw.setVisible(false) });
+    if (this.textures.exists('vfx_charge_spin')) {
+      const sp = this.add.sprite(pl.x, pl.y - 7, 'vfx_charge_spin', 3)
+        .setOrigin(.5, .5).setFlipX(dx < 0).setScale((1 + (tt - 1) * .12) * hMul).setDepth(pl.y + 3);
+      if (ARC_TINT[S.eq.wpn]) sp.setTint(ARC_TINT[S.eq.wpn]);
+      sp.play('vfx_charge_release'); sp.once('animationcomplete', () => sp.destroy());
+    }
+    this.cameras.main.shake(90, .0035);
   },
 
   rollFx() {

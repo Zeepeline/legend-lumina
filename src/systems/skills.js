@@ -7,15 +7,32 @@ Object.assign(World.prototype, {
       this.holdA += dt;
       if (this.holdA > .45 && !this.charged) { this.charged = true; sfx('cur'); this.sparkle(pl.x, pl.y - 10, 'doto', 6); }
       if (this.charged) { if (Math.floor(this.t * 14) % 2) pl.setTint(0xfff0a0); else pl.clearTint(); }
-    } else { if (this.charged) { this.charged = false; pl.clearTint(); this.spin(); } this.holdA = 0; }
+      if (this.holdA > .12 && this.updChargeFx) this.updChargeFx(this.holdA);
+    } else {
+      const hDur = this.holdA;
+      if (this.clearChargeFx) this.clearChargeFx();
+      if (this.charged) { this.charged = false; pl.clearTint(); this.spin(hDur); }
+      this.holdA = 0;
+    }
   },
-  spin() {
-    const pl = this.pl, st = stat(), tt = tierOf('spin'); useJurus(this, 'spin'); pl.atkCd = .45; pl.atkT = .3; sfx('swing'); this.time.delayedCall(90, () => sfx('swing'));
-    const g = this.add.sprite(pl.x, pl.y - 9, 'slash').setOrigin(4 / 28, .5).setDepth(pl.y + 3).play('slash');
-    this.tweens.add({ targets: g, rotation: Math.PI * 2, duration: 260, onComplete: () => g.destroy() });
-    const ring = this.add.graphics().setDepth(pl.y + 2), o = { r: 6 };
-    this.tweens.add({ targets: o, r: 30 + tt * 8, duration: 240, onUpdate: () => { ring.clear(); ring.lineStyle(2, 0xffffff, 1 - o.r / 40).strokeEllipse(pl.x, pl.y - 6, o.r * 2, o.r * 1.3); }, onComplete: () => ring.destroy() });
-    for (const e of this.enemies) { if (e.hp <= 0) continue; const dx = e.spr.x - pl.x, dy = e.spr.y - pl.y, d = Math.hypot(dx, dy) || 1; if (d < 30 + tt * 8 + e.D.r * e.sc) this.hitEnemy(e, st.atk * (1.3 + .2 * tt), Math.random() < .15, dx / d, dy / d); }
+  spin(holdDur = .5) {
+    const pl = this.pl, st = stat(), tt = tierOf('spin'), hMul = Math.min(1.4, 1 + Math.max(0, (holdDur || .5) - .45) * .6);
+    useJurus(this, 'spin'); pl.atkCd = .45; pl.atkT = .3; sfx('swing'); this.time.delayedCall(90, () => sfx('swing'));
+    if (this.spinFx) this.spinFx(tt, hMul);
+    else {
+      const g = this.add.sprite(pl.x, pl.y - 9, 'slash').setOrigin(4 / 28, .5).setDepth(pl.y + 3).play('slash');
+      this.tweens.add({ targets: g, rotation: Math.PI * 2, duration: 260, onComplete: () => g.destroy() });
+    }
+    const rad = (30 + tt * 8) * hMul, dmg = st.atk * (1.3 + .2 * tt) * hMul, [fx, fy] = DIRV[pl.dir] || [1, 0];
+    for (const e of this.enemies) {
+      if (e.hp <= 0) continue;
+      const dx = e.spr.x - pl.x, dy = e.spr.y - pl.y, d = Math.hypot(dx, dy) || 1;
+      if (d < rad + e.D.r * e.sc) {
+        const isBack = (dx * fx + dy * fy) < -2;
+        if (isBack) this.time.delayedCall(70, () => { if (e.hp > 0) this.hitEnemy(e, dmg, Math.random() < .2, dx / d, dy / d); });
+        else this.hitEnemy(e, dmg, Math.random() < .2, dx / d, dy / d);
+      }
+    }
   },
   dash() {
     const pl = this.pl; if (!learned('dash')) { popWorld(pl.x, pl.y - 30, 'Belum belajar Dash', 'xp'); return; }

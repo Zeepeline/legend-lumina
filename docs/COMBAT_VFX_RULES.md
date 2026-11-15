@@ -146,7 +146,91 @@ def draw_directional_hit_impact(canvas, hit_x, hit_y, force_angle_deg, phase="pe
 
 ---
 
-## 6. Wajib Preview Sebelum Implementasi
+## 6. Spesifikasi *Charge Attack* (Gelombang Angin Tanah Meluas & Tebasan Putar 360°)
+
+Aset: `assets/img/vfx_charge_spin.png` (`588×48`, 7 frame @ `84×48`).
+
+1. **Fase Menahan Tombol (*Expanding Ground-Wind Shockwave* — Frame `0..2`)**:
+   - **Tubuh Karakter Tetap Bersih**: Arka merendahkan kuda-kuda (`side1`) dengan pedang ditarik ke pinggang belakang (`-145°` s/d `-152°`, berkilat putih penuh saat `holdA >= 0.45s`). **Jangan** menaruh pilar vertikal yang menutupi tubuh/kepala Arka.
+   - **Aset Angin Tanah yang Meluas (`draw_expanding_ground_wind`)**:
+     - Hanya gelombang angin di tanah tepat di bawah kaki yang **semakin meluas secara radial ke kiri-kanan semakin lama tombol ditahan**:
+       - **Frame 0 (`holdA < 0.32s` — *Hold Awal*)**: Cincin angin kecil di bawah kaki (`radius ~12 px`).
+       - **Frame 1 (`0.32s–0.62s` — *Hold Sedang*)**: Gelombang angin melebar (`radius ~21 px`) dengan ekor angin melengkung naik di ujung kiri-kanan.
+       - **Frame 2 (`> 0.62s` — *Hold Lama / Penuh*)**: Gelombang angin meluas lebar (`radius ~34 px` + `scaleX` terus bertambah hingga `1.55×`) dengan cincin lapis kedua di bagian dalam.
+2. **Fase Pelepasan (*360° Spiral Cleave & Sequential Hit Timing* — Frame `3..6`)**:
+   - **Frame 3 (*Release Whip*)**: Pedang menyabet area depan lebih dulu (`-152° → +25°`); musuh di depan langsung terkena tebasan pada `0 ms`.
+   - **Frame 4 (*360° Cyclone Peak*)**: Arka memutar badan (`flipX`) menyapu punggungnya (`+25° → +335°`); jejak bilah membentuk pusaran elips 360° (`rx = 1.28, ry = 0.78`), dan musuh di belakang terkena tebasan `70 ms` kemudian sesuai urutan lewatnya bilah pedang.
+   - **Frame 5–6 (*Vortex Break Apart $\to$ Dissipation*)**: Ekor pusaran menguap searah putaran pedang menjadi pita tipis dan percikan kecil.
+   - Radius dan damage tebasan 360° ikut membesar (`hMul` hingga `1.4×`) sebanding dengan lamanya pemain menahan tombol.
+
+---
+
+## 7. Fisika & Anatomi Partikel Sekunder (Hasil Studi `pixelfx`)
+
+Koreografi tubuh dan ayunan bilah utama tetap menggunakan standar *Legenda Lumina* (Bagian 1–6), namun untuk **efek partikel sekunder** (percikan baja, serpihan angin, debu lantai, bara, dan serpihan benturan), gunakan prinsip fisika dan anatomi partikel dari `patch-gg/pixelfx`:
+
+### 7.1 Sepuluh Spesies Partikel (Jangan Hanya Titik `1×1` Seragam!)
+1. **`SPARK` (Percikan Benturan Baja — *Two-Tone Velocity Streak & Floor Bounce*)**:
+   - **Bentuk**: Bukan titik bulat, melainkan **garis kecepatan 2-warna** sepanjang vektor gerak $(u_x, u_y)$ dengan panjang proporsional terhadap laju: $L = \min(9, 1 + v \cdot 0.022)$.
+   - **Warna**: Bagian kepala ($45\%$ depan) berwarna panas (`#ffffff` $\to$ `#fff3a6`), ekor ($55\%$ belakang) berwarna lebih dingin (`#ff8a2a` $\to$ `#f2561d`).
+   - **Fisika**: Meluncur cepat ($150\text{–}400\text{ px/s}$), gravitasi sedang ($g = 420\text{ px/s}^2$), *air drag* ($2.2/\text{s}$), dan **memantul saat menyentuh lantai** ($v_y \leftarrow -0.45 |v_y|$, $v_x \leftarrow 0.7 v_x$).
+2. **`MOTE` (Serpihan Angin Bilah / *Blade Shavings*)**:
+   - **Asal**: Terkelupas (*flung off*) dari tepi luar busur ayunan pedang (`r = R_outer`) searah tangen ayunan + sedikit gaya sentrifugal keluar.
+   - **Bentuk**: Garis tipis memanjang mengikuti kecepatan ($g = 0$, *drag* ringan $0.6/\text{s}$), kepala terang dan ekor `55%` lebih redup.
+3. **`DOTTED TRACE` (Jejak Residu Dither di Ekor Tebasan)**:
+   - Saat busur tebasan (*smear*) mulai menyusut pada fase *Decay*, tinggalkan **deretan titik-titik tipis (`1 px`) tepat di garis keliling luar lintasan ujung pedang (`R_outer - 0.5`)** yang memudar dengan pola *Ordered Bayer 4×4 Dither*.
+4. **`STREAK` (Garis Hisap Konvergensi saat *Charge / Windup*)**:
+   - Muncul di radius luar ($14\text{–}26\text{ px}$) lalu **dipercepat masuk** menuju titik fokus senjata ($v \leftarrow v + 3v \cdot dt$), dengan ujung depan putih tajam dan ekor bergradasi.
+5. **`GRIT` (Kerikil Kecil / *Hot Chips* yang Berhenti di Tanah)**:
+   - Terpental dengan gravitasi penuh ($g = 950\text{ px/s}^2$), memantul sekali di tanah ($v_y \leftarrow -0.25 v_y$), lalu **berhenti diam di permukaan tanah ($v_x = v_y = 0$)** selama beberapa milidetik sebelum menghilang. Digambar `1×1` atau `2×2` dengan sisi bawah lebih gelap (`0.7×`).
+6. **`SHARD` & `CHUNK` (Serpihan Tajam & Bongkahan Batu Berfaset yang Berputar)**:
+   - Memiliki sudut rotasi $\theta$ dan kecepatan putar $\omega$ ($\theta \leftarrow \theta + \omega \cdot dt$).
+   - Digambar sebagai poligon kecil berfaset dengan **pencahayaan 3-sisi** (sisi menghadap kiri-atas terang `light`, tengah `body`, sisi bawah-kanan gelap `shade`, plus `1 px` *dark outline* `#1a1422`). Saat berhenti di tanah, memicu 1–2 kepulan `DUST` kecil.
+7. **`EMBER` (Bara Mengambang dengan Turbulensi Sinus)**:
+   - Bergerak naik perlahan ($v_y = -30\text{ px/s}$) sambil meliuk-liuk secara organik menggunakan gelombang sinus ganda: $v_x \mathrel{+}= \cos(2.3t + \text{seed})\cdot 45\,dt$, $v_y \mathrel{+}= \sin(3t + \text{seed})\cdot 20\,dt$, dan berkedip (*flicker*) menjelang padam.
+8. **`SMOKE` & `DUST` (Kepulan Asap/Debu 3-Lapis Bervolume)**:
+   - Digambar di layer belakang (`back`) menggunakan **3 cakram transparan bertumpuk**: cakram dasar, inti bawah yang lebih pekat (`0.74r`), dan **tudung atas yang terkena cahaya (`lit cap`)** saat kepulan masih muda (`age < 0.5`).
+9. **`BROKEN RING` (Cincin Kejut yang Retak Menjadi Busur Sabit)**:
+   - Cincin kejut (*shockwave ring*) tidak sekadar membesar lalu transparan, melainkan **terbelah menjadi 5–7 segmen busur sabit** dengan celah (*gap*) yang makin melebar, ketebalan ujung yang meruncing, dan kecepatan radial yang sedikit bervariasi per segmen.
+10. **`BLADE GLINT / SPARKLE` (Kilau Bintang 4-Lengan di Titik Awal/Akhir Ayunan)**:
+    - Saat pedang selesai ditarik (*charge penuh*) atau tepat ketika ujung bilah menyelesaikan sabetan (*slash end*), munculkan kilau bintang 4-lengan (`CROSS` + `DIAG` dengan inti `WHITE` 1px) yang membesar cepat (`ease.outBack`) lalu menyusut dalam `150–220 ms`.
+
+### 7.2 Aturan *Ordered Bayer Dither* vs *Alpha Blend* & Larangan Percikan Api pada Hit Biasa
+- **Dilarang Memakai Percikan Api pada Tebasan Fisik Biasa**: Saat pedang/senjata biasa mengenai musuh (`hitFx`), **jangan** memunculkan percikan api berwarna kuning/oranye/merah (`sparkle('spark'/'doto')` atau `SPARK` api) agar tebasan fisik tetap bersih (cukup *White Hit-Flash* + semburan angin/benturan putih `vfx_hit_impact` + `MOTE`/`DOTTED TRACE` pada ayunan bilah). Gunakan percikan api/bara (`SPARK`/`EMBER`) khusus untuk jurus berelemen api atau hantaman tanah khusus.
+- **Partikel Keras (`MOTE`, `SHARD`, `GRIT`, `DOTTED TRACE`)**: **Jangan** memudarkan dengan *alpha opacity* halus yang membuat piksel terlihat kabur/becek. Gunakan pengurangan jumlah piksel (**4×4 Ordered Bayer Dither**).
+- **Partikel Volume Lembut (`SMOKE`, `DUST`, `VAPOUR`)**: Boleh menggunakan *translucent disc* (`alpha 0.35–0.65`) di layer belakang karakter/musuh.
+
+---
+
+## 8. Prinsip Animasi & *Smear Interpolation* ala `t3ssel8r`
+
+Berdasarkan studi video devlog `t3ssel8r` (*"Making an Animation for my 3D Pixel Art Game"* — `youtu.be/1FrIBkuq0ZI`), terdapat **4 pilar utama** untuk membuat animasi serangan pixel-art terasa berbobot, cepat (*snappy*), dan hidup:
+
+### 8.1 *Smear Interpolation* vs Interpolasi Linear (`4:05 smear interpolation`)
+- **Masalah Interpolasi Biasa**: Pada pixel art ber-framerate rendah, interpolasi posisi pedang secara linear di antara dua frame membuat pedang tampak "melayang tanggung" atau memotong lurus menembus tubuh (*chord clipping*).
+- **Solusi *Cylindrical / Polar Smear Mesh***:
+  1. Lintasan gagang pedang (*Hilt*) dan ujung pedang (*Tip*) diinterpolasikan dalam **koordinat polar/silinder mengelilingi poros bahu/tubuh karakter**, bukan garis lurus Kartesius.
+  2. Selama frame tebasan cepat (*active cut*), seluruh ruang sapuan antara posisi $(\text{Hilt}(u), \text{Tip}(u))$ dari sudut frame sebelumnya $\theta_{t-1}$ hingga sudut saat ini $\theta_t$ diisi menjadi **jaring pita *Smear* (*Swept Quad Fan*)** yang meruncing di pangkal awal dan menempel penuh di sepanjang bilah pedang pada $\theta_t$.
+  3. **lompatan *Snappy* (Tanpa Frame Tengah yang Lambat)**: Gerakan besar (*large action*) melompat langsung dari **Pose Windup Ekstrem** ke **Pose Ekstensi Penuh + Smear Sabit** dalam 1 langkah tajam, bukan dicicil dengan banyak posisi pedang di tengah jalan.
+
+### 8.2 Rantai Kinematika Tubuh & *Counter-Balance* (`4:47 animation second pass`)
+Ayunan pedang yang bertenaga tidak boleh hanya menggerakkan lengan (seperti *first pass* yang kaku), melainkan melibatkan seluruh tubuh:
+1. **Coiling (Puntiran Antisipasi)**: Lutut menekuk rendah, badan memuntir ke belakang (*torso twist*), dan senjata ditarik jauh ke belakang bahu.
+2. **Center-of-Mass Shift & Whip Chain**: Titik pusat massa (*Center of Mass*) dan kaki tumpuan melangkah maju **mendahului** ayunan tangan, lalu tenaga mengalir berurutan seperti cambuk: $\text{Kaki} \to \text{Pinggul} \to \text{Bahu} \to \text{Siku} \to \text{Tangan} \to \text{Ujung Pedang}$.
+3. **Counter-Balance Arm & Overshoot**: Saat tangan kanan mengayunkan pedang habis ke depan/samping, **lengan kiri terentang ke arah berlawanan sebagai penyeimbang (*counter-balance*)**, dan tubuh sedikit melampaui titik henti (*overshoot*) sebelum kembali stabil (*settle*).
+
+### 8.3 *Secondary Motion / Overlapping Action* (`6:03 secondary motion and tweaks`)
+Untuk menghilangkan kesan kaku pada sprite piksel, tambahkan **gerakan sekunder yang tertinggal fase (*phase-lagged follow-through*)** menggunakan dinamika pegas (*second-order dynamics*) pada elemen pakaian/rambut/syal:
+- **Saat Menerjang (*Lunge*)**: Jubah, syal, dan rambut tertarik berkibar ke belakang berlawanan dengan arah dorongan badan.
+- **Saat Berhenti Mendadak (*Impact / Follow-Through Stop*)**: Ketika tubuh berhenti di akhir tebasan, jubah dan rambut **masih meneruskan momentumnya mengayun sedikit ke depan (*overshoot whip*)** selama 1–2 frame sebelum turun kembali ke posisi tenang.
+
+### 8.4 *Selective Frame Dropping* (Kontras Ritme Frame)
+- **Aksi Besar (*The Slash*)**: Gunakan sedikit frame posisi tubuh namun dibantu **Smear Frame lebar** agar terasa eksplosif.
+- **Aksi Kecil (*Windup Coiling & Recovery Settle*)**: Gunakan *limited animation* dan penahanan frame (*frame holds*) dengan *secondary motion* halus pada rambut/jubah agar ritme antara "tahan $\to$ ledak $\to$ tahan" terbaca jelas oleh mata pemain.
+
+---
+
+## 9. Wajib Preview Sebelum Implementasi
 
 Setiap kali membuat atau memodifikasi aset VFX pertarungan:
 1. Render **GIF animasi komparasi berdampingan** (*Kolom Kiri: Tebas Angin / Whiff* vs *Kolom Kanan: Kena Musuh / On-Hit Impact*) dengan `Image.NEAREST` (tanpa interpolasi blur).
