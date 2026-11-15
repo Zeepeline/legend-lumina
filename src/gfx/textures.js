@@ -10,7 +10,8 @@ const IMG_LIST = [
   "lampPost", "crateCart", "benchWood", "hero_custom", "mon_slime_hd", "mon_wolf_hd", "mon_wolf_elite_hd", "mon_goblin_hd", "mon_goblin_archer_hd",
   "mon_goblin_shaman", "mon_goblin_elite",
   "goblin_fortress", "goblin_gate", "goblin_hut", "goblin_tower", "goblin_cage", "goblin_forge", "goblin_shrine",
-  "goblin_cauldron", "goblin_totem", "goblin_torch", "goblin_wagon", "goblin_banner"
+  "goblin_cauldron", "goblin_totem", "goblin_torch", "goblin_wagon", "goblin_banner",
+  "vfx_swing_combo", "vfx_hit_impact"
 , 'npc_elder', 'npc_smith', 'npc_merchant', 'npc_farmer', 'npc_inn', 'npc_guard', 'npc_hunter', 'npc_hermit', 'npc_nila', 'npc_joko', 'npc_girl', 'npc_child', 'npc_woman', 'npc_mom', 'npc_ratih', 'npc_wati', 'npc_darma', 'npc_bayu', 'npc_lestari', 'npc_gun', 'npc_priest', 'ani_rabbit', 'ani_squirrel', 'ani_deer', 'ani_owl', 'ani_duck'];
 function loadImgs() { return Promise.all(IMG_LIST.map(k => new Promise(r => { const i = new Image(); i.onload = () => { IMGEL[k] = i; r(); }; i.onerror = () => { console.error('Gagal memuat gambar', k); r(); }; i.src = (window.IMG_INLINE && IMG_INLINE[k]) || 'assets/img/' + k + '.png'; }))); }
 function addStrip(scene, key, st) { const t = scene.textures.addCanvas(key, st.c); for (let i = 0; i < st.n; i++) t.add(i, 0, i * st.fw, 0, st.fw, st.fh); }
@@ -124,6 +125,17 @@ function buildTextures(sc) {
     regA('slime_idle', 0, 5, 7, -1); regA('slime_hop', 7, 13, 11, -1);
     regA('slime_atk', 14, 20, 12, 0); regA('slime_hurt', 21, 23, 10, 0);
     regA('slime_die', 28, 34, 9, 0);
+  }
+  if (IMGEL.vfx_swing_combo && !T.exists('vfx_swing_combo')) {
+    sc.textures.addSpriteSheet('vfx_swing_combo', IMGEL.vfx_swing_combo, { frameWidth: 48, frameHeight: 36 });
+    for (let r = 0; r < 5; r++) {
+      A.create({ key: 'vfx_swing_' + r, frames: A.generateFrameNumbers('vfx_swing_combo', { start: r * 4 + 1, end: r * 4 + 3 }), frameRate: 28, repeat: 0 });
+    }
+  }
+  if (IMGEL.vfx_hit_impact && !T.exists('vfx_hit_impact')) {
+    sc.textures.addSpriteSheet('vfx_hit_impact', IMGEL.vfx_hit_impact, { frameWidth: 48, frameHeight: 36 });
+    A.create({ key: 'vfx_hit_0', frames: A.generateFrameNumbers('vfx_hit_impact', { start: 1, end: 4 }), frameRate: 28, repeat: 0 });
+    A.create({ key: 'vfx_hit_1', frames: A.generateFrameNumbers('vfx_hit_impact', { start: 6, end: 9 }), frameRate: 25, repeat: 0 });
   }
   ICONS.coin = (() => { const s = artCoin(); const [c, x] = mk(10, 10); x.drawImage(s.c, 0, 0); return c.toDataURL(); })();
 }

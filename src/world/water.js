@@ -11,7 +11,10 @@ function pondsBase(M) {
     if (!b || Math.min(a[2], a[3]) > 70 || Math.min(b[2], b[3]) > 70) continue;
     const d = Math.hypot(b[0] - a[0], b[1] - a[1]); if (d > 220) continue;
     const step = Math.min(a[2], a[3], b[2], b[3]) * .8, n = Math.ceil(d / step);
-    for (let k = 1; k < n; k++) { const t = k / n; out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t, a[3] + (b[3] - a[3]) * t]); }
+    for (let k = 1; k < n; k++) {
+      const t = k / n;
+      out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t, a[3] + (b[3] - a[3]) * t]);
+    }
   }
   out.src = M.ponds; return M._pondsB = out;
 }

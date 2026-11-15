@@ -238,7 +238,7 @@ class World extends Phaser.Scene {
           }
           const k = 'hero_side';
           pl.flipX = (pl.lastSide || (pl.dir === 'left' ? 'left' : 'right')) === 'left';
-          if (pl.atkT > 0) { pl.anims.stop(); pl.setFrame(sd + '3'); }
+          if (pl.atkT > 0) { pl.anims.stop(); pl.setFrame(sd + (pl.atkPose || '3')); }
           else { if (pl.anims.currentAnim?.key !== k || !pl.anims.isPlaying) pl.play(k, true); pl.anims.timeScale = (.6 + m * .5) * stat().spd; }
           this.dustT -= dt; if (this.dustT <= 0 && m > .6) {
             this.dustT = .28;
@@ -252,7 +252,7 @@ class World extends Phaser.Scene {
           }
           // Akumulasi statistik langkah kaki (Fitur #25)
           S.st = S.st || {}; S.st.steps = (S.st.steps || 0) + 1;
-        } else { pl.anims.stop(); pl.setFrame(sd + (pl.atkT > 0 ? '3' : '0')); pl.flipX = pl.dir === 'left'; }
+        } else { pl.anims.stop(); pl.setFrame(sd + (pl.atkT > 0 ? (pl.atkPose || '3') : '0')); pl.flipX = pl.dir === 'left'; }
       }
       pl.setAlpha(pl.inv > 0 ? (Math.floor(this.t * 20) % 2 ? .35 : 1) : 1);
     }

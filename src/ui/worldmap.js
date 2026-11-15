@@ -45,7 +45,9 @@ function openWorldMap(sc) {
   const maxH = Math.min(window.innerHeight - 190, 640);
   canvas.width = maxW;
   canvas.height = maxH;
-  canvas.style.cssText = 'border:3px solid #6e4222;border-radius:10px;box-shadow:0 0 0 2px #2a1a0e,0 6px 18px rgba(0,0,0,.8);background:#1d3b4a;cursor:grab;touch-action:none;image-rendering:pixelated;';
+  canvas.style.cssText = 'border:3px solid #6e4222;border-radius:10px;' +
+    'box-shadow:0 0 0 2px #2a1a0e,0 6px 18px rgba(0,0,0,.8);' +
+    'background:#1d3b4a;cursor:grab;touch-action:none;image-rendering:pixelated;';
   overlay.appendChild(canvas);
 
   const ctx = canvas.getContext('2d');

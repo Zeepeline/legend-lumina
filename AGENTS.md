@@ -20,7 +20,7 @@ Proyek: action RPG top-down untuk browser/HP, **Phaser 3.80.1**, skrip klasik gl
 | NPC, dialog, rutinitas | `docs/NPC_RULES.md` |
 | Cerita, misi, bab, boss | `docs/GAME_DESIGN.md` (+ `SPOILER_ENDING.md`, rahasia) |
 | Wilayah/kota/dungeon baru | `docs/WORLD_DESIGN.md` (checklist bag. 23) + `docs/BENUA_LUMINA.md` |
-| Gambar/aset/animasi | `docs/ART_BIBLE.md`, `ASSET_RULES.md`, `VALIDATION_RULES.md`, `ANIMATION_RULES.md` |
+| Gambar/aset/animasi/VFX tempur | `docs/ART_BIBLE.md`, `ASSET_RULES.md`, `VALIDATION_RULES.md`, `ANIMATION_RULES.md`, `COMBAT_VFX_RULES.md` |
 | Cek apakah fitur lama sudah ada | `grep -n "kata" docs/arsip/*.md` |
 
 ## Menjalankan & cek

@@ -21,12 +21,12 @@ Object.assign(World.prototype, {
     const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword', W = WEAPON_STYLE[wt];
     pl.atkCd = W.cd; pl.atkT = W.lock; sfx(wt === 'bow' ? 'jump' : 'swing');
     if (wt === 'bow') return this.shootArrow();
-    // kombo 3 pukulan (#2): ketuk beruntun, pukulan ke-3 lebih kuat & mendorong jauh
-    pl.combo = this.t - (pl.lastAtk || -9) < W.cd + .45 ? (pl.combo || 0) % 3 + 1 : 1; pl.lastAtk = this.t;
-    const fin = pl.combo === 3, cMul = fin ? 1.6 : pl.combo === 2 ? 1.1 : 1, cKb = fin ? 1.9 : 1;
+    // kombo 5 serangan beruntun: ketuk beruntun (1..5), tebasan ke-5 finisher kuat & mendorong jauh
+    pl.combo = this.t - (pl.lastAtk || -9) < W.cd + .5 ? (pl.combo || 0) % 5 + 1 : 1; pl.lastAtk = this.t;
+    const fin = pl.combo === 5, cMul = [1, 1, 1.1, 1.22, 1.38, 1.85][pl.combo] || 1, cKb = fin ? 2.1 : pl.combo >= 3 ? 1.3 : 1;
     if (fin) { pl.atkCd += .18; this.time.delayedCall(40, () => sfx('crit')); popWorld(pl.x, pl.y - 30, 'KOMBO!', 'crit'); }
     const [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx), ox = pl.x + dx * 3, oy = pl.y - 9 + dy * 2;
-    if (wt !== 'spear') {
+    if (wt !== 'spear' && !this.textures.exists('vfx_swing_combo')) {
       const sl = this.add.sprite(ox, oy, 'slash').setOrigin(4 / 28, .5).setRotation(ang).setDepth(pl.y + (dy < 0 ? -2 : 3)).setFlipY((dx < 0) !== (pl.combo === 2)).setScale(W.fxs * (fin ? 1.35 : 1)); if (fin) sl.setTint(0xffe08a);
       sl.play('slash'); sl.once('animationcomplete', () => sl.destroy());
     }
@@ -148,7 +148,7 @@ Object.assign(World.prototype, {
     e.hp -= dmg; popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 2 - (e.D.fly ? 10 : 0), label, style);
     sfx(crit ? 'crit' : 'hit'); if (crit) shake();
     const fatal = e.hp <= 0;
-    const isComboFin = this.pl?.combo === 3;
+    const isComboFin = this.pl?.combo === 5 || this.pl?.combo === 3;
     const hsDur = (e.boss && fatal) ? .22 : fatal ? .09 : crit ? .08 : isComboFin ? .06 : .035;
     const hsVib = (fatal || crit) ? 25 : isComboFin ? 16 : 10;
     this.hitStop(hsDur, hsVib);

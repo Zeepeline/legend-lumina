@@ -18,7 +18,10 @@ function worldOverview(M) {
   for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
     const px = i * WOV_K + 4, py = j * WOV_K + 4, o = (j * W + i) * 4; let col = null;
     if (R && Math.abs(py - riverY(R, px)) < R.w / 2) col = (px >= R.bridge[0] && px <= R.bridge[1]) ? [168, 112, 62] : WAT[1];
-    if (!col && ponds.length) { const e = waterE(ponds, px, py, GX, GY); if (e < 1) col = sd(px, py) < 0 ? [168, 112, 62] : WAT[e > .82 ? 2 : e > .5 || waterE.r < 70 ? 1 : 0]; }
+    if (!col && ponds.length) {
+      const e = waterE(ponds, px, py, GX, GY);
+      if (e < 1) col = sd(px, py) < 0 ? [168, 112, 62] : WAT[e > .82 ? 2 : e > .5 || waterE.r < 70 ? 1 : 0];
+    }
     if (!col && sd(px, py) < 0) col = PATH;
     if (!col) {
       const v = vnoise(px + GX, py + GY, 56, 11) * .75 + vnoise(px + GX, py + GY, 20, 12) * .25;

@@ -91,9 +91,13 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 203 · obj `treeA` 210 · obj `goblin_torch` 218 · obj `goblin_cauldron` 221 · obj `cryst` 230 · obj `lamp` 233 · obj `viewpoint` 236 · obj `lumina_shard` 270
 
-## src/world/ground.js (302 baris)
+## src/world/ground.js (315 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `TILE_CACHE` 90 · `getTileData()` 91 · `genGround()` 100 · `blockRects()` 203 · `scatter()` 219 · `openSides()` 252 · `borderTrees()` 265 · `ringObjects()` 281 · `mapObjects()` 286 · `mapWalls()` 290
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 27 · `GROUND` 28 · `BLEND_W` 40 · `WILD_G` 41 · `edgeSegs()` 42 · `edgeBlend()` 71 · `TILE_CACHE` 90 · `getTileData()` 91 · `genGround()` 100 · `blockRects()` 216 · `scatter()` 232 · `openSides()` 265 · `borderTrees()` 278 · `ringObjects()` 294 · `mapObjects()` 299 · `mapWalls()` 303
+
+## src/world/water.js (66 baris)
+_Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
+`pondsBase()` 6 · `WGLOB` 22 · `waterGlobal()` 23 · `pondsAll()` 37 · `pondsNear()` 46 · `waterE()` 49 · `waterGXY()` 65
 
 ## src/world/maps/village.js (88 baris)
 _Peta: Desa Lumina_
@@ -103,7 +107,7 @@ _Peta: Desa Lumina_
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
-## src/world/maps/meadow.js (86 baris)
+## src/world/maps/meadow.js (89 baris)
 _Peta: Padang Angin_
 
 
@@ -119,7 +123,7 @@ _Peta: Rawa Senja (bab 2, Morgath)_
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 
-## src/world/maps/lake.js (40 baris)
+## src/world/maps/lake.js (42 baris)
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
@@ -179,13 +183,13 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 23 · `shadowIndex()` 24
 
-## src/gfx/textures.js (130 baris)
+## src/gfx/textures.js (142 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
-`ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 15 · `addStrip()` 16 · `darkTree()` 17 · `NPC_W` 19 · `regPortrait()` 20 · `regChar()` 25 · `buildTextures()` 41
+`ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 16 · `addStrip()` 17 · `darkTree()` 18 · `NPC_W` 20 · `regPortrait()` 21 · `regChar()` 26 · `buildTextures()` 42
 
-## src/world/ground_verdant.js (69 baris)
+## src/world/ground_verdant.js (88 baris)
 _Tanah Verdant (Padang, Hutan, Desa) meniru assets/reference/target_padang.png._
-`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `VT` 9 · `verdantTiles()` 10 · `vMod` 16 · `vDirtN` 18 · `vDirtT` 19 · `verdantPix()` 21 · `verdantDeco()` 33 · `VBASE` 54 · `verdantBase()` 55
+`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `VT` 9 · `verdantTiles()` 10 · `vMod` 16 · `vDirtN` 18 · `vDirtT` 19 · `verdantPix()` 21 · `verdantDeco()` 33 · `VBASE` 54 · `verdantBase()` 55 · `VWC` 70 · `verdantWater()` 71 · `verdantBank()` 82
 
 ## src/scene/world.js (397 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
@@ -327,9 +331,9 @@ _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_
 _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, mengobrol, duduk, berpatroli), pulang saat malam._
 `NPC_ROLE` 4 · `STORY_NPC` 11 · `WORK` 13 · `SEATS` 27 · `SOCIAL` 28 · `IDLE_ICON` 29 · `.npcBrainInit()` 32 · `.npcEmote()` 44 · `.npcPickGoal()` 45 · `.npcWalkAnim()` 66 · `.npcBrain()` 67 · `.npcActStart()` 89 · `.npcActTick()` 94
 
-## src/npc/crowd.js (155 baris)
+## src/npc/crowd.js (201 baris)
 _Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed._
-`CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 60 · `.clearCrowd()` 138 · `_updAmbP` 150
+`CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 60 · `.clearCrowd()` 138 · `.initCrowd()` 148 · `_initPolishCrowd` 160 · `_dropActiveFxCrowd` 167 · `_updAmbP` 194
 
 ## src/systems/qol.js (244 baris)
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
@@ -423,11 +427,15 @@ _Mode benua: buang petak objek yang jauh dari Arka (memori). Mencatat semua yang
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
 `SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 120
 
-## src/systems/combat_fx.js (358 baris)
+## src/systems/combat_fx.js (346 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
-`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 111 · `.hitFx()` 121 · `.rollFx()` 156 · `.updLowHp()` 188
+`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 87 · `.hitFx()` 97 · `.rollFx()` 144 · `.updLowHp()` 176
 
-## src/ui/worldmap.js (343 baris)
+## src/ui/worldmap_art.js (67 baris)
+_Gambar ringkas berwarna tiap wilayah untuk Peta Benua (1 piksel = WOV_K piksel dunia):_
+`WOV_K` 4 · `WOV_TREE` 5 · `WOV_BUSH` 6 · `WOV_ROCK` 7 · `WOV_BLD` 8 · `wovRGB()` 9 · `worldOverview()` 10
+
+## src/ui/worldmap.js (318 baris)
 _Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)_
 `openWorldMap()` 3
 

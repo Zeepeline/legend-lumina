@@ -2803,7 +2803,7 @@ File BARU milik agen: `src/npc/crowd.js`, `src/systems/townlife.js`. Pengecualia
 - Batasan: kinerja HP: buat objek/efek hanya bila dekat kamera (≤ 500 px) & hancurkan saat jauh
 - Cek: `npm run check` (0 masalah); konsol `__game.sc.spawnCrowd(8)` di pasar → 8 warga berjalan; FPS tidak turun jelas.
 
-### [ ] T368. **Pasang warga latar di permukiman** — referensi: Stoneshard, Crimson Desert (permukiman ramai)
+### [x] T368. **Pasang warga latar di permukiman** — referensi: Stoneshard, Crimson Desert (permukiman ramai)
 
 - File: `src/npc/crowd.js` + data peta (`crowd: N` di `src/world/maps/city.js`, `village.js`). Baca dulu: hasil tugas sebelumnya.
 - Lakukan: tambahkan field `crowd` per peta: pasar 12, kota bawah 8, gerbang 6, akademi 5, desa 3; panggil `spawnCrowd(M.crowd)` saat peta dibuat (mode benua: saat wilayah dimasuki, mengikuti `benuaAmbient` sebagai contoh, tanpa mengubah benua_scene.js — bungkus dari crowd.js). Malam hari: jumlah dikali 0,3.

@@ -143,12 +143,58 @@ Object.assign(World.prototype, {
     }
     this.crowd = [];
     if (this.inter) this.inter = this.inter.filter(it => !it.crowdPerson);
+  },
+
+  initCrowd() {
+    this.clearCrowd();
+    const M = this.M;
+    if (!M || !M.crowd || G.title) return;
+    // Siang ramai, malam lebih sepi (30% dari kuota normal, minimal 1)
+    const isNightTime = (typeof S !== 'undefined' && S && (S.time >= 20 || S.time < 5));
+    const effectiveCount = isNightTime ? Math.max(1, Math.round(M.crowd * 0.3)) : M.crowd;
+    this.spawnCrowd(effectiveCount);
   }
 });
+
+// Sambungkan ke inisialisasi scene & pembersihan wilayah
+const _initPolishCrowd = World.prototype.initPolish;
+World.prototype.initPolish = function () {
+  const res = _initPolishCrowd ? _initPolishCrowd.apply(this, arguments) : undefined;
+  if (!this.passive && this.initCrowd) this.initCrowd();
+  return res;
+};
+
+const _dropActiveFxCrowd = World.prototype.dropActiveFx;
+World.prototype.dropActiveFx = function () {
+  if (this.clearCrowd) this.clearCrowd();
+  return _dropActiveFxCrowd ? _dropActiveFxCrowd.apply(this, arguments) : undefined;
+};
+
+// Mode Benua: inisialisasi / bersihkan crowd saat berpindah wilayah
+if (typeof World.prototype.benuaAmbient === 'function') {
+  const _benuaAmbientCrowd = World.prototype.benuaAmbient;
+  World.prototype.benuaAmbient = function (id) {
+    const res = _benuaAmbientCrowd.apply(this, arguments);
+    if (this.initCrowd) {
+      const regMap = MAPS[id];
+      if (regMap && regMap.crowd) {
+        this.clearCrowd();
+        const isNightTime = (typeof S !== 'undefined' && S && (S.time >= 20 || S.time < 5));
+        const count = isNightTime ? Math.max(1, Math.round(regMap.crowd * 0.3)) : regMap.crowd;
+        this.spawnCrowd(count);
+      } else {
+        this.clearCrowd();
+      }
+    }
+    return res;
+  };
+}
 
 // Sambungkan ke update loop scene
 const _updAmbP = World.prototype.updAmbient;
 World.prototype.updAmbient = function (dt) {
   if (this.updCrowd) this.updCrowd(dt);
-  return _updAmbP.call(this, dt);
+  return _updAmbP ? _updAmbP.call(this, dt) : undefined;
 };
+
+

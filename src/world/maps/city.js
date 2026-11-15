@@ -38,7 +38,7 @@ MAPS.road = {
 };
 
 MAPS.kgate = {
-  id: 'kgate', name: 'Gerbang Kota Lumina', w: 1200, h: 900, bgm: 'town', ground: 'village', glow: [600, 360, 600],
+  id: 'kgate', name: 'Gerbang Kota Lumina', w: 1200, h: 900, bgm: 'town', ground: 'village', glow: [600, 360, 600], crowd: 6,
   paths: [[600, 900, 600, 0, 34], [600, 640, 300, 640, 12], [600, 640, 900, 640, 12]],
   discs: [[600, 300, 120], [300, 640, 50], [900, 640, 50]],
   ponds: [[300, 470, 210, 70], [900, 470, 210, 70]],
@@ -66,7 +66,7 @@ MAPS.kgate = {
 };
 
 MAPS.kpasar = {
-  id: 'kpasar', name: 'Distrik Pasar', w: 1600, h: 1200, bgm: 'town', ground: 'village', glow: [800, 600, 900],
+  id: 'kpasar', name: 'Distrik Pasar', w: 1600, h: 1200, bgm: 'town', ground: 'village', glow: [800, 600, 900], crowd: 12,
   paths: [[800, 1200, 800, 0, 34], [0, 620, 1600, 620, 30], [400, 360, 1200, 360, 18], [400, 900, 1200, 900, 18], [400, 360, 400, 900, 18], [1200, 360, 1200, 900, 18]],
   discs: [[800, 620, 170], [400, 900, 40], [1200, 360, 40], [640, 500, 60], [960, 500, 60], [640, 790, 60], [960, 790, 60]],
   objs: [['fountain', 800, 640, { ok: 'air mancur di tengah alun-alun pasar' }],
@@ -100,7 +100,7 @@ MAPS.kpasar = {
 };
 
 MAPS.kakademi = {
-  id: 'kakademi', name: 'Distrik Akademi', w: 1400, h: 1000, bgm: 'town', ground: 'village', glow: [700, 500, 700],
+  id: 'kakademi', name: 'Distrik Akademi', w: 1400, h: 1000, bgm: 'town', ground: 'village', glow: [700, 500, 700], crowd: 5,
   paths: [[700, 1000, 700, 380, 30], [300, 640, 1100, 640, 16], [300, 640, 300, 420, 12], [1100, 640, 1100, 420, 12]],
   discs: [[700, 520, 150], [300, 380, 70], [1100, 380, 70], [300, 640, 50], [1100, 640, 50]],
   objs: [['academy', 700, 380], ['shrine', 700, 600],
@@ -128,7 +128,7 @@ MAPS.kakademi = {
 };
 
 MAPS.kbawah = {
-  id: 'kbawah', name: 'Kota Bawah', w: 1200, h: 1000, bgm: 'town', ground: 'village',
+  id: 'kbawah', name: 'Kota Bawah', w: 1200, h: 1000, bgm: 'town', ground: 'village', crowd: 8,
   paths: [[1200, 500, 200, 500, 14], [400, 500, 400, 345, 10], [700, 500, 700, 880, 10], [950, 500, 950, 160, 10], [200, 500, 200, 860, 10], [530, 500, 530, 710, 10], [530, 710, 700, 710, 10]],
   discs: [[560, 640, 80], [700, 700, 50], [950, 260, 40], [200, 760, 40]],
   objs: [...houseRow(160, 330, 3, 118, ['houseB', 'houseC']), ...houseRow(560, 330, 3, 118, ['houseC', 'houseB']), ...houseRow(300, 800, 3, 118, ['houseC', 'houseB']), ...houseRow(820, 800, 3, 118, ['houseB', 'houseC']),

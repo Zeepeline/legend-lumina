@@ -2,7 +2,7 @@
 // Peta: Desa Lumina
 // ---------------- DESA ----------------
 MAPS.village = {
-  id: 'village', name: 'Desa Lumina', w: 1024, h: 712, bgm: 'town', ground: 'village', glow: [512, 300, 520],
+  id: 'village', name: 'Desa Lumina', w: 1024, h: 712, bgm: 'town', ground: 'village', glow: [512, 300, 520], crowd: 3,
   paths: [
     // Jalan Arteri Utama (Radius 12–16)
     [512, 340, 512, 430, 15], [512, 520, 512, 712, 16],

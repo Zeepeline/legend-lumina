@@ -53,7 +53,10 @@ MAPS.meadow = {
   ],
   chests: [{ id: 'm1', x: 300, y: 870, item: 'potion3' }, { id: 'm2', x: 1250, y: 780, item: 'ring' }],
   walls: [[0, 0, 560, 60], [640, 0, 800, 60], [0, 0, 40, 296], [0, 364, 40, 676], [1400, 0, 40, 1040], [0, 1006, 960, 40], [1040, 1006, 400, 40]],
-  border: { top: 60, bottom: 1000, left: 40, right: 1400, gapL: [290, 370], gapT: [560, 640], gap: [960, 1040], types: ['verdant_tree', 'verdant_tree', 'treeAd'] },
+  border: {
+    top: 60, bottom: 1000, left: 40, right: 1400, gapL: [290, 370], gapT: [560, 640], gap: [960, 1040],
+    types: ['verdant_tree', 'verdant_tree', 'treeAd']
+  },
   exits: [{ x: 0, y: 296, w: 14, h: 68, to: 'village', tx: 1000, ty: 266, dir: 'left', label: 'Desa Lumina' },
     { x: 1180, y: 160, w: 40, h: 22, to: 'cave', tx: 120, ty: 790, dir: 'up', label: 'Gua Batu' },
     { x: 560, y: 0, w: 80, h: 12, to: 'snow', tx: 640, ty: 1150, dir: 'up', label: 'Puncak Beku' },
