@@ -53,7 +53,7 @@ Object.assign(World.prototype, {
       const p = { x: p0.x + (M._ox || 0), y: p0.y + (M._oy || 0) };
       const sc = { id, kind, x: p.x, y: p.y };
       if (kind === 'dig') { sc.spr = this.add.image(p.x, p.y - 2, 'spark').setDepth(p.y).setAlpha(.8); this.tweens.add({ targets: sc.spr, alpha: .15, scale: 1.6, duration: 700, yoyo: true, repeat: -1 }); this.inter.push(sc.it = { x: p.x, y: p.y, r: 16, fn: () => this.openSecret(sc) }); }
-      else { sc.spr = this.add.image(p.x, p.y, kind === 'bush' ? 'bushy' : 'rock').setOrigin(.5, 1).setDepth(p.y).setTint(kind === 'bush' ? 0x9a8a5a : 0x9890a0); if (kind === 'crack') sc.spr.setScale(1.3);
+      else { sc.spr = this.add.image(p.x, p.y, kind === 'bush' ? 'verdant_bush_small' : 'rock').setOrigin(.5, 1).setDepth(p.y).setTint(kind === 'bush' ? 0x9a8a5a : 0x9890a0); if (kind === 'crack') sc.spr.setScale(1.3);
         sc.wall = this.wall(p.x - 10, p.y - 10, 20, 9);
         this.inter.push(sc.it = { x: p.x, y: p.y + 6, r: 16, fn: () => talk(null, [kind === 'bush' ? 'Semak kering yang rapuh... mungkin bisa dibakar.' : 'Batu ini retak-retak. Ledakan mungkin bisa memecahkannya.']) }); }
       this.secrets.push(sc);

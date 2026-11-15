@@ -2,9 +2,9 @@
 // Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py
 // (dibersihkan sesuai docs/VALIDATION_RULES.md, ukurannya disamakan dengan tekstur lama agar tata letak tetap benar).
 const GPT_SWAP = [
-  "i_treeA", "treeAd", "treeSn", "round", "pine", "pined", "i_treeWoodsPine", "i_apple1", "i_orange1",
-  "i_bushG1", "i_bushG2", "i_bushP", "i_bushW", "i_bushP2", "bush", "bushy", "bushv", "rock",
-  "i_rockWoods", "stump", "log", "hay", "i_cart", "crate", "barrel", "fence", "sign", "lamp",
+  "i_treeA", "treeAd", "treeSn", "pine", "pined", "i_treeWoodsPine", "i_apple1", "i_orange1",
+  "i_bushP", "i_bushW", "i_bushP2", "bush", "bushv", "rock",
+  "i_rockWoods", "log", "hay", "i_cart", "crate", "barrel", "fence", "sign", "lamp",
   "mush", "stele", "i_houseA", "i_houseB", "i_houseC", "i_market", "windmill", "pebbles",
   "verdant_tree", "verdant_rock_large", "verdant_rock_med", "verdant_rock_pillar",
   "verdant_bush", "verdant_bush_small", "verdant_stump", "verdant_log",
