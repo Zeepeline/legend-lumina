@@ -884,7 +884,7 @@ Cari tugasmu: `grep -n "### \[ \] T" docs/TASKS_AGENT.md | head -1` lalu baca HA
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
 - Lalu `node tools/check-size.js --update` (angka utang harus TURUN). Cek: `npm run check`, buka game & mainkan 30 detik tanpa error konsol.
 
-### [ ] T136. **Pecah baris > 160 karakter di `src/world/maps/forest.js`**
+### [x] T136. **Pecah baris > 160 karakter di `src/world/maps/forest.js`**
 
 - Lihat baris panjang: `awk 'length>160{print FNR}' src/world/maps/forest.js`. Pecah tiap baris di `;` atau `,` menjadi beberapa baris, indentasi sama. LOGIKA TIDAK BOLEH BERUBAH.
 - Jangan pecah di tengah string/template literal. Jangan menyisipkan komentar `//` di tengah pernyataan.
@@ -3151,7 +3151,7 @@ BUKAN petak seamless. Diulang dengan `% 64` di `src/world/ground.js` (±baris 15
   bukan warna `DIRT[k]` datar. Jalan batu (bukan 'dirt') JANGAN diubah.
 - Cek: `npm run check` (0 masalah); jalan tanah desa menyatu dengan bercak tanah, tepinya bergerigi halus, bukan garis lurus gelap.
 
-### [ ] T414. **Batu & kerikil seragam gaya** — referensi: —
+### [x] T414. **Batu & kerikil seragam gaya** — referensi: —
 - File: `src/world/objects.js` (`rock`, `pebbles`, `rockWoods`), `src/gfx/gptassets.js`. Baca dulu: commit a53d19f (gpt_rock, gpt_pebbles).
 - Lakukan: cek gambar `gpt_rock.png`, `gpt_pebbles.png`, `gpt_i_rockWoods.png`: jika ada bingkai/latar gelap tersisa (piksel tidak transparan di tepi),
   buat transparan (alpha 0 untuk piksel yang tersambung ke tepi & gelap). Objek `pebbles` di peta verdant boleh dikurangi 50% karena kerikil
@@ -3170,7 +3170,7 @@ BUKAN petak seamless. Diulang dengan `% 64` di `src/world/ground.js` (±baris 15
   semak tersebar (1 per ±200×200 px). Jangan menutup jalan/portal.
 - Cek: `npm run check` (0 masalah); `check-layout` tanpa peringatan baru; tampilan mendekati `target_padang.png`.
 
-### [ ] T417. **Gelagah di tepi air** — referensi: Stardew Valley (rumput tepi kolam)
+### [x] T417. **Gelagah di tepi air** — referensi: Stardew Valley (rumput tepi kolam)
 - File: `src/world/objects.js` (tambah `reeds: { key: 'deco_reeds', col: [8, 4, 0], sh: [10, 3] }`), peta dengan `ponds`/sungai (verdant). Baca dulu: `GEOGRAFI.md` §3.
 - Lakukan: taruh 3–6 `reeds` berkelompok di tepi tiap kolam/sungai di Padang, Hutan, Desa (tepi air, bukan di air, bukan di jalan).
 - Cek: `npm run check` (0 masalah); `check-layout` tanpa peringatan baru; gelagah terlihat di tepi air.
@@ -3180,7 +3180,7 @@ BUKAN petak seamless. Diulang dengan `% 64` di `src/world/ground.js` (±baris 15
 - Lakukan: buka game di HP, jalan di Desa, Jalan Desa–Padang, Padang, Hutan. Catat: garis grid? pola berulang terlihat? FPS turun? Ambil 1 tangkapan layar.
 - Cek: catatan berisi jawaban 3 pertanyaan.
 
-### [ ] T416. **Dokumentasi pola tanah** — referensi: —
+### [x] T416. **Dokumentasi pola tanah** — referensi: —
 - File: `docs/GEOGRAFI.md` (bagian baru "§8 Pola tanah", maks 12 baris). Baca dulu: aturan 1–5 di atas.
 - Lakukan: salin aturan 1–5 secara singkat + cara membuat petak baru dengan `tools/gen_ground.py` (ubah palet/seed), agar agen berikutnya tidak memotong
   petak dari lembar GPT lagi.
@@ -3206,14 +3206,14 @@ BUKAN petak seamless. Diulang dengan `% 64` di `src/world/ground.js` (±baris 15
 rumah pohon Tetua Bram 513,66), sumur (512, 345), NPC cerita (`elder`, `guard`, `smith`, `merchant`) maks geser 60 px, peti (`chests`), `viewpoint`,
 `lumina_shard`, `crystal`, kandang (`ranch`). Rumah lain boleh digeser maks 120 px — pintunya (entri `doors` dengan koordinat sama) WAJIB ikut digeser.
 
-### [ ] T420. **Selaraskan skill desa dengan aturan dunia** — referensi: —
+### [x] T420. **Selaraskan skill desa dengan aturan dunia** — referensi: —
 - File: `.agents/skills/village-organic-layout/SKILL.md`. Baca dulu: `docs/WORLD_REFACTOR.md` §2 & §7, `docs/GEOGRAFI.md` §7 (Desa vs kota).
 - Lakukan: ubah prinsip 2 ("Radial-Organic") menjadi: pusat desa = pelataran TAK BERATURAN di sekitar sumur (bukan cincin/elips sempurna), rumah
   berkelompok di sepanjang jalan utama (bukan melingkar rata), jalan bertemu di pelataran dari arah tak simetris. Tambah bagian "Halaman belakang"
   (T423) & "Zona fungsi" (T424). Perbarui diagram bagian 2 setelah T421–T425 selesai. Catat: jalan TANAH dibelokkan otomatis oleh `world/organic.js`.
 - Cek: skill tidak lagi menyarankan `rings` melingkar sempurna.
 
-### [ ] T421. **Pelataran sumur tak beraturan** — referensi: alun-alun desa Inggris (village green), Stardew Valley (Pelican Town)
+### [x] T421. **Pelataran sumur tak beraturan** — referensi: alun-alun desa Inggris (village green), Stardew Valley (Pelican Town)
 - File: `src/world/maps/village.js` (`rings`, `discs`, objek sekitar 512, 345). Baca dulu: `makeSD` di `ground.js` (cara `rings`/`discs` digambar).
 - Lakukan: hapus `rings`; ganti `discs: [[512, 345, 42]]` dengan 3–4 lingkaran bertumpuk tak sama besar yang condong ke satu sisi, contoh
   `[[512, 345, 62], [462, 330, 46], [566, 368, 52], [520, 300, 38]]`. Isi pelataran: 1 pohon desa besar di tepi pelataran (`treeA` atau `bigtree` kecil),
@@ -3227,26 +3227,26 @@ rumah pohon Tetua Bram 513,66), sumur (512, 345), NPC cerita (`elder`, `guard`, 
   (tidak segaris). Setapak pintu (radius 8–10) dari pintu ke jalan terdekat ≤ 36 px. NPC pemilik rumah ikut digeser.
 - Cek: `check-layout` 0 masalah; tes cerita awal (`tests/bab*.spec.js` yang ada di desa) lulus; tidak ada lagi 8 rumah mengelilingi sumur rata.
 
-### [ ] T423. **Halaman belakang tiap rumah** — referensi: Stoneshard (Osbrook), burgage plot (GEOGRAFI §7)
+### [x] T423. **Halaman belakang tiap rumah** — referensi: Stoneshard (Osbrook), burgage plot (GEOGRAFI §7)
 - File: `village.js` (`objs`). Baca dulu: `docs/PLACEMENT_RULES.md` (jarak objek), objek yang ada: `woodpile`, `barrel`, `crate`, `fence`, `hay`, `pot`.
 - Lakukan: di BELAKANG (sisi jauh dari jalan) tiap rumah taruh 2–4 dari: tumpukan kayu, tong, peti, kebun kecil (`gardens` 40×30), jemuran (bila ada
   objeknya; kalau tidak, lewati), kandang ayam kecil, pagar kayu 2–4 segmen membentuk huruf L terbuka (bukan kotak tertutup).
 - Cek: `check-layout` 0 masalah; setiap rumah punya halaman berisi; jalan tetap bebas.
 
-### [ ] T424. **Zona fungsi desa** — referensi: GEOGRAFI §7 (bising/bau dijauhkan, tani di pinggir)
+### [x] T424. **Zona fungsi desa** — referensi: GEOGRAFI §7 (bising/bau dijauhkan, tani di pinggir)
 - File: `village.js`. Baca dulu: §7 tabel kawasan & radius pengaruh.
 - Lakukan: bengkel Pak Besi: tambah area kerja di sisi jalan timur (anvil/forge/bellows + tong air) menghadap jalan, ≥ 120 px dari rumah biasa —
   geser rumah biasa di dekatnya (bukan bengkelnya). Tani: perluas kebun Bu Lastri jadi 2–3 petak di barat (`gardens`), orang-orangan sawah,
   pagar dengan celah masuk. Kandang (`ranch` 840,310): tambah hay & tong di sekitarnya, jauh dari rumah ≥ 100 px.
 - Cek: `check-layout` 0 masalah; tangkapan layar: barat = kebun, timur = kerja/ternak, tengah = pelataran & rumah.
 
-### [ ] T425. **Pohon desa berumpun, ada padang terbuka** — referensi: target_padang.png (`assets/reference/`)
+### [x] T425. **Pohon desa berumpun, ada padang terbuka** — referensi: target_padang.png (`assets/reference/`)
 - File: `village.js` (30 `treeA`). Baca dulu: skill desa bagian 4 (aturan tabrakan pohon).
 - Lakukan: susun ulang 30 `treeA` jadi 6–7 rumpun (2–5 pohon, jarak 34–60 px, posisi acak bukan baris) + 3–4 pohon tunggal di dekat rumah
   (peneduh halaman). Sisakan 2 padang rumput terbuka ≥ 150×100 px. Jangan ada pohon di jalan, pintu, pelataran, atau kebun.
 - Cek: `check-layout` 0 masalah; tidak ada deretan pohon berjarak sama.
 
-### [ ] T426. **Jalan masuk pelataran tidak memancar** — referensi: WORLD_REFACTOR §2
+### [x] T426. **Jalan masuk pelataran tidak memancar** — referensi: WORLD_REFACTOR §2
 - File: `village.js` (`paths`). Baca dulu: komentar jalan di file.
 - Lakukan: 4 jalan utama tidak boleh bertemu tepat di titik-titik simetris pelataran. Jalan utara masuk dari sisi barat laut pelataran, jalan timur
   bercabang dulu ke bengkel lalu ke pelataran, jalan barat lewat kebun lalu masuk dari barat daya. Setapak pintu tetap radius 8–11.

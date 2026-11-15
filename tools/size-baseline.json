@@ -49,11 +49,11 @@
  },
  "src/core/input.js": {
   "lines": 0,
-  "long": 5
+  "long": 2
  },
  "src/core/state.js": {
   "lines": 0,
-  "long": 8
+  "long": 6
  },
  "src/data/enemies.js": {
   "lines": 0,
@@ -73,7 +73,7 @@
  },
  "src/gfx/textures.js": {
   "lines": 0,
-  "long": 20
+  "long": 21
  },
  "src/npc/brain.js": {
   "lines": 0,
@@ -85,11 +85,11 @@
  },
  "src/scene/world.js": {
   "lines": 0,
-  "long": 33
+  "long": 32
  },
  "src/systems/ambient.js": {
   "lines": 0,
-  "long": 33
+  "long": 32
  },
  "src/systems/chapter3.js": {
   "lines": 0,
@@ -105,7 +105,7 @@
  },
  "src/systems/combat.js": {
   "lines": 0,
-  "long": 25
+  "long": 20
  },
  "src/systems/craft.js": {
   "lines": 0,
@@ -125,11 +125,11 @@
  },
  "src/systems/feel.js": {
   "lines": 0,
-  "long": 5
+  "long": 4
  },
  "src/systems/fishing.js": {
   "lines": 0,
-  "long": 14
+  "long": 13
  },
  "src/systems/home.js": {
   "lines": 0,
@@ -173,11 +173,11 @@
  },
  "src/systems/polish.js": {
   "lines": 0,
-  "long": 17
+  "long": 15
  },
  "src/systems/qol.js": {
   "lines": 0,
-  "long": 19
+  "long": 15
  },
  "src/systems/ranch.js": {
   "lines": 0,
@@ -193,19 +193,23 @@
  },
  "src/systems/skills.js": {
   "lines": 0,
-  "long": 6
+  "long": 3
  },
  "src/systems/sound.js": {
   "lines": 0,
-  "long": 6
+  "long": 5
  },
  "src/systems/status.js": {
   "lines": 0,
-  "long": 4
+  "long": 3
  },
  "src/systems/stream.js": {
   "lines": 0,
   "long": 6
+ },
+ "src/systems/waterflow.js": {
+  "lines": 0,
+  "long": 1
  },
  "src/ui/bag.js": {
   "lines": 0,
@@ -217,19 +221,15 @@
  },
  "src/ui/menus.js": {
   "lines": 0,
-  "long": 19
- },
- "src/ui/shop.js": {
-  "lines": 419,
-  "long": 0
+  "long": 17
  },
  "src/ui/widgets.js": {
   "lines": 0,
-  "long": 12
+  "long": 11
  },
  "src/world/ground.js": {
   "lines": 0,
-  "long": 19
+  "long": 24
  },
  "src/world/layout.js": {
   "lines": 0,
@@ -237,11 +237,7 @@
  },
  "src/world/maps/city.js": {
   "lines": 0,
-  "long": 24
- },
- "src/world/maps/forest.js": {
-  "lines": 0,
-  "long": 4
+  "long": 21
  },
  "src/world/maps/interiors.js": {
   "lines": 0,
@@ -253,14 +249,18 @@
  },
  "src/world/maps/swamp.js": {
   "lines": 0,
-  "long": 5
+  "long": 4
  },
  "src/world/maps/wild.js": {
   "lines": 0,
-  "long": 11
+  "long": 10
  },
  "src/world/spawn/spawn_1.js": {
   "lines": 0,
   "long": 4
+ },
+ "src/world/water.js": {
+  "lines": 0,
+  "long": 1
  }
 }

@@ -22,7 +22,11 @@ MAPS.forest = {
     [60, 470, 26, 36], [60, 530, 26, 36], [60, 580, 26, 36], [60, 620, 28, 36],
   ],
   river: { y: 600, amp: 30, k: .009, w: 36, bridge: [380, 432] },
-  objs: [['stele', 556, 1004, { lore: 'prasasti_hutan' }], ['sign', 450, 300, { text: 'Papan arah: ↑ Desa Lumina · ← Hutan Dalam · → Jalur Sungai' }], ['sign', 350, 410, { text: 'Papan arah: ↑ Desa Lumina · ↙ Hutan Dalam' }], 
+  objs: [
+    ['reeds', 260, 440], ['reeds', 280, 445], ['reeds', 850, 750], ['reeds', 870, 755],
+    ['stele', 556, 1004, { lore: 'prasasti_hutan' }],
+    ['sign', 450, 300, { text: 'Papan arah: ↑ Desa Lumina · ← Hutan Dalam · → Jalur Sungai' }],
+    ['sign', 350, 410, { text: 'Papan arah: ↑ Desa Lumina · ↙ Hutan Dalam' }], 
     ['shrine', 640, 1094], ['sign', 676, 120, { text: 'Kuil Kristal: ikuti jalan ke selatan.\nTimur: perkemahan goblin.\nTenggara: sarang ular.' }],
     ['sign', 440, 280, { text: 'SIMPANG TIGA HUTAN\n← Barat: Hutan Dalam (Berbahaya)\n→ Timur: Jalur Sungai Senja\n↑ Utara: Desa Lumina' }],
     ['campfire', 650, 180],
@@ -53,10 +57,17 @@ MAPS.forest = {
     ['goblin_banner', 860, 390], ['goblin_banner', 930, 390], ['goblin_banner', 1070, 390], ['goblin_banner', 1200, 390],
     ['goblin_totem', 970, 400], ['goblin_totem', 1100, 400], ['goblin_wagon', 1210, 280],
   ],
-  chests: [{ id: 'c1', x: 1060, y: 300, item: 'iron' }, { id: 'c2', x: 180, y: 852, item: 'ether2' }, { id: 'c3', x: 676, y: 156, item: 'potion2' }, { id: 'c4', x: 1060, y: 852, item: 'gold150', lock: 1 }],
+  chests: [
+    { id: 'c1', x: 1060, y: 300, item: 'iron' }, { id: 'c2', x: 180, y: 852, item: 'ether2' },
+    { id: 'c3', x: 676, y: 156, item: 'potion2' }, { id: 'c4', x: 1060, y: 852, item: 'gold150', lock: 1 }
+  ],
   crystal: { x: 640, y: 1076 },
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 700], [0, 760, 40, 440], [1240, 0, 40, 500], [1240, 560, 40, 640], [0, 1170, 1280, 30]],
-  exits: [{ x: 0, y: 700, w: 12, h: 60, to: 'deepwood', tx: 2340, ty: 730, dir: 'left', label: 'Hutan Dalam' }, { x: 1268, y: 500, w: 12, h: 60, to: 'river', tx: 60, ty: 530, dir: 'right', label: 'Jalur Sungai' }, { x: 600, y: 0, w: 80, h: 12, to: 'village', tx: 512, ty: 664, dir: 'up', label: 'Desa Lumina' }],
+  exits: [
+    { x: 0, y: 700, w: 12, h: 60, to: 'deepwood', tx: 2340, ty: 730, dir: 'left', label: 'Hutan Dalam' },
+    { x: 1268, y: 500, w: 12, h: 60, to: 'river', tx: 60, ty: 530, dir: 'right', label: 'Jalur Sungai' },
+    { x: 600, y: 0, w: 80, h: 12, to: 'village', tx: 512, ty: 664, dir: 'up', label: 'Desa Lumina' }
+  ],
   npcs: [{ id: 'hunter', ch: 'hunter', name: 'Pemburu Raka', x: 600, y: 90, dir: 'down' }],
   enemies: [
     ['slime', 520, 220], ['slime', 600, 250], ['slime', 400, 330], ['bat', 440, 400], ['slime', 330, 470, { ambush: true }],
@@ -76,7 +87,10 @@ MAPS.forest = {
     { type: 'gsnake', flag: 'mb_snake', x: 1030, y: 860, zone: [972, 802, 116, 116], need: 2, after: 'seal',
       intro: [[null, 'Tanah berdesis... Seekor ular raksasa melingkari pecahan segel!']] },
     { type: 'gking', flag: 'boss', x: 640, y: 1046, zone: [560, 996, 160, 114], need: 3, after: 'crystal',
-      intro: [['Raja Goblin', 'GRAAAH! Kau menghancurkan segelku?! Kristal ini sumber kekuatanku sekarang!'], ['Arka', 'Cahayanya akan kubawa pulang ke desa. Bersiaplah!']] },
+      intro: [
+        ['Raja Goblin', 'GRAAAH! Kau menghancurkan segelku?! Kristal ini sumber kekuatanku sekarang!'],
+        ['Arka', 'Cahayanya akan kubawa pulang ke desa. Bersiaplah!']
+      ] },
   ],
   barrier: { x: 640, y: 984, w: 64 },
   ring: { cx: 640, cy: 1068, r: 104, gap: 22 },

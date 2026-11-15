@@ -83,9 +83,9 @@ _Efek: tebasan, api, proyektil, cahaya, bayangan_
 _Lantai & perabot interior_
 `FURN` 4 · `drawFurn()` 5 · `genRoom()` 15 · `artMusicBox()` 28
 
-## src/world/objects.js (179 baris)
+## src/world/objects.js (180 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 178
+`OBJ` 7 · `MAPS` 179
 
 ## src/world/spawn/spawn_1.js (398 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
@@ -103,15 +103,15 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
 `WATER_WIDEN` 6 · `pondsBase()` 7 · `WGLOB` 25 · `waterGlobal()` 26 · `pondsAll()` 40 · `pondsNear()` 49 · `waterE()` 52 · `waterGXY()` 68 · `WATER_MOVABLE` 71 · `waterRelocate()` 72
 
-## src/world/maps/village.js (115 baris)
+## src/world/maps/village.js (120 baris)
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
 
 
-## src/world/maps/forest.js (87 baris)
+## src/world/maps/forest.js (101 baris)
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
-## src/world/maps/meadow.js (89 baris)
+## src/world/maps/meadow.js (90 baris)
 _Peta: Padang Angin_
 
 
