@@ -23,7 +23,7 @@ Object.assign(World.prototype, {
     const name = npc ? (npc.n?.name || '') : (best.name || best.label || '');
     const txt = name ? `${icon}\n${name}` : icon;
     const x = npc ? npc.spr.x : best.rect ? best.rect[0] + best.rect[2] / 2 : best.x, y = npc ? npc.spr.y - 34 : (best.rect ? best.rect[1] : best.y - 18);
-    this.iHint.setText(txt).setPosition(x, y + Math.sin(this.t * 5) * 1.5).setVisible(true);
+    this.iHint.setText(txt).setPosition(x, y + Math.sin(this.t * 5) * 1.5).setVisible(true).setScale(1 / (this.M.zoom || 1));
     if (btn && btn.dataset.ctx !== kind) { btn.dataset.ctx = kind; btn.innerHTML = icon + '<small>' + kind.toUpperCase() + '</small>'; }
   },
   // bilah HP kecil di atas musuh yang sudah terluka (bukan boss; boss punya bilah sendiri)

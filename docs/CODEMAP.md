@@ -195,13 +195,13 @@ _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 _Tanah Verdant (Padang, Hutan, Desa) meniru assets/reference/target_padang.png._
 `VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `VT` 9 · `verdantTiles()` 10 · `vMod` 16 · `vDirtN` 18 · `vDirtT` 19 · `verdantPix()` 21 · `verdantDeco()` 33 · `VBASE` 54 · `verdantBase()` 55 · `VWC` 70 · `verdantWater()` 71 · `VSTONE` 83 · `vCobble()` 84 · `verdantBank()` 93
 
-## src/world/interior_sheet.js (81 baris)
+## src/world/interior_sheet.js (89 baris)
 _Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._
-`INT_SIZE` 5 · `INT_FLAT` 14 · `INT_RUG` 16 · `intDims()` 17 · `rug9()` 18 · `genRoomSheet()` 29 · `_genRoom0` 70 · `sheetWalls()` 73 · `regIntTex()` 80
+`INT_SIZE` 5 · `INT_FLAT` 14 · `INT_RUG` 16 · `intDims()` 17 · `rug9()` 18 · `genRoomSheet()` 30 · `_genRoom0` 78 · `sheetWalls()` 81 · `regIntTex()` 88
 
-## src/scene/world.js (399 baris)
+## src/scene/world.js (400 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
-`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 211 · `.update()` 212 · `.puff()` 314 · `.camStep()` 315 · `.pump()` 363 · `.front()` 372 · `.actionA()` 373 · `.sparkle()` 383 · `.checkZones()` 387
+`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 211 · `.update()` 212 · `.puff()` 314 · `.camStep()` 315 · `.pump()` 364 · `.front()` 373 · `.actionA()` 374 · `.sparkle()` 384 · `.checkZones()` 388
 
 ## src/systems/scene_nav.js (14 baris)
 _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._
@@ -363,13 +363,13 @@ _Gelombang 5: poin atribut (#16), kerajinan (#26), bom & alat lempar (#29, #407)
 _Gelombang 6: kabut peta (#61), rahasia (#63), peta harta (#66), lubang galian (#665),_
 `FOG_N` 4 · `WILD` 5 · `ROLE_ICON` 8 · `hash32()` 9 · `seeded()` 10 · `fogOf()` 12 · `fogSeen()` 13 · `drawFog()` 14 · `.updFog()` 21 · `.freeSpot()` 28 · `.initSecrets()` 46 · `.initTreasure()` 63 · `.digTreasure()` 68 · `.openSecret()` 74 · `.giveTreasureMap()` 85 · `.updSecrets()` 101 · `.blastAt()` 108 · `openMapNew()` 111 · `.draw()` 149
 
-## src/systems/home.js (310 baris)
+## src/systems/home.js (313 baris)
 _Gelombang 7: Rumah Arka (#46), peti penyimpanan (#32), perluasan (#492), tata perabot bebas (#493),_
-`HOME_PRICE` 4 · `FCAT` 5 · `ROOM_IN` 19 · `homeInit()` 21 · `furnTex()` 31 · `.spawnHome()` 37 · `.placeFurnSprite()` 75 · `.removeFurnSprite()` 82 · `.useFurn()` 83 · `.useTrophyShelf()` 111 · `.homeMenu()` 147 · `.chooseHomeStyle()` 171 · `.pickCatalog()` 196 · `.pickPlaced()` 205 · `.startCarry()` 209 · `.furnOk()` 213 · `.updCarry()` 223 · `.carryKey()` 229 · `openBox()` 300
+`HOME_PRICE` 4 · `FCAT` 5 · `ROOM_IN` 19 · `homeInit()` 21 · `furnTex()` 31 · `.spawnHome()` 37 · `.placeFurnSprite()` 76 · `.removeFurnSprite()` 83 · `.useFurn()` 84 · `.useTrophyShelf()` 112 · `.homeMenu()` 148 · `.chooseHomeStyle()` 172 · `.pickCatalog()` 197 · `.pickPlaced()` 206 · `.startCarry()` 210 · `.furnOk()` 214 · `.updCarry()` 226 · `.carryKey()` 232 · `openBox()` 303
 
-## src/world/interior_layouts.js (48 baris)
-_Tata letak interior gaya lembar pemilik (lihat src/world/interior_sheet.js). Koordinat perabot = [nama, x tengah, y dasar, balik?]._
-`INT_LAYOUT` 4 · `HOME_DEF2` 38 · `_homeInit0` 39
+## src/world/interior_layouts.js (94 baris)
+_Interior = gambar ruangan pemilik apa adanya (assets/img/int_room1..3.png, skala sama dengan perabot lembar → rasio & bentuk identik)._
+`INT_ROOMS` 5 · `_genRoomSheet0` 37 · `_homeInit0` 58
 
 ## src/systems/ranch.js (119 baris)
 _Gelombang 8: peternakan (#47), kandang ayam (#514), kandang sapi (#515), kasih sayang hewan (#519),_

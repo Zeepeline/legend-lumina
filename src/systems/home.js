@@ -21,7 +21,7 @@ MAPS.home = makeRoom('home', 'Rumah Arka', [874, 250], { wallc: '#ead6b6', furn:
 function homeInit() {
   if (!S.home) S.home = { owned: 0, lv: 0, items: [], box: {} };
   // Default ranjang & lemari pakaian untuk rumah
-  if (S.home.items && S.home.items.length === 0 && S.home.owned) {
+  if (S.home.items && S.home.items.length === 0 && S.home.owned && !S.home.lay3) {
     S.home.items.push({ t: 'bed', x: 62, y: 90, v: 0 });
     S.home.items.push({ t: 'wardrobe', x: 236, y: 86, v: 0 });
     S.home.items.push({ t: 'stove', x: 200, y: 160, v: 0 }); // Kompor Dapur Mandiri (#497)
@@ -36,8 +36,9 @@ function furnTex(sc, t, v) {
 Object.assign(World.prototype, {
   spawnHome() {
     this.hf = []; this.carry = null; if (this.M.id !== 'home') return; const H = homeInit();
-    this.inter.push({ x: 160, y: 86, r: 18, fn: () => this.homeMenu() });
-    const b = this.add.text(160, 66, '📋', { fontSize: '12px' }).setOrigin(.5).setDepth(70);
+    const [bx, by] = this.M.board || [160, 86]; /* papan menu: rak kecil di dinding (interior_layouts.js) */
+    this.inter.push({ x: bx, y: by, r: 18, fn: () => this.homeMenu() });
+    if (!this.M.board) this.add.text(160, 66, '📋', { fontSize: '12px' }).setOrigin(.5).setDepth(70);
     for (const f of H.items) this.placeFurnSprite(f);
 
     // Tamu Warga Berkunjung ke Rumah (#500)
@@ -50,7 +51,7 @@ Object.assign(World.prototype, {
       ];
       // Tampilkan 1 pengunjung sore jika beruntung
       const v = visitors[Math.floor(Math.random() * visitors.length)];
-      const vx = 140, vy = 150;
+      const [vx, vy] = this.M.guest || [140, 150];
       this.spawnNpc({ id: 'guest_' + v.id, ch: v.ch, name: v.name + ' (Tamu Sore)', x: vx, y: vy, dir: 'down', wander: 0 });
       this.inter.push({
         x: vx, y: vy + 4, r: 20,
@@ -217,7 +218,9 @@ Object.assign(World.prototype, {
     if (!C.flat && r.x < DOOR_LANE.r && r.r > DOOR_LANE.x && r.b > DOOR_LANE.y) return false;
     if (!C.flat) { for (const o of this.hf) { const D = FCAT[o.f.t]; if (D.flat) continue; if (r.x < o.f.x + D.w && r.r > o.f.x && r.y < o.f.y + D.h && r.b > o.f.y) return false; }
       const p = this.pl; if (p.x > r.x - 4 && p.x < r.r + 4 && p.y > r.y + C.h * .4 - 4 && p.y < r.b + 4) return false; }
-    if (r.x < 176 && r.r > 144 && r.y < 104) return false; // papan rumah
+    if (!this.M.board && r.x < 176 && r.r > 144 && r.y < 104) return false; /* papan rumah lama */
+    if (!C.wallOnly && ROOM_IN.fy && r.y + (C.flat ? 0 : C.h * .4) < ROOM_IN.fy) return false; /* perabot lantai tak boleh menempel dinding */
+    if (!C.flat && (this.M.solid || []).some(w => r.x < w[0] + w[2] && r.r > w[0] && r.y + C.h * .4 < w[1] + w[3] && r.b > w[1])) return false;
     return true;
   },
   updCarry() {
@@ -293,7 +296,7 @@ World.prototype.buyHome = async function () {
     if (r !== 0) { this.pl.y += 10; return; }
     if (S.gold < HOME_PRICE) { sfx('buzz'); await say(`Uangmu belum cukup (${S.gold}/${HOME_PRICE} G).`, 'Rumah Kosong'); this.pl.y += 10; return; }
     S.gold -= HOME_PRICE; homeInit().owned = 1; updHud(); sfx('chest');
-    await say('Rumah ini sekarang milikmu! Masuk dan tata sesukamu lewat papan 📋 di dinding.', 'Rumah Arka');
+    await say('Rumah ini sekarang milikmu! Masuk dan tata sesukamu lewat rak kecil di dinding belakang.', 'Rumah Arka');
   } finally { G.lock--; }
   if (homeInit().owned) this.goto('home', 160, 226, 'up');
 };

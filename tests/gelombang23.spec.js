@@ -22,7 +22,7 @@ test.describe('Gelombang 23 Features', () => {
     const craftHomeCheck = await h.G(page, () => {
       S.home = null; homeInit(); S.home.owned = 1; homeInit(); // kompor bawaan muncul setelah rumah dimiliki
       const homeItems = S.home?.items || [];
-      const hasStove = homeItems.some(i => i.t === 'stove');
+      const hasStove = homeItems.some(i => i.t === 'stove') || (MAPS.home.sheetUse || []).some(u => u[2] === 'stove'); // perapian di gambar ruangan
       return {
         hasStove,
         hasDyeRed: !!ITEMS['dye_red'],

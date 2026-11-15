@@ -23,7 +23,8 @@ function rug9(x, im, X, Y, w, h) {
     x.drawImage(im, m, 0, ww, m, X + xx, Y, ww, m); x.drawImage(im, m, H0 - m, ww, m, X + xx, Y + h - m, ww, m); }
   for (let yy = m; yy < h - m; yy += ch) { const hh = Math.min(ch, h - m - yy);                  // tepi kiri & kanan
     x.drawImage(im, 0, m, m, hh, X, Y + yy, m, hh); x.drawImage(im, W0 - m, m, m, hh, X + w - m, Y + yy, m, hh); }
-  for (const [sx, sy, dx, dy] of [[0, 0, 0, 0], [W0 - m, 0, w - m, 0], [0, H0 - m, 0, h - m], [W0 - m, H0 - m, w - m, h - m]]) x.drawImage(im, sx, sy, m, m, X + dx, Y + dy, m, m);
+  for (const [sx, sy, dx, dy] of [[0, 0, 0, 0], [W0 - m, 0, w - m, 0], [0, H0 - m, 0, h - m], [W0 - m, H0 - m, w - m, h - m]])
+    x.drawImage(im, sx, sy, m, m, X + dx, Y + dy, m, m);
   x.drawImage(im, m, m, cw, ch, X + Math.round((w - cw) / 2), Y + Math.round((h - ch) / 2), cw, ch);  // motif asli di tengah
 }
 function genRoomSheet(M) {
@@ -45,13 +46,20 @@ function genRoomSheet(M) {
   x.restore();
   // dinding belakang: plester krem + balok atas + papan kayu bawah (wainscot) + tiang
   F('#e9c7a1', rx, ry - 36, rw, 30);
-  for (let i = 0; i < 90; i++) F(hash(i, 3, 12) < .5 ? '#ddb88f' : '#f1d4b0', rx + Math.floor(hash(i, 1, 12) * rw), ry - 34 + Math.floor(hash(i, 2, 12) * 26), 2, 1);
+  for (let i = 0; i < 90; i++)
+    F(hash(i, 3, 12) < .5 ? '#ddb88f' : '#f1d4b0', rx + Math.floor(hash(i, 1, 12) * rw), ry - 34 + Math.floor(hash(i, 2, 12) * 26), 2, 1);
   F('#8b5132', rx, ry - 8, rw, 8); F('#a9703f', rx, ry - 8, rw, 1); F('#5e3420', rx, ry - 1, rw, 1);
   F('#6d3b24', rx, ry - 40, rw, 5); F('#a3683c', rx, ry - 40, rw, 1);
   for (let X = rx; X < rx + rw; X += 52) { F('#6d3b24', X, ry - 36, 4, 30); F('#a3683c', X, ry - 36, 1, 30); }
-  for (const wx of M.windows || []) { F('#4a2a18', wx - 1, ry - 32, 16, 14); F('#7ec4ee', wx, ry - 31, 14, 12); F('#d6f2ff', wx + 1, ry - 30, 4, 4); F('#4a2a18', wx + 6, ry - 31, 2, 12); F('#4a2a18', wx, ry - 26, 14, 1); }
+  for (const wx of M.windows || []) {
+    F('#4a2a18', wx - 1, ry - 32, 16, 14); F('#7ec4ee', wx, ry - 31, 14, 12);
+    F('#d6f2ff', wx + 1, ry - 30, 4, 4); F('#4a2a18', wx + 6, ry - 31, 2, 12); F('#4a2a18', wx, ry - 26, 14, 1);
+  }
   // bingkai kayu tebal (kiri, kanan, atas, bawah dengan celah pintu)
-  const frame = (a, b, w, h) => { F('#2a140c', a - 1, b - 1, w + 2, h + 2); F('#7c4628', a, b, w, h); F('#a46a3c', a, b, w, 1); F('#5a3018', a, b + h - 1, w, 1); };
+  const frame = (a, b, w, h) => {
+    F('#2a140c', a - 1, b - 1, w + 2, h + 2); F('#7c4628', a, b, w, h);
+    F('#a46a3c', a, b, w, 1); F('#5a3018', a, b + h - 1, w, 1);
+  };
   frame(rx - 10, ry - 48, rw + 20, 8); frame(rx - 10, ry - 48, 10, rh + 58); frame(rx + rw, ry - 48, 10, rh + 58);
   const dl = 140, dr = 180; frame(rx - 10, ry + rh, dl - rx + 10, 10); frame(dr, ry + rh, rx + rw - dr + 10, 10);
   // pintu: tikar merah & tangga batu

@@ -318,7 +318,8 @@ class World extends Phaser.Scene {
       const tx = pl.x - VW / 2, ty = pl.y - 12 - VH / 2, k = Math.exp(-this.dt * 9);
       let ox = (this.cx - tx) * k, oy = (this.cy - ty) * k;
       if (Math.abs(ox) < .5) ox = 0; if (Math.abs(oy) < .5) oy = 0;
-      const B = this.camB || { x0: 0, y0: 0, x1: M.w, y1: M.h }, cc = (v, a, b, V) => b - a < V ? Math.round((a + b - V) / 2) : clamp(v, a, b - V); /* peta sempit → di tengah */
+      const B = this.camB || { x0: 0, y0: 0, x1: M.w, y1: M.h }, z = M.zoom || 1; /* peta sempit → di tengah; zoom = interior gambar */
+      const cc = (v, a, b, V) => { const W = V / z, d = (V - W) / 2; return (b - a < W ? Math.round((a + b - W) / 2) : clamp(v + d, a, b - W)) - d; };
       const sx = cc(Math.round(pl.x) - VW / 2 + Math.round(ox), B.x0, B.x1, VW), sy = cc(Math.round(pl.y) - 12 - VH / 2 + Math.round(oy), B.y0, B.y1, VH);
       this.cx = tx + ox; this.cy = ty + oy;
       cam.setScroll(sx, sy);

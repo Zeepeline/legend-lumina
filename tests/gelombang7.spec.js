@@ -8,16 +8,15 @@ test('gelombang 7: rumah Arka, perabot, peti', async ({ page }) => {
   await h.G(page, () => { window.__game.sc.enterRoom('home'); });
   for (let i = 0; i < 12 && await h.G(page, () => window.__game.sc.M.id !== 'home'); i++) await h.press(page, 'a', 1, 500); await page.waitForFunction(() => window.__game.sc.M.id === 'home', null, { timeout: 8000 }); await page.waitForTimeout(600);
   expect(await h.G(page, () => [S.home.owned, S.gold])).toEqual([1, 1750]);
-  // beli ranjang & taruh
+  // ruangan penuh (gambar pemilik): perabot lama masuk gudang, karpet masih bisa dibentang di lantai kosong
   const r = await h.G(page, () => {
-    const sc = window.__game.sc; sc.pl.setPosition(100, 200); sc.pl.dir = 'up';
-    sc.startCarry({ t: 'bed', x: 0, y: 0, v: 0 }, true); sc.updCarry(); const ok = sc.carry.ok; sc.carryKey('a');
-    sc.pl.setPosition(160, 230); sc.startCarry({ t: 'box', x: 0, y: 0, v: 0 }, true); sc.updCarry(); const bad = sc.carry.ok; sc.carryKey('b');
-    sc.pl.setPosition(130, 150); sc.pl.dir = 'up'; sc.startCarry({ t: 'box', x: 0, y: 0, v: 0 }, true); sc.updCarry(); sc.carryKey('a');
+    const sc = window.__game.sc; sc.pl.setPosition(98, 50); sc.pl.dir = 'down';
+    sc.startCarry({ t: 'rug', x: 0, y: 0, v: 0 }, true); sc.updCarry(); const ok = sc.carry.ok; sc.carryKey('a');
+    sc.pl.setPosition(58, 86); sc.pl.dir = 'up'; sc.startCarry({ t: 'bed', x: 0, y: 0, v: 0 }, true); sc.updCarry(); const bad = sc.carry.ok; sc.carryKey('b');
     return { ok, bad, items: S.home.items.map(f => f.t), store: S.home.store };
   });
   console.log(r);
-  expect(r.ok).toBe(true); expect(r.bad).toBe(false); expect(r.items).toEqual(expect.arrayContaining(['bed', 'box'])); // rumah bisa punya perabot bawaan (lemari, #21)
+  expect(r.ok).toBe(true); expect(r.bad).toBe(false); expect(r.items).toEqual(['rug']); expect(r.store.bed).toBeGreaterThan(0);
   // simpan & muat ulang ruangan: perabot tetap ada
   await h.goto(page, 'village', 874, 260, 'down'); await h.goto(page, 'home', 160, 226, 'up'); await page.waitForTimeout(500);
   expect(await h.G(page, () => window.__game.sc.hf.length)).toBe(await h.G(page, () => S.home.items.length));

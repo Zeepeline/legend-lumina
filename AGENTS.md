@@ -1,6 +1,7 @@
 # AGENTS.md — Legenda Lumina (baca ini dulu, file lain hanya sesuai tugas)
 
 Pemilik berbahasa Indonesia: balas & tulis teks game dalam **Bahasa Indonesia**. **Jangan pernah membahas isi `docs/SPOILER_ENDING.md` dengan pemilik.**
+**Aturan gambar referensi pemilik:** bila pemilik memberi gambar (ruangan, peta, aset, UI), hasil di game WAJIB identik dengan gambar itu — rasio, bentuk, ukuran relatif, susunan & kepadatan sama persis. Pakai gambarnya langsung (potong/skala bulat) bila bisa; jangan "menafsirkan ulang" atau melonggarkan tata letak.
 Proyek: action RPG top-down untuk browser/HP, **Phaser 3.80.1**, skrip klasik global tanpa bundler (urutan muat = `index.html`). Live: https://zeepeline.github.io/legend-lumina/ (setiap push ke `main` langsung deploy).
 
 ## Hemat konteks (WAJIB)
@@ -58,4 +59,5 @@ Proyek: action RPG top-down untuk browser/HP, **Phaser 3.80.1**, skrip klasik gl
 - **Desain dunia organik (v1.35.0):** jalan tanah berliku otomatis, lapangan/tepi hutan/pohon alami, sungai menyambung (`world/organic.js`, `world/water.js`). Aturan: `docs/WORLD_REFACTOR.md` §7.
 - **Patokan gaya aset (v1.38.0):** pohon `treeA`/`treeAd`/`treeSn` + set Verdant. `round`, semak neon (`bushG1/G2`, `bushy`), `stump` dialihkan, pinus diwarnai ulang (`gfx/style_unify.js`). Aset baru WAJIB senada treeA.
 - **Layar & suasana (v1.39.0):** bawaan layar penuh mendatar + kontrol transparan (`body.full`, `LAYOUT_FULL`/`VW` dinamis di `core/util.js`); cuaca kabut & cahaya malam (`systems/atmos.js`); musik lewat WebAudio + suara hujan (`core/audio.js`); kesulitan di `DIFF` (`core/state.js`).
+- **Interior gambar (v1.42.0):** rumah Arka/penginapan/tetua/Lina = gambar ruangan pemilik apa adanya (`world/interior_layouts.js` `INT_ROOMS`, zoom kamera 2, tembok persegi per perabot). Lembar sprite di `world/interior_sheet.js`.
 - **Berikutnya:** konten ekspansi Bab 6 (`BENUA_LUMINA.md` bag. 7) & eksplorasi teka-teki kuil kuno.
