@@ -3323,7 +3323,8 @@ Urutan dampak (pemilik setuju): **(1) gaya gambar seragam → (2) tebing & ketin
 Tiap tugas kecil & berdiri sendiri. Setelah tiap tugas: `npm run check`, `node tools/check-layout.js` (0 masalah), 1 tangkapan layar di HP/viewport 390×844.
 Jangan ubah mesin tanah/air Claude (`ground_verdant.js`, `water.js`, `organic.js`) kecuali tugas menyebutnya.
 
-### (1) Gaya gambar seragam — objek lama hasil kode vs aset GPT/Verdant
+### (1) Gaya gambar seragam — PATOKAN = pohon `treeA`/`treeAd`/`treeSn` (keputusan pemilik). Sudah dipasang Claude v1.38.0 (`src/gfx/style_unify.js`):
+round→treeAd, bushG1/G2/bushy→semak Verdant, stump→verdant_stump, pinus diwarnai ulang. Sisa objek KODE hanya 88 buah (39 jenis, kebanyakan berfungsi).
 ### [ ] T437. **Lembar audit semua objek** — referensi: —
 - File: file baru `tools/obj-sheet.spec.js` (tes Playwright sekali jalan, BUKAN masuk suite) → `assets/reference/audit_objek.png`.
 - Baca dulu: `src/world/objects.js` (`OBJ`: `key`), `src/gfx/gptassets.js` (daftar `GPT_SWAP` = sudah diganti aset GPT).
@@ -3331,22 +3332,22 @@ Jangan ubah mesin tanah/air Claude (`ground_verdant.js`, `water.js`, `organic.js
   nama + "GPT" atau "KODE" + jumlah kemunculan di peta luar ruang (hitung dari `mapObjects(MAPS[id])`). Urutkan: KODE dengan kemunculan terbanyak dulu.
 - Cek: gambar audit ada; tulis 15 objek KODE teratas di bawah tugas ini (nama, jumlah, ukuran px).
 
-### [ ] T438. **Daftar permintaan aset untuk pemilik** — referensi: `assets/reference/target_padang.png` (gaya acuan)
+### [ ] T438. **Daftar permintaan aset untuk pemilik** — referensi: `assets/reference/target_padang.png` + `assets/img/gpt_i_treeA.png` (PATOKAN gaya)
 - File: file baru `docs/ASET_DIMINTA.md`. Baca dulu: hasil T437, `docs/ART_BIBLE.md`, `docs/ASSET_RULES.md`.
 - Lakukan: untuk 15 objek KODE teratas tulis tabel: nama, ukuran target (px), arah pandang (top-down 3/4 seperti Verdant), catatan bentuk, dan
-  SATU kalimat prompt siap tempel ke GPT ("pixel art top-down 3/4, palette Verdant Forest, transparent background, objek X, Y px"). Kelompokkan
+  SATU kalimat prompt siap tempel ke GPT ("pixel art top-down 3/4, matching the soft natural greens and subtle outlines of the reference tree (treeA), transparent background, objek X, Y px"). Kelompokkan
   jadi 2 lembar sprite (maks 8 objek/lembar) agar pemilik cukup membuat 2 gambar.
 - Cek: dokumen ada; beri tahu pemilik di catatan serah-terima bahwa lembar ditunggu.
 
-### [ ] T439. **Selaraskan warna objek KODE ke palet Verdant (sementara)** — referensi: palette swap
+### [ ] T439. **Selaraskan warna objek KODE ke palet treeA (sementara)** — referensi: palette swap
 - File: `src/gfx/textures.js` (setelah semua `one(...)` dibuat). Baca dulu: fungsi `one`, palet `gnd_grass` (ambil 7 warna dari `assets/img/gnd_grass.png`).
-- Lakukan: fungsi `toVerdant(canvas)`: tiap piksel hijau (g > r+20 & g > b+10) dipetakan ke warna hijau Verdant terdekat (kecerahan sama);
+- Lakukan: fungsi `toVerdant(canvas)`: tiap piksel hijau (g > r+20 & g > b+10) dipetakan ke warna daun treeA (pakai `styleRecolor` di `src/gfx/style_unify.js`) (kecerahan sama);
   cokelat kayu → palet kayu dari `gpt_verdant_log`. Terapkan HANYA pada objek KODE di daftar T437 yang bukan karakter/musuh. Bisa dimatikan `?verdantpal=0`.
-- Cek: tangkapan layar Padang sebelum/sesudah: semak & pohon lama tidak lagi "neon" dibanding pohon Verdant.
+- Cek: tangkapan layar Padang sebelum/sesudah: semak & pohon lama tidak lagi "neon" dibanding treeA.
 
 ### [ ] T440. **Garis luar seragam** — referensi: Verdant (garis luar gelap 1 px berwarna, bukan hitam)
 - File: `src/gfx/textures.js`. Baca dulu: fungsi `outline` di `src/art/monsters.js`.
-- Lakukan: objek KODE (bukan karakter) diberi garis luar 1 px warna = warna tetangga ×0.45 (bukan hitam murni), seperti aset Verdant.
+- Lakukan: objek KODE (bukan karakter) diberi garis luar 1 px warna = warna tetangga ×0.45 (bukan hitam murni), seperti treeA.
 - Cek: tangkapan layar objek lama & Verdant bersebelahan tampak satu gaya.
 
 ### [ ] T441. **Pasang lembar aset baru dari pemilik** — referensi: —
