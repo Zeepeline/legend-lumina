@@ -82,7 +82,7 @@ function stepSound(kind) {
     case 'stone': noise(t, .025, 2200 * pMul, .18 * vMul); tone(180 * pMul, t, .02, 'square', .05 * vMul, D); break;
     case 'wood': tone(140 * pMul, t, .04, 'triangle', .35 * vMul, D); noise(t, .02, 700 * pMul, .1 * vMul); break;
     case 'water': noise(t, .09, 900 * pMul, .25 * vMul, 2400 * pMul); break;
-    case 'dirt': noise(t, .04, 600 * pMul, .2 * vMul); break;
+    case 'dirt': noise(t, .04, 600 * pMul, .2 * vMul); tone(90 * pMul, t, .03, 'sine', .12 * vMul, D); break;
     default: noise(t, .05, 1500 * pMul, .14 * vMul, 900 * pMul); // rumput
   }
 }

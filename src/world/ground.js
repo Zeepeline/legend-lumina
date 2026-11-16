@@ -167,8 +167,9 @@ function genGround(M, rect) {
     if (d < 0) {
       if (M.pathType === 'paving' || M.ground === 'paving') {
         const im = IMGEL.gnd_city_cobble;
-        if (im) {
-          const ti = ((vMod(y + GY) % 64) * 64 + (vMod(x + GX) % 64)) * 4;
+        if (im && im.width) {
+          const gx = ((x + GX) % 64 + 64) % 64, gy = ((y + GY) % 64 + 64) % 64;
+          const ti = (gy * 64 + gx) * 4;
           if (!M._cobbleData) {
             const [tc, tx] = mk(64, 64); tx.drawImage(im, 0, 0);
             M._cobbleData = tx.getImageData(0, 0, 64, 64).data;
@@ -177,6 +178,11 @@ function genGround(M, rect) {
           put(i, [cd[ti], cd[ti + 1], cd[ti + 2]], d > -1.5 ? -.12 : 0);
           continue;
         }
+        // Fallback paving abu-abu jika gambar belum di-cache
+        const v = vor(x, y, 8, 12);
+        const CP = [[156, 150, 168], [140, 134, 154], [172, 166, 184], [128, 122, 142]];
+        put(i, v.m < 1.3 ? [90, 84, 100] : CP[Math.floor(hash(v.id, 3, 13) * 4)], d > -1.5 ? -.12 : 0);
+        continue;
       }
       if (GP.path === 'dirt' && VERDANT[M.ground] && (d < -2 || hash(x + GX, y + GY, 32) < .5)) { const vp = verdantPix(M, x + GX, y + GY, 1); if (vp) { put(i, vp); continue; } }
       if (GP.path === 'dirt') { const n = vnoise(x, y, 6, 3), k = n < .3 ? 1 : n < .7 ? 0 : 2; let c = DIRT[k]; if (hash(x, y, 8) > .985) c = h2r('#8a7a6a'); put(i, c, d > -2 ? -.12 : 0); continue; }

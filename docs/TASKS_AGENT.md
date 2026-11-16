@@ -3942,82 +3942,82 @@ Fokus: mengadopsi 20 teknik *micro-juice*, interaksi lingkungan, animasi kenyal,
 - Lakukan: catat hitungan pengambilan item beruntun `this._pickupStreak`. Jika item diambil dalam jarak waktu `< 0.8 dtk`, variasikan nada audio `sfx('coin')` atau `sfx('chest')` naik bertahap mengikuti tangga nada pentatonik (`pitch * 1.05^streak`), menciptakan sensasi audio ASMR yang memuaskan.
 - Hasil: mengambil deretan koin/item berturut-turut menghasilkan efek tangga nada naik yang merdu.
 
-### [ ] T537. **Telegraf Serangan Musuh Mengisi Tanah (*Progressive Attack Telegraphs*)** — referensi: Cobo #11
+### [x] T537. **Telegraf Serangan Musuh Mengisi Tanah (*Progressive Attack Telegraphs*)** — referensi: Cobo #11
 - File: `src/systems/juice.js` (`jxTele`).
 - Lakukan: lingkaran atau garis bahaya serangan musuh di tanah terisi penuh secara bertahap (*fill progress 0% → 100%*) mengikuti durasi ancang-ancang sebelum serangan meledak.
 - Hasil: zona bahaya serangan musuh memiliki animasi pengisian visual proporsional terhadap waktu tebasannya.
 
-### [ ] T538. **Ancang-Ancang Memipih & Melesat Musuh (*Enemy Squash-and-Stretch Windup*)** — referensi: Cobo #12
+### [x] T538. **Ancang-Ancang Memipih & Melesat Musuh (*Enemy Squash-and-Stretch Windup*)** — referensi: Cobo #12
 - File: `src/systems/feel.js`.
 - Lakukan: saat musuh mengumpulkan tenaga sebelum menerjang/menghantam (`windup`), pipihkan sprite musuh (`scaleY: 0.85, scaleX: 1.15`), lalu regangkan (`scaleY: 1.2, scaleX: 0.9`) saat meluncur menerjang Arka.
 - Hasil: animasi serangan musuh memiliki ancang-ancang squash-and-stretch yang terbaca jelas secara naluriah.
 
-### [ ] T539. **Debu Langkah Kaki Adaptif Warna Bioma (*Terrain-Adaptive Dust Puffs*)** — referensi: Cobo #20
+### [x] T539. **Debu Langkah Kaki Adaptif Warna Bioma (*Terrain-Adaptive Dust Puffs*)** — referensi: Cobo #20
 - File: `src/systems/juice.js` & `src/systems/qol.js`.
 - Lakukan: partikel debu tumit saat berlari atau berhenti mendadak (`puff`) otomatis mengambil warna sesuai jenis tanah bioma aktif: cokelat oker di jalan tanah, hijau zaitun di padang rumput, putih di salju, dan lumut gelap di rawa.
 - Hasil: partikel debu langkah kaki menyesuaikan warna permukaan tanah yang dipijak.
 
-### [ ] T540. **Napas Halus Karakter Saat Diam (*Micro Idle Breathing*)** — referensi: Cobo #19
+### [x] T540. **Napas Halus Karakter Saat Diam (*Micro Idle Breathing*)** — referensi: Cobo #19
 - File: `src/systems/feel.js` atau `src/systems/juice.js`.
 - Lakukan: saat Arka atau NPC berdiri diam (tidak bergerak, menyerang, atau terluka), berikan ritme nafas mikro 1 piksel (`scaleY` berayun halus antara `0.99` dan `1.015`) setiap `1.6 detik`.
 - Hasil: karakter dan NPC terlihat bernafas hidup secara halus saat diam di tempat.
 
-### [ ] T541. **Pendar Jendela Rumah Hangat (*Cozy Window Bloom*)** — referensi: Cobo #4
+### [x] T541. **Pendar Jendela Rumah Hangat (*Cozy Window Bloom*)** — referensi: Cobo #4
 - File: `src/systems/atmos.js`.
 - Lakukan: jendela bangunan desa dan gubuk di senja hingga malam hari memiliki pendar hangat kuning keemasan lembut yang menyala bertahap dan berkedip mikro menyerupai nyala perapian di dalam ruangan.
 - Hasil: jendela rumah menyala dengan pendar hangat yang berkedip halus saat malam tiba.
 
-### [ ] T542. **Angka Kerusakan Melompat Melengkung (*Bouncing Arc Damage Numbers*)** — referensi: Cobo #15
+### [x] T542. **Angka Kerusakan Melompat Melengkung (*Bouncing Arc Damage Numbers*)** — referensi: Cobo #15
 - File: `src/core/util.js` (`popWorld`).
 - Lakukan: angka kerusakan musuh melompat dengan kurva parabola ke samping kiri/kanan acak dan memantul kecil di tanah sebelum melayang memudar ke atas, dengan pendar emas saat serangan kritikal.
 - Hasil: teks damage melompat dinamis dengan parabola dan pantulan membal.
 
-### [ ] T543. **Siluet Tembus Pandang di Balik Kanopi & Bangunan (*X-Ray Cutout Silhouette*)** — referensi: Cobo #3
+### [x] T543. **Siluet Tembus Pandang di Balik Kanopi & Bangunan (*X-Ray Cutout Silhouette*)** — referensi: Cobo #3
 - File: `src/scene/world.js` (`fades`).
 - Lakukan: saat Arka berada di balik kanopi pohon besar atau atap rumah, selain meredupkan kanopi (`fade`), tampilkan siluet garis luar terang (*white/cyan outline*) pada Arka agar pemain tidak pernah kehilangan posisi karakter di balik rintangan.
 - Hasil: Arka memiliki siluet X-ray yang tetap terbaca jelas saat tertutup pohon atau atap bangunan.
 
-### [ ] T544. **Buih Ombak Tepi Air Prosedural (*Cozy Shoreline Foam Waves*)** — referensi: Cobo #5
+### [x] T544. **Buih Ombak Tepi Air Prosedural (*Cozy Shoreline Foam Waves*)** — referensi: Cobo #5
 - File: `src/world/water.js` & `src/systems/waterflow.js`.
 - Lakukan: di tepi sungai, danau, dan pantai padang, tambahkan lapisan buih putih piksel tipis (`1–2 px`) yang bergulung masuk lalu pecah dan surut perlahan (`sine wave 3.2s`) meninggalkan jejak basah sesaat di tepi tanah.
 - Hasil: tepi badan air memiliki animasi buih ombak pasang-surut yang menenangkan.
 
-### [ ] T545. **Fisika Magnet Penarik Berkurva Halus (*Accelerated Curve Loot Magnet*)** — referensi: Cobo #7
+### [x] T545. **Fisika Magnet Penarik Berkurva Halus (*Accelerated Curve Loot Magnet*)** — referensi: Cobo #7
 - File: `src/systems/combat.js` (`updPicks`).
 - Lakukan: item rampasan yang terhisap magnet bergerak dengan kurva percepatan halus (*ease-in parabolic curve*) dan sedikit melengkung ke samping sebelum menempel ke tubuh Arka, bukan sekadar garis lurus kaku.
 - Hasil: koin dan item tertarik ke Arka dengan lintasan kurva magnetik yang organik.
 
-### [ ] T546. **Pendar Garis Luar Objek Interaktif (*Pulsing Interactive Outlines*)** — referensi: Cobo #9
+### [x] T546. **Pendar Garis Luar Objek Interaktif (*Pulsing Interactive Outlines*)** — referensi: Cobo #9
 - File: `src/world/objects.js` & `src/systems/feel.js`.
 - Lakukan: peti harta, prasasti, tanaman panen, dan NPC dalam jarak jangkau interaksi (`< 22 px`) memiliki denyut garis tepi lembut (*subtle white pulse outline 1px*) yang menegaskan objek tersebut siap ditekan/diajak bicara.
 - Hasil: objek dan item interaktif berdenyut halus saat didekati pemain.
 
-### [ ] T547. **Nodul Tambang & Tanaman Meletup Saat Muncul (*Resource Node Pop & Shake*)** — referensi: Cobo #10
+### [x] T547. **Nodul Tambang & Tanaman Meletup Saat Muncul (*Resource Node Pop & Shake*)** — referensi: Cobo #10
 - File: `src/systems/life/harvest_1.js` & `src/systems/juice.js`.
 - Lakukan: batu tambang, tanaman herbal, dan jamur saat respawn atau dipanen memiliki animasi meletup (*squash-and-stretch pop: scaleX 1.3, scaleY 0.7 → normal*) disertai hamburan serpihan kecil.
 - Hasil: sumber daya alam meletup membal saat muncul dan saat dipukul palu/alat panen.
 
-### [ ] T548. **Pembekuan Frame Hantaman Telak (*Hit-Stop Frame Freeze on Heavy Hits*)** — referensi: Cobo #13
+### [x] T548. **Pembekuan Frame Hantaman Telak (*Hit-Stop Frame Freeze on Heavy Hits*)** — referensi: Cobo #13
 - File: `src/systems/combat_fx.js` & `src/systems/feel.js`.
 - Lakukan: saat serangan berat, kombo penutup (ke-5), atau *critical hit* mendarat pada musuh, bekukan animasi dunia selama `2–3 frame` (`40–60 ms`) sebelum efek lentingan terjadi, memberikan sensasi tebasan yang tertanam kuat ke badan musuh.
 - Hasil: pukulan berat dan kritikal memiliki jeda *hit-stop* mikro yang membuat tebasan terasa sangat bertenaga.
 
-### [ ] T549. **Goncangan Layar Dibulatkan Piksel (*Pixel-Clamped Screen Shake*)** — referensi: Cobo #14
+### [x] T549. **Goncangan Layar Dibulatkan Piksel (*Pixel-Clamped Screen Shake*)** — referensi: Cobo #14
 - File: `src/scene/world.js` (`camStep`).
 - Lakukan: offset getaran kamera (*shake*) selalu dibulatkan ke bilangan bulat piksel (`Math.round`) untuk mencegah terjadinya distorsi piksel (*pixel shimmering/subpixel jitter*) pada layar beresolusi rendah.
 - Hasil: efek *screen shake* tetap tajam tanpa artefak buram atau piksel yang bergetar pecah.
 
-### [ ] T550. **Cincin Suara & Indikator Bahaya Luar Layar (*Visual Sound Wave Rings*)** — referensi: Cobo #16
+### [x] T550. **Cincin Suara & Indikator Bahaya Luar Layar (*Visual Sound Wave Rings*)** — referensi: Cobo #16
 - File: `src/systems/feel.js`.
 - Lakukan: saat ada musuh elit atau boss mengaum/menyiapkan serangan besar di luar pandangan kamera (`off-screen`), tampilkan gelombang cincin getar suara atau panah bahaya berdenyut di tepi layar mengarah ke sumber ancaman.
 - Hasil: pemain mendapat peringatan visual atas serangan musuh berbahaya yang berasal dari luar batas layar.
 
-### [ ] T551. **Pengurutan Kedalaman Y-Sorting Presisi (*Sub-Pixel Depth Sorting Bias*)** — referensi: Cobo #17
+### [x] T551. **Pengurutan Kedalaman Y-Sorting Presisi (*Sub-Pixel Depth Sorting Bias*)** — referensi: Cobo #17
 - File: `src/scene/world.js`.
 - Lakukan: standarisasi titik jangkar (*anchor point*) dasar sprite dan berikan bias kedalaman mikro (`depth = base_y + bias`) pada dekorasi kecil (bunga, rumput, batu) agar tidak pernah terjadi kedipan tumpang-tindih (*z-fighting*) dengan kaki karakter.
 - Hasil: pengurutan kedalaman sprite 2D top-down sepenuhnya konsisten dan bebas dari bug layering.
 
-### [ ] T552. **Bayangan Proyeksi Miring Dinamis (*Dynamic Angled Silhouette Cast Shadows*)** — referensi: Cobo #18
+### [x] T552. **Bayangan Proyeksi Miring Dinamis (*Dynamic Angled Silhouette Cast Shadows*)** — referensi: Cobo #18
 - File: `src/art/fx.js` & `src/systems/tree_shadows.js`.
 - Lakukan: sinkronkan sudut kemiringan bayangan siluet pohon dan patung dengan pergeseran posisi matahari sepanjang hari (miring panjang ke kanan-bawah saat pagi, memendek saat siang, dan memanjang ke kanan-bawah saat senja).
 - Hasil: bayangan objek dunia memanjang dan memendek secara dinamis mengikuti waktu siang-malam.
@@ -4027,52 +4027,52 @@ Fokus: mengadopsi 20 teknik *micro-juice*, interaksi lingkungan, animasi kenyal,
 ## U. GELOMBANG 20 — 10 Trik Lanjutan Suasana & Mekanik ala Cobo / Mytheria (T553–T562)
 Fokus: mengadopsi 10 trik gameplay, visual monster malam, audio adaptif, dan atmosfer sarang bos dari devlog Cobo Makes Games (*Mytheria*).
 
-### [ ] T553. **Monster Malam Bermata Menyala & Tepian Bara Prosedural (*Night Monster Glowing Eyes & Ember Edges*)** — referensi: Cobo #21
+### [x] T553. **Monster Malam Bermata Menyala & Tepian Bara Prosedural (*Night Monster Glowing Eyes & Ember Edges*)** — referensi: Cobo #21
 - File: `src/scene/world.js` & `src/systems/atmos.js`.
 - Lakukan: saat malam hari (`isNight()`), seluruh musuh di alam liar otomatis diberi pendaran mata menyala (dua titik kuning/merah pekat 1-px di posisi kepala) dan tepian siluet berbutir bara api tipis (`jxAura`) tanpa perlu menggambar ulang sprite, membuat monster terlihat mengancam di kegelapan.
 - Hasil: monster di malam hari memiliki mata menyala dan aura bara yang menyeramkan.
 
-### [ ] T554. **Boneka Latih Roh Muncul Saat Upgrade Senjata (*Forge Practice Dummy Spawns*)** — referensi: Cobo #22
+### [x] T554. **Boneka Latih Roh Muncul Saat Upgrade Senjata (*Forge Practice Dummy Spawns*)** — referensi: Cobo #22
 - File: `src/systems/craft.js` & `src/world/spawn/spawn_1.js`.
 - Lakukan: setiap kali Arka berhasil menaikkan tingkat/menempa senjata di Pandai Besi, munculkan 1 boneka latihan roh kayu (*training dummy*) di dekat tungku selama 25 detik agar pemain bisa langsung mencoba kombo dan merasakan peningkatan damage senjata barunya.
 - Hasil: menempa senjata memunculkan target uji coba latihan di samping pandai besi.
 
-### [ ] T555. **Jejak Cakar & Tanda Wilayah Bos (*Environmental Claw Marks & Territory Signs*)** — referensi: Cobo #23
+### [x] T555. **Jejak Cakar & Tanda Wilayah Bos (*Environmental Claw Marks & Territory Signs*)** — referensi: Cobo #23
 - File: `src/world/ground.js` & `src/systems/feel.js`.
 - Lakukan: di area perbatasan menuju sarang monster elit atau gerbang bos, tambahkan stensil/dekal tanah berupa bekas cakaran predator raksasa, ranting pohon patah, dan abu hangus sebagai petunjuk visual naratif bahwa Arka memasuki wilayah berbahaya.
 - Hasil: lingkungan di sekitar arena bos memiliki tanda teritori cakar dan bekas hantaman buas.
 
-### [ ] T556. **Animasi Serangan 3-Frame Tajam (*Snappy 3-Frame Attack Timing*)** — referensi: Cobo #24
+### [x] T556. **Animasi Serangan 3-Frame Tajam (*Snappy 3-Frame Attack Timing*)** — referensi: Cobo #24
 - File: `src/ai/choreo.js` & `src/systems/feel.js`.
 - Lakukan: standarisasi timing tebasan musuh ke dalam ritme 3-frame tegas: Frame 1 (ancang-ancang/windup bergetar), Frame 2 (eksekusi hantaman instan dengan garis tebas), Frame 3 (pemulihan/recovery lambat), menciptakan dinamika tempur yang renyah dan adil untuk ditangkis (*parry*).
 - Hasil: serangan musuh memiliki ritme 3-frame yang jelas dan mudah dibaca timing serangnya.
 
-### [ ] T557. **Dinding Duri Berlubang Satu (*Thorn Wall Arena Escape Gap*)** — referensi: Cobo #25
+### [x] T557. **Dinding Duri Berlubang Satu (*Thorn Wall Arena Escape Gap*)** — referensi: Cobo #25
 - File: `src/ai/bosses.js` & `src/ai/choreo.js`.
 - Lakukan: saat bos (seperti Ratu Jamur atau Bos Golem Fase 2) melancarkan barikade duri/gelombang melingkar, sisakan HANYA satu celah sempit (escape gap) pada formasi dinding tersebut yang menuntut pemain sigap melompat/berguling melewatinya.
 - Hasil: serangan dinding area bos memiliki satu celah pelarian sempit yang menantang refleks gerak.
 
-### [ ] T558. **Garis Agresivitas Musuh (*Visual Aggro / Target Tether*)** — referensi: Cobo #26
+### [x] T558. **Garis Agresivitas Musuh (*Visual Aggro / Target Tether*)** — referensi: Cobo #26
 - File: `src/ai/choreo.js` & `src/systems/feel.js`.
 - Lakukan: saat musuh elit atau pemimpin kawanan mengunci target untuk serangan terjang, tampilkan garis fokus aura merah tipis sesaat dari musuh ke Arka, memperjelas arah ancaman saat bertarung di tengah kerumunan.
 - Hasil: musuh yang sedang mengincar Arka menampilkan garis target ancaman yang terbaca jelas.
 
-### [ ] T559. **Hamburan Serpihan Pecahan Benda Fisik (*Debris Physics Scatter*)** — referensi: Cobo #27
+### [x] T559. **Hamburan Serpihan Pecahan Benda Fisik (*Debris Physics Scatter*)** — referensi: Cobo #27
 - File: `src/world/spawn/spawn_1.js` & `src/systems/juice.js`.
 - Lakukan: tong kayu, peti hancur, atau pot tembikar saat dipukul pecah meletupkan 4–6 serpihan fisik bertekstur yang memantul dan berputar di lantai sebelum diam dan memudar.
 - Hasil: menghancurkan perabot dunia menghasilkan hamburan serpihan fisik yang memantul.
 
-### [ ] T560. **Langkah Kaki Bersuara Adaptif (*Terrain-Adaptive Footstep Audio*)** — referensi: Cobo #28
+### [x] T560. **Langkah Kaki Bersuara Adaptif (*Terrain-Adaptive Footstep Audio*)** — referensi: Cobo #28
 - File: `src/core/audio.js` & `src/systems/qol.js`.
 - Lakukan: suara langkah kaki saat berlari otomatis memilih variasi nada dan tekstur sesuai permukaan tanah: renyah di atas rumput (`step_grass`), ketukan padat di jalan batu (`step_stone`), gemersik di tanah oker (`step_dirt`), dan cipratan di tepian air (`step_water`).
 - Hasil: bunyi langkah kaki pemain berubah dinamis mengikuti material tanah yang dipijak.
 
-### [ ] T561. **Denyut Jantung & Vinyet Merah Saat Sekarat (*Low Health Heartbeat & Red Vignette*)** — referensi: Cobo #29
+### [x] T561. **Denyut Jantung & Vinyet Merah Saat Sekarat (*Low Health Heartbeat & Red Vignette*)** — referensi: Cobo #29
 - File: `src/systems/atmos.js` & `src/ui/widgets.js`.
 - Lakukan: saat HP Arka berada di bawah 25%, tepi layar berdenyut vinyet merah gelap lembut seirama detak jantung lambat (`pulse 1.1s`), memberi tensi dramatis agar pemain segera meminum Botol Cahaya.
 - Hasil: kondisi sekarat memicu denyut vinyet merah dan efek detak jantung di layar.
 
-### [ ] T562. **Api Unggun Berdenyut Pemulihan (*Campfire Healing Pulse*)** — referensi: Cobo #30
+### [x] T562. **Api Unggun Berdenyut Pemulihan (*Campfire Healing Pulse*)** — referensi: Cobo #30
 - File: `src/world/spawn/spawn_1.js` & `src/systems/juice.js`.
 - Lakukan: saat beristirahat di dekat perapian atau api unggun markas, api memancarkan cincin gelombang hangat lembut berkala (`radius 32 px`) yang mengisi HP/stamina perlahan disertai partikel percikan api emas ke tubuh Arka.
 - Hasil: berada di dekat api unggun memancarkan gelombang hangat berkala yang memulihkan kondisi karakter.

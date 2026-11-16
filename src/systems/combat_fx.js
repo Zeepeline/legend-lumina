@@ -106,6 +106,16 @@ Object.assign(World.prototype, {
     });
     const y = s.y - (e.D.r || 8) * (e.sc || 1);
     const pl = this.pl, cIdx = (((pl && pl.combo) || 1) - 1) % 5, fin = cIdx === 4 || crit;
+    // T548: Hit-stop freeze frame 48ms (Cobo #13) saat serangan berat / kombo penutup / kritikal
+    if (fin && !this._hitStopping) {
+      this._hitStopping = true;
+      const prevT = this.time.timeScale, prevP = this.physics.world.timeScale;
+      this.time.timeScale = 0.05; this.physics.world.timeScale = 0.05;
+      setTimeout(() => {
+        this._hitStopping = false;
+        if (this.time) { this.time.timeScale = prevT || 1; this.physics.world.timeScale = prevP || 1; }
+      }, 48);
+    }
     const hitAng = pl ? Math.atan2(y - (pl.y - 7), s.x - pl.x) : 0;
     const sgn = Math.cos(hitAng) < 0 ? -1 : 1;
     const vecOff = [0.42 * sgn, -0.58 * sgn, 0.07 * sgn, 0, 0.31 * sgn][cIdx] || 0;

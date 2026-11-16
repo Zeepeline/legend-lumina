@@ -91,7 +91,8 @@ Object.assign(OBJ_SPAWN, {
         this.camShake(80, .003);
         this.sparkle(x, y - 10, 'spark', 8);
         s.minedHp = (s.minedHp || 3) - 1;
-        this.tweens.add({ targets: s, angle: 5, duration: 60, yoyo: true, repeat: 2, onComplete: () => { s.angle = 0; } });
+        if (this.jxNodePop) this.jxNodePop(s, x, y, 'rock');
+        else this.tweens.add({ targets: s, angle: 5, duration: 60, yoyo: true, repeat: 2, onComplete: () => { s.angle = 0; } });
         if (s.minedHp <= 0) {
           this.puff(x, y - 8);
           sfx('crit');

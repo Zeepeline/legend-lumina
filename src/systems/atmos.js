@@ -2,8 +2,9 @@
 // Suasana cahaya & kabut (wilayah aktif saja):
 // - lapisan kabut berlapis (2 lembar noise lembut, parallax & bergeser) untuk cuaca 'fog'; lebih tebal pagi hari
 // - cahaya hangat berkedip untuk SEMUA lampu di layar saat malam (lampu besar sudah punya `this.glows`) + lentera kecil di sekitar Arka
+// - pendar jendela rumah hangat (Cozy Window Bloom - Cobo #4) menyala keemasan saat senja hingga malam
 // - butiran debu emas melayang (siang/sore) & bara api lembut (malam) ala suasana Dimraeth
-const ATMOS_POOL = 18, MOTE_POOL = 18;
+const ATMOS_POOL = 36, MOTE_POOL = 18;
 function fogSheetTex(sc) {
   if (sc.textures.exists('fogsheet')) return;
   const N = 256, [c, x] = mk(N, N), D = x.createImageData(N, N), d = D.data;
@@ -97,12 +98,17 @@ Object.assign(World.prototype, {
     this._lant.setVisible(ga > 0 && !!pl).setAlpha(ga * .45);
     if (pl) this._lant.setPosition(pl.x, pl.y - 12).setScale((.55 + Math.sin(this.t * 4) * .02) * fogBoost);
     let used = 0;
-    if (ga > 0) {
-      const v = cam.worldView;
+    const isNightDusk = outdoor && (h >= 16.2 || h < 6.2 || n > 0.08);
+    if (ga > 0 || isNightDusk) {
+      const v = cam.worldView, duskA = Math.max(ga, Math.min(.55, h >= 16.2 && h <= 19 ? (h - 16.2) * .2 : 0));
       for (const L of this.lights) {
-        if (!L.small || used >= ATMOS_POOL || L.x < v.x - 40 || L.x > v.right + 40 || L.y < v.y - 40 || L.y > v.bottom + 40) continue;
-        const g = this._glP[used] || (this._glP[used] = this.add.image(0, 0, 'nlW').setTint(0xffb050).setBlendMode(Phaser.BlendModes.ADD).setDepth(2e5 + 1));
-        g.setVisible(true).setPosition(L.x, L.y).setScale(.9 * fogBoost).setAlpha(ga * (.85 + Math.sin(this.t * 5 + L.x) * .15)); used++;
+        if ((!L.small && !L.window) || used >= ATMOS_POOL || L.x < v.x - 40 || L.x > v.right + 40 || L.y < v.y - 40 || L.y > v.bottom + 40) continue;
+        const isWin = !!L.window, curA = isWin ? duskA : ga;
+        if (curA <= 0) continue;
+        const g = this._glP[used] || (this._glP[used] = this.add.image(0, 0, 'nlW').setBlendMode(Phaser.BlendModes.ADD).setDepth(2e5 + 1));
+        const flicker = .82 + Math.sin(this.t * 4.2 + L.x * .1) * .12 + Math.cos(this.t * 6.5 + L.y * .1) * .06;
+        g.setVisible(true).setPosition(L.x, L.y).setScale((isWin ? .65 : .9) * fogBoost).setTint(isWin ? 0xffbe4e : 0xffb050).setAlpha(curA * flicker);
+        used++;
       }
     }
     for (let i = used; i < this._glP.length; i++) this._glP[i].setVisible(false);

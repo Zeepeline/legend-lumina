@@ -103,10 +103,24 @@ Object.assign(World.prototype, {
     if (wind && (!e.wasWind || !e.mk)) {
       markOver(this, e, '!', '#ffd84a');
       this.tweens.add({ targets: s, scaleX: e.sc * 1.12, duration: 80, yoyo: true, repeat: 1 });
+      // T550: Cincin peringatan bahaya luar layar saat musuh elit/boss bersiap menyerang (Cobo #16)
+      if (e.elite || e.boss) this.dangerFrom(s.x, s.y);
     }
     e.wasWind = wind;
-    // T501: Jendela Hukuman (vulnT = 0.9s) setelah serangan menerjang/berat meleset
+    // T538: Squash saat ancang-ancang & stretch saat menerjang (Cobo #12)
     const atkSt = ['atk', 'dash', 'lunge', 'run', 'swoop', 'charge'].includes(e.st);
+    if (wind) {
+      s.setScale(e.sc * 1.15, e.sc * 0.85);
+    } else if (atkSt) {
+      s.setScale(e.sc * 0.9, e.sc * 1.2);
+    } else if (Math.abs(s.scaleX - e.sc) > 0.01 || Math.abs(s.scaleY - e.sc) > 0.01) {
+      const curX = s.scaleX, curY = s.scaleY;
+      s.setScale(
+        Math.abs(curX - e.sc) < 0.02 ? e.sc : curX + (e.sc - curX) * Math.min(1, dt * 10),
+        Math.abs(curY - e.sc) < 0.02 ? e.sc : curY + (e.sc - curY) * Math.min(1, dt * 10)
+      );
+    }
+    // T501: Jendela Hukuman (vulnT = 0.9s) setelah serangan menerjang/berat meleset
     if (atkSt) {
       e._wasAtkSt = true; if (pl.inv > .85) e._atkHit = true;
     } else if (e._wasAtkSt) {
@@ -221,4 +235,38 @@ World.prototype.killEnemy = function (e) {
       }
     }
   }
+};
+// T540: Napas halus karakter Arka saat diam (Cobo #19)
+const _feelCr = World.prototype.create;
+World.prototype.create = function () {
+  const r = _feelCr.apply(this, arguments);
+  if (!this._feelHook) {
+    this._feelHook = 1;
+    this.events.on('postupdate', () => {
+      const pl = this.pl;
+      if (!pl || pl.dead || !pl.body) return;
+      const moving = pl.body.velocity.length() > 2;
+      const busy = (pl.atkT || 0) > 0 || (pl.inv || 0) > 0 || pl.isClimbing || pl.rolling;
+      if (!moving && !busy) {
+        pl.scaleY = 1 + Math.sin(this.t * 3.927) * 0.012;
+      } else if (pl.scaleY !== 1 && !busy) {
+        pl.scaleY = 1;
+      }
+      // T543: Siluet tembus pandang X-ray saat di balik kanopi pohon / atap (Cobo #3)
+      const occluded = (this.fades || []).some(f => !G.title && pl.x > f.l && pl.x < f.r && pl.y < f.b && pl.y > f.t);
+      if (occluded) {
+        if (!this._xraySpr && this.add) {
+          this._xraySpr = this.add.image(pl.x, pl.y, pl.texture.key, pl.frame.name)
+            .setDepth(9.1e4).setTint(0x70eeff).setAlpha(0.68).setOrigin(pl.originX, pl.originY);
+        }
+        if (this._xraySpr) {
+          this._xraySpr.setVisible(true).setPosition(pl.x, pl.y)
+            .setTexture(pl.texture.key, pl.frame.name).setFlipX(pl.flipX).setScale(pl.scaleX, pl.scaleY);
+        }
+      } else if (this._xraySpr && this._xraySpr.visible) {
+        this._xraySpr.setVisible(false);
+      }
+    });
+  }
+  return r;
 };

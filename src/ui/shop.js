@@ -115,6 +115,9 @@ async function buybackMenu() {
     S.buyback.splice(r, 1);
     sfx('coin');
     updHud();
+    if (G.scene && typeof G.scene.spawnForgeDummy === 'function') {
+      G.scene.spawnForgeDummy(G.scene.pl.x + 36, G.scene.pl.y);
+    }
     await say(`Berhasil membeli kembali ${ITEMS[b.id].n} x${b.n}!`);
   }
 }
@@ -225,6 +228,9 @@ async function sellMenu() {
     if (S.buyback.length > 8) S.buyback.pop();
     sfx('coin');
     updHud();
+    if (G.scene && typeof G.scene.spawnForgeDummy === 'function') {
+      G.scene.spawnForgeDummy(G.scene.pl.x + 36, G.scene.pl.y);
+    }
   }
 }
 async function forgeMenu() {

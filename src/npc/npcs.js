@@ -84,6 +84,9 @@ function updBarks(cam, dt) {
 Object.assign(World.prototype, {
   updNpc(o, dt, locked) {
     const s = o.spr; s.setDepth(s.y); o.sh.setPosition(s.x, s.y - 1).setDepth(s.y - .5); if (o.mark) o.mark.y = s.y - 31 + Math.sin(this.t * 6) * 1.5;
+    // T540: Napas halus NPC saat diam (Cobo #19)
+    if (!o.walking && s) s.scaleY = 1 + Math.sin(this.t * 3.927 + (s.x * 0.04)) * 0.012;
+    else if (s && s.scaleY !== 1) s.scaleY = 1;
     const dPl = Math.hypot(this.pl.x - s.x, this.pl.y - s.y);
 
     // Reaksi sapaan spontan saat pemain lewat di dekat NPC (jarak 34px)

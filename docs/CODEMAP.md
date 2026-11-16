@@ -7,7 +7,7 @@ Format: `nama` baris. Urutan file = urutan muat di index.html.
 _Konstanta layar & util kecil_
 `IS_TOUCH` 7 · `LAYOUT_FULL` 8 · `VW` 10 · `VH` 15 · `rnd` 19 · `ri` 20 · `pick` 21 · `clamp` 22 · `sleep` 23 · `$` 24 · `SCREEN` 25
 
-## src/core/audio.js (209 baris)
+## src/core/audio.js (210 baris)
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
 `AU_FILES` 4 · `AU` 18 · `NI` 19 · `nf()` 20 · `parseSeq()` 21 · `bossBass` 22 · `TRACKS` 23 · `auInit()` 45 · `tone()` 57 · `sweep()` 58 · `noise()` 59 · `_AUDIO_POOL` 60 · `BGM_BASE_VOL` 62 · `_bgmDuck` 63 · `routeTag()` 65 · `tagVolFor()` 69 · `tagSetVol()` 73 · `tagGetVol()` 74 · `setWeatherDuck()` 75 · `_rain` 77 · `rainSound()` 78 · `setBgmDuck()` 93 · `stopAudioTag()` 97 · `playBGM()` 104 · `_lastSfx` 158 · `sfx()` 159
 
@@ -91,13 +91,13 @@ _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 `OBJ_SPAWN` 3 · obj `shrine` 5 · obj `cavemouth` 8 · obj `sign` 11 · obj `forge` 21 · obj `pebbles` 31 · obj `telescope` 39 · obj `altar` 47 · obj `fieldoven` 55 · obj `dripstone` 63 · obj `frostflower` 71 · obj `totem` 79 · obj `pigeons` 87 · obj `teatable` 95 · obj `lotuspad` 103 · obj `dockboat` 111 · obj `coffeeshrub` 166 · obj `coffeekettle` 174 · obj `orchidrock` 182 · obj `canaryperch` 190 · obj `woodlandshrine` 198 · obj `bellows` 206 · obj `ringbooth` 214 · obj `archerytarget` 222 · obj `lakelighthouse` 230 · obj `streetdrum` 238 · obj `dummy` 246 · obj `pot` 254 · obj `well` 264 · obj `apple1` 279 · obj `bench` 343 · obj `bell` 359 · obj `campfire` 367 · obj `alchemytable` 384 · obj `scenicbench` 393 · obj `mailbox` 411
 
-## src/world/spawn/spawn_2.js (309 baris)
+## src/world/spawn/spawn_2.js (310 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 203 · obj `treeA` 210 · obj `goblin_torch` 218 · obj `goblin_cauldron` 221 · obj `cryst` 230 · obj `lamp` 233 · obj `viewpoint` 236 · obj `lumina_shard` 270 · obj `gatehouse` 292
+obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `goblin_torch` 219 · obj `goblin_cauldron` 222 · obj `cryst` 231 · obj `lamp` 234 · obj `viewpoint` 237 · obj `lumina_shard` 271 · obj `gatehouse` 293
 
-## src/world/ground.js (370 baris)
+## src/world/ground.js (376 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 110 · `blockRects()` 250 · `scatter()` 266 · `openSides()` 311 · `borderTrees()` 324 · `ringObjects()` 349 · `mapObjects()` 354 · `mapWalls()` 358
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 110 · `blockRects()` 256 · `scatter()` 272 · `openSides()` 317 · `borderTrees()` 330 · `ringObjects()` 355 · `mapObjects()` 360 · `mapWalls()` 364
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
@@ -131,7 +131,7 @@ _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (205 baris)
+## src/world/maps/city.js (201 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 
@@ -143,9 +143,9 @@ _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina
 _Interior: penginapan, rumah pohon, rumah Lina_
 `makeRoom()` 4
 
-## src/ui/widgets.js (247 baris)
+## src/ui/widgets.js (251 baris)
 _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
-`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 41 · `choose()` 45 · `ask()` 81 · `BANNER_QUEUE` 90 · `BANNER_BUSY` 91 · `processBannerQueue()` 92 · `banner()` 105 · `POPS` 114 · `popWorld()` 115 · `updPops()` 119 · `HUD` 122 · `buildHud()` 123 · `updHud()` 137 · `hudPeaceT` 209 · `updHudFade()` 210 · `showHud()` 225 · `bossBar()` 230 · `autoSaveIcon()` 246
+`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 41 · `choose()` 45 · `ask()` 81 · `BANNER_QUEUE` 90 · `BANNER_BUSY` 91 · `processBannerQueue()` 92 · `banner()` 105 · `POPS` 114 · `popWorld()` 115 · `updPops()` 123 · `HUD` 126 · `buildHud()` 127 · `updHud()` 141 · `hudPeaceT` 213 · `updHudFade()` 214 · `showHud()` 229 · `bossBar()` 234 · `autoSaveIcon()` 250
 
 ## src/ui/spellbar.js (54 baris)
 _Bilah 5 slot jurus dengan cooldown (T327)_
@@ -199,9 +199,9 @@ _Tanah Verdant (Padang, Hutan, Desa) meniru assets/reference/target_padang.png._
 _Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._
 `INT_SIZE` 5 · `INT_FLAT` 14 · `INT_RUG` 16 · `intDims()` 17 · `rug9()` 18 · `genRoomSheet()` 30 · `_genRoom0` 78 · `sheetWalls()` 81 · `regIntTex()` 88
 
-## src/scene/world.js (400 baris)
+## src/scene/world.js (395 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
-`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 211 · `.update()` 212 · `.puff()` 314 · `.camStep()` 315 · `.pump()` 364 · `.front()` 373 · `.actionA()` 374 · `.sparkle()` 384 · `.checkZones()` 388
+`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 99 · `.dropActiveFx()` 112 · `.wall()` 113 · `.shadow()` 114 · `.spawnObj()` 115 · `.spawnChest()` 133 · `.spawnCrystal()` 140 · `.spawnBarrier()` 148 · `.spawnMochi()` 155 · `.spawnNpc()` 159 · `.face()` 170 · `.spawnCritter()` 171 · `.spawnFly()` 176 · `.spawnEnemy()` 181 · `.camShake()` 211 · `.update()` 212 · `.puff()` 309 · `.camStep()` 310 · `.pump()` 359 · `.front()` 368 · `.actionA()` 369 · `.sparkle()` 379 · `.checkZones()` 383
 
 ## src/systems/scene_nav.js (14 baris)
 _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._
@@ -209,7 +209,7 @@ _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (g
 
 ## src/systems/combat.js (400 baris)
 _pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali dorongan_
-`WEAPON_STYLE` 3 · `.attack()` 11 · `.shootArrow()` 82 · `.aimAngle()` 95 · `.magic()` 104 · `.drink()` 118 · `.useItem()` 124 · `.hitStop()` 133 · `.hitEnemy()` 138 · `.killEnemy()` 185 · `.drop()` 264 · `.updPicks()` 270 · `.gainExp()` 292 · `.hurtPlayer()` 308 · `.eShoot()` 327 · `.shockwave()` 337 · `.updShots()` 370 · `.defeat()` 387
+`WEAPON_STYLE` 3 · `.attack()` 11 · `.shootArrow()` 82 · `.aimAngle()` 95 · `.magic()` 104 · `.drink()` 118 · `.useItem()` 124 · `.hitStop()` 133 · `.hitEnemy()` 138 · `.killEnemy()` 185 · `.drop()` 262 · `.updPicks()` 273 · `.gainExp()` 292 · `.hurtPlayer()` 308 · `.eShoot()` 327 · `.shockwave()` 337 · `.updShots()` 370 · `.defeat()` 387
 
 ## src/systems/skills.js (54 baris)
 _Jurus: dash, tebasan putar, nova es_
@@ -223,9 +223,9 @@ _Efek visual sihir: lingkar rune, proyektil, ledakan, dan aura (T318-T322)_
 _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipakai (tingkat I–III)._
 `JURUS` 4 · `MASTERY` 13 · `tierOf` 14 · `learned` 15 · `useJurus()` 16 · `canTeach` 20 · `.learnTalk()` 23 · `.castSpell()` 38
 
-## src/systems/ambient.js (340 baris)
+## src/systems/ambient.js (341 baris)
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
-`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 213 · `.ripple()` 214 · `.spawnRainEmitters()` 228 · `.rainSplash()` 240 · `.updRainFx()` 248 · `artQuestArrow()` 321 · `.updQuestGuide()` 328
+`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 213 · `.ripple()` 214 · `.spawnRainEmitters()` 228 · `.rainSplash()` 240 · `.updRainFx()` 248 · `artQuestArrow()` 322 · `.updQuestGuide()` 329
 
 ## src/systems/status.js (125 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
@@ -335,9 +335,9 @@ _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 _Segel kuil, Mochi hilang, kristal, peti harta_
 `.touchBarrier()` 4 · `.takeMochi()` 20 · `.useCrystal()` 24 · `.openChest()` 37 · `interactRunePillar()` 96
 
-## src/npc/npcs.js (132 baris)
+## src/npc/npcs.js (135 baris)
 _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_
-`NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 85 · `.updCritter()` 108
+`NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 85 · `.updCritter()` 111
 
 ## src/npc/brain.js (135 baris)
 _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, mengobrol, duduk, berpatroli), pulang saat malam._
@@ -347,13 +347,13 @@ _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, m
 _Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed._
 `CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 60 · `.clearCrowd()` 138 · `.initCrowd()` 148 · `_initPolishCrowd` 170 · `_dropActiveFxCrowd` 177 · `_updAmbP` 210
 
-## src/systems/qol.js (214 baris)
+## src/systems/qol.js (232 baris)
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
-`.updInteractHint()` 6 · `.updEnemyBars()` 30 · `.retryBoss()` 56 · `levelUpDetail()` 62 · `.setTimeout()` 68 · `TIPS` 81 · `showTip()` 92 · `.updTips()` 111 · `.updPeaceHud()` 121 · `.updMinimap()` 126 · `.swapWeapon()` 160 · `.updStamina()` 171 · `.tryClimb()` 182 · `applyPadOpt()` 210
+`.updInteractHint()` 6 · `.updEnemyBars()` 42 · `.retryBoss()` 68 · `levelUpDetail()` 74 · `.setTimeout()` 80 · `TIPS` 93 · `showTip()` 104 · `.updTips()` 123 · `.updPeaceHud()` 133 · `.updMinimap()` 138 · `.swapWeapon()` 172 · `.updStamina()` 183 · `.tryClimb()` 200 · `applyPadOpt()` 228
 
-## src/systems/feel.js (225 baris)
+## src/systems/feel.js (273 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
-`ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 150 · `.hurtAnim()` 157 · `.hasLineOfSight()` 159 · `_spawnEnemy` 175 · `_killEnemy` 195
+`ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 164 · `.hurtAnim()` 171 · `.hasLineOfSight()` 173 · `_spawnEnemy` 189 · `_killEnemy` 209 · `_feelCr` 240
 
 ## src/systems/sound.js (116 baris)
 _Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#911),_
@@ -475,21 +475,25 @@ _T506: Fasilitas Markas Rumah Arka (Stronghold) & T507: Ikatan Sekutu & Perbekal
 _Paket A (T469, T484, T485, T486) & Paket B Gelombang 18 (T528–T531: Spell Wheel, Relik, Sekutu Tempur, Ujian Bayangan)_
 `.updLostArrow()` 163 · `.cycleSpell()` 178 · `.summonCompanion()` 188 · `.updCompanion()` 197 · `.startShadowTrial()` 218
 
+## src/systems/gelombang20.js (233 baris)
+_Gelombang 20 (T553–T562): 10 Trik Lanjutan Suasana & Mekanik ala Cobo / Mytheria_
+
+
 ## src/systems/reflect.js (55 baris)
 _Pantulan Karakter di Air (T460) — referensi: RPG klasik / Sea of Stars_
 
 
-## src/systems/tree_shadows.js (42 baris)
-_Bayangan Daun Bergoyang di Bawah Pohon (T448) — referensi: target_padang.png, Stardew_
+## src/systems/tree_shadows.js (63 baris)
+_Bayangan Daun Bergoyang & Proyeksi Miring Dinamis (T448, T552) — referensi: Cobo #18, Stardew_
 
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
 
 
-## src/systems/combat_fx.js (387 baris)
+## src/systems/combat_fx.js (397 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
-`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 87 · `.hitFx()` 97 · `.updChargeFx()` 131 · `.clearChargeFx()` 146 · `.spinFx()` 151 · `.enemyWindFx()` 172 · `.enemySlashFx()` 179 · `.enemySmashFx()` 189 · `.enemyRingFx()` 203 · `.rollFx()` 208 · `.updLowHp()` 229
+`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 87 · `.hitFx()` 97 · `.updChargeFx()` 141 · `.clearChargeFx()` 156 · `.spinFx()` 161 · `.enemyWindFx()` 182 · `.enemySlashFx()` 189 · `.enemySmashFx()` 199 · `.enemyRingFx()` 213 · `.rollFx()` 218 · `.updLowHp()` 239
 
 ## src/systems/movement.js (346 baris)
 _Gelombang 16 (T508–T517): Gerakan & Posisi (Movement & Positioning) ala Dimraeth_
@@ -511,9 +515,9 @@ _Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)_
 _Percakapan NPC, toko, bengkel, penginapan_
 `.npcHasQuest()` 4 · `.talkNpc()` 9 · `.offerPet()` 168 · `.shop()` 172 · `.smithy()` 217 · `.innTalk()` 262 · `.talkArenaMaster()` 273 · `.startCityArena()` 310 · `.talkNightMerchant()` 374 · `.talkCourier()` 388 · `.talkAuctioneer()` 422
 
-## src/ui/shop.js (377 baris)
+## src/ui/shop.js (383 baris)
 _Menu beli, jual, tempa_
-`icon` 4 · `ownedEq` 5 · `buyMenu()` 6 · `buybackMenu()` 86 · `sellMenu()` 121 · `forgeMenu()` 230 · `cookMenu()` 252 · `upgCost()` 317 · `upgradeMenu()` 318
+`icon` 4 · `ownedEq` 5 · `buyMenu()` 6 · `buybackMenu()` 86 · `sellMenu()` 124 · `forgeMenu()` 236 · `cookMenu()` 258 · `upgCost()` 323 · `upgradeMenu()` 324
 
 ## src/ui/socket.js (76 baris)
 _Menu Pasang Permata (#23)_
@@ -551,13 +555,13 @@ _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TA
 _T442 & T445: Data tebing M.cliffs = [[x1, y1, x2, y2, 'S'|'N'|'E'|'W'], ...]_
 
 
-## src/systems/waterflow.js (62 baris)
+## src/systems/waterflow.js (101 baris)
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
-`FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `.updFlow()` 33 · `_updFlow0` 54
+`FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `foamTex()` 32 · `isShorelineAt()` 39 · `.updFlow()` 51 · `_updFlow0` 93
 
-## src/systems/atmos.js (112 baris)
+## src/systems/atmos.js (118 baris)
 _Suasana cahaya & kabut (wilayah aktif saja):_
-`ATMOS_POOL` 6 · `fogSheetTex()` 7 · `moteTex()` 18 · `.updAmbientMotes()` 25 · `.updAtmos()` 71
+`ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `.updAmbientMotes()` 26 · `.updAtmos()` 72
 
 ## src/systems/sunbeams.js (72 baris)
 _T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_
@@ -591,9 +595,9 @@ _Sprite sheet lengkap Arka dari ChatGPT (assets/raw/hero/arka_sheet1..6.png → 
 _Lembar musuh baru dari ChatGPT (assets/raw/enemy/<id>.png → tools/gen_enemy.py → assets/img/esh_<id>.png)._
 `ESH` 5 · `regEnemySheets()` 10 · `eshFrame()` 31
 
-## src/systems/juice.js (282 baris)
+## src/systems/juice.js (307 baris)
 _"Juice" v1.45: lapisan partikel & animasi tambahan di atas sistem yang ada (tanpa mengubah logika tempur)._
-`JX_MAT` 9 · `jxMat()` 14 · `jxTextures()` 15 · `JX_CFG` 33 · `.jx()` 45 · `.jxLevelUp()` 61 · `.jxWind()` 68 · `.jxGhost()` 78 · `.jxShots()` 83 · `.jxTele()` 100 · `.jxSwoosh()` 110 · `.jxCrater()` 119 · `.jxDustRing()` 129 · `.jxPostureBreak()` 138 · `.jxAura()` 149 · `.jxTick()` 167
+`JX_MAT` 9 · `jxMat()` 14 · `jxTextures()` 15 · `JX_CFG` 33 · `.jx()` 45 · `.jxLevelUp()` 61 · `.jxWind()` 68 · `.jxGhost()` 78 · `.jxShots()` 83 · `.jxTele()` 100 · `.jxNodePop()` 113 · `.jxSwoosh()` 119 · `.jxCrater()` 128 · `.jxDustRing()` 138 · `.jxPostureBreak()` 147 · `.jxAura()` 158 · `.jxTick()` 176
 
 ## src/systems/grade.js (53 baris)
 _Rona warna "sore keemasan" ala screenshot Dimraeth pemilik (v1.47.0): seluruh layar luar-ruang digeser ke kuning-zaitun hangat,_

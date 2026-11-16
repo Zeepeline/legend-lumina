@@ -292,10 +292,11 @@ Object.assign(World.prototype, {
         g.fillStyle(0xe6f6ff, ba).fillEllipse(bx, by, br * 2.1, br * 1.5);
       }
     }
+    // T534: Gelombang angin miring global terkoordinasi ala Cobo
     if (this.bushes && !OPT.lite) {
       for (const b of this.bushes) {
         if (b.active && !b._swaying && b.x > v.x - 30 && b.x < v.right + 30 && b.y > v.y - 30 && b.y < v.bottom + 30) {
-          b.angle = Math.sin(this.t * 2.8 + b.x * .07 + b.y * .05) * 2.4;
+          b.angle = Math.sin(this.t * 2.2 + (b.x * 0.035 + b.y * 0.025)) * 2.6;
         }
       }
     }

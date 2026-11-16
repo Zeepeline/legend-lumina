@@ -110,11 +110,15 @@ function banner(text, sub, big, ms = 1800) {
   return createdEl;
 }
 
-// ---- angka melayang (menempel di dunia) ----
+// ---- angka melayang (menempel di dunia, T542: bouncing arc damage numbers Cobo #15) ----
 const POPS = [];
 function popWorld(x, y, text, cls = '') {
-  const e = document.createElement('div'); const col = typeof cls === 'string' && cls[0] === '#'; e.className = 'pop ' + (col ? '' : cls); if (col) e.style.color = cls; e.textContent = text; UI.appendChild(e);
-  POPS.push({ e, x, y }); setTimeout(() => { e.remove(); const i = POPS.findIndex(p => p.e === e); if (i >= 0) POPS.splice(i, 1); }, 900);
+  const e = document.createElement('div'); const col = typeof cls === 'string' && cls[0] === '#';
+  const isDmg = cls === 'crit' || cls === 'hurt' || /^\d+$/.test(text) || /^[-+]?\d+/.test(text);
+  const arc = isDmg ? (Math.random() < 0.5 ? ' arc-l' : ' arc-r') : '';
+  e.className = 'pop' + arc + ' ' + (col ? '' : cls); if (col) e.style.color = cls;
+  e.textContent = text; UI.appendChild(e);
+  POPS.push({ e, x, y }); setTimeout(() => { e.remove(); const i = POPS.findIndex(p => p.e === e); if (i >= 0) POPS.splice(i, 1); }, 950);
 }
 function updPops(cam) { for (const p of POPS) { p.e.style.left = Math.round(p.x - cam.scrollX) + 'px'; p.e.style.top = Math.round(p.y - cam.scrollY) + 'px'; } }
 

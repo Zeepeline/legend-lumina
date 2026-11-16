@@ -114,7 +114,7 @@ class World extends Phaser.Scene {
   shadow(x, y, rx, ry) { this.add.image(x + 1, y, 'shadowb').setDisplaySize(rx * 2.4, ry * 2.6).setAlpha(this.M.dark ? .5 : .32).setDepth(-9e5); }
   spawnObj(o) {
     const [type, x, y, opt] = o; const d = OBJ[type];
-    const s = this.add.sprite(x, y, d.key, 0).setOrigin(.5, 1).setDepth(y);
+    const bs = (!d.col || !d.col[0]) && !d.fade ? -1.5 : 0; const s = this.add.sprite(x, y, d.key, 0).setOrigin(.5, 1).setDepth(y + bs);
     if (type.startsWith('bush') || type === 'flower' || type === 'mush') {
       this.bushes = this.bushes || [];
       this.bushes.push(s);
@@ -126,7 +126,7 @@ class World extends Phaser.Scene {
       const cx = x + (opt && opt.flip ? -1 : 1) * d.chim[0], cy = y - s.height + d.chim[1];
       this.add.particles(cx, cy, 'smoke', { lifespan: 2600, speedY: { min: -16, max: -9 }, speedX: { min: -2, max: 7 }, scale: { start: .5, end: 1.5 }, alpha: { start: .5, end: 0 }, frequency: 480 }).setDepth(y + 1);
     }
-    if (d.chim) { this.lights.push({ x: x - 26, y: y - 22 }); this.lights.push({ x: x + 26, y: y - 22 }); }
+    if (d.chim) { this.lights.push({ x: x - 26, y: y - 22, window: 1 }); this.lights.push({ x: x + 26, y: y - 22, window: 1 }); }
     const hk = OBJ_SPAWN[type]; if (hk) hk.call(this, s, x, y, opt, d, type); /* perilaku khusus per objek: src/world/spawn/ */
     return s;
   }
@@ -208,7 +208,7 @@ class World extends Phaser.Scene {
     if (!e.boss && !G.title && !this.M.indoor && D.ai !== 'turret' && Math.random() < ELITE_RATE) this.makeElite(e);
     this.enemies.push(e); return e;
   }
-  camShake(ms, k) { if (OPT.shake) this.cameras.main.shake(ms, k); }
+  camShake(ms, k) { if (OPT.shake) { this.cameras.main.roundPixels = true; this.cameras.main.shake(ms, k); } }
   update(time, dms) {
     // hit-stop: dunia membeku sesaat saat pukulan kena (lihat hitStop() di systems/combat.js)
     if (this.hsT > 0) { this.hsT -= Math.min(dms, 50) / 1000; if (this.hsT > 0) return; this.physics.resume(); this.anims.resumeAll(); this.tweens.timeScale = 1; }
@@ -287,23 +287,18 @@ class World extends Phaser.Scene {
       const a = Math.atan2(Input.aim.y, Input.aim.x), ox = pl.x, oy = pl.y - 9;
       for (let i = 1; i <= 8; i++) { const X = ox + Math.cos(a) * i * 11, Y = oy + Math.sin(a) * i * 11, r = i === 8 ? 3.5 : 2; this.aimG.fillStyle(0x5a2a00, .8).fillCircle(X, Y, r + 1); this.aimG.fillStyle(i === 8 ? 0xff7a2a : 0xffe27a, 1).fillCircle(X, Y, r); }
     }
-    // Efek rumput/semak bergoyang (#91)
+    // Efek rumput/semak bergoyang (#91) & hamburan daun rontok Cobo (T533)
     if (!locked && !pl.dead && this.bushes && this.bushes.length) {
       for (const b of this.bushes) {
         if (!b.active) continue;
         const d = Math.hypot(pl.x - b.x, pl.y - b.y);
-        if (d < 16 && !b._swaying) {
+        if (d < 18 && !b._swaying) {
           b._swaying = true;
+          if (this.jx) this.jx('pop', b.x, b.y - 6, 2, { tint: 0x6ec048 });
+          if (typeof sfx === 'function') sfx('bush');
           this.tweens.add({
-            targets: b,
-            angle: pl.x < b.x ? 12 : -12,
-            duration: 80,
-            yoyo: true,
-            repeat: 2,
-            onComplete: () => {
-              b.angle = 0;
-              this.time.delayedCall(400, () => { b._swaying = false; });
-            }
+            targets: b, angle: pl.x < b.x ? 14 : -14, scaleY: 0.88, duration: 80, yoyo: true, repeat: 2,
+            onComplete: () => { b.angle = 0; b.scaleY = 1; this.time.delayedCall(380, () => { b._swaying = false; }); }
           });
         }
       }
@@ -322,7 +317,7 @@ class World extends Phaser.Scene {
       const cc = (v, a, b, V) => { const W = V / z, d = (V - W) / 2; return (b - a < W ? Math.round((a + b - W) / 2) : clamp(v + d, a, b - W)) - d; };
       const sx = cc(Math.round(pl.x) - VW / 2 + Math.round(ox), B.x0, B.x1, VW), sy = cc(Math.round(pl.y) - 12 - VH / 2 + Math.round(oy), B.y0, B.y1, VH);
       this.cx = tx + ox; this.cy = ty + oy;
-      cam.setScroll(sx, sy);
+      cam.setScroll(Math.round(sx), Math.round(sy));
     }
     if (G.title) cam.setScroll(Math.round(this.cx), Math.round(this.cy));
     if (pl) {

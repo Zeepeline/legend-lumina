@@ -62,14 +62,14 @@ MAPS.road = {
 
 MAPS.kgate = {
   id: 'kgate', name: 'Gerbang Kota Lumina', w: 1200, h: 900, bgm: 'town', ground: 'village', pathType: 'paving', glow: [600, 360, 600], crowd: 6,
-  paths: [[600, 900, 600, 0, 34], [600, 640, 300, 640, 12], [600, 640, 900, 640, 12]],
-  discs: [[600, 300, 120], [300, 640, 50], [900, 640, 50]],
+  paths: [[600, 900, 600, 380, 48], [600, 640, 300, 640, 12], [600, 640, 900, 640, 12]],
+  discs: [[600, 460, 80], [300, 640, 50], [900, 640, 50]],
   ponds: [[150, 840, 160, 70], [1050, 840, 160, 70]],
   objs: [
     ['gatehouse', 600, 424],
-    ...[[72, 404], [204, 404], [336, 404], [468, 404], [732, 404], [864, 404], [996, 404], [1128, 404]].map(([x, y]) => ['cwall', x, y]),
-    ['gpt_city_lamp', 554, 494], ['gpt_city_lamp', 646, 494],
-    ['gpt_city_banner_sm', 530, 498], ['gpt_city_banner_sm', 670, 498],
+    ...[59, 127, 195, 263, 331, 399, 467, 733, 801, 869, 937, 1005, 1073, 1141].map(x => ['cwall', x, 424]),
+    ['gpt_city_lamp', 554, 474], ['gpt_city_lamp', 646, 474],
+    ['gpt_city_banner_sm', 526, 474], ['gpt_city_banner_sm', 674, 474],
     ['gpt_city_banner', 566, 340], ['gpt_city_banner', 634, 340],
     ['gpt_city_cliff_l', 160, 840, { ok: 'tebing sungai kiri bawah sesuai referensi' }],
     ['gpt_city_cliff_r', 1040, 840, { ok: 'tebing sungai kanan bawah sesuai referensi' }],
@@ -81,11 +81,7 @@ MAPS.kgate = {
     ['sign', 680, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\n↑ Masuk lewat gerbang di utara → Distrik Pasar.' }],
     ['bounty_board', 720, 600],
     ['crate', 260, 620], ['crate', 282, 616], ['barrel', 330, 630], ['crate', 880, 620], ['barrel', 930, 626],
-    ['houseB', 200, 230], ['houseC', 1000, 230],
-    ['houseA', 120, 150], ['houseB', 240, 150], ['houseC', 360, 150],
-    ['houseC', 840, 150], ['houseA', 960, 150], ['houseB', 1080, 150],
-    ['houseB', 180, 740], ['houseA', 1020, 740],
-    ['planter', 470, 300], ['planter', 730, 300],
+    ['planter', 470, 490], ['planter', 730, 490],
     ['pigeons', 680, 520], ['pigeons', 420, 680],
     ['archerytarget', 340, 720]
   ],
@@ -93,16 +89,16 @@ MAPS.kgate = {
     [0, 0, 540, 40], [660, 0, 540, 40],
     [0, 0, 40, 900], [1160, 0, 40, 900],
     [0, 860, 560, 40], [640, 860, 560, 40],
-    [0, 380, 535, 26], [665, 380, 535, 26]
+    [0, 380, 560, 44], [640, 380, 560, 44]
   ],
   border: { top: 40, bottom: 860, left: 40, right: 1160, gap: [560, 640], gapT: [540, 660], types: ['treeA', 'treeB'] },
   exits: [
     { x: 560, y: 888, w: 80, h: 12, to: 'road', tx: 450, ty: 60, dir: 'down', label: 'Jalan Raya Lama' },
-    { x: 540, y: 0, w: 120, h: 12, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' }
+    { x: 560, y: 388, w: 80, h: 20, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' }
   ],
   npcs: citizens([
-    ['gj1', 'guard_spear', 'Penjaga Gerbang', 562, 476, 'gerbang', 0],
-    ['gj2', 'guard_spear', 'Penjaga Gerbang', 638, 476, 'gerbang', 0],
+    ['gj1', 'guard_spear', 'Penjaga Gerbang', 562, 456, 'gerbang', 0],
+    ['gj2', 'guard_spear', 'Penjaga Gerbang', 638, 456, 'gerbang', 0],
     ['courier', 'boy', 'Budi Kurir Kilat', 380, 720, 'warga', 0],
     ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'],
     ['gw2', 'farmer', 'Petani', 900, 700, 'warga']
@@ -134,7 +130,7 @@ MAPS.kpasar = {
     ['sign', 1540, 680, { text: 'BALAI DEWAN KOTA\nTertutup untuk umum. Urusan dewan saja.' }], ['sign', 610, 330, { text: 'Penginapan "Seribu Lentera"' }]],
   walls: [[0, 0, 760, 40], [840, 0, 760, 40], [0, 0, 40, 590], [0, 650, 40, 550], [1560, 0, 40, 1200], [0, 1160, 760, 40], [840, 1160, 760, 40]],
   border: { top: 40, bottom: 1160, left: 40, right: 1560, gap: [760, 840], gapT: [760, 840], gapL: [590, 650], types: ['treeAd', 'treeBd'] },
-  exits: [{ x: 760, y: 1188, w: 80, h: 12, to: 'kgate', tx: 600, ty: 60, dir: 'down', label: 'Gerbang Kota' },
+  exits: [{ x: 760, y: 1188, w: 80, h: 12, to: 'kgate', tx: 600, ty: 440, dir: 'down', label: 'Gerbang Kota' },
     { x: 760, y: 0, w: 80, h: 12, to: 'kakademi', tx: 700, ty: 960, dir: 'up', label: 'Distrik Akademi' },
     { x: 0, y: 590, w: 12, h: 60, to: 'kbawah', tx: 1150, ty: 500, dir: 'left', label: 'Kota Bawah' }],
   doors: [[560, 300, { to: 'kinn' }], [180, 300, 'Rumah penjahit. Pintunya terkunci.'], [1300, 300, 'Kantor Serikat Dagang cabang Kota Lumina. Penjaganya menatapmu tajam.'], [1040, 300, 'Toko buku. "Tutup sampai ujian Akademi selesai."']],

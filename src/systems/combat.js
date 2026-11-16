@@ -254,36 +254,36 @@ Object.assign(World.prototype, {
       sfxAt('magic', x, y, this);
       popWorld(x, y - 24, '💧 MEMBELAH DIRI!', 'crit');
       this.time.delayedCall(200, () => {
-        this.spawnEnemy('slime', x - 16, y - 10);
-        this.spawnEnemy('slime', x + 16, y - 10);
-        this.spawnEnemy('slime', x, y + 14);
+        for (const [ox, oy] of [[-16, -10], [16, -10], [0, 14]]) this.spawnEnemy('slime', x + ox, y + oy);
       });
     }
     if (e.boss) this.bossDown(e); else achCheck(this);
   },
   drop(x, y, kind, val) {
-    const s = this.add.sprite(x, y - 4, kind === 'coin' ? 'coin' : 'ic_' + val).setOrigin(.5, 1).setDepth(y); if (kind === 'coin') s.play('coin');
+    const s = this.add.sprite(x, y - 4, kind === 'coin' ? 'coin' : 'ic_' + val).setOrigin(.5, 1).setDepth(y);
+    if (kind === 'coin') s.play('coin');
     const tx = x + rnd(-14, 14), ty = y + rnd(-8, 10);
-    this.tweens.add({ targets: s, x: tx, duration: 380 }); this.tweens.add({ targets: s, y: { from: y - 4, to: ty - 14 }, duration: 190, ease: 'Quad.out', onComplete: () => this.tweens.add({ targets: s, y: ty, duration: 190, ease: 'Bounce.out' }) });
+    this.tweens.add({ targets: s, x: tx, duration: 380, ease: 'Cubic.out' });
+    this.tweens.add({ targets: s, y: { from: y - 4, to: ty - 16 }, duration: 180, ease: 'Quad.out', onComplete: () => {
+      this.tweens.add({ targets: s, y: ty, duration: 180, ease: 'Bounce.out', onComplete: () => {
+        this.tweens.add({ targets: s, scaleX: 1.25, scaleY: 0.78, duration: 60, yoyo: true });
+      } }); } });
     this.picks.push({ s, kind, val, t: .45 });
   },
   updPicks(dt) {
-    const pl = this.pl;
-    // Magnet Rampasan Koin & Material Otomatis (#169)
-    // Radius magnet dasar 70 px
-    const magnetRadius = 70;
+    const pl = this.pl, magnetRadius = 70;
     for (const p of this.picks) {
       p.t -= dt; if (p.t > 0 || p.got) continue; const dx = pl.x - p.s.x, dy = pl.y - 4 - p.s.y, d = Math.hypot(dx, dy);
       if (d < magnetRadius && !pl.dead) {
-        const pullSpeed = d < 38 ? 200 : 140;
-        p.s.x += dx / d * Math.min(d, pullSpeed * dt);
-        p.s.y += dy / d * Math.min(d, pullSpeed * dt);
-        p.s.setDepth(p.s.y);
+        const pullSpeed = 120 + (1 - d / magnetRadius) * 200, cv = Math.sin((p.s.x + p.s.y) * .05) * 26 * dt;
+        p.s.x += dx / d * Math.min(d, pullSpeed * dt) - (dy / d) * cv; p.s.y += dy / d * Math.min(d, pullSpeed * dt) + (dx / d) * cv; p.s.setDepth(p.s.y);
       }
       if (d < 12) {
         p.got = true; p.s.destroy();
-        if (p.kind === 'coin') { S.gold += p.val; sfx('coin'); popWorld(pl.x, pl.y - 30, '+' + p.val + 'G', 'gold'); }
-        else { addItem(p.val); sfx('chest'); const itemN = ITEMS[p.val] ? ITEMS[p.val].n : p.val; popWorld(pl.x, pl.y - 30, '+' + itemN, 'heal'); }
+        const now = this.t || 0, semi = (!this._pickT || now - this._pickT > .8) ? (this._pickN = 0) : Math.min(8, ++this._pickN);
+        this._pickT = now; const r = 1 + semi * .06;
+        if (p.kind === 'coin') { S.gold += p.val; sfx('coin', r); popWorld(pl.x, pl.y - 30, '+' + p.val + 'G', 'gold'); }
+        else { addItem(p.val); sfx('chest', r); popWorld(pl.x, pl.y - 30, '+' + (ITEMS[p.val]?.n || p.val), 'heal'); }
         updHud();
       }
     }
@@ -310,8 +310,8 @@ Object.assign(World.prototype, {
     if (pl.inv > 0 || pl.dead || G.lock > 0 || UIH) {
       if ((pl.dashT > 0 || this.t - (pl.dashStartT || 0) <= .2) && !pl.perfectDodged) {
         pl.perfectDodged = true; popWorld(pl.x, pl.y - 32, 'Lolos!', 'heal'); sfx('crit');
-        this.time.timeScale = 0.3; this.physics.world.timeScale = 0.3;
-        setTimeout(() => { if (this.time) { this.time.timeScale = 1; this.physics.world.timeScale = 1; } }, 120);
+        this.time.timeScale = this.physics.world.timeScale = 0.3;
+        setTimeout(() => { if (this.time) this.time.timeScale = this.physics.world.timeScale = 1; }, 120);
         S.sta = Math.min((stat().maxsta || 100), (S.sta || 0) + 10); updHud();
       }
       return;

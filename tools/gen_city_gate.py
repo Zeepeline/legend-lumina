@@ -71,35 +71,6 @@ def clean_crop(im, box, scale=0.5, mode=None):
                 q.append((ny, nx))
     a[bg, 3] = 0
 
-    if mode == 'gate':
-        for dx in range(117):
-            x = 140 + dx
-            norm = (dx - 58.0) / 58.5
-            y_top = int(round(140 + 33 * (norm ** 2)))
-            for ry in range(max(135, y_top - 2), y_top):
-                a[ry, x, :3] = [52, 54, 68]
-                a[ry, x, 3] = 255
-            for y in range(y_top, H):
-                if dx < 8 or dx > 108:
-                    if y < 228:
-                        col = np.array([58, 44, 40], dtype=float) * (0.72 if (dx in (0, 7, 109, 116)) else 1.0)
-                        a[y, x, :3] = col.astype(np.uint8)
-                        a[y, x, 3] = 255
-                    else:
-                        a[y, x, 3] = 0
-                else:
-                    a[y, x, 3] = 0
-        for y in range(224, H):
-            for x in range(134, 261):
-                a[y, x, 3] = 0
-        for y in range(238, H):
-            for x in range(W):
-                r, g, b, al = [int(v) for v in a[y, x]]
-                if al > 0 and g > r + 15 and g > b + 15:
-                    if (x < 68 or x > 326) and y < 246:
-                        continue
-                    a[y, x, 3] = 0
-
     a = soften_outline(a)
     ys, xs = np.nonzero(a[:, :, 3] > 128)
     if len(ys):
@@ -112,24 +83,26 @@ def clean_crop(im, box, scale=0.5, mode=None):
 
 
 def make_cwall(sheet):
-    w_crop = sheet.crop((404, 70, 548, 252))
+    w_crop = sheet.crop((404, 101, 540, 253))
     wa = np.array(w_crop)
-    seg = np.zeros((96, 76, 4), dtype=np.uint8)
-    top_m = wa[8:38, 18:94].copy()
-    for y in range(30):
-        for x in range(76):
-            if top_m[y, x, :3].max() < 32:
-                top_m[y, x, 3] = 0
-            elif top_m[y, x, :3].max() < 48 and y < 22:
-                top_m[y, x, :3] = [44, 48, 64]
-    seg[0:30, :] = top_m
-    seg[30:78, :] = wa[112:160, 28:104]
-    seg[78:94, :] = wa[128:144, 28:104]
-    seg[94:96, :, :3] = [48, 52, 68]
-    seg[94:96, :, 3] = 255
-    tiled = np.concatenate([seg, seg, seg], axis=1)
-    tiled = soften_outline(tiled)
-    return Image.fromarray(tiled, 'RGBA').resize((132, 48), Image.NEAREST)
+    H, W, _ = wa.shape
+    bg = np.zeros((H, W), dtype=bool)
+    q = deque()
+    for x in range(W):
+        if wa[0, x, :3].max() < 32:
+            bg[0, x] = True
+            q.append((0, x))
+    while q:
+        cy, cx = q.popleft()
+        for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            ny, nx = cy + dy, cx + dx
+            if 0 <= ny < H and 0 <= nx < W and not bg[ny, nx] and wa[ny, nx, :3].max() < 32:
+                bg[ny, nx] = True
+                q.append((ny, nx))
+    wa[bg, 3] = 0
+    wa = soften_outline(wa)
+    out = Image.fromarray(wa, 'RGBA')
+    return out.resize((68, 76), Image.NEAREST)
 
 
 def make_banks(ref_path):
@@ -172,12 +145,22 @@ def make_banks(ref_path):
 def main():
     sheet = Image.open(SHEET).convert('RGBA')
     assets = {}
-    assets['buildings/gpt_gatehouse.png'] = clean_crop(sheet, (8, 7, 402, 264), 0.5, mode='gate')
-    # Top arch overlay (upper 90px of gatehouse so Arka walks underneath the arch!)
-    gh = assets['buildings/gpt_gatehouse.png']
-    gh_top = Image.new('RGBA', gh.size, (0, 0, 0, 0))
-    gh_top.paste(gh.crop((0, 0, gh.width, 90)), (0, 0))
-    assets['buildings/gpt_gatehouse_top.png'] = gh_top
+    gate_full = clean_crop(sheet, (8, 7, 402, 264), 0.5)
+
+    # 1. Overlay atas (lengkungan arch, perisai, merlon, atap menara) dengan depth tinggi
+    g_top_a = np.array(gate_full).copy()
+    for y in range(92, 128):
+        for x in range(68, 129):
+            g_top_a[y, x, 3] = 0
+    assets['buildings/gpt_gatehouse_top.png'] = Image.fromarray(g_top_a, 'RGBA')
+
+    # 2. Base layer (menara samping + jalan paving di dasar pintu, dinding atas transparan)
+    g_base_a = np.array(gate_full).copy()
+    for y in range(0, 96):
+        for x in range(68, 129):
+            g_base_a[y, x, 3] = 0
+    assets['buildings/gpt_gatehouse.png'] = Image.fromarray(g_base_a, 'RGBA')
+
     assets['buildings/gpt_cwall.png'] = make_cwall(sheet)
     assets['buildings/gpt_ctower.png'] = clean_crop(sheet, (551, 8, 686, 255), 0.5)
     assets['buildings/gpt_city_bridge.png'] = clean_crop(sheet, (858, 582, 1011, 670), 0.5)

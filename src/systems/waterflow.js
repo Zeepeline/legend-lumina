@@ -29,11 +29,33 @@ function flowTex(sc) {
   x.fillStyle = 'rgba(40,94,172,.55)'; x.fillRect(2, 1, 5, 1);   // bayangan riak
   sc.textures.addCanvas('flowln', c);
 }
+function foamTex(sc) { // T544: tekstur buih ombak tepi pantai (Cobo #5)
+  if (sc.textures.exists('shorefoam')) return;
+  const [c, x] = mk(6, 2);
+  x.fillStyle = 'rgba(240,248,255,0.92)'; x.fillRect(0, 0, 6, 1);
+  x.fillStyle = 'rgba(180,225,255,0.5)'; x.fillRect(1, 1, 4, 1);
+  sc.textures.addCanvas('shorefoam', c);
+}
+function isShorelineAt(M, x, y, ox, oy) {
+  if (!M || M.indoor) return false;
+  const R = M.river;
+  if (R && Math.abs(Math.abs(y - riverY(R, x)) - R.w / 2) < 4.5 && !(x >= R.bridge[0] && x <= R.bridge[1])) return true;
+  const L = typeof pondsAll === 'function' ? pondsAll(M) : null;
+  if (L && L.length && typeof waterE === 'function') {
+    const e = waterE(L, x, y, ox, oy);
+    if (e >= 0.94 && e <= 1.05) return true;
+  }
+  return false;
+}
 Object.assign(World.prototype, {
   updFlow(dt) {
     if (G.title || (this.M && this.M.indoor) || typeof WORLD_POS === 'undefined') return;
-    flowTex(this);
-    if (!this._flow || this._flowM !== this.M) { (this._flow || []).forEach(f => f.img.destroy()); this._flow = []; this._flowM = this.M; }
+    flowTex(this); foamTex(this);
+    if (!this._flow || this._flowM !== this.M) {
+      (this._flow || []).forEach(f => f.img.destroy()); this._flow = [];
+      (this._shoreFoam || []).forEach(f => f.img.destroy()); this._shoreFoam = [];
+      this._flowM = this.M;
+    }
     const cam = this.cameras.main.worldView, off = this.M.benua ? [0, 0] : (WORLD_POS[this.M.id] || [0, 0]);
     for (let k = 0; k < 3 && this._flow.length < FLOW_MAX; k++) {
       const x = cam.x + Math.random() * cam.width, y = cam.y + Math.random() * cam.height, d = waterFlowAt(x + off[0], y + off[1]);
@@ -48,6 +70,23 @@ Object.assign(World.prototype, {
       let dead = f.t >= f.life;
       if (!dead && f.chk > .3) { f.chk = 0; const d = waterFlowAt(f.img.x + off[0], f.img.y + off[1]); if (!d) dead = true; else { f.d = d; f.img.setRotation(Math.atan2(d.y, d.x)); } }
       if (dead) { f.img.destroy(); this._flow.splice(i, 1); }
+    }
+    // T544: buih ombak pasang surut tepi air (siklus 3.2 detik)
+    for (let k = 0; k < 2 && this._shoreFoam.length < 32; k++) {
+      const rx = cam.x + Math.random() * cam.width, ry = cam.y + Math.random() * cam.height;
+      if (!isShorelineAt(this.M, rx, ry, off[0], off[1])) continue;
+      const img = this.add.image(rx, ry, 'shorefoam').setDepth(-9.4e5).setAlpha(0);
+      this._shoreFoam.push({ img, x: rx, y: ry, life: 3.2, t: Math.random() * 3.2 });
+    }
+    for (let i = this._shoreFoam.length - 1; i >= 0; i--) {
+      const sf = this._shoreFoam[i]; sf.t += dt;
+      if (sf.t >= sf.life) sf.t -= sf.life;
+      const wave = Math.sin(sf.t / sf.life * Math.PI * 2);
+      const a = wave > 0 ? wave * 0.82 : Math.max(0, 0.28 + wave * 0.28);
+      sf.img.setAlpha(a).setScale(1 + Math.max(0, wave) * 0.35, 1);
+      if (sf.x < cam.x - 30 || sf.x > cam.right + 30 || sf.y < cam.y - 30 || sf.y > cam.bottom + 30) {
+        sf.img.destroy(); this._shoreFoam.splice(i, 1);
+      }
     }
   }
 });

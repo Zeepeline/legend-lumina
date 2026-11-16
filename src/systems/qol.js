@@ -17,8 +17,20 @@ Object.assign(World.prototype, {
       const x = it.npc ? it.npc.spr.x : it.x, y = it.npc ? it.npc.spr.y - 3 : it.y, d = Math.hypot(x - f.x, y - f.y); if (d < it.r + 6 && d < bd) { bd = d; best = it; }
     }
     const btn = document.getElementById('bA');
-    if (!best) { this.iHint.setVisible(false); if (btn && btn.dataset.ctx) { btn.innerHTML = '⚔<small>SERANG</small>'; delete btn.dataset.ctx; } return; }
-    const npc = best.npc, src = String(best.fn), kind = npc ? 'bicara' : /openChest/.test(src) ? 'buka' : /enterRoom|goto/.test(src) ? 'masuk' : /Lore|text|readLore/.test(src) ? 'baca' : /harvest|fish|garden|pick/i.test(src) ? 'ambil' : 'periksa';
+    if (!best) {
+      this.iHint.setVisible(false); if (this.iHintRing) this.iHintRing.clear();
+      if (btn && btn.dataset.ctx) { btn.innerHTML = '⚔<small>SERANG</small>'; delete btn.dataset.ctx; } return;
+    }
+    // T546: Pendar garis luar objek interaktif yang siap disentuh (Cobo #9)
+    const npc = best.npc;
+    if (!this.iHintRing) this.iHintRing = this.add.graphics().setDepth(1.2);
+    const ring = this.iHintRing; ring.clear();
+    const ox = npc ? npc.spr.x : (best.rect ? best.rect[0] + best.rect[2] / 2 : best.x);
+    const oy = npc ? npc.spr.y : (best.rect ? best.rect[1] + best.rect[3] : best.y);
+    const or = Math.max(10, Math.min(22, (best.r || 16) * .7)), pulse = .35 + Math.sin(this.t * 5) * .22;
+    ring.lineStyle(1.2, 0xffffff, pulse); ring.strokeEllipse(ox, oy - 2, or * 2, or * 1.2);
+    ring.lineStyle(1, 0xffe27a, pulse * .6); ring.strokeEllipse(ox, oy - 2, or * 2.3, or * 1.38);
+    const src = String(best.fn), kind = npc ? 'bicara' : /openChest/.test(src) ? 'buka' : /enterRoom|goto/.test(src) ? 'masuk' : /Lore|text|readLore/.test(src) ? 'baca' : /harvest|fish|garden|pick/i.test(src) ? 'ambil' : 'periksa';
     const icon = { bicara: '💬', buka: '🗝', masuk: '🚪', baca: '📜', ambil: '✋', periksa: '❕' }[kind];
     const name = npc ? (npc.n?.name || '') : (best.name || best.label || '');
     const txt = name ? `${icon}\n${name}` : icon;
@@ -172,9 +184,15 @@ Object.assign(World.prototype, {
     const st = stat(), maxSta = st.maxsta || 100;
     if (S.sta == null) S.sta = maxSta;
     if (isSprinting && isMoving) {
+      this._wasSprinting = true;
       S.sta = Math.max(0, S.sta - dt * 18);
-      if (Math.random() < .2) this.puff(this.pl.x - this.pl.body.velocity.x * .05, this.pl.y - 2);
+      if (Math.random() < .22) this.puff(this.pl.x - this.pl.body.velocity.x * .05, this.pl.y - 2);
     } else {
+      if (this._wasSprinting && !isMoving && this.puff && this.pl) {
+        this._wasSprinting = false;
+        this.puff(this.pl.x - 3, this.pl.y - 2);
+        this.puff(this.pl.x + 3, this.pl.y - 2);
+      } else if (!isSprinting) this._wasSprinting = false;
       const regenRate = isMoving ? 28 : 42;
       S.sta = Math.min(maxSta, S.sta + dt * regenRate);
     }

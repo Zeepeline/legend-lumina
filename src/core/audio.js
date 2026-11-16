@@ -156,36 +156,37 @@ setInterval(() => {
   for (const v of q.vs) { while (!v.done && v.t < AU.ctx.currentTime + .3) { const n = v.n[v.i]; const d = n.b * sp; tone(n.f, v.t, d * .9, v.type, v.vol, AU.music); v.t += d; v.i++; if (v.i >= v.n.length) { if (q.tr.loop) v.i = 0; else v.done = true; } } }
 }, 60);
 let _lastSfx = {}, _sfxDest = null;
-function sfx(n) {
-  if (!AU.ctx) return; const t = AU.ctx.currentTime, D = _sfxDest || AU.sfx;
+function sfx(n, rate = 1) {
+  if (!AU.ctx) return; const t = AU.ctx.currentTime, D = _sfxDest || AU.sfx, r = rate > 0 ? rate : 1;
   if (_lastSfx[n] && t - _lastSfx[n] < .04) return; _lastSfx[n] = t;
   switch (n) {
-    case 'cur': tone(990, t, .035, 'square', .16, D); break;
-    case 'ok': tone(660, t, .05, 'square', .22, D); tone(990, t + .05, .07, 'square', .22, D); break;
-    case 'back': tone(520, t, .05, 'square', .22, D); tone(330, t + .05, .07, 'square', .22, D); break;
-    case 'buzz': tone(110, t, .16, 'square', .3, D); break;
-    case 'bird': { const f = 2200 + Math.random() * 900; for (let i = 0; i < 2 + Math.floor(Math.random() * 3); i++) { tone(f + i * 140, t + i * .09, .05, 'sine', .05, D); tone(f * 1.25, t + i * .09 + .03, .03, 'sine', .035, D); } break; }
-    case 'cricket': for (let i = 0; i < 6; i++) tone(4200, t + i * .045, .018, 'square', .012, D); break;
-    case 'owl': tone(420, t, .22, 'sine', .05, D); tone(360, t + .28, .32, 'sine', .05, D); break;
-    case 'frog': tone(160, t, .07, 'square', .04, D); tone(140, t + .1, .09, 'square', .04, D); break;
-    case 'creak': tone(90, t, .5, 'sawtooth', .015, D); break;
+    case 'cur': tone(990 * r, t, .035, 'square', .16, D); break;
+    case 'ok': tone(660 * r, t, .05, 'square', .22, D); tone(990 * r, t + .05, .07, 'square', .22, D); break;
+    case 'back': tone(520 * r, t, .05, 'square', .22, D); tone(330 * r, t + .05, .07, 'square', .22, D); break;
+    case 'buzz': tone(110 * r, t, .16, 'square', .3, D); break;
+    case 'bird': { const f = (2200 + Math.random() * 900) * r; for (let i = 0; i < 2 + Math.floor(Math.random() * 3); i++) { tone(f + i * 140, t + i * .09, .05, 'sine', .05, D); tone(f * 1.25, t + i * .09 + .03, .03, 'sine', .035, D); } break; }
+    case 'cricket': for (let i = 0; i < 6; i++) tone(4200 * r, t + i * .045, .018, 'square', .012, D); break;
+    case 'owl': tone(420 * r, t, .22, 'sine', .05, D); tone(360 * r, t + .28, .32, 'sine', .05, D); break;
+    case 'frog': tone(160 * r, t, .07, 'square', .04, D); tone(140 * r, t + .1, .09, 'square', .04, D); break;
+    case 'creak': tone(90 * r, t, .5, 'sawtooth', .015, D); break;
     case 'wind': noise(t, 1.6, 500, .03); break;
-    case 'drip': tone(1500, t, .04, 'sine', .05, D); tone(1100, t + .04, .06, 'sine', .03, D); break;
+    case 'drip': tone(1500 * r, t, .04, 'sine', .05, D); tone(1100 * r, t + .04, .06, 'sine', .03, D); break;
     case 'flap': noise(t, .12, 1200, .05); noise(t + .1, .1, 1200, .04); break;
     case 'splash': noise(t, .18, 900, .06); break;
-    case 'blip': tone(1250, t, .018, 'square', .05, D); break;
+    case 'blip': tone(1250 * r, t, .018, 'square', .05, D); break;
     case 'swing': noise(t, .09, 3800, .45, 1200); break;
-    case 'hit': noise(t, .12, 1500, .8); tone(160, t, .07, 'square', .22, D); break;
-    case 'crit': noise(t, .2, 2600, 1); tone(240, t, .06, 'square', .3, D); tone(120, t + .06, .12, 'square', .3, D); break;
-    case 'hurt': noise(t, .18, 600, .9); sweep(240, 80, t, .16, 'sawtooth', .22); break;
-    case 'fire': noise(t, .3, 500, .7, 2500); sweep(180, 520, t, .2, 'sawtooth', .1); break;
-    case 'boom': noise(t, .35, 300, 1, 80); sweep(160, 40, t, .3, 'square', .2); break;
-    case 'heal': [523, 659, 784, 1047].forEach((f, i) => tone(f, t + i * .07, .18, 'sine', .32, D)); break;
-    case 'die': sweep(700, 80, t, .3, 'square', .18); noise(t, .2, 900, .5); break;
-    case 'lvl': [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => tone(f, t + i * .07, .14, 'square', .2, D)); break;
-    case 'chest': [784, 988, 1175, 1568].forEach((f, i) => tone(f, t + i * .08, .16, 'square', .2, D)); break;
-    case 'coin': tone(1320, t, .05, 'square', .15, D); tone(1760, t + .05, .1, 'square', .15, D); break;
-    case 'save': [880, 1175, 1568].forEach((f, i) => tone(f, t + i * .08, .12, 'triangle', .3, D)); break;
+    case 'hit': noise(t, .12, 1500, .8); tone(160 * r, t, .07, 'square', .22, D); break;
+    case 'crit': noise(t, .2, 2600, 1); tone(240 * r, t, .06, 'square', .3, D); tone(120 * r, t + .06, .12, 'square', .3, D); break;
+    case 'hurt': noise(t, .18, 600, .9); sweep(240 * r, 80 * r, t, .16, 'sawtooth', .22); break;
+    case 'fire': noise(t, .3, 500, .7, 2500); sweep(180 * r, 520 * r, t, .2, 'sawtooth', .1); break;
+    case 'boom': noise(t, .35, 300, 1, 80); sweep(160 * r, 40 * r, t, .3, 'square', .2); break;
+    case 'heal': [523, 659, 784, 1047].forEach((f, i) => tone(f * r, t + i * .07, .18, 'sine', .32, D)); break;
+    case 'die': sweep(700 * r, 80 * r, t, .3, 'square', .18); noise(t, .2, 900, .5); break;
+    case 'lvl': [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => tone(f * r, t + i * .07, .14, 'square', .2, D)); break;
+    case 'chest': [784, 988, 1175, 1568].forEach((f, i) => tone(f * r, t + i * .08, .16, 'square', .2, D)); break;
+    case 'coin': tone(1320 * r, t, .05, 'square', .15, D); tone(1760 * r, t + .05, .1, 'square', .15, D); break;
+    case 'bush': noise(t, .08, 1400, .14, 600); tone(480 * r, t, .04, 'triangle', .05, D); break;
+    case 'save': [880, 1175, 1568].forEach((f, i) => tone(f * r, t + i * .08, .12, 'triangle', .3, D)); break;
     case 'spore': sweep(400, 200, t, .15, 'triangle', .2); break;
     case 'jump': sweep(200, 600, t, .12, 'square', .12); break;
     case 'roar': noise(t, .6, 250, 1, 900); sweep(120, 60, t, .5, 'sawtooth', .25); break;
