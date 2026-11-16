@@ -205,36 +205,6 @@ Object.assign(World.prototype, {
     if (pl.isClimbing) { pl.isClimbing = false; pl.clearTint(); }
     return false;
   },
-  tryGlide(v, m, dt) {
-    const pl = this.pl;
-    if (this.M.indoor || !pl || pl.dead) { this.stopGlide(); return false; }
-    // Meluncur aktif bila menahan tombol dash di udara / setelah panjat atau saat gliding
-    const wantGlide = (Input.keys?.dash || Input.keys?.b) && S.sta > 0 && !pl.isClimbing;
-    if (wantGlide && (pl.isGliding || (m > .1 && pl.body.velocity.y > 20))) {
-      pl.isGliding = true;
-      S.sta = Math.max(0, S.sta - dt * 14);
-      pl.setVelocity(v.x * 105, 32); // kecepatan meluncur horizontal lincah, turun perlahan
-      if (!this.gliderSpr) {
-        this.gliderSpr = this.add.image(pl.x, pl.y - 26, 'glider').setOrigin(.5, .5).setDepth(pl.y + 10);
-        sfx('dash');
-      } else {
-        this.gliderSpr.setPosition(pl.x, pl.y - 26).setDepth(pl.y + 10).setFlipX(pl.flipX);
-      }
-      if (Math.random() < .2) this.puff(pl.x - (v.x || 0) * 8, pl.y - 12);
-      if (S.sta <= 0) {
-        this.stopGlide();
-        popWorld(pl.x, pl.y - 28, 'Glider Terlipat!', 'mpc');
-        sfx('buzz');
-      }
-      return true;
-    }
-    if (pl.isGliding) this.stopGlide();
-    return false;
-  },
-  stopGlide() {
-    const pl = this.pl; if (pl) pl.isGliding = false;
-    if (this.gliderSpr) { this.gliderSpr.destroy(); this.gliderSpr = null; }
-  },
 });
 // ukuran & transparansi tombol layar (#74 sebagian)
 function applyPadOpt() { const r = document.documentElement.style; r.setProperty('--bs', [.85, 1, 1.15, 1.3][OPT.btnSize != null ? OPT.btnSize : 1]); r.setProperty('--ba', [1, .75, .5][OPT.btnAlpha || 0]); }

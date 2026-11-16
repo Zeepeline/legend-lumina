@@ -225,7 +225,7 @@ class World extends Phaser.Scene {
       else if (locked) { pl.setVelocity(0); pl.anims.stop(); pl.setFrame(sd + '0'); }
       else {
         const v = Input.vec(), m = Math.hypot(v.x, v.y), isShift = !!(Input.keys?.dash && S.sta > 0);
-        const climbing = this.tryClimb(v, m, dt), gliding = !climbing && this.tryGlide(v, m, dt);
+        const climbing = this.tryClimb(v, m, dt), gliding = false; /* glider dihapus v1.43.2 */
         const sprintMul = isShift && m > .15 && !climbing && !gliding ? 1.55 : 1;
         if (!climbing && !gliding) this.updStamina(dt, isShift, m > .15);
         const sp = (pl.atkT > 0 ? 26 : this.holdA > .45 ? 50 : 86) * stat().spd * this.speedMul() * sprintMul;

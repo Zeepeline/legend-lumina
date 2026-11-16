@@ -16,7 +16,7 @@
 Pilihan user yang sudah dikunci:
 - Pendekatan: **satukan wilayah lama** (bukan bikin peta baru).
 - Tumpang tindih: **geser & beri jarak** (sudah via `WORLD_POS`).
-- Gerak: **stamina & lari cepat, memanjat tebing, meluncur (glider)**. Berenang **TIDAK** dipilih.
+- Gerak: **stamina & lari cepat, memanjat tebing, ~~meluncur (glider)~~ (dihapus pemilik v1.43.2)**. Berenang **TIDAK** dipilih.
 
 ### DEFINISI SELESAI (ditegaskan user 12 Nov, dengan screenshot)
 User melihat kamera **berhenti di tepi wilayah** (karakter tidak di tengah layar, di balik tepi ada dinding pohon). Itu yang TIDAK diinginkan. Target:
@@ -113,12 +113,12 @@ Uji cepat: `localStorage.lumina_benua='1'` lalu muat ulang; `__game.sc.M.id === 
 ### Tahap 3 — Gerak (pilihan user) [SELESAI v1.27.3]
 - Stamina + sprint (bar di HUD, konsumsi stamina saat dash/sprint, regen otomatis).
 - Panjat tebing (deteksi tebing/dinding, konsumsi 20 sta/s, lepas saat habis).
-- Glider dari tempat tinggi (art sayap glider kustom, melayang lembut 105 px/s, kuras stamina).
+- (DIHAPUS v1.43.2 atas permintaan pemilik) Glider dari tempat tinggi (art sayap glider kustom, melayang lembut 105 px/s, kuras stamina).
 - **Tidak ada berenang.** Air tetap penghalang.
 
 ### Tahap 4 — Konten eksplorasi [SELESAI v1.27.3]
 - Viewpoint (titik pandang panorama di bukit/puncak tebing, buka kabut 360px di peta + reward EXP).
-- Lumina Shard (kristal oculus bercahaya terapung di lokasi tebing sulit, butuh kombinasi panjat/glider, simpan progres di `S.shards`).
+- Lumina Shard (kristal oculus bercahaya terapung di lokasi tebing sulit, butuh kombinasi panjat, simpan progres di `S.shards`).
 
 ## 4. Gotcha teknis (sudah pernah bikin bug)
 - Script **global klasik**, urutan muat di `index.html`. Mixin `Object.assign(World.prototype, {...})`. Jangan override fungsi dari file yang dimuat belakangan — pakai delegate (contoh: `openMapNew`, `openFishLogNew`). `const/let` global **tidak** ada di `window`.
