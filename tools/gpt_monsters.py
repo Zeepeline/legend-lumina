@@ -19,16 +19,16 @@ L, R = (160, 238), (898, 992)  # rentang x kolom IDLE panel kiri & kanan
 TABEL = {
     'slime': (L, 86, 120, 20, 18), 'slimeb': (L, 120, 154, 20, 18), 'slimer': (L, 154, 188, 20, 18), 'slimei': (L, 188, 222, 20, 18),
     'slimep': (L, 222, 254, 20, 18), 'slimef': (L, 254, 288, 20, 18), 'g_gold_slime': (L, 288, 316, 20, 18),
-    'wolf': (L, 390, 424, 27, 16), 'wolfs': (L, 424, 458, 27, 16), 'snake': (L, 460, 490, 22, 16), 'g_gsnake': (L, 484, 528, 26, 20),
+    'snake': (L, 460, 490, 22, 16), 'g_gsnake': (L, 484, 528, 26, 20),
     'boar': (L, 526, 562, 26, 15), 'frog': (L, 562, 596, 22, 15), 'salam': (L, 596, 630, 22, 16),
     'bat': (L, 662, 692, 24, 15), 'batc': ((238, 330), 696, 728, 24, 15), 'bee': (L, 728, 762, 18, 13), 'wisp': (L, 760, 796, 14, 16),
     'shroom': (L, 862, 900, 20, 18), 'plant': (L, 900, 936, 20, 20), 'squeen': (L, 930, 996, 24, 24),
     'ghost': (R, 296, 336, 20, 17), 'golem': (R, 404, 452, 26, 20), 'golemi': (R, 450, 492, 26, 20), 'g_golemk': (R, 490, 530, 26, 20),
-    'g_kryos': ((898, 1040), 598, 650, 30, 22), 'g_bounty_wolf': (R, 650, 692, 27, 16), 'g_bounty_frog': (R, 692, 736, 22, 16),
+    'g_kryos': ((898, 1040), 598, 650, 30, 22), 'g_bounty_frog': (R, 692, 736, 22, 16),
     'g_bounty_gargoyle': (R, 736, 780, 26, 22), 'g_king_slime': (R, 776, 822, 22, 20),
 }
 
-SPLIT = {'g_bounty_wolf', 'g_king_slime'}
+SPLIT = {'g_king_slime'}
 
 def comps(cell, split=False):
     m = cell[..., 3] >= 150

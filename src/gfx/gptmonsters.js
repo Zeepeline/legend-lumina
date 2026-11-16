@@ -2,9 +2,9 @@
 // Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame).
 // Tekstur lama (slime, wolf, …) digambar ULANG di kanvasnya sendiri (ukuran sama) agar animasi <key>_mv tetap sah.
 // Kunci baru g_<id> = musuh khusus/boss yang dulu meminjam sprite monster lain → tekstur & animasi baru, ENEMY[id].tex diganti.
-const GPT_MON = ['slime', 'slimeb', 'slimer', 'slimei', 'slimep', 'slimef', 'wolf', 'wolfs', 'snake', 'boar', 'frog', 'salam',
+const GPT_MON = ['slime', 'slimeb', 'slimer', 'slimei', 'slimep', 'slimef', 'snake', 'boar', 'frog', 'salam',
   'bat', 'batc', 'bee', 'wisp', 'shroom', 'plant', 'squeen', 'ghost', 'golem', 'golemi'];
-const GPT_MON_NEW = ['gold_slime', 'gsnake', 'golemk', 'kryos', 'bounty_wolf', 'bounty_frog', 'bounty_gargoyle', 'king_slime'];
+const GPT_MON_NEW = ['gold_slime', 'gsnake', 'golemk', 'kryos', 'bounty_frog', 'bounty_gargoyle', 'king_slime'];
 IMG_LIST.push(...GPT_MON.map(k => 'mon_' + k), ...GPT_MON_NEW.map(id => 'mon_g_' + id));
 function applyGptMonsters(sc) {
   const T = sc.textures, A = sc.anims;
@@ -54,6 +54,9 @@ function applyGptMonsters(sc) {
     regW('wolf_hd_howl', 49, 54, 9, 0);
     regW('wolf_hd_mv', 7, 13, 10, -1);
     if (ENEMY.wolf) { ENEMY.wolf.tex = 'wolf_hd'; ENEMY.wolf.scale = 0.44; }
+    // serigala salju & Taring Perak memakai Forest Wolf (strip 2 frame lama dihapus), dibedakan warna tetap
+    if (ENEMY.wolfs) Object.assign(ENEMY.wolfs, { tex: 'wolf_hd', scale: 0.46, keepTint: 0xd4eaff });
+    if (ENEMY.bounty_wolf) Object.assign(ENEMY.bounty_wolf, { tex: 'wolf_hd', scale: 0.6, keepTint: 0xc8c8dc });
   }
   const wehd = IMGEL.mon_wolf_elite_hd;
   if (wehd) {
@@ -149,4 +152,13 @@ function applyGptMonsters(sc) {
       delete ENEMY.goblin_shaman.ch;
     }
   }
+}
+
+// warna tetap (keepTint): clearTint setelah kilatan kena pukul kembali ke warna ini, bukan ke warna asli
+{ const _se = World.prototype.spawnEnemy;
+  World.prototype.spawnEnemy = function () {
+    const e = _se.apply(this, arguments), K = e && e.D && e.D.keepTint;
+    if (K) { const s = e.spr, clr = s.clearTint; s.clearTint = function () { clr.call(this); return this.setTint(K); }; s.setTint(K); }
+    return e;
+  };
 }

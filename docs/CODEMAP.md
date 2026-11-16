@@ -507,7 +507,7 @@ _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan ole
 _Penyeragaman gaya: PATOKAN = pohon treeA / treeAd / treeSn (hijau alami, garis luar halus) + set Verdant yang senada._
 `styleLeafPalette()` 12 · `styleRecolor()` 18 · `_applyGptSwapStyle` 26
 
-## src/gfx/gptmonsters.js (153 baris)
+## src/gfx/gptmonsters.js (165 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
