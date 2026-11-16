@@ -515,6 +515,10 @@ _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py 
 _Sprite sheet lengkap Arka dari ChatGPT (assets/raw/hero/arka_sheet1..6.png → tools/gen_hero.py → assets/img/hero_arka.png)._
 `HERO_FW` 5 · `HERO_ROW` 6 · `regHeroArka()` 13 · `heroFrame()` 22
 
+## src/gfx/enemy_sheets.js (55 baris)
+_Lembar musuh baru dari ChatGPT (assets/raw/enemy/<id>.png → tools/gen_enemy.py → assets/img/esh_<id>.png)._
+`ESH` 5 · `regEnemySheets()` 9 · `eshFrame()` 29
+
 ## src/main.js (39 baris)
 _Mulai game Phaser_
 `game` 20

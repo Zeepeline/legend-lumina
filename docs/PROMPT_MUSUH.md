@@ -2,7 +2,7 @@
 
 Acuan gaya: `assets/reference/musuh_gaya_ref.png` (Arka, Forest Wolf, Goblin, Slime — gaya & ketebalan garis yang sudah ada di game).
 Cara pakai: SATU obrolan ChatGPT, unggah `musuh_gaya_ref.png`, lalu kirim prompt satu musuh per gambar. Musuh berikutnya di obrolan yang sama.
-Setiap lembar = 4 kolom × 6 baris, 1024×1536, latar magenta. Simpan ke `assets/raw/enemy/<id>.png` (nama id di judul).
+Setiap lembar = 4 kolom × 6 baris, 1024×1536, latar magenta. Simpan ke `assets/raw/enemy/<id>.png` (nama id di judul), lalu `python3 tools/gen_enemy.py <id>` dan tambahkan entri di `ESH` (`src/gfx/enemy_sheets.js`, fw/fh dari keluaran alat).
 Musuh biasa TIDAK butuh animasi mati: saat mati game membuatnya putih lalu memudar (v1.43.1). Bos tetap punya animasi mati.
 Tidak perlu lembar baru: slime merah/es/racun/api (pakai Slime yang ada + warna), Kelelawar Gua & Gargoyle (warna dari Kelelawar),
 Golem Es & Golem Purba (warna dari Golem), Ular Raksasa (Ular diperbesar), Raja Rawa Toksin (Katak diperbesar). Bos menyusul di lembar terpisah.
@@ -116,7 +116,7 @@ Row 3 wind-up: inflates throat, glow in the mouth. Row 4 attack: short flame spu
 Row 5 hurt recoil / staggered.
 ```
 
-### 12. `golem` — Golem (juga Golem Es & Golem Purba lewat warna)
+### 12. `golem` — Golem ✅ SUDAH DIPASANG v1.44.0 (juga Golem Es & Golem Purba lewat warna)
 ```
 [blok umum]
 Monster: ancient war golem, cracked dark granite body bound with rusted chains, moss and old spear tips stuck in it, glowing amber rune cracks and eyes, massive fists. About 1.5x the hero's height.
