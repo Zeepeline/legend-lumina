@@ -28,6 +28,7 @@ function regPortrait(T, k) {
   const t = T.addCanvas('ch_' + k, c); ['down', 'up', 'side'].forEach((d, di) => { for (let f = 0; f < 4; f++) t.add(d + f, 0, (di * 4 + f) * NPC_W, 0, NPC_W, NPC_H); });
 }
 function regChar(T, k) {
+  if (k === 'hero' && IMGEL.hero_arka && typeof regHeroArka === 'function') return regHeroArka(T); /* sheet lengkap ChatGPT */
   if (k === 'hero' && IMGEL.hero_custom) {
     const img = IMGEL.hero_custom;
     const t = T.addImage('ch_' + k, img);

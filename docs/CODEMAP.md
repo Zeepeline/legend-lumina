@@ -187,9 +187,9 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 23 · `shadowIndex()` 24
 
-## src/gfx/textures.js (151 baris)
+## src/gfx/textures.js (152 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
-`ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 16 · `addStrip()` 17 · `darkTree()` 22 · `NPC_W` 24 · `regPortrait()` 25 · `regChar()` 30 · `buildTextures()` 46
+`ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 16 · `addStrip()` 17 · `darkTree()` 22 · `NPC_W` 24 · `regPortrait()` 25 · `regChar()` 30 · `buildTextures()` 47
 
 ## src/world/ground_verdant.js (105 baris)
 _Tanah Verdant (Padang, Hutan, Desa) meniru assets/reference/target_padang.png._
@@ -510,6 +510,10 @@ _Penyeragaman gaya: PATOKAN = pohon treeA / treeAd / treeSn (hijau alami, garis 
 ## src/gfx/gptmonsters.js (165 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
+
+## src/gfx/hero_arka.js (69 baris)
+_Sprite sheet lengkap Arka dari ChatGPT (assets/raw/hero/arka_sheet1..6.png → tools/gen_hero.py → assets/img/hero_arka.png)._
+`HERO_FW` 5 · `HERO_ROW` 6 · `regHeroArka()` 13 · `heroFrame()` 22
 
 ## src/main.js (39 baris)
 _Mulai game Phaser_

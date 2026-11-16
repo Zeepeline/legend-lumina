@@ -1,0 +1,68 @@
+'use strict';
+// Sprite sheet lengkap Arka dari ChatGPT (assets/raw/hero/arka_sheet1..6.png → tools/gen_hero.py → assets/img/hero_arka.png).
+// Atlas: frame 48×40, kaki di baris paling bawah, tengah badan di x 24. Satu baris = satu animasi 4 frame. "side" menghadap kanan (kiri = flipX).
+// Pemutar animasi: setiap akhir update scene, frame pemain dipilih dari keadaannya (mati, berguling, kena pukul, serang, sihir, busur, jalan, diam).
+const HERO_FW = 48, HERO_FH = 40;
+const HERO_ROW = {
+  idle_down: 0, walk_down: 1, idle_up: 2, walk_up: 3, idle_side: 4, walk_side_a: 5, walk_side: 6, atk1_down: 7, atk2_down: 8, atk1_up: 9,
+  atk2_up: 10, atk1_side: 11, atk2_side: 12, atk3_down: 13, atk3_up: 14, atk3_side: 15, heavy_down: 16, heavy_up: 17, heavy_side: 18,
+  roll_down: 19, roll_up: 20, roll_side: 21, hurt: 22, die: 23, rise: 24, cast_down: 25, cast_up: 26, cast_side: 27, bow_down: 28,
+  bow_side_a: 29, bow_side: 30, bow_up: 31, fish_cast: 32, fish_pull: 33, pick: 34, hoe: 35, cheer: 36, cheer_b: 37, sleep: 38
+};
+IMG_LIST.push('hero_arka');
+function regHeroArka(T) {
+  const img = IMGEL.hero_arka; if (T.exists('ch_hero')) T.remove('ch_hero');
+  const t = T.addImage('ch_hero', img);
+  for (const k in HERO_ROW) for (let i = 0; i < 4; i++) t.add(k + i, 0, i * HERO_FW, HERO_ROW[k] * HERO_FH, HERO_FW, HERO_FH);
+  // nama frame lama (dipakai kode lama sebelum pemutar menimpa): down0..3 / up0..3 / side0..3
+  for (const d of ['down', 'up', 'side']) ['idle_' + d + '0', 'walk_' + d + '0', 'walk_' + d + '2', 'atk1_' + d + '1'].forEach((f, i) => {
+    const r = HERO_ROW[f.slice(0, -1)]; t.add(d + i, 0, +f.slice(-1) * HERO_FW, r * HERO_FH, HERO_FW, HERO_FH);
+  });
+}
+function heroFrame(sc, dt) {
+  const pl = sc.pl; if (!pl || !pl.body || !pl.active) return;
+  const A = pl._ha || (pl._ha = { k: '', t: 0 }), sd = pl.dir === 'left' || pl.dir === 'right' ? 'side' : (pl.dir || 'down');
+  for (const k of ['_hurt', '_cast', '_bow', '_heavy', '_atk', '_roll']) if (pl[k] > 0) pl[k] -= dt;
+  let k, f, fps = 0, once = false;
+  const moving = pl.body.velocity.length() > 8;
+  if (pl.dead) { k = 'die'; fps = 6; once = true; }
+  else if (pl._roll > 0) { k = 'roll_' + sd; f = Math.min(3, Math.floor((.3 - pl._roll) / .075)); }
+  else if (pl._heavy > 0) { k = 'heavy_' + sd; f = Math.min(3, 2 + Math.floor((.45 - Math.min(.45, pl._heavy)) / .2)); }
+  else if (sc.charged) { k = 'heavy_' + sd; f = Math.floor(sc.t * 6) % 2; }
+  else if (pl._hurt > 0) { k = 'hurt'; f = sd === 'side' ? 2 + (pl._hurt < .12 ? 1 : 0) : (pl._hurt < .12 ? 1 : 0); }
+  else if (pl._bow > 0) { k = sd === 'side' ? 'bow_side' : sd === 'up' ? 'cast_up' : 'bow_down'; f = Math.min(3, Math.floor((.4 - pl._bow) / .1)); }
+  else if (pl._cast > 0) { k = 'cast_' + sd; f = Math.min(3, Math.floor((.4 - pl._cast) / .1)); }
+  else if (pl._atk > 0) {
+    const c = pl.combo || 1, fin = c === 5; k = (fin ? 'atk3_' : c % 2 ? 'atk1_' : 'atk2_') + sd;
+    const D = fin ? .4 : .28; f = Math.min(3, Math.floor((D - Math.min(D, pl._atk)) / (D / 4)));
+  }
+  else if (moving) { k = 'walk_' + sd; fps = 9 * Math.min(1.4, Math.max(.7, pl.body.velocity.length() / 70)); }
+  else { k = 'idle_' + sd; fps = 4; }
+  if (A.k !== k) { A.k = k; A.t = 0; } else A.t += dt;
+  if (f == null) { const n = Math.floor(A.t * fps); f = once ? Math.min(3, n) : n % 4; }
+  if (pl.anims.isPlaying) pl.anims.stop();
+  const name = k + f; if (pl.frame.name !== name) pl.setFrame(name);
+}
+{ const W = World.prototype, _cr = W.create;
+  W.create = function (data) {
+    const r = _cr.apply(this, arguments);
+    if (this.pl && IMGEL.hero_arka) {
+      this.pl.body.setSize(10, 6).setOffset((HERO_FW - 10) / 2, HERO_FH - 7);
+      if (!this._heroHook) { this._heroHook = 1; this.events.on('postupdate', (t, d) => heroFrame(this, Math.min(.1, d / 1000))); }
+    }
+    return r;
+  };
+  const wrap = (fn, after) => {
+    const o = W[fn]; if (!o) return;
+    W[fn] = function () {
+      const pl = this.pl, s0 = pl && [S.hp, S.mp, pl.atkCd], r = o.apply(this, arguments);
+      if (pl) after.call(this, pl, s0); return r;
+    };
+  };
+  wrap('attack', function (pl, s0) { if (pl.atkCd > s0[2] && !pl._bow) pl._atk = pl.combo === 5 ? .4 : .28; });
+  wrap('dash', function (pl) { if (pl.dashStartT === this.t) { pl._roll = .3; pl._atk = 0; } });
+  wrap('hurtPlayer', function (pl, s0) { if (S.hp < s0[0]) pl._hurt = .25; });
+  wrap('magic', function (pl, s0) { if (S.mp < s0[1] || pl.atkCd !== s0[2]) pl._cast = .4; });
+  wrap('shootArrow', function (pl) { pl._bow = .4; pl._atk = 0; });
+  wrap('spin', function (pl) { pl._heavy = .45; });
+}
