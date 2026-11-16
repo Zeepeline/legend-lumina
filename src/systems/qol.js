@@ -172,10 +172,10 @@ Object.assign(World.prototype, {
     const st = stat(), maxSta = st.maxsta || 100;
     if (S.sta == null) S.sta = maxSta;
     if (isSprinting && isMoving) {
-      S.sta = Math.max(0, S.sta - dt * 24);
+      S.sta = Math.max(0, S.sta - dt * 18);
       if (Math.random() < .2) this.puff(this.pl.x - this.pl.body.velocity.x * .05, this.pl.y - 2);
     } else {
-      const regenRate = isMoving ? 16 : 28;
+      const regenRate = isMoving ? 28 : 42;
       S.sta = Math.min(maxSta, S.sta + dt * regenRate);
     }
   },

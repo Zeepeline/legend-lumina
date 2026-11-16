@@ -100,8 +100,25 @@ Object.assign(World.prototype, {
     else if (e.alert && d > 230) e.alert = 0;
     // ancang-ancang: tanda ! + kedip setiap kali musuh mulai bersiap menyerang
     const wind = ['wind', 'swind', 'cwind', 'throw'].includes(e.st);
-    if (wind && !e.wasWind) { markOver(this, e, '!', '#ffd84a'); this.tweens.add({ targets: s, scaleX: e.sc * 1.12, duration: 80, yoyo: true, repeat: 1 }); }
+    if (wind && (!e.wasWind || !e.mk)) {
+      markOver(this, e, '!', '#ffd84a');
+      this.tweens.add({ targets: s, scaleX: e.sc * 1.12, duration: 80, yoyo: true, repeat: 1 });
+    }
     e.wasWind = wind;
+    // T501: Jendela Hukuman (vulnT = 0.9s) setelah serangan menerjang/berat meleset
+    const atkSt = ['atk', 'dash', 'lunge', 'run', 'swoop', 'charge'].includes(e.st);
+    if (atkSt) {
+      e._wasAtkSt = true; if (pl.inv > .85) e._atkHit = true;
+    } else if (e._wasAtkSt) {
+      e._wasAtkSt = false;
+      if (!e._atkHit && d < 95) {
+        e.vulnT = .9; markOver(this, e, '★', '#ffe88a');
+        if (this.jxPostureBreak) this.jxPostureBreak(s.x, s.y - s.displayHeight * 0.5);
+        else if (this.jx) this.jx('star', s.x, s.y - s.displayHeight - 4, 3, { tint: 0xffe88a });
+      }
+      e._atkHit = false;
+    }
+    if (e.vulnT > 0) e.vulnT -= dt;
     if (e.D.ai === 'shoot' && e.alert === 2 && e.shootT < .35 && !e.shootWarn) { e.shootWarn = 1; markOver(this, e, '!', '#ffd84a'); }
     if (e.shootT > .5) e.shootWarn = 0;
     // pola tambahan musuh elit: lingkaran peluru
@@ -129,10 +146,11 @@ Object.assign(World.prototype, {
       }
     }
   },
-  // penanda bahaya: serangan dari luar layar
+  // penanda bahaya: serangan dari luar layar (T471)
   dangerFrom(sx, sy) {
-    const v = this.cameras.main.worldView; if (v.contains(sx, sy)) return;
-    const pl = this.pl, dx = sx - pl.x, dy = sy - pl.y;
+    const v = this.cameras.main.worldView, pl = this.pl;
+    const dx = sx - pl.x, dy = sy - pl.y;
+    if (v && v.width > 0 && v.contains(sx, sy) && Math.hypot(dx, dy) < 180) return;
     dangerEdge(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'bottom' : 'top'));
   },
   // animasi terkena pukul pada Arka

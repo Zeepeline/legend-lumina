@@ -127,6 +127,10 @@ async function openMapNew(sc) {
     for (const B of M.bosses || []) if (!S.flags[B.flag] && S.stage >= B.need) mk2('mb', B.x, B.y - 10, '☠');
     for (const ex of M.exits || []) { const X = clamp(ex.x + ex.w / 2, 30 / s, M.w - 30 / s), Y = clamp(ex.y + ex.h / 2, 8 / s, M.h - 8 / s); const e = document.createElement('div'); e.className = 'mk mx'; e.style.left = X * s + 'px'; e.style.top = Y * s + 'px'; e.innerHTML = '➜ ' + (S.seen[ex.to] ? ex.label : '???'); wrap.appendChild(e); }
     if (S.tmap && S.tmap.map === M.id) { const e = document.createElement('div'); e.className = 'mk mt'; e.style.left = S.tmap.x * s + 'px'; e.style.top = S.tmap.y * s + 'px'; e.textContent = '✖'; wrap.appendChild(e); }
+    if (S.lost && S.lost.map === M.id) {
+      const e = document.createElement('div'); e.className = 'mk mq';
+      e.style.left = S.lost.x * s + 'px'; e.style.top = S.lost.y * s + 'px'; e.textContent = '✦'; wrap.appendChild(e);
+    }
     if (q) { const e = document.createElement('div'); e.className = 'mk mq'; e.style.left = q.x * s + 'px'; e.style.top = (q.y - 6) * s + 'px'; e.textContent = '★'; wrap.appendChild(e); }
     // Render Custom Pins (#62)
     S.pins = S.pins || {};

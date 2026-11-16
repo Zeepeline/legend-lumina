@@ -126,6 +126,26 @@ Object.assign(World.prototype, {
     }
     this.tweens.add({ targets: g, alpha: 0, delay: 3500, duration: 2500, onComplete: () => g.destroy() });
   },
+  jxDustRing(x, y, r = 18) { // cincin debu hantaman melingkar di tanah ala Souls-lite
+    const g = this.add.graphics().setDepth(y - 1);
+    g.lineStyle(1.8, 0xdfd3b8, 0.65);
+    g.strokeEllipse(x, y, r * 0.7, r * 0.45);
+    this.tweens.add({
+      targets: g, scaleX: 1.8, scaleY: 1.6, alpha: 0, duration: 220,
+      ease: 'Cubic.easeOut', onComplete: () => g.destroy()
+    });
+  },
+  jxPostureBreak(x, y) { // kilau pecah kristal emas saat musuh stagger / terbuka riposte
+    this.jx('star', x, y, 7, { tint: 0xffea78 });
+    this.jx('spark', x, y, 9, { tint: 0xffffff, spread: 180 });
+    const g = this.add.graphics().setDepth(y + 20).setBlendMode(Phaser.BlendModes.ADD);
+    g.fillStyle(0xfff2a0, 0.85);
+    g.fillCircle(x, y, 12);
+    this.tweens.add({
+      targets: g, scaleX: 2.2, scaleY: 2.2, alpha: 0, duration: 180,
+      ease: 'Quad.easeOut', onComplete: () => g.destroy()
+    });
+  },
   jxAura(dt) { // aura status: terbakar, racun, beku/dingin, terhuyung, mengamuk (musuh) + status pemain
     const L = this._jxL; L.au = (L.au || 0) - dt; if (L.au > 0) return; L.au = OPT.lite ? .16 : .08;
     for (const e of this.enemies || []) {
@@ -243,4 +263,19 @@ Object.assign(World.prototype, {
     if (this.puff) for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2 + .4; this.puff(x + Math.cos(a) * R * .6, y + Math.sin(a) * R * .45); }
     return r;
   };
+  if (W.slashFx) {
+    const _slash = W.slashFx;
+    W.slashFx = function (wt, combo) {
+      const pl = this.pl;
+      if (pl) {
+        const [dx, dy] = DIRV[pl.dir], cIdx = ((combo || 1) - 1) % 5, fin = cIdx === 4;
+        const ang = Math.atan2(dy, dx);
+        this.jx('spark', pl.x + dx * 14, pl.y - 7 + dy * 8, fin ? 5 : 2, {
+          ang, spread: 35, tint: wt === 'axe' ? 0xffc27a : 0xfffae0
+        });
+        if (fin) this.jxDustRing(pl.x + dx * 16, pl.y + 2, 22);
+      }
+      return _slash.apply(this, arguments);
+    };
+  }
 }

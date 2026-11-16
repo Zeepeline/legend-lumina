@@ -8,7 +8,7 @@ R = os.path.join(os.path.dirname(__file__), '..'); TMP = '/tmp/gptprep'; os.make
 N, B1, B2 = 'nature/nat_tree_%03d.png', 'new_builidng_gpt_1/bld_gpt1_%03d.png', 'new_building_gpt_2/bld_gpt2_%03d.png'
 # kunci tekstur lama: (sumber, lebar maks, tinggi maks)
 SWAP = {
-  'i_treeA': (N % 1, 70, 78), 'i_treeB': (N % 5, 68, 76), 'round': (N % 20, 50, 62), 'pine': (N % 6, 40, 60), 'pined': (N % 8, 40, 60), 'i_treeWoodsPine': (N % 7, 60, 72),
+  'i_treeA': (N % 1, 70, 78), 'i_treeB': (N % 5, 68, 76), 'round': (N % 20, 50, 62),
   'i_apple1': (N % 12, 66, 76), 'i_apple2': (N % 12, 62, 72), 'i_orange1': (N % 13, 60, 76),
   'i_bushG1': (N % 23, 48, 44), 'i_bushG2': (N % 28, 50, 46), 'i_bushP': (N % 26, 34, 38), 'i_bushW': (N % 25, 34, 32), 'i_bushP2': (N % 30, 32, 32),
   'bush': (N % 29, 28, 19), 'bushy': (N % 23, 28, 20), 'bushv': (N % 27, 28, 20),
@@ -29,9 +29,13 @@ def fit(src, w, h, out):
     s = min(w / im.width, h / im.height); im = im.resize((max(1, round(im.width * s)), max(1, round(im.height * s))), Image.LANCZOS)
     a = np.array(im); a[:, :, 3] = (a[:, :, 3] > 110) * 255; Image.fromarray(a).save(out); return im.size
 sizes = {}
-for k, (src, w, h) in SWAP.items(): sizes[k] = fit(src, w, h, os.path.join(R, 'assets/img/gpt_%s.png' % k))
+def sub(k):
+    if k.startswith('i_house') or k in ('i_market', 'windmill'): return 'buildings'
+    if any(x in k for x in ('tree', 'pine', 'bush', 'apple', 'orange', 'stump', 'log', 'rock', 'pebble', 'mush', 'cliff')): return 'nature'
+    return 'props'
+for k, (src, w, h) in SWAP.items(): sizes[k] = fit(src, w, h, os.path.join(R, 'assets/img/%s/gpt_%s.png' % (sub(k), k)))
 for nid, n in LOOK.items():
     p = TMP + '/n.png'; small = fit('new_characters_gpt_1/char_gpt1_%03d.png' % n, 30, 30 if n < 86 else 22, p)
-    im = Image.open(p); c = Image.new('RGBA', (32, 32)); c.paste(im, ((32 - im.width) // 2, 32 - im.height)); c.save(os.path.join(R, 'assets/img/npc_g%03d.png' % n))
+    im = Image.open(p); c = Image.new('RGBA', (32, 32)); c.paste(im, ((32 - im.width) // 2, 32 - im.height)); c.save(os.path.join(R, 'assets/img/npc/npc_g%03d.png' % n))
 json.dump({'swap': list(SWAP), 'look': LOOK}, open(os.path.join(R, 'assets/img/gpt_index.json'), 'w'))
 print(len(SWAP), 'objek,', len(set(LOOK.values())), 'NPC')

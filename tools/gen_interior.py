@@ -34,7 +34,7 @@ for k, s in enumerate(objs):
     W, H = max(1, round(hd.width / F)), max(1, round(hd.height / F))
     sm = np.array(hd.resize((W, H), Image.BOX)).astype(float)
     a = sm[..., 3] > 110; rgb = sm[..., :3] / np.maximum(sm[..., 3:4] / 255, .01)
-    Image.fromarray(np.dstack([rgb.clip(0, 255), a * 255]).astype(np.uint8), 'RGBA').save(R + 'assets/img/int_' + nm + '.png')
+    Image.fromarray(np.dstack([rgb.clip(0, 255), a * 255]).astype(np.uint8), 'RGBA').save(R + 'assets/img/interior/int_' + nm + '.png')
     meta[nm] = [W, H]
 json.dump(meta, open(R + 'assets/raw/interior/sizes.json', 'w'), indent=0)
 print(len(meta), 'sprite')

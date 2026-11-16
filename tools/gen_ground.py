@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 from scipy import ndimage
 SRC='/home/claude/legend-lumina/enemy_image/lands/Verdant Forest Pixel Tileset.png'
-OUT='/home/claude/legend-lumina/assets/img/'
+OUT='/home/claude/legend-lumina/assets/img/ground/'
 F=3.5; S=128
 src=Image.open(SRC).convert('RGB')
 def down(box):

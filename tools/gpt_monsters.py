@@ -13,7 +13,7 @@ from scipy import ndimage as ndi
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SHEET = os.path.join(ROOT, 'assets/raw/gpt_monsters/sheet.png')
-OUT = os.path.join(ROOT, 'assets/img')
+OUT = os.path.join(ROOT, 'assets/img/monsters')
 L, R = (160, 238), (898, 992)  # rentang x kolom IDLE panel kiri & kanan
 # key tekstur: (rentang x, y atas, y bawah, lebar frame, tinggi frame). Ukuran frame = ukuran sprite lama (tabrakan & skala tetap).
 TABEL = {

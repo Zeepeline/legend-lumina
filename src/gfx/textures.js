@@ -6,14 +6,50 @@ const ICONS = {}, IMGEL = {};
 const IMG_LIST = [
   "apple1", "bench", "bigtree", "bushG1", "bushG2", "bushP", "bushP2", "bushW",
   "fountain", "houseA", "houseB", "houseC", "market", "orange1", "planter", "pot",
-  "treeA", "treeWoodsPine", "stumpWoods",
+  "treeA", "stumpWoods",
   "lampPost", "crateCart", "benchWood", "hero_custom", "mon_slime_hd", "mon_wolf_hd", "mon_wolf_elite_hd", "mon_goblin_hd", "mon_goblin_archer_hd",
   "mon_goblin_shaman", "mon_goblin_elite",
   "goblin_fortress", "goblin_gate", "goblin_hut", "goblin_tower", "goblin_cage", "goblin_forge", "goblin_shrine",
   "goblin_cauldron", "goblin_totem", "goblin_torch", "goblin_wagon", "goblin_banner",
-  "vfx_swing_combo", "vfx_hit_impact", "vfx_charge_spin"
+  "vfx_swing_combo", "vfx_hit_impact", "vfx_charge_spin",
+  "gnd_city_cobble",
+  "gpt_gatehouse", "gpt_gatehouse_top", "gpt_cwall", "gpt_ctower", "gpt_city_bridge",
+  "gpt_city_lamp", "gpt_city_lamp2", "gpt_city_banner", "gpt_city_banner_sm",
+  "gpt_city_fence", "gpt_city_board", "gpt_city_cart", "gpt_city_flower_w", "gpt_city_flower_p",
+  "gpt_city_rock_lg", "gpt_city_rock_sm", "gpt_city_cliff_s", "gpt_city_cliff_c",
+  "gpt_city_guard", "npc_guard_spear", "gpt_city_cliff_l", "gpt_city_cliff_r"
 , 'npc_elder', 'npc_smith', 'npc_merchant', 'npc_farmer', 'npc_inn', 'npc_guard', 'npc_hunter', 'npc_hermit', 'npc_nila', 'npc_joko', 'npc_girl', 'npc_child', 'npc_woman', 'npc_mom', 'npc_ratih', 'npc_wati', 'npc_darma', 'npc_bayu', 'npc_lestari', 'npc_gun', 'npc_priest', 'ani_rabbit', 'ani_squirrel', 'ani_deer', 'ani_owl', 'ani_duck'];
-function loadImgs() { return Promise.all(IMG_LIST.map(k => new Promise(r => { const i = new Image(); i.onload = () => { IMGEL[k] = i; r(); }; i.onerror = () => { console.error('Gagal memuat gambar', k); r(); }; i.src = (window.IMG_INLINE && IMG_INLINE[k]) || 'assets/img/' + k + '.png'; }))); }
+function imgSubdir(k) {
+  if (k.startsWith('hero_')) return 'hero';
+  if (k.startsWith('npc_')) return 'npc';
+  if (k.startsWith('ani_')) return 'animals';
+  if (k.startsWith('mon_') || k.startsWith('esh_')) return 'monsters';
+  if (k.startsWith('vfx_')) return 'vfx';
+  if (k.startsWith('gnd_') || k.startsWith('deco_')) return 'ground';
+  if (k.startsWith('int_')) return 'interior';
+  if (k.startsWith('goblin_')) return 'goblin';
+  if (k.startsWith('gpt_v_') || k.startsWith('gpt_i_house') || k === 'gpt_i_market' || k === 'gpt_windmill' ||
+    k === 'fountain' || k === 'market' || /^house[ABC]$/.test(k) ||
+    k.startsWith('gpt_gatehouse') || k === 'gpt_cwall' || k === 'gpt_ctower' || k === 'gpt_city_bridge') return 'buildings';
+  if (k.startsWith('gpt_city_flower')) return 'props';
+  if (/tree|pine|bush|apple|orange|stump|log|rock|pebble|mush|cliff|flower/i.test(k) ||
+    k.startsWith('gpt_city_rock') || k.startsWith('gpt_city_cliff')) return 'nature';
+  return 'props';
+}
+function loadImgs() {
+  return Promise.all(IMG_LIST.map(k => new Promise(r => {
+    const i = new Image();
+    i.onload = () => { IMGEL[k] = i; r(); };
+    i.onerror = () => {
+      // Fallback jika file dihapus pengguna: jangan throw error yang menghentikan game
+      const c = document.createElement('canvas');
+      c.width = 32; c.height = 32;
+      IMGEL[k] = c;
+      r();
+    };
+    i.src = (window.IMG_INLINE && IMG_INLINE[k]) || 'assets/img/' + imgSubdir(k) + '/' + k + '.png';
+  })));
+}
 function addStrip(scene, key, st) {
   if (scene.textures.exists(key)) return;
   const t = scene.textures.addCanvas(key, st.c);
@@ -111,7 +147,7 @@ function buildTextures(sc) {
   if (typeof regIntTex === 'function') regIntTex(T);
   if (typeof regVerdantTex === 'function') regVerdantTex(T);
   // Daftarkan otomatis objek yang teksturnya belum ada: cari fungsi global art<Nama> yang cocok (tanpa peduli huruf besar), atau alias gambar
-  const ALIAS = { i_cart: 'i_crateCart', i_treePine: 'i_treeWoodsPine', i_treeOak: 'i_stumpWoods', i_rockWoods: 'rock' };
+  const ALIAS = { i_cart: 'i_crateCart', i_treePine: 'i_treeA', i_treeWoodsPine: 'i_treeA', i_treeOak: 'i_stumpWoods', i_rockWoods: 'rock' };
   const artFns = Object.keys(window).filter(n => /^art[A-Z]/.test(n) && typeof window[n] === 'function');
   for (const [k, o] of Object.entries(OBJ)) {
     if (T.exists(o.key)) continue;

@@ -289,6 +289,11 @@ Object.assign(OBJ_SPAWN, {
       }
     });
   },
+  gatehouse(s, x, y, opt, d, type) {
+    if (IMGEL.gpt_gatehouse_top) {
+      this.add.image(x, y, 'gpt_gatehouse_top').setOrigin(.5, 1).setDepth(y + 160);
+    }
+  },
 });
 OBJ_SPAWN.stele = OBJ_SPAWN.sign;
 OBJ_SPAWN.bloom = OBJ_SPAWN.pot;

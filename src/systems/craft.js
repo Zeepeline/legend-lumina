@@ -7,11 +7,22 @@ Object.assign(ITEMS, {
   net: { n: 'Jaring', k: 'use', tool: 'net', price: 16, sell: 6, d: 'Lempar ke depan. Menjerat musuh pertama yang kena selama 3 detik.' },
   sarrow: { n: 'Panah Tajam', k: 'mat', price: 3, sell: 1, d: 'Dipakai otomatis saat memanah: kerusakan ×1,6 dan menembus musuh.' },
   bait: { n: 'Umpan Pancing', k: 'mat', price: 4, sell: 1, d: 'Dipakai otomatis saat memancing: ikan langka lebih sering datang.' },
+  lumina_shard: { n: 'Pecahan Cahaya', k: 'mat', price: 50, sell: 25, d: 'Pecahan kristal suci kuno untuk memperkuat Botol Cahaya di Patung Kristal.' },
+  book_fire: { n: 'Kitab Bara Purba', k: 'use', spellbook: 'fire', price: 120, sell: 45, d: 'Baca dari tas: modifikasi permanen Bola Api Bercabang 2.' },
+  book_shadow: {
+    n: 'Kitab Langkah Bayangan', k: 'use', spellbook: 'dash', price: 120, sell: 45,
+    d: 'Baca dari tas: modifikasi permanen Dash Bayangan Peledak.'
+  },
+  book_thorn: { n: 'Kitab Duri Rawa', k: 'use', spellbook: 'thorn', price: 120, sell: 45, d: 'Baca dari tas: modifikasi permanen Perisai Duri (pantul 25%).' },
 });
 Object.assign(ICON_MAP, {
   bomb: ['....K.....', '....YK....', '...DDDD...', '..DCCCCD..', '.DCLCCCCD.', '.DCCCCCCD.', '.DCCCCCCD.', '..DCCCCD..', '...DDDD...'],
   net: ['..........', '.K.K.K.K..', 'K.K.K.K.K.', '.K.K.K.K..', 'K.K.K.K.K.', '.K.K.K.K..', 'K.K.K.K.K.', '..........'],
   arrowi: ['.........W', '........WW', '.......K..', '......K...', '.....K....', '....K.....', 'F..K......', 'FFK.......', '.FF.......'],
+  tome: [
+    '..DDDDDD..', '.DCCCCCCW.', '.DCLLLLCW.', '.DCCYYCCW.',
+    '.DCLLLLCW.', '.DCCCCCCW.', '.DWWWWWWW.', '..DDDDDD..'
+  ],
 });
 Object.assign(ICONS_DEF, {
   bomb: ['bomb', { C: '#3a3446', L: '#8a8098', D: '#1a1622', K: '#6a4a2a', Y: '#ffb03a' }],
@@ -19,6 +30,10 @@ Object.assign(ICONS_DEF, {
   net: ['net', { K: '#c8a870' }],
   sarrow: ['arrowi', { K: '#8a5a2a', W: '#ffe08a', F: '#ffffff' }],
   bait: ['blob', { C: '#c84a7a', L: '#ff9ac0', D: '#7a2a4a', E: '#3a1a2a' }],
+  lumina_shard: ['shard', { C: '#ffd86a', L: '#fff6c0', D: '#b87a1a' }],
+  book_fire: ['tome', { C: '#b83a2a', L: '#ff8a4a', D: '#4a1812', Y: '#ffe07a', W: '#f4ead2' }],
+  book_shadow: ['tome', { C: '#4a3268', L: '#9a6ad8', D: '#221434', Y: '#d8b8ff', W: '#e8e0f4' }],
+  book_thorn: ['tome', { C: '#2e6838', L: '#6fc86a', D: '#16341c', Y: '#c8ff8a', W: '#eaf4dc' }],
 });
 const CRAFT = [
   { id: 'potion', n: 1, need: { herb: 3 } },
@@ -37,6 +52,9 @@ const CRAFT = [
   { id: 'dye_blue', n: 1, need: { flower_bouquet: 1, herb: 2 } },
   { id: 'dye_gold', n: 1, need: { flower_bouquet: 1, spore: 2 } },
   { id: 'dye_purple', n: 1, need: { flower_bouquet: 1, berry: 3 } },
+  { id: 'book_fire', n: 1, need: { shard: 1, spore: 2 } },
+  { id: 'book_shadow', n: 1, need: { bone: 2, ecto: 1 } },
+  { id: 'book_thorn', n: 1, need: { spore: 2, scale: 2 } },
 ];
 const ATTR = [['str', 'Kekuatan', '+1 serangan'], ['int', 'Sihir', '+2 kekuatan sihir'], ['vit', 'Ketahanan', '+5 HP maks & +0,5 pertahanan'], ['agi', 'Kelincahan', '+1% kecepatan & +1% kritikal']];
 function attrInit() {

@@ -3531,17 +3531,17 @@ Probe cepat tanpa suite: `python3 -m http.server 8010` lalu skrip Playwright sek
 
 ### (2) Tes merah — tentukan dulu: bug game atau tes usang
 Bug game → perbaiki game. Tes usang (game sengaja berubah) → perbarui tes dan tulis alasannya di bawah tugas.
-### [ ] T469. **Bos Bab 1–2 tidak bangun** (PRIORITAS TERTINGGI: cerita utama bisa macet) — referensi: —
+### [x] T469. **Bos Bab 1–2 tidak bangun** (PRIORITAS TERTINGGI: cerita utama bisa macet) — referensi: —
 - `tests/quest.spec.js:43` timeout menunggu `sc.enemies.some(e => e.boss && e.awake)`.
 - Lakukan: jalankan tes itu saja dan cari bos mana yang tidak bangun. Cari syarat `awake` (`grep -n "awake" src/ai/bosses.js src/systems/*.js`). Kemungkinan pemicunya jarak/posisi yang ikut berubah oleh tata letak baru (gelombang 12) atau DIFF. Izin: `src/ai/bosses.js` (hanya syarat bangun).
 - Cek: `tests/quest.spec.js` lulus, dan bos bangun saat didekati lewat jalan normal.
 
-### [ ] T470. **Tangkis (parry) tidak pernah berhasil** — referensi: Sekiro/Dark Souls
+### [x] T470. **Tangkis (parry) tidak pernah berhasil** — referensi: Sekiro/Dark Souls
 - `tests/gelombang11.spec.js:23` `r.parried = false`. Kode: `src/systems/polish.js:64–80` (`PARRY_WIN`, pembungkus `attack` & `hurtPlayer`).
 - Dugaan: pembungkus `attack` lain (stamina di `souls.js`) atau DIFF membuat `pl.swingT` tidak terisi, atau `pl.inv > 0` setelah menyerang. Cetak `pl.swingT, sc.t, pl.inv, G.lock` di konsol dengan isi tes. Izin: `polish.js`, `souls.js`.
 - Cek: gelombang11 lulus, dan tangkis di permainan nyata (serang tepat sebelum serigala menggigit) memunculkan kritikal.
 
-### [ ] T471. **Tanda ancang-ancang "!" & panah bahaya luar layar hilang** — referensi: —
+### [x] T471. **Tanda ancang-ancang "!" & panah bahaya luar layar hilang** — referensi: —
 - `tests/gelombang3.spec.js:25`: `warned` (musuh `st='wind'` → tanda `!`) dan `dg` (`.danger.right.on`) bernilai false.
 - File: `src/systems/feel.js` (`markOver`, `updFeel`). Panah bahaya: `grep -rn "danger" src styles.css`, mungkin tersembunyi oleh `body.full`. Izin: feel.js.
 - Cek: gelombang3 lulus. Di layar penuh, panah bahaya tampil saat dipukul dari luar layar.
@@ -3595,20 +3595,20 @@ Bug game → perbaiki game. Tes usang (game sengaja berubah) → perbarui tes da
 - File: `src/core/input.js` (deteksi tahan untuk tombol sentuh & keyboard J/Spasi) + file baru `src/systems/heavy.js`. Izin: input.js.
 - Cek: tes baru, damage berat ≥ 1,7× ringan, stamina terpakai 2×.
 
-### [ ] T483. **Balasan setelah tangkis (riposte)** — referensi: Sekiro (deathblow kecil)
+### [x] T483. **Balasan setelah tangkis (riposte)** — referensi: Sekiro (deathblow kecil)
 - Butuh T470. Setelah tangkis berhasil (`pl.parryCrit > 0`), serangan berikutnya dalam 1,5 detik: ×2,5, hit-stop 0,12 detik (pakai `hitStop` yang ada), teks "BALASAN!", dan getar.
 - File: `src/systems/polish.js` (baris 11). Izin: polish.js.
 
-### [ ] T484. **Musuh hanya bangkit lagi setelah istirahat** — referensi: Dark Souls (api unggun)
+### [x] T484. **Musuh hanya bangkit lagi setelah istirahat** — referensi: Dark Souls (api unggun)
 - Sekarang semua musuh muncul lagi setiap masuk ulang peta (`world.js:64`), jadi dunia terasa tanpa akibat dan mudah di-farm.
 - File baru `src/systems/slain.js`: bungkus `spawnEnemy` dan `killEnemy`. Simpan `S.slain[mapId] = [indeks spawn]` untuk musuh non-boss. Lewati indeks itu saat spawn sampai pemain tidur (rumah/penginapan) atau 1 hari game berlalu, lalu kosongkan `S.slain`. Default `S.slain = {}` lewat pola `S.x = S.x || {}` di file baru (state.js terkunci).
 - Cek: bunuh 3 slime → keluar-masuk → tetap 3 berkurang → tidur → kembali lengkap.
 
-### [ ] T485. **Jejak Cahaya terlihat di peta & penunjuk** — referensi: Hollow Knight (bayangan di peta)
+### [x] T485. **Jejak Cahaya terlihat di peta & penunjuk** — referensi: Hollow Knight (bayangan di peta)
 - `S.lost = {map, x, y, gold}` (`src/systems/souls.js:73`). Tampilkan ikon ✦ di Peta & peta mini, plus panah penunjuk kecil kalau berada di wilayah yang sama.
 - Izin: `src/ui/map.js` (hanya gambar ikon). Cek: kalah di Hutan → buka peta → ikon di titik jatuh.
 
-### [ ] T486. **Bantuan kalah berulang (adil)** — referensi: Celeste (assist), Hades (God Mode)
+### [x] T486. **Bantuan kalah berulang (adil)** — referensi: Celeste (assist), Hades (God Mode)
 - Jika kalah ≥ 3× di wilayah yang sama dalam 15 menit game, tawarkan "Berkat Lumina": +1 Botol Cahaya dan kerusakan musuh −15% di wilayah itu sampai menang lawan bos/keluar wilayah. Pemain boleh menolak.
 - File baru `src/systems/mercy.js` (bungkus fungsi kalah di `souls.js`; cari `S.lost =`). Simpan hitungan di `S.deaths[map]`.
 
@@ -3661,3 +3661,418 @@ Bug game → perbaiki game. Tes usang (game sengaja berubah) → perbarui tes da
 
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
 memasang BESTIARY_TEXT ke layar Bestiari, buang petak objek jauh di mode benua, hapus mode lama. Rincian: `docs/GAME_DESIGN.md` (akhir) & `docs/HANDOFF_OPENWORLD.md`.
+
+---
+
+## P. GELOMBANG 15 — Sistem Inti ala Dimraeth (T498–T507)
+Fokus: menerapkan mekanik khas *Dimraeth* (aliran fisik-ke-mantra *Concentration*, pukulan akhir kombo *Final Attack*, sinergi ledakan status, jendela hukuman musuh, peningkatan Botol Cahaya, buku mantra, dan fasilitas markas).
+
+### [x] T498. **Aliran *Weave*: Serangan Fisik Memulihkan Konsentrasi/MP** — referensi: Dimraeth (Concentration regenerates on basic attacks)
+- Di *Dimraeth*, *Concentration* (MP) di tengah pertarungan terisi saat pemain mendaratkan serangan fisik dasar, mendorong ritme *tebas-tebas-mantra*.
+- File: `src/systems/combat.js` (di dalam `doHit` / `hitEnemy`) atau bungkus `hitEnemy` di `src/systems/souls.js`.
+- Lakukan: setiap serangan fisik senjata (`!this.curElem && !this._inShots`) yang mengenai musuh memulihkan `+1 MP` (`+3 MP` pada tebasan kombo terakhir / `pl.combo === 5` atau serangan berat), tampilkan partikel biru tipis atau teks kecil `+MP` bila MP belum penuh. Kurangi regenerasi MP pasif saat ada musuh mengejar dalam radius 220 px agar pemain terdorong aktif menyerang.
+- Cek: kuras MP dengan Bola Api → pukul musuh beberapa kali → MP terisi kembali tanpa harus lari menunggu.
+
+### [x] T499. **Serangan Akhir Kombo (*Final Attack Proc*)** — referensi: Dimraeth (Final Attack triggers passives & elemental bursts)
+- File: `src/systems/combat.js` (`pl.combo === 5` atau pukulan ke-3 kombo di `hero_arka.js`).
+- Lakukan: saat pukulan kombo terakhir mengenai musuh, selain *knockback* ekstra, picu efek bawaan sesuai jenis senjata atau cincin/jimat yang dipakai:
+  - Pedang (`sword`): gelombang tebasan pendek ke depan (30% ATK).
+  - Tombak (`spear`): tusukan menembus beri status *Bleed/Luka* (2 dmg/dtk selama 3 dtk).
+  - Kapak (`axe`): hentakan tanah (`jxCrate` / kawah kecil di `juice.js`) yang memperlambat musuh sekitar radius 42 px selama 1,5 dtk.
+- Cek: lakukan kombo penuh pada musuh → efek khusus *Final Attack* keluar dengan umpan balik visual yang jelas.
+
+### [x] T500. **Tumpukan Status & Detonasi Elemen (*Combustion & Venom Burst*)** — referensi: Dimraeth (spell modifiers detonating status stacks)
+- Saat ini `pecah` (beku + pukulan berat, T309) sudah ada di `src/systems/polish.js:31`. Tambahkan sinergi untuk status **Terbakar (`burn`)** dan **Racun (`poison`)**.
+- File: `src/systems/polish.js` & `src/systems/status.js`.
+- Lakukan:
+  - Simpan tumpukan bakar `e.burnStacks = Math.min(5, (e.burnStacks || 0) + 1)` saat terkena api. Jika musuh yang sedang `e.burn > 0` terkena **Serangan Berat (`_isHeavy`)** atau **Nova Es (`curElem === 'ice'`)**, ledakkan sisa durasi bakar menjadi kerusakan instan (*Combust*: `sisa_detik × burnDmg × 1.6`), bersihkan `e.burn`, dan tampilkan `"MELEDAK!"` (`jx('spark', ...)`).
+  - Jika musuh yang sedang `e.poison > 0` terkena **Bola Api (`curElem === 'fire'`)**, picu *Ledakan Gas Racun* radius 48 px yang menularkan racun ke musuh di sebelahnya.
+- Cek: bakar musuh dengan Bola Api → hantam dengan serangan berat → muncul teks `"MELEDAK!"` dan *burst damage*.
+
+### [x] T501. **Jendela Hukuman (*Recovery Window*) & *Stagger* Musuh** — referensi: Dimraeth, Dark Souls (deliberate punish windows)
+- File: `src/ai/enemies.js` & `src/systems/feel.js`.
+- Lakukan: setelah musuh selesai melakukan serangan menerjang/berat (`st === 'atk'` atau `'dash'`) dan meleset (tidak mengenai Arka), beri status `e.vulnT = 0.9` (jendela lengah) dengan tanda bintang kecil/kilau di kepala. Serangan Arka yang masuk saat `e.vulnT > 0` menghasilkan **1.35× kerusakan** + teks `"CELAH!"` dan menambah *stagger* lebih cepat.
+- Cek: hindari terjangan serigala/golem dengan berguling → pukul balik segera → muncul `"CELAH!"` dengan kerusakan bonus.
+
+### [x] T502. **Peningkatan Kapasitas & Khasiat Botol Cahaya (*Sacred Shards*)** — referensi: Dimraeth, Elden Ring (Golden Seed / Sacred Tear)
+- Lihat `docs/GAME_DESIGN.md:140`: peningkatan Botol Cahaya.
+- File: `src/systems/souls.js` (`flaskOf`, `SOUL.flaskHeal`) & `src/npc/dialog.js` (Pendeta Elian di `temple` atau patung kristal).
+- Lakukan: setiap 3 `lumina_shard` (Pecahan Cahaya yang sudah tersebar di dunia) yang dikumpulkan Arka, pemain bisa mempersembahkannya di Patung Kristal / Kuil untuk menambah **+1 kapasitas Botol Cahaya** (`S.flaskUp = (S.flaskUp || 0) + 1`, maks +3 botol tambahan) atau meningkatkan pemulihan botol dari 45% ke 60% HP.
+- Cek: kumpulkan 3 Pecahan Cahaya → persembahkan di patung → jumlah Botol Cahaya di HUD naik dari `3/3` menjadi `4/4`.
+
+### [x] T503. **Varian Cara Lepas Mantra (*Quick-Cast vs Charged Spell*)** — referensi: Dimraeth (quick-press vs hold-to-charge spell modifiers)
+- File: `src/systems/combat.js` (`magic`, `castSpell`) & `src/core/input.js` (durasi tahan tombol sihir `Input.holdB`).
+- Lakukan: ukur berapa lama tombol Sihir (`B`) ditahan:
+  - **Ketuk cepat (< 0,35 dtk):** mantra biasa (hemat MP, cepat).
+  - **Tahan isi daya (≥ 0,35 dtk):** muncul lingkaran mantra di kaki Arka (`jxAura`), memakan `1.5× MP`, menghasilkan varian *Charged* (mis. Bola Api Besar yang menembus & meninggalkan bara di tanah selama 2 detik, atau Petir Berantai +2 pantulan).
+- Cek: tahan tombol sihir 0,4 detik lalu lepas → keluar Bola Api Besar yang menembus target.
+
+### [x] T504. **Buku Mantra (*Spellbooks*) dari Eksplorasi & Kerajinan** — referensi: Dimraeth (spellbooks found/crafted across the world)
+- Lihat Pilar 2 di `docs/GAME_DESIGN.md:136`.
+- File: `src/data/items.js` (bila diizinkan, atau daftar di file baru `src/systems/spellbooks.js`), `src/systems/craft.js`.
+- Lakukan: tambahkan 3 Buku Mantra yang bisa dirakit di Meja Kerajinan / Menara Sihir menggunakan bahan monster (mis. *Kitab Bara Purba*, *Kitab Duri Rawa*, *Kitab Langkah Bayangan*). Saat dibaca/dipakai dari tas, membuka modifikasi pasif permanen pada jurus yang bersangkutan (mis. Bola Api bercabang 2, Dash meninggalkan bayangan peledak, Perisai memantulkan 25% kerusakan).
+- Cek: rakit 1 Buku Mantra → gunakan dari tas → efek jurus berubah sesuai kitab.
+
+### [x] T505. **Archetype Gabungan 2 Aliran Jurus (*Hybrid Class Bonus*)** — referensi: Dimraeth (class/archetype synergy)
+- Lihat Pilar 2 di `docs/GAME_DESIGN.md:136`.
+- File: file baru `src/systems/archetype.js`, tampilkan di menu Status/Jurus (`src/ui/menus.js`).
+- Lakukan: tentukan *Archetype* Arka secara otomatis berdasarkan kombinasi senjata terpasang + 2 jurus yang paling sering dipakai / tertinggi tier-nya:
+  - **Kبلا (Keringat & Bara / *Battlemage*):** Pedang/Kapak + Sihir Api/Petir → setelah merapal mantra, tebasan fisik berikutnya dalam 2 detik menyala (+25% kerusakan elemen).
+  - **Pengintai Senja (*Shadow Ranger*):** Busur/Tombak + Dash → setelah *Perfect Dodge* atau *Dash*, serangan berikutnya pasti *Critical*.
+  - **Penjaga Kristal (*Paladin*):** Perisai/Penyembuhan + Senjata jarak dekat → menahan serangan memulihkan 5% stamina dan memberi perisai tipis.
+- Cek: buka menu Jurus/Status → nama Archetype aktif beserta bonus pasifnya tampil jelas dan berfungsi di pertarungan.
+
+### [x] T506. **Fasilitas Markas Rumah Arka (*Stronghold Progression Engine*)** — referensi: Dimraeth (stronghold structures unlock crafting tiers)
+- Lihat Pilar 3 di `docs/GAME_DESIGN.md:137`.
+- File: `src/systems/home.js` & `src/world/maps/village.js` (pekarangan Rumah Arka).
+- Lakukan: di pekarangan/dalam Rumah Arka, izinkan pemain membangun/meningkatkan 3 stasiun fungsional dengan kayu, batu, dan bijih besi:
+  1. **Tungku Alkimia Markas:** meracik ramuan penguat (*Elixir Ketahanan*, *Minyak Senjata Api/Es*).
+  2. **Paron Tempa Markas:** mengasah senjata memberi buff tajam (+10% ATK selama 1 hari penuh).
+  3. **Meja Peta & Prasasti:** melihat lokasi musuh elit/bos dan status kesiapan wilayah.
+- Cek: bangun Tungku Alkimia di Rumah Arka → gunakan untuk meracik Minyak Senjata.
+
+### [x] T507. **Ikatan Sekutu & Bantuan Fasilitas Markas (*Allies & Bonds*)** — referensi: Dimraeth (recruited NPCs expand stronghold services)
+- Lihat Pilar 4 di `docs/GAME_DESIGN.md:138`.
+- File: `src/npc/dialog.js` & `src/systems/home.js`.
+- Lakukan: ketika tingkat keakraban (`S.rel[id]`) dengan NPC kunci (Bu Sari, Pak Besi, Pertapa Sura, atau Sambo) mencapai penuh (3 ♥), mereka menawarkan kiriman/dukungan rutin ke Rumah Arka (kotak perbekalan sekutu di depan pintu rumah Arka setiap pagi: berisi benih langka, anak panah tajam, atau bahan ramuan gratis sesuai sekutu yang sudah akrab), plus membuka 1 resep khusus sekutu tersebut.
+- Cek: capai 3 ♥ dengan salah satu NPC → tidur sampai pagi → ambil perbekalan sekutu di peti depan Rumah Arka.
+
+---
+
+## Q. GELOMBANG 16 — Gerakan & Posisi (*Movement & Positioning*) ala Dimraeth (T508–T517)
+Fokus: memperhalus rasa gerak (*movement feel*), *footwork* tempur, *dodge roll*, bobot langkah, dan *positioning* ala *Dimraeth* (deliberate, berbobot, dan taktis).
+
+### [x] T508. **Kurva Kecepatan Berguling (*Roll Burst & Landing Recovery*)** (dipasang di `src/systems/movement.js`) — referensi: Dimraeth, Dark Souls (deliberate dodge roll curve)
+- Saat ini `dash()` (`src/systems/skills.js:41`) memakai kecepatan rata (`290 px/s` selama `0.17s`), sehingga terasa seperti meluncur lurus tanpa bobot mendarat.
+- File: file baru `src/systems/movement.js` (atau di `src/systems/combat_fx.js`).
+- Lakukan: ubah kurva kecepatan berguling menjadi **3 fase**:
+  1. **Dorongan Awal (*Burst*, 0–0,10 dtk):** cepat (`340 px/dtk`, kebal *i-frame*).
+  2. **Meluncur (*Glide*, 0,10–0,18 dtk):** melambat halus (`210 px/dtk`).
+  3. **Pijakan Mendarat (*Landing Recovery*, 0,18–0,24 dtk):** kecepatan turun ke `55 px/dtk` + kepulan debu pendaratan sebelum kembali jalan normal.
+- Hasil: kurva kecepatan 3 fase (`340` → `215` → `55 px/s`) + kepulan debu/cipratan air saat pendaratan dipasang di `src/systems/movement.js`.
+
+### [x] T509. **Serangan Keluar dari Berguling (*Roll-Attack / Dash-Strike*)** (dipasang di `src/systems/movement.js`) — referensi: Dimraeth, Elden Ring (rolling attack)
+- File: `src/systems/movement.js` & `src/systems/combat.js`.
+- Lakukan: jika pemain menekan tombol **Serang (`A`)** di paruh akhir berguling (`pl.dashT` tersisa `< 0.09` dtk atau dalam `0.15` dtk setelah selesai berguling), langsung lepaskan **Tusukan/Tebasan Laju (*Dash-Strike*)**: Arka meluncur maju `28 px` dengan jangkauan tusuk `+30%`, kerusakan `1.25×`, dan langsung menyambung ke kombo ke-2.
+- Hasil: menekan Serang di akhir roll atau backstep memicu `"SERBU!"` (*Dash-Strike*) dengan jangkauan +30%, 1.25× kerusakan kritikal, dan menyambung ke kombo 2.
+
+### [x] T510. **Langkah Geser Samping Saat Mengunci Target (*Lock-On Strafe & Backstep*)** (dipasang di `src/systems/movement.js`) — referensi: Dimraeth (facing & positioning matter)
+- Saat `this.lockE` aktif (kunci target, `src/systems/polish.js`), saat ini Arka masih membalik badan mengikuti arah analog sehingga membelakangi musuh saat mundur.
+- File: `src/systems/movement.js` (bungkus orientasi hadap `pl.dir` di `update`).
+- Lakukan:
+  - Selama `this.lockE` aktif dan musuh dalam jarak `< 180 px` (dan Arka tidak sedang sprint penuh), kunci arah hadap `pl.dir` selalu menghadap `this.lockE`. Jalan menyamping/mundur otomatis menjadi *strafe* (kecepatan mundur `0.85×` agar taktis).
+  - Jika menekan tombol **Berguling (`Dash`) tanpa arah analog** (`m < 0.2`) saat mengunci target, lakukan **Lompat Mundur Cepat (*Backstep*)** sejauh `38 px` (biaya stamina 40% lebih hemat dari roll biasa, langsung siap membalas dengan *Dash-Strike*).
+- Hasil: selama `lockE` aktif dalam 180 px, Arka selalu menghadap musuh (*strafe* mundur 0.85× spd), dan menekan Dash tanpa arah analog melakukan *Backstep* hemat stamina 40%.
+
+### [x] T511. **Langkah Maju Bertahap per Ayunan Kombo (*Weighted Combo Footwork*)** (dipasang di `src/systems/movement.js`) — referensi: Dimraeth (commitment & forward momentum per swing)
+- Saat ini semua tebasan memakai `CFX.lunge = 120` yang seragam (`src/systems/combat_fx.js:263`).
+- File: `src/systems/combat_fx.js` (`attack` wrapper).
+- Lakukan: bedakan jarak dorongan langkah kaki (*footwork*) sesuai urutan kombo dan jenis senjata:
+  - Kombo 1 & 2: langkah pendek terukur (`85 px/dtk`, mudah dibatalkan dengan roll).
+  - Kombo 3 & 4: langkah menengah (`125 px/dtk`).
+  - Kombo 5 (*Final Attack*): lompatan tebasan jauh (`185 px/dtk` selama `0.11 dtk`) namun dengan jeda pemulihan sedikit lebih panjang.
+  - Izinkan arah analog mengoreksi sudut langkah kombo hingga `±45°` di antara tiap ayunan agar tidak memukul angin saat musuh bergeser.
+- Hasil: langkah maju tiap tebasan kini bertingkat (`85` → `95` → `125` → `135` → `185 px/s`) dan sudutnya bisa dibelokkan ±45° mengikuti analog.
+
+### [x] T512. **Pembatalan Pemulihan Ayunan dengan Berguling (*Dodge-Cancel Recovery*)** (dipasang di `src/systems/movement.js`) — referensi: Dimraeth, Hades
+- Di *Dimraeth*, pemain berkomitmen pada ayunan senjata (tidak bisa *cancel* di tengah tebasan), tetapi begitu bilah senjata selesai menyapu (*recovery frame*), pemain bisa langsung memotong jeda kaku dengan berguling.
+- File: `src/systems/skills.js` (`dash`) & `src/scene/world.js`.
+- Lakukan: saat `pl.atkT` sudah lewat separuh awal (fase *windup/active* selesai, tersisa `< 45%` dari `W.lock`), menekan `dash` langsung membatalkan sisa `pl.atkT = 0`, menyembunyikan sprite ayunan pedang, dan mengeksekusi berguling tanpa tertahan.
+- Hasil: menekan Dash saat sisa `pl.atkT <= 55%` dari durasi kunci senjata langsung memotong sisa *recovery* dan mengeksekusi roll.
+
+### [x] T513. **Akselerasi & Pengereman Langkah (*Inertia & Pivot Turn Dust*)** (dipasang di `src/systems/movement.js`) — referensi: Dimraeth, Zelda (grounded pixel movement)
+- Saat ini kecepatan jalan langsung melompat dari `0` ke `v.x * sp` dan langsung `0` saat dilepas (`world.js:233`), sehingga terasa kaku.
+- File: `src/systems/movement.js`.
+- Lakukan:
+  - Terapkan interpolasi kecepatan (*smoothing*) singkat: akselerasi penuh dalam `0.06 dtk` dan deselerasi berhenti dalam `0.05 dtk` (tetap sangat responsif tetapi tidak patah).
+  - **Pivot Turn:** jika Arka sedang berlari (`m > 0.7`) lalu pemain membalik arah analog `> 135°` secara mendadak, munculkan kepulan debu selip di kaki (`puff` + suara gesek pelan) dan jeda tumpuan `0.05 dtk` sebelum melesat ke arah sebaliknya.
+- Hasil: akselerasi (0.055s) dan pengereman (0.045s) diperhalus, dilengkapi deteksi *Pivot Turn* (`dot < -0.65`) yang memunculkan debu tumpuan kaki dan jeda pijakan 0.045s.
+
+### [x] T514. **Gerak Melambat Taktis Saat Menahan Mantra/Busur (*Strafing While Channelling*)** (dipasang di `src/systems/movement.js`) — referensi: Dimraeth (caster/ranged positioning)
+- Di *Dimraeth*, pemanah dan penyihir bisa bergeser pelan mencari sudut tembak saat menahan mantra atau menarik tali busur.
+- File: `src/systems/movement.js` & `src/systems/combat.js`.
+- Lakukan: saat pemain menahan tombol Sihir (T503) atau membidik dengan tarik-bidik (`Input.aim.on`), izinkan Arka tetap melangkah pelan (`45%` kecepatan normal) sambil mengunci arah hadap ke sudut bidikan (`Input.aim`), bukan membeku total di tempat.
+- Hasil: saat menahan bidikan sihir (`Input.aim.drag` / `Input.keys.b`) atau mengisi serangan, Arka dapat bergeser taktis dengan kecepatan 45% sambil menghadap arah bidik.
+
+### [x] T515. **Pengaruh Medan pada Kecepatan &Stamina (*Terrain Tactical Footing*)** (dipasang di `src/systems/movement.js`) — referensi: Dimraeth (environmental awareness in combat)
+- Saat ini baru salju tebal yang memperlambat (`snowSlow` di `status.js:26`).
+- File: `src/systems/movement.js` & `src/systems/status.js` (`speedMul`).
+- Lakukan: baca jenis permukaan tanah (`groundAt(pl.x, pl.y)` dan jalan setapak `sd(pl.x, pl.y) < 0`):
+  - **Jalan batu/tanah rata (`path`):** kecepatan jalan di luar tempur `+10%` dan biaya stamina berlari `-25%` (membuat jaringan jalan antar-wilayah terasa berguna).
+  - **Air dangkal / lumpur rawa (`shallow` / `swamp` luar jalan):** kecepatan `-18%`, berguling menjadi sedikit lebih pendek (`0.85×` jarak) dengan cipratan air/lumpur.
+  - Sepatu Angin (`S.eq.acc === 'boots'`) menghilangkan penalti lumpur/air dangkal.
+- Hasil: deteksi permukaan via `makeSD(M)` & `groundAt` memberi bonus jalan raya (+10% spd luar tempur, hemat 25% stamina lari) dan penalti lumpur/rawa (-18% spd, 0.85× jarak roll, kebal bila memakai Sepatu Angin).
+
+### [x] T516. **Tolakan Tubuh Saat Terkepung & Terobos Berguling (*Body Blocking & Roll-Through*)** (dipasang di `src/systems/movement.js`) — referensi: Dimraeth (getting surrounded is dangerous, dodge roll slips through)
+- Di *Dimraeth*, dikepung musuh dari berbagai sisi sangat berbahaya karena tubuh musuh menghalangi jalan kabur biasa, hanya berguling (*dodge roll*) yang bisa menerobos celah kerumunan.
+- File: `src/systems/movement.js`.
+- Lakukan:
+  - Saat berjalan biasa (bukan `pl.dashT > 0`), jika jarak Arka ke badan musuh hidup `< (e.D.r * e.sc + 8)`, berikan gaya tolak lembut agar Arka tidak bisa berjalan menembus tengah badan musuh begitu saja.
+  - Saat berguling (`pl.dashT > 0`), matikan tolakan itu sehingga Arka bisa **menerobos celah kepungan musuh**, ditambah efek dorongan kecil (`kb = 0.08`) pada musuh kecil yang tersenggol bahu Arka saat berguling.
+- Hasil: badan musuh hidup menolak langkah jalan biasa Arka saat berdempetan, sedangkan *dodge roll* menembus celah kepungan sambil menyenggol musuh non-bos ke samping.
+
+### [x] T517. **Pulih Pijakan Cepat Saat Terpental (*Tech-Roll / Ukemi Recovery*)** (dipasang di `src/systems/movement.js`) — referensi: Dimraeth, Monster Hunter
+- Saat terkena pukulan berat bos/golem, Arka terpental (`pl.kb > 0`) dan rentan terkena serangan beruntun (*stunlock*).
+- File: `src/systems/movement.js` & `src/scene/world.js` (blok `if (pl.kb > 0)`).
+- Lakukan: jika pemain menekan tombol **Berguling (`Dash`)** tepat di paruh akhir terpental (`pl.kb > 0 && pl.kb < 0.12`) dan memiliki cukup stamina (`15` sta), Arka melakukan **Jungkir Pulih Cepat (*Tech-Roll*)**: langsung memotong sisa `pl.kb = 0`, berguling pendek ke arah analog dengan `0.2s` *i-frame* kilat putih, dan menampilkan teks kecil `"PULIH!"`.
+- Hasil: menekan Dash di paruh akhir terpental (`pl.kb < 0.14`) memicu jungkir pulih `"PULIH!"` dengan 0.22s *i-frame* dan memutus *stunlock*.
+
+---
+
+## R. GELOMBANG 17 — Koreografi Musuh, Bos & Taktik Pertemuan (*Enemy & Boss Choreography*) ala Dimraeth (T518–T527)
+Fokus: meningkatkan kecerdasan taktis musuh, pola serangan berantai (*multi-hit combo*), variasi *telegraph* (*delayed swing*), bar ketahanan (*Poise/Posture*) bos, dan koreografi pertempuran ala *Dimraeth*.
+
+### [x] T518. **Serangan Berantai Musuh Elit & Bos (*Multi-Hit Enemy Combo Chains*)** (dipasang di `src/ai/choreo.js`) — referensi: Dimraeth, Elden Ring (`docs/GAME_DESIGN.md:140`)
+- Saat ini sebagian besar musuh hanya melakukan 1 tebasan lalu langsung kembali `rec`/`chase`. Di *Dimraeth*, musuh tangguh menyerang dalam rangkaian 2–3 pukulan beruntun dengan ritme berbeda.
+- File: file baru `src/ai/choreo.js` (atau di `src/ai/enemies.js` & `src/ai/bosses.js`).
+- Lakukan:
+  - Untuk musuh `goblin_elite`, `golem`, `bounty_wolf`, dan semua Bos: saat jarak Arka masih `< 56 px` di akhir serangan pertama (`lunge`/`slam`), berikan peluang 65% menyambung ke **Ayunan ke-2** (dan **Hantaman Penutup ke-3** khusus bos Fase 2) dengan *windup* pendek (`0.22 dtk`) dan langkah maju mengikuti posisi Arka.
+  - Setelah rangkaian selesai, barulah musuh masuk fase `rec` lebih lama (`1.1 dtk` = jendela hukuman bagi pemain yang sabar menunggu kombo selesai).
+- Hasil: musuh elit & bos di `src/ai/choreo.js` menyambung ayunan ke-2/3 bila Arka masih dalam 56 px, lalu membuka jendela lengah (`rec = 1.1s`, `vulnT = 0.95s`).
+
+### [x] T519. **Variasi Ayunan Tertunda (*Delayed Heavy Telegraph / Bait Swing*)** (dipasang di `src/ai/choreo.js`) — referensi: Dimraeth, Margit/Elden Ring (roll-catching delays)
+- Di *Dimraeth*, jika semua musuh menyerang dengan tempo yang sama, pemain cukup menghafal satu ketukan *roll*. Musuh berat sengaja menahan ayunan sesaat untuk menangkap pemain yang *panic-roll* terlalu cepat.
+- File: `src/ai/choreo.js`.
+- Lakukan: untuk `golem`, `golemi`, `elite_brute`, dan bos jarak dekat, berikan 35% peluang serangan berubah menjadi **Hantaman Tertunda (*Delayed Smash*)**:
+  - Tanda peringatan berwarna jingga tua `"!!"` + kilatan *windup* `1.45×` lebih lama (`~0.85 dtk`) disertai getaran badan dan cincin `jxTele` yang menutup lebih lambat namun beradius `+25%` lebih lebar dan kerusakan `1.3×`.
+- Hasil: peluang 35% hantaman tertunda (`1.45×` durasi windup, tanda `"!!"` jingga, `1.3×` damage) dipasang di `src/ai/choreo.js`.
+
+### [x] T520. **Bilah Ketahanan (*Posture / Poise Bar*) & Serangan Kritis *Stagger* pada Bos/Elit** (dipasang di `src/ai/choreo.js`) — referensi: Dimraeth, Sekiro, Elden Ring
+- Saat ini `e.poise` dan `e.staggerT` sudah ada sebagian, namun pemain tidak bisa melihat seberapa dekat bos/elit akan runtuh (*stagger*).
+- File: `src/ai/choreo.js` & `src/scene/world.js` (`this.bars`).
+- Lakukan:
+  - Berikan atribut ketahanan `e.maxPoise` pada semua Bos (`100`) dan Musuh Elit (`45`). Setiap tebasan Arka mengurangi `e.poise` (serangan biasa `-8`, kombo ke-5 `-18`, serangan berat `-28`, tangkis/parry `-35`). Jika tidak dipukul selama `4 dtk`, `e.poise` pulih perlahan.
+  - Gambar garis tipis kuning emas (`2 px`) tepat di bawah bilah HP musuh elit / bilah HP Bos.
+  - Saat `e.poise <= 0`, musuh jatuh **Runtuh (*Staggered*, `2.0 dtk`)** dengan suara dentuman berat; serangan pertama Arka ke musuh yang runtuh menjadi **Eksekusi Kritis (`2.2×` dmg + `"RUNTUH!"`)** lalu mereset `e.poise = e.maxPoise`.
+- Hasil: bilah kuning Poise digambar di bawah HP bos/elit; saat habis musuh terhuyung 2 detik dan menerima tebasan eksekusi `"RUNTUH! x2.2"`.
+
+### [x] T521. **Manuver Mundur & Jaga Jarak Pemanah/Penyihir (*Ranged Kiting & Evasive Hop*)** (dipasang di `src/ai/choreo.js`) — referensi: Dimraeth (ranged enemies maintain spacing)
+- Saat ini musuh penembak (`shoot` / `goblin_archer`) hanya berjalan mundur lambat ketika didekati sehingga sangat mudah dikunci di pojok.
+- File: `src/ai/choreo.js`.
+- Lakukan: jika Arka mendekat dalam radius `< 48 px` dari pemanah/dukun (`goblin_archer`, `goblin_shaman`, `wboss`) dan `e.evadeCd <= 0`:
+  - Musuh melakukan **Lompat Mundur Gesit (*Back-Hop*)** sejauh `55 px` menjauhi Arka (menghindari tembok belakang bila mentok, berbelok ke samping) sambil melepaskan 1 tembakan cepat ke posisi lama Arka, lalu `e.evadeCd = 4.5 dtk`.
+- Hasil: pemanah & dukun melakukan *Back-Hop* gesit disertai tembakan balasan cepat saat Arka masuk radius `< 48 px` (`evadeCd = 4.5s`).
+
+### [x] T522. **Tebasan Sapuan Putar Anti-Kepung (*Boss Backswing / Tail Sweep*)** (dipasang di `src/ai/choreo.js`) — referensi: Dimraeth, Dark Souls (anti-backstab sweep)
+- Karena *Backstab* (memukul dari belakang = 1.8× dmg) sangat kuat, di *Dimraeth* bos dan musuh besar punya gerakan menyapu ke belakang jika pemain terus-menerus menempel di punggung mereka.
+- File: `src/ai/choreo.js`.
+- Lakukan: jika Arka berada di belakang punggung Bos atau Golem dalam jarak `< 44 px` selama `> 1.1 detik` berturut-turut, bos membatalkan jeda jalan dan melakukan **Sapuan Balik Cepat (*Backswing*, *windup* `0.3 dtk`)** memutar `180°` yang mendorong Arka menjauh (`kb = 0.22`) dengan teks peringatan `"SAPUAN!"`.
+- Hasil: menempel di punggung Bos/Golem/Elit `> 1.1s` memicu sapuan putar 180° `"SAPUAN!"` yang membalikkan badan musuh dan mendorong Arka.
+
+### [x] T523. **Koordinasi Kawanan: Komando Serbu & Formasi Perisai (*Pack Command & Shield Wall*)** (dipasang di `src/ai/choreo.js`) — referensi: Dimraeth (tactical group encounters)
+- File: `src/ai/choreo.js` & `src/systems/feel.js`.
+- Lakukan:
+  - Jika ada `goblin_elite` atau `goblin_shaman` bersama `>= 2` goblin biasa dalam radius `160 px`, setiap `7 detik` pemimpin mengeluarkan **Komando Serbu (`"SERANG!"`)**: memberikan aura merah tipis (+20% kecepatan gerak pada 2 goblin terdekat selama `3 dtk`) dan mengizinkan 2 musuh menyerang bersamaan.
+  - Musuh bertameng (`role === 'depan'`) bergerak melambat sambil mengangkat tameng di antara Arka dan pemanah/dukun di belakangnya (*bodyguard positioning*).
+- Hasil: komando `"SERANG!"` memberi +20% kecepatan & izin serang serentak pada kawanan goblin, serta barisan depan menjaga garis antara Arka dan pemanah.
+
+### [x] T524. **Zona Bahaya Bertahan di Tanah (*Lingering Hazard Zones*)** (dipasang di `src/ai/choreo.js`) — referensi: Dimraeth (area denial in combat)
+- Di *Dimraeth*, pertarungan memaksa pemain terus berpindah tempat karena serangan elemen musuh meninggalkan area berbahaya di tanah selama beberapa detik.
+- File: `src/ai/choreo.js` & `src/systems/juice.js`.
+- Lakukan: saat proyektil/serangan khusus musuh mendarat (ludah racun `venom` dari Ratu Jamur/Ular/Dukun, napas api/es `fire`/`icebolt` dari Naga/Salamander, atau kawah Golem Es), tinggalkan **Zona Bahaya Tanah** berdiameter `36 px` selama `3.2 detik` (lingkaran partikel racun hijau / bara api / es membeku di `depth -8.5e5`). Jika Arka menginjaknya lebih dari `0.4 dtk`, Arka terkena akumulasi status (`poison`/`burn`/`chill`) dan pelambatan kecil.
+- Hasil: proyektil elemen musuh & hentakan Golem Es meninggalkan `spawnHazardZone` selama 3.2 detik di tanah yang memberi efek status bila diinjak `> 0.45s`.
+
+### [x] T525. **Transisi Fase Bos Dramatis & Serangan Khas Fase 2 (*Phase 2 Signature Overdrive*)** (dipasang di `src/ai/choreo.js`) — referensi: Dimraeth (`docs/GAME_DESIGN.md:140`: boss dengan fase)
+- Saat ini `triggerPhase2` (`src/ai/bosses.js:9`) sudah memberi *shockwave* dan `+20% spd`, tetapi belum mengubah pola serangan bos secara nyata.
+- File: `src/ai/bosses.js` & `src/ai/choreo.js`.
+- Lakukan: saat bos masuk Fase 2 (`e.p2 === true`, HP `< 50%`):
+  - **Raja Goblin / Golem Purba (`gboss`):** lompatan `leap` di Fase 2 memicu **3 Cincin Gelombang Bertahap** (dalam → tengah → luar) atau 2 lompatan beruntun.
+  - **Morgath (`wboss`):** setelah teleportasi (`tele`), meninggalkan bayangan ilusi yang ikut menembakkan 1 proyektil ke arah Arka.
+  - **Kryos Naga Es (`dboss`):** serangan napas es menyapu dalam busur kipas lebar disertai jatuhan es di sekitar arena.
+- Hasil: di Fase 2 (`e.p2`), hentakan `shockwave` bos memicu 3 cincin gelombang bertahap (`1.0×` → `1.32×` → `1.65×` radius) dan teleportasi Morgath meninggalkan ilusi penembak.
+
+### [x] T526. **Indikator Serangan Tak Tertangkis (*Unparriable Red Glint*) vs Bisa Ditangkis (*Gold Glint*)** (dipasang di `src/ai/choreo.js`) — referensi: Dimraeth, Sekiro, Lies of P
+- Agar sistem *Parry* (Tangkis) dan *Dodge Roll* punya peran yang jelas dan adil di layar HP:
+- File: `src/ai/choreo.js` & `src/systems/polish.js`.
+- Lakukan:
+  - Saat musuh melakukan ancang-ancang serangan biasa (bisa ditangkis), tampilkan kilatan bintang **Kuning Emas** di senjata/badan musuh.
+  - Saat musuh melakukan serangan berat/terjangan besar (`leap`, `charge` bos, hantaman dua tangan Golem), tandai `e.unparriable = true` dan tampilkan kilatan silang **Merah Menyala** + suara dengung rendah: serangan ini **tidak bisa ditangkis** (harus dihindari dengan *Dodge Roll* atau lari keluar lingkaran `jxTele`).
+- Hasil: fungsi `spawnGlint` menampilkan kilat bintang emas untuk serangan biasa dan kilat silang merah (`e.unparriable = true`) untuk serangan berat yang melewati jendela *parry*.
+
+### [x] T527. **Hadiah Kemenangan Tanpa Tersentuh & Eksekusi Bos (*Flawless Boss Bonus & Finishers*)** (dipasang di `src/ai/choreo.js`) — referensi: Dimraeth (mastery rewards)
+- File: `src/ai/bosses.js` (`startBoss`, `bossDown`) & `src/systems/combat.js`.
+- Lakukan:
+  - Catat `this._bossHitsTaken = 0` saat `startBoss`. Setiap kali Arka kehilangan HP selama `this.bossOn`, naikkan penghitung.
+  - Saat pukulan terakhir menumbangkan Bos (`e.hp <= 0`), jalankan efek **Slow-Motion Finisher (`0.25×` kecepatan selama `0.6 dtk` + zoom kamera halus `1.12×`)**.
+  - Jika `this._bossHitsTaken === 0` (atau `<= 1`), berikan gelar banner `"KEMENANGAN SEMPURNA!"` + bonus hadiah emas `+50%` dan 1 batu permata/bahan langka tambahan.
+- Hasil: pukulan penutup bos memicu *slow-mo finisher* `0.25×` + zoom `1.12×`; menang dengan `<= 1` terkena pukulan memberi banner `"KEMENANGAN SEMPURNA!"`, `+50%` emas, dan `+1` Pecahan Es.
+
+---
+
+## S. GELOMBANG 18 — Relik Build, Roda Mantra, Sekutu Tempur & Ujian Markas ala Dimraeth (T528–T532)
+Fokus: melengkapi pilar 2–4 *Dimraeth* (5 slot mantra cepat, aksesoris relik pengubah gaya main, panggilan sekutu tempur, ujian bayangan di markas, dan gelombang kejut tangkisan).
+
+### [x] T528. **Roda 5 Slot Mantra Cepat (*Spell Wheel*)** (dipasang di `src/systems/slain.js`) — referensi: Dimraeth (`docs/GAME_DESIGN.md:136`)
+- Menyimpan hingga 5 mantra aktif di `S.spellWheel` dan menyediakan `cycleSpell()` untuk mengganti mantra secara instan di medan tempur.
+
+### [x] T529. **Modifikasi Relik Cincin & Amulet (*Build-Defining Relics*)** (dipasang di `src/systems/slain.js`) — referensi: Dimraeth
+- Menambahkan 3 relik kerajinan: *Cincin Darah Purba* (`relic_blood`, rapal mantra dengan HP saat MP habis & +20% dmg mantra), *Jimat Langkah Bayangan* (`relic_shadow`, berguling menembus musuh memberi efek Luka/Bleed), dan *Segel Vora* (`relic_vora`, kombo terakhir memulihkan +4 HP & +8 Stamina).
+
+### [x] T530. **Sekutu Ikut Bertempur (*Companion Call / Spirit Summon*)** (dipasang di `src/systems/slain.js`) — referensi: Dimraeth (`docs/GAME_DESIGN.md:138`)
+- Menambahkan *Peluit Sekutu Lumina* (`ally_horn`) untuk memanggil sekutu (Pemburu Raka) bertarung membantu Arka selama 25 detik.
+
+### [x] T531. **Prasasti Ujian Bayangan di Markas (*Stronghold Shadow Trial*)** (dipasang di `src/systems/stronghold.js` & `src/systems/slain.js`) — referensi: Dimraeth
+- Membuka menu *Ujian Bayangan* di Meja Peta & Prasasti Rumah Arka untuk menantang proyeksi musuh elit dan menguji *build*.
+
+### [x] T532. **Gelombang Kejut Tangkisan Sempurna (*Deflect Shockwave*)** (dipasang di `src/systems/polish.js`) — referensi: Dimraeth, Sekiro
+- Saat *Parry* berhasil (`TANGKIS!`), melepaskan gelombang kejut radius 36 px yang mendorong dan menguras *poise* musuh di sekitar Arka.
+
+---
+
+## T. GELOMBANG 19 — 20 Trik Poles Visual & Game-Feel ala Cobo / Mytheria (T533–T552)
+Fokus: mengadopsi 20 teknik *micro-juice*, interaksi lingkungan, animasi kenyal, kedalaman visual pseudo-3D, dan audio ASMR ala Cobo Makes Games (*Mytheria*).
+
+### [ ] T533. **Interaksi Dedaunan Rontok & Rumput Terinjak (*Foliage Trample & Leaf Scatter*)** — referensi: Cobo #1
+- File: `src/scene/world.js` & `src/systems/juice.js`.
+- Lakukan: saat Arka menerobos semak (`bushes`) atau rumpun rumput tinggi: lenturkan semak dengan *spring bounce* miring dan semburkan 2–3 partikel helai daun melayang (`jx('pop', b.x, b.y - 6, 2, { tint: 0x7ac456 })`) disertai bunyi kresek lembut.
+- Hasil: menerobos semak menghasilkan hamburan partikel daun dan bunyi kresek dedaunan.
+
+### [ ] T534. **Gelombang Angin Global Terkoordinasi (*Global Wind Swell*)** — referensi: Cobo #2
+- File: `src/systems/ambient.js` & `src/systems/tree_shadows.js`.
+- Lakukan: sinkronkan goyangan dedaunan pohon `treeA`, bayangan kanopi di tanah, dan semak menggunakan satu fungsi gelombang angin miring global `Math.sin(this.t * 2.2 + (x + y * 0.7) * 0.04)`.
+- Hasil: seluruh pepohonan, semak, dan bayangan daun di layar berayun serempak mengikuti hembusan angin yang sama.
+
+### [ ] T535. **Pantulan Kenyal Loot & Efek Squishy (*Bouncing Loot Drops & Squash*)** — referensi: Cobo #6
+- File: `src/systems/combat.js` (`drop`).
+- Lakukan: koin dan item yang dijatuhkan musuh memantul 2 kali dengan parabola mulus, memipih sesaat (`scaleX: 1.25, scaleY: 0.75`) saat menyentuh tanah, lalu mengambang tenang dengan bayangan lembut di bawahnya.
+- Hasil: rampasan koin dan material jatuh dengan pantulan kenyal yang memipih saat menyentuh lantai.
+
+### [ ] T536. **Pengambilan Item ASMR & Variasi Nada (*Ascending Pickup Audio*)** — referensi: Cobo #8
+- File: `src/systems/combat.js` (`updPicks`).
+- Lakukan: catat hitungan pengambilan item beruntun `this._pickupStreak`. Jika item diambil dalam jarak waktu `< 0.8 dtk`, variasikan nada audio `sfx('coin')` atau `sfx('chest')` naik bertahap mengikuti tangga nada pentatonik (`pitch * 1.05^streak`), menciptakan sensasi audio ASMR yang memuaskan.
+- Hasil: mengambil deretan koin/item berturut-turut menghasilkan efek tangga nada naik yang merdu.
+
+### [ ] T537. **Telegraf Serangan Musuh Mengisi Tanah (*Progressive Attack Telegraphs*)** — referensi: Cobo #11
+- File: `src/systems/juice.js` (`jxTele`).
+- Lakukan: lingkaran atau garis bahaya serangan musuh di tanah terisi penuh secara bertahap (*fill progress 0% → 100%*) mengikuti durasi ancang-ancang sebelum serangan meledak.
+- Hasil: zona bahaya serangan musuh memiliki animasi pengisian visual proporsional terhadap waktu tebasannya.
+
+### [ ] T538. **Ancang-Ancang Memipih & Melesat Musuh (*Enemy Squash-and-Stretch Windup*)** — referensi: Cobo #12
+- File: `src/systems/feel.js`.
+- Lakukan: saat musuh mengumpulkan tenaga sebelum menerjang/menghantam (`windup`), pipihkan sprite musuh (`scaleY: 0.85, scaleX: 1.15`), lalu regangkan (`scaleY: 1.2, scaleX: 0.9`) saat meluncur menerjang Arka.
+- Hasil: animasi serangan musuh memiliki ancang-ancang squash-and-stretch yang terbaca jelas secara naluriah.
+
+### [ ] T539. **Debu Langkah Kaki Adaptif Warna Bioma (*Terrain-Adaptive Dust Puffs*)** — referensi: Cobo #20
+- File: `src/systems/juice.js` & `src/systems/qol.js`.
+- Lakukan: partikel debu tumit saat berlari atau berhenti mendadak (`puff`) otomatis mengambil warna sesuai jenis tanah bioma aktif: cokelat oker di jalan tanah, hijau zaitun di padang rumput, putih di salju, dan lumut gelap di rawa.
+- Hasil: partikel debu langkah kaki menyesuaikan warna permukaan tanah yang dipijak.
+
+### [ ] T540. **Napas Halus Karakter Saat Diam (*Micro Idle Breathing*)** — referensi: Cobo #19
+- File: `src/systems/feel.js` atau `src/systems/juice.js`.
+- Lakukan: saat Arka atau NPC berdiri diam (tidak bergerak, menyerang, atau terluka), berikan ritme nafas mikro 1 piksel (`scaleY` berayun halus antara `0.99` dan `1.015`) setiap `1.6 detik`.
+- Hasil: karakter dan NPC terlihat bernafas hidup secara halus saat diam di tempat.
+
+### [ ] T541. **Pendar Jendela Rumah Hangat (*Cozy Window Bloom*)** — referensi: Cobo #4
+- File: `src/systems/atmos.js`.
+- Lakukan: jendela bangunan desa dan gubuk di senja hingga malam hari memiliki pendar hangat kuning keemasan lembut yang menyala bertahap dan berkedip mikro menyerupai nyala perapian di dalam ruangan.
+- Hasil: jendela rumah menyala dengan pendar hangat yang berkedip halus saat malam tiba.
+
+### [ ] T542. **Angka Kerusakan Melompat Melengkung (*Bouncing Arc Damage Numbers*)** — referensi: Cobo #15
+- File: `src/core/util.js` (`popWorld`).
+- Lakukan: angka kerusakan musuh melompat dengan kurva parabola ke samping kiri/kanan acak dan memantul kecil di tanah sebelum melayang memudar ke atas, dengan pendar emas saat serangan kritikal.
+- Hasil: teks damage melompat dinamis dengan parabola dan pantulan membal.
+
+### [ ] T543. **Siluet Tembus Pandang di Balik Kanopi & Bangunan (*X-Ray Cutout Silhouette*)** — referensi: Cobo #3
+- File: `src/scene/world.js` (`fades`).
+- Lakukan: saat Arka berada di balik kanopi pohon besar atau atap rumah, selain meredupkan kanopi (`fade`), tampilkan siluet garis luar terang (*white/cyan outline*) pada Arka agar pemain tidak pernah kehilangan posisi karakter di balik rintangan.
+- Hasil: Arka memiliki siluet X-ray yang tetap terbaca jelas saat tertutup pohon atau atap bangunan.
+
+### [ ] T544. **Buih Ombak Tepi Air Prosedural (*Cozy Shoreline Foam Waves*)** — referensi: Cobo #5
+- File: `src/world/water.js` & `src/systems/waterflow.js`.
+- Lakukan: di tepi sungai, danau, dan pantai padang, tambahkan lapisan buih putih piksel tipis (`1–2 px`) yang bergulung masuk lalu pecah dan surut perlahan (`sine wave 3.2s`) meninggalkan jejak basah sesaat di tepi tanah.
+- Hasil: tepi badan air memiliki animasi buih ombak pasang-surut yang menenangkan.
+
+### [ ] T545. **Fisika Magnet Penarik Berkurva Halus (*Accelerated Curve Loot Magnet*)** — referensi: Cobo #7
+- File: `src/systems/combat.js` (`updPicks`).
+- Lakukan: item rampasan yang terhisap magnet bergerak dengan kurva percepatan halus (*ease-in parabolic curve*) dan sedikit melengkung ke samping sebelum menempel ke tubuh Arka, bukan sekadar garis lurus kaku.
+- Hasil: koin dan item tertarik ke Arka dengan lintasan kurva magnetik yang organik.
+
+### [ ] T546. **Pendar Garis Luar Objek Interaktif (*Pulsing Interactive Outlines*)** — referensi: Cobo #9
+- File: `src/world/objects.js` & `src/systems/feel.js`.
+- Lakukan: peti harta, prasasti, tanaman panen, dan NPC dalam jarak jangkau interaksi (`< 22 px`) memiliki denyut garis tepi lembut (*subtle white pulse outline 1px*) yang menegaskan objek tersebut siap ditekan/diajak bicara.
+- Hasil: objek dan item interaktif berdenyut halus saat didekati pemain.
+
+### [ ] T547. **Nodul Tambang & Tanaman Meletup Saat Muncul (*Resource Node Pop & Shake*)** — referensi: Cobo #10
+- File: `src/systems/life/harvest_1.js` & `src/systems/juice.js`.
+- Lakukan: batu tambang, tanaman herbal, dan jamur saat respawn atau dipanen memiliki animasi meletup (*squash-and-stretch pop: scaleX 1.3, scaleY 0.7 → normal*) disertai hamburan serpihan kecil.
+- Hasil: sumber daya alam meletup membal saat muncul dan saat dipukul palu/alat panen.
+
+### [ ] T548. **Pembekuan Frame Hantaman Telak (*Hit-Stop Frame Freeze on Heavy Hits*)** — referensi: Cobo #13
+- File: `src/systems/combat_fx.js` & `src/systems/feel.js`.
+- Lakukan: saat serangan berat, kombo penutup (ke-5), atau *critical hit* mendarat pada musuh, bekukan animasi dunia selama `2–3 frame` (`40–60 ms`) sebelum efek lentingan terjadi, memberikan sensasi tebasan yang tertanam kuat ke badan musuh.
+- Hasil: pukulan berat dan kritikal memiliki jeda *hit-stop* mikro yang membuat tebasan terasa sangat bertenaga.
+
+### [ ] T549. **Goncangan Layar Dibulatkan Piksel (*Pixel-Clamped Screen Shake*)** — referensi: Cobo #14
+- File: `src/scene/world.js` (`camStep`).
+- Lakukan: offset getaran kamera (*shake*) selalu dibulatkan ke bilangan bulat piksel (`Math.round`) untuk mencegah terjadinya distorsi piksel (*pixel shimmering/subpixel jitter*) pada layar beresolusi rendah.
+- Hasil: efek *screen shake* tetap tajam tanpa artefak buram atau piksel yang bergetar pecah.
+
+### [ ] T550. **Cincin Suara & Indikator Bahaya Luar Layar (*Visual Sound Wave Rings*)** — referensi: Cobo #16
+- File: `src/systems/feel.js`.
+- Lakukan: saat ada musuh elit atau boss mengaum/menyiapkan serangan besar di luar pandangan kamera (`off-screen`), tampilkan gelombang cincin getar suara atau panah bahaya berdenyut di tepi layar mengarah ke sumber ancaman.
+- Hasil: pemain mendapat peringatan visual atas serangan musuh berbahaya yang berasal dari luar batas layar.
+
+### [ ] T551. **Pengurutan Kedalaman Y-Sorting Presisi (*Sub-Pixel Depth Sorting Bias*)** — referensi: Cobo #17
+- File: `src/scene/world.js`.
+- Lakukan: standarisasi titik jangkar (*anchor point*) dasar sprite dan berikan bias kedalaman mikro (`depth = base_y + bias`) pada dekorasi kecil (bunga, rumput, batu) agar tidak pernah terjadi kedipan tumpang-tindih (*z-fighting*) dengan kaki karakter.
+- Hasil: pengurutan kedalaman sprite 2D top-down sepenuhnya konsisten dan bebas dari bug layering.
+
+### [ ] T552. **Bayangan Proyeksi Miring Dinamis (*Dynamic Angled Silhouette Cast Shadows*)** — referensi: Cobo #18
+- File: `src/art/fx.js` & `src/systems/tree_shadows.js`.
+- Lakukan: sinkronkan sudut kemiringan bayangan siluet pohon dan patung dengan pergeseran posisi matahari sepanjang hari (miring panjang ke kanan-bawah saat pagi, memendek saat siang, dan memanjang ke kanan-bawah saat senja).
+- Hasil: bayangan objek dunia memanjang dan memendek secara dinamis mengikuti waktu siang-malam.
+
+---
+
+## U. GELOMBANG 20 — 10 Trik Lanjutan Suasana & Mekanik ala Cobo / Mytheria (T553–T562)
+Fokus: mengadopsi 10 trik gameplay, visual monster malam, audio adaptif, dan atmosfer sarang bos dari devlog Cobo Makes Games (*Mytheria*).
+
+### [ ] T553. **Monster Malam Bermata Menyala & Tepian Bara Prosedural (*Night Monster Glowing Eyes & Ember Edges*)** — referensi: Cobo #21
+- File: `src/scene/world.js` & `src/systems/atmos.js`.
+- Lakukan: saat malam hari (`isNight()`), seluruh musuh di alam liar otomatis diberi pendaran mata menyala (dua titik kuning/merah pekat 1-px di posisi kepala) dan tepian siluet berbutir bara api tipis (`jxAura`) tanpa perlu menggambar ulang sprite, membuat monster terlihat mengancam di kegelapan.
+- Hasil: monster di malam hari memiliki mata menyala dan aura bara yang menyeramkan.
+
+### [ ] T554. **Boneka Latih Roh Muncul Saat Upgrade Senjata (*Forge Practice Dummy Spawns*)** — referensi: Cobo #22
+- File: `src/systems/craft.js` & `src/world/spawn/spawn_1.js`.
+- Lakukan: setiap kali Arka berhasil menaikkan tingkat/menempa senjata di Pandai Besi, munculkan 1 boneka latihan roh kayu (*training dummy*) di dekat tungku selama 25 detik agar pemain bisa langsung mencoba kombo dan merasakan peningkatan damage senjata barunya.
+- Hasil: menempa senjata memunculkan target uji coba latihan di samping pandai besi.
+
+### [ ] T555. **Jejak Cakar & Tanda Wilayah Bos (*Environmental Claw Marks & Territory Signs*)** — referensi: Cobo #23
+- File: `src/world/ground.js` & `src/systems/feel.js`.
+- Lakukan: di area perbatasan menuju sarang monster elit atau gerbang bos, tambahkan stensil/dekal tanah berupa bekas cakaran predator raksasa, ranting pohon patah, dan abu hangus sebagai petunjuk visual naratif bahwa Arka memasuki wilayah berbahaya.
+- Hasil: lingkungan di sekitar arena bos memiliki tanda teritori cakar dan bekas hantaman buas.
+
+### [ ] T556. **Animasi Serangan 3-Frame Tajam (*Snappy 3-Frame Attack Timing*)** — referensi: Cobo #24
+- File: `src/ai/choreo.js` & `src/systems/feel.js`.
+- Lakukan: standarisasi timing tebasan musuh ke dalam ritme 3-frame tegas: Frame 1 (ancang-ancang/windup bergetar), Frame 2 (eksekusi hantaman instan dengan garis tebas), Frame 3 (pemulihan/recovery lambat), menciptakan dinamika tempur yang renyah dan adil untuk ditangkis (*parry*).
+- Hasil: serangan musuh memiliki ritme 3-frame yang jelas dan mudah dibaca timing serangnya.
+
+### [ ] T557. **Dinding Duri Berlubang Satu (*Thorn Wall Arena Escape Gap*)** — referensi: Cobo #25
+- File: `src/ai/bosses.js` & `src/ai/choreo.js`.
+- Lakukan: saat bos (seperti Ratu Jamur atau Bos Golem Fase 2) melancarkan barikade duri/gelombang melingkar, sisakan HANYA satu celah sempit (escape gap) pada formasi dinding tersebut yang menuntut pemain sigap melompat/berguling melewatinya.
+- Hasil: serangan dinding area bos memiliki satu celah pelarian sempit yang menantang refleks gerak.
+
+### [ ] T558. **Garis Agresivitas Musuh (*Visual Aggro / Target Tether*)** — referensi: Cobo #26
+- File: `src/ai/choreo.js` & `src/systems/feel.js`.
+- Lakukan: saat musuh elit atau pemimpin kawanan mengunci target untuk serangan terjang, tampilkan garis fokus aura merah tipis sesaat dari musuh ke Arka, memperjelas arah ancaman saat bertarung di tengah kerumunan.
+- Hasil: musuh yang sedang mengincar Arka menampilkan garis target ancaman yang terbaca jelas.
+
+### [ ] T559. **Hamburan Serpihan Pecahan Benda Fisik (*Debris Physics Scatter*)** — referensi: Cobo #27
+- File: `src/world/spawn/spawn_1.js` & `src/systems/juice.js`.
+- Lakukan: tong kayu, peti hancur, atau pot tembikar saat dipukul pecah meletupkan 4–6 serpihan fisik bertekstur yang memantul dan berputar di lantai sebelum diam dan memudar.
+- Hasil: menghancurkan perabot dunia menghasilkan hamburan serpihan fisik yang memantul.
+
+### [ ] T560. **Langkah Kaki Bersuara Adaptif (*Terrain-Adaptive Footstep Audio*)** — referensi: Cobo #28
+- File: `src/core/audio.js` & `src/systems/qol.js`.
+- Lakukan: suara langkah kaki saat berlari otomatis memilih variasi nada dan tekstur sesuai permukaan tanah: renyah di atas rumput (`step_grass`), ketukan padat di jalan batu (`step_stone`), gemersik di tanah oker (`step_dirt`), dan cipratan di tepian air (`step_water`).
+- Hasil: bunyi langkah kaki pemain berubah dinamis mengikuti material tanah yang dipijak.
+
+### [ ] T561. **Denyut Jantung & Vinyet Merah Saat Sekarat (*Low Health Heartbeat & Red Vignette*)** — referensi: Cobo #29
+- File: `src/systems/atmos.js` & `src/ui/widgets.js`.
+- Lakukan: saat HP Arka berada di bawah 25%, tepi layar berdenyut vinyet merah gelap lembut seirama detak jantung lambat (`pulse 1.1s`), memberi tensi dramatis agar pemain segera meminum Botol Cahaya.
+- Hasil: kondisi sekarat memicu denyut vinyet merah dan efek detak jantung di layar.
+
+### [ ] T562. **Api Unggun Berdenyut Pemulihan (*Campfire Healing Pulse*)** — referensi: Cobo #30
+- File: `src/world/spawn/spawn_1.js` & `src/systems/juice.js`.
+- Lakukan: saat beristirahat di dekat perapian atau api unggun markas, api memancarkan cincin gelombang hangat lembut berkala (`radius 32 px`) yang mengisi HP/stamina perlahan disertai partikel percikan api emas ke tubuh Arka.
+- Hasil: berada di dekat api unggun memancarkan gelombang hangat berkala yang memulihkan kondisi karakter.

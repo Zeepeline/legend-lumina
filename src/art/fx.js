@@ -93,8 +93,28 @@ function artRainBg() {
   x.beginPath(); x.moveTo(.5, 9.2); x.lineTo(2.5, .8); x.stroke();
   return c;
 }
-// bayangan karakter lembut (gradasi, bukan elips keras)
-function artShadowSoft(w, h) { const [c, x] = mk(w, h); x.save(); x.scale(1, h / w); const g = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2); g.addColorStop(0, 'rgba(10,30,20,.85)'); g.addColorStop(.6, 'rgba(10,30,20,.5)'); g.addColorStop(1, 'rgba(10,30,20,0)'); x.fillStyle = g; x.fillRect(0, 0, w, w); x.restore(); return c; }
+// bayangan karakter lembut berbobot ala Dimraeth: kontak inti pekat + sebaran halus ke kanan-bawah
+function artShadowSoft(w, h) {
+  const [c, x] = mk(w, h);
+  x.save();
+  x.scale(1, h / w);
+  // Lapisan luar: sebaran bayangan lembut condong ke kanan-bawah (arah cahaya kiri-atas)
+  const g1 = x.createRadialGradient(w / 2 + 1, w / 2 + 1, 0, w / 2, w / 2, w / 2);
+  g1.addColorStop(0, 'rgba(12,24,14,.72)');
+  g1.addColorStop(.55, 'rgba(12,24,14,.38)');
+  g1.addColorStop(1, 'rgba(12,24,14,0)');
+  x.fillStyle = g1;
+  x.fillRect(0, 0, w, w);
+  // Lapisan dalam: kontak oklusi pekat tepat di tapak kaki (menghilangkan kesan melayang)
+  const g2 = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 3);
+  g2.addColorStop(0, 'rgba(8,14,8,.92)');
+  g2.addColorStop(.65, 'rgba(8,14,8,.55)');
+  g2.addColorStop(1, 'rgba(8,14,8,0)');
+  x.fillStyle = g2;
+  x.fillRect(0, 0, w, w);
+  x.restore();
+  return c;
+}
 function artFog() { const [c, x] = mk(96, 64); x.save(); x.scale(1, 64 / 96); const g = x.createRadialGradient(48, 48, 0, 48, 48, 48); g.addColorStop(0, 'rgba(230,240,235,.9)'); g.addColorStop(1, 'rgba(230,240,235,0)'); x.fillStyle = g; x.fillRect(0, 0, 96, 96); x.restore(); return c; }
 function artRipple() { const fr2 = []; for (let f = 0; f < 3; f++) { const [c, x] = mk(24, 12); x.strokeStyle = 'rgba(230,250,255,' + (.9 - f * .25) + ')'; x.lineWidth = 1; x.beginPath(); x.ellipse(12, 6, 4 + f * 3.5, 2 + f * 1.6, 0, 0, 6.29); x.stroke(); fr(x, '#ffffff', 11, 5, 2, 1); fr2.push(c); } return strip(fr2); }
 function artSprout(ready) { const [c, x] = mk(12, 12); if (!ready) { fr(x, '#3f8a34', 5, 5, 2, 6); fr(x, '#6cc04a', 2, 4, 3, 2); fr(x, '#6cc04a', 7, 3, 3, 2); return outline(c); } fr(x, '#ff8a2a', 4, 8, 4, 3); fr(x, '#ffd08a', 4, 8, 1, 2); for (let l = -2; l <= 2; l++) fr(x, '#4f9a34', 6 + l, 2 + Math.abs(l), 1, 6 - Math.abs(l)); return outline(c); }

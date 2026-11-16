@@ -61,30 +61,52 @@ MAPS.road = {
 };
 
 MAPS.kgate = {
-  id: 'kgate', name: 'Gerbang Kota Lumina', w: 1200, h: 900, bgm: 'town', ground: 'village', glow: [600, 360, 600], crowd: 6,
+  id: 'kgate', name: 'Gerbang Kota Lumina', w: 1200, h: 900, bgm: 'town', ground: 'village', pathType: 'paving', glow: [600, 360, 600], crowd: 6,
   paths: [[600, 900, 600, 0, 34], [600, 640, 300, 640, 12], [600, 640, 900, 640, 12]],
   discs: [[600, 300, 120], [300, 640, 50], [900, 640, 50]],
-  ponds: [[300, 470, 210, 70], [900, 470, 210, 70]],
-  objs: [['gatehouse', 600, 404], ...[[60, 404], [192, 404], [324, 404], [876, 404], [1008, 404], [1140, 404]].map(([x, y]) => ['cwall', x, y]),
-    ...lampRow(560, 560, 2, 80), ...lampRow(560, 720, 2, 80), ...lampRow(540, 250, 3, 60),
-    ['lamp', 300, 620], ['lamp', 900, 620], ['lamp', 560, 840], ['lamp', 640, 840],
-    ['planter', 510, 450], ['planter', 690, 450],
-    ['fence', 480, 620], ['fence', 498, 620], ['fence', 702, 620], ['fence', 720, 620],
+  ponds: [[150, 840, 160, 70], [1050, 840, 160, 70]],
+  objs: [
+    ['gatehouse', 600, 424],
+    ...[[72, 404], [204, 404], [336, 404], [468, 404], [732, 404], [864, 404], [996, 404], [1128, 404]].map(([x, y]) => ['cwall', x, y]),
+    ['gpt_city_lamp', 554, 494], ['gpt_city_lamp', 646, 494],
+    ['gpt_city_banner_sm', 530, 498], ['gpt_city_banner_sm', 670, 498],
+    ['gpt_city_banner', 566, 340], ['gpt_city_banner', 634, 340],
+    ['gpt_city_cliff_l', 160, 840, { ok: 'tebing sungai kiri bawah sesuai referensi' }],
+    ['gpt_city_cliff_r', 1040, 840, { ok: 'tebing sungai kanan bawah sesuai referensi' }],
+    ['gpt_city_fence', 510, 840], ['gpt_city_fence', 710, 840],
+    ['gpt_city_rock_lg', 770, 600], ['gpt_city_rock_sm', 800, 615],
+    ['gpt_city_flower_w', 555, 660], ['gpt_city_flower_p', 645, 660],
     ['sign', 550, 660, { text: 'PERSIMPANGAN GERBANG\n↑ Distrik Pasar · ↓ Jalan Raya Lama · ← Pos Sayap Barat · → Sayap Timur' }],
     ['sign', 670, 840, { text: 'SELAMAT DATANG DI KOTA LUMINA\nKota Seribu Lentera\n↑ Masuk gerbang utama menuju Distrik Pasar' }],
-    ['sign', 680, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\n↑ Masuk lewat gerbang di utara → Distrik Pasar.' }], ['bounty_board', 720, 600], ['crate', 260, 620], ['crate', 282, 616], ['barrel', 330, 630], ['crate', 880, 620], ['barrel', 930, 626],
+    ['sign', 680, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\n↑ Masuk lewat gerbang di utara → Distrik Pasar.' }],
+    ['bounty_board', 720, 600],
+    ['crate', 260, 620], ['crate', 282, 616], ['barrel', 330, 630], ['crate', 880, 620], ['barrel', 930, 626],
     ['houseB', 200, 230], ['houseC', 1000, 230],
     ['houseA', 120, 150], ['houseB', 240, 150], ['houseC', 360, 150],
     ['houseC', 840, 150], ['houseA', 960, 150], ['houseB', 1080, 150],
     ['houseB', 180, 740], ['houseA', 1020, 740],
     ['planter', 470, 300], ['planter', 730, 300],
     ['pigeons', 680, 520], ['pigeons', 420, 680],
-    ['archerytarget', 340, 720]],
-  walls: [[0, 0, 540, 40], [660, 0, 540, 40], [0, 0, 40, 900], [1160, 0, 40, 900], [0, 860, 560, 40], [640, 860, 560, 40], [0, 380, 564, 26], [636, 380, 564, 26]],
+    ['archerytarget', 340, 720]
+  ],
+  walls: [
+    [0, 0, 540, 40], [660, 0, 540, 40],
+    [0, 0, 40, 900], [1160, 0, 40, 900],
+    [0, 860, 560, 40], [640, 860, 560, 40],
+    [0, 380, 535, 26], [665, 380, 535, 26]
+  ],
   border: { top: 40, bottom: 860, left: 40, right: 1160, gap: [560, 640], gapT: [540, 660], types: ['treeA', 'treeB'] },
-  exits: [{ x: 560, y: 888, w: 80, h: 12, to: 'road', tx: 450, ty: 60, dir: 'down', label: 'Jalan Raya Lama' },
-    { x: 540, y: 0, w: 120, h: 12, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' }],
-  npcs: citizens([['gj1', 'guard', 'Penjaga Gerbang', 540, 450, 'gerbang', 0], ['gj2', 'guard', 'Penjaga Gerbang', 660, 450, 'gerbang', 0], ['courier', 'boy', 'Budi Kurir Kilat', 380, 720, 'warga', 0], ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'], ['gw2', 'farmer', 'Petani', 900, 700, 'warga']]),
+  exits: [
+    { x: 560, y: 888, w: 80, h: 12, to: 'road', tx: 450, ty: 60, dir: 'down', label: 'Jalan Raya Lama' },
+    { x: 540, y: 0, w: 120, h: 12, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' }
+  ],
+  npcs: citizens([
+    ['gj1', 'guard_spear', 'Penjaga Gerbang', 562, 476, 'gerbang', 0],
+    ['gj2', 'guard_spear', 'Penjaga Gerbang', 638, 476, 'gerbang', 0],
+    ['courier', 'boy', 'Budi Kurir Kilat', 380, 720, 'warga', 0],
+    ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'],
+    ['gw2', 'farmer', 'Petani', 900, 700, 'warga']
+  ]),
   trees: { n: 40, min: 30, types: [['treeA', .3], ['bushG1', .4], ['rock', .3]] },
 };
 

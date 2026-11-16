@@ -69,7 +69,7 @@ def build(eid):
             hh, ww = min(h - sy0, FH - ty0), min(w - sx0, FW - tx0)
             if hh > 0 and ww > 0: f[ty0:ty0 + hh, tx0:tx0 + ww] = sm[sy0:sy0 + hh, sx0:sx0 + ww]
             atlas[r * FH:(r + 1) * FH, c * FW:(c + 1) * FW] = f
-    Image.fromarray(atlas).save(f'assets/img/esh_{eid}.png', optimize=True)
+    Image.fromarray(atlas).save(f'assets/img/monsters/esh_{eid}.png', optimize=True)
     prev = Image.fromarray(atlas); prev.resize((prev.width * 4, prev.height * 4), Image.NEAREST).save(f'assets/raw/enemy/{eid}_cut.png')
     body_h = max(by - (np.argwhere(sm[..., 3] > 0)[:, 0].min()) for sm, cx, by in cut[0])
     return {'fw': FW, 'fh': FH, 'h': int(round(body_h))}

@@ -259,9 +259,7 @@ Object.assign(World.prototype, {
       this.slashFx(wt, pl.combo || 1);
       if (!pl.dashT || pl.dashT <= 0) {
         const [dx, dy] = DIRV[pl.dir];
-        pl.dashT = CFX.lungeT;
-        pl.dvx = dx * CFX.lunge;
-        pl.dvy = dy * CFX.lunge;
+        if (pl.body) pl.body.setVelocity(dx * CFX.lunge, dy * CFX.lunge);
         this.ghostT = CFX.lungeT + .05;
       }
     }

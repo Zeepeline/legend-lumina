@@ -8,8 +8,9 @@ html = rd('index.html')
 html = html.replace('<link rel="stylesheet" href="styles.css">', '<style>\n' + rd('styles.css') + '</style>')
 imgs = {}
 d = os.path.join(root, 'assets', 'img')
-for f in sorted(os.listdir(d)):
-    if f.endswith('.png'): imgs[f[:-4]] = 'data:image/png;base64,' + base64.b64encode(open(os.path.join(d, f), 'rb').read()).decode()
+for cur, _, files in sorted(os.walk(d)):
+    for f in sorted(files):
+        if f.endswith('.png'): imgs[f[:-4]] = 'data:image/png;base64,' + base64.b64encode(open(os.path.join(cur, f), 'rb').read()).decode()
 srcs = re.findall(r'<script src="(src/[^"]+)"></script>', html)
 code = 'window.IMG_INLINE = ' + json.dumps(imgs) + ';\n' + '\n'.join(rd(s) for s in srcs)
 html = re.sub(r'(<script src="src/[^"]+"></script>\n?)+', lambda m: '<script>\n' + code.replace('</script', '<\\/script') + '\n</script>\n', html, count=1)

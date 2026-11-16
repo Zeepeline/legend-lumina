@@ -2,7 +2,7 @@
 import random, numpy as np
 from PIL import Image
 from scipy import ndimage
-REF='/home/claude/legend-lumina/assets/reference/target_padang.png'; OUT='/home/claude/legend-lumina/assets/img/'
+REF='/home/claude/legend-lumina/assets/reference/target_padang.png'; OUT='/home/claude/legend-lumina/assets/img/ground/'
 S=128; F=5.2   # 1 piksel seni (±6 px) → ±1.15 px game, sama dengan skala lembar Verdant
 ref=Image.open(REF).convert('RGB')
 def down(b): c=ref.crop(b); return np.array(c.resize((round(c.width/F),round(c.height/F)),Image.BOX)).astype(float)

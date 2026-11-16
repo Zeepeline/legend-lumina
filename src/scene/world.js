@@ -69,7 +69,7 @@ class World extends Phaser.Scene {
     pl.body.setSize(10, 6).setOffset(5, CH_FH - 7);
     if (M.indoor) pl.setCollideWorldBounds(true);
     pl.dir = data.dir || 'down'; pl.flipX = pl.dir === 'left'; pl.atkCd = 0; pl.atkT = 0; pl.inv = 0; pl.kb = 0; pl.dead = false;
-    pl.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.25);
+    pl.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.36);
     this.physics.add.collider(pl, this.walls);
     for (const n of this.npcs) this.physics.add.collider(pl, n.spr);
     for (const e of this.enemies) if (e.D.ai === 'turret') this.physics.add.collider(pl, e.spr);
@@ -160,7 +160,7 @@ class World extends Phaser.Scene {
     const s = this.physics.add.sprite(n.x, n.y, 'ch_' + n.ch, 'down0').setOrigin(.5, 1).setDepth(n.y);
     s.body.setSize(12, 7).setOffset((s.width - 12) / 2, s.height - 8); s.setImmovable(true); s.setCollideWorldBounds(true);
     this.physics.add.collider(s, this.walls);
-    const o = { n, spr: s, ch: n.ch, home: { x: n.x, y: n.y }, t: rnd(1, 3), dir: n.dir, sh: this.add.image(n.x, n.y, 'shadow').setAlpha(.25) };
+    const o = { n, spr: s, ch: n.ch, home: { x: n.x, y: n.y }, t: rnd(1, 3), dir: n.dir, sh: this.add.image(n.x, n.y, 'shadow').setAlpha(.34) };
     this.face(o, n.dir); this.npcs.push(o);
     this.inter.push({ npc: o, r: n.reach || 16, fn: () => this.talkNpc(o) });
     // tanda ! untuk NPC yang punya misi
@@ -198,7 +198,7 @@ class World extends Phaser.Scene {
       if (this.anims.exists(D.tex + '_mv')) { s.play(D.tex + '_mv'); s.anims.setProgress(Math.random()); }
       else if (this.anims.exists(D.tex + '_idle')) { s.play(D.tex + '_idle'); }
     } else s.anims.stop();
-    const e = { D, type, spr: s, sc: D.scale || 1, hp: D.hp, max: D.hp, st: 'idle', t: rnd(.2, 1.2), home: { x, y }, ph: rnd(0, 6), shootT: rnd(1, 2.5), flash: 0, kb: 0, cd: 0, boss: BOSS_AI.includes(D.ai), sh: this.add.image(x, y, D.scale ? 'shadowb' : 'shadow').setAlpha(.22) };
+    const e = { D, type, spr: s, sc: D.scale || 1, hp: D.hp, max: D.hp, st: 'idle', t: rnd(.2, 1.2), home: { x, y }, ph: rnd(0, 6), shootT: rnd(1, 2.5), flash: 0, kb: 0, cd: 0, boss: BOSS_AI.includes(D.ai), sh: this.add.image(x, y, D.scale ? 'shadowb' : 'shadow').setAlpha(.32) };
     if (type === 'gold_slime') {
       s.setTint(0xffd700);
       e.goldSlime = true;

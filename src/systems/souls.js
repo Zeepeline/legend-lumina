@@ -4,7 +4,7 @@
 // - Botol Cahaya: penyembuh isi ulang (S.flask), terisi penuh di patung teleport, saat tidur, dan saat bangkit setelah kalah
 // - kalah: separuh emas tertinggal sebagai "Jejak Cahaya" di tempat jatuh; ambil kembali sebelum kalah lagi (S.lost)
 // Kesulitan Santai (OPT.diff 0) memotong biaya stamina separuh.
-const SOUL = { atk: { sword: 12, spear: 14, axe: 20, bow: 8 }, roll: 22, regenDelay: .7, flaskHeal: .45, flaskT: .55, lostR: 18 };
+const SOUL = { atk: { sword: 7, spear: 8, axe: 12, bow: 5 }, roll: 14, regenDelay: .35, flaskHeal: .45, flaskT: .55, lostR: 18 };
 function flaskOf() {
   const maxF = (typeof OPT !== 'undefined' && OPT.diff === 2) ? 2 : 3;
   if (!S.flask) S.flask = { n: maxF, max: maxF };
@@ -22,7 +22,7 @@ function refillFlask(sc) {
   // stamina: biaya serangan & berguling
   const spend = (sc, n) => {
     if (S.sta == null) S.sta = stat().maxsta || 100;
-    if (S.sta < Math.min(n, 6)) {
+    if (S.sta <= 0) {
       if (!sc.tiredT || sc.t - sc.tiredT > 1) { sc.tiredT = sc.t; popWorld(sc.pl.x, sc.pl.y - 30, 'Lelah!', 'mpc'); sfx('buzz'); }
       return false;
     }
@@ -32,7 +32,7 @@ function refillFlask(sc) {
   W.attack = function () {
     const pl = this.pl; if (!pl || pl.dead || pl.atkCd > 0) return attack0.apply(this, arguments);
     const wt = (ITEMS[S.eq.wpn] && ITEMS[S.eq.wpn].wt) || 'sword';
-    if (!spend(this, soulCost(SOUL.atk[wt] || 12))) return;
+    if (!spend(this, soulCost(SOUL.atk[wt] || 7))) return;
     return attack0.apply(this, arguments);
   };
   const dash0 = W.dash;

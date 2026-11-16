@@ -2,7 +2,7 @@
 // Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py
 // (dibersihkan sesuai docs/VALIDATION_RULES.md, ukurannya disamakan dengan tekstur lama agar tata letak tetap benar).
 const GPT_SWAP = [
-  "i_treeA", "treeAd", "treeSn", "pine", "pined", "i_treeWoodsPine", "i_apple1", "i_orange1",
+  "i_treeA", "treeAd", "treeSn", "i_apple1", "i_orange1",
   "i_bushP", "i_bushW", "i_bushP2", "bush", "bushv", "rock",
   "i_rockWoods", "log", "hay", "i_cart", "crate", "barrel", "fence", "sign", "lamp",
   "mush", "stele", "i_houseA", "i_houseB", "i_houseC", "i_market", "windmill", "pebbles",
@@ -13,7 +13,7 @@ const GPT_SWAP = [
 const GPT_LOOK = {
   "domba": "g094", "ayam": "g090", "chick_master": "g023", "child": "g055", "rudi": "g074",
   "dice_gambler": "g026", "pancing": "g058", "sambo": "g017", "kafilah": "g025", "kmerchant": "g059",
-  "gj1": "g029", "gj2": "g030", "gw1": "g010", "gw2": "g021", "kp1": "g053", "kp2": "g057",
+  "gj1": "guard_spear", "gj2": "guard_spear", "gw1": "g010", "gw2": "g021", "kp1": "g053", "kp2": "g057",
   "kp3": "g011", "kp4": "g036", "kp5": "g051", "kp6": "g022", "kp7": "g002", "kp8": "g040",
   "ka1": "g037", "ka2": "g075", "ka3": "g063", "ka4": "g032", "ka5": "g077", "kb1": "g073",
   "kb2": "g052", "kb3": "g012", "kb4": "g056"
@@ -29,6 +29,31 @@ function applyGptSwap(T, A) {
       if (T.exists(hk)) T.remove(hk);
       const th = T.addImage(hk, IMGEL[hk]);
       th.add(0, 0, 0, 0, IMGEL[hk].width, IMGEL[hk].height);
+    }
+  }
+  if (IMGEL['gpt_gatehouse']) {
+    if (T.exists('gatehouse')) T.remove('gatehouse');
+    const tg = T.addImage('gatehouse', IMGEL['gpt_gatehouse']);
+    tg.add(0, 0, 0, 0, IMGEL['gpt_gatehouse'].width, IMGEL['gpt_gatehouse'].height);
+  }
+  if (IMGEL['gpt_gatehouse_top']) {
+    if (T.exists('gpt_gatehouse_top')) T.remove('gpt_gatehouse_top');
+    const tgt = T.addImage('gpt_gatehouse_top', IMGEL['gpt_gatehouse_top']);
+    tgt.add(0, 0, 0, 0, IMGEL['gpt_gatehouse_top'].width, IMGEL['gpt_gatehouse_top'].height);
+  }
+  if (IMGEL['gpt_cwall']) {
+    if (T.exists('cwall')) T.remove('cwall');
+    const tc = T.addImage('cwall', IMGEL['gpt_cwall']);
+    tc.add(0, 0, 0, 0, IMGEL['gpt_cwall'].width, IMGEL['gpt_cwall'].height);
+  }
+  const cityProps = ['gpt_city_lamp', 'gpt_city_banner', 'gpt_city_banner_sm', 'gpt_city_fence',
+    'gpt_city_rock_lg', 'gpt_city_rock_sm', 'gpt_city_flower_w', 'gpt_city_flower_p',
+    'gpt_city_cliff_l', 'gpt_city_cliff_r'];
+  for (const cp of cityProps) {
+    if (IMGEL[cp]) {
+      if (T.exists(cp)) T.remove(cp);
+      const tc = T.addImage(cp, IMGEL[cp]);
+      tc.add(0, 0, 0, 0, IMGEL[cp].width, IMGEL[cp].height);
     }
   }
   if (IMGEL['gpt_v_village_well']) {

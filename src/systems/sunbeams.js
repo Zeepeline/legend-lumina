@@ -13,10 +13,10 @@
     }
   }
 
-  function drawTrapezoid(g, xTop, wTop, xBot, wBot, h, alpha) {
+  function drawTrapezoid(g, xTop, wTop, xBot, wBot, h, alpha, col = 0xfff4c2) {
     g.clear();
     if (alpha <= 0.005) return;
-    g.fillStyle(0xfff4c2, alpha);
+    g.fillStyle(col, alpha);
     g.beginPath();
     g.moveTo(xTop, 0);
     g.lineTo(xTop + wTop, 0);
@@ -31,11 +31,16 @@
     if (typeof origUpdAtmos === 'function') origUpdAtmos.call(this, dt);
     const mId = this.M && this.M.id;
     const isForest = mId === 'forest' || mId === 'deepwood';
+    const isOutdoor = this.M && !this.M.indoor && !this.M.dark;
     const h = (typeof S !== 'undefined' && S.time != null) ? S.time : 12;
-    // Pagi jam 6.0 sampai 9.0 (puncak jam 7.5)
-    let beamStrength = 0;
+    // Pagi jam 6.0-9.0 di hutan ATAU Sore Senja Emas (jam 15.8-18.6) di padang/luar ruang ala Dimraeth
+    let beamStrength = 0, beamCol = 0xfff4c2;
     if (isForest && h >= 6 && h <= 9) {
       beamStrength = 1 - Math.abs(h - 7.5) / 1.5;
+      beamCol = 0xfff4c2;
+    } else if (isOutdoor && h >= 15.8 && h <= 18.6) {
+      beamStrength = (1 - Math.abs(h - 17.2) / 1.4) * 0.92;
+      beamCol = 0xffcb58;
     }
 
     if (beamStrength <= 0) {
@@ -60,7 +65,7 @@
       const wTop = 32 + (i % 3) * 12;
       const xBot = xTop + 70 + (i * 10);
       const wBot = wTop + 45;
-      drawTrapezoid(g, xTop, wTop, xBot, wBot, vh, alpha);
+      drawTrapezoid(g, xTop, wTop, xBot, wBot, vh, alpha, beamCol);
     }
   };
 })();

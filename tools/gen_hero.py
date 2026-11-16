@@ -91,7 +91,7 @@ def main():
     atlas = np.zeros((len(strips) * FH, W, 4), np.uint8)
     for r, fr in enumerate(strips):
         for c, f in enumerate(fr): atlas[r * FH:(r + 1) * FH, c * FW:(c + 1) * FW] = f
-    Image.fromarray(atlas).save('assets/img/hero_arka.png')
+    Image.fromarray(atlas).save('assets/img/hero/hero_arka.png')
     json.dump({'fw': FW, 'fh': FH, 'anims': anims}, open(f'{SRC}/hero_arka.json', 'w'), indent=0)
     print('atlas', atlas.shape, len(anims), 'animasi')
 

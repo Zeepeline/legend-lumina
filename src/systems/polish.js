@@ -8,7 +8,14 @@ const ELEM_COL = { fire: '#ff8a3a', ice: '#8ad8ff', holy: '#ffe88a' };
 const _hitEnemy = World.prototype.hitEnemy;
 World.prototype.hitEnemy = function (e, base, crit, nx, ny) {
   const el = this.curElem || (this._inShots && this._curShot && this._curShot.kind === 'fire' ? 'fire' : null), k = el && WEAK[ELEM[e.type]] ? WEAK[ELEM[e.type]][el] || 1 : 1;
-  if (this.pl.parryCrit > 0 && !el) { crit = true; this.pl.parryCrit = 0; }
+  if (this.pl.parryCrit > 0 && !el) {
+    crit = true; this.pl.parryCrit = 0;
+    if (!this.pl.riposteUntil || (this.t || 0) <= this.pl.riposteUntil) {
+      base = Math.round(base * 1.48);
+      popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 22, 'BALASAN!', 'crit');
+      this.hitStop(.12, 35); this.camShake(130, .006);
+    }
+  }
   if (k !== 1 && e.hp > 0) {
     const weakLabel = OPT.colorblind ? (k > 1 ? '[LEMAH!]' : '[KEBAL]') : (k > 1 ? 'LEMAH!' : 'tahan');
     popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 14, weakLabel, k > 1 ? (OPT.colorblind ? '#00e5ff' : ELEM_COL[el] || '#ffe66b') : '#a8a8b8');
@@ -60,23 +67,32 @@ const _nova = World.prototype.nova;
 World.prototype.nova = function () { this.curElem = 'ice'; try { return _nova.apply(this, arguments); } finally { this.time.delayedCall(400, () => { this.curElem = null; }); } };
 const _useTool = World.prototype.useTool;
 World.prototype.useTool = function (id) { if (ITEMS[id].tool === 'bomb') this.time.delayedCall(600, () => { this.curElem = 'fire'; this.time.delayedCall(200, () => { this.curElem = null; }); }); return _useTool.call(this, id); };
-// ---- tangkis: serang tepat sebelum terkena pukulan jarak dekat ----
-const PARRY_WIN = .18;
+// ---- tangkis: serang tepat sebelum terkena pukulan jarak dekat (T470, T483, T532) ----
+const PARRY_WIN = .22;
 const _attack = World.prototype.attack;
-World.prototype.attack = function () { if (this.pl.atkCd <= 0) this.pl.swingT = this.t; return _attack.apply(this, arguments); };
+World.prototype.attack = function () { if (this.pl.atkCd <= 0) this.pl.swingT = this.t || 0; return _attack.apply(this, arguments); };
 const _hurtPlayer = World.prototype.hurtPlayer;
 World.prototype.hurtPlayer = function (atk, sx, sy, fx) {
-  const pl = this.pl;
-  if (pl.swingT != null && this.t - pl.swingT < PARRY_WIN && pl.inv <= 0 && !pl.dead && !G.lock) {
-    const e = this.enemies.filter(e => e.hp > 0 && !e.boss).sort((a, b) => Math.hypot(a.spr.x - sx, a.spr.y - sy) - Math.hypot(b.spr.x - sx, b.spr.y - sy))[0];
-    if (e && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 60) {
-      pl.swingT = null; pl.inv = .4; pl.parryCrit = 1.5; S.parries = (S.parries || 0) + 1;
-      e.staggerT = 0.6; e.st = 'rec'; e.t = 0.6; e.spr.setVelocity(0);
-      e.kb = .2; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1; e.kbx = (e.spr.x - pl.x) / n * 200; e.kby = (e.spr.y - pl.y) / n * 200;
-      if (e.D && e.D.ai === 'fly') {
-        // Jatuhkan musuh terbang saat ditangkis waktu menukik (#7)
-        this.freezeEnemy(e, 2);
-        popWorld(e.spr.x, e.spr.y - 20, 'JATUH TERSUNGKUR!', 'crit');
+  const pl = this.pl, now = this.t || 0;
+  if (pl.swingT != null && now - pl.swingT < PARRY_WIN && pl.inv <= 0 && !pl.dead && !G.lock) {
+    const e = this.enemies.filter(o => !o.boss).sort((a, b) => Math.hypot(a.spr.x - sx, a.spr.y - sy) - Math.hypot(b.spr.x - sx, b.spr.y - sy))[0];
+    if ((e && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 64) || (sx != null && Math.hypot(sx - pl.x, sy - pl.y) < 64)) {
+      pl.swingT = null; pl.inv = .4; pl.parryCrit = 1.5; pl.riposteUntil = now + 1.5; S.parries = (S.parries || 0) + 1;
+      if (e && e.hp > 0) {
+        e.staggerT = 0.6; e.st = 'rec'; e.t = 0.6; e.spr.setVelocity(0);
+        e.kb = .2; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1; e.kbx = (e.spr.x - pl.x) / n * 200; e.kby = (e.spr.y - pl.y) / n * 200;
+        if (e.D && e.D.ai === 'fly') {
+          this.freezeEnemy(e, 2);
+          popWorld(e.spr.x, e.spr.y - 20, 'JATUH TERSUNGKUR!', 'crit');
+        }
+      }
+      // T532: Gelombang kejut tangkisan mendorong musuh sekitar 36 px
+      for (const o of this.enemies || []) {
+        if (o !== e && o.hp > 0 && Math.hypot(o.spr.x - pl.x, o.spr.y - pl.y) < 36) {
+          o.kb = .14; const dn = Math.hypot(o.spr.x - pl.x, o.spr.y - pl.y) || 1;
+          o.kbx = (o.spr.x - pl.x) / dn * 150; o.kby = (o.spr.y - pl.y) / dn * 150;
+          if (o.poise != null) o.poise = Math.max(0, o.poise - 1);
+        }
       }
       const pRing = this.add.graphics().setDepth(pl.y + 4); const ro = { r: 8 };
       if (!OPT.lite && pRing.preFX && this.renderer?.type === Phaser.WEBGL) {

@@ -41,7 +41,8 @@
     if (!r || !this.tweens) return;
 
     const targetColor = BIOME_TINTS[id] || BIOME_TINTS.default;
-    const targetAlpha = (targetColor !== BIOME_TINTS.default) ? 0.055 : 0;
+    const isNightTime = typeof nightAmt === 'function' && nightAmt() > 0.3;
+    const targetAlpha = (targetColor !== BIOME_TINTS.default && !isNightTime) ? 0.055 : 0;
 
     r.fillColor = targetColor;
     this.tweens.killTweensOf(r);

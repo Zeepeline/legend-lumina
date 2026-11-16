@@ -27,13 +27,19 @@ const segDist = (px, py, x1, y1, x2, y2) => { const dx = x2 - x1, dy = y2 - y1, 
 const boxSegDist = (b, s) => Math.min(...[[b.x1, b.y1], [b.x2, b.y1], [b.x1, b.y2], [b.x2, b.y2], [(b.x1 + b.x2) / 2, (b.y1 + b.y2) / 2]].map(([x, y]) => segDist(x, y, s[0], s[1], s[2], s[3])));
 const inPond = (x, y, P) => ((x - P[0]) / P[2]) ** 2 + ((y - P[1]) / P[3]) ** 2 < .85;
 const hit = (a, b, m = 0) => a.x1 < b.x2 + m && a.x2 > b.x1 - m && a.y1 < b.y2 + m && a.y2 > b.y1 - m;
+const imgDir = path.join(root, 'assets/img'), imgMap = {};
+for (const e of fs.readdirSync(imgDir, { withFileTypes: true })) {
+  if (e.isDirectory()) for (const f of fs.readdirSync(path.join(imgDir, e.name))) { if (f.endsWith('.png')) imgMap[f.slice(0, -4)] = path.join(imgDir, e.name, f); }
+  else if (e.name.endsWith('.png')) imgMap[e.name.slice(0, -4)] = path.join(imgDir, e.name);
+}
+const findImg = k => imgMap[k] || path.join(imgDir, k + '.png');
 
 for (const [id, M] of Object.entries(MAPS)) {
   if (M.indoor) continue;
   const objs = (M.objs || []).map(([t, x, y, opt], i) => ({ t, x, y, i, ok: opt && opt.ok, b: box(t, x, y) }));
   const tag = o => `${id}: '${o.t}' (${o.x}, ${o.y})`;
   // kandang (M.ranch): area pagar tidak boleh menumpuk gambar objek, jalan, atau NPC
-  const visH = t => { const k = OBJ[t] && OBJ[t].key, g = k && path.join(root, 'assets/img', 'gpt_' + k + '.png'), f = k && (fs.existsSync(g) ? g : path.join(root, 'assets/img', k.replace(/^i_/, '') + '.png')); try { const b = fs.readFileSync(f); return b.readUInt32BE(20); } catch (_) { const c = OBJ[t] && OBJ[t].col; return Math.min(120, Math.max(28, (c && c[0] || 20) * 1.4)); } };
+  const visH = t => { const k = OBJ[t] && OBJ[t].key, g = k && findImg('gpt_' + k), f = k && (fs.existsSync(g) ? g : findImg(k.replace(/^i_/, ''))); try { const b = fs.readFileSync(f); return b.readUInt32BE(20); } catch (_) { const c = OBJ[t] && OBJ[t].col; return Math.min(120, Math.max(28, (c && c[0] || 20) * 1.4)); } };
   if (M.ranch) { const R = M.ranch, rb = { x1: R.x, y1: R.y - 14, x2: R.x + R.w, y2: R.y + R.h + 6 };
     for (const o of objs) { const c = OBJ[o.t] && OBJ[o.t].col, w = c && c[0] ? c[0] : 20, vis = { x1: o.x - w / 2, x2: o.x + w / 2, y1: o.y - visH(o.t), y2: o.y + 2 }; if (hit(rb, vis)) issues.push(`${id}: kandang menumpuk '${o.t}' (${o.x}, ${o.y})`); }
     for (const s of M.paths || []) if (boxSegDist(rb, s) < (s[4] || 12) / 2 + 2) issues.push(`${id}: kandang menutup jalan (${s.slice(0, 4).join(',')})`);
@@ -87,7 +93,7 @@ for (const [id, M] of Object.entries(MAPS)) {
 }
 // gambar: file ada & tidak terlalu kecil (tanda salah potong)
 const tex = fs.readFileSync(path.join(root, 'src/gfx/textures.js'), 'utf8'), list = (tex.match(/const IMG_LIST = \[([^\]]*)\]/) || [, ''])[1].match(/['"][^'"]+['"]/g).map(x => x.slice(1, -1));
-for (const k of list) { const f = path.join(root, 'assets/img', k + '.png'); if (!fs.existsSync(f)) issues.push(`gambar '${k}' ada di IMG_LIST tapi file assets/img/${k}.png tidak ada`); }
+for (const k of list) { const f = findImg(k); if (!fs.existsSync(f)) issues.push(`gambar '${k}' ada di IMG_LIST tapi file assets/img/${k}.png tidak ada`); }
 for (const [k, o] of Object.entries(OBJ)) if (/^i_/.test(o.key) && !list.includes(o.key.slice(2)) && !/i_(cart|treePine|treeOak|rockWoods)$/.test(o.key)) issues.push(`OBJ '${k}' memakai gambar '${o.key}' yang tidak ada di IMG_LIST`);
 const all = process.argv.includes('--semua');
 for (const m of issues) console.log('MASALAH  ' + m);

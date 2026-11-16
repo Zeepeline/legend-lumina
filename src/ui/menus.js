@@ -166,7 +166,8 @@ async function openDebugMenu() {
       { t: '🚀 Teleport: Rawa Senja', map: 'swamp', x: 640, y: 100 },
       { t: '🚀 Teleport: Puncak Beku', map: 'snow', x: 640, y: 1100 },
       { t: '🚀 Teleport: Danau Cermin', map: 'lake', x: 1000, y: 500 },
-      { t: '🚀 Teleport: Kota Lumina', map: 'kpasar', x: 560, y: 320 },
+      { t: '🚀 Teleport: Gerbang Kota Lumina', map: 'kgate', x: 600, y: 750 },
+      { t: '🚀 Teleport: Kota Lumina (Pasar)', map: 'kpasar', x: 560, y: 320 },
       { t: '🎁 Beri Semua Kunci & Alat' },
       { t: 'Tutup' }
     ];

@@ -2,7 +2,8 @@
 // Suasana cahaya & kabut (wilayah aktif saja):
 // - lapisan kabut berlapis (2 lembar noise lembut, parallax & bergeser) untuk cuaca 'fog'; lebih tebal pagi hari
 // - cahaya hangat berkedip untuk SEMUA lampu di layar saat malam (lampu besar sudah punya `this.glows`) + lentera kecil di sekitar Arka
-const ATMOS_POOL = 18;
+// - butiran debu emas melayang (siang/sore) & bara api lembut (malam) ala suasana Dimraeth
+const ATMOS_POOL = 18, MOTE_POOL = 18;
 function fogSheetTex(sc) {
   if (sc.textures.exists('fogsheet')) return;
   const N = 256, [c, x] = mk(N, N), D = x.createImageData(N, N), d = D.data;
@@ -14,11 +15,65 @@ function fogSheetTex(sc) {
   }
   x.putImageData(D, 0, 0); sc.textures.addCanvas('fogsheet', c);
 }
+function moteTex(sc) {
+  if (sc.textures.exists('mote_dot')) return;
+  const [c, x] = mk(4, 4); x.fillStyle = '#ffffff';
+  x.fillRect(1, 0, 2, 4); x.fillRect(0, 1, 4, 2);
+  sc.textures.addCanvas('mote_dot', c);
+}
 Object.assign(World.prototype, {
+  updAmbientMotes(dt, outdoor, cave, n) {
+    if (OPT.lite || (!outdoor && !cave)) {
+      if (this._moteP) for (const m of this._moteP) m.img.setVisible(false);
+      return;
+    }
+    moteTex(this);
+    if (!this._moteP) {
+      this._moteP = [];
+      const vw = typeof VW !== 'undefined' ? VW : 480, vh = typeof VH !== 'undefined' ? VH : 270;
+      for (let i = 0; i < MOTE_POOL; i++) {
+        const img = this.add.image(rnd(0, vw), rnd(0, vh), 'mote_dot')
+          .setScrollFactor(0).setDepth(1.92e5).setBlendMode(Phaser.BlendModes.ADD);
+        this._moteP.push({
+          img, x: rnd(0, vw), y: rnd(0, vh),
+          speed: rnd(12, 28), ph: rnd(0, 6.28), bA: rnd(0.25, 0.6)
+        });
+      }
+    }
+    const vw = typeof VW !== 'undefined' ? VW : 480, vh = typeof VH !== 'undefined' ? VH : 270;
+    const h = (typeof S !== 'undefined' && S.time != null) ? S.time : 12;
+    const isEmber = outdoor && (n > 0.45 || h >= 19.5 || h < 4.5);
+    const isDusk = outdoor && h >= 15.5 && h < 19.5;
+    const isMorning = outdoor && h >= 5.0 && h < 11.5;
+    let tint = 0xfffae8; // siang: sinar matahari netral lembut
+    if (cave) tint = 0x88c8ff; // gua: kristal pendar biru
+    else if (isEmber) tint = 0xff7028; // malam: bara api hangat
+    else if (isDusk) tint = 0xffcb50; // sore: debu senja keemasan
+    else if (isMorning) tint = 0xf0f8ff; // pagi: embun putih segar
+    for (const m of this._moteP) {
+      m.img.setVisible(true);
+      m.img.setTint(tint);
+      if (isEmber) { // bara api melayang ke atas
+        m.y -= (m.speed * 0.9 + 8) * dt;
+        m.x += (Math.sin(this.t * 2 + m.ph) * 14 + 6) * dt;
+        if (m.y < -8) { m.y = vh + 8; m.x = rnd(0, vw); }
+      } else { // debu emas melayang santai ke kanan-bawah
+        m.x += (m.speed + Math.cos(this.t * 1.2 + m.ph) * 8) * dt;
+        m.y += (m.speed * 0.35 + Math.sin(this.t * 1.5 + m.ph) * 10) * dt;
+        if (m.x > vw + 8) { m.x = -8; m.y = rnd(0, vh); }
+        if (m.y > vh + 8) { m.y = -8; m.x = rnd(0, vw); }
+      }
+      const alphaPulse = m.bA * (0.7 + Math.sin(this.t * 2.5 + m.ph) * 0.3);
+      m.img.setPosition(m.x, m.y).setAlpha(alphaPulse);
+    }
+  },
+
   updAtmos(dt) {
     if (G.title || !this.M) return;
     if (this.M.indoor && this._bgM !== this.M) { this._bgM = this.M; this.cameras.main.setBackgroundColor('#0e0907'); } /* luar ruangan sempit: gelap, bukan hijau */
-    const outdoor = !this.M.indoor && !this.M.dark, n = typeof nightAmt === 'function' ? nightAmt() : 0;
+    const outdoor = !this.M.indoor && !this.M.dark, cave = this.M && this.M.ground === 'cave';
+    const n = typeof nightAmt === 'function' ? nightAmt() : 0;
+    this.updAmbientMotes(dt, outdoor, cave, n);
     if (this._atmosM !== this.M || !this._fogL || !this._fogL[0].active) {
       (this._fogL || []).forEach(o => o.destroy()); (this._glP || []).forEach(o => o.destroy()); fogSheetTex(this);
       this._fogL = [0, 1].map(k => this.add.tileSprite(0, 0, VW, VH, 'fogsheet').setOrigin(0).setScrollFactor(0).setDepth(1.9e5 + k).setAlpha(0)

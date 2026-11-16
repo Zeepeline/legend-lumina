@@ -2,7 +2,7 @@
 // Input keyboard, joystick, tombol sentuh, dan layout layar
 // ---------------- INPUT ----------------
 // Input.held: arah dari keyboard; Input.joy: vektor analog dari joystick; Input.q: tombol yang ditekan
-const Input = { held: [], joy: { x: 0, y: 0, on: false }, q: [], keys: {}, aim: { on: false, x: 0, y: 0 }, castAng: null, padAxes: { x: 0, y: 0 } };
+const Input = { held: [], joy: { x: 0, y: 0, on: false }, q: [], keys: {}, aim: { on: false, x: 0, y: 0 }, castAng: null, holdB: 0, padAxes: { x: 0, y: 0 } };
 function press(k) { auInit(); Input.q.push(k); }
 const KEYMAP = {
   ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down',
@@ -14,7 +14,7 @@ const KEYMAP = {
 };
 const ISDIR = { up: 1, down: 1, left: 1, right: 1 };
 const ATK_HOLD_MS = 400;
-let _atkDownT = 0, _atkHeavyFired = false;
+let _atkDownT = 0, _atkHeavyFired = false, _magDownT = 0;
 addEventListener('keydown', e => {
   const k = KEYMAP[e.code]; if (!k) return; e.preventDefault();
   if (ISDIR[k]) { if (!Input.held.includes(k)) Input.held.push(k); press(k); }
@@ -23,6 +23,8 @@ addEventListener('keydown', e => {
     if (k === 'a') {
       _atkDownT = performance.now();
       _atkHeavyFired = false;
+    } else if (k === 'b') {
+      _magDownT = performance.now();
     }
     press(k);
   }
@@ -38,6 +40,13 @@ addEventListener('keyup', e => {
       if (dur >= ATK_HOLD_MS && !_atkHeavyFired) {
         _atkHeavyFired = true;
         press('heavy');
+      }
+    } else if (k === 'b' && _magDownT > 0) {
+      const dur = performance.now() - _magDownT;
+      _magDownT = 0;
+      if (dur >= 350) {
+        Input.holdB = dur / 1000;
+        press('b_charged');
       }
     }
   }
@@ -128,8 +137,10 @@ const JOY_DEAD = .18;
     const end = e => {
       if (pid === null || (e && e.pointerId !== pid)) return;
       pid = null; b.classList.remove('on'); b.style.transform = '';
-      const a = Input.aim; Input.castAng = a.drag ? Math.atan2(a.y, a.x) : null;
-      Input.aim = { on: false, x: 0, y: 0 }; press(!a.drag && performance.now() - a.t0 > 450 ? 'nova' : 'b');
+      const a = Input.aim, dur = (performance.now() - (a.t0 || 0)) / 1000;
+      Input.castAng = a.drag ? Math.atan2(a.y, a.x) : null;
+      if (dur >= .35) Input.holdB = dur;
+      Input.aim = { on: false, x: 0, y: 0 }; press(!a.drag && dur > .45 && S && S.spell === 'nova' ? 'nova' : 'b');
     };
     b.addEventListener('pointerup', end); b.addEventListener('pointercancel', end);
   })();
