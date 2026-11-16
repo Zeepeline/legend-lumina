@@ -3492,5 +3492,174 @@ round→treeAd, bushG1/G2/bushy→semak Verdant, stump→verdant_stump, pinus di
 
 ---
 
+## O. GELOMBANG 14 — perbaikan bug & penguatan fitur INTI (T463–T497)
+
+Dasar: uji Claude 16-11-2026 (v1.42.0) = full suite **8 gagal dari 61**, sapuan semua peta di layar 844×390, dan probe pertarungan.
+Urutan = prioritas. Bagian (1)–(2) dulu, karena itu bug yang terlihat pemain atau bisa membuat cerita macet.
+**Izin khusus gelombang ini:** file TERKUNCI boleh diubah HANYA jika tugas menulis `Izin: <file>` dan hanya bagian yang disebut.
+Probe cepat tanpa suite: `python3 -m http.server 8010` lalu skrip Playwright sekali jalan di `/tmp`.
+
+### (1) Bug yang terlihat di layar
+### [ ] T463. **Gelagah jadi kotak hijau (tekstur hilang)** — referensi: —
+- Terlihat di Desa (205,595), Hutan (260,440), dan Padang (780,360 · 490,730 · 830,730).
+- Penyebab: `OBJ.reeds.key = 'deco_reeds'` (`src/world/objects.js:148`). `deco_*` hanya dimuat sebagai `IMGEL` (`src/world/ground_verdant.js:8`), tidak didaftarkan sebagai tekstur Phaser.
+- Lakukan: tiru `regIntTex` (`src/world/interior_sheet.js:88`) dengan `regVerdantTex(T)` di ground_verdant.js. Isinya `T.addImage('deco_' + k, IMGEL['deco_' + k])` untuk tiap `VDECO` bila belum ada. Panggil di `src/gfx/textures.js` setelah baris `regIntTex(T)`.
+- Cek: di tiap peta, jumlah objek dengan `texture.key === '__MISSING'` = 0. Lewati semua scene dengan `__game.sc.scene.manager.getScenes(true)`.
+
+### [ ] T464. **Kotak dialog tertutup joystick & tombol (layar penuh mendatar)** — referensi: Genshin (kontrol hilang saat dialog)
+- Terlihat: tombol SERANG/SIHIR/DASH dan joystick menimpa teks dialog di 844×390.
+- File: `styles.css` (bagian `body.full` ±baris 258) dan `src/ui/widgets.js` (`say` baris 16, `win('dlg')` baris 81). Izin: `widgets.js` (hanya menambah/melepas kelas).
+- Lakukan: saat `.dlg` terbuka, tambah kelas `talking` ke `body`; lepas saat dialog tutup. Lalu `body.full.talking #pad, body.full.talking <wadah tombol aksi> {opacity:0;pointer-events:none}`. Cari id wadah tombol di `index.html` ±baris 24–45. Ketuk di kotak dialog harus tetap memajukan teks.
+- Cek: screenshot 844×390 saat bicara dengan Bu Sari, teks terbaca penuh. Tes lama yang memakai `press('a')` tetap lulus.
+
+### [ ] T465. **Menu meluber keluar layar (Kerajinan, dll.)** — referensi: —
+- Terlihat: `openCraft` (`src/systems/craft.js:67`) tingginya 368 px di layar 390 px, jadi baris deskripsi terpotong.
+- Lakukan (CSS saja): `.win.menu` diberi `max-height: calc(100vh - 16px)`. Daftar pilihan bisa digulir (`overflow-y:auto`), deskripsi di bawah tetap terlihat.
+- Cek: skrip membuka setiap fungsi global `open*` di 844×390, lalu memastikan `getBoundingClientRect().bottom <= innerHeight` untuk semua `.win`.
+
+### [ ] T466. **Teks pilihan toko terpotong** — referensi: —
+- Terlihat: di toko Bu Sari tertulis "Beri Hadiah Beri (" (kalimatnya terpotong).
+- Lakukan: cari pembuat pilihan itu (`grep -rn "Beri Hadiah" src`). Pendekkan labelnya (mis. "Beri Hadiah") atau izinkan teks pilihan membungkus ke baris berikut.
+- Cek: semua pilihan toko di Desa & Kota terbaca utuh di 844×390.
+
+### [ ] T467. **Aman saat tiba di wilayah (tidak langsung dikeroyok)** — referensi: Dark Souls (area masuk aman)
+- Terlihat: masuk Hutan dari Desa, musuh terdekat hanya 164 px. Di Padang, pemain LV rendah tumbang dalam 3 detik.
+- File baru `src/systems/arrival.js` (+1 baris `<script>` setelah `interior_layouts.js`). Bungkus `World.prototype.create` (pola di akhir `src/world/interior_layouts.js`).
+- Lakukan: setelah create, untuk setiap musuh non-boss yang jaraknya < 200 px dari pemain: pindahkan ke titik 260–400 px yang bukan tembok/air, atau beri `e.calmT = 3`. Kalau pakai `calmT`, `updFeel` harus mengabaikan pemain selama 3 detik (feel.js baris ±95). Izin: feel.js.
+- Cek: probe, setelah masuk Hutan/Padang/Rawa/Salju, jarak musuh terdekat ≥ 200 px atau musuh tidak mengejar 3 detik.
+
+### [ ] T468. **Musuh tersangkut saat mengejar** — referensi: Hades (musuh menyusur pinggir rintangan)
+- Terlihat: di Padang, 5 dari 7 musuh yang mengejar diam lebih dari separuh waktu walau jarak > 50 px. Pemain berputar radius 90 px selama 12 detik.
+- Lakukan: catat `e.D.ai, e.st`, kecepatan, dan tembok terdekat untuk memastikan penyebabnya. Lalu tambah aturan lepas-sangkut di `src/ai/enemies.js`: kalau sedang mengejar dan bergerak < 2 px selama 0,6 detik, belok tegak lurus arah ke pemain selama 0,5 detik (pilih sisi yang tidak menabrak). Izin: `src/ai/enemies.js` (hanya tambahan di jalur kejar).
+- Cek: probe yang sama, musuh diam < 20% waktu. `tests/combat.spec.js` lulus.
+
+### (2) Tes merah — tentukan dulu: bug game atau tes usang
+Bug game → perbaiki game. Tes usang (game sengaja berubah) → perbarui tes dan tulis alasannya di bawah tugas.
+### [ ] T469. **Bos Bab 1–2 tidak bangun** (PRIORITAS TERTINGGI: cerita utama bisa macet) — referensi: —
+- `tests/quest.spec.js:43` timeout menunggu `sc.enemies.some(e => e.boss && e.awake)`.
+- Lakukan: jalankan tes itu saja dan cari bos mana yang tidak bangun. Cari syarat `awake` (`grep -n "awake" src/ai/bosses.js src/systems/*.js`). Kemungkinan pemicunya jarak/posisi yang ikut berubah oleh tata letak baru (gelombang 12) atau DIFF. Izin: `src/ai/bosses.js` (hanya syarat bangun).
+- Cek: `tests/quest.spec.js` lulus, dan bos bangun saat didekati lewat jalan normal.
+
+### [ ] T470. **Tangkis (parry) tidak pernah berhasil** — referensi: Sekiro/Dark Souls
+- `tests/gelombang11.spec.js:23` `r.parried = false`. Kode: `src/systems/polish.js:64–80` (`PARRY_WIN`, pembungkus `attack` & `hurtPlayer`).
+- Dugaan: pembungkus `attack` lain (stamina di `souls.js`) atau DIFF membuat `pl.swingT` tidak terisi, atau `pl.inv > 0` setelah menyerang. Cetak `pl.swingT, sc.t, pl.inv, G.lock` di konsol dengan isi tes. Izin: `polish.js`, `souls.js`.
+- Cek: gelombang11 lulus, dan tangkis di permainan nyata (serang tepat sebelum serigala menggigit) memunculkan kritikal.
+
+### [ ] T471. **Tanda ancang-ancang "!" & panah bahaya luar layar hilang** — referensi: —
+- `tests/gelombang3.spec.js:25`: `warned` (musuh `st='wind'` → tanda `!`) dan `dg` (`.danger.right.on`) bernilai false.
+- File: `src/systems/feel.js` (`markOver`, `updFeel`). Panah bahaya: `grep -rn "danger" src styles.css`, mungkin tersembunyi oleh `body.full`. Izin: feel.js.
+- Cek: gelombang3 lulus. Di layar penuh, panah bahaya tampil saat dipukul dari luar layar.
+
+### [ ] T472. **Tips pemula tidak pernah muncul** — referensi: —
+- `tests/gelombang2.spec.js`: `S.tipsDone` tetap kosong setelah `updTips` dipanggil 5×. Kode: `src/systems/qol.js:111`.
+- Cek: gelombang2 lulus, dan tip pertama muncul di game baru (OPT.tips aktif).
+
+### [ ] T473. **Beli Ramuan di Bu Sari gagal lewat tombol** — referensi: —
+- `tests/systems.spec.js:11` (potion 3, bukan 4). Menu toko sekarang punya pilihan tambahan (Beri Hadiah). Pastikan alur Beli → Ramuan → A membeli 1. Kalau game benar, sesuaikan urutan tekan di tes.
+
+### [ ] T474. **Tanam & panen kebun desa** — referensi: —
+- `tests/systems.spec.js:35`: `inv.veg` undefined. Tes menanam di (400,530), padahal tata letak desa gelombang 12 memindah kebun.
+- Lakukan: cari petak kebun baru (`grep -rn "farm\|plot" src/world/maps/village.js`). Pastikan tanam → 7 jam → panen menghasilkan 3 sayur, lalu perbarui koordinat tes.
+
+### [ ] T475. **Akuarium rumah** (gelombang9:20 `hf[0].swim` undefined) — referensi: —
+- Sejak v1.42.0, perabot lama dipindah ke gudang (ruangan = gambar pemilik, penuh). Kerjakan setelah T478.
+- Perbarui tes: taruh akuarium di lantai kosong (pemain di 98,50 menghadap bawah) atau pakai akuarium dari gudang (T478).
+
+### [ ] T476. **belajar.spec: emas 800, bukan 200** — referensi: —
+- Bukan bug game: tes mengatur `S.lv = 30`, sehingga hadiah pencapaian level ikut cair (`src/systems/achievements.js:64`, +600 G).
+- Perbarui tes: bandingkan selisih emas sebelum/sesudah belajar (−300), bukan nilai mutlak.
+
+### [ ] T477. **Full suite hijau** — referensi: —
+- Jalankan semua tes di latar belakang dan tulis hasilnya di bawah tugas ini. Target 61/61. Sisa gagal → buat tugas baru T5xx dengan bukti (baris & nilai).
+
+### (3) Rumah Arka setelah ruangan gambar (v1.42.0)
+### [ ] T478. **Perabot berfungsi bisa dipakai dari gudang** — referensi: Stardew (peti di menu)
+- Ruangan Arka sekarang penuh sesuai gambar pemilik, jadi peti simpan, meja kerja, alkimia, dan akuarium tidak muat dipasang. Fungsinya tetap harus bisa dipakai.
+- File: `src/systems/home.js` (`homeMenu`, `useFurn` ±baris 100–125). Izin: home.js.
+- Lakukan: di `homeMenu`, untuk setiap perabot di `S.home.store` yang punya `FCAT[t].act` selain dekorasi, tambah pilihan "Pakai <nama>" yang memanggil `this.useFurn({ f: { t } })`.
+- Cek: beli peti → ada di gudang → menu rumah → "Pakai Peti" membuka penyimpanan.
+
+### [ ] T479. **Toko perabot jujur soal ruang** — referensi: —
+- Di daftar beli perabot, tandai "(masuk gudang)" untuk perabot yang tidak muat di lantai kosong. Uji dengan `furnOk` di beberapa titik kosong.
+- Jangan sembunyikan barangnya, karena fungsinya tetap jalan lewat T478.
+
+### [ ] T480. **Minta gambar ruangan upgrade rumah** — referensi: `assets/raw/interior/sheet_interior.png`
+- File: `docs/ASET_DIMINTA.md`. Tulis permintaan 2 gambar ruangan Rumah Arka lv 1 & lv 2. Gayanya sama persis dengan sheet interior (skala sama: perabot sebesar di sheet). Ruangan lebih luas (± 170×130 dan 210×150 px skala game) dengan lantai kosong untuk perabot.
+- Jangan membuat ruangan sendiri: aturan pemilik = gambar referensi dibuat identik (AGENTS.md).
+
+### (4) Pertarungan inti (souls-lite)
+### [ ] T481. **Bantuan bidik untuk sentuh** — referensi: Genshin/MLBB (serang mengarah ke musuh terdekat)
+- Saat SERANG ditekan tanpa kunci target (`lockR` tidak terlihat), arahkan `pl.dir` ke musuh hidup terdekat dalam 70 px sebelum ayunan.
+- File baru `src/systems/aimassist.js` yang membungkus `World.prototype.attack`. Hanya aktif saat `body.touch` atau joystick dipakai. Tambah opsi `OPT.assist` (bawaan true) di menu Pengaturan; izin: `menus.js` (1 baris pilihan).
+- Cek: tes baru, musuh di kanan-atas & pemain menghadap kiri, setelah serang `pl.dir` mengarah ke musuh.
+
+### [ ] T482. **Serangan berat (tahan SERANG)** — referensi: Dark Souls (R2), Elden Ring
+- Tahan SERANG ≥ 0,4 detik lalu lepas: kerusakan ×1,8, stamina ×2, poise musuh −2 (poise: `src/systems/combat.js:142–163`), dan muncul garis ayunan lebih tebal. Tetap bisa ditangkis musuh elit.
+- File: `src/core/input.js` (deteksi tahan untuk tombol sentuh & keyboard J/Spasi) + file baru `src/systems/heavy.js`. Izin: input.js.
+- Cek: tes baru, damage berat ≥ 1,7× ringan, stamina terpakai 2×.
+
+### [ ] T483. **Balasan setelah tangkis (riposte)** — referensi: Sekiro (deathblow kecil)
+- Butuh T470. Setelah tangkis berhasil (`pl.parryCrit > 0`), serangan berikutnya dalam 1,5 detik: ×2,5, hit-stop 0,12 detik (pakai `hitStop` yang ada), teks "BALASAN!", dan getar.
+- File: `src/systems/polish.js` (baris 11). Izin: polish.js.
+
+### [ ] T484. **Musuh hanya bangkit lagi setelah istirahat** — referensi: Dark Souls (api unggun)
+- Sekarang semua musuh muncul lagi setiap masuk ulang peta (`world.js:64`), jadi dunia terasa tanpa akibat dan mudah di-farm.
+- File baru `src/systems/slain.js`: bungkus `spawnEnemy` dan `killEnemy`. Simpan `S.slain[mapId] = [indeks spawn]` untuk musuh non-boss. Lewati indeks itu saat spawn sampai pemain tidur (rumah/penginapan) atau 1 hari game berlalu, lalu kosongkan `S.slain`. Default `S.slain = {}` lewat pola `S.x = S.x || {}` di file baru (state.js terkunci).
+- Cek: bunuh 3 slime → keluar-masuk → tetap 3 berkurang → tidur → kembali lengkap.
+
+### [ ] T485. **Jejak Cahaya terlihat di peta & penunjuk** — referensi: Hollow Knight (bayangan di peta)
+- `S.lost = {map, x, y, gold}` (`src/systems/souls.js:73`). Tampilkan ikon ✦ di Peta & peta mini, plus panah penunjuk kecil kalau berada di wilayah yang sama.
+- Izin: `src/ui/map.js` (hanya gambar ikon). Cek: kalah di Hutan → buka peta → ikon di titik jatuh.
+
+### [ ] T486. **Bantuan kalah berulang (adil)** — referensi: Celeste (assist), Hades (God Mode)
+- Jika kalah ≥ 3× di wilayah yang sama dalam 15 menit game, tawarkan "Berkat Lumina": +1 Botol Cahaya dan kerusakan musuh −15% di wilayah itu sampai menang lawan bos/keluar wilayah. Pemain boleh menolak.
+- File baru `src/systems/mercy.js` (bungkus fungsi kalah di `souls.js`; cari `S.lost =`). Simpan hitungan di `S.deaths[map]`.
+
+### (5) Kinerja di HP
+### [ ] T487. **Sembunyikan objek di luar layar** — referensi: Phaser camera culling
+- Sapuan: Hutan Dalam 1466 objek, mode Benua 2076 objek, semua tetap digambar walau di luar layar.
+- File baru `src/systems/cull.js`: setiap 0,25 detik, untuk objek statis (pohon, batu, dekorasi; bukan musuh/NPC/pemain/UI) `setVisible(inView)` dengan `cameras.main.worldView` + margin 64 px. Daftarkan objeknya sekali saat spawn objek (cari `spawnObj`).
+- Cek: catat `game.loop.actualFps` di Hutan Dalam & Benua sebelum/sesudah (swiftshader + throttle CPU 4× di Playwright). Tulis angkanya di bawah tugas.
+
+### [ ] T488. **Mode ringan otomatis** — referensi: —
+- Jika FPS < 40 selama 5 detik berturut-turut, nyalakan `OPT.lite` sekali dan tampilkan toast "Mode ringan dinyalakan (bisa dimatikan di Pengaturan)". Pastikan `OPT.lite` benar-benar mengurangi kabut berlapis, cahaya, dan partikel (`grep -rn "OPT.lite" src`). Tambahkan yang belum.
+- Izin: `src/systems/perf.js`, `src/systems/atmos.js`.
+
+### (6) Simpanan & keandalan
+### [ ] T489. **Cadangan simpanan otomatis** — referensi: —
+- `saveGame` (`src/core/state.js:106`) menulis satu kunci. Kalau rusak (tab tertutup saat menulis), progres hilang.
+- Lakukan: sebelum menulis, salin nilai lama ke `<kunci>_bak`. Di `loadSave`, jika `JSON.parse` gagal atau data tanpa `stage`, pakai `_bak` lalu tampilkan toast "Simpanan dipulihkan dari cadangan". Izin: state.js (hanya 2 fungsi itu).
+- Cek: tes baru, rusak kunci utama → muat → progres dari cadangan.
+
+### [ ] T490. **Uji muat simpanan lama** — referensi: —
+- Buat tes yang memuat save v1.30–v1.40 (bentuk `S` lama: posisi di dalam penginapan 160,226, item rumah di koordinat lama, tanpa `S.home.lay3`). Pastikan tanpa error, pemain di pintu ruangan, dan perabot lama ada di gudang.
+
+### (7) Alur & kejelasan
+### [ ] T491. **Ringkasan saat Lanjutkan** — referensi: Xenoblade (recap)
+- Saat memilih Lanjutkan, tampilkan banner 3 detik: tujuan misi aktif (jurnal lapis 1) + wilayah + waktu main. Ambil teks dari fungsi jurnal (`grep -rn "Jurnal" src/ui`).
+
+### [ ] T492. **Rekomendasi level di pintu wilayah** — referensi: —
+- `LEVEL_WILAYAH` (`src/systems/feel.js:158`) sudah ada. Saat masuk wilayah dengan selisih level ≥ 3 di atas pemain, banner nama wilayah diberi baris "Disarankan Lv N" berwarna jingga atau merah.
+- Cek: masuk Rawa di LV 1 → peringatan tampil.
+
+### [ ] T493. **Audit kurva level per bab** — referensi: —
+- Buat tabel di `docs/BALANCE.md`: tiap wilayah = level rekomendasi, EXP rata-rata per musuh, musuh per kunjungan, dan EXP untuk naik level. Hitung berapa kunjungan sampai level yang disarankan bab berikutnya. Tandai yang > 3 kunjungan (terlalu grind) atau < 1 (terlalu mudah).
+- Usulkan angka baru di tabel. JANGAN ubah `data/enemies.js` (terkunci). Pemilik/Claude yang memutuskan.
+
+### [ ] T494. **Tanda tujuan di peta untuk misi sampingan** — referensi: —
+- Panah penunjuk misi (`updQuestGuide`) hanya untuk misi utama. Tambahkan tujuan misi sampingan aktif yang dipilih di Jurnal (satu saja, ganti lewat Jurnal) dengan warna berbeda.
+
+### (8) Penutup
+### [ ] T495. **Cek layar 390×800 (tegak) untuk semua perbaikan UI** — referensi: —
+- T464–T466, T485, T491, T492 diuji juga di mode tegak (Pengaturan → layar tegak). Screenshot sebelum/sesudah di `test-results/`.
+
+### [ ] T496. **Catatan serah-terima gelombang 14** — referensi: —
+- Buat `docs/HANDOFF_GELOMBANG14.md`: tugas selesai, tes baru, angka FPS (T487), dan sisa masalah. Tambah 1 baris Status di AGENTS.md.
+
+### [ ] T497. **Rilis** — referensi: —
+- Naikkan versi (`sw.js`, `GAME_VERSION`), `python3 tools/bundle.py`, `npm run check`, full suite hijau, lalu push.
+
+---
+
 Tugas besar (JANGAN diambil agen ini): pola serangan musuh & boss berfase, Botol Cahaya tambahan, pilar build/mantra, markas, sekutu & ikatan,
 memasang BESTIARY_TEXT ke layar Bestiari, buang petak objek jauh di mode benua, hapus mode lama. Rincian: `docs/GAME_DESIGN.md` (akhir) & `docs/HANDOFF_OPENWORLD.md`.
