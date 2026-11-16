@@ -46,6 +46,9 @@ MAPS.deepwood = {
     ['goblin_totem', 420, 1490], ['goblin_totem', 470, 1640],
     ['goblin_torch', 380, 1640], ['goblin_torch', 460, 1590],
     ['goblin_banner', 410, 1680], ['goblin_banner', 300, 1450],
+    // T433: Properti cerita khas markas Hutan Dalam (tulang ritual & akar membelit reruntuhan)
+    ['bones', 430, 1590], ['bones', 390, 1550], ['bones', 250, 1480],
+    ['root', 360, 1440], ['root', 440, 1530], ['root', 290, 1540],
     ['sign', 570, 1660, { text: 'WILAYAH SUKU AKAR GELAP\nPendatang akan dijadikan tumbal kristal!' }],
     ['sign', 2300, 690, { text: 'HUTAN DALAM\nJangan tinggalkan jalan setapak. Lumut bercahaya menunjukkan arah pulang.' }]],
   walls: [[0, 0, 2400, 30], [0, 0, 40, 1800], [2360, 0, 40, 700], [2360, 760, 40, 1040], [0, 1770, 2400, 30]],

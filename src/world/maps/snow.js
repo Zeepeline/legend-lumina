@@ -48,4 +48,9 @@ MAPS.snow = {
     ]
   }],
   trees: { n: 1100, min: 30, types: [['treeSn', .62], ['rock', .26], ['bushW', .12]] },
+  // T445: Terasering Puncak Beku (2 tingkat tebing melintang y≈760 & y≈420)
+  cliffs: [
+    [100, 760, 1180, 760, 'S'],
+    [100, 420, 1180, 420, 'S'],
+  ],
 };

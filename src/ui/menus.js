@@ -80,6 +80,7 @@ async function openSettings() {
     ['Tata letak layar', () => LAYOUT_FULL ? 'Mendatar penuh' : 'Tegak', () => { try { localStorage.setItem('lumina_layout', LAYOUT_FULL ? 'tegak' : 'mendatar'); } catch (_) { }
       if (!G.title && G.scene) saveGame(G.scene); location.reload(); }, 'Mendatar penuh = gaya Genshin/MLBB. Game dimuat ulang (progres disimpan dulu).'],
     ['Transparansi tombol', () => ['Penuh', 'Sedikit', 'Banyak'][OPT.btnAlpha], () => { OPT.btnAlpha = (OPT.btnAlpha + 1) % 3; applyPadOpt(); }, 'Supaya tombol tidak menutupi layar'],
+    ['Bantuan Bidik', () => onoff(OPT.assist !== false), () => { OPT.assist = !(OPT.assist !== false); }, 'Arahkan serangan ke musuh terdekat (layar sentuh)'],
     ['Bilah HP musuh', () => onoff(OPT.hpbar), () => { OPT.hpbar = !OPT.hpbar; }, 'Bilah HP kecil di atas musuh'],
     ['Ekspor save', () => null, async () => { saveGame(G.scene); await codeDialog('out'); }, 'Salin kode save ke perangkat lain'],
     ['Impor save', () => null, async () => { if (await codeDialog('in')) { await say('Save berhasil dimuat. Game akan dibuka ulang.'); location.reload(); } }, 'Muat progres dari kode save'],

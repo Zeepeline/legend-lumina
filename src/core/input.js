@@ -13,15 +13,34 @@ const KEYMAP = {
   KeyI: 'bag', KeyB: 'bag', KeyR: 'tool1', KeyF: 'tool2', KeyT: 'lock'
 };
 const ISDIR = { up: 1, down: 1, left: 1, right: 1 };
+const ATK_HOLD_MS = 400;
+let _atkDownT = 0, _atkHeavyFired = false;
 addEventListener('keydown', e => {
   const k = KEYMAP[e.code]; if (!k) return; e.preventDefault();
   if (ISDIR[k]) { if (!Input.held.includes(k)) Input.held.push(k); press(k); }
-  else if (!e.repeat) { Input.keys[k] = true; press(k); }
+  else if (!e.repeat) {
+    Input.keys[k] = true;
+    if (k === 'a') {
+      _atkDownT = performance.now();
+      _atkHeavyFired = false;
+    }
+    press(k);
+  }
 });
 addEventListener('keyup', e => {
   const k = KEYMAP[e.code]; if (!k) return;
   if (ISDIR[k]) { const i = Input.held.indexOf(k); if (i >= 0) Input.held.splice(i, 1); }
-  else Input.keys[k] = false;
+  else {
+    Input.keys[k] = false;
+    if (k === 'a' && _atkDownT > 0) {
+      const dur = performance.now() - _atkDownT;
+      _atkDownT = 0;
+      if (dur >= ATK_HOLD_MS && !_atkHeavyFired) {
+        _atkHeavyFired = true;
+        press('heavy');
+      }
+    }
+  }
 });
 addEventListener('blur', () => { Input.held.length = 0; Input.keys = {}; Input.joy.x = Input.joy.y = 0; Input.padAxes.x = Input.padAxes.y = 0; });
 Input.vec = () => {
@@ -116,13 +135,24 @@ const JOY_DEAD = .18;
   })();
   document.querySelectorAll('.btn').forEach(b => {
     if (b.id === 'bB') return;
+    let btnDownT = 0;
     b.addEventListener('pointerdown', e => {
       e.preventDefault();
       const k = b.dataset.k;
       if (k === 'a' || k === 'dash') haptic(8);
-      b.classList.add('on'); Input.keys[k] = true; press(k);
+      b.classList.add('on'); Input.keys[k] = true;
+      if (k === 'a') btnDownT = performance.now();
+      press(k);
     });
-    const up = () => { b.classList.remove('on'); Input.keys[b.dataset.k] = false; };
+    const up = () => {
+      const k = b.dataset.k;
+      b.classList.remove('on'); Input.keys[k] = false;
+      if (k === 'a' && btnDownT > 0) {
+        const dur = performance.now() - btnDownT;
+        btnDownT = 0;
+        if (dur >= ATK_HOLD_MS) press('heavy');
+      }
+    };
     b.addEventListener('pointerup', up); b.addEventListener('pointerleave', up); b.addEventListener('pointercancel', up);
   });
   SCREEN.addEventListener('contextmenu', e => e.preventDefault());

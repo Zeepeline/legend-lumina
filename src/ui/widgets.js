@@ -18,6 +18,7 @@ function say(text, name) {
   if (Array.isArray(text)) return talk(name || null, text);
   DLG_LOG.push({ name: name || '', text: String(text) }); if (DLG_LOG.length > 60) DLG_LOG.shift();
   if (typeof setBgmDuck === 'function') setBgmDuck(0.45);
+  document.body.classList.add('talking');
   return new Promise(res => {
     const prev = UIH;
     const w = win('dlg act', (name ? `<div class="nm">${name}</div>` : '') + '<div class="tx"></div><div class="more">▼</div>');
@@ -29,6 +30,7 @@ function say(text, name) {
       if (k !== 'a' && k !== 'b' && k !== 'tap') return;
       if (!done) { finish(); return; }
       w.remove(); UIH = prev;
+      if (!document.querySelector('.dlg')) document.body.classList.remove('talking');
       if (typeof setBgmDuck === 'function' && !document.querySelector('.dlg')) setBgmDuck(1.0);
       res();
     };
@@ -78,9 +80,12 @@ function choose(o, items) {
 }
 async function ask(q, name, yes = 'Ya', no = 'Tidak') {
   G.lock++;
+  document.body.classList.add('talking');
   const w = win('dlg', (name ? `<div class="nm">${name}</div>` : '') + `<div class="tx">${q}</div>`);
   const r = await choose({ items: [{ t: yes }, { t: no }], right: 8, bottom: 62 });
-  w.remove(); G.lock--; return r === 0;
+  w.remove();
+  if (!document.querySelector('.dlg')) document.body.classList.remove('talking');
+  G.lock--; return r === 0;
 }
 const BANNER_QUEUE = [];
 let BANNER_BUSY = false;
@@ -174,9 +179,30 @@ function updHud() {
   const q = $('quest');
   const prog = { 2: [S.inv.seal || 0, 3], 11: [[0, 1, 2].filter(k => S.flags['torch' + k]).length, 3], 15: [['m_darto', 'm_sari', 'm_dodi'].filter(k => S.flags[k]).length, 3], 25: [(typeof ARSIP !== 'undefined' ? ARSIP : []).filter(k => S.lore[k]).length, 4] }[S.stage];
   const txt = STAGE_TXT[S.stage];
-  q.innerHTML = txt ? `<div class="qh">★ MISI UTAMA</div><div class="qt">${txt}${prog ? ` <span class="qp">${prog[0]}/${prog[1]}</span>` : ''}</div><div class="qf">ketuk: Jurnal<span class="qd"></span></div>` : '';
+  if (txt) {
+    if (q._lastStage !== S.stage) {
+      q._lastStage = S.stage;
+      q.classList.remove('folded');
+      clearTimeout(q._foldTm);
+      q._foldTm = setTimeout(() => { if (q) q.classList.add('folded'); }, 4000);
+    }
+    q.innerHTML = `<div class="qh"><span>★ MISI UTAMA</span><span class="qbtn" id="qJrnBtn">📖</span></div><div class="qt">${txt}${prog ? ` <span class="qp">${prog[0]}/${prog[1]}</span>` : ''}</div><div class="qf">ketuk kartu untuk buka/lipat<span class="qd"></span></div>`;
+  } else {
+    q.innerHTML = '';
+  }
   q.style.display = txt ? '' : 'none';
-  if (!q._tap) { q._tap = 1; q.addEventListener('pointerdown', e => { e.stopPropagation(); if (!G.lock && !G.title) openQuests(); }); }
+  if (!q._tap) {
+    q._tap = 1;
+    q.classList.add('folded');
+    q.addEventListener('pointerdown', e => {
+      e.stopPropagation();
+      if (e.target && e.target.id === 'qJrnBtn') {
+        if (!G.lock && !G.title) openQuests();
+      } else {
+        q.classList.toggle('folded');
+      }
+    });
+  }
   updHudFade(st);
   if (typeof updSpellbar === 'function') updSpellbar();
 }

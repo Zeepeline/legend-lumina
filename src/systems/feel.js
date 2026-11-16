@@ -91,8 +91,11 @@ Object.assign(World.prototype, {
       s.setVelocity(Math.cos(baseAng) * e.D.spd * 0.9, Math.sin(baseAng) * e.D.spd * 0.9);
       if (s.body?.velocity.x) s.flipX = s.body.velocity.x > 0;
     }
-    // meteran waspada: ? saat curiga, ! saat mengejar
-    if (!e.alert && d < 165 && d >= 120) { e.alert = 1; markOver(this, e, '?', '#fff3c0'); }
+    // meteran waspada: ? saat curiga, ! saat mengejar (abaikan pemain bila musuh masih tenang/calmT T467)
+    if (e.calmT > 0) {
+      e.calmT -= dt;
+      e.alert = 0;
+    } else if (!e.alert && d < 165 && d >= 120) { e.alert = 1; markOver(this, e, '?', '#fff3c0'); }
     else if (e.alert !== 2 && d < 120 && !pl.dead) { e.alert = 2; markOver(this, e, '!', '#ff5a3a'); sfx('jump'); }
     else if (e.alert && d > 230) e.alert = 0;
     // ancang-ancang: tanda ! + kedip setiap kali musuh mulai bersiap menyerang

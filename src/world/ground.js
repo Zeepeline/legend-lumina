@@ -38,6 +38,12 @@ const GROUND = {
 // Dalam pita BLEND_W px dari tepi, piksel memakai warna tanah tetangga dengan peluang naik dari 0 ke 0,5 tepat di garis.
 // Keputusan memakai noise koordinat GLOBAL & urutan id peta, sehingga kedua sisi garis menghitung pola yang sama (tanpa jahitan).
 // Sisi tanpa tetangga (hutan lebat pengisi celah, systems/wilds.js) memudar ke tanah hutan yang gelap.
+function blendW(gA, gB) {
+  if (!gA || !gB) return 150;
+  if (gA === 'snow' || gB === 'snow') return 320;
+  if (gA === 'swamp' || gB === 'swamp') return 240;
+  return 150;
+}
 const BLEND_W = 150;
 const WILD_G = ['#2f5f24', '#36692a', '#3d7330', '#2a5620'];
 function edgeSegs(M) {
@@ -57,12 +63,13 @@ function edgeSegs(M) {
     else if (hx && Math.abs(oy + B.h) < tol) { side = 'N'; r = ovX; }
     if (!side) continue;
     cover[side].push(r);
-    if (B.ground !== M.ground) segs.push({ side, a0: r[0], a1: r[1], G: GROUND[B.ground].g.map(h2r), first: M.id < id });
+    const bw = blendW(M.ground, B.ground);
+    if (B.ground !== M.ground) segs.push({ side, a0: r[0], a1: r[1], G: GROUND[B.ground].g.map(h2r), first: M.id < id, bw });
   }
   for (const side of ['N', 'S', 'W', 'E']) { // celah kosong → hutan lebat
     const len = side === 'N' || side === 'S' ? M.w : M.h, rs = cover[side].sort((p, q) => p[0] - q[0]); let at = 0;
     for (const [a, b] of rs.concat([[len, len]])) {
-      if (a - at > 40) segs.push({ side, a0: at, a1: a, G: WILD_G.map(h2r), first: true, wild: 1 });
+      if (a - at > 40) segs.push({ side, a0: at, a1: a, G: WILD_G.map(h2r), first: true, wild: 1, bw: 150 });
       at = Math.max(at, b);
     }
   }
@@ -73,15 +80,17 @@ function edgeBlend(M) {
   const segs = edgeSegs(M); if (!segs) return null;
   const [PX, PY] = WORLD_POS[M.id], W = M.w, H = M.h;
   return (x, y, k) => {
-    let best = null, bd = BLEND_W;
+    let best = null, bd = 999;
     for (const s of segs) {
       const along = s.side === 'N' || s.side === 'S' ? x : y; if (along < s.a0 || along > s.a1) continue;
       const d = s.side === 'N' ? y : s.side === 'S' ? H - 1 - y : s.side === 'W' ? x : W - 1 - x;
-      if (d < bd) { bd = d; best = s; }
+      const maxW = s.bw || BLEND_W;
+      if (d < maxW && d < bd) { bd = d; best = s; }
     }
     if (!best) return null;
+    const curW = best.bw || BLEND_W;
     const gx = x + PX, gy = y + PY, n = vnoise(gx, gy, 22, 31) * .7 + hash(gx, gy, 32) * .3;
-    const half = best.wild ? .62 : .5, p = half * (1 - bd / BLEND_W); // peluang warna tetangga
+    const half = best.wild ? .62 : .5, p = half * (1 - bd / curW); // peluang warna tetangga
     const useOther = best.first ? n < p : n >= 1 - p;
     return useOther ? best.G[k % best.G.length] : null;
   };
@@ -260,6 +269,16 @@ function scatter(M, spec) {
     if (!edge && !ok(x, y)) continue; if (edge && !ok2(x, y)) continue;
     let r = hash(n, 3, 31), type = spec.types[0][0];
     for (const [t, p] of spec.types) { if (r < p) { type = t; break; } r -= p; }
+    // Objek peralihan: dalam 400 px dari tepi salju (T456)
+    if (M.id === 'meadow' || M.id === 'pl_meadow_snow') {
+      const distToSnow = M.id === 'meadow' ? Math.max(0, y - (M.h - 400)) : Math.max(0, 400 - y);
+      if (distToSnow > 0) {
+        const pineProb = distToSnow / 400;
+        if (hash(n, 7, 33) < pineProb) {
+          if (type === 'verdant_tree' || type === 'treeA' || type === 'treeB') type = 'pine';
+        }
+      }
+    }
     out.push([type, Math.round(x), Math.round(y)]);
   }
   function ok2(x, y) { for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < 20) return false; for (const ex of mapDoors(M)) if (x > ex.x - 64 && x < ex.x + ex.w + 64 && y > ex.y - 64 && y < ex.y + ex.h + 72) return false; return true; }

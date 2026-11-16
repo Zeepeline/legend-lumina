@@ -57,6 +57,9 @@ MAPS.forest = {
     ['goblin_torch', 910, 360], ['goblin_torch', 960, 345], ['goblin_torch', 1080, 220],
     ['goblin_banner', 890, 345], ['goblin_banner', 1120, 215],
     ['goblin_totem', 940, 375], ['goblin_totem', 1160, 310],
+    // T433: Properti cerita khas markas Hutan Lumina (trofi buruan tulang & kristal hijau altar)
+    ['bones', 1080, 270], ['bones', 1040, 240], ['bones', 1130, 140], ['bones', 1150, 150],
+    ['cryst', 1050, 260], ['cryst', 1070, 240],
   ],
   chests: [
     { id: 'c1', x: 1060, y: 300, item: 'iron' }, { id: 'c2', x: 180, y: 852, item: 'ether2' },

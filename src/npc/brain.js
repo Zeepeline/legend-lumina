@@ -51,6 +51,27 @@ Object.assign(World.prototype, {
       const d = M.doors.map(d => [d[0], d[1] + 8]).sort((a, b) => Math.hypot(a[0] - s.x, a[1] - s.y) - Math.hypot(b[0] - s.x, b[1] - s.y))[0];
       return { x: d[0], y: d[1], act: 'home' };
     }
+    // T379: Reaksi terhadap hujan
+    const isRain = this.weather === 'rain' && !M.indoor && !M.dark;
+    if (isRain && o.role !== 'guard' && o.role !== 'gate') {
+      if (o.role === 'child' && Math.random() < 0.3) {
+        return { x: h.x + rnd(-1, 1) * o.leash * .6, y: h.y + rnd(-1, 1) * o.leash * .4, act: 'play', dur: rnd(1, 2), run: true };
+      }
+      if (M.doors && M.doors.length) {
+        const d = M.doors.map(d => [d[0], d[1] + 8]).sort((a, b) => Math.hypot(a[0] - s.x, a[1] - s.y) - Math.hypot(b[0] - s.x, b[1] - s.y))[0];
+        return { x: d[0], y: d[1], act: o.story ? 'shelter' : 'home', dur: rnd(8, 16), run: true };
+      }
+    }
+    // T380: Pagi hari (06:00-08:00): membuka toko & menyapu / menyalakan tungku
+    const curHour = (typeof S !== 'undefined' && S.time != null) ? S.time : 12;
+    if (curHour >= 6 && curHour < 8 && !isRain) {
+      if (['vendor', 'inn'].includes(o.role) && Math.random() < 0.6) {
+        return { x: h.x + rnd(-6, 6), y: h.y + 10, act: 'sweep', dur: rnd(4, 7) };
+      }
+      if (o.role === 'smith' && Math.random() < 0.6) {
+        return { x: h.x + rnd(-8, 8), y: h.y + 12, act: 'kindle', dur: rnd(5, 8) };
+      }
+    }
     const r = Math.random();
     if (o.role === 'gate') return { x: h.x + rnd(-10, 10), y: h.y + rnd(-6, 6), act: 'watch', dur: rnd(4, 8) };
     if (o.role === 'guard') { const P = (M.paths || []).filter(p => inLeash([p[0], p[1]]) || inLeash([p[2], p[3]])); const p = P.length ? P[Math.floor(Math.random() * P.length)] : null; return p ? { x: p[0] + (p[2] - p[0]) * Math.random(), y: p[1] + (p[3] - p[1]) * Math.random(), act: 'watch', dur: rnd(2, 4) } : { x: h.x + rnd(-60, 60), y: h.y + rnd(-40, 40), act: 'watch', dur: 3 }; }
@@ -102,6 +123,9 @@ Object.assign(World.prototype, {
     else if (g.act === 'play') { o.actT = .5; if (Math.random() < .3) this.npcEmote(o, pick(['😆', '🏃', '⭐', '🎈']), 1); }
     else if (g.act === 'sit') { o.actT = rnd(2, 4); if (Math.random() < .5) this.npcEmote(o, pick(['☕', '📖', '😌', '🎵']), 1.6); }
     else if (g.act === 'watch') { o.actT = rnd(1.2, 2.4); this.face(o, pick(['left', 'right', 'down', 'up'])); if (Math.random() < .2) this.npcEmote(o, '👀', 1.2); }
+    else if (g.act === 'sweep') { o.actT = rnd(1.2, 2); this.face(o, pick(['left', 'right', 'down'])); this.npcEmote(o, '🧹', 1.2); }
+    else if (g.act === 'kindle') { o.actT = rnd(1.2, 2); this.face(o, 'up'); this.npcEmote(o, '🔥', 1.2); this.sparkle(s.x, s.y - 12, 'smoke', 2); }
+    else if (g.act === 'shelter') { o.actT = rnd(2, 4); this.face(o, 'down'); if (Math.random() < .3) this.npcEmote(o, '🌧', 1.4); }
     else { o.actT = rnd(1.5, 3); this.face(o, pick(['left', 'right', 'down', 'up'])); if (Math.random() < .25) this.npcEmote(o, pick(IDLE_ICON), 1.4); }
   },
 });

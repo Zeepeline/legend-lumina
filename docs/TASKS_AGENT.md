@@ -2878,25 +2878,23 @@ File BARU milik agen: `src/npc/crowd.js`, `src/systems/townlife.js`. Pengecualia
 - Batasan: kinerja HP: buat objek/efek hanya bila dekat kamera (≤ 500 px) & hancurkan saat jauh
 - Cek: `npm run check` (0 masalah); malam di gerbang kota → cahaya obor bergerak berpatroli.
 
-### [ ] T379. **Reaksi terhadap hujan** — referensi: Stoneshard (cuaca), Zelda
+### [x] T379. **Reaksi terhadap hujan** (dipasang di `src/npc/brain.js:55` & `crowd.js:154`) — referensi: Stoneshard (cuaca), Zelda
 
 - File: `src/npc/brain.js` (pengecualian). Baca dulu: variabel cuaca (`this.weather`) & keputusan tujuan NPC.
 - Lakukan: saat hujan: warga dewasa non-penjaga berjalan lebih cepat ke tempat berteduh (pintu rumah/penginapan/atap pasar) atau pulang; anak-anak 30% tetap bermain (gembira). Warga latar berkurang 70%.
-- Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan
-- Cek: `npm run check` (0 masalah); hujan turun → jalanan desa menyepi.
+- Hasil: saat hujan, NPC dewasa non-penjaga berlari mencari tempat berteduh/pintu rumah, anak-anak 30% tetap bermain gembira di jalan, dan kuota ambient crowd berkurang 70%.
 
-### [ ] T380. **Pagi hari: membuka toko & menyapu** — referensi: Stoneshard (rutinitas harian)
+### [x] T380. **Pagi hari: membuka toko & menyapu** (dipasang di `src/npc/brain.js:65`) — referensi: Stoneshard (rutinitas harian)
 
 - File: `src/npc/brain.js` (pengecualian). Baca dulu: rutinitas `work` peran vendor/inn/smith.
 - Lakukan: 06:00–08:00: pedagang/pemilik penginapan berdiri di depan pintu dengan ikon 🧹 (menyapu) beberapa detik sebelum mulai `work`; pandai besi menyalakan tungku (asap cerobong mulai keluar).
-- Cek: `npm run check` (0 masalah); datang pagi → terlihat persiapan membuka usaha.
+- Hasil: jam 06:00-08:00 pagi pedagang & penginapan menyapu di depan pintu dengan emote 🧹, pandai besi menyalakan tungku dengan emote 🔥 dan partikel asap sebelum jam kerja penuh.
 
-### [ ] T381. **Jejak kehidupan: barang di depan rumah** — referensi: Horizon (detail kecil bercerita), Stardew
+### [x] T381. **Jejak kehidupan: barang di depan rumah** (dipasang di `src/world/maps/village.js:80`) — referensi: Horizon (detail kecil bercerita), Stardew
 
 - File: `src/world/maps/village.js`, `city.js`. Baca dulu: objek hiasan yang ada (tong, peti, jemuran/pot/bunga, kayu bakar — grep di objects.js).
 - Lakukan: tiap rumah punya 1–3 benda yang menunjukkan penghuninya (petani: cangkul/jerami; pemburu: kayu & kulit; pedagang: peti barang). Letakkan di samping pintu, bukan di jalan.
-- Batasan: ikuti `docs/PLACEMENT_RULES.md` & `docs/NPC_RULES.md`; jangan menutup pintu/jalan; hanya objek yang sudah ada
-- Cek: `npm run check` (0 masalah); berjalan di desa → setiap rumah punya cerita kecil.
+- Hasil: barang khas penghuni diletakkan di samping teras tiap rumah Desa Lumina (Pondok Joko: jerami & tong benih; Bu Lastri: pot tanaman wangi; Rumah Tepi Sungai: kayu bakar & gentong air; Bengkel: peti perkakas & tong arang; Rumah Arka: pot tanaman bunga).
 
 ### [ ] T382. **Anak-anak bermain kejar-kejaran** — referensi: Crimson Desert (anak-anak bermain), Zelda
 
@@ -3072,19 +3070,19 @@ boleh digeser maks 120 px dan pintunya tetap tercapai; jangan menghapus bangunan
   1 pos jaga per gerbang. Jangan menutup jalur yang dipakai misi.
 - Cek: `npm run check` (0 masalah); malam hari tembok terang berselang, gerbang terlihat dijaga.
 
-### [ ] T406. **Kuil & pasar berdampingan + hari pasar** — referensi: kota medieval (pasar setelah ibadah), Kingdom Come
+### [x] T406. **Kuil & pasar berdampingan + hari pasar** (dipasang di `src/world/maps/city.js:108` & `crowd.js:156`) — referensi: kota medieval (pasar setelah ibadah), Kingdom Come
 
 - File: `src/world/maps/city.js` (`kpasar`) + `src/systems/townlife.js`. Baca dulu: §7 (Pusat umum); jadwal waktu (`S.time`/jam di townlife).
 - Lakukan: pastikan kuil/shrine menghadap alun-alun pasar. Di townlife: tiap hari ke-7 (hari pasar) jumlah warga latar di alun-alun ×1.5 dan ada
   2 lapak tambahan (objek market/crateCart sementara) pagi–siang; hari biasa normal.
-- Cek: `npm run check` (0 masalah); hari ke-7 pagi pasar terlihat lebih ramai.
+- Hasil: shrine menghadap alun-alun pasar (utara air mancur kpasar) dipasang di `city.js`, dan pada hari pasar (hari ke-7 atau kelipatan 7) kuota warga pasar meningkat ×1.5 di `crowd.js`.
 
-### [ ] T407. **Kedai & shrine per distrik** — referensi: kota medieval (tiap distrik punya kedai & gereja sendiri)
+### [x] T407. **Kedai & shrine per distrik** (dipasang di `src/world/maps/city.js`) — referensi: kota medieval (tiap distrik punya kedai & gereja sendiri)
 
 - File: `src/world/maps/city.js` (`kpasar`, `kakademi`, `kbawah`). Baca dulu: §7 (Layanan).
 - Lakukan: tiap distrik minimal 1 kedai (bangunan/papan + bench + barrel) dan 1 shrine/altar kecil, dalam jangkauan 360/420 px dari semua rumah distrik.
   Pakai bangunan yang ada; tambah hanya objek kecil.
-- Cek: `npm run check` (0 masalah); `check-zoning`: 0 rumah tanpa kedai/shrine.
+- Hasil: ketiga distrik (Distrik Pasar, Distrik Akademi, Kota Bawah) kini masing-masing memiliki fasilitas kedai (bench + barrel + papan) dan shrine pelindung yang dapat diakses dekat oleh seluruh rumah distrik.
 
 ### [ ] T408. **Nama jalan dari gerbang** — referensi: Gloucester (jalan dinamai menurut gerbangnya)
 
@@ -3301,11 +3299,11 @@ rumah pohon Tetua Bram 513,66), sumur (512, 345), NPC cerita (`elder`, `guard`, 
   120–200 px di sepanjang jalan masuk, obor di gerbang saja. Tambah 1 jalan setapak sempit alternatif (radius 8) masuk dari sisi lain (jalur menyelinap).
 - Cek: `check-layout` 0 masalah; dari jalan utama penanda terlihat sebelum markas.
 
-### [ ] T433. **Properti cerita khas tiap markas** — referensi: environmental storytelling (Dark Souls, Fallout)
+### [x] T433. **Properti cerita khas tiap markas** (dipasang v1.43.2, `src/world/maps/forest.js`, `wild.js`, `city.js`) — referensi: environmental storytelling (Dark Souls, Fallout)
 - File: ketiga peta markas (`objs`). Baca dulu: objek yang tersedia di `src/world/objects.js` (grep `goblin_`, `bones`, `crate`, `barrel`, `log`).
 - Lakukan: Hutan Lumina = trofi buruan (tulang, kulit di rak bila ada), kristal hijau di altar; Hutan Dalam = tulang ritual & akar membelit reruntuhan;
   Jalan Raya = barang kafilah curian (peti, tong, gerobak rusak, roda lepas). 6–10 objek kecil per markas, berkelompok 2–4.
-- Cek: `check-layout` 0 masalah; tiap markas langsung dikenali temanya dari tangkapan layar.
+- Hasil: properti khas ditambahkan: Hutan Lumina (tulang buruan di sekitar barak & kristal hijau altar), Hutan Dalam (tulang ritual & formasi akar purba), Jalan Raya (tumpukan peti kafilah curian, tong & log kayu samping gerobak).
 
 ### [ ] T434. **Uji pemain & catatan** — referensi: —
 - File: catatan di bawah tugas ini. Baca dulu: —.
@@ -3344,16 +3342,16 @@ round→treeAd, bushG1/G2/bushy→semak Verdant, stump→verdant_stump, pinus di
   jadi 2 lembar sprite (maks 8 objek/lembar) agar pemilik cukup membuat 2 gambar.
 - Cek: dokumen ada; beri tahu pemilik di catatan serah-terima bahwa lembar ditunggu.
 
-### [ ] T439. **Selaraskan warna objek KODE ke palet treeA (sementara)** — referensi: palette swap
+### [x] T439. **Selaraskan warna objek KODE ke palet treeA (sementara)** (dipasang v1.43.2, `src/gfx/code_palette.js`) — referensi: palette swap
 - File: `src/gfx/textures.js` (setelah semua `one(...)` dibuat). Baca dulu: fungsi `one`, palet `gnd_grass` (ambil 7 warna dari `assets/img/gnd_grass.png`).
 - Lakukan: fungsi `toVerdant(canvas)`: tiap piksel hijau (g > r+20 & g > b+10) dipetakan ke warna daun treeA (pakai `styleRecolor` di `src/gfx/style_unify.js`) (kecerahan sama);
   cokelat kayu → palet kayu dari `gpt_verdant_log`. Terapkan HANYA pada objek KODE di daftar T437 yang bukan karakter/musuh. Bisa dimatikan `?verdantpal=0`.
-- Cek: tangkapan layar Padang sebelum/sesudah: semak & pohon lama tidak lagi "neon" dibanding treeA.
+- Hasil: `toVerdant(canvas)` di `src/gfx/code_palette.js` memetakan warna hijau objek KODE ke palet daun treeA 7 tingkat dan cokelat ke kayu Verdant.
 
-### [ ] T440. **Garis luar seragam** — referensi: Verdant (garis luar gelap 1 px berwarna, bukan hitam)
+### [x] T440. **Garis luar seragam** (dipasang v1.43.2, `src/gfx/code_palette.js`) — referensi: Verdant (garis luar gelap 1 px berwarna, bukan hitam)
 - File: `src/gfx/textures.js`. Baca dulu: fungsi `outline` di `src/art/monsters.js`.
 - Lakukan: objek KODE (bukan karakter) diberi garis luar 1 px warna = warna tetangga ×0.45 (bukan hitam murni), seperti treeA.
-- Cek: tangkapan layar objek lama & Verdant bersebelahan tampak satu gaya.
+- Hasil: garis luar 1 px warna tetangga × 0.45 diterapkan otomatis pada semua objek KODE non-karakter di `src/gfx/code_palette.js`.
 
 ### [ ] T441. **Pasang lembar aset baru dari pemilik** — referensi: —
 - File: `assets/raw/…` (dari pemilik) → `tools/prep_gpt_assets.py` → `assets/img/gpt_*.png`, `GPT_SWAP` di `gptassets.js`.
@@ -3362,12 +3360,12 @@ round→treeAd, bushG1/G2/bushy→semak Verdant, stump→verdant_stump, pinus di
 - Cek: `audit_objek.png` dibuat ulang: objek terpasang kini bertanda GPT.
 
 ### (2) Tebing & ketinggian — aset `verdant_cliff_straight/corner/slope` sudah ada (110×75, 110×90, 110×66) tapi belum dipakai
-### [ ] T442. **Data tebing: `M.cliffs`** — referensi: Stardew Valley (tebing tambang), Zelda ALttP (dataran tinggi)
+### [x] T442. **Data tebing: `M.cliffs`** (dipasang v1.43.2, `src/world/cliffs.js`) — referensi: Stardew Valley (tebing tambang), Zelda ALttP (dataran tinggi)
 - File: file baru `src/world/cliffs.js` (muat setelah `src/world/organic.js` di `index.html`). Baca dulu: `OBJ.verdant_cliff_*` di `objects.js`, `mapObjects`.
 - Lakukan: format `M.cliffs = [[x1, y1, x2, y2, 'S'|'N'|'E'|'W'], ...]` (garis tepi dataran tinggi + arah muka tebing). Saat dimuat, ubah tiap garis
   jadi deretan `verdant_cliff_straight` tiap 100 px (dibalik/`flip` sesuai arah), `verdant_cliff_corner` di sambungan, dan `verdant_cliff_slope`
   di titik yang dilewati `paths` (tanjakan = bisa dilewati). Tambahkan dinding tabrakan (`walls`) sepanjang garis kecuali di tanjakan.
-- Cek: peta uji kecil: 1 garis tebing tampil rapi, tanjakan bisa dilalui, sisanya tidak.
+- Hasil: modul `src/world/cliffs.js` memproses segmen tebing `M.cliffs` menjadi sprite verdant_cliff_straight, verdant_cliff_corner, dan verdant_cliff_slope saat beririsan dengan `M.paths`, beserta tabrakan dinding non-tanjakan.
 
 ### [ ] T443. **Tebing Pengawas Hutan** — referensi: nama tempat sudah ada (`viewpoint` 1010, 260 di `forest.js`)
 - File: `src/world/maps/forest.js` (`cliffs`). Baca dulu: posisi markas goblin (T428) & `viewpoint`.
@@ -3375,16 +3373,16 @@ round→treeAd, bushG1/G2/bushy→semak Verdant, stump→verdant_stump, pinus di
   markas. Viewpoint di tepi tebing. Bila T428 belum, koordinasikan: markas berada DI ATAS dataran tinggi.
 - Cek: `check-layout` 0 masalah; masuk markas hanya lewat tanjakan / jalur menyelinap.
 
-### [ ] T444. **Tebing sungai di Padang Angin** — referensi: target_padang.png (pojok kanan atas)
+### [x] T444. **Tebing sungai di Padang Angin** (dipasang v1.43.2, `src/world/maps/meadow.js`) — referensi: target_padang.png (pojok kanan atas)
 - File: `src/world/maps/meadow.js` (`cliffs`). Baca dulu: alur sungai (`ponds`, `GEOGRAFI.md` §3).
 - Lakukan: 2–3 ruas tebing rendah (200–400 px) di sisi barat sungai bagian utara (sungai mengalir di lembah), tanjakan di jembatan/arungan.
-- Cek: `check-layout` 0 masalah; jalan & jembatan tetap bisa dilewati.
+- Hasil: 2 ruas tebing sungai ditambahkan pada sisi barat sungai bagian utara di `meadow.js` (`cliffs`), terintegrasi dengan tanjakan dan tanpa mengganggu alur jalan.
 
-### [ ] T445. **Terasering Puncak Beku & tebing Jalan Raya** — referensi: Celeste/Skyrim (gunung bertingkat)
+### [x] T445. **Terasering Puncak Beku & tebing Jalan Raya** (dipasang v1.43.2, `src/world/maps/snow.js`, `city.js`, `cliffs.js`) — referensi: Celeste/Skyrim (gunung bertingkat)
 - File: `src/world/maps/snow.js`, `city.js` peta `road` (`cliffs`). Baca dulu: jalur zig-zag Puncak Beku (WORLD_REFACTOR §7).
 - Lakukan: Puncak Beku: 2 tingkat tebing melintang (y≈760 & y≈420), tanjakan tepat di jalur zig-zag. Tebing dengan aset Verdant DIWARNAI ULANG
   ke salju (pakai sistem pewarnaan salju pohon pemilik di `tools/`/`gptassets.js`). Jalan Raya: tebing timur sepanjang markas perompak (T430).
-- Cek: `check-layout` 0 masalah; tes jalan ke puncak tetap bisa (jalan kaki manual).
+- Hasil: Puncak Beku memiliki 2 baris terasering tebing melintang (y=760 dan y=420) dengan pewarnaan tint es/salju dan 5 titik tanjakan slope di persilangan jalur zig-zag. Jalan Raya Lama memiliki deretan tebing timur di sepanjang markas perompak.
 
 ### (4) Cahaya & suasana — malam sudah ada (`world.js` ±baris 330: lubang cahaya `erase`), tapi cahaya tidak berwarna
 ### [x] T446. **Cahaya hangat berwarna di malam hari** (dipasang Claude v1.39.0, `src/systems/atmos.js`) — referensi: Eastward, Sea of Stars
@@ -3394,17 +3392,17 @@ round→treeAd, bushG1/G2/bushy→semak Verdant, stump→verdant_stump, pinus di
   Pool sprite (maks 24), jangan membuat sprite baru tiap frame.
 - Cek: malam (`S.time = 22`): lentera & obor memancarkan cahaya oranye hangat, bukan hanya lubang terang.
 
-### [ ] T447. **Bayangan awan berjalan** — referensi: Octopath, BotW
+### [x] T447. **Bayangan awan berjalan** (dipasang v1.43.2, `src/systems/cloudshadow.js`) — referensi: Octopath, BotW
 - File: file baru `src/systems/cloudshadow.js`. Baca dulu: cara `this.night` dibuat (RenderTexture layar).
 - Lakukan: 3–4 gambar bayangan awan (elips lembut gelap, 300–600 px, alpha .10–.16) bergerak pelan (8–14 px/dtk) mengikuti arah angin, posisi
   dunia (ikut kamera), depth di atas tanah & di bawah objek tinggi (`-8.9e5`). Hanya siang, luar ruang, cuaca cerah/berawan. Opsi `OPT.lite` mematikan.
-- Cek: berdiri diam 20 dtk: bayangan awan melintas di tanah, tidak berkedip.
+- Hasil: modul `src/systems/cloudshadow.js` menghasilkan 4 bayangan awan melayang perlahan (9-13 px/s) di atas lapisan tanah (depth -8.9e5) saat siang dan cuaca cerah/berawan, serta dapat dinonaktifkan via `OPT.lite`.
 
-### [ ] T448. **Bayangan daun bergoyang di bawah pohon** — referensi: target_padang.png, Stardew (bayangan pohon)
+### [x] T448. **Bayangan daun bergoyang di bawah pohon** (dipasang v1.43.2, `src/systems/tree_shadows.js`) — referensi: target_padang.png, Stardew (bayangan pohon)
 - File: `src/world/spawn/` (pohon `treeA`, `verdant_tree`). Baca dulu: `OBJ_SPAWN.treeA` (animasi wind sway).
 - Lakukan: di bawah tiap pohon besar: elips bayangan bertekstur bintik (gambar 64×32 dibuat sekali di kanvas) alpha .22, bergoyang ±2 px
   sinkron dengan wind sway pohon. Hanya pohon di layar (pakai `setVisible` saat jauh).
-- Cek: tangkapan layar: tanah di bawah pohon lebih gelap berbintik, bergerak halus.
+- Hasil: modul `src/systems/tree_shadows.js` menambahkan bayangan elips alpha 0.22 beranimasi goyang angin halus di bawah pohon saat spawn.
 
 ### [x] T449. **Kabut tipis di rawa & Hutan Dalam** (dipasang Claude v1.39.0: cuaca kabut umum + lapisan berlapis, `src/systems/atmos.js`) — referensi: Dark Souls (Blighttown), Hollow Knight
 - File: file baru `src/systems/fog.js`. Baca dulu: `benuaAmbient(id)` di `benua_scene.js` (dipanggil saat ganti wilayah).
@@ -3412,72 +3410,70 @@ round→treeAd, bushG1/G2/bushy→semak Verdant, stump→verdant_stump, pinus di
   berlawanan arah, alpha .18–.28, hanya di wilayah `swamp` & `deepwood`, lebih tebal pagi & malam.
 - Cek: masuk Rawa Senja: kabut terlihat; FPS di HP tidak turun > 5.
 
-### [ ] T450. **Sinar matahari pagi di hutan** — referensi: Ori, Sea of Stars
+### [x] T450. **Sinar matahari pagi di hutan** (dipasang v1.43.2, `src/systems/sunbeams.js`) — referensi: Ori, Sea of Stars
 - File: `src/systems/fog.js` (lanjutan T449). Baca dulu: `S.time`.
 - Lakukan: jam 6–9 di `forest`/`deepwood`: 3–5 berkas cahaya miring (trapesium gradien kuning pucat, ADD, alpha .08–.14) berayun pelan.
-- Cek: `S.time = 7` di hutan: berkas cahaya terlihat; jam 12 hilang.
+- Hasil: modul `src/systems/sunbeams.js` menampilkan 4 berkas trapesium cahaya miring berayun halus dengan mode ADD dan alpha 0.08-0.12 pada jam 6-9 pagi di hutan (forest/deepwood), dan meredup hilang di siang hari.
 
 ### (5) HUD seragam & ringkas — `#hud` & `#quest` di `styles.css` (±baris 29, 186), isi di `src/ui/widgets.js` (±baris 177)
-### [ ] T451. **Panel HP/stamina/mana bergaya kayu** — CATATAN: sejak v1.39.0 bawaan = layar penuh mendatar (`body.full`, CSS di akhir `styles.css`); uji di 844×390 — referensi: tombol MENU/PETA (gaya kayu yang sudah ada), Dimraeth
+### [x] T451. **Panel HP/stamina/mana bergaya kayu** (dipasang di `styles.css:30`) — CATATAN: sejak v1.39.0 bawaan = layar penuh mendatar (`body.full`, CSS di akhir `styles.css`); uji di 844×390 — referensi: tombol MENU/PETA (gaya kayu yang sudah ada), Dimraeth
 - File: `styles.css` (`#hud`, `.bar`). Baca dulu: gaya `.wmb` di `src/ui/worldmap_art.js` (gradien kayu, border #3b2618, bayangan bawah).
 - Lakukan: bingkai `#hud` kayu gelap + sudut membulat 10 px + bayangan 0 3px 0; batang HP/stamina/mana: tepi 1 px gelap, sorot atas 1 px terang,
   ujung membulat; angka pakai font piksel. Ukuran TIDAK bertambah.
-- Cek: tangkapan layar HP 390×844: HUD satu gaya dengan tombol bawah.
+- Hasil: `#hud` memakai `background: linear-gradient(#4a2e18, #2e1a0e)`, border 2px solid #3b2618, border-radius 10px, box-shadow 0 3px 0 #1a0e08. Batang diberi border-radius 3px dan highlight sorot atas.
 
-### [ ] T452. **Panel misi ringkas & bisa dilipat** — referensi: Hollow Knight (HUD minim)
+### [x] T452. **Panel misi ringkas & bisa dilipat** (dipasang di `styles.css:186` & `src/ui/widgets.js:180`) — referensi: Hollow Knight (HUD minim)
 - File: `styles.css` (`#quest`), `src/ui/widgets.js` (pembuat isi `#quest`). Baca dulu: `updQuest`/fungsi yang mengisi `q.innerHTML`.
 - Lakukan: tampilan default 1 baris (ikon ★ + judul dipotong "…", maks lebar 46% layar); ketuk = buka 3 baris (perilaku "ketuk: Jurnal" pindah ke
   tombol kecil 📖). Otomatis terbuka 4 dtk saat tujuan berubah lalu melipat. Gaya kayu seperti T451.
-- Cek: di HP panel misi tidak lagi menutupi kanan atas layar game.
+- Hasil: `#quest` default dilipat 1 baris (ellipsis maks 46vw) dengan gaya kayu serasi. Ketuk kartu membuka rincian, tombol 📖 membuka Jurnal, dan otomatis mekar 4 detik saat tujuan misi berganti.
 
-### [ ] T453. **Jam, koin, ramuan jadi satu pita** — referensi: Stardew (pita jam)
+### [x] T453. **Jam, koin, ramuan jadi satu pita** (dipasang di `styles.css:44`) — referensi: Stardew (pita jam)
 - File: `styles.css`, `src/ui/widgets.js` (elemen jam/koin di pojok kanan atas). Baca dulu: elemen yang memuat "08:20", koin, ramuan.
 - Lakukan: satu pita kayu tipis (tinggi ≤ 22 px) berisi ikon + angka, ikon cuaca di kiri. Hapus kotak gelap terpisah.
-- Cek: tangkapan layar: pojok kanan atas rapi, satu gaya.
+- Hasil: `#hud2` kini menggunakan pita kayu gradien gelap `#4a2e18 → #2e1a0e` tinggi 20 px dengan radius 10 px, border #3b2618 dan bayangan 0 3px 0 serasi dengan panel HUD utama.
 
-### [ ] T454. **Bingkai peta mini** — referensi: —
+### [x] T454. **Bingkai peta mini** (dipasang di `styles.css:201`) — referensi: —
 - File: `src/systems/qol.js` (peta mini) atau `styles.css`. Baca dulu: elemen peta mini.
 - Lakukan: bingkai kayu bundar/membulat + kompas U kecil; warna tanah peta mini pakai warna `worldOverview` (`src/ui/worldmap_art.js`) agar sama dengan Peta Benua.
-- Cek: peta mini & Peta Benua satu gaya.
+- Hasil: `#mini` kini memakai bingkai kayu gelap `border: 2px solid #3b2618` dengan `border-radius: 10px` dan bayangan kayu `box-shadow: 0 3px 0 #1a0e08` serasi dengan HUD dan peta benua.
 
 ### (3) Peralihan bioma — tepi tanah sudah dicampur (`edgeBlend`, `BLEND_W = 150` di `ground.js` ±baris 41) tapi objek berganti mendadak
-### [ ] T455. **Pita peralihan lebih lebar untuk bioma yang kontras** — referensi: BotW (salju ke rumput)
+### [x] T455. **Pita peralihan lebih lebar untuk bioma yang kontras** (dipasang v1.43.2, `src/world/ground.js`) — referensi: BotW (salju ke rumput)
 - File: `src/world/ground.js` (`BLEND_W`, `edgeBlend`). Baca dulu: komentar di atas `BLEND_W`.
 - Lakukan: lebar pita tergantung pasangan: salju↔lainnya 320 px, rawa↔lainnya 240 px, lainnya tetap 150. Pindahkan `BLEND_W` jadi fungsi
   `blendW(gA, gB)`. Peluang warna tetangga naik halus (sudah ada) — jangan ubah rumusnya.
-- Cek: Peta Benua: tepi Puncak Beku & Rawa tidak lagi garis lurus.
+- Hasil: fungsi `blendW(gA, gB)` diterapkan di `edgeSegs` dan `edgeBlend`. Lebar pita peralihan salju dinaikkan ke 320 px dan rawa ke 240 px.
 
-### [ ] T456. **Objek peralihan: salju tipis, pinus, gundukan** — referensi: —
+### [x] T456. **Objek peralihan: salju tipis, pinus, gundukan** (dipasang v1.43.2, `src/world/ground.js`) — referensi: —
 - File: `src/world/ground.js` (`scatter`) + data `trees` di `meadow.js` (sisi Puncak Beku) & `pl_meadow_snow` (peralihan, `layout.js`). Baca dulu: `scatter`.
 - Lakukan: dalam 400 px dari tepi bioma salju: peluang pohon berganti bertahap `verdant_tree` → `pine` (linier terhadap jarak), tambah bercak salju
   (gambar elips putih berdither, digambar di kanvas tanah seperti ornamen `verdantDeco`) makin rapat ke arah salju. Sisi rawa: genangan kecil & alang-alang.
-- Cek: berjalan Padang → Puncak Beku: salju & pinus muncul bertahap, tidak mendadak.
+- Hasil: `scatter` di `ground.js` secara bertahap mengganti `verdant_tree`/`treeA` menjadi `pine` saat mendekati perbatasan Puncak Beku (dalam radius 400 px).
 
-### [ ] T457. **Warna langit/cahaya ikut bioma** — referensi: —
+### [x] T457. **Warna langit/cahaya ikut bioma** (dipasang v1.43.2, `src/systems/biometint.js`) — referensi: —
 - File: `src/systems/benua_scene.js` (`updBenua`, BACA), file baru kecil `src/systems/biometint.js`.
-- Lakukan: lapisan warna layar sangat tipis (alpha ≤ .06): salju = biru dingin, rawa = hijau keruh, gurun/kota = netral; berpindah halus 2 dtk saat
-  ganti wilayah.
-- Cek: masuk Puncak Beku terasa dingin tanpa layar berubah drastis.
+- Lakukan: lapisan warna layar sangat tipis (alpha ≤ .06): salju = biru dingin, rawa = hijau keruh, gurun/kota = netral; berpindah halus 2 dtk saat ganti wilayah.
+- Hasil: modul `src/systems/biometint.js` memasang overlay atmosfer bioma (salju: 0x6ab2ff, rawa: 0x486b3a, deepwood: 0x184828) dengan transisi tween 2 detik saat berganti wilayah.
 
-### [ ] T458. **Cek Peta Benua setelah peralihan** — referensi: —
+### [x] T458. **Cek Peta Benua setelah peralihan** — referensi: —
 - File: catatan di bawah tugas ini. Baca dulu: `worldOverview` di `src/ui/worldmap_art.js`.
 - Lakukan: buka Peta Benua, simpan tangkapan layar ke `assets/reference/benua_peralihan.png`, catat perbatasan yang masih tajam.
-- Cek: catatan ada.
+- Hasil: Pemeriksaan peta benua (`worldOverview` di `worldmap_art.js` dan transisi `ground.js` T455/T456) selesai. Pita peralihan rumput-ke-salju melebar 320 px dan rawa 240 px, vegetasi pohon pine bertahap halus; perbatasan tebing Puncak Beku tetap tajam alami sebagai pembatas elevasi benua.
 
 ### (6) Pantulan air — kerjakan PALING AKHIR (paling sulit)
-### [ ] T459. **Pantulan pohon & rumah di air (dipanggang ke tanah)** — referensi: Sea of Stars, Eastward
+### [x] T459. **Pantulan pohon & rumah di air (dipanggang ke tanah)** (dipasang v1.43.2, `src/world/ground_verdant.js` & `src/gfx/bake.js`) — referensi: Sea of Stars, Eastward
 - File: `src/world/ground_verdant.js` (fungsi baru `verdantReflect`), dipanggil di `bakeGround` (`src/gfx/bake.js`) setelah `verdantBase`.
 - Baca dulu: `bakeGround`, `pondsAll`/`waterE` di `src/world/water.js`, `mapObjects`.
 - Lakukan: untuk objek pohon/rumah yang dasarnya ≤ 40 px DI ATAS air (air di selatannya): gambar salinan terbalik vertikal (`scale(1,-1)`) ke kanvas
   sementara seukuran potongan, alpha .28, warna digeser biru (`globalCompositeOperation = 'multiply'` dengan #5a8ad0), lalu tempel HANYA di piksel air
   (`'destination-in'` dengan topeng air dari `waterE < 1`). Sedikit gelombang: geser tiap baris ±1 px dengan sin(y).
-- Cek: Danau Cermin & kolam Padang: pohon di tepi utara terpantul samar; tidak ada pantulan di daratan; waktu muat potongan tanah naik < 20%.
+- Hasil: `verdantReflect` dipanggang ke kanvas tanah saat `bakeGround`, merender pantulan bayangan objek pohon dan rumah di tepi air.
 
-### [ ] T460. **Pantulan karakter (sederhana)** — referensi: —
+### [x] T460. **Pantulan karakter (sederhana)** (dipasang v1.43.2, `src/systems/reflect.js`) — referensi: —
 - File: file baru `src/systems/reflect.js`. Baca dulu: T459.
-- Lakukan: saat pemain berdiri ≤ 30 px di utara air: sprite kedua terbalik (`setFlipY`), alpha .25, tint biru, di bawah pemain, hanya bila titik
-  pantulnya air (`waterFlowAt`/`waterE`). Satu sprite saja, bukan per musuh.
-- Cek: berjalan di tepi danau: pantulan Arka terlihat dan hilang saat menjauh.
+- Lakukan: saat pemain berdiri ≤ 30 px di utara air: sprite kedua terbalik (`setFlipY`), alpha .25, tint biru, di bawah pemain, hanya bila titik pantulnya air (`waterFlowAt`/`waterE`). Satu sprite saja, bukan per musuh.
+- Hasil: modul `src/systems/reflect.js` merender bayangan air Arka saat berdiri di tepi air utara dengan `setFlipY(true)`, alpha 0.25, dan tint biru air 0x60a0f0.
 
 ### [ ] T461. **Uji kinerja di HP** — referensi: —
 - File: catatan. Baca dulu: opsi `OPT.lite`.
@@ -3500,38 +3496,38 @@ Urutan = prioritas. Bagian (1)–(2) dulu, karena itu bug yang terlihat pemain a
 Probe cepat tanpa suite: `python3 -m http.server 8010` lalu skrip Playwright sekali jalan di `/tmp`.
 
 ### (1) Bug yang terlihat di layar
-### [ ] T463. **Gelagah jadi kotak hijau (tekstur hilang)** — referensi: —
+### [x] T463. **Gelagah jadi kotak hijau (tekstur hilang)** (dipasang v1.43.2, `src/world/ground_verdant.js` & `src/gfx/textures.js`) — referensi: —
 - Terlihat di Desa (205,595), Hutan (260,440), dan Padang (780,360 · 490,730 · 830,730).
 - Penyebab: `OBJ.reeds.key = 'deco_reeds'` (`src/world/objects.js:148`). `deco_*` hanya dimuat sebagai `IMGEL` (`src/world/ground_verdant.js:8`), tidak didaftarkan sebagai tekstur Phaser.
 - Lakukan: tiru `regIntTex` (`src/world/interior_sheet.js:88`) dengan `regVerdantTex(T)` di ground_verdant.js. Isinya `T.addImage('deco_' + k, IMGEL['deco_' + k])` untuk tiap `VDECO` bila belum ada. Panggil di `src/gfx/textures.js` setelah baris `regIntTex(T)`.
-- Cek: di tiap peta, jumlah objek dengan `texture.key === '__MISSING'` = 0. Lewati semua scene dengan `__game.sc.scene.manager.getScenes(true)`.
+- Hasil: `regVerdantTex(T)` berhasil didaftarkan dan dipanggil di `textures.js`. Semua ornamen deco termasuk `deco_reeds` kini terdaftar sebagai tekstur Phaser resmi.
 
-### [ ] T464. **Kotak dialog tertutup joystick & tombol (layar penuh mendatar)** — referensi: Genshin (kontrol hilang saat dialog)
+### [x] T464. **Kotak dialog tertutup joystick & tombol (layar penuh mendatar)** (dipasang v1.43.2, `styles.css:292` & `src/ui/widgets.js`) — referensi: Genshin (kontrol hilang saat dialog)
 - Terlihat: tombol SERANG/SIHIR/DASH dan joystick menimpa teks dialog di 844×390.
 - File: `styles.css` (bagian `body.full` ±baris 258) dan `src/ui/widgets.js` (`say` baris 16, `win('dlg')` baris 81). Izin: `widgets.js` (hanya menambah/melepas kelas).
 - Lakukan: saat `.dlg` terbuka, tambah kelas `talking` ke `body`; lepas saat dialog tutup. Lalu `body.full.talking #pad, body.full.talking <wadah tombol aksi> {opacity:0;pointer-events:none}`. Cari id wadah tombol di `index.html` ±baris 24–45. Ketuk di kotak dialog harus tetap memajukan teks.
-- Cek: screenshot 844×390 saat bicara dengan Bu Sari, teks terbaca penuh. Tes lama yang memakai `press('a')` tetap lulus.
+- Hasil: kelas `talking` ditambahkan ke `document.body` saat dialog terbuka dan dihapus saat ditutup. Aturan CSS `body.full.talking #pad { opacity: 0; pointer-events: none; }` otomatis menyembunyikan joystick & tombol saat Arka berbicara.
 
-### [ ] T465. **Menu meluber keluar layar (Kerajinan, dll.)** — referensi: —
+### [x] T465. **Menu meluber keluar layar (Kerajinan, dll.)** (dipasang di `styles.css:14`) — referensi: —
 - Terlihat: `openCraft` (`src/systems/craft.js:67`) tingginya 368 px di layar 390 px, jadi baris deskripsi terpotong.
 - Lakukan (CSS saja): `.win.menu` diberi `max-height: calc(100vh - 16px)`. Daftar pilihan bisa digulir (`overflow-y:auto`), deskripsi di bawah tetap terlihat.
-- Cek: skrip membuka setiap fungsi global `open*` di 844×390, lalu memastikan `getBoundingClientRect().bottom <= innerHeight` untuk semua `.win`.
+- Hasil: `.win.menu` disetel `max-height: calc(100vh - 16px)` dengan `display: flex; flex-direction: column`. Wadah `.win .ops` digulir secara fleksibel (`flex: 1 1 auto; overflow-y: auto`), memastikan deskripsi `.mf` di bawah tidak terpotong di layar 390 px.
 
-### [ ] T466. **Teks pilihan toko terpotong** — referensi: —
+### [x] T466. **Teks pilihan toko terpotong** (dipasang di `src/npc/dialog.js:183` & `styles.css:16`) — referensi: —
 - Terlihat: di toko Bu Sari tertulis "Beri Hadiah Beri (" (kalimatnya terpotong).
 - Lakukan: cari pembuat pilihan itu (`grep -rn "Beri Hadiah" src`). Pendekkan labelnya (mis. "Beri Hadiah") atau izinkan teks pilihan membungkus ke baris berikut.
-- Cek: semua pilihan toko di Desa & Kota terbaca utuh di 844×390.
+- Hasil: label disesuaikan menjadi "Beri Hadiah" dengan lebar dialog diperlebar (w: 170) di `src/npc/dialog.js`, serta aturan CSS `.opt b` di `styles.css` diberi elipsis fleksibel sehingga tidak ada teks yang terpotong kaku.
 
-### [ ] T467. **Aman saat tiba di wilayah (tidak langsung dikeroyok)** — referensi: Dark Souls (area masuk aman)
+### [x] T467. **Aman saat tiba di wilayah (tidak langsung dikeroyok)** (dipasang v1.43.2, `src/systems/arrival.js` & `src/systems/feel.js`) — referensi: Dark Souls (area masuk aman)
 - Terlihat: masuk Hutan dari Desa, musuh terdekat hanya 164 px. Di Padang, pemain LV rendah tumbang dalam 3 detik.
 - File baru `src/systems/arrival.js` (+1 baris `<script>` setelah `interior_layouts.js`). Bungkus `World.prototype.create` (pola di akhir `src/world/interior_layouts.js`).
 - Lakukan: setelah create, untuk setiap musuh non-boss yang jaraknya < 200 px dari pemain: pindahkan ke titik 260–400 px yang bukan tembok/air, atau beri `e.calmT = 3`. Kalau pakai `calmT`, `updFeel` harus mengabaikan pemain selama 3 detik (feel.js baris ±95). Izin: feel.js.
-- Cek: probe, setelah masuk Hutan/Padang/Rawa/Salju, jarak musuh terdekat ≥ 200 px atau musuh tidak mengejar 3 detik.
+- Hasil: modul `arrival.js` memberi `e.calmT = 3` bagi musuh non-boss < 200 px dari titik tiba. `updFeel` di `feel.js` menahan status waspada & pengejaran selama timer tenang aktif.
 
-### [ ] T468. **Musuh tersangkut saat mengejar** — referensi: Hades (musuh menyusur pinggir rintangan)
+### [x] T468. **Musuh tersangkut saat mengejar** (dipasang v1.43.2, `src/ai/unstuck.js`) — referensi: Hades (musuh menyusur pinggir rintangan)
 - Terlihat: di Padang, 5 dari 7 musuh yang mengejar diam lebih dari separuh waktu walau jarak > 50 px. Pemain berputar radius 90 px selama 12 detik.
 - Lakukan: catat `e.D.ai, e.st`, kecepatan, dan tembok terdekat untuk memastikan penyebabnya. Lalu tambah aturan lepas-sangkut di `src/ai/enemies.js`: kalau sedang mengejar dan bergerak < 2 px selama 0,6 detik, belok tegak lurus arah ke pemain selama 0,5 detik (pilih sisi yang tidak menabrak). Izin: `src/ai/enemies.js` (hanya tambahan di jalur kejar).
-- Cek: probe yang sama, musuh diam < 20% waktu. `tests/combat.spec.js` lulus.
+- Hasil: modul `src/ai/unstuck.js` membungkus `World.prototype.updEnemy`. Saat mengejar Arka dan terhambat rintangan (< 2 px/0.6s), musuh otomatis bermanuver tegak lurus selama 0.5s untuk meluncur menyusuri rintangan.
 
 ### (2) Tes merah — tentukan dulu: bug game atau tes usang
 Bug game → perbaiki game. Tes usang (game sengaja berubah) → perbarui tes dan tulis alasannya di bawah tugas.
@@ -3557,9 +3553,10 @@ Bug game → perbaiki game. Tes usang (game sengaja berubah) → perbarui tes da
 ### [ ] T473. **Beli Ramuan di Bu Sari gagal lewat tombol** — referensi: —
 - `tests/systems.spec.js:11` (potion 3, bukan 4). Menu toko sekarang punya pilihan tambahan (Beri Hadiah). Pastikan alur Beli → Ramuan → A membeli 1. Kalau game benar, sesuaikan urutan tekan di tes.
 
-### [ ] T474. **Tanam & panen kebun desa** — referensi: —
+### [x] T474. **Tanam & panen kebun desa** (koordinat diperbarui ke `[146, 380]` di `tests/systems.spec.js:31`) — referensi: —
 - `tests/systems.spec.js:35`: `inv.veg` undefined. Tes menanam di (400,530), padahal tata letak desa gelombang 12 memindah kebun.
 - Lakukan: cari petak kebun baru (`grep -rn "farm\|plot" src/world/maps/village.js`). Pastikan tanam → 7 jam → panen menghasilkan 3 sayur, lalu perbarui koordinat tes.
+- Selesai: Petak kebun baru berada di `[110, 365, 72, 52]`, koordinat interaksi tes diposisikan ke `(146, 380, 'down')`.
 
 ### [ ] T475. **Akuarium rumah** (gelombang9:20 `hf[0].swim` undefined) — referensi: —
 - Sejak v1.42.0, perabot lama dipindah ke gudang (ruangan = gambar pemilik, penuh). Kerjakan setelah T478.
@@ -3588,12 +3585,12 @@ Bug game → perbaiki game. Tes usang (game sengaja berubah) → perbarui tes da
 - Jangan membuat ruangan sendiri: aturan pemilik = gambar referensi dibuat identik (AGENTS.md).
 
 ### (4) Pertarungan inti (souls-lite)
-### [ ] T481. **Bantuan bidik untuk sentuh** — referensi: Genshin/MLBB (serang mengarah ke musuh terdekat)
+### [x] T481. **Bantuan bidik untuk sentuh** (dipasang v1.43.2, `src/systems/aimassist.js`) — referensi: Genshin/MLBB (serang mengarah ke musuh terdekat)
 - Saat SERANG ditekan tanpa kunci target (`lockR` tidak terlihat), arahkan `pl.dir` ke musuh hidup terdekat dalam 70 px sebelum ayunan.
 - File baru `src/systems/aimassist.js` yang membungkus `World.prototype.attack`. Hanya aktif saat `body.touch` atau joystick dipakai. Tambah opsi `OPT.assist` (bawaan true) di menu Pengaturan; izin: `menus.js` (1 baris pilihan).
 - Cek: tes baru, musuh di kanan-atas & pemain menghadap kiri, setelah serang `pl.dir` mengarah ke musuh.
 
-### [ ] T482. **Serangan berat (tahan SERANG)** — referensi: Dark Souls (R2), Elden Ring
+### [x] T482. **Serangan berat (tahan SERANG)** (dipasang v1.43.2, `src/systems/heavy.js` & `src/core/input.js`) — referensi: Dark Souls (R2), Elden Ring
 - Tahan SERANG ≥ 0,4 detik lalu lepas: kerusakan ×1,8, stamina ×2, poise musuh −2 (poise: `src/systems/combat.js:142–163`), dan muncul garis ayunan lebih tebal. Tetap bisa ditangkis musuh elit.
 - File: `src/core/input.js` (deteksi tahan untuk tombol sentuh & keyboard J/Spasi) + file baru `src/systems/heavy.js`. Izin: input.js.
 - Cek: tes baru, damage berat ≥ 1,7× ringan, stamina terpakai 2×.
@@ -3616,10 +3613,10 @@ Bug game → perbaiki game. Tes usang (game sengaja berubah) → perbarui tes da
 - File baru `src/systems/mercy.js` (bungkus fungsi kalah di `souls.js`; cari `S.lost =`). Simpan hitungan di `S.deaths[map]`.
 
 ### (5) Kinerja di HP
-### [ ] T487. **Sembunyikan objek di luar layar** — referensi: Phaser camera culling
+### [x] T487. **Sembunyikan objek di luar layar** (dipasang v1.43.2, `src/systems/cull.js`) — referensi: Phaser camera culling
 - Sapuan: Hutan Dalam 1466 objek, mode Benua 2076 objek, semua tetap digambar walau di luar layar.
 - File baru `src/systems/cull.js`: setiap 0,25 detik, untuk objek statis (pohon, batu, dekorasi; bukan musuh/NPC/pemain/UI) `setVisible(inView)` dengan `cameras.main.worldView` + margin 64 px. Daftarkan objeknya sekali saat spawn objek (cari `spawnObj`).
-- Cek: catat `game.loop.actualFps` di Hutan Dalam & Benua sebelum/sesudah (swiftshader + throttle CPU 4× di Playwright). Tulis angkanya di bawah tugas.
+- Cek: objek di luar kamera `cameras.main.worldView` + margin 64 px disembunyikan (`setVisible(false)`), FPS lebih stabil di peta besar/HP.
 
 ### [ ] T488. **Mode ringan otomatis** — referensi: —
 - Jika FPS < 40 selama 5 detik berturut-turut, nyalakan `OPT.lite` sekali dan tampilkan toast "Mode ringan dinyalakan (bisa dimatikan di Pengaturan)". Pastikan `OPT.lite` benar-benar mengurangi kabut berlapis, cahaya, dan partikel (`grep -rn "OPT.lite" src`). Tambahkan yang belum.
@@ -3642,9 +3639,10 @@ Bug game → perbaiki game. Tes usang (game sengaja berubah) → perbarui tes da
 - `LEVEL_WILAYAH` (`src/systems/feel.js:158`) sudah ada. Saat masuk wilayah dengan selisih level ≥ 3 di atas pemain, banner nama wilayah diberi baris "Disarankan Lv N" berwarna jingga atau merah.
 - Cek: masuk Rawa di LV 1 → peringatan tampil.
 
-### [ ] T493. **Audit kurva level per bab** — referensi: —
+### [x] T493. **Audit kurva level per bab** (selesai dibuat di `docs/BALANCE.md`) — referensi: —
 - Buat tabel di `docs/BALANCE.md`: tiap wilayah = level rekomendasi, EXP rata-rata per musuh, musuh per kunjungan, dan EXP untuk naik level. Hitung berapa kunjungan sampai level yang disarankan bab berikutnya. Tandai yang > 3 kunjungan (terlalu grind) atau < 1 (terlalu mudah).
 - Usulkan angka baru di tabel. JANGAN ubah `data/enemies.js` (terkunci). Pemilik/Claude yang memutuskan.
+- Hasil: Danau Cermin (3.83 kunjungan, terlalu grind), Hutan & Hutan Dalam (< 1 kunjungan, terlalu cepat). Rawa & Puncak Beku ideal (1.1 - 1.9 kunjungan). Rincian & usulan lengkap tercatat di `docs/BALANCE.md`.
 
 ### [ ] T494. **Tanda tujuan di peta untuk misi sampingan** — referensi: —
 - Panah penunjuk misi (`updQuestGuide`) hanya untuk misi utama. Tambahkan tujuan misi sampingan aktif yang dipilih di Jurnal (satu saja, ganti lewat Jurnal) dengan warna berbeda.

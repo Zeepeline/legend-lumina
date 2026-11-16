@@ -176,11 +176,11 @@ Object.assign(World.prototype, {
       const rel = S.rel?.merchant || 0;
       const m = await choose({
         head: `Kios Bu Sari · ${S.gold} G · ${'♥'.repeat(Math.min(3, rel))}${'♡'.repeat(3 - Math.min(3, rel))}`,
-        x: 80, y: 50, w: 140,
+        x: 80, y: 50, w: 170,
         items: [
           { t: 'Beli' },
           { t: 'Jual barang' },
-          { t: 'Beri Hadiah Beri', r: has('berry') ? '1 Beri' : '(kosong)' },
+          { t: 'Beri Hadiah', r: has('berry') ? '1 Beri' : '(kosong)' },
           { t: 'Keluar' }
         ],
         foot: (i) => ['Beli perbekalan petualang.', 'Jual hasil buruan & panen.', 'Beri buah kesukaan Bu Sari untuk mempererat keakraban.', 'Tutup toko.'][i]

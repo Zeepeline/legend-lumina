@@ -78,6 +78,12 @@ MAPS.village = {
     ['hay', 100, 480], ['hay', 670, 280],
     ['hay', 850, 275], ['barrel', 945, 275],
     ['pot', 396, 220], ['pot', 590, 220], ['planter', 570, 225], ['mailbox', 320, 220],
+    // T381: Jejak kehidupan di depan rumah warga
+    ['hay', 130, 225], ['barrel', 154, 220], // Pondok Pak Joko (petani: jerami & tong benih)
+    ['pot', 290, 396], ['planter', 200, 396], // Rumah Bu Lastri (bunga & pot tanaman harum)
+    ['woodpile', 734, 540], ['barrel', 626, 540], // Rumah Tepi Sungai (kayu bakar & gentong air)
+    ['crate', 695, 420], ['barrel', 790, 420], // Bengkel Pak Besi (peti perkakas & tong arang)
+    ['pot', 545, 565], ['planter', 572, 565], // Rumah Arka (pot & bunga samping teras timur)
     ['stele', 570, 280, { lore: 'prasasti_desa' }],
     ['sign', 450, 410, { text: 'PERSIMPANGAN ALUN-ALUN\n← Danau Cermin · ↑ Rumah Tetua · ↓ Hutan Lumina · → Pasar & Padang' }],
     ['sign', 72, 600, { text: 'Barat: DANAU CERMIN' }],

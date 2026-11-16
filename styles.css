@@ -11,8 +11,10 @@ body{font-family:'Pixelify Sans','Courier New',monospace;color:#3b2618}
 #ui .act{pointer-events:auto}
 #fade{position:absolute;inset:0;background:#000;opacity:1;transition:opacity .35s;pointer-events:none}
 .win{position:absolute;background:#fbf1d9;border:2px solid #6e4222;border-radius:4px;box-shadow:0 0 0 1px #2a1a10,inset 0 0 0 1px #e2c99a,0 3px 0 rgba(0,0,0,.35);padding:4px 7px;color:#3b2618;z-index:20;max-height:calc(100% - 12px);box-sizing:border-box}
-.win .ops{max-height:140px;overflow-y:auto;touch-action:pan-y}
-.opt{position:relative;padding-left:10px;white-space:nowrap;display:flex;justify-content:space-between;gap:10px;height:14px;line-height:14px;cursor:pointer}
+.win.menu{max-height:calc(100vh - 16px);display:flex;flex-direction:column}
+.win .ops{max-height:140px;overflow-y:auto;touch-action:pan-y;flex:1 1 auto}
+.opt{position:relative;padding-left:10px;white-space:nowrap;display:flex;justify-content:space-between;gap:6px;min-height:14px;line-height:14px;cursor:pointer}
+.opt b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .opt.sel{color:#000}
 .opt.sel::before{content:'';position:absolute;left:0;top:4px;border-left:6px solid #d0582a;border-top:3px solid transparent;border-bottom:3px solid transparent;animation:blink .8s steps(2) infinite}
 .opt.dis{color:#a8957a}
@@ -26,13 +28,13 @@ body{font-family:'Pixelify Sans','Courier New',monospace;color:#3b2618}
 .done .more{opacity:1;animation:bob .6s ease-in-out infinite alternate}
 @keyframes bob{to{transform:translateY(2px)}}
 @keyframes blink{50%{opacity:.25}}
-#hud{position:absolute;left:4px;top:4px;display:flex;gap:4px;align-items:center;background:rgba(20,14,10,.82);border:2px solid #000;border-radius:4px;padding:3px 5px;color:#fff;transition:opacity .3s;z-index:2}
+#hud{position:absolute;left:4px;top:4px;display:flex;gap:4px;align-items:center;background:linear-gradient(#4a2e18,#2e1a0e);border:2px solid #3b2618;border-radius:10px;box-shadow:0 3px 0 #1a0e08,inset 0 1px 0 rgba(255,255,255,.2);padding:3px 6px;color:#fff;transition:opacity .3s;z-index:2}
 .hud-sub{display:flex;align-items:center;gap:4px;margin-top:1px}
 .hud-sub .lv{font-size:7.5px;color:#ffe27a;font-weight:700}
 .hud-sub .lv b{font-size:8.5px;color:#fff}
 .bars{display:flex;flex-direction:column;gap:2px}
-.bar{position:relative;width:74px;height:6px;background:#1a100a;border-radius:1px;overflow:hidden;box-shadow:inset 0 0 0 1px #000}
-.bar>i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(#9cf07a,#3cae3a);transition:width .12s}
+.bar{position:relative;width:74px;height:6px;background:#1a100a;border-radius:3px;overflow:hidden;box-shadow:inset 0 0 0 1px #000, 0 1px 0 rgba(255,255,255,.15)}
+.bar>i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(#9cf07a,#3cae3a);border-radius:3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35);transition:width .12s}
 .bar.hp>i.fill{background:linear-gradient(#ef4444,#b91c1c)}
 .bar.hp>i.ghost{background:linear-gradient(#ffa090,#d03030);transition:width .6s ease-out .25s}
 .bar.sta>i.fill{background:linear-gradient(#22c55e,#15803d)}
@@ -40,7 +42,7 @@ body{font-family:'Pixelify Sans','Courier New',monospace;color:#3b2618}
 .bar.xp{height:2px;flex:1}.bar.xp>i{background:linear-gradient(#fff0a0,#e0a82a)}
 .bar.low>i.fill{background:linear-gradient(#f87171,#dc2626)}
 .bar>span{position:absolute;right:2px;top:-1px;font-size:6px;line-height:8px;color:#fff;text-shadow:1px 1px 0 #000;font-family:monospace}
-#hud2{position:absolute;right:4px;top:4px;display:flex;gap:6px;align-items:center;background:rgba(30,20,12,.62);border:1px solid rgba(255,230,180,.35);border-radius:4px;padding:2px 6px;color:#fff;font-size:10px;transition:opacity .3s;z-index:2}
+#hud2{position:absolute;right:4px;top:4px;display:flex;gap:6px;align-items:center;background:linear-gradient(#4a2e18,#2e1a0e);border:2px solid #3b2618;border-radius:10px;box-shadow:0 3px 0 #1a0e08,inset 0 1px 0 rgba(255,255,255,.2);height:20px;padding:0 8px;color:#fff;font-size:10px;transition:opacity .3s;z-index:2;box-sizing:border-box}
 #hud2 img{width:10px;height:10px;image-rendering:pixelated;vertical-align:-1px;margin-right:2px}
 #hud2 .pt img{width:9px;height:11px}
 #hud2 .pt b{display:inline-flex;align-items:center;gap:3px}
@@ -183,11 +185,14 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #autosv.on{animation:asv 2.2s ease}
 @keyframes asv{0%,100%{opacity:0}15%,70%{opacity:1}}
 /* kartu misi */
-#quest{position:absolute;right:4px;top:22px;pointer-events:auto!important;cursor:pointer;background:rgba(28,20,36,.72);border:1px solid #e8c050;border-radius:6px;padding:2px 5px 2px;max-width:140px;text-align:left!important;box-shadow:0 2px 6px rgba(0,0,0,.35)}
-#quest .qh{font-size:7px;letter-spacing:0.5px;color:#e8c050}
+#quest{position:absolute;right:4px;top:28px;pointer-events:auto!important;cursor:pointer;background:linear-gradient(#4a2e18,#2e1a0e);border:2px solid #3b2618;border-radius:8px;box-shadow:0 3px 0 #1a0e08,inset 0 1px 0 rgba(255,255,255,.2);padding:2px 6px;max-width:46vw;text-align:left!important;transition:all .25s ease}
+#quest.folded .qf{display:none}
+#quest.folded .qt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#quest .qh{font-size:7px;letter-spacing:0.5px;color:#ffe27a;display:flex;justify-content:space-between;align-items:center}
 #quest .qt{font-size:8px;line-height:1.2;color:#fff}
-#quest .qp{display:inline-block;background:#e8c050;color:#2a1a10;border-radius:4px;padding:0 3px;font-size:7px;font-weight:bold}
-#quest .qf{font-size:6.5px;color:#b8a8c8;margin-top:1px}
+#quest .qp{display:inline-block;background:#ffe27a;color:#2a1a10;border-radius:3px;padding:0 3px;font-size:7px;font-weight:bold}
+#quest .qf{font-size:6.5px;color:#c8b090;margin-top:2px;border-top:1px dashed rgba(255,255,255,.2);padding-top:1px}
+#quest .qbtn{font-size:8px;margin-left:4px;cursor:pointer}
 /* balon sapaan otomatis NPC (barking speech bubble) */
 .bark{position:absolute;transform:translate(-50%,-100%);background:#fffef5;color:#2a1810;border:1.5px solid #6e4222;border-radius:4px;padding:2px 5px;font-size:8.5px;line-height:10.5px;white-space:nowrap;pointer-events:none;z-index:9000;box-shadow:0 2px 4px rgba(0,0,0,.3);animation:barkPop .25s ease-out forwards;max-width:130px;white-space:normal;text-align:center}
 .bark::after{content:'';position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid #6e4222}
@@ -198,8 +203,8 @@ html,body{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;-webk
 #tip b{color:#ffd84a}#tip small{display:block;font-size:8px;color:#b8a8c8;margin-top:2px}#tip.off{opacity:0;transition:opacity .3s}
 @keyframes tipin{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}
 /* peta mini */
-#mini{position:absolute;left:4px;top:44px;width:52px;height:52px;border:1px solid #e8c050;border-radius:4px;background:rgba(20,16,30,.55);z-index:1;pointer-events:auto;image-rendering:pixelated}
-#mini.big{width:104px;height:104px;z-index:10;box-shadow:0 3px 8px rgba(0,0,0,.5)}
+#mini{position:absolute;left:4px;top:44px;width:52px;height:52px;border:2px solid #3b2618;border-radius:10px;box-shadow:0 3px 0 #1a0e08,inset 0 1px 0 rgba(255,255,255,.2);background:linear-gradient(#4a2e18,#2e1a0e);z-index:1;pointer-events:auto;image-rendering:pixelated}
+#mini.big{width:104px;height:104px;border-radius:14px;z-index:10;box-shadow:0 4px 10px rgba(0,0,0,.6)}
 /* ukuran & transparansi tombol (#74) */
 #pad .btn{scale:var(--bs,1);opacity:var(--ba,1)}
 /* penanda bahaya dari luar layar */
@@ -288,3 +293,4 @@ body.rotate #rotate{display:flex;position:fixed;inset:0;z-index:9999;background:
 body.rotate #rotate i{font-style:normal;font-size:56px;animation:rotHint 1.6s ease-in-out infinite}
 @keyframes rotHint{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
 body.full #hDate{left:50%;transform:translateX(-50%);top:21px}
+body.full.talking #pad{opacity:0;pointer-events:none;transition:opacity .2s}

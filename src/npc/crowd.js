@@ -150,8 +150,18 @@ Object.assign(World.prototype, {
     const M = this.M;
     if (!M || !M.crowd || G.title) return;
     // Siang ramai, malam lebih sepi (30% dari kuota normal, minimal 1)
+    // T379: saat hujan warga latar berkurang 70% (hanya 30% kuota normal)
+    // T406: hari ke-7 (hari pasar) warga latar di alun-alun pasar x1.5
     const isNightTime = (typeof S !== 'undefined' && S && (S.time >= 20 || S.time < 5));
-    const effectiveCount = isNightTime ? Math.max(1, Math.round(M.crowd * 0.3)) : M.crowd;
+    const isRain = this.weather === 'rain' && !M.indoor && !M.dark;
+    const isMarketDay = (typeof S !== 'undefined' && S && S.day && (S.day % 7 === 0) && M.id === 'kpasar');
+
+    let mult = 1.0;
+    if (isNightTime) mult *= 0.3;
+    if (isRain) mult *= 0.3;
+    if (isMarketDay && !isNightTime && !isRain) mult *= 1.5;
+
+    const effectiveCount = Math.max(1, Math.round(M.crowd * mult));
     this.spawnCrowd(effectiveCount);
   }
 });
@@ -180,7 +190,13 @@ if (typeof World.prototype.benuaAmbient === 'function') {
       if (regMap && regMap.crowd) {
         this.clearCrowd();
         const isNightTime = (typeof S !== 'undefined' && S && (S.time >= 20 || S.time < 5));
-        const count = isNightTime ? Math.max(1, Math.round(regMap.crowd * 0.3)) : regMap.crowd;
+        const isRain = this.weather === 'rain' && !regMap.indoor && !regMap.dark;
+        const isMarketDay = (typeof S !== 'undefined' && S && S.day && (S.day % 7 === 0) && id === 'kpasar');
+        let mult = 1.0;
+        if (isNightTime) mult *= 0.3;
+        if (isRain) mult *= 0.3;
+        if (isMarketDay && !isNightTime && !isRain) mult *= 1.5;
+        const count = Math.max(1, Math.round(regMap.crowd * mult));
         this.spawnCrowd(count);
       } else {
         this.clearCrowd();

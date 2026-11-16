@@ -11,9 +11,9 @@ _Konstanta layar & util kecil_
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
 `AU_FILES` 4 · `AU` 18 · `NI` 19 · `nf()` 20 · `parseSeq()` 21 · `bossBass` 22 · `TRACKS` 23 · `auInit()` 45 · `tone()` 57 · `sweep()` 58 · `noise()` 59 · `_AUDIO_POOL` 60 · `BGM_BASE_VOL` 62 · `_bgmDuck` 63 · `routeTag()` 65 · `tagVolFor()` 69 · `tagSetVol()` 73 · `tagGetVol()` 74 · `setWeatherDuck()` 75 · `_rain` 77 · `rainSound()` 78 · `setBgmDuck()` 93 · `stopAudioTag()` 97 · `playBGM()` 104 · `_lastSfx` 158 · `sfx()` 159
 
-## src/core/input.js (292 baris)
+## src/core/input.js (322 baris)
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
-`Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 15 · `enableTouch()` 34 · `JOY_DEAD` 37 · `UISCALE` 188 · `PAD_STATE` 190 · `pollGamepad()` 191 · `layout()` 251
+`Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 15 · `ATK_HOLD_MS` 16 · `_atkDownT` 17 · `enableTouch()` 53 · `JOY_DEAD` 56 · `UISCALE` 218 · `PAD_STATE` 220 · `pollGamepad()` 221 · `layout()` 281
 
 ## src/art/base.js (75 baris)
 _Dasar gambar: kanvas, warna, aturan gaya (toneC, garis tepi berwarna), renderMap_
@@ -95,23 +95,23 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 113 · obj `mirror_memory` 123 · obj `fame_board` 133 · obj `bounty_board` 142 · obj `deadtree` 151 · obj `rune_pillar` 179 · obj `fountain` 191 · obj `windmill` 203 · obj `treeA` 210 · obj `goblin_torch` 218 · obj `goblin_cauldron` 221 · obj `cryst` 230 · obj `lamp` 233 · obj `viewpoint` 236 · obj `lumina_shard` 270
 
-## src/world/ground.js (327 baris)
+## src/world/ground.js (346 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `BLEND_W` 41 · `WILD_G` 42 · `edgeSegs()` 43 · `edgeBlend()` 72 · `TILE_CACHE` 91 · `getTileData()` 92 · `genGround()` 101 · `blockRects()` 217 · `scatter()` 233 · `openSides()` 268 · `borderTrees()` 281 · `ringObjects()` 306 · `mapObjects()` 311 · `mapWalls()` 315
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 110 · `blockRects()` 226 · `scatter()` 242 · `openSides()` 287 · `borderTrees()` 300 · `ringObjects()` 325 · `mapObjects()` 330 · `mapWalls()` 334
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
 `WATER_WIDEN` 6 · `pondsBase()` 7 · `WGLOB` 25 · `waterGlobal()` 26 · `pondsAll()` 40 · `pondsNear()` 49 · `waterE()` 52 · `mapDoors()` 69 · `waterGXY()` 70 · `WATER_MOVABLE` 73 · `waterRelocate()` 74
 
-## src/world/maps/village.js (120 baris)
+## src/world/maps/village.js (126 baris)
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
 
 
-## src/world/maps/forest.js (102 baris)
+## src/world/maps/forest.js (105 baris)
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
-## src/world/maps/meadow.js (90 baris)
+## src/world/maps/meadow.js (95 baris)
 _Peta: Padang Angin_
 
 
@@ -123,7 +123,7 @@ _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
-## src/world/maps/snow.js (52 baris)
+## src/world/maps/snow.js (57 baris)
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 
@@ -131,11 +131,11 @@ _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (168 baris)
+## src/world/maps/city.js (183 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 
-## src/world/maps/wild.js (122 baris)
+## src/world/maps/wild.js (125 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
 `ruinRing` 5
 
@@ -143,9 +143,9 @@ _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina
 _Interior: penginapan, rumah pohon, rumah Lina_
 `makeRoom()` 4
 
-## src/ui/widgets.js (221 baris)
+## src/ui/widgets.js (247 baris)
 _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
-`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 39 · `choose()` 43 · `ask()` 79 · `BANNER_QUEUE` 85 · `BANNER_BUSY` 86 · `processBannerQueue()` 87 · `banner()` 100 · `POPS` 109 · `popWorld()` 110 · `updPops()` 114 · `HUD` 117 · `buildHud()` 118 · `updHud()` 132 · `hudPeaceT` 183 · `updHudFade()` 184 · `showHud()` 199 · `bossBar()` 204 · `autoSaveIcon()` 220
+`UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 41 · `choose()` 45 · `ask()` 81 · `BANNER_QUEUE` 90 · `BANNER_BUSY` 91 · `processBannerQueue()` 92 · `banner()` 105 · `POPS` 114 · `popWorld()` 115 · `updPops()` 119 · `HUD` 122 · `buildHud()` 123 · `updHud()` 137 · `hudPeaceT` 209 · `updHudFade()` 210 · `showHud()` 225 · `bossBar()` 230 · `autoSaveIcon()` 246
 
 ## src/ui/spellbar.js (54 baris)
 _Bilah 5 slot jurus dengan cooldown (T327)_
@@ -183,17 +183,17 @@ _Jam & siang-malam_
 _Cek pencapaian & kabar progres 50% / 90% (T265)_
 `totalKills()` 3 · `toastAch()` 5 · `achProgCheck()` 15 · `achCheck()` 61
 
-## src/gfx/bake.js (48 baris)
+## src/gfx/bake.js (50 baris)
 _Panggang bayangan objek ke tekstur tanah_
-`SHC` 3 · `bakeGround()` 4 · `SHB` 23 · `shadowIndex()` 24
+`SHC` 3 · `bakeGround()` 4 · `SHB` 25 · `shadowIndex()` 26
 
-## src/gfx/textures.js (152 baris)
+## src/gfx/textures.js (153 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `loadImgs()` 16 · `addStrip()` 17 · `darkTree()` 22 · `NPC_W` 24 · `regPortrait()` 25 · `regChar()` 30 · `buildTextures()` 47
 
-## src/world/ground_verdant.js (105 baris)
+## src/world/ground_verdant.js (142 baris)
 _Tanah Verdant (Padang, Hutan, Desa) meniru assets/reference/target_padang.png._
-`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `VT` 9 · `verdantTiles()` 10 · `vMod` 16 · `vDirtN` 18 · `vDirtT` 19 · `verdantPix()` 21 · `verdantDeco()` 33 · `VBASE` 54 · `verdantBase()` 55 · `VWC` 70 · `verdantWater()` 71 · `VSTONE` 83 · `vCobble()` 84 · `verdantBank()` 93
+`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `VT` 9 · `verdantTiles()` 10 · `vMod` 16 · `vDirtN` 18 · `vDirtT` 19 · `verdantPix()` 21 · `verdantDeco()` 33 · `VBASE` 54 · `verdantBase()` 55 · `VWC` 70 · `verdantWater()` 71 · `VSTONE` 83 · `vCobble()` 84 · `verdantBank()` 93 · `regVerdantTex()` 105 · `verdantReflect()` 114
 
 ## src/world/interior_sheet.js (89 baris)
 _Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._
@@ -250,6 +250,10 @@ _Teleport: patung batu di tiap wilayah. Sentuh untuk mengaktifkan, lalu pindah i
 ## src/ai/enemies.js (393 baris)
 _AI musuh biasa (hop, fly, shoot, turret, lunge, walk, charge, ghost, golem)_
 `.updEnemy()` 4 · `.charAnim()` 386
+
+## src/ai/unstuck.js (61 baris)
+_Aturan Lepas-Sangkut Musuh Saat Mengejar (T468) — referensi: Hades_
+
 
 ## src/ai/elite_brute.js (96 baris)
 _AI untuk musuh Brute Elite (Goblin Brute Elite, dsb)_
@@ -335,21 +339,21 @@ _Segel kuil, Mochi hilang, kristal, peti harta_
 _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_
 `NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 85 · `.updCritter()` 108
 
-## src/npc/brain.js (111 baris)
+## src/npc/brain.js (135 baris)
 _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, mengobrol, duduk, berpatroli), pulang saat malam._
-`NPC_ROLE` 4 · `STORY_NPC` 11 · `WORK` 13 · `SEATS` 27 · `SOCIAL` 28 · `IDLE_ICON` 29 · `.npcBrainInit()` 32 · `.npcEmote()` 44 · `.npcPickGoal()` 45 · `.npcWalkAnim()` 66 · `.npcBrain()` 67 · `.npcActStart()` 89 · `.npcActTick()` 94
+`NPC_ROLE` 4 · `STORY_NPC` 11 · `WORK` 13 · `SEATS` 27 · `SOCIAL` 28 · `IDLE_ICON` 29 · `.npcBrainInit()` 32 · `.npcEmote()` 44 · `.npcPickGoal()` 45 · `.npcWalkAnim()` 87 · `.npcBrain()` 88 · `.npcActStart()` 110 · `.npcActTick()` 115
 
-## src/npc/crowd.js (201 baris)
+## src/npc/crowd.js (217 baris)
 _Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed._
-`CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 60 · `.clearCrowd()` 138 · `.initCrowd()` 148 · `_initPolishCrowd` 160 · `_dropActiveFxCrowd` 167 · `_updAmbP` 194
+`CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 60 · `.clearCrowd()` 138 · `.initCrowd()` 148 · `_initPolishCrowd` 170 · `_dropActiveFxCrowd` 177 · `_updAmbP` 210
 
 ## src/systems/qol.js (214 baris)
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
 `.updInteractHint()` 6 · `.updEnemyBars()` 30 · `.retryBoss()` 56 · `levelUpDetail()` 62 · `.setTimeout()` 68 · `TIPS` 81 · `showTip()` 92 · `.updTips()` 111 · `.updPeaceHud()` 121 · `.updMinimap()` 126 · `.swapWeapon()` 160 · `.updStamina()` 171 · `.tryClimb()` 182 · `applyPadOpt()` 210
 
-## src/systems/feel.js (204 baris)
+## src/systems/feel.js (207 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
-`ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 130 · `.hurtAnim()` 136 · `.hasLineOfSight()` 138 · `_spawnEnemy` 154 · `_killEnemy` 174
+`ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 133 · `.hurtAnim()` 139 · `.hasLineOfSight()` 141 · `_spawnEnemy` 157 · `_killEnemy` 177
 
 ## src/systems/sound.js (116 baris)
 _Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#911),_
@@ -370,6 +374,10 @@ _Gelombang 7: Rumah Arka (#46), peti penyimpanan (#32), perluasan (#492), tata p
 ## src/world/interior_layouts.js (94 baris)
 _Interior = gambar ruangan pemilik apa adanya (assets/img/int_room1..3.png, skala sama dengan perabot lembar → rasio & bentuk identik)._
 `INT_ROOMS` 5 · `_genRoomSheet0` 37 · `_homeInit0` 58
+
+## src/systems/arrival.js (29 baris)
+_Zona Aman Saat Tiba di Wilayah (T467) — referensi: Dark Souls_
+
 
 ## src/systems/ranch.js (119 baris)
 _Gelombang 8: peternakan (#47), kandang ayam (#514), kandang sapi (#515), kasih sayang hewan (#519),_
@@ -431,13 +439,37 @@ _MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALI
 _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat Arka berada, teleport tanpa memuat ulang._
 `KEMBARA_POS` 20 · `.initBenua()` 25 · `.withRegion()` 39 · `.spawnRegionFx()` 44 · `.streamObjs()` 69 · `.benuaAmbient()` 88 · `.benuaWeather()` 98 · `.updBenua()` 107
 
+## src/systems/biometint.js (56 baris)
+_Warna Langit/Cahaya Ikut Bioma (T457)_
+
+
 ## src/systems/benua_unload.js (49 baris)
 _Mode benua: buang petak objek yang jauh dari Arka (memori). Mencatat semua yang dibuat spawnObj per petak lalu menghancurkannya._
 `UNLOAD_FAR` 3 · `.unloadFar()` 20
 
+## src/systems/cull.js (61 baris)
+_Optimalisasi Kamera Culling (T487)_
+
+
 ## src/systems/souls.js (122 baris)
 _Pertarungan Souls-lite "menantang tapi adil" (arah Dimraeth, docs/GAME_DESIGN.md bag. Pertarungan):_
 `SOUL` 7 · `flaskOf()` 8 · `soulCost()` 15 · `refillFlask()` 16 · `.updLost()` 90 · `soulHudOn` 111 · `soulHudWrap()` 112 · `.updHud()` 120
+
+## src/systems/heavy.js (89 baris)
+_Serangan Berat (Heavy Attack) (T482)_
+
+
+## src/systems/reflect.js (55 baris)
+_Pantulan Karakter di Air (T460) — referensi: RPG klasik / Sea of Stars_
+
+
+## src/systems/tree_shadows.js (42 baris)
+_Bayangan Daun Bergoyang di Bawah Pohon (T448) — referensi: target_padang.png, Stardew_
+
+
+## src/systems/aimassist.js (48 baris)
+_Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
+
 
 ## src/systems/combat_fx.js (389 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
@@ -471,9 +503,9 @@ _Tas (inventaris) & buku misi_
 _Layar peta & navigasi tujuan misi_
 `MINI` 4 · `WORLD` 5 · `buildMini()` 6 · `routeNext()` 23 · `questTarget()` 28 · `openMap()` 36
 
-## src/ui/menus.js (393 baris)
+## src/ui/menus.js (394 baris)
 _Menu utama, jurus, bestiari, pencapaian_
-`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 95 · `enemyThumb()` 107 · `openBestiary()` 108 · `openFishLog()` 116 · `openAch()` 117 · `openDlgLog()` 123 · `chooseSlot()` 130 · `openDebugMenu()` 154 · `openPhotoMode()` 211 · `TALENT_DEFS` 279 · `getTalentPoints()` 306 · `openTalentTree()` 316
+`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 96 · `enemyThumb()` 108 · `openBestiary()` 109 · `openFishLog()` 117 · `openAch()` 118 · `openDlgLog()` 124 · `chooseSlot()` 131 · `openDebugMenu()` 155 · `openPhotoMode()` 212 · `TALENT_DEFS` 280 · `getTalentPoints()` 307 · `openTalentTree()` 317
 
 ## src/ui/savecode.js (49 baris)
 _Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)_
@@ -491,6 +523,10 @@ _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung da
 _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),_
 `ORG_SKIP` 5 · `ORG_FILL` 6 · `orgPlanned()` 7 · `orgCurve()` 9
 
+## src/world/cliffs.js (104 baris)
+_T442 & T445: Data tebing M.cliffs = [[x1, y1, x2, y2, 'S'|'N'|'E'|'W'], ...]_
+
+
 ## src/systems/waterflow.js (62 baris)
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
 `FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `.updFlow()` 33 · `_updFlow0` 54
@@ -499,6 +535,14 @@ _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hu
 _Suasana cahaya & kabut (wilayah aktif saja):_
 `ATMOS_POOL` 5 · `fogSheetTex()` 6 · `.updAtmos()` 18
 
+## src/systems/sunbeams.js (67 baris)
+_T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_
+
+
+## src/systems/cloudshadow.js (79 baris)
+_T447: Bayangan awan berjalan_
+
+
 ## src/gfx/gptassets.js (52 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
 `GPT_SWAP` 4 · `GPT_LOOK` 13 · `applyGptSwap()` 26
@@ -506,6 +550,10 @@ _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan ole
 ## src/gfx/style_unify.js (37 baris)
 _Penyeragaman gaya: PATOKAN = pohon treeA / treeAd / treeSn (hijau alami, garis luar halus) + set Verdant yang senada._
 `styleLeafPalette()` 12 · `styleRecolor()` 18 · `_applyGptSwapStyle` 26
+
+## src/gfx/code_palette.js (111 baris)
+_T439: Selaraskan warna objek KODE ke palet treeA / Verdant_
+
 
 ## src/gfx/gptmonsters.js (165 baris)
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._

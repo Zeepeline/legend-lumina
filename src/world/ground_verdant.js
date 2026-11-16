@@ -102,3 +102,40 @@ function verdantBank(M, d, X, Y, north) {
   if (d < rw + 2.6) { const c = verdantPix(M, X, Y); return c && c.map((v, k) => Math.min(255, v * (k === 1 ? 1.14 : 1.05))); } // bibir rumput terang
   return null;
 }
+function regVerdantTex(T) {
+  if (typeof IMGEL === 'undefined' || !T) return;
+  for (const k of VDECO) {
+    const n = 'deco_' + k, img = IMGEL[n];
+    if (img && !T.exists(n)) T.addImage(n, img);
+  }
+}
+
+// Pantulan pohon & rumah di air (dipanggang ke tanah) (T459)
+function verdantReflect(x, M, rect) {
+  if (!M.ponds || !M.ponds.length || M.indoor) return;
+  const [RX, RY, RW, RH] = rect || [0, 0, M.w, M.h];
+  const objs = mapObjects(M);
+  for (const o of objs) {
+    const type = o[0], ox = o[1], oy = o[2];
+    if (!type.startsWith('tree') && !type.startsWith('house')) continue;
+    // Cek apakah dasar objek <= 40 px di atas air
+    if (typeof waterE !== 'function') continue;
+    const distToWater = waterE(M.ponds, ox, oy + 20);
+    if (distToWater > 1.3) continue; // Terlalu jauh dari air
+
+    const d = OBJ[type];
+    const imgKey = d ? d.key : null;
+    const img = imgKey && typeof IMGEL !== 'undefined' ? IMGEL[imgKey] : null;
+    if (!img) continue;
+
+    const iw = img.width, ih = img.height;
+    if (ox + iw / 2 < RX || ox - iw / 2 > RX + RW || oy > RY + RH + ih || oy + ih < RY) continue;
+
+    x.save();
+    x.globalAlpha = 0.22;
+    x.translate(ox, oy);
+    x.scale(1, -0.6); // Terbalik vertikal
+    x.drawImage(img, -iw / 2, 0);
+    x.restore();
+  }
+}

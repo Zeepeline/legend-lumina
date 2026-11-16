@@ -40,7 +40,14 @@ MAPS.road = {
     ['goblin_totem', 490, 1140],
     ['goblin_torch', 540, 1080], ['goblin_torch', 740, 990],
     ['goblin_banner', 500, 1070], ['goblin_banner', 720, 960],
+    // T433: Properti cerita khas markas perompak Jalan Raya (barang kafilah curian)
+    ['crate', 740, 920], ['crate', 710, 1040], ['barrel', 750, 1020],
+    ['crate', 660, 1140], ['barrel', 680, 1150], ['log', 580, 1180],
     ['sign', 470, 1210, { text: 'Pos Istirahat Kafilah\nKota Lumina: setengah hari ke utara.\nAWAS: Suku Goblin Perompak bersarang di tebing timur!' }]],
+  // T445: Tebing timur sepanjang markas perompak
+  cliffs: [
+    [810, 840, 810, 1180, 'W'],
+  ],
   walls: [[0, 0, 410, 40], [490, 0, 410, 40], [0, 0, 40, 2000], [860, 0, 40, 2000], [0, 1960, 410, 40], [490, 1960, 410, 40]],
   border: { top: 40, bottom: 1960, left: 40, right: 860, gap: [410, 490], gapT: [410, 490], types: ['treeA', 'treeB', 'pine'] },
   exits: [{ x: 410, y: 1988, w: 80, h: 12, to: 'lake', tx: 820, ty: 70, dir: 'down', label: 'Danau Cermin' },
@@ -98,6 +105,9 @@ MAPS.kpasar = {
     ...lampRow(480, 560, 2, 640), ...lampRow(480, 700, 2, 640), ...lampRow(700, 430, 3, 100), ...lampRow(700, 850, 3, 100), ...lampRow(200, 580, 3, 120), ...lampRow(1160, 580, 3, 120),
     ['bench', 720, 720], ['bench', 880, 720], ['planter', 690, 560], ['planter', 910, 560], ['barrel', 430, 840], ['crate', 1170, 840],
     ['ringbooth', 720, 480],
+    // T406 & T407: Kuil/Shrine & Kedai Pasar
+    ['shrine', 800, 470], // Kuil menghadap alun-alun pasar (utara air mancur)
+    ['benchWood', 510, 310], ['barrel', 490, 314], ['sign', 530, 320, { text: 'Kedai Seribu Lentera' }],
     ['sign', 860, 1120, { text: 'DISTRIK PASAR\nUtara: Distrik Akademi · Barat: Kota Bawah · Timur: Balai Dewan' }],
     ['sign', 1540, 680, { text: 'BALAI DEWAN KOTA\nTertutup untuk umum. Urusan dewan saja.' }], ['sign', 610, 330, { text: 'Penginapan "Seribu Lentera"' }]],
   walls: [[0, 0, 760, 40], [840, 0, 760, 40], [0, 0, 40, 590], [0, 650, 40, 550], [1560, 0, 40, 1200], [0, 1160, 760, 40], [840, 1160, 760, 40]],
@@ -134,6 +144,8 @@ MAPS.kakademi = {
     ['houseB', 180, 480], ['houseC', 420, 480],
     ['houseC', 980, 240], ['houseA', 1100, 240], ['houseB', 1220, 240],
     ['houseA', 980, 480], ['houseB', 1220, 480],
+    // T407: Kedai Cendekiawan Akademi
+    ['benchWood', 180, 560], ['barrel', 210, 560], ['sign', 230, 560, { text: 'Kedai Buku & Teh' }],
     ['sign', 760, 900, { text: 'AKADEMI CAHAYA\nDidirikan oleh para penyintas Aurel. Ilmu adalah lentera.' }]],
   walls: [[0, 0, 1400, 40], [0, 0, 40, 1000], [1360, 0, 40, 1000], [0, 960, 660, 40], [740, 960, 660, 40]],
   border: { top: 40, bottom: 960, left: 40, right: 1360, gap: [660, 740], types: ['treeA', 'treeB', 'pine'] },
@@ -153,6 +165,9 @@ MAPS.kbawah = {
     ['crate', 260, 600], ['crate', 240, 620], ['hay', 300, 680], ['hay', 260, 720],
     ['streetdrum', 680, 650], ['barrel', 740, 710], ['crate', 750, 690],
     ['barrel', 380, 380], ['crate', 420, 380], ['woodpile', 720, 380], ['barrel', 930, 220],
+    // T407: Kedai & Shrine Kota Bawah (di area pelataran bebas jalur)
+    ['benchWood', 590, 670], ['barrel', 615, 672], ['sign', 565, 670, { text: 'Kedai Buruh' }],
+    ['shrine', 760, 700], // Shrine pelindung distrik bawah
     ['sign', 640, 560, { text: 'DAPUR UMUM\nMakan gratis untuk yang butuh. — L.' }]],
   walls: [[0, 0, 1200, 40], [0, 0, 40, 1000], [1160, 0, 40, 470], [1160, 530, 40, 470], [0, 960, 1200, 40]],
   border: { top: 40, bottom: 960, left: 40, right: 1160, gapR: [470, 530], types: ['treeAd', 'treeBd'] },
