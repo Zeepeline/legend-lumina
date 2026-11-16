@@ -35,6 +35,9 @@ Visi 12 · Prinsip Storytelling 27 · Pacing 45 · Tujuan Pemain 65 · Immediate
 ## PLACEMENT_RULES.md — Aturan Penempatan Objek & Aset (WAJIB untuk semua agent) (73 baris, ~1100 token)
 1. Setiap objek harus punya alasan berada di situ 16 · 2. Jangan menghalangi 26 · 3. Kepadatan & ritme 38 · 4. Pengecualian yang disengaja 44 · 5. Aset gambar 54 · 6. Setelah menaruh objek 63 · Area berpagar (kandang, kebun) 70
 
+## PROMPT_ARKA.md — Prompt ChatGPT — sprite sheet lengkap Arka (karakter utama) (83 baris, ~1300 token)
+Blok umum (sudah ikut di tiap prompt) 8 · Lembar 1 — diam & jalan 15 · Lembar 2 — serangan kombo 1 & 2 27 · Lembar 3 — pukulan penutup & serangan berat 39 · Lembar 4 — berguling, kena pukul, kalah 48 · Lembar 5 — sihir & busur 58 · Lembar 6 — kehidupan sehari-hari (opsional) 67 · Kalau hasil meleset 78
+
 ## SPOILER_ENDING.md — ⚠️ SPOILER — KHUSUS UNTUK AI AGENT ⚠️ (50 baris, ~1100 token)
 _Isi rahasia: baca hanya saat menulis cerita/bab/boss. JANGAN dibahas dengan pemilik._
 
