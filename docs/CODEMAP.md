@@ -83,9 +83,9 @@ _Efek: tebasan, api, proyektil, cahaya, bayangan_
 _Lantai & perabot interior_
 `FURN` 4 · `drawFurn()` 5 · `genRoom()` 15 · `artMusicBox()` 28
 
-## src/world/objects.js (190 baris)
+## src/world/objects.js (366 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 189
+`OBJ` 7 · `MAPS` 365
 
 ## src/world/spawn/spawn_1.js (421 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
