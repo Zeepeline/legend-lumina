@@ -571,6 +571,10 @@ _Lembar musuh baru dari ChatGPT (assets/raw/enemy/<id>.png → tools/gen_enemy.p
 _"Juice" v1.45: lapisan partikel & animasi tambahan di atas sistem yang ada (tanpa mengubah logika tempur)._
 `JX_MAT` 9 · `jxMat()` 14 · `jxTextures()` 15 · `JX_CFG` 33 · `.jx()` 45 · `.jxLevelUp()` 61 · `.jxWind()` 68 · `.jxGhost()` 78 · `.jxShots()` 83 · `.jxTele()` 100 · `.jxSwoosh()` 110 · `.jxCrater()` 119 · `.jxAura()` 129 · `.jxTick()` 147
 
+## src/systems/grade.js (30 baris)
+_Rona warna "sore keemasan" ala screenshot Dimraeth pemilik (v1.47.0): seluruh layar luar-ruang digeser ke kuning-zaitun hangat,_
+`GRADE_OFF` 6 · `GRADE_M` 7 · `gradeOn()` 8 · `gradeCam()` 9
+
 ## src/main.js (39 baris)
 _Mulai game Phaser_
 `game` 20
