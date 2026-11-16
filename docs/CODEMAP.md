@@ -559,13 +559,17 @@ _T439: Selaraskan warna objek KODE ke palet treeA / Verdant_
 _Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
-## src/gfx/hero_arka.js (69 baris)
+## src/gfx/hero_arka.js (73 baris)
 _Sprite sheet lengkap Arka dari ChatGPT (assets/raw/hero/arka_sheet1..6.png → tools/gen_hero.py → assets/img/hero_arka.png)._
 `HERO_FW` 5 · `HERO_ROW` 6 · `regHeroArka()` 13 · `heroFrame()` 22
 
 ## src/gfx/enemy_sheets.js (58 baris)
 _Lembar musuh baru dari ChatGPT (assets/raw/enemy/<id>.png → tools/gen_enemy.py → assets/img/esh_<id>.png)._
 `ESH` 5 · `regEnemySheets()` 10 · `eshFrame()` 31
+
+## src/systems/juice.js (164 baris)
+_"Juice" v1.45: lapisan partikel & animasi tambahan di atas sistem yang ada (tanpa mengubah logika tempur)._
+`JX_MAT` 8 · `jxMat()` 13 · `jxTextures()` 14 · `JX_CFG` 21 · `.jx()` 32 · `.jxLevelUp()` 48 · `.jxWind()` 55 · `.jxGhost()` 65 · `.jxShots()` 70 · `.jxTick()` 86
 
 ## src/main.js (39 baris)
 _Mulai game Phaser_

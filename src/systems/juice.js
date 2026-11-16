@@ -1,0 +1,163 @@
+'use strict';
+// "Juice" v1.45: lapisan partikel & animasi tambahan di atas sistem yang ada (tanpa mengubah logika tempur).
+// - jx(nama, x, y, n, opsi): 4 pemancar partikel bersama per scene (spark, chip, mote, star) → murah, tanpa objek baru per partikel.
+// - Kena pukul: percikan searah tebasan + serpihan sewarna bahan musuh + bintang saat kritikal.
+// - Mati: butiran cahaya naik saat musuh memutih; ancang-ancang musuh: butiran merah mengumpul ke badan.
+// - Arka: bayangan-ikut saat berguling, serpihan saat terluka, sorak + pilar cahaya saat naik level, butiran hijau saat pulih,
+//   pose memancing, bangkit setelah kalah. OPT.lite → jumlah partikel separuh, tanpa bayangan-ikut & butiran ancang-ancang.
+const JX_MAT = [ // warna serpihan per jenis musuh (dicocokkan ke awalan id)
+  [/^slimeb/, 0x5aa8e8], [/^slimer|^slimef/, 0xe8643a], [/^slimei/, 0xa8e0ff], [/^slimep/, 0x9a5ad0], [/^slime/, 0x6fd36a],
+  [/^golemi/, 0xbfe2ff], [/^golem/, 0x8a7f78], [/^ghost|^wisp/, 0xcfd8ff], [/^skel/, 0xe8e2cf], [/^plant|^frog|^snake/, 0x6f9a3c],
+  [/^shroom|^squeen/, 0xc65a7a], [/^bat/, 0x7a5a9a], [/^bee/, 0xe8c040], [/^salam/, 0xff8a3a], [/^mimic/, 0xb07a3a],
+];
+function jxMat(e) { const id = e.id || ''; for (const [re, c] of JX_MAT) if (re.test(id)) return c; return 0xb23a3a; }
+function jxTextures(T) {
+  if (T.exists('jx_sq')) return;
+  const mkc = (k, w, h, fn) => { const c = T.createCanvas(k, w, h), x = c.getContext(); x.fillStyle = '#fff'; fn(x); c.refresh(); };
+  mkc('jx_sq', 2, 2, x => x.fillRect(0, 0, 2, 2));
+  mkc('jx_mote', 5, 5, x => { x.globalAlpha = .45; x.fillRect(1, 0, 3, 5); x.fillRect(0, 1, 5, 3); x.globalAlpha = 1; x.fillRect(1, 1, 3, 3); });
+  mkc('jx_star', 7, 7, x => { x.fillRect(3, 0, 1, 7); x.fillRect(0, 3, 7, 1); x.fillRect(2, 2, 3, 3); });
+}
+const JX_CFG = {
+  spark: ['jx_sq', { lifespan: { min: 130, max: 280 }, speed: { min: 80, max: 230 }, scale: { start: 1.4, end: 0 }, blendMode: 'ADD' }],
+  chip: ['jx_sq', { lifespan: { min: 300, max: 540 }, speed: { min: 40, max: 140 }, gravityY: 300, scale: { start: 1.7, end: .7 },
+    alpha: { start: 1, end: 0 } }],
+  mote: ['jx_mote', { lifespan: { min: 480, max: 950 }, speedY: { min: -58, max: -20 }, speedX: { min: -14, max: 14 }, scale: { start: 1, end: 0 },
+    alpha: { start: 1, end: 0 }, blendMode: 'ADD' }],
+  star: ['jx_star', { lifespan: { min: 340, max: 620 }, speed: { min: 50, max: 140 }, scale: { start: 1.3, end: 0 }, rotate: { start: 0, end: 180 },
+    blendMode: 'ADD' }],
+};
+Object.assign(World.prototype, {
+  // pancarkan n partikel: o = { ang (radian), spread (derajat), tint, rx, ry (sebaran posisi) }
+  jx(name, x, y, n, o = {}) {
+    if (OPT.lite) n = Math.ceil(n / 2);
+    const J = this._jx || (this._jx = { em: {}, st: {} });
+    let em = J.em[name];
+    if (!em || !em.scene) {
+      jxTextures(this.textures); const [tex, cfg] = JX_CFG[name], st = J.st[name] = { ang: 0, spread: 180, tint: 0xffffff };
+      const c = Object.assign({ emitting: false, tint: { onEmit: () => st.tint } }, cfg);
+      if (cfg.speed) c.angle = { onEmit: () => st.ang + (Math.random() * 2 - 1) * st.spread };
+      em = J.em[name] = this.add.particles(0, 0, tex, c);
+    }
+    const st = J.st[name]; st.ang = (o.ang || 0) * 180 / Math.PI; st.spread = o.spread == null ? 180 : o.spread;
+    st.tint = o.tint == null ? 0xffffff : o.tint;
+    em.setDepth(y + 24);
+    if (o.rx || o.ry) for (let i = 0; i < n; i++) em.emitParticleAt(x + rnd(-(o.rx || 0), o.rx || 0), y + rnd(-(o.ry || 0), o.ry || 0), 1);
+    else em.emitParticleAt(x, y, n);
+  },
+  jxLevelUp() {
+    const pl = this.pl; if (!pl) return;
+    pl._emote = { k: 'cheer', fps: 7, loop: 1, t: 1.15 };
+    this.jx('star', pl.x, pl.y - 14, 16, { tint: 0xffe07a });
+    const col = i => this.jx('mote', pl.x, pl.y - 4, 5, { tint: i % 2 ? 0xfff2b0 : 0x9ae8ff, rx: 9, ry: 3 });
+    for (let i = 0; i < 6; i++) this.time.delayedCall(i * 110, () => { if (pl.active) col(i); });
+  },
+  jxWind(e) { // butiran merah mengumpul ke badan musuh selama ancang-ancang
+    if (OPT.lite) return; jxTextures(this.textures);
+    const s = e.spr, cy = () => s.y - (e.D.r || 8) * (e.sc || 1), R = 18 + (e.D.r || 8);
+    for (let i = 0; i < 7; i++) {
+      const a = i / 7 * Math.PI * 2 + Math.random(), m = this.add.image(s.x + Math.cos(a) * R, cy() + Math.sin(a) * R * .7, 'jx_mote')
+        .setTint(e.boss ? 0xffc04a : 0xff5a4a).setBlendMode('ADD').setDepth(s.y + 30).setAlpha(0);
+      this.tweens.add({ targets: m, x: s.x, y: cy(), alpha: { from: 0, to: 1 }, scale: { from: 1.3, to: .4 }, duration: 260 + i * 22, ease: 'Quad.easeIn',
+        onComplete: () => m.destroy() });
+    }
+  },
+  jxGhost() { // bayangan-ikut saat berguling
+    const pl = this.pl, g = this.add.image(pl.x, pl.y, pl.texture.key, pl.frame.name).setOrigin(pl.originX, pl.originY).setFlipX(pl.flipX)
+      .setScale(pl.scaleX, pl.scaleY).setTint(0x8fd0ff).setAlpha(.5).setDepth(pl.depth - 1);
+    this.tweens.add({ targets: g, alpha: 0, duration: 210, onComplete: () => g.destroy() });
+  },
+  jxShots(dt) { // ekor partikel proyektil + percikan saat proyektil hilang (kena/padam)
+    const M = this._jxSh || (this._jxSh = new Map()), live = this.shots || [];
+    for (const sh of live) {
+      const s = sh.s; if (!s || !s.active) continue;
+      let m = M.get(sh);
+      const col = sh.kind === 'fire' ? 0xff9a3a : sh.kind === 'arrow' ? 0xfff2d0 : s.isTinted ? s.tintTopLeft : 0xbfe8ff;
+      if (!m) M.set(sh, m = { t: 0, x: s.x, y: s.y, c: col });
+      m.x = s.x; m.y = s.y; m.t -= dt;
+      if (m.t > 0) continue; const arrow = sh.kind === 'arrow';
+      m.t = arrow ? .05 : .035; this.jx(arrow ? 'spark' : 'mote', s.x, s.y, 1, { tint: m.c, rx: 1.5, ry: 1.5 });
+    }
+    if (M.size > live.length) for (const [sh, m] of M) {
+      if (live.includes(sh)) continue; M.delete(sh);
+      this.jx('spark', m.x, m.y, 7, { tint: m.c }); if (sh.kind !== 'arrow') this.jx('mote', m.x, m.y, 4, { tint: m.c, rx: 4, ry: 4 });
+    }
+  },
+  jxTick(dt) {
+    const pl = this.pl; if (!pl || !pl.active) return;
+    // naik level & pulih (dibandingkan dengan frame sebelumnya)
+    const L = this._jxL || (this._jxL = { lv: S.lv, hp: S.hp, gh: 0, fish: 0 });
+    if (S.lv > L.lv) this.jxLevelUp();
+    else if (S.hp - L.hp >= Math.max(8, stat().maxhp * .12) && !pl.dead) {
+      this.jx('mote', pl.x, pl.y - 10, 12, { tint: 0x8af0a0, rx: 8, ry: 8 }); this.jx('star', pl.x, pl.y - 16, 4, { tint: 0xc8ffd0 });
+    }
+    L.lv = S.lv; L.hp = S.hp;
+    if (pl.dead) G._jxDied = 1;
+    // bayangan-ikut saat berguling
+    if (pl._roll > 0 && !OPT.lite) { L.gh -= dt; if (L.gh <= 0) { L.gh = .045; this.jxGhost(); } } else L.gh = 0;
+    // pose memancing
+    if (this.fishing) { L.fish += dt; pl.flipX = pl.dir === 'left'; pl._emote = { k: 'fish_cast', f: Math.min(3, Math.floor(L.fish / .13)) }; }
+    else if (L.fish) { L.fish = 0; pl._emote = null; }
+    this.jxShots(dt);
+    // ancang-ancang musuh + debu langkah musuh besar
+    for (const e of this.enemies || []) {
+      const w = e.hp > 0 && (e.st === 'wind' || e.st === 'swind' || e.st === 'cwind');
+      if (w && !e._jxW) this.jxWind(e); e._jxW = w;
+      if (e.hp > 0 && (e.D.r || 0) >= 12 && this.puff && e.spr.body && e.spr.body.velocity.length() > 8) {
+        e._jxStep = (e._jxStep || 0) - dt; if (e._jxStep <= 0) { e._jxStep = .38; this.puff(e.spr.x + rnd(-6, 6), e.spr.y); }
+      }
+    }
+  },
+});
+{ const W = World.prototype, _cr = W.create, _hit = W.hitFx, _kill = W.killEnemy, _hurt = W.hurtPlayer, _sw = W.shockwave;
+  W.create = function () {
+    this._jx = null; this._jxL = null; this._jxSh = null; const r = _cr.apply(this, arguments), pl = this.pl;
+    if (!this._jxHook) { this._jxHook = 1; this.events.on('postupdate', (t, d) => this.jxTick(Math.min(.1, d / 1000))); }
+    if (G._jxDied && pl && this === G.scene) {
+      G._jxDied = 0; pl._emote = { k: 'rise', fps: 4.5, t: .95 }; this.jx('mote', pl.x, pl.y - 6, 10, { tint: 0xfff2b0, rx: 8, ry: 4 });
+    }
+    return r;
+  };
+  W.hitFx = function (e, crit) {
+    const r = _hit.apply(this, arguments), s = e && e.spr, pl = this.pl; if (!s || !s.active) return r;
+    const y = s.y - (e.D.r || 8) * (e.sc || 1), ang = pl ? Math.atan2(y - (pl.y - 7), s.x - pl.x) : 0, fin = crit || (pl && pl.combo === 5);
+    this.jx('spark', s.x, y, fin ? 11 : 6, { ang, spread: fin ? 50 : 34, tint: crit ? 0xffe07a : 0xffffff });
+    this.jx('chip', s.x, y, fin ? 8 : 4, { ang: ang - .35, spread: 55, tint: jxMat(e) });
+    if (crit) this.jx('star', s.x, y, 5, { tint: 0xffd25a });
+    return r;
+  };
+  W.killEnemy = function (e) {
+    const s = e && e.spr, x = s && s.x, y = s && s.y - (e.D.r || 8) * (e.sc || 1), r = _kill.apply(this, arguments);
+    if (s && x != null) {
+      const R = (e.D.r || 8) * (e.sc || 1);
+      this.jx('chip', x, y, e.boss ? 18 : 8, { ang: -Math.PI / 2, spread: 80, tint: jxMat(e) });
+      this.jx('mote', x, y, e.boss ? 26 : 9, { rx: R, ry: R, tint: e.boss ? 0xffe6a0 : 0xffffff });
+      const more = () => { this.jx('mote', x, y, 12, { rx: R * 1.3, ry: R, tint: 0xffe6a0 }); this.jx('star', x, y, 5, { tint: 0xffd25a }); };
+      if (e.boss) for (let i = 1; i < 5; i++) this.time.delayedCall(i * 160, more);
+    }
+    return r;
+  };
+  W.hurtPlayer = function (dmg, sx, sy) {
+    const pl = this.pl, hp = S.hp, r = _hurt.apply(this, arguments);
+    if (pl && S.hp < hp) {
+      pl._emote = null; const ang = sx == null ? -Math.PI / 2 : Math.atan2(pl.y - sy, pl.x - sx);
+      this.jx('chip', pl.x, pl.y - 12, 6, { ang: ang - .3, spread: 50, tint: 0xff6a5a });
+      this.jx('spark', pl.x, pl.y - 12, 5, { ang, spread: 40, tint: 0xffd0c8 });
+    }
+    return r;
+  };
+  if (W.openChest) { const _oc = W.openChest;
+    W.openChest = function (c) {
+      if (c && !S.flags[c.id]) { this.jx('star', c.x, c.y - 8, 10, { tint: 0xffd25a }); this.jx('mote', c.x, c.y - 6, 8, { tint: 0xfff2b0, rx: 7, ry: 3 }); }
+      return _oc.apply(this, arguments);
+    };
+  }
+  W.shockwave = function (x, y, R) {
+    const r = _sw.apply(this, arguments), n = OPT.lite ? 6 : 12;
+    for (let i = 0; i < n; i++) {
+      const a = i / n * Math.PI * 2; this.jx('chip', x + Math.cos(a) * R * .55, y + Math.sin(a) * R * .4, 2, { ang: a - .5, spread: 30, tint: 0x8a7a6a });
+    }
+    if (this.puff) for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2 + .4; this.puff(x + Math.cos(a) * R * .6, y + Math.sin(a) * R * .45); }
+    return r;
+  };
+}

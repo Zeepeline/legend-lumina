@@ -26,6 +26,10 @@ function heroFrame(sc, dt) {
   let k, f, fps = 0, once = false;
   const moving = pl.body.velocity.length() > 8;
   if (pl.dead) { k = 'die'; fps = 6; once = true; }
+  else if (pl._emote) { /* pose khusus dari systems/juice.js: { k, f | fps, loop, t } */
+    const E = pl._emote; k = E.k; if (E.f != null) f = E.f; else { fps = E.fps || 8; once = !E.loop; }
+    if (E.t != null && (E.t -= dt) <= 0) pl._emote = null;
+  }
   else if (pl._roll > 0) { k = 'roll_' + sd; f = Math.min(3, Math.floor((.3 - pl._roll) / .075)); }
   else if (pl._heavy > 0) { k = 'heavy_' + sd; f = Math.min(3, 2 + Math.floor((.45 - Math.min(.45, pl._heavy)) / .2)); }
   else if (sc.charged) { k = 'heavy_' + sd; f = Math.floor(sc.t * 6) % 2; }
