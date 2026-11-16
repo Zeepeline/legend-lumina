@@ -21,6 +21,13 @@ function jxTextures(T) {
   R('#2a2630', 2, 1, 8, 13); R('#2a2630', 1, 3, 10, 11); R('#2a2630', 0, 12, 12, 3); R('#8d8a96', 3, 2, 6, 11); R('#8d8a96', 2, 4, 8, 9);
   R('#b9b6c2', 3, 2, 5, 1); R('#b9b6c2', 2, 4, 1, 7); R('#5d596a', 9, 5, 1, 8); R('#4a4654', 5, 5, 2, 6); R('#4a4654', 4, 7, 4, 1);
   R('#5a7a3a', 1, 13, 10, 1); R('#6f9a3c', 1, 12, 2, 1); R('#6f9a3c', 8, 12, 3, 1); tomb.refresh();
+  { const c = T.createCanvas('jx_arc', 40, 20), x = c.getContext(); x.strokeStyle = '#fff'; x.lineCap = 'round'; /* sabit debu, lancip di ujung */
+    for (let i = 0; i < 4; i++) {
+      x.globalAlpha = .28; x.lineWidth = 5 - i * 1.2; x.beginPath(); x.arc(20, 30, 24, Math.PI * (1.22 + i * .04), Math.PI * (1.78 - i * .04)); x.stroke();
+    }
+    c.refresh();
+    const l = T.createCanvas('jx_line', 48, 1), y = l.getContext(), gr = y.createLinearGradient(0, 0, 48, 0);
+    gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(255,255,255,1)'); y.fillStyle = gr; y.fillRect(0, 0, 48, 1); l.refresh(); }
   mkc('jx_star', 7, 7, x => { x.fillRect(3, 0, 1, 7); x.fillRect(0, 3, 7, 1); x.fillRect(2, 2, 3, 3); });
 }
 const JX_CFG = {
@@ -90,15 +97,24 @@ Object.assign(World.prototype, {
     }
   },
   // ── ala Dimraeth: zona bahaya di tanah, aura status, kawah hantaman, nisan Jejak Cahaya ──
-  jxTele(e) { // zona merah di tanah yang terisi selama ancang-ancang (tanda "baca lalu hindari")
-    const s = e.spr, pl = this.pl, a = Math.atan2(pl.y - s.y, pl.x - s.x), r0 = (e.D.r || 8) * (e.sc || 1), R = r0 + 13;
-    const cx = s.x + Math.cos(a) * (r0 + 9), cy = s.y - 2 + Math.sin(a) * (r0 + 9) * .8, g = this.add.graphics().setDepth(1.5), T0 = Math.max(.2, e.t || .4);
-    const o = { p: 0 }, done = () => { if (g.active) this.tweens.add({ targets: g, alpha: 0, duration: 120, onComplete: () => g.destroy() }); };
+  jxTele(e) { // cincin merah tipis di tanah yang menutup selama ancang-ancang (gaya acuan Dimraeth: halus, tidak menutupi tanah)
+    const s = e.spr, pl = this.pl, a = Math.atan2(pl.y - s.y, pl.x - s.x), r0 = (e.D.r || 8) * (e.sc || 1), R = r0 + 12;
+    const cx = s.x + Math.cos(a) * (r0 + 8), cy = s.y - 2 + Math.sin(a) * (r0 + 8) * .8, g = this.add.graphics().setDepth(1.5), T0 = Math.max(.2, e.t || .4);
+    const o = { p: 0 }, done = () => { if (g.active) this.tweens.add({ targets: g, alpha: 0, duration: 140, onComplete: () => g.destroy() }); };
     this.tweens.add({ targets: o, p: 1, duration: T0 * 1000, onComplete: done, onUpdate: () => {
       if (!g.active) return; g.clear(); if (e.hp <= 0 || !s.active) { g.destroy(); return; }
-      g.fillStyle(0xd02a1a, .16).fillEllipse(cx, cy, R * 2, R * 1.5); g.fillStyle(0xff4a2a, .3).fillEllipse(cx, cy, R * 2 * o.p, R * 1.5 * o.p);
-      g.lineStyle(1, 0xff6a4a, .75).strokeEllipse(cx, cy, R * 2, R * 1.5);
+      const k = 1.35 - .35 * o.p; g.fillStyle(0xff6a5a, .05 + .07 * o.p).fillEllipse(cx, cy, R * 2, R * 1.5);
+      g.lineStyle(1, 0xff8a7a, .35 + .45 * o.p).strokeEllipse(cx, cy, R * 2 * k, R * 1.5 * k);
     } });
+  },
+  jxSwoosh(x, y, vx, vy, big) { // sabit debu pucat di tanah + garis laju tipis di belakang gerakan cepat
+    jxTextures(this.textures); const a = Math.atan2(vy, vx), k = big ? 1.25 : .85;
+    const d = this.add.image(x - Math.cos(a) * 6, y + 1, 'jx_arc').setRotation(a - Math.PI / 2).setTint(0xf0e2c0).setAlpha(.55)
+      .setScale(k * .7, k * .6).setDepth(y - 2);
+    this.tweens.add({ targets: d, alpha: 0, scaleX: k * 1.25, scaleY: k, x: d.x - Math.cos(a) * 7, y: d.y - Math.sin(a) * 5, duration: 380,
+      onComplete: () => d.destroy() });
+    const l = this.add.image(x, y - 9, 'jx_line').setOrigin(1, .5).setRotation(a).setTint(0xfff6dc).setAlpha(.5).setScale(big ? 1.5 : 1, 1).setDepth(y - 1);
+    this.tweens.add({ targets: l, alpha: 0, scaleX: l.scaleX * 1.3, duration: 240, onComplete: () => l.destroy() });
   },
   jxCrater(x, y, R) { // bekas hantaman: retakan gelap yang memudar pelan
     const g = this.add.graphics().setDepth(1.2); g.fillStyle(0x1a1410, .34).fillEllipse(x, y, R * 1.25, R * .85);
@@ -139,7 +155,10 @@ Object.assign(World.prototype, {
     L.lv = S.lv; L.hp = S.hp;
     if (pl.dead) G._jxDied = 1;
     // bayangan-ikut saat berguling
-    if (pl._roll > 0 && !OPT.lite) { L.gh -= dt; if (L.gh <= 0) { L.gh = .045; this.jxGhost(); } } else L.gh = 0;
+    if (pl._roll > 0 && !OPT.lite) {
+      L.gh -= dt; const v = pl.body.velocity;
+      if (L.gh <= 0) { L.gh = .06; this.jxGhost(); if (v.length() > 60) this.jxSwoosh(pl.x, pl.y, v.x, v.y, false); }
+    } else L.gh = 0;
     // pose memancing
     if (this.fishing) { L.fish += dt; pl.flipX = pl.dir === 'left'; pl._emote = { k: 'fish_cast', f: Math.min(3, Math.floor(L.fish / .13)) }; }
     else if (L.fish) { L.fish = 0; pl._emote = null; }
@@ -158,6 +177,11 @@ Object.assign(World.prototype, {
     // ancang-ancang musuh + debu langkah musuh besar
     for (const e of this.enemies || []) {
       const w = e.hp > 0 && (e.st === 'wind' || e.st === 'swind' || e.st === 'cwind');
+      const bv = e.hp > 0 && e.spr.body ? e.spr.body.velocity : null, sp = bv ? bv.length() : 0;
+      if (sp > 105 && !OPT.lite) {
+        e._jxSw = (e._jxSw || 0) - dt; if (e._jxSw <= 0) { e._jxSw = .11; this.jxSwoosh(e.spr.x, e.spr.y, bv.x, bv.y, (e.D.r || 8) >= 10); }
+      }
+      else e._jxSw = 0;
       if (w && !e._jxW) { this.jxWind(e); if (!e.boss && e.D.ai !== 'golem') this.jxTele(e); } e._jxW = w;
       if (e.hp > 0 && (e.D.r || 0) >= 12 && this.puff && e.spr.body && e.spr.body.velocity.length() > 8) {
         e._jxStep = (e._jxStep || 0) - dt; if (e._jxStep <= 0) { e._jxStep = .38; this.puff(e.spr.x + rnd(-6, 6), e.spr.y); }
