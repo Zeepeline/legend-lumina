@@ -3,6 +3,7 @@
 // Atlas 4 frame × 6 baris: idle, move, wind (ancang-ancang), atk, hurt (0-1 kena, 2-3 terhuyung), alert (siaga). Menghadap KANAN.
 // Varian (warna/ukuran) memakai lembar yang sama lewat keepTint/scale (gfx/gptmonsters.js). Musuh biasa mati = putih memudar (combat.js).
 const ESH = {
+  ghost: { fw: 52, fh: 48, use: { ghost: { r: 9 } }, near: 34 }, /* AI hantu tak punya status serang: dekat pemain = cakar */
   golem: { fw: 64, fh: 63, use: { golem: { r: 13 }, golemi: { keepTint: 0xbfe2ff, r: 13 }, golemk: { keepTint: 0xe6d2a8, scale: 1.5, r: 18 } } },
 };
 IMG_LIST.push(...Object.keys(ESH).map(k => 'esh_' + k));
@@ -15,10 +16,11 @@ function regEnemySheets(sc) {
       if (A.exists(key + '_' + n)) return;
       A.create({ key: key + '_' + n, frames: A.generateFrameNumbers(key, { start: row * 4, end: row * 4 + 3 }), frameRate: fps, repeat: rep });
     };
-    mk('idle', 0, 5, -1); mk('mv', 1, 7, -1); mk('wind', 2, 7, 0); mk('atk', 3, 12, 0); mk('alert', 5, 8, 0);
+    mk('idle', 0, 5, -1); mk('mv', 1, 7, -1); mk('wind', 2, 7, 0); mk('atk', 3, E.near ? 8 : 12, E.near ? -1 : 0); mk('alert', 5, 8, 0);
     for (const t in E.use) {
       if (!ENEMY[t]) continue;
-      ENEMY[t].tex = key; ENEMY[t].esh = 1; Object.assign(ENEMY[t], E.use[t]); if (!E.use[t].scale) delete ENEMY[t].scale;
+      ENEMY[t].tex = key; ENEMY[t].esh = 1; if (E.near) ENEMY[t].eshNear = E.near;
+      Object.assign(ENEMY[t], E.use[t]); if (!E.use[t].scale) delete ENEMY[t].scale;
     }
   }
 }
@@ -39,6 +41,7 @@ function eshFrame(sc, dt) {
     if (e.staggerT > 0 || e.frozen > 0) { s.anims.stop(); s.setFrame(18 + (Math.floor(sc.t * 4) % 2)); X.a = 'stag'; continue; }
     if (['wind', 'swind', 'cwind', 'throw'].includes(e.st)) a = 'wind';
     else if (['atk', 'lunge', 'run', 'shoot', 'charge', 'slam'].includes(e.st) || (e.st === 'rec' && e.t > .55)) a = 'atk';
+    else if (D.eshNear && pl && Math.hypot(pl.x - s.x, pl.y - s.y) < D.eshNear && !e.faded) a = 'atk';
     else if (e._alertT > 0) a = 'alert';
     else a = s.body && s.body.velocity.length() > 6 ? 'mv' : 'idle';
     if (X.a !== a) { X.a = a; s.play(key + '_' + a, true); }

@@ -71,7 +71,7 @@ Row 3 wind-up: shrinks and glows brighter. Row 4 attack: bursts forward in a fla
 Row 5 hurt recoil / staggered.
 ```
 
-### 7. `ghost` — Hantu (7 tempat, menembus)
+### 7. `ghost` — Hantu ✅ SUDAH DIPASANG v1.44.1 (7 tempat, menembus)
 ```
 [blok umum]
 Monster: wraith of a drowned villager, tattered grey-blue burial shroud, gaunt skull-like face with empty glowing eye sockets, long bony clawed hands, wispy torn tail instead of legs (pale colors, no real transparency). Taller than the hero, floating.
