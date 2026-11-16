@@ -4,7 +4,8 @@
 // - Kena pukul: percikan searah tebasan + serpihan sewarna bahan musuh + bintang saat kritikal.
 // - Mati: butiran cahaya naik saat musuh memutih; ancang-ancang musuh: butiran merah mengumpul ke badan.
 // - Arka: bayangan-ikut saat berguling, serpihan saat terluka, sorak + pilar cahaya saat naik level, butiran hijau saat pulih,
-//   pose memancing, bangkit setelah kalah. OPT.lite → jumlah partikel separuh, tanpa bayangan-ikut & butiran ancang-ancang.
+//   pose memancing, bangkit setelah kalah. Ala Dimraeth: zona bahaya di tanah, aura status, kawah hantaman, nisan Jejak Cahaya.
+//   OPT.lite → jumlah partikel separuh, tanpa bayangan-ikut & butiran ancang-ancang.
 const JX_MAT = [ // warna serpihan per jenis musuh (dicocokkan ke awalan id)
   [/^slimeb/, 0x5aa8e8], [/^slimer|^slimef/, 0xe8643a], [/^slimei/, 0xa8e0ff], [/^slimep/, 0x9a5ad0], [/^slime/, 0x6fd36a],
   [/^golemi/, 0xbfe2ff], [/^golem/, 0x8a7f78], [/^ghost|^wisp/, 0xcfd8ff], [/^skel/, 0xe8e2cf], [/^plant|^frog|^snake/, 0x6f9a3c],
@@ -16,6 +17,10 @@ function jxTextures(T) {
   const mkc = (k, w, h, fn) => { const c = T.createCanvas(k, w, h), x = c.getContext(); x.fillStyle = '#fff'; fn(x); c.refresh(); };
   mkc('jx_sq', 2, 2, x => x.fillRect(0, 0, 2, 2));
   mkc('jx_mote', 5, 5, x => { x.globalAlpha = .45; x.fillRect(1, 0, 3, 5); x.fillRect(0, 1, 5, 3); x.globalAlpha = 1; x.fillRect(1, 1, 3, 3); });
+  const tomb = T.createCanvas('jx_tomb', 12, 15), t = tomb.getContext(), R = (c, x, y, w, h) => { t.fillStyle = c; t.fillRect(x, y, w, h); };
+  R('#2a2630', 2, 1, 8, 13); R('#2a2630', 1, 3, 10, 11); R('#2a2630', 0, 12, 12, 3); R('#8d8a96', 3, 2, 6, 11); R('#8d8a96', 2, 4, 8, 9);
+  R('#b9b6c2', 3, 2, 5, 1); R('#b9b6c2', 2, 4, 1, 7); R('#5d596a', 9, 5, 1, 8); R('#4a4654', 5, 5, 2, 6); R('#4a4654', 4, 7, 4, 1);
+  R('#5a7a3a', 1, 13, 10, 1); R('#6f9a3c', 1, 12, 2, 1); R('#6f9a3c', 8, 12, 3, 1); tomb.refresh();
   mkc('jx_star', 7, 7, x => { x.fillRect(3, 0, 1, 7); x.fillRect(0, 3, 7, 1); x.fillRect(2, 2, 3, 3); });
 }
 const JX_CFG = {
@@ -24,6 +29,7 @@ const JX_CFG = {
     alpha: { start: 1, end: 0 } }],
   mote: ['jx_mote', { lifespan: { min: 480, max: 950 }, speedY: { min: -58, max: -20 }, speedX: { min: -14, max: 14 }, scale: { start: 1, end: 0 },
     alpha: { start: 1, end: 0 }, blendMode: 'ADD' }],
+  pop: ['jx_mote', { lifespan: { min: 380, max: 620 }, speed: { min: 18, max: 62 }, scale: { start: 1.1, end: 0 }, alpha: { start: 1, end: 0 } }],
   star: ['jx_star', { lifespan: { min: 340, max: 620 }, speed: { min: 50, max: 140 }, scale: { start: 1.3, end: 0 }, rotate: { start: 0, end: 180 },
     blendMode: 'ADD' }],
 };
@@ -83,6 +89,45 @@ Object.assign(World.prototype, {
       this.jx('spark', m.x, m.y, 7, { tint: m.c }); if (sh.kind !== 'arrow') this.jx('mote', m.x, m.y, 4, { tint: m.c, rx: 4, ry: 4 });
     }
   },
+  // ── ala Dimraeth: zona bahaya di tanah, aura status, kawah hantaman, nisan Jejak Cahaya ──
+  jxTele(e) { // zona merah di tanah yang terisi selama ancang-ancang (tanda "baca lalu hindari")
+    const s = e.spr, pl = this.pl, a = Math.atan2(pl.y - s.y, pl.x - s.x), r0 = (e.D.r || 8) * (e.sc || 1), R = r0 + 13;
+    const cx = s.x + Math.cos(a) * (r0 + 9), cy = s.y - 2 + Math.sin(a) * (r0 + 9) * .8, g = this.add.graphics().setDepth(1.5), T0 = Math.max(.2, e.t || .4);
+    const o = { p: 0 }, done = () => { if (g.active) this.tweens.add({ targets: g, alpha: 0, duration: 120, onComplete: () => g.destroy() }); };
+    this.tweens.add({ targets: o, p: 1, duration: T0 * 1000, onComplete: done, onUpdate: () => {
+      if (!g.active) return; g.clear(); if (e.hp <= 0 || !s.active) { g.destroy(); return; }
+      g.fillStyle(0xd02a1a, .16).fillEllipse(cx, cy, R * 2, R * 1.5); g.fillStyle(0xff4a2a, .3).fillEllipse(cx, cy, R * 2 * o.p, R * 1.5 * o.p);
+      g.lineStyle(1, 0xff6a4a, .75).strokeEllipse(cx, cy, R * 2, R * 1.5);
+    } });
+  },
+  jxCrater(x, y, R) { // bekas hantaman: retakan gelap yang memudar pelan
+    const g = this.add.graphics().setDepth(1.2); g.fillStyle(0x1a1410, .34).fillEllipse(x, y, R * 1.25, R * .85);
+    g.lineStyle(1, 0x120e0a, .6);
+    for (let i = 0; i < 7; i++) {
+      const a = i / 7 * Math.PI * 2 + rnd(-.3, .3), l = R * rnd(.55, .95);
+      const mx = x + Math.cos(a) * l * .5 + rnd(-3, 3), my = y + Math.sin(a) * l * .34 + rnd(-2, 2);
+      g.lineBetween(x, y, mx, my); g.lineBetween(mx, my, x + Math.cos(a) * l, y + Math.sin(a) * l * .68);
+    }
+    this.tweens.add({ targets: g, alpha: 0, delay: 3500, duration: 2500, onComplete: () => g.destroy() });
+  },
+  jxAura(dt) { // aura status: terbakar, racun, beku/dingin, terhuyung, mengamuk (musuh) + status pemain
+    const L = this._jxL; L.au = (L.au || 0) - dt; if (L.au > 0) return; L.au = OPT.lite ? .16 : .08;
+    for (const e of this.enemies || []) {
+      const s = e.spr; if (e.hp <= 0 || !s.active || !s.visible) continue;
+      const h = s.displayHeight, w = s.displayWidth * .3, top = s.y - h;
+      if (e.burn > 0) { this.jx('mote', s.x, s.y - h * .45, 2, { tint: Math.random() < .5 ? 0xff7a2a : 0xffd04a, rx: w, ry: h * .35 }); }
+      if (e.poison > 0 && Math.random() < .6) this.jx('pop', s.x, top + 2, 1, { tint: 0x7ae05a, rx: w, ry: 3 });
+      if (e.frz > 0 && Math.random() < .5) this.jx('star', s.x, s.y - h * .5, 1, { tint: 0xbfeaff, rx: w, ry: h * .4 });
+      else if (e.slow > 0 && Math.random() < .5) this.jx('pop', s.x, s.y - 3, 1, { tint: 0x9ad8ff, rx: w, ry: 2 });
+      const a = this.t * 9;
+      if (e.staggerT > 0) this.jx('spark', s.x + Math.cos(a) * w * 1.2, top - 2 + Math.sin(a) * 2.5, 1, { tint: 0xffe07a, spread: 20, ang: a });
+      if (e.rageT > 0 || e.enrageT > 0) this.jx('mote', s.x, s.y - h * .3, 1, { tint: 0xff3a2a, rx: w * 1.3, ry: h * .3 });
+    }
+    const pl = this.pl, P = this.pst || {};
+    if (P.burn > 0) this.jx('mote', pl.x, pl.y - 12, 2, { tint: Math.random() < .5 ? 0xff7a2a : 0xffd04a, rx: 6, ry: 9 });
+    if (P.poison > 0 && Math.random() < .6) this.jx('pop', pl.x, pl.y - 26, 1, { tint: 0x7ae05a, rx: 6, ry: 3 });
+    if (P.chill > 0 && Math.random() < .6) this.jx('star', pl.x, pl.y - 12, 1, { tint: 0xbfeaff, rx: 7, ry: 10 });
+  },
   jxTick(dt) {
     const pl = this.pl; if (!pl || !pl.active) return;
     // naik level & pulih (dibandingkan dengan frame sebelumnya)
@@ -99,10 +144,21 @@ Object.assign(World.prototype, {
     if (this.fishing) { L.fish += dt; pl.flipX = pl.dir === 'left'; pl._emote = { k: 'fish_cast', f: Math.min(3, Math.floor(L.fish / .13)) }; }
     else if (L.fish) { L.fish = 0; pl._emote = null; }
     this.jxShots(dt);
+    this.jxAura(dt);
+    // nisan di titik Jejak Cahaya (emas yang tertinggal saat kalah)
+    const ls = this.lostS;
+    if (ls && ls.active && (!this._jxTomb || !this._jxTomb.active)) {
+      jxTextures(this.textures); this._jxTomb = this.add.image(ls.x, ls.y, 'jx_tomb').setOrigin(.5, 1).setScale(1.4);
+    }
+    if (this._jxTomb && !(ls && ls.active)) { this._jxTomb.destroy(); this._jxTomb = null; }
+    if (this._jxTomb) {
+      this._jxTomb.setPosition(ls.x, ls.y + 4).setDepth(ls.y - .5);
+      if (Math.random() < dt * 5) this.jx('mote', ls.x, ls.y - 12, 1, { tint: 0xffe28a, rx: 5, ry: 4 });
+    }
     // ancang-ancang musuh + debu langkah musuh besar
     for (const e of this.enemies || []) {
       const w = e.hp > 0 && (e.st === 'wind' || e.st === 'swind' || e.st === 'cwind');
-      if (w && !e._jxW) this.jxWind(e); e._jxW = w;
+      if (w && !e._jxW) { this.jxWind(e); if (!e.boss && e.D.ai !== 'golem') this.jxTele(e); } e._jxW = w;
       if (e.hp > 0 && (e.D.r || 0) >= 12 && this.puff && e.spr.body && e.spr.body.velocity.length() > 8) {
         e._jxStep = (e._jxStep || 0) - dt; if (e._jxStep <= 0) { e._jxStep = .38; this.puff(e.spr.x + rnd(-6, 6), e.spr.y); }
       }
@@ -111,7 +167,7 @@ Object.assign(World.prototype, {
 });
 { const W = World.prototype, _cr = W.create, _hit = W.hitFx, _kill = W.killEnemy, _hurt = W.hurtPlayer, _sw = W.shockwave;
   W.create = function () {
-    this._jx = null; this._jxL = null; this._jxSh = null; const r = _cr.apply(this, arguments), pl = this.pl;
+    this._jx = null; this._jxL = null; this._jxSh = null; this._jxTomb = null; const r = _cr.apply(this, arguments), pl = this.pl;
     if (!this._jxHook) { this._jxHook = 1; this.events.on('postupdate', (t, d) => this.jxTick(Math.min(.1, d / 1000))); }
     if (G._jxDied && pl && this === G.scene) {
       G._jxDied = 0; pl._emote = { k: 'rise', fps: 4.5, t: .95 }; this.jx('mote', pl.x, pl.y - 6, 10, { tint: 0xfff2b0, rx: 8, ry: 4 });
@@ -152,11 +208,14 @@ Object.assign(World.prototype, {
       return _oc.apply(this, arguments);
     };
   }
+  const SPK = { dot: 0xffffff, dotg: 0xbff09a, doto: 0xffb04a, spark: 0xffe07a };
+  W.sparkle = function (x, y, key = 'dot', n = 10) { this.jx('pop', x, y, n, { tint: SPK[key] || 0xffffff }); }; /* dulu: pemancar baru tiap panggilan */
   W.shockwave = function (x, y, R) {
     const r = _sw.apply(this, arguments), n = OPT.lite ? 6 : 12;
     for (let i = 0; i < n; i++) {
       const a = i / n * Math.PI * 2; this.jx('chip', x + Math.cos(a) * R * .55, y + Math.sin(a) * R * .4, 2, { ang: a - .5, spread: 30, tint: 0x8a7a6a });
     }
+    this.jxCrater(x, y, R);
     if (this.puff) for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2 + .4; this.puff(x + Math.cos(a) * R * .6, y + Math.sin(a) * R * .45); }
     return r;
   };

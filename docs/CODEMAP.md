@@ -567,9 +567,9 @@ _Sprite sheet lengkap Arka dari ChatGPT (assets/raw/hero/arka_sheet1..6.png → 
 _Lembar musuh baru dari ChatGPT (assets/raw/enemy/<id>.png → tools/gen_enemy.py → assets/img/esh_<id>.png)._
 `ESH` 5 · `regEnemySheets()` 10 · `eshFrame()` 31
 
-## src/systems/juice.js (164 baris)
+## src/systems/juice.js (223 baris)
 _"Juice" v1.45: lapisan partikel & animasi tambahan di atas sistem yang ada (tanpa mengubah logika tempur)._
-`JX_MAT` 8 · `jxMat()` 13 · `jxTextures()` 14 · `JX_CFG` 21 · `.jx()` 32 · `.jxLevelUp()` 48 · `.jxWind()` 55 · `.jxGhost()` 65 · `.jxShots()` 70 · `.jxTick()` 86
+`JX_MAT` 9 · `jxMat()` 14 · `jxTextures()` 15 · `JX_CFG` 26 · `.jx()` 38 · `.jxLevelUp()` 54 · `.jxWind()` 61 · `.jxGhost()` 71 · `.jxShots()` 76 · `.jxTele()` 93 · `.jxCrater()` 103 · `.jxAura()` 113 · `.jxTick()` 131
 
 ## src/main.js (39 baris)
 _Mulai game Phaser_
