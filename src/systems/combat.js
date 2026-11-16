@@ -212,7 +212,11 @@ Object.assign(World.prototype, {
     for (let i = 0; i < 4; i++) this.time.delayedCall(i * 40, () => this.puff(x + rnd(-8, 8), y - rnd(0, 10)));
     this.tweens.killTweensOf(e.spr);
     const isDeadHd = ['slime_hd', 'wolf_hd', 'wolf_elite_hd', 'goblin_hd', 'goblin_archer_hd', 'goblin_shaman'].includes(e.D?.tex);
-    if (isDeadHd && e.spr?.anims) {
+    if (!e.boss) { /* musuh biasa: membeku jadi putih lalu pudar (tanpa animasi mati, hemat aset) */
+      const s = e.spr; s.anims?.stop(); s.setTintFill(0xffffff); e.sh?.setVisible(false);
+      this.tweens.add({ targets: s, alpha: 0, scaleX: e.sc * 1.12, scaleY: e.sc * 1.12, y: s.y - 3, duration: 380, delay: 90, ease: 'Quad.easeIn',
+        onComplete: () => { s.destroy(); e.sh?.destroy(); } });
+    } else if (isDeadHd && e.spr?.anims) {
       e.spr.play(e.D.tex + '_die', true);
       this.time.delayedCall(650, () => { if (e.spr?.active) { e.spr.destroy(); e.sh?.destroy(); } });
     } else {

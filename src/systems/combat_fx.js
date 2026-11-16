@@ -100,7 +100,7 @@ Object.assign(World.prototype, {
     const keep = s.isTinted ? s.tintTopLeft : null;
     s.setTintFill(0xffffff);
     this.time.delayedCall(65, () => {
-      if (!s.active) return;
+      if (!s.active || e.hp <= 0) return; /* mati: tetap putih sampai pudar */
       if (keep !== null && keep !== 0xffffff) s.setTint(keep);
       else s.clearTint();
     });

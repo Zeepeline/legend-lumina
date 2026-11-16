@@ -6988,7 +6988,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.43.0';
+const GAME_VERSION = '1.43.1';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() {
@@ -8874,7 +8874,11 @@ Object.assign(World.prototype, {
     for (let i = 0; i < 4; i++) this.time.delayedCall(i * 40, () => this.puff(x + rnd(-8, 8), y - rnd(0, 10)));
     this.tweens.killTweensOf(e.spr);
     const isDeadHd = ['slime_hd', 'wolf_hd', 'wolf_elite_hd', 'goblin_hd', 'goblin_archer_hd', 'goblin_shaman'].includes(e.D?.tex);
-    if (isDeadHd && e.spr?.anims) {
+    if (!e.boss) { /* musuh biasa: membeku jadi putih lalu pudar (tanpa animasi mati, hemat aset) */
+      const s = e.spr; s.anims?.stop(); s.setTintFill(0xffffff); e.sh?.setVisible(false);
+      this.tweens.add({ targets: s, alpha: 0, scaleX: e.sc * 1.12, scaleY: e.sc * 1.12, y: s.y - 3, duration: 380, delay: 90, ease: 'Quad.easeIn',
+        onComplete: () => { s.destroy(); e.sh?.destroy(); } });
+    } else if (isDeadHd && e.spr?.anims) {
       e.spr.play(e.D.tex + '_die', true);
       this.time.delayedCall(650, () => { if (e.spr?.active) { e.spr.destroy(); e.sh?.destroy(); } });
     } else {
@@ -20669,7 +20673,7 @@ Object.assign(World.prototype, {
     const keep = s.isTinted ? s.tintTopLeft : null;
     s.setTintFill(0xffffff);
     this.time.delayedCall(65, () => {
-      if (!s.active) return;
+      if (!s.active || e.hp <= 0) return; /* mati: tetap putih sampai pudar */
       if (keep !== null && keep !== 0xffffff) s.setTint(keep);
       else s.clearTint();
     });
