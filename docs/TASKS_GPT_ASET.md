@@ -169,10 +169,10 @@ Obrolan "Tanah".
 - Simpan: `assets/raw/gpt2/tanah/hutan_hiasan.png` · Ukuran di game: tiap hiasan 6–20 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] 16 small ground decorations for slightly deeper green forest grass with tiny leaf litter: grass tufts, tiny weeds, pebbles, twigs, fallen leaves, small flowers, a mushroom. All tiny and flat to the ground.`
 - Cek: Kecil & rendah; tidak ada yang lebih besar dari 1/4 sel. Selesai dipotong 16 varian + ekspor 16 sprite game ke `assets/img/nature/fclutter_*.png`.
-### [ ] G020. hutan: tepi air (tebing kecil tanah ke air)
+### [x] G020. hutan: tepi air (tebing kecil tanah ke air)
 - Simpan: `assets/raw/gpt2/tanah/hutan_tepiair.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Shoreline pieces where slightly deeper green forest grass with tiny leaf litter meets calm water: a thin darker earth lip, a few reeds and pebbles at the waterline. Row 1: straight shore facing up, right, down, left. Row 2: outer corners. Row 3: inner corners. Row 4: four small rocks/reed clumps standing in water. Only the land part is drawn; water area is magenta.`
-- Cek: Hanya bagian darat yang digambar; air = magenta.
+- Cek: Hanya bagian darat yang digambar; air = magenta. Selesai dipotong 12 ubin tepian 32×32 px + 4 objek perairan hutan.
 ### [ ] G021. hutan dalam: tekstur tanah utama (mulus, diulang)
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_dasar.png` · Ukuran di game: 256×256 px di game (diulang tanpa sambungan)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of dark mossy forest floor with moss tufts. Very low contrast, no single object stands out, subtle variation only.`
