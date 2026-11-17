@@ -362,22 +362,22 @@ Obrolan "Tanah".
 
 ## C. Pohon & tumbuhan
 Obrolan "Vegetasi".
-### [ ] G071. pohon padang
+### [x] G071. pohon padang
 - Simpan: `assets/raw/gpt2/vegetasi/pohon_padang.png` · Ukuran di game: pohon 48–96 px tinggi
 - Prompt: `[LAYOUT: OBJ 2x2] 4 broad round-canopy meadow trees, slightly different shapes, sunlit yellow-green tops and deep olive undersides. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
-- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel.
-### [ ] G072. pohon buah
+- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel. Selesai dipotong 4 variasi + animasi sway 8 frame ke `assets/img/nature/`.
+### [x] G072. pohon buah
 - Simpan: `assets/raw/gpt2/vegetasi/pohon_buah.png` · Ukuran di game: pohon 48–96 px tinggi
 - Prompt: `[LAYOUT: OBJ 2x2] 4 fruit trees: apple tree, apple tree heavy with fruit, orange tree, pear tree. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
-- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel.
-### [ ] G073. pohon hutan
+- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel. Selesai dipotong 4 variasi + animasi sway 8 frame ke `assets/img/nature/fruit_*.png`.
+### [x] G073. pohon hutan
 - Simpan: `assets/raw/gpt2/vegetasi/pohon_hutan.png` · Ukuran di game: pohon 48–96 px tinggi
 - Prompt: `[LAYOUT: OBJ 2x2] 4 tall forest trees with dense layered canopies and visible trunks at the bottom. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
-- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel.
-### [ ] G074. pohon hutan dalam
+- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel. Selesai dipotong 4 variasi + animasi sway 8 frame ke `assets/img/nature/forest_*.png`.
+### [x] G074. pohon hutan dalam
 - Simpan: `assets/raw/gpt2/vegetasi/pohon_hutan_dalam.png` · Ukuran di game: pohon 48–96 px tinggi
 - Prompt: `[LAYOUT: OBJ 2x2] 4 giant ancient trees: mossy trunk, hollow trunk, a tree with an owl hole, a tree with a beehive. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
-- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel.
+- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel. Selesai dipotong 4 varian + animasi sway 8 frame ke `assets/img/nature/deepwood_*.png`.
 ### [ ] G075. pohon jarum
 - Simpan: `assets/raw/gpt2/vegetasi/pohon_jarum.png` · Ukuran di game: pohon 48–96 px tinggi
 - Prompt: `[LAYOUT: OBJ 2x2] 4 conifers: tall pine, short pine, cool blue-green fir, a dead pine. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
@@ -402,14 +402,14 @@ Obrolan "Vegetasi".
 - Simpan: `assets/raw/gpt2/vegetasi/semak.png` · Ukuran di game: objek 8–32 px
 - Prompt: `[LAYOUT: STAMP 4x4] 16 bushes: round leafy bushes (light and dark), flowering bushes (white, pink, purple), berry bush, thorny bramble, small shrubs. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
 - Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel.
-### [ ] G081. pakis
+### [x] G081. pakis
 - Simpan: `assets/raw/gpt2/vegetasi/pakis.png` · Ukuran di game: objek 8–32 px
 - Prompt: `[LAYOUT: STAMP 4x4] 16 fern clumps and broad-leaf undergrowth in dark olive greens, small to large. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
-- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel.
-### [ ] G082. bunga liar
+- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel. Selesai dipotong 16 varian + ekspor 6 sprite game ke `assets/img/nature/fern_*.png`.
+### [x] G082. bunga liar
 - Simpan: `assets/raw/gpt2/vegetasi/bunga_liar.png` · Ukuran di game: objek 8–32 px
 - Prompt: `[LAYOUT: STAMP 4x4] 16 wildflower clusters: white, yellow, pink, violet, blue, mixed. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
-- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel.
+- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel. Selesai dipotong 16 varian + ekspor 8 sprite game ke `assets/img/nature/flower_*.png`.
 ### [ ] G083. rumput tinggi
 - Simpan: `assets/raw/gpt2/vegetasi/rumput_tinggi.png` · Ukuran di game: objek 8–32 px
 - Prompt: `[LAYOUT: STAMP 4x4] tall grass clumps swaying: 4 different clumps × 4 frames each. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
