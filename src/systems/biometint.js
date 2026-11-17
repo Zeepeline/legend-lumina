@@ -8,7 +8,7 @@
     snow: 0x6ab2ff,     // Biru dingin
     swamp: 0x486b3a,    // Hijau keruh
     cave: 0x221a30,     // Ungu gua gelap
-    deepwood: 0x184828, // Hijau lumut lebat
+    deepwood: 0x0a1e12, // Hijau kanopi purba gelap sejuk
     desert: 0xd89a42,   // Oranye gurun hangat
     default: 0xffffff
   };
@@ -27,6 +27,7 @@
       this._curBiomeTint = 0xffffff;
       this._curBiomeAlpha = 0;
     }
+    if (this.M) this.applyBiomeTint(this.M.id);
     return res;
   };
 
@@ -40,9 +41,13 @@
     const r = this.biomeTintRect;
     if (!r || !this.tweens) return;
 
-    const targetColor = BIOME_TINTS[id] || BIOME_TINTS.default;
+    const curId = id || (this.M && this.M.id);
+    const targetColor = BIOME_TINTS[curId] || BIOME_TINTS.default;
     const isNightTime = typeof nightAmt === 'function' && nightAmt() > 0.3;
-    const targetAlpha = (targetColor !== BIOME_TINTS.default && !isNightTime) ? 0.055 : 0;
+    let targetAlpha = 0;
+    if (targetColor !== BIOME_TINTS.default && !isNightTime) {
+      targetAlpha = (curId === 'deepwood') ? 0.25 : 0.055;
+    }
 
     r.fillColor = targetColor;
     this.tweens.killTweensOf(r);

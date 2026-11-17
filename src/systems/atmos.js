@@ -46,8 +46,10 @@ Object.assign(World.prototype, {
     const isEmber = outdoor && (n > 0.45 || h >= 19.5 || h < 4.5);
     const isDusk = outdoor && h >= 15.5 && h < 19.5;
     const isMorning = outdoor && h >= 5.0 && h < 11.5;
+    const isDeepwood = this.M && this.M.id === 'deepwood';
     let tint = 0xfffae8; // siang: sinar matahari netral lembut
-    if (cave) tint = 0x88c8ff; // gua: kristal pendar biru
+    if (isDeepwood) tint = 0x8aff9a; // Hutan Dalam: spora fosfor lumut hijau mistis
+    else if (cave) tint = 0x88c8ff; // gua: kristal pendar biru
     else if (isEmber) tint = 0xff7028; // malam: bara api hangat
     else if (isDusk) tint = 0xffcb50; // sore: debu senja keemasan
     else if (isMorning) tint = 0xf0f8ff; // pagi: embun putih segar
@@ -77,19 +79,28 @@ Object.assign(World.prototype, {
     this.updAmbientMotes(dt, outdoor, cave, n);
     if (this._atmosM !== this.M || !this._fogL || !this._fogL[0].active) {
       (this._fogL || []).forEach(o => o.destroy()); (this._glP || []).forEach(o => o.destroy()); fogSheetTex(this);
+      if (this._canopyL && this._canopyL.active) this._canopyL.destroy();
+      this._canopyL = (this.M && this.M.id === 'deepwood' && this.textures.exists('canopy_overhang'))
+        ? this.add.tileSprite(0, 0, VW, 52, 'canopy_overhang').setOrigin(0).setScrollFactor(0).setDepth(1.98e5).setAlpha(0.92) : null;
       this._fogL = [0, 1].map(k => this.add.tileSprite(0, 0, VW, VH, 'fogsheet').setOrigin(0).setScrollFactor(0).setDepth(1.9e5 + k).setAlpha(0)
         .setTileScale(k ? 1.6 : 1.1));
       this._glP = []; this._lant = null; this._atmosM = this.M; this._fogA = 0;
     }
     // kabut: target alpha menurut cuaca & jam (pagi lebih tebal), berubah halus
     const h = S.time || 12, morning = h >= 4 && h < 9 ? 1 : h >= 17 && h < 20 ? .6 : .35;
-    const want = outdoor && this.weather === 'fog' ? .3 + .35 * morning : 0;
+    const isDw = this.M && this.M.id === 'deepwood';
+    const want = outdoor && (this.weather === 'fog' ? .3 + .35 * morning : (isDw ? .22 : 0));
     this._fogA += (want - this._fogA) * Math.min(1, dt * .8);
     const cam = this.cameras.main;
+    if (this._canopyL && this._canopyL.active) {
+      this._canopyL.tilePositionX = cam.scrollX * .18 + Math.sin(this.t * .8) * 3;
+      this._canopyL.setVisible(isDw);
+    }
     this._fogL.forEach((f, k) => {
       f.setAlpha(this._fogA * (k ? .7 : 1)).setVisible(this._fogA > .01);
-      f.tilePositionX = cam.scrollX * (k ? .55 : .3) + this.t * (k ? 7 : 4); f.tilePositionY = cam.scrollY * (k ? .55 : .3) + this.t * (k ? 1.5 : .8);
-      f.setTint(n > .3 ? 0x8090b8 : 0xffffff);
+      f.tilePositionX = cam.scrollX * (k ? .55 : .3) + this.t * (k ? 7 : 4);
+      f.tilePositionY = cam.scrollY * (k ? .55 : .3) + this.t * (k ? 1.5 : .8);
+      f.setTint(n > .3 ? 0x8090b8 : (isDw ? 0x88b090 : 0xffffff));
     });
     // cahaya hangat lampu kecil + lentera Arka saat malam
     const ga = outdoor ? Math.max(0, Math.min(.6, (n - .12) * 1.4)) : 0, fogBoost = 1 + this._fogA * .8;

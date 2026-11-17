@@ -8,13 +8,68 @@ const ruinRing = (cx, cy, r, n) => { const w = r, h = r * .6, P = 4 * (w + h), o
     else if ((d -= 2 * h) < 2 * w) { x = cx + w - d; y = cy + h; } else { d -= 2 * w; x = cx - w; y = cy + h - d; }
     out.push([i % 3 ? 'rock' : 'stalag', Math.round(x), Math.round(y)]); }
   return out; };
+
+// Snail Swarm Theory: Pola kurva spiral keong alami (Fibonacci / Golden spiral clustering).
+// Tepi luar rapat (kanopi redwood menutupi matahari), lengkungan meliuk membimbing pemain,
+// pusat spiral kosong lapang untuk area pertempuran bebas tabrakan (combat clearing).
+const deepwoodPaths = [
+  [2400, 730, 1900, 730, 13], [1900, 730, 1500, 980, 12], [1500, 980, 1100, 900, 12], [1100, 900, 700, 560, 12], [700, 560, 520, 420, 12],
+  [1500, 980, 1600, 1400, 10], [1600, 1400, 1200, 1580, 10], [1100, 900, 900, 1300, 10], [1900, 730, 2000, 360, 10]
+];
+const deepwoodPonds = [[1250, 470, 150, 70], [1420, 560, 90, 50], [330, 1250, 160, 90], [1900, 1500, 140, 70]];
+const snailSwarm = (paths, ponds, cx, cy, rMin, rMax, turns, n, startA = 0, types = ['treeRedwood']) => {
+  const out = [];
+  const distP = (px, py) => {
+    let md = 1e9;
+    for (const p of paths) {
+      const ax = p[0], ay = p[1], bx = p[2], by = p[3], dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy;
+      if (!L) continue;
+      const u = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / L));
+      const d = Math.hypot(px - (ax + u * dx), py - (ay + u * dy));
+      if (d < md) md = d;
+    }
+    return md;
+  };
+  const inWater = (px, py) => {
+    for (const p of ponds || []) {
+      if (Math.hypot((px - p[0]) / p[2], (py - p[1]) / p[3]) < 1.25) return true;
+    }
+    return false;
+  };
+  for (let i = 0; i < n; i++) {
+    const t = i / Math.max(1, n - 1);
+    const theta = startA + t * turns * Math.PI * 2;
+    const r = rMin + (rMax - rMin) * Math.pow(t, 0.85);
+    const jx = Math.sin(i * 3.7) * 10, jy = Math.cos(i * 4.3) * 8;
+    const x = Math.round(cx + r * Math.cos(theta) + jx);
+    const y = Math.round(cy + r * Math.sin(theta) * 0.76 + jy);
+    if (x < 55 || x > 2345 || y < 65 || y > 1735) continue;
+    if (distP(x, y) < 42) continue;
+    if (inWater(x, y)) continue;
+    out.push([types[i % types.length], x, y]);
+  }
+  return out;
+};
+
 MAPS.deepwood = {
   id: 'deepwood', name: 'Hutan Dalam', w: 2400, h: 1800, bgm: 'field', ground: 'forest', scale: 2.2,
-  paths: [[2400, 730, 1900, 730, 13], [1900, 730, 1500, 980, 12], [1500, 980, 1100, 900, 12], [1100, 900, 700, 560, 12], [700, 560, 520, 420, 12],
-    [1500, 980, 1600, 1400, 10], [1600, 1400, 1200, 1580, 10], [1100, 900, 900, 1300, 10], [1900, 730, 2000, 360, 10]],
-  discs: [[520, 400, 150], [420, 470, 95], [630, 330, 105], [560, 520, 70], [2000, 330, 90], [1600, 1420, 80], [900, 1320, 70], [1500, 980, 60], [1960, 760, 50],
-    [320, 1550, 70], [420, 1580, 85], [490, 1610, 65]],
-  ponds: [[1250, 470, 150, 70], [1420, 560, 90, 50], [330, 1250, 160, 90], [1900, 1500, 140, 70]],
+  paths: deepwoodPaths,
+  cliffs: [
+    // Plato Bertingkat Reruntuhan Aurel (Dataran Tinggi Suci di barat laut)
+    // Lereng batu tanjakan otomatis terpasang di x=720 saat jalan menembus tebing!
+    [220, 575, 820, 575, 'S'],
+    [820, 160, 820, 575, 'E'],
+    // Plato Suaka Pohon Tua (Dataran Tinggi Bukit Suci di timur laut)
+    // Lereng batu tanjakan otomatis terpasang di x=1990 tempat jalan menuju Pohon Tua!
+    [1720, 500, 2280, 500, 'S']
+  ],
+  discs: [
+    [520, 400, 180], [420, 470, 110], [630, 330, 120], [560, 520, 85], // Arena 1: Reruntuhan Aurel
+    [380, 1540, 175], [260, 1460, 110], [480, 1600, 110], // Arena 2: Markas Suku Goblin Akar Gelap
+    [1400, 860, 170], [1750, 1050, 150], [1050, 1100, 140], [1550, 1420, 120], // Arena 3: Padang Terbuka Tengah & Kemah
+    [2000, 330, 105], [900, 1320, 85], [1960, 760, 80]
+  ],
+  ponds: deepwoodPonds,
   objs: [
     // Reruntuhan Aurel (barat laut): cincin batu, kuil runtuh, prasasti
     ['shrine', 520, 400], ...ruinRing(520, 400, 170, 14), ['stele', 440, 330, { lore: 'aurel_gerbang' }], ['stele', 610, 470, { lore: 'aurel_istana' }],
@@ -50,7 +105,12 @@ MAPS.deepwood = {
     ['bones', 430, 1590], ['bones', 390, 1550], ['bones', 250, 1480],
     ['root', 360, 1440], ['root', 440, 1530], ['root', 290, 1540],
     ['sign', 570, 1660, { text: 'WILAYAH SUKU AKAR GELAP\nPendatang akan dijadikan tumbal kristal!' }],
-    ['sign', 2300, 690, { text: 'HUTAN DALAM\nJangan tinggalkan jalan setapak. Lumut bercahaya menunjukkan arah pulang.' }]],
+    ['sign', 2300, 690, { text: 'HUTAN DALAM\nJangan tinggalkan jalan setapak. Lumut bercahaya menunjukkan arah pulang.' }],
+    // Gugusan Pohon Snail Swarm Theory: Kurva Spiral Keong Membungkus Arena
+    ...snailSwarm(deepwoodPaths, deepwoodPonds, 520, 400, 230, 520, 1.3, 26, Math.PI * 0.5, ['treeRedwood', 'pined']),
+    ...snailSwarm(deepwoodPaths, deepwoodPonds, 380, 1540, 220, 460, 1.2, 22, -Math.PI * 0.4, ['treeRedwood', 'pined']),
+    ...snailSwarm(deepwoodPaths, deepwoodPonds, 2000, 330, 160, 420, 1.25, 18, 0, ['treeRedwood', 'pined']),
+    ...snailSwarm(deepwoodPaths, deepwoodPonds, 1400, 860, 230, 480, 1.15, 20, Math.PI * 0.2, ['treeRedwood', 'pined'])],
   walls: [[0, 0, 2400, 30], [0, 0, 40, 1800], [2360, 0, 40, 700], [2360, 760, 40, 1040], [0, 1770, 2400, 30]],
   exits: [{ x: 2388, y: 700, w: 12, h: 60, to: 'forest', tx: 60, ty: 730, dir: 'right', label: 'Hutan Lumina' }],
   npcs: [{ id: 'sambo', ch: 'darma', name: 'Sambo, Pemburu Gelap', x: 1600, y: 1360, dir: 'down', wander: 18 }],
@@ -60,7 +120,8 @@ MAPS.deepwood = {
     ['ghost', 560, 520], ['ghost', 420, 300], ['golem', 640, 260], ['wisp', 800, 600], ['plant', 900, 1200], ['snake', 700, 1400], ['snake', 1200, 1500], ['wolf', 1900, 1300], ['boar', 2100, 1500], ['golem', 300, 500], ['ghost', 1500, 400],
     ['goblin_elite', 420, 1540], ['goblin_shaman', 320, 1600], ['goblin_shaman', 520, 1600],
     ['goblin_archer', 280, 1520], ['goblin_archer', 560, 1520], ['goblin', 380, 1650], ['goblin', 460, 1650]],
-  trees: { n: 3600, min: 26, types: [['treeAd', .35], ['treeBd', .3], ['pined', .15], ['bushG2', .1], ['stump', .05], ['rock', .05]] },
+  border: { top: 70, bottom: 1730, left: 50, right: 2350, gapR: [660, 780], types: ['treeRedwood'] },
+  trees: { n: 440, min: 58, types: [['treeRedwood', .42], ['pined', .26], ['bushG2', .16], ['rock', .10], ['mush', .06]] },
 };
 MAPS.river = {
   id: 'river', name: 'Jalur Sungai Senja', w: 2600, h: 1000, bgm: 'field', ground: 'meadow', scale: 1.8,

@@ -75,25 +75,25 @@ _Monster versi garang: bentuk baru (mata menyala, taring, tanduk, duri) + pencah
 _Ikon item & senjata_
 `SWORD` 3 · `artSword()` 4 · `artSpear()` 9 · `artAxe()` 10 · `artBow()` 11 · `artArrow()` 12 · `artCoin()` 13 · `artPotion()` 18 · `artHeart()` 19 · `artShard()` 20 · `ICON_MAP` 22 · `ICONS_DEF` 49 · `iconFallback()` 109 · `artIcon()` 115
 
-## src/art/fx.js (131 baris)
+## src/art/fx.js (148 baris)
 _Efek: tebasan, api, proyektil, cahaya, bayangan_
-`artSlash()` 4 · `artFire()` 21 · `artSpore()` 31 · `artDot()` 32 · `artSmoke()` 33 · `artSpark()` 34 · `artButterfly()` 35 · `artShadow()` 40 · `artBone()` 41 · `artSeed()` 42 · `artRockShot()` 43 · `artBrazier()` 44 · `artIceGate()` 45 · `artIceBolt()` 46 · `artWarp()` 47 · `artStele()` 48 · `artBoat()` 49 · `artRelief()` 50 · `artSealDoor()` 51 · `artGatehouse()` 52 · `artCityWall()` 61 · `artAcademy()` 62 · `artRoot()` 73 · `artLight()` 76 · `artRain()` 77 · `artRainBg()` 87 · `artShadowSoft()` 97 · `artFog()` 118 · `artRipple()` 119 · `artSprout()` 120 · `shadowCanvas()` 122 · `artLightP()` 130
+`artSlash()` 4 · `artFire()` 21 · `artSpore()` 31 · `artDot()` 32 · `artSmoke()` 33 · `artSpark()` 34 · `artButterfly()` 35 · `artShadow()` 40 · `artBone()` 41 · `artSeed()` 42 · `artRockShot()` 43 · `artBrazier()` 44 · `artIceGate()` 45 · `artIceBolt()` 46 · `artWarp()` 47 · `artStele()` 48 · `artBoat()` 49 · `artRelief()` 50 · `artSealDoor()` 51 · `artGatehouse()` 52 · `artCityWall()` 61 · `artAcademy()` 62 · `artRoot()` 73 · `artLight()` 76 · `artRain()` 77 · `artRainBg()` 87 · `artShadowSoft()` 97 · `artFog()` 118 · `artRipple()` 119 · `artSprout()` 120 · `shadowCanvas()` 122 · `artLightP()` 130 · `artCanopyOverhang()` 131
 
 ## src/art/interior.js (62 baris)
 _Lantai & perabot interior_
 `FURN` 4 · `drawFurn()` 5 · `genRoom()` 15 · `artMusicBox()` 28
 
-## src/world/objects.js (368 baris)
+## src/world/objects.js (370 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 367
+`OBJ` 7 · `MAPS` 369
 
 ## src/world/spawn/spawn_1.js (362 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 `OBJ_SPAWN` 3 · obj `shrine` 5 · obj `cavemouth` 8 · obj `sign` 11 · obj `forge` 21 · obj `pebbles` 31 · obj `telescope` 39 · obj `altar` 47 · obj `fieldoven` 55 · obj `dripstone` 63 · obj `frostflower` 71 · obj `totem` 79 · obj `pigeons` 87 · obj `teatable` 95 · obj `lotuspad` 103 · obj `dockboat` 111 · obj `coffeeshrub` 166 · obj `coffeekettle` 174 · obj `orchidrock` 182 · obj `canaryperch` 190 · obj `woodlandshrine` 198 · obj `bellows` 206 · obj `ringbooth` 214 · obj `archerytarget` 222 · obj `lakelighthouse` 230 · obj `streetdrum` 238 · obj `dummy` 246 · obj `pot` 254 · obj `well` 264 · obj `apple1` 279 · obj `bench` 284 · obj `bell` 300 · obj `campfire` 308 · obj `alchemytable` 325 · obj `scenicbench` 334 · obj `mailbox` 352
 
-## src/world/spawn/spawn_2.js (310 baris)
+## src/world/spawn/spawn_2.js (320 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `goblin_torch` 219 · obj `goblin_cauldron` 222 · obj `cryst` 231 · obj `lamp` 234 · obj `viewpoint` 237 · obj `lumina_shard` 271 · obj `gatehouse` 293
+obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 219 · obj `tree_redwood` 226 · obj `goblin_torch` 229 · obj `goblin_cauldron` 232 · obj `cryst` 241 · obj `lamp` 244 · obj `viewpoint` 247 · obj `lumina_shard` 281 · obj `gatehouse` 303
 
 ## src/world/ground.js (381 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
@@ -135,9 +135,9 @@ _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan k
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 
-## src/world/maps/wild.js (125 baris)
+## src/world/maps/wild.js (186 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
-`ruinRing` 5
+`ruinRing` 5 · `deepwoodPaths` 15 · `deepwoodPonds` 19 · `snailSwarm` 20
 
 ## src/world/maps/interiors.js (70 baris)
 _Interior: penginapan, rumah pohon, rumah Lina_
@@ -187,7 +187,7 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 25 · `shadowIndex()` 26
 
-## src/gfx/textures.js (192 baris)
+## src/gfx/textures.js (195 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `imgSubdir()` 23 · `loadImgs()` 42 · `addStrip()` 56 · `darkTree()` 61 · `NPC_W` 63 · `regPortrait()` 64 · `regChar()` 69 · `buildTextures()` 86
 
@@ -439,7 +439,7 @@ _MODE BENUA (dunia satu peta, tahap 1): semua wilayah luar ruang dibangun SEKALI
 _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat Arka berada, teleport tanpa memuat ulang._
 `KEMBARA_POS` 20 · `.initBenua()` 25 · `.withRegion()` 39 · `.spawnRegionFx()` 44 · `.streamObjs()` 69 · `.benuaAmbient()` 88 · `.benuaWeather()` 98 · `.updBenua()` 107
 
-## src/systems/biometint.js (57 baris)
+## src/systems/biometint.js (62 baris)
 _Warna Langit/Cahaya Ikut Bioma (T457)_
 
 
@@ -563,11 +563,11 @@ _T442 & T445: Data tebing M.cliffs = [[x1, y1, x2, y2, 'S'|'N'|'E'|'W'], ...]_
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
 `FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `foamTex()` 32 · `isShorelineAt()` 39 · `.updFlow()` 51 · `_updFlow0` 93
 
-## src/systems/atmos.js (118 baris)
+## src/systems/atmos.js (129 baris)
 _Suasana cahaya & kabut (wilayah aktif saja):_
-`ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `.updAmbientMotes()` 26 · `.updAtmos()` 72
+`ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `.updAmbientMotes()` 26 · `.updAtmos()` 74
 
-## src/systems/sunbeams.js (72 baris)
+## src/systems/sunbeams.js (74 baris)
 _T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_
 
 

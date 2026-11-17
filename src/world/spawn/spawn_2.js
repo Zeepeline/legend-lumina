@@ -216,6 +216,16 @@ Object.assign(OBJ_SPAWN, {
       s.anims.timeScale = 0.85 + (Math.abs(Math.sin(x * 12.9898 + y * 78.233)) * 0.3);
     }
   },
+  treeRedwood(s, x, y, opt, d, type) {
+    const animKey = 'tree_redwood_sway';
+    if (this.anims.exists(animKey)) {
+      s.play({ key: animKey, startFrame: Math.abs(Math.round(x * 7 + y * 13)) % 8 });
+      s.anims.timeScale = 0.85 + (Math.abs(Math.sin(x * 12.9898 + y * 78.233)) * 0.3);
+    }
+  },
+  tree_redwood(s, x, y, opt, d, type) {
+    this.treeRedwood(s, x, y, opt, d, type);
+  },
   goblin_torch(s, x, y) {
     this.lights.push({ x, y: y - 24, big: 1 });
   },

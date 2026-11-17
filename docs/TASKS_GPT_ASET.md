@@ -133,62 +133,62 @@ Obrolan "Patokan". Kerjakan A1 dulu: itu jadi STYLE KEY untuk semua obrolan lain
 
 ## B. Tanah, air, tebing, ladang
 Obrolan "Tanah".
-### [x] G011. padang: tekstur tanah utama (mulus, diulang)
+### [ ] G011. padang: tekstur tanah utama (mulus, diulang)
 - Simpan: `assets/raw/gpt2/tanah/padang_dasar.png` · Ukuran di game: 256×256 px di game (diulang tanpa sambungan)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of sun-baked yellow-green meadow grass. Very low contrast, no single object stands out, subtle variation only.`
-- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol. Selesai disetujui & mulus sempurna.
-### [x] G012. padang: tekstur tanah kedua (jalan/petak)
+- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol.
+### [ ] G012. padang: tekstur tanah kedua (jalan/petak)
 - Simpan: `assets/raw/gpt2/tanah/padang_jalan.png` · Ukuran di game: 256×256 px di game (diulang)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of warm ochre dirt.`
-- Cek: Mulus saat diulang 2×2. Selesai disetujui & mulus sempurna.
-### [x] G013. padang: potongan tepi antara rumput & jalan
+- Cek: Mulus saat diulang 2×2.
+### [ ] G013. padang: potongan tepi antara rumput & jalan
 - Simpan: `assets/raw/gpt2/tanah/padang_tepi.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Edge pieces where sun-baked yellow-green meadow grass overlaps warm ochre dirt: the grass edge is soft and scalloped with small leafy bumps (no hard line). Row 1: straight edge facing up, right, down, left. Row 2: four outer corners. Row 3: four inner corners. Row 4: four small isolated grass islands. Each piece shows ONLY the grass part with its leafy rim; the rest of the cell is magenta.`
-- Cek: Tepi rumput bergerigi daun lembut seperti gambar patokan; bagian jalan = magenta. Selesai dipotong 12 ubin tepi 32×32 px + 4 pulau rumput stepping patch.
-### [x] G014. padang: hiasan tanah kecil
+- Cek: Tepi rumput bergerigi daun lembut seperti gambar patokan; bagian jalan = magenta.
+### [ ] G014. padang: hiasan tanah kecil
 - Simpan: `assets/raw/gpt2/tanah/padang_hiasan.png` · Ukuran di game: tiap hiasan 6–20 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] 16 small ground decorations for sun-baked yellow-green meadow grass: grass tufts, tiny weeds, pebbles, twigs, fallen leaves, small flowers, a mushroom. All tiny and flat to the ground.`
-- Cek: Kecil & rendah; tidak ada yang lebih besar dari 1/4 sel. Selesai dipotong 16 varian + ekspor 16 sprite game ke `assets/img/nature/clutter_*.png`.
-### [x] G015. padang: tepi air (tebing kecil tanah ke air)
+- Cek: Kecil & rendah; tidak ada yang lebih besar dari 1/4 sel.
+### [ ] G015. padang: tepi air (tebing kecil tanah ke air)
 - Simpan: `assets/raw/gpt2/tanah/padang_tepiair.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Shoreline pieces where sun-baked yellow-green meadow grass meets calm water: a thin darker earth lip, a few reeds and pebbles at the waterline. Row 1: straight shore facing up, right, down, left. Row 2: outer corners. Row 3: inner corners. Row 4: four small rocks/reed clumps standing in water. Only the land part is drawn; water area is magenta.`
-- Cek: Hanya bagian darat yang digambar; air = magenta. Selesai dipotong 12 ubin tepian 32×32 px + 4 objek air (batu & alang-alang) bersih transparan.
-### [x] G016. hutan: tekstur tanah utama (mulus, diulang)
+- Cek: Hanya bagian darat yang digambar; air = magenta.
+### [ ] G016. hutan: tekstur tanah utama (mulus, diulang)
 - Simpan: `assets/raw/gpt2/tanah/hutan_dasar.png` · Ukuran di game: 256×256 px di game (diulang tanpa sambungan)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of slightly deeper green forest grass with tiny leaf litter. Very low contrast, no single object stands out, subtle variation only.`
-- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol. Selesai disetujui & mulus sempurna (selisih sambungan hanya 0.26 RGB).
-### [x] G017. hutan: tekstur tanah kedua (jalan/petak)
+- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol.
+### [ ] G017. hutan: tekstur tanah kedua (jalan/petak)
 - Simpan: `assets/raw/gpt2/tanah/hutan_jalan.png` · Ukuran di game: 256×256 px di game (diulang)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of brown-ochre forest dirt with twigs.`
-- Cek: Mulus saat diulang 2×2. Selesai disetujui & mulus sempurna (selisih sambungan hanya ~1.0 RGB).
-### [x] G018. hutan: potongan tepi antara rumput & jalan
+- Cek: Mulus saat diulang 2×2.
+### [ ] G018. hutan: potongan tepi antara rumput & jalan
 - Simpan: `assets/raw/gpt2/tanah/hutan_tepi.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Edge pieces where slightly deeper green forest grass with tiny leaf litter overlaps brown-ochre forest dirt with twigs: the grass edge is soft and scalloped with small leafy bumps (no hard line). Row 1: straight edge facing up, right, down, left. Row 2: four outer corners. Row 3: four inner corners. Row 4: four small isolated grass islands. Each piece shows ONLY the grass part with its leafy rim; the rest of the cell is magenta.`
-- Cek: Tepi rumput bergerigi daun lembut seperti gambar patokan; bagian jalan = magenta. Selesai dipotong 12 ubin tepi 32×32 px + 4 pulau rumput stepping patch.
-### [x] G019. hutan: hiasan tanah kecil
+- Cek: Tepi rumput bergerigi daun lembut seperti gambar patokan; bagian jalan = magenta.
+### [ ] G019. hutan: hiasan tanah kecil
 - Simpan: `assets/raw/gpt2/tanah/hutan_hiasan.png` · Ukuran di game: tiap hiasan 6–20 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] 16 small ground decorations for slightly deeper green forest grass with tiny leaf litter: grass tufts, tiny weeds, pebbles, twigs, fallen leaves, small flowers, a mushroom. All tiny and flat to the ground.`
-- Cek: Kecil & rendah; tidak ada yang lebih besar dari 1/4 sel. Selesai dipotong 16 varian + ekspor 16 sprite game ke `assets/img/nature/fclutter_*.png`.
-### [x] G020. hutan: tepi air (tebing kecil tanah ke air)
+- Cek: Kecil & rendah; tidak ada yang lebih besar dari 1/4 sel.
+### [ ] G020. hutan: tepi air (tebing kecil tanah ke air)
 - Simpan: `assets/raw/gpt2/tanah/hutan_tepiair.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Shoreline pieces where slightly deeper green forest grass with tiny leaf litter meets calm water: a thin darker earth lip, a few reeds and pebbles at the waterline. Row 1: straight shore facing up, right, down, left. Row 2: outer corners. Row 3: inner corners. Row 4: four small rocks/reed clumps standing in water. Only the land part is drawn; water area is magenta.`
-- Cek: Hanya bagian darat yang digambar; air = magenta. Selesai dipotong 12 ubin tepian 32×32 px + 4 objek perairan hutan.
-### [x] G021. hutan dalam: tekstur tanah utama (mulus, diulang)
+- Cek: Hanya bagian darat yang digambar; air = magenta.
+### [ ] G021. hutan dalam: tekstur tanah utama (mulus, diulang)
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_dasar.png` · Ukuran di game: 256×256 px di game (diulang tanpa sambungan)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of dark mossy forest floor with moss tufts. Very low contrast, no single object stands out, subtle variation only.`
-- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol. Selesai disetujui & mulus sempurna.
-### [x] G022. hutan dalam: tekstur tanah kedua (jalan/petak)
+- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol.
+### [ ] G022. hutan dalam: tekstur tanah kedua (jalan/petak)
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_jalan.png` · Ukuran di game: 256×256 px di game (diulang)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of damp dark-brown soil with roots.`
-- Cek: Mulus saat diulang 2×2. Selesai disetujui & mulus sempurna.
-### [x] G023. hutan dalam: potongan tepi antara rumput & jalan
+- Cek: Mulus saat diulang 2×2.
+### [ ] G023. hutan dalam: potongan tepi antara rumput & jalan
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_tepi.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Edge pieces where dark mossy forest floor with moss tufts overlaps damp dark-brown soil with roots: the grass edge is soft and scalloped with small leafy bumps (no hard line). Row 1: straight edge facing up, right, down, left. Row 2: four outer corners. Row 3: four inner corners. Row 4: four small isolated grass islands. Each piece shows ONLY the grass part with its leafy rim; the rest of the cell is magenta.`
-- Cek: Tepi rumput bergerigi daun lembut seperti gambar patokan; bagian jalan = magenta. Selesai dipotong 12 ubin tepi 32×32 px + 4 pulau lumut stepping patch.
-### [x] G024. hutan dalam: hiasan tanah kecil
+- Cek: Tepi rumput bergerigi daun lembut seperti gambar patokan; bagian jalan = magenta.
+### [ ] G024. hutan dalam: hiasan tanah kecil
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_hiasan.png` · Ukuran di game: tiap hiasan 6–20 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] 16 small ground decorations for dark mossy forest floor with moss tufts: grass tufts, tiny weeds, pebbles, twigs, fallen leaves, small flowers, a mushroom. All tiny and flat to the ground.`
-- Cek: Kecil & rendah; tidak ada yang lebih besar dari 1/4 sel. Selesai dipotong 16 varian + ekspor 16 sprite game ke `assets/img/nature/dwclutter_*.png`.
+- Cek: Kecil & rendah; tidak ada yang lebih besar dari 1/4 sel.
 ### [ ] G025. hutan dalam: tepi air (tebing kecil tanah ke air)
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_tepiair.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Shoreline pieces where dark mossy forest floor with moss tufts meets calm water: a thin darker earth lip, a few reeds and pebbles at the waterline. Row 1: straight shore facing up, right, down, left. Row 2: outer corners. Row 3: inner corners. Row 4: four small rocks/reed clumps standing in water. Only the land part is drawn; water area is magenta.`
@@ -378,10 +378,10 @@ Obrolan "Vegetasi".
 - Simpan: `assets/raw/gpt2/vegetasi/pohon_hutan_dalam.png` · Ukuran di game: pohon 48–96 px tinggi
 - Prompt: `[LAYOUT: OBJ 2x2] 4 giant ancient trees: mossy trunk, hollow trunk, a tree with an owl hole, a tree with a beehive. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
 - Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel. Selesai dipotong 4 varian + animasi sway 8 frame ke `assets/img/nature/deepwood_*.png`.
-### [ ] G075. pohon jarum
-- Simpan: `assets/raw/gpt2/vegetasi/pohon_jarum.png` · Ukuran di game: pohon 48–96 px tinggi
-- Prompt: `[LAYOUT: OBJ 2x2] 4 conifers: tall pine, short pine, cool blue-green fir, a dead pine. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
-- Cek: Pangkal batang/akar di garis bawah sel; tidak terpotong tepi sel.
+### [ ] G075. pohon jarum (conifer tinggi & sedang)
+- Simpan: `assets/raw/gpt2/vegetasi/pohon_jarum.png` · Ukuran di game: pohon sedang 96–112 px & tinggi 160–192 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 tall evergreen conifers for top-down 2D pixel RPG: tall ancient pine (high-trunk design with lower 45% clear bare trunk before needle canopy starts), blue-green spruce fir, twisted mountain pine, dead snag conifer. 1:1 native pixel density matching a 32px adventurer. Soft contact shadow at base. Warm sunlight from top-left, deep shadowed needles on bottom-right.`
+- Cek: Batang bawah bersih agar tidak menghalangi gerak pemain; rasio piksel 1:1 identik dengan karakter.
 ### [ ] G076. pohon rawa
 - Simpan: `assets/raw/gpt2/vegetasi/pohon_rawa.png` · Ukuran di game: pohon 48–96 px tinggi
 - Prompt: `[LAYOUT: OBJ 2x2] 4 swamp trees: twisted dead tree, mangrove with arching roots, weeping willow, hollow mangrove. Each sits on the same baseline; soft contact shadow allowed only as a separate darker blob under the base (no long cast shadow).`
@@ -1438,19 +1438,20 @@ Obrolan "Vegetasi" (lanjutan). Tujuan: pohon terlihat tumbuh dari tanah, kanopi 
 - Simpan: `assets/raw/gpt2/vegetasi/anakan.png` · Ukuran di game: tinggi 12–24 px
 - Prompt: `[LAYOUT: STAMP 4x4] 16 tree saplings and seedlings: thin stems with a few leaves, small young bushes turning into trees, a sapling with a protective stick, a sprouting acorn.`
 
-### [ ] G353. Pohon muda
-- Simpan: `assets/raw/gpt2/vegetasi/pohon_muda.png` · Ukuran di game: tinggi 32–48 px
-- Prompt: `[LAYOUT: OBJ 2x2] 4 young forest trees: slender trunks, small airy canopies with light passing through, slightly different species (oak-like, birch-like with pale bark, chestnut-like, maple-like).`
-- Cek: Lebih kecil & lebih terang dari pohon dewasa.
+### [ ] G353. Pohon muda & sedang (skala 1:1)
+- Simpan: `assets/raw/gpt2/vegetasi/pohon_muda.png` · Ukuran di game: tinggi 96–112 px (~3× tinggi Arka)
+- Prompt: `[LAYOUT: OBJ 2x2] 4 young-to-medium forest trees for top-down 16-bit RPG: slender mossy trunks, airy layered canopies, 1:1 crisp pixel clusters with zero blur. Each sits on the same baseline; soft dark contact shadow under base. Different species: birch-like pale bark, young oak, wild chestnut, hornbeam. Consistent sunlight from top-left.`
+- Cek: Lebih ramping dari pohon dewasa, tinggi kanvas ~3x karakter 32px.
 
-### [ ] G354. Pohon dewasa variasi spesies
-- Simpan: `assets/raw/gpt2/vegetasi/pohon_dewasa_b.png` · Ukuran di game: tinggi 64–80 px
-- Prompt: `[LAYOUT: OBJ 2x2] 4 mature forest trees of different species from the earlier forest trees: pale-barked birch-like tree, broad chestnut-like tree, tall ash-like tree, a leaning tree with a split trunk.`
-- Cek: Siluet tiap pohon berbeda jelas.
+### [ ] G354. Pohon hutan tinggi high-trunk (skala 1:1, zero mixels)
+- Simpan: `assets/raw/gpt2/vegetasi/pohon_hutan_tinggi.png` · Ukuran di game: tinggi 160–192 px (~5× tinggi Arka), kanopi lebar 112–144 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 tall cathedral forest trees for top-down 2D pixel RPG (CrossCode / Eastward standard): high-trunk architecture where the lower 45% of total tree height is a straight bare mossy trunk before the wide layered canopy branches out, giving clear gameplay space below. Trunk base has buttress roots 1.5x hero width. 1:1 native pixel ratio (leaf clusters identical in pixel density to 96px trees, NOT scaled up). Top-left warm sunlight highlights, deep olive shadow cores.`
+- Cek: Batang bawah cukup tinggi (45% total tinggi) agar karakter bisa leluasa bergerak di bawahnya.
 
-### [ ] G355. Pohon raksasa akar terbuka
-- Simpan: `assets/raw/gpt2/vegetasi/pohon_raksasa.png` · Ukuran di game: tinggi 96–128 px
-- Prompt: `[LAYOUT: OBJ 2x2] 4 giant ancient forest trees: massive trunks with exposed roots, vines and moss, canopies that would cover a whole clearing, one with a doorway-like hollow, one with glowing mushrooms on the bark.`
+### [ ] G355. Pohon purba raksasa akar terbuka (skala 1:1, cathedral canopy)
+- Simpan: `assets/raw/gpt2/vegetasi/pohon_raksasa.png` · Ukuran di game: tinggi 192–224 px (~6× tinggi Arka), kanopi lebar 128–160 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 colossal ancient forest trees for top-down 2D pixel RPG: massive towering trunks with thick buttress roots spreading across the ground, hanging vines, hollows, and enormous asymmetric layered canopies. High-trunk design with lower 40-50% clear trunk space. 1:1 native pixel density matching a 32px hero. Top canopy edges natural and uneven, with warm golden highlights from top-left and deep mossy shadows below. Baseline grounding shadow included.`
+- Cek: Pohon benar-benar menjulang raksasa (5x-6x karakter), daun bertekstur pixel crisp tanpa blur/mixels.
 
 ### [ ] G356. Tumbuhan bawah rapat
 - Simpan: `assets/raw/gpt2/vegetasi/semak_tinggi.png` · Ukuran di game: tinggi 16–32 px

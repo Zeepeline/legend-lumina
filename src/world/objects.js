@@ -183,6 +183,8 @@ const OBJ = {
   },
   streetdrum: { key: "streetdrum", col: [18, 10, 0], sh: [14, 3], fade: 1 },
   pot: { key: "i_pot", col: [14, 5, 2], sh: [8, 2] },
+  treeRedwood: { key: "tree_redwood", col: [24, 10, 2], sh: [44, 12], fade: 1 },
+  tree_redwood: { key: "tree_redwood", col: [24, 10, 2], sh: [44, 12], fade: 1 },
   treeA: { key: "i_treeA", col: [10, 6, 2], sh: [18, 5], fade: 1 },
   treeB: { key: "i_treeA", col: [10, 6, 2], sh: [18, 5], fade: 1 },
   treeAd: { key: "treeAd", col: [10, 6, 2], sh: [18, 5], fade: 1 },

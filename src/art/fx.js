@@ -128,3 +128,20 @@ function shadowCanvas(src, sx, sy, w, h) {
   return { c, pad, shH };
 }
 function artLightP(r, peak) { const s = r * 2, [c, x] = mk(s, s); const g = x.createRadialGradient(r, r, 0, r, r, r); g.addColorStop(0, `rgba(255,255,255,${peak})`); g.addColorStop(.5, `rgba(255,255,255,${peak * .55})`); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, s, s); return c; }
+function artCanopyOverhang() {
+  const [c, x] = mk(256, 56);
+  for (let i = 0; i < 22; i++) {
+    const h1 = typeof hash === 'function' ? hash(i, 1, 71) : Math.sin(i * 71);
+    const h2 = typeof hash === 'function' ? hash(i, 2, 71) : Math.cos(i * 71);
+    const h3 = typeof hash === 'function' ? hash(i, 3, 71) : Math.abs(Math.sin(i * 3));
+    const h4 = typeof hash === 'function' ? hash(i, 4, 71) : Math.abs(Math.cos(i * 4));
+    const cx = (i * 12 + h1 * 16) % 256, cy = -8 + h2 * 16;
+    const rx = 18 + h3 * 20, ry = 16 + h4 * 22;
+    ellF(x, '#102214', cx, cy, rx, ry);
+    ellF(x, '#1a341e', cx - 2, cy - 2, rx * .8, ry * .8);
+    ellF(x, '#244828', cx - 4, cy - 4, rx * .5, ry * .5);
+  }
+  return c;
+}
+if (typeof window !== 'undefined') window.artCanopyOverhang = artCanopyOverhang;
+

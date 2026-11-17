@@ -37,9 +37,11 @@
     let beamStrength = 0, beamCol = 0xfff4c2;
     if (isForest && h >= 6 && h <= 9) {
       beamStrength = 1 - Math.abs(h - 7.5) / 1.5;
+      if (mId === 'deepwood') beamStrength *= 0.25; // Kanopi redwood sangat rapat, sinar matahari berkurang drastis
       beamCol = 0xfff4c2;
     } else if (isOutdoor && h >= 15.8 && h <= 18.6) {
       beamStrength = (1 - Math.abs(h - 17.2) / 1.4) * 0.92;
+      if (mId === 'deepwood') beamStrength *= 0.2;
       beamCol = 0xffcb58;
     }
 

@@ -61,7 +61,7 @@ function applyGptSwap(T, A) {
     const tw = T.addImage('well', IMGEL['gpt_v_village_well']);
     tw.add(0, 0, 0, 0, IMGEL['gpt_v_village_well'].width, IMGEL['gpt_v_village_well'].height);
   }
-  for (const tk of ['tree_apple_fruit', 'tree_apple_bare']) {
+  for (const tk of ['tree_apple_fruit', 'tree_apple_bare', 'tree_redwood']) {
     const img = IMGEL[tk];
     if (img && img.width > img.height * 4) {
       if (T.exists(tk)) T.remove(tk);
