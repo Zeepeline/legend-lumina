@@ -104,7 +104,9 @@ function getTileData(k) {
   const el = (typeof IMGEL !== 'undefined' && (IMGEL['gpt_' + k] || IMGEL[k]));
   if (!el || !el.width) { TILE_CACHE[k] = null; return null; }
   const [c, ctx] = mk(el.width, el.height); ctx.drawImage(el, 0, 0);
-  TILE_CACHE[k] = ctx.getImageData(0, 0, el.width, el.height).data;
+  const d = ctx.getImageData(0, 0, el.width, el.height).data;
+  d.size = el.width;
+  TILE_CACHE[k] = d;
   return TILE_CACHE[k];
 }
 function genGround(M, rect) {
@@ -127,7 +129,7 @@ function genGround(M, rect) {
     }
     return { m: d2 - d1, id, v: (x - fx) + (y - fy) };
   };
-  const VW = VERDANT[M.ground] && !GP.ice && verdantTiles();
+  const VW = VERDANT[M.ground] && !GP.ice && verdantTiles(M);
   const water = (i, t, x, y) => { if (VW) { put(i, verdantWater(t, x + GX, y + GY)); return; } let c = GP.ice ? (t > .82 ? '#e8f8ff' : t > .55 ? '#c4e8f8' : '#a8d8f0') : t > .82 ? '#7cd0f0' : t > .55 ? '#4aa6e0' : '#3a8ed0'; const rp = Math.sin(x * .15 + y * .9) + Math.sin(x * .05 - y * .3) * 1.3; if (rp > 1.85 && t < .8) c = '#a8e8ff'; put(i, h2r(c)); };
   for (let y = RY; y < RY + RH; y++) for (let x = RX; x < RX + RW; x++) {
     const i = ((y - RY) * RW + (x - RX)) * 4;
@@ -196,7 +198,7 @@ function genGround(M, rect) {
     const n = vnoise(x + GX, y + GY, 26, 1) * .55 + vnoise(x + GX, y + GY, 8, 2) * .45;
     let k = n < .33 ? 0 : n < .5 ? 1 : n < .68 ? 2 : 3, f = 0;
     if (glow && !VW) { const g = Math.max(0, 1 - Math.hypot(x - glow[0], (y - glow[1]) * 1.3) / glow[2]); f = g * g * .16; }
-    if (d < 2.2 && !(VERDANT[M.ground] && GP.path === 'dirt' && verdantTiles())) { put(i, EDGE, f * .5); continue; }
+    if (d < 2.2 && !(VERDANT[M.ground] && GP.path === 'dirt' && verdantTiles(M))) { put(i, EDGE, f * .5); continue; }
     if (d < 4 && hash(x, y, 4) > .5) k = Math.max(0, k - 1);
     const vc = VERDANT[M.ground] && verdantPix(M, x + GX, y + GY);
     if (vc) {
@@ -214,7 +216,7 @@ function genGround(M, rect) {
     for (let n = 0; n < W * H / 260; n++) { const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); if (out(X, Y)) continue; const d = sd(X, Y); if (d > 2 && d < 60 && hash(n, 3, 22) > .6) { const col = hash(n, 4, 22) > .5 ? '#9a6aff' : '#5ac8ff'; px(x, col, X, Y); px(x, shade(col, .5), X, Y - 1); } else if (d < -4) { px(x, '#6a6476', X, Y); } }
     return c;
   }
-  const vOK = VERDANT[M.ground] && verdantTiles();
+  const vOK = VERDANT[M.ground] && verdantTiles(M);
   if (vOK) verdantDeco(x, M, [RX, RY, RW, RH], GX, GY, sd, near);
   if (!vOK) for (let n = 0; n < W * H / (M.flowers ? 60 : 90); n++) {
     const X = Math.floor(hash(n, 1, 21) * W), Y = Math.floor(hash(n, 2, 21) * H); if (out(X, Y)) continue;

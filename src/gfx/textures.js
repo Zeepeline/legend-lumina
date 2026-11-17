@@ -33,7 +33,9 @@ function imgSubdir(k) {
     k === 'fountain' || k === 'market' || /^house[ABC]$/.test(k) ||
     k.startsWith('gpt_gatehouse') || k === 'gpt_cwall' || k === 'gpt_ctower' || k === 'gpt_city_bridge') return 'buildings';
   if (k.startsWith('gpt_city_flower')) return 'props';
-  if (k.startsWith('clutter_') || k.startsWith('fclutter_') || k.startsWith('dwclutter_') || /tree|pine|bush|apple|orange|stump|log|rock|pebble|mush|cliff|flower/i.test(k) ||
+  if (k.startsWith('clutter_') || k.startsWith('fclutter_') || k.startsWith('dwclutter_') ||
+    k.startsWith('water_') || k.startsWith('fwater_') || k.includes('island') ||
+    /tree|pine|bush|apple|orange|stump|log|rock|pebble|mush|cliff|flower/i.test(k) ||
     k.startsWith('gpt_city_rock') || k.startsWith('gpt_city_cliff')) return 'nature';
   return 'props';
 }
