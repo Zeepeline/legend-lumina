@@ -106,7 +106,7 @@ Obrolan "Patokan". Kerjakan A1 dulu: itu jadi STYLE KEY untuk semua obrolan lain
 - Simpan: `assets/raw/gpt2/patokan/desa.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of a small farming village square: timber-and-plaster cottages with thatched and red-tiled roofs, a stone well, a market stall, fences, vegetable plots, warm golden light. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: Warna & cahaya cocok dengan blok gaya; tidak ada teks/logo; skala karakter kecil.
-### [ ] G005. Gambar patokan suasana: rawa
+### [x] G005. Gambar patokan suasana: rawa
 - Simpan: `assets/raw/gpt2/patokan/rawa.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of a murky swamp: olive water with lily pads, reeds, twisted dead trees, wooden boardwalk, low mist, muted sickly greens. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: Warna & cahaya cocok dengan blok gaya; tidak ada teks/logo; skala karakter kecil.
