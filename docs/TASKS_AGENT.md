@@ -4147,7 +4147,7 @@ Fokus: menyuntikkan kehidupan pada alam, cuaca, vegetasi, air, dan pemukiman den
 ## W. GELOMBANG 22 — Ekosistem & Kehidupan NPC Organik (T575–T579)
 Fokus: menyempurnakan fisika pergerakan, proporsi tubuh, kecerdasan buatan (AI), dan interaksi sosial NPC agar dunia Lumina terasa berpenghuni nyata, hidup, dan bernapas ala JRPG modern (Red Dead Redemption 2, Octopath Traveler II, Stardew Valley, Genshin Impact).
 
-### [ ] T575. **Fisika Pergerakan Halus NPC (Anti-Seret, Akselerasi/Deselerasi & Bobbing Langkah)** — referensi: Octopath Traveler II, Eastward
+### [x] T575. **Fisika Pergerakan Halus NPC (Anti-Seret, Akselerasi/Deselerasi & Bobbing Langkah)** — referensi: Octopath Traveler II, Eastward
 - File: `src/npc/brain.js` & `src/npc/npcs.js`.
 - Masalah: NPC saat ini langsung melonjak ke kecepatan penuh dan berhenti mendadak saat sampai atau saat didekati Arka (`setVelocity` instan), sehingga tampak kaku seperti diseret atau diteleportasi.
 - Lakukan:
@@ -4157,7 +4157,7 @@ Fokus: menyempurnakan fisika pergerakan, proporsi tubuh, kecerdasan buatan (AI),
   4. Berikan jeda ancang-ancang arah (*turn anticipation*): saat mengubah arah pandang/gerak lebih dari 90 derajat, NPC berhenti sesaat (0.15 detik) untuk menoleh sebelum melangkahkan kaki.
 - Hasil: gerakan patroli dan jalan-jalan NPC tampak luwes, natural, memiliki bobot fisik, dan bebas dari kesan "diseret".
 
-### [ ] T576. **Standardisasi Proporsi & Rasio Ukuran NPC Sebanding Arka** — referensi: Chrono Trigger, Sea of Stars
+### [x] T576. **Standardisasi Proporsi & Rasio Ukuran NPC Sebanding Arka** — referensi: Chrono Trigger, Sea of Stars
 - File: `src/scene/world.js`, `src/art/characters.js`, & `src/gfx/textures.js`.
 - Masalah: Sprite NPC lama berukuran 20×26 px sehingga tampak terlalu kurus, kerdil, atau tidak proporsional saat berdiri bersisian dengan sprite Arka (hero_arka frame 48×40 dengan tinggi karakter ~30–32 px).
 - Lakukan:
@@ -4170,7 +4170,7 @@ Fokus: menyempurnakan fisika pergerakan, proporsi tubuh, kecerdasan buatan (AI),
   3. Sesuaikan ukuran collider kaki (`s.body.setSize`) dan bayangan dasar elips (`shadow`) agar proporsional dengan skala baru tiap karakter.
 - Hasil: semua NPC memiliki proporsi tubuh yang serasi, seimbang, dan konsisten saat berdampingan dengan Arka.
 
-### [ ] T577. **Sistem Perilaku Mikro & Gestur Hidup NPC (*Micro-Idle Behaviors & Living Gestures*)** — referensi: Red Dead Redemption 2, Stardew Valley
+### [x] T577. **Sistem Perilaku Mikro & Gestur Hidup NPC (*Micro-Idle Behaviors & Living Gestures*)** — referensi: Red Dead Redemption 2, Stardew Valley
 - File: `src/npc/brain.js` & `src/npc/npcs.js`.
 - Lakukan:
   1. Saat NPC sedang diam atau menunggu di tempat kerja, sematkan tingkah laku mikro acak berkala (tiap 3–7 detik):
@@ -4181,7 +4181,7 @@ Fokus: menyempurnakan fisika pergerakan, proporsi tubuh, kecerdasan buatan (AI),
   2. Variasikan kecepatan jalan santai antar NPC (warga tua berjalan lebih lambat ~22 spd, anak-anak berlari ~45 spd, pengantar surat melangkah gesit ~36 spd).
 - Hasil: NPC yang sedang berdiam tidak lagi mematung kaku, melainkan menunjukkan gerak-gerik alami makhluk hidup.
 
-### [ ] T578. **Interaksi Sosial Spontan Antar Warga (*Dynamic Citizen Encounters & Chatter*)** — referensi: The Legend of Zelda: Majora's Mask, Skyrim
+### [x] T578. **Interaksi Sosial Spontan Antar Warga (*Dynamic Citizen Encounters & Chatter*)** — referensi: The Legend of Zelda: Majora's Mask, Skyrim
 - File: `src/npc/brain.js` & `src/npc/crowd.js`.
 - Lakukan:
   1. Saat dua NPC patroli/warga berpapasan dalam jarak dekat (radius 24 px) di jalan setapak:
@@ -4191,7 +4191,7 @@ Fokus: menyempurnakan fisika pergerakan, proporsi tubuh, kecerdasan buatan (AI),
   2. Saat berkumpul di dekat sumur desa, papan pengumuman, atau bangku taman, NPC dapat membentuk lingkaran obrolan kecil kelompok (2–3 warga) bertukar cerita.
 - Hasil: desa dan kota terasa ramai dengan interaksi sosial warga yang saling menyapa secara mandiri.
 
-### [ ] T579. **Reaksi Situasional NPC Terhadap Aksi Pemain (*Reactive Awareness to Arka's Actions*)** — referensi: Breath of the Wild, GTA
+### [x] T579. **Reaksi Situasional NPC Terhadap Aksi Pemain (*Reactive Awareness to Arka's Actions*)** — referensi: Breath of the Wild, GTA
 - File: `src/npc/brain.js`, `src/scene/world.js`, & `src/systems/combat.js`.
 - Lakukan:
   1. *Lari Cepat / Dash*: Jika Arka melakukan roll/dash kencang memotong jalan tepat di samping NPC (< 20 px), NPC sedikit tersentak ke samping dengan emote `❗` atau `😮` sesaat sebelum kembali tenang.
@@ -4201,57 +4201,68 @@ Fokus: menyempurnakan fisika pergerakan, proporsi tubuh, kecerdasan buatan (AI),
 
 ---
 
-## W. GELOMBANG 22 — Ekosistem & Kehidupan NPC Organik (T575–T579)
-Fokus: menyempurnakan fisika pergerakan, proporsi tubuh, kecerdasan buatan (AI), dan interaksi sosial NPC agar dunia Lumina terasa berpenghuni nyata, hidup, dan bernapas ala JRPG modern (Red Dead Redemption 2, Octopath Traveler II, Stardew Valley, Genshin Impact).
+## X. GELOMBANG 23 — Peningkatan Kemegahan Gerbang Masuk Kota Lumina (T580–T584)
+Fokus: merombak gerbang masuk utama Kota Lumina (`kgate` & transisi dari `road`) agar menjadi titik masuk yang megah, hidup, memiliki atmosfer kota metropolitan fantasi abad pertengahan (ala Novigrad di *The Witcher 3*, Tretisva di *Octopath Traveler*, dan *Dragon Quest XI*), lengkap dengan gerbang gapura batu berlapis bayangan, jembatan parit kota, pos karavan pedagang, penjaga bertombak interaktif, serta panji kota yang berkibar.
 
-### [ ] T575. **Fisika Pergerakan Halus NPC (Anti-Seret, Akselerasi/Deselerasi & Bobbing Langkah)** — referensi: Octopath Traveler II, Eastward
-- File: `src/npc/brain.js` & `src/npc/npcs.js`.
-- Masalah: NPC saat ini langsung melonjak ke kecepatan penuh dan berhenti mendadak saat sampai atau saat didekati Arka (`setVelocity` instan), sehingga tampak kaku seperti diseret atau diteleportasi.
+### [ ] T580. **Gapura Batu Megah, Lengkungan Terowongan & Kedalaman Bayangan (*Grand Gatehouse & Shadowed Archway*)** — referensi: Octopath Traveler, The Witcher 3
+- File: `src/world/maps/city.js`, `src/world/objects.js`, & `src/world/spawn/spawn_2.js`.
+- Masalah: Gerbang kota saat ini hanya berupa gambar datar `gatehouse` dengan tembok berulang tanpa kedalaman terowongan atau sensasi memasuki benteng batu kokoh.
 - Lakukan:
-  1. Ganti manipulasi kecepatan instan dengan interpolasi lerp lembut (*smooth velocity ramping*): kecepatan NPC berakselerasi bertahap saat mulai berjalan dan melambat halus (*gentle deceleration*) saat mendekati target (radius 18 px).
-  2. Saat Arka mendekat (< 30 px) atau saat diajak bicara, NPC tidak membeku instan; terapkan pengereman bertahap selama 0.2 detik lalu menoleh perlahan ke arah Arka.
-  3. Tambahkan efek langkah mikro (*footstep stride bobbing*): saat berjalan, tambahkan getaran vertikal ritmis lembut (`scaleY` membal 0.98–1.02 dan offset Y sine wave kecil ±0.8 px seirama langkah) serta hembusan debu mikro sesekali saat memutar arah.
-  4. Berikan jeda ancang-ancang arah (*turn anticipation*): saat mengubah arah pandang/gerak lebih dari 90 derajat, NPC berhenti sesaat (0.15 detik) untuk menoleh sebelum melangkahkan kaki.
-- Hasil: gerakan patroli dan jalan-jalan NPC tampak luwes, natural, memiliki bobot fisik, dan bebas dari kesan "diseret".
+  1. Tata ulang struktur `gatehouse` (koordinat x: 600, y: 424) agar memiliki 3 lapisan visual (*layering depth*):
+     - *Dinding dasar & tiang pilar kiri-kanan*: berkolisi solid (`wall`) dengan tekstur batu bata kokoh.
+     - *Lengkungan lorong bawah (tunnel arch)*: jalur bebas rintangan selebar 72 px di tengah dengan efek bayangan atap lengkung (*dark interior vignette shadow* di lantai) saat pemain melintas di bawahnya.
+     - *Menara atas gerbang (parapet/battlements)*: menggunakan `gpt_gatehouse_top` dengan `setDepth(y + 120)` sehingga Arka benar-benar tampak berjalan "di dalam/di bawah" gerbang sebelum tembus ke sisi utara.
+  2. Apit sisi kiri dan kanan gerbang dengan menara pengawas bundar (`gpt_ctower`) di titik sambungan tembok (`cwall`), menciptakan siluet benteng yang kokoh dan berwibawa.
+  3. Tambahkan kisi jeruji besi gantung (*iron portcullis*) di langit-langit lengkungan gerbang yang tergantung kokoh dengan rantai tebal.
+- Hasil: gerbang kota terasa seperti bangunan benteng pertahanan sungguhan yang megah dan berbobot arsitektural tinggi.
 
-### [ ] T576. **Standardisasi Proporsi & Rasio Ukuran NPC Sebanding Arka** — referensi: Chrono Trigger, Sea of Stars
-- File: `src/scene/world.js`, `src/art/characters.js`, & `src/gfx/textures.js`.
-- Masalah: Sprite NPC lama berukuran 20×26 px sehingga tampak terlalu kurus, kerdil, atau tidak proporsional saat berdiri bersisian dengan sprite Arka (hero_arka frame 48×40 dengan tinggi karakter ~30–32 px).
+### [ ] T581. **Parit Air Pertahanan Kota & Jembatan Lengkung Batu (*Moat Waterway & Stone Arch Bridge Approach*)** — referensi: Final Fantasy IX, Chrono Trigger
+- File: `src/world/maps/city.js` & `src/world/ground.js`.
+- Masalah: Peta gerbang kota langsung bertemu jalan datar dari selatan tanpa rintangan alami atau batas geografis yang menjelaskan mengapa kota ini berbenteng kokoh.
 - Lakukan:
-  1. Sesuaikan skala visual rendering sprite NPC (`s.setScale(...)`) atau kanvas pembentuk sprite agar rasio tinggi dan volume tubuhnya seimbang harmonis dengan Arka.
-  2. Terapkan diferensiasi tinggi badan berbasis peran (`ROLE_HEIGHT_TIER`):
-     - *Anak-anak* (`child`, `rudi`, `girl`, `kb1`, `kb4`): rasio tinggi 0.78x Arka (~24 px), tubuh lebih mungil dan lincah.
-     - *Warga biasa & wanita* (`citizen`, `farmer`, `inn`, `woman`): rasio tinggi 0.95–1.0x Arka (~30–31 px).
-     - *Penjaga, pemburu & pandai besi* (`guard`, `smith`, `hunter`, `gj1`, `gj2`): rasio tinggi 1.05–1.08x Arka (~33–34 px) dengan postur tegap.
-     - *Tetua & petapa* (`elder`, `hermit`): sedikit membungkuk (~28–29 px) namun berbusana jubah bervolume.
-  3. Sesuaikan ukuran collider kaki (`s.body.setSize`) dan bayangan dasar elips (`shadow`) agar proporsional dengan skala baru tiap karakter.
-- Hasil: semua NPC memiliki proporsi tubuh yang serasi, seimbang, dan konsisten saat berdampingan dengan Arka.
+  1. Buat kanal/parit pertahanan air kota (*city moat*) horizontal di depan tembok kota (rentang y: 720–780, lebar 48 px melintang dari barat ke timur menghubungkan kolam kiri dan kanan).
+  2. Bentangkan jembatan batu lengkung megah (`gpt_city_bridge` / jalan batu berpaving tebal dengan pagar pembatas batu) di tengah-tengah parit (x: 550–650) sebagai satu-satunya akses masuk dari Jalan Raya Lama.
+  3. Pasang sepasang lentera jalan bertiang besi (`gpt_city_lamp`) di kedua pangkal jembatan batu dengan efek pendaran cahaya hangat (*warm halo*).
+  4. Hiasi tepian air parit dengan tumbuhan teratai, rumput air, dan bebatuan kali berlumut (`reeds`, `lotuspad`, `pebbles`).
+- Hasil: pendekatan menuju gerbang kota melalui jembatan parit air memberikan kesan dramatis dan monumental saat pertama kali tiba.
 
-### [ ] T577. **Sistem Perilaku Mikro & Gestur Hidup NPC (*Micro-Idle Behaviors & Living Gestures*)** — referensi: Red Dead Redemption 2, Stardew Valley
-- File: `src/npc/brain.js` & `src/npc/npcs.js`.
+### [ ] T582. **Pos Peristirahatan Karavan & Logistik Pedagang Luar Gerbang (*Caravan Encampment & Inspection Logistics*)** — referensi: Dragon Quest XI, Skyrim
+- File: `src/world/maps/city.js` & `src/world/spawn/spawn_1.js`.
+- Masalah: Area depan gerbang masih sepi dan belum memperlihatkan aktivitas ekonomi dunia luar sebelum memasuki pasar kota.
 - Lakukan:
-  1. Saat NPC sedang diam atau menunggu di tempat kerja, sematkan tingkah laku mikro acak berkala (tiap 3–7 detik):
-     - Menoleh ke kiri/kanan mengamati sekeliling secara independen.
-     - Menghela napas/merenggangkan punggung (sedikit stretch vertikal).
-     - Menepuk debu pakaian atau menyeka dahi sehabis bekerja (pandai besi, petani, koki).
-     - Warga yang duduk di bangku sesekali menyilangkan kaki, menyesap teh, atau menengadah memandang langit.
-  2. Variasikan kecepatan jalan santai antar NPC (warga tua berjalan lebih lambat ~22 spd, anak-anak berlari ~45 spd, pengantar surat melangkah gesit ~36 spd).
-- Hasil: NPC yang sedang berdiam tidak lagi mematung kaku, melainkan menunjukkan gerak-gerik alami makhluk hidup.
+  1. Bangun klaster peristirahatan karavan di pelataran barat daya gerbang (radius x: 260–380, y: 600–700):
+     - Pasang 1–2 gerobak dagang kayu beratap terpal (`crateCart`), tumpukan karung gandum, tong anggur, dan peti rempah berikat tali.
+     - Tambahkan tenda pos piket penjaga (*guard inspection tent/canopy*) tempat barang bawaan diperiksa sebelum masuk kota.
+  2. Di pelataran timur (x: 820–940, y: 600–700):
+     - Pasang bangku kayu panjang (`scenicbench`) untuk musafir beristirahat di bawah naungan pohon rindang.
+     - Sediakan palungan air & tempat minum ternak/kuda.
+     - Letakkan papan pengumuman resmi kerajaan (*royal proclamation board*) berisi peraturan kota dan daftar buronan/monster sekitar.
+  3. Hadirkan NPC pedagang musafir atau kusir karavan yang sedang memeriksa roda gerobak atau bersantai meregangkan otot.
+- Hasil: pelataran luar gerbang terasa hidup dengan hiruk-pikuk aktivitas logistik dan perdagangan yang sedang antre masuk ke kota.
 
-### [ ] T578. **Interaksi Sosial Spontan Antar Warga (*Dynamic Citizen Encounters & Chatter*)** — referensi: The Legend of Zelda: Majora's Mask, Skyrim
-- File: `src/npc/brain.js` & `src/npc/crowd.js`.
+### [ ] T583. **Protokol Penjaga Gerbang, Animasi Salut & Panduan Distrik (*Gate Sentinels Protocol & District Orientation*)** — referensi: The Legend of Zelda: Twilight Princess, Suikoden
+- File: `src/world/maps/city.js` & `src/npc/dialogs.js`.
+- Masalah: Dua penjaga gerbang (`gj1` dan `gj2`) saat ini berdiri diam mematung dan hanya mengeluarkan dialog statis pendek satu baris.
 - Lakukan:
-  1. Saat dua NPC patroli/warga berpapasan dalam jarak dekat (radius 24 px) di jalan setapak:
-     - Keduanya melambat, saling menoleh menghadap satu sama lain, dan berhenti sejenak (1.5–3 detik).
-     - Muncul balon emote dialog sosial berbalas mikro (misal NPC 1: `👋` / `☀️`, lalu NPC 2 membalas: `😊` / `💬`).
-     - Setelah selesai bertegur sapa, keduanya mengangguk kecil lalu melanjutkan rute masing-masing tanpa tabrakan.
-  2. Saat berkumpul di dekat sumur desa, papan pengumuman, atau bangku taman, NPC dapat membentuk lingkaran obrolan kecil kelompok (2–3 warga) bertukar cerita.
-- Hasil: desa dan kota terasa ramai dengan interaksi sosial warga yang saling menyapa secara mandiri.
+  1. *Perilaku Siaga & Animasi Hormat*:
+     - Saat Arka mendekat (< 48 px dari tengah gapura), kedua penjaga menoleh serentak menghadap Arka.
+     - Tampilkan animasi singkat tegak siaga / hentakan tombak ke tanah (*spear tap*) disertai partikel debu mikro dan balon reaksi anggukan (`🛡️`).
+  2. *Sistem Dialog Interaktif & Panduan Navigasi*:
+     - Tambahkan opsi dialog informatif bercabang saat berbicara dengan Komandan Penjaga Gerbang:
+       * "Apa saja distrik di Kota Lumina?" -> Penjaga menjelaskan: Utara = Distrik Pasar & Perdagangan, Timur = Akademi Sihir & Menara Pengamat, Barat = Pemukiman Kota Bawah & Dermaga Kanal.
+       * "Apakah ada aturan khusus bagi pendatang?" -> Peringatan: dilarang menghunus senjata sembarangan di jalan umum, hormati jam malam distrik atas.
+       * "Kabar terkini di sekitar kota?" -> Petunjuk tentang ancaman serigala di Jalan Raya Lama dan aktivitas goblin di pinggiran hutan.
+  3. Suara sfx derak zirah baja ringan (*armor clank*) saat pemain melintas di antara kedua penjaga.
+- Hasil: penjaga gerbang memiliki wibawa militer yang kuat dan berfungsi sebagai pemandu informatif bagi pemain yang baru pertama kali tiba di Kota Lumina.
 
-### [ ] T579. **Reaksi Situasional NPC Terhadap Aksi Pemain (*Reactive Awareness to Arka's Actions*)** — referensi: Breath of the Wild, GTA
-- File: `src/npc/brain.js`, `src/scene/world.js`, & `src/systems/combat.js`.
+### [ ] T584. **Panji Berombak Tertiup Angin & Efek Suasana Kota Megah (*Animated Banners, Flag Sway & Town Atmosphere*)** — referensi: Ghost of Tsushima, Sea of Stars
+- File: `src/systems/atmos.js` & `src/world/maps/city.js`.
+- Masalah: Bendera panji kota (`gpt_city_banner`, `gpt_city_banner_sm`) saat ini statis kaku tanpa hembusan angin.
 - Lakukan:
-  1. *Lari Cepat / Dash*: Jika Arka melakukan roll/dash kencang memotong jalan tepat di samping NPC (< 20 px), NPC sedikit tersentak ke samping dengan emote `❗` atau `😮` sesaat sebelum kembali tenang.
-  2. *Ayunan Senjata di Desa*: Jika Arka mengayunkan pedang atau menembakkan panah dekat warga sipil/anak-anak (< 36 px), NPC melangkah mundur 1 langkah dengan postur terkejut / cemas (`💦` / `😨`) dan melontarkan teguran ringan ("Hati-hati Arka!", "Jangan main senjata di sini!").
-  3. *Cuaca Ekstrem / Hujan Badai*: Saat hujan deras turun, NPC yang belum sempat masuk rumah mempercepat langkahnya sambil mengangkat tangan menaungi kepala, atau berteduh di bawah emperan atap rumah terdekat.
-- Hasil: NPC memiliki kesadaran penuh terhadap lingkungan dan tindakan pemain di sekitarnya.
+  1. Berikan animasi goyangan kain dinamis (*procedural cloth wave*):
+     - Terapkan rotasi sine halus (`rotation = Math.sin(t * 3.2 + x * 0.05) * 0.08`) dan sedikit skew horizontal pada semua sprite panji di gerbang (`gpt_city_banner`).
+     - Kecepatan berkibar bertambah saat cuaca berangin atau badai.
+  2. Di atas puncak menara gerbang, tambahkan partikel debu halus dan dedaunan yang sesekali melayang terbawa hembusan angin sepoi-sepoi dari arah padang rumput.
+  3. Di malam hari: kedua lentera gerbang memancarkan pendaran cahaya oranye keemasan dengan efek flicker napas api (*warm breathing torchlight*), memantul lembut pada permukaan batu bata gerbang dan air parit.
+  4. Pasang ambient audio khusus gerbang: perpaduan samar suara sayup-sayup keramaian pasar di utara, derak roda gerobak di atas batu, dan kicauan burung merpati di atap gapura.
+- Hasil: gerbang kota memancarkan atmosfer yang megah, puitis, dan penuh kehidupan sinematik baik di siang maupun malam hari.

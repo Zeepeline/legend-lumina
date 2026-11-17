@@ -335,17 +335,17 @@ _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 _Segel kuil, Mochi hilang, kristal, peti harta_
 `.touchBarrier()` 4 · `.takeMochi()` 20 · `.useCrystal()` 24 · `.openChest()` 37 · `interactRunePillar()` 96
 
-## src/npc/npcs.js (135 baris)
+## src/npc/npcs.js (189 baris)
 _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_
-`NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 85 · `.updCritter()` 111
+`NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 85 · `.updCritter()` 165
 
-## src/npc/brain.js (135 baris)
+## src/npc/brain.js (197 baris)
 _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, mengobrol, duduk, berpatroli), pulang saat malam._
-`NPC_ROLE` 4 · `STORY_NPC` 11 · `WORK` 13 · `SEATS` 27 · `SOCIAL` 28 · `IDLE_ICON` 29 · `.npcBrainInit()` 32 · `.npcEmote()` 44 · `.npcPickGoal()` 45 · `.npcWalkAnim()` 87 · `.npcBrain()` 88 · `.npcActStart()` 110 · `.npcActTick()` 115
+`NPC_ROLE` 4 · `STORY_NPC` 11 · `NPC_SCALES` 13 · `WORK` 21 · `SEATS` 35 · `SOCIAL` 36 · `IDLE_ICON` 37 · `.npcBrainInit()` 40 · `.npcEmote()` 58 · `.npcPickGoal()` 59 · `.npcWalkAnim()` 101 · `.npcBrain()` 112 · `.npcActStart()` 162 · `.npcActTick()` 167
 
-## src/npc/crowd.js (217 baris)
+## src/npc/crowd.js (232 baris)
 _Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed._
-`CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 60 · `.clearCrowd()` 138 · `.initCrowd()` 148 · `_initPolishCrowd` 170 · `_dropActiveFxCrowd` 177 · `_updAmbP` 210
+`CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 62 · `.clearCrowd()` 153 · `.initCrowd()` 163 · `_initPolishCrowd` 185 · `_dropActiveFxCrowd` 192 · `_updAmbP` 225
 
 ## src/systems/qol.js (241 baris)
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
