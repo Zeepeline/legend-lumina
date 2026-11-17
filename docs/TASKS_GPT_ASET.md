@@ -118,7 +118,7 @@ Obrolan "Patokan". Kerjakan A1 dulu: itu jadi STYLE KEY untuk semua obrolan lain
 - Simpan: `assets/raw/gpt2/patokan/gua.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of a stone cave: dark warm-grey rock floor, purple crystals glowing softly, stalagmites, a narrow path lit by a torch. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: Warna & cahaya cocok dengan blok gaya; tidak ada teks/logo; skala karakter kecil.
-### [ ] G008. Gambar patokan suasana: danau
+### [x] G008. Gambar patokan suasana: danau
 - Simpan: `assets/raw/gpt2/patokan/danau.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of a calm lake shore: sandy-ochre bank, reeds, a wooden pier with a rowboat, gentle ripples, a small lighthouse in the distance. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: Warna & cahaya cocok dengan blok gaya; tidak ada teks/logo; skala karakter kecil.
