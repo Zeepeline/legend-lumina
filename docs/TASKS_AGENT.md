@@ -4204,7 +4204,7 @@ Fokus: menyempurnakan fisika pergerakan, proporsi tubuh, kecerdasan buatan (AI),
 ## X. GELOMBANG 23 — Peningkatan Kemegahan Gerbang Masuk Kota Lumina (T580–T584)
 Fokus: merombak gerbang masuk utama Kota Lumina (`kgate` & transisi dari `road`) agar menjadi titik masuk yang megah, hidup, memiliki atmosfer kota metropolitan fantasi abad pertengahan (ala Novigrad di *The Witcher 3*, Tretisva di *Octopath Traveler*, dan *Dragon Quest XI*), lengkap dengan gerbang gapura batu berlapis bayangan, jembatan parit kota, pos karavan pedagang, penjaga bertombak interaktif, serta panji kota yang berkibar.
 
-### [ ] T580. **Gapura Batu Megah, Lengkungan Terowongan & Kedalaman Bayangan (*Grand Gatehouse & Shadowed Archway*)** — referensi: Octopath Traveler, The Witcher 3
+### [x] T580. **Gapura Batu Megah, Lengkungan Terowongan & Kedalaman Bayangan (*Grand Gatehouse & Shadowed Archway*)** — referensi: Octopath Traveler, The Witcher 3
 - File: `src/world/maps/city.js`, `src/world/objects.js`, & `src/world/spawn/spawn_2.js`.
 - Masalah: Gerbang kota saat ini hanya berupa gambar datar `gatehouse` dengan tembok berulang tanpa kedalaman terowongan atau sensasi memasuki benteng batu kokoh.
 - Lakukan:
@@ -4216,7 +4216,7 @@ Fokus: merombak gerbang masuk utama Kota Lumina (`kgate` & transisi dari `road`)
   3. Tambahkan kisi jeruji besi gantung (*iron portcullis*) di langit-langit lengkungan gerbang yang tergantung kokoh dengan rantai tebal.
 - Hasil: gerbang kota terasa seperti bangunan benteng pertahanan sungguhan yang megah dan berbobot arsitektural tinggi.
 
-### [ ] T581. **Parit Air Pertahanan Kota & Jembatan Lengkung Batu (*Moat Waterway & Stone Arch Bridge Approach*)** — referensi: Final Fantasy IX, Chrono Trigger
+### [x] T581. **Parit Air Pertahanan Kota & Jembatan Lengkung Batu (*Moat Waterway & Stone Arch Bridge Approach*)** — referensi: Final Fantasy IX, Chrono Trigger
 - File: `src/world/maps/city.js` & `src/world/ground.js`.
 - Masalah: Peta gerbang kota langsung bertemu jalan datar dari selatan tanpa rintangan alami atau batas geografis yang menjelaskan mengapa kota ini berbenteng kokoh.
 - Lakukan:
@@ -4226,7 +4226,7 @@ Fokus: merombak gerbang masuk utama Kota Lumina (`kgate` & transisi dari `road`)
   4. Hiasi tepian air parit dengan tumbuhan teratai, rumput air, dan bebatuan kali berlumut (`reeds`, `lotuspad`, `pebbles`).
 - Hasil: pendekatan menuju gerbang kota melalui jembatan parit air memberikan kesan dramatis dan monumental saat pertama kali tiba.
 
-### [ ] T582. **Pos Peristirahatan Karavan & Logistik Pedagang Luar Gerbang (*Caravan Encampment & Inspection Logistics*)** — referensi: Dragon Quest XI, Skyrim
+### [x] T582. **Pos Peristirahatan Karavan & Logistik Pedagang Luar Gerbang (*Caravan Encampment & Inspection Logistics*)** — referensi: Dragon Quest XI, Skyrim
 - File: `src/world/maps/city.js` & `src/world/spawn/spawn_1.js`.
 - Masalah: Area depan gerbang masih sepi dan belum memperlihatkan aktivitas ekonomi dunia luar sebelum memasuki pasar kota.
 - Lakukan:
@@ -4240,7 +4240,7 @@ Fokus: merombak gerbang masuk utama Kota Lumina (`kgate` & transisi dari `road`)
   3. Hadirkan NPC pedagang musafir atau kusir karavan yang sedang memeriksa roda gerobak atau bersantai meregangkan otot.
 - Hasil: pelataran luar gerbang terasa hidup dengan hiruk-pikuk aktivitas logistik dan perdagangan yang sedang antre masuk ke kota.
 
-### [ ] T583. **Protokol Penjaga Gerbang, Animasi Salut & Panduan Distrik (*Gate Sentinels Protocol & District Orientation*)** — referensi: The Legend of Zelda: Twilight Princess, Suikoden
+### [x] T583. **Protokol Penjaga Gerbang, Animasi Salut & Panduan Distrik (*Gate Sentinels Protocol & District Orientation*)** — referensi: The Legend of Zelda: Twilight Princess, Suikoden
 - File: `src/world/maps/city.js` & `src/npc/dialogs.js`.
 - Masalah: Dua penjaga gerbang (`gj1` dan `gj2`) saat ini berdiri diam mematung dan hanya mengeluarkan dialog statis pendek satu baris.
 - Lakukan:
@@ -4255,7 +4255,7 @@ Fokus: merombak gerbang masuk utama Kota Lumina (`kgate` & transisi dari `road`)
   3. Suara sfx derak zirah baja ringan (*armor clank*) saat pemain melintas di antara kedua penjaga.
 - Hasil: penjaga gerbang memiliki wibawa militer yang kuat dan berfungsi sebagai pemandu informatif bagi pemain yang baru pertama kali tiba di Kota Lumina.
 
-### [ ] T584. **Panji Berombak Tertiup Angin & Efek Suasana Kota Megah (*Animated Banners, Flag Sway & Town Atmosphere*)** — referensi: Ghost of Tsushima, Sea of Stars
+### [x] T584. **Panji Berombak Tertiup Angin & Efek Suasana Kota Megah (*Animated Banners, Flag Sway & Town Atmosphere*)** — referensi: Ghost of Tsushima, Sea of Stars
 - File: `src/systems/atmos.js` & `src/world/maps/city.js`.
 - Masalah: Bendera panji kota (`gpt_city_banner`, `gpt_city_banner_sm`) saat ini statis kaku tanpa hembusan angin.
 - Lakukan:
