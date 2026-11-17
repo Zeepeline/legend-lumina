@@ -173,10 +173,10 @@ Obrolan "Tanah".
 - Simpan: `assets/raw/gpt2/tanah/hutan_tepiair.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Shoreline pieces where slightly deeper green forest grass with tiny leaf litter meets calm water: a thin darker earth lip, a few reeds and pebbles at the waterline. Row 1: straight shore facing up, right, down, left. Row 2: outer corners. Row 3: inner corners. Row 4: four small rocks/reed clumps standing in water. Only the land part is drawn; water area is magenta.`
 - Cek: Hanya bagian darat yang digambar; air = magenta. Selesai dipotong 12 ubin tepian 32×32 px + 4 objek perairan hutan.
-### [ ] G021. hutan dalam: tekstur tanah utama (mulus, diulang)
+### [x] G021. hutan dalam: tekstur tanah utama (mulus, diulang)
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_dasar.png` · Ukuran di game: 256×256 px di game (diulang tanpa sambungan)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of dark mossy forest floor with moss tufts. Very low contrast, no single object stands out, subtle variation only.`
-- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol.
+- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol. Selesai disetujui & mulus sempurna.
 ### [ ] G022. hutan dalam: tekstur tanah kedua (jalan/petak)
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_jalan.png` · Ukuran di game: 256×256 px di game (diulang)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of damp dark-brown soil with roots.`
