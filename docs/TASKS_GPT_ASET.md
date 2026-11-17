@@ -181,10 +181,10 @@ Obrolan "Tanah".
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_jalan.png` · Ukuran di game: 256×256 px di game (diulang)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of damp dark-brown soil with roots.`
 - Cek: Mulus saat diulang 2×2. Selesai disetujui & mulus sempurna.
-### [ ] G023. hutan dalam: potongan tepi antara rumput & jalan
+### [x] G023. hutan dalam: potongan tepi antara rumput & jalan
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_tepi.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Edge pieces where dark mossy forest floor with moss tufts overlaps damp dark-brown soil with roots: the grass edge is soft and scalloped with small leafy bumps (no hard line). Row 1: straight edge facing up, right, down, left. Row 2: four outer corners. Row 3: four inner corners. Row 4: four small isolated grass islands. Each piece shows ONLY the grass part with its leafy rim; the rest of the cell is magenta.`
-- Cek: Tepi rumput bergerigi daun lembut seperti gambar patokan; bagian jalan = magenta.
+- Cek: Tepi rumput bergerigi daun lembut seperti gambar patokan; bagian jalan = magenta. Selesai dipotong 12 ubin tepi 32×32 px + 4 pulau lumut stepping patch.
 ### [ ] G024. hutan dalam: hiasan tanah kecil
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_hiasan.png` · Ukuran di game: tiap hiasan 6–20 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] 16 small ground decorations for dark mossy forest floor with moss tufts: grass tufts, tiny weeds, pebbles, twigs, fallen leaves, small flowers, a mushroom. All tiny and flat to the ground.`
