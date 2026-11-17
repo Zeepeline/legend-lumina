@@ -133,22 +133,22 @@ Obrolan "Patokan". Kerjakan A1 dulu: itu jadi STYLE KEY untuk semua obrolan lain
 
 ## B. Tanah, air, tebing, ladang
 Obrolan "Tanah".
-### [ ] G011. padang: tekstur tanah utama (mulus, diulang)
+### [x] G011. padang: tekstur tanah utama (mulus, diulang)
 - Simpan: `assets/raw/gpt2/tanah/padang_dasar.png` · Ukuran di game: 256×256 px di game (diulang tanpa sambungan)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of sun-baked yellow-green meadow grass. Very low contrast, no single object stands out, subtle variation only.`
-- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol.
-### [ ] G012. padang: tekstur tanah kedua (jalan/petak)
+- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol. Selesai disetujui & mulus sempurna.
+### [x] G012. padang: tekstur tanah kedua (jalan/petak)
 - Simpan: `assets/raw/gpt2/tanah/padang_jalan.png` · Ukuran di game: 256×256 px di game (diulang)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of warm ochre dirt.`
-- Cek: Mulus saat diulang 2×2.
+- Cek: Mulus saat diulang 2×2. Selesai disetujui & mulus sempurna.
 ### [ ] G013. padang: potongan tepi antara rumput & jalan
 - Simpan: `assets/raw/gpt2/tanah/padang_tepi.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Edge pieces where sun-baked yellow-green meadow grass overlaps warm ochre dirt: the grass edge is soft and scalloped with small leafy bumps (no hard line). Row 1: straight edge facing up, right, down, left. Row 2: four outer corners. Row 3: four inner corners. Row 4: four small isolated grass islands. Each piece shows ONLY the grass part with its leafy rim; the rest of the cell is magenta.`
 - Cek: Tepi rumput bergerigi daun lembut seperti gambar patokan; bagian jalan = magenta.
-### [ ] G014. padang: hiasan tanah kecil
+### [x] G014. padang: hiasan tanah kecil
 - Simpan: `assets/raw/gpt2/tanah/padang_hiasan.png` · Ukuran di game: tiap hiasan 6–20 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] 16 small ground decorations for sun-baked yellow-green meadow grass: grass tufts, tiny weeds, pebbles, twigs, fallen leaves, small flowers, a mushroom. All tiny and flat to the ground.`
-- Cek: Kecil & rendah; tidak ada yang lebih besar dari 1/4 sel.
+- Cek: Kecil & rendah; tidak ada yang lebih besar dari 1/4 sel. Selesai dipotong 16 varian + ekspor 16 sprite game ke `assets/img/nature/clutter_*.png`.
 ### [ ] G015. padang: tepi air (tebing kecil tanah ke air)
 - Simpan: `assets/raw/gpt2/tanah/padang_tepiair.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Shoreline pieces where sun-baked yellow-green meadow grass meets calm water: a thin darker earth lip, a few reeds and pebbles at the waterline. Row 1: straight shore facing up, right, down, left. Row 2: outer corners. Row 3: inner corners. Row 4: four small rocks/reed clumps standing in water. Only the land part is drawn; water area is magenta.`
