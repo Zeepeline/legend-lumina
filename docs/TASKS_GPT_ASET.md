@@ -102,7 +102,7 @@ Obrolan "Patokan". Kerjakan A1 dulu: itu jadi STYLE KEY untuk semua obrolan lain
 - Simpan: `assets/raw/gpt2/patokan/hutan_dalam.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of an old deep forest: giant mossy trunks, hanging vines, dim green-gold light, mushrooms, a small stream with stepping stones. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: Warna & cahaya cocok dengan blok gaya; tidak ada teks/logo; skala karakter kecil.
-### [ ] G004. Gambar patokan suasana: desa
+### [x] G004. Gambar patokan suasana: desa
 - Simpan: `assets/raw/gpt2/patokan/desa.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of a small farming village square: timber-and-plaster cottages with thatched and red-tiled roofs, a stone well, a market stall, fences, vegetable plots, warm golden light. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: Warna & cahaya cocok dengan blok gaya; tidak ada teks/logo; skala karakter kecil.
