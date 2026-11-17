@@ -121,15 +121,15 @@ Object.assign(World.prototype, {
         c.active = true;
       }
       c.t += dt;
-      const d = Math.hypot(pl.x - c.x, pl.y - c.y);
-      if (d < 28) {
-        const ang = Math.atan2(c.y - pl.y, c.x - pl.x);
-        c.vx += Math.cos(ang) * 90; c.vy += Math.sin(ang) * 90;
+      const dx = c.x - pl.x, dy = c.y - pl.y, distSq = dx * dx + dy * dy;
+      if (distSq < 784) {
+        const invD = 90 / (Math.sqrt(distSq) || 1);
+        c.vx += dx * invD; c.vy += dy * invD;
       }
       c.vx *= 0.92; c.vy *= 0.92;
       const wanderX = Math.sin(c.t * 2.2) * 18, wanderY = Math.cos(c.t * 1.8) * 14;
       c.x += (c.vx + wanderX) * dt; c.y += (c.vy + wanderY) * dt;
-      if (d > 240) c.active = false;
+      if (distSq > 57600) c.active = false;
       const flap = isNight ? 1 : Math.abs(Math.sin(c.t * 16));
       const pulseA = isNight ? (0.4 + 0.5 * Math.sin(c.t * 3.5)) : 0.85;
       c.img.setVisible(true).setPosition(c.x, c.y).setTint(tint)
@@ -181,14 +181,13 @@ Object.assign(World.prototype, {
       const offsets = [0.15, 0.42, 0.68, 0.88];
       for (let i = 0; i < 4; i++) {
         const ray = this.add.image(vw * offsets[i], 12, 'godray_beam')
-          .setScrollFactor(0).setDepth(1.94e5).setOrigin(0.5, 0).setRotation(-0.24)
-          .setBlendMode(Phaser.BlendModes.ADD);
+          .setScrollFactor(0).setDepth(1.94e5).setOrigin(0.5, 0).setRotation(-0.24);
         this._godRays.push(ray);
       }
     }
     for (let i = 0; i < this._godRays.length; i++) {
       const r = this._godRays[i];
-      const pulseA = 0.08 + Math.sin(this.t * 1.4 + i * 1.5) * 0.035;
+      const pulseA = 0.12 + Math.sin(this.t * 1.4 + i * 1.5) * 0.04;
       r.setVisible(true).setAlpha(pulseA).setScale(1.2 + Math.sin(this.t * 0.8 + i) * 0.1, 1.4);
     }
   },

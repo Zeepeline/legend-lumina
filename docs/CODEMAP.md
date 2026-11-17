@@ -95,9 +95,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 219 · obj `tree_redwood` 226 · obj `goblin_torch` 229 · obj `goblin_cauldron` 232 · obj `cryst` 241 · obj `lamp` 244 · obj `viewpoint` 252 · obj `lumina_shard` 286 · obj `scenicbench` 308 · obj `mailbox` 326 · obj `gatehouse` 336 · obj `ctower` 344 · obj `city_bridge` 347 · obj `gpt_city_banner` 350 · obj `gpt_city_banner_sm` 354 · obj `gpt_city_board` 358
 
-## src/world/ground.js (397 baris)
+## src/world/ground.js (398 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 112 · `blockRects()` 272 · `scatter()` 288 · `openSides()` 346 · `borderTrees()` 359 · `ringObjects()` 376 · `mapObjects()` 381 · `mapWalls()` 385
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 112 · `blockRects()` 273 · `scatter()` 289 · `openSides()` 347 · `borderTrees()` 360 · `ringObjects()` 377 · `mapObjects()` 382 · `mapWalls()` 386
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
@@ -187,13 +187,13 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 25 · `shadowIndex()` 26
 
-## src/gfx/textures.js (198 baris)
+## src/gfx/textures.js (211 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
-`ICONS` 4 · `IMG_LIST` 6 · `imgSubdir()` 23 · `loadImgs()` 42 · `addStrip()` 56 · `darkTree()` 61 · `NPC_W` 63 · `regPortrait()` 64 · `regChar()` 69 · `buildTextures()` 86
+`ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 34 · `loadImgs()` 53 · `addStrip()` 67 · `darkTree()` 72 · `NPC_W` 74 · `regPortrait()` 75 · `regChar()` 80 · `buildTextures()` 97
 
-## src/world/ground_verdant.js (291 baris)
+## src/world/ground_verdant.js (337 baris)
 _Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024)._
-`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `V_TILES` 13 · `CLUTTER_PADANG` 19 · `CLUTTER_FOREST` 25 · `CLUTTER_DEEPWOOD` 32 · `ISLANDS_PADANG` 39 · `ISLANDS_FOREST` 40 · `ISLANDS_DEEPWOOD` 41 · `WATER_DECO_PADANG` 42 · `WATER_DECO_FOREST` 43 · `VT_MAP` 54 · `verdantTiles()` 55 · `vModW` 72 · `vDirtN` 74 · `vDirtT` 75 · `verdantPix()` 78 · `verdantDeco()` 93 · `VBASE` 157 · `verdantBase()` 158 · `VWC` 176 · `verdantWater()` 180 · `VSTONE` 195 · `vCobble()` 199 · `verdantBank()` 213 · `regVerdantTex()` 227 · `verdantReflect()` 236 · `verdantScallop()` 265 · `verdantEdgePix()` 280
+`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `MEADOW_FLOWERS` 12 · `V_TILES` 17 · `CLUTTER_PADANG` 23 · `CLUTTER_FOREST` 29 · `CLUTTER_DEEPWOOD` 36 · `ISLANDS_PADANG` 43 · `ISLANDS_FOREST` 44 · `ISLANDS_DEEPWOOD` 45 · `WATER_DECO_PADANG` 46 · `WATER_DECO_FOREST` 47 · `VT_MAP` 58 · `verdantTiles()` 59 · `vModW` 76 · `vDirtN` 78 · `vDirtT` 79 · `verdantPix()` 82 · `verdantDeco()` 97 · `VBASE` 181 · `verdantBase()` 182 · `VWC` 200 · `verdantWater()` 204 · `VSTONE` 219 · `vCobble()` 223 · `verdantBank()` 237 · `regVerdantTex()` 251 · `verdantReflect()` 260 · `verdantScallop()` 289 · `verdantEdgePix()` 304 · `bridgeWoodPix()` 317
 
 ## src/world/interior_sheet.js (89 baris)
 _Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._
@@ -563,9 +563,9 @@ _T442, T445 & Elevated Border Cliffs:_
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
 `FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `foamTex()` 32 · `isShorelineAt()` 39 · `.updFlow()` 51 · `_updFlow0` 145
 
-## src/systems/atmos.js (279 baris)
+## src/systems/atmos.js (278 baris)
 _Suasana cahaya & kabut (wilayah aktif saja):_
-`ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `godrayTex()` 25 · `cloudShadowTex()` 39 · `.updAmbientMotes()` 51 · `.updCritters()` 100 · `.updWindGust()` 141 · `.updGodRays()` 169 · `.updBanners()` 197 · `.updAtmos()` 210
+`ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `godrayTex()` 25 · `cloudShadowTex()` 39 · `.updAmbientMotes()` 51 · `.updCritters()` 100 · `.updWindGust()` 141 · `.updGodRays()` 169 · `.updBanners()` 196 · `.updAtmos()` 209
 
 ## src/systems/sunbeams.js (74 baris)
 _T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_

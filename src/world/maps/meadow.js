@@ -82,9 +82,9 @@ MAPS.meadow = {
     ['wolf', 1180, 880], ['boar', 1300, 820], ['plant', 1180, 700], ['slimer', 880, 860], ['wolf', 1100, 300], ['bee', 1260, 300],
   ],
   trees: {
-    n: 460, min: 30, sp: 34,
-    types: [['verdant_tree', .2], ['treeB', .07], ['apple1', .06], ['orange1', .04], ['verdant_bush', .2], ['verdant_bush_small', .13],
-      ['verdant_rock_med', .14], ['verdant_rock_large', .06], ['rock', .1]]
+    n: 95, min: 36, sp: 58,
+    types: [['verdant_tree', .35], ['treeB', .15], ['apple1', .08], ['orange1', .06],
+      ['verdant_rock_med', .18], ['verdant_rock_large', .08], ['rock', .1]]
   },
   butterflies: 10,
   // T444: Tebing sungai di sisi barat sungai bagian utara

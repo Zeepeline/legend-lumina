@@ -1,7 +1,18 @@
 'use strict';
 // Muat gambar & daftarkan semua tekstur/animasi ke Phaser
 // ---------------- TEKSTUR ----------------
-const ICONS = {}, IMGEL = {};
+const ICONS_CACHE = {};
+const ICONS = new Proxy(ICONS_CACHE, {
+  get(t, p) {
+    if (p in t) return t[p];
+    if (typeof p === 'string' && typeof ITEMS !== 'undefined' && ITEMS[p]) {
+      const c = artIcon(typeof ICON_OF !== 'undefined' && ICON_OF[p] && p === 'stonearm' ? 'chain' : p);
+      return t[p] = c.toDataURL();
+    }
+    return t[p];
+  }
+});
+const IMGEL = {};
 // Gambar dari gambar referensi ada di assets/img/<nama>.png → tekstur Phaser 'i_<nama>'
 const IMG_LIST = [
   "apple1", "bench", "bigtree", "bushG1", "bushG2", "bushP", "bushW",
@@ -93,7 +104,8 @@ function buildTextures(sc) {
       if (!T.exists(bare)) T.addImage(bare, IMGEL[k]);
     }
   }
-  one('treeAd', darkTree(IMGEL.treeA)); one('treeBd', darkTree(IMGEL.treeA));
+  const _darkA = IMGEL.treeA ? darkTree(IMGEL.treeA) : null;
+  if (_darkA) { one('treeAd', _darkA); one('treeBd', _darkA); }
   one('pear', artFruitTree('pear', 3)); one('round', artRoundTree(4)); one('pine', artPine(5)); one('pined', artPine(6, 1));
   one('bush', artBush(1)); one('bushy', artBush(5, 'yellow')); one('bushv', artBush(4, 'purple'));
   one('barrel', artBarrel()); one('crate', artCrate()); one('sign', artSign()); one('fence', artFence()); one('lamp', artLamp()); one('dock', artDock()); one('boat', artBoat());
@@ -132,12 +144,13 @@ function buildTextures(sc) {
   addStrip(sc, 'snakei', artMon('snake', { G: '#9ad4f4', L: '#f0faff', E: '#1a2a5a', R: '#4a8aff' }));
   addStrip(sc, 'wisp', artWisp()); addStrip(sc, 'frog', artMon('frog')); addStrip(sc, 'slimep', artMon('slime', { G: '#a060d0', D: '#5a2a8a', L: '#f0d8ff' }));
   one('gate', artGate()); one('boulder', artBoulder()); one('plate', artPlate());
-  one('treeSw', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = darkTree(IMGEL.treeA), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = 0.75 - 0.45 * Math.pow(Math.min(1, yy / 0.65), 0.85); const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('bramble', artBramble()); one('bell', artBell()); one('bloom', artBloom()); one('dummy', artDummy()); one('pebbles', artPebbles()); one('telescope', artTelescope()); one('altar', artShrineAltar()); one('fieldoven', artFieldOven()); one('dripstone', artDripStalactite()); one('frostflower', artFrostFlower()); one('totem', artSwampTotem()); one('pigeons', artPigeonsSpot()); one('teatable', artTeaTable()); one('lotuspad', artLotusPondSpot()); one('dockboat', artDockBoat()); one('coffeeshrub', artCoffeeShrub()); one('coffeekettle', artCoffeeKettle()); one('orchidrock', artOrchidRock()); one('canaryperch', artCanaryPerch()); one('woodlandshrine', artWoodlandShrine()); one('bellows', artBellows()); one('ringbooth', artRingBooth()); one('archerytarget', artArcheryTarget()); one('lakelighthouse', artLakeLighthouse()); one('streetdrum', artStreetDrum()); one('warp0', artWarp(false)); one('stele', artStele()); artCritters(T); artQuestArrow(T); one('root', artRoot()); one('gatehouse', artGatehouse()); one('cwall', artCityWall()); one('academy', artAcademy()); one('boat', artBoat()); one('relief', artRelief()); one('sealdoor0', artSealDoor(false)); one('sealdoor1', artSealDoor(true)); one('warp1', artWarp(true)); one('icegate', artIceGate()); one('icebolt', artIceBolt());
+  const _cDark = () => { const [c, x] = mk(_darkA ? _darkA.width : 32, _darkA ? _darkA.height : 32); if (_darkA) x.drawImage(_darkA, 0, 0); return c; };
+  one('treeSw', (() => { const c = _cDark(), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height); for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); const [r, g, b] = h2r(hsl2hex(hueToward(h, 90, 30), s2 * .7, l * .95)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } x.putImageData(d, 0, 0); return c; })()); one('treeSn', (() => { const c = _cDark(), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), H = c.height; for (let i = 0; i < d.data.length; i += 4) { if (!d.data[i + 3]) continue; const yy = Math.floor(i / 4 / c.width) / H; const [h, s2, l] = rgb2hsl(d.data[i], d.data[i + 1], d.data[i + 2]); if (h > 50 && h < 170) { const k = 0.75 - 0.45 * Math.pow(Math.min(1, yy / 0.65), 0.85); const [r, g, b] = h2r(hsl2hex(hueToward(h, 200, 60), s2 * .35, l + (1 - l) * k)); d.data[i] = r; d.data[i + 1] = g; d.data[i + 2] = b; } } x.putImageData(d, 0, 0); return c; })()); one('brazier', artBrazier()); one('bramble', artBramble()); one('bell', artBell()); one('bloom', artBloom()); one('dummy', artDummy()); one('pebbles', artPebbles()); one('telescope', artTelescope()); one('altar', artShrineAltar()); one('fieldoven', artFieldOven()); one('dripstone', artDripStalactite()); one('frostflower', artFrostFlower()); one('totem', artSwampTotem()); one('pigeons', artPigeonsSpot()); one('teatable', artTeaTable()); one('lotuspad', artLotusPondSpot()); one('dockboat', artDockBoat()); one('coffeeshrub', artCoffeeShrub()); one('coffeekettle', artCoffeeKettle()); one('orchidrock', artOrchidRock()); one('canaryperch', artCanaryPerch()); one('woodlandshrine', artWoodlandShrine()); one('bellows', artBellows()); one('ringbooth', artRingBooth()); one('archerytarget', artArcheryTarget()); one('lakelighthouse', artLakeLighthouse()); one('streetdrum', artStreetDrum()); one('warp0', artWarp(false)); one('stele', artStele()); artCritters(T); artQuestArrow(T); one('root', artRoot()); one('gatehouse', artGatehouse()); one('cwall', artCityWall()); one('academy', artAcademy()); one('boat', artBoat()); one('relief', artRelief()); one('sealdoor0', artSealDoor(false)); one('sealdoor1', artSealDoor(true)); one('warp1', artWarp(true)); one('icegate', artIceGate()); one('icebolt', artIceBolt());
   one('light', artLight(80)); one('lights', artLight(36)); one('nlL', artLightP(54, .9)); one('nlS', artLightP(38, .85)); one('nlW', artLightP(18, .75));
   const _fnCanopy = typeof artCanopyOverhang === 'function' ? artCanopyOverhang :
     (typeof window !== 'undefined' && typeof window.artCanopyOverhang === 'function' ? window.artCanopyOverhang : null);
   if (_fnCanopy) one('canopy_overhang', _fnCanopy());
-  for (const id in ITEMS) { const c = artIcon(ICON_OF[id] && id === 'stonearm' ? 'chain' : id); one('ic_' + id, c); ICONS[id] = c.toDataURL(); }
+  for (const id in ITEMS) { const c = artIcon(ICON_OF[id] && id === 'stonearm' ? 'chain' : id); one('ic_' + id, c); }
   const A = sc.anims, fr2 = (k, n) => [...Array(n).keys()].map(i => ({ key: k, frame: i }));
   A.create({ key: 'crystal_lit', frames: fr2('crystal_lit', 4), frameRate: 5, repeat: -1 });
   A.create({ key: 'barrier', frames: fr2('barrier', 3), frameRate: 6, repeat: -1 });

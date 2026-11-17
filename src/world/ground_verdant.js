@@ -1,7 +1,7 @@
 'use strict';
 // Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024).
 // Ubin ground 256×256 px, tepi jalan berenda daun alami, ornamen clutter & pulau rumput.
-const VERDANT = {};
+const VERDANT = { village: true, forest: true, deepwood: true, meadow: true };
 const VBAY = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const VDECO = ['tuft', 'sprout_a', 'sprout_b', 'sprout_c', 'flower_w', 'flower_w2', 'flower_w3', 'flower_b', 'flower_b2', 'flowers', 'flowers_w',
   'mushroom', 'pebble', 'pebbles', 'reeds',
@@ -9,6 +9,10 @@ const VDECO = ['tuft', 'sprout_a', 'sprout_b', 'sprout_c', 'flower_w', 'flower_w
   'water_stepstone', 'water_lilypad', 'water_lotus', 'water_reeds_lush', 'water_reeds_short',
   'water_dock', 'water_boat', 'water_pier',
   ...['w', 'p', 'y', 'v'].flatMap(c => [1, 2, 3].map(n => 'fl_' + c + n))];
+const MEADOW_FLOWERS = [
+  'flower_white_single', 'flower_white_med', 'flower_blue_single', 'flower_blue_med',
+  'flower_cream_single', 'flower_cream_med', 'flower_mix_large', 'flower_mix_dense'
+];
 
 const V_TILES = [
   'gnd_meadow_base', 'gnd_meadow_path',
@@ -44,7 +48,7 @@ const WATER_DECO_FOREST = ['fwater_pebble', 'fwater_rocks', 'fwater_reeds_slim',
 
 if (typeof IMG_LIST !== 'undefined') {
   IMG_LIST.push(
-    ...V_TILES, ...VDECO.map(k => 'deco_' + k),
+    ...V_TILES, ...VDECO.map(k => 'deco_' + k), ...MEADOW_FLOWERS,
     ...CLUTTER_PADANG, ...CLUTTER_FOREST, ...CLUTTER_DEEPWOOD,
     ...ISLANDS_PADANG, ...ISLANDS_FOREST, ...ISLANDS_DEEPWOOD,
     ...WATER_DECO_PADANG, ...WATER_DECO_FOREST
@@ -89,18 +93,19 @@ function verdantPix(M, X, Y, path) {
   return [s[ti], s[ti + 1], s[ti + 2]];
 }
 
-// ornamen: grid 36 px global + geser acak (jarak seimbang & lapang, tidak menumpuk)
+// ornamen: grid teratur global + geser acak (jarak seimbang & lapang, tidak menumpuk)
 function verdantDeco(x, M, rect, GX, GY, sd, near) {
-  const [RX, RY, RW, RH] = rect, C = 36, fm = M.flowers ? 1.6 : 1;
+  const [RX, RY, RW, RH] = rect, isMeadow = M.ground === 'meadow';
+  const C = isMeadow ? 84 : 36, fm = M.flowers ? 1.6 : 1;
   const isDeep = M.id === 'deepwood', isForest = M.ground === 'forest' && !isDeep;
   const cList = isDeep ? CLUTTER_DEEPWOOD : isForest ? CLUTTER_FOREST : CLUTTER_PADANG;
   const waterDeco = isForest || isDeep ? WATER_DECO_FOREST : WATER_DECO_PADANG;
   const useNew = typeof IMGEL !== 'undefined' && IMGEL[cList[0]];
 
-  for (let cy = Math.floor((RY + GY - 36) / C); cy <= Math.floor((RY + RH + GY) / C); cy++) {
-    for (let cx = Math.floor((RX + GX - 36) / C); cx <= Math.floor((RX + RW + GX) / C); cx++) {
-      const X = cx * C + Math.floor(hash(cx, cy, 61) * 20) - GX;
-      const Y = cy * C + Math.floor(hash(cx, cy, 62) * 20) - GY;
+  for (let cy = Math.floor((RY + GY - C) / C); cy <= Math.floor((RY + RH + GY) / C); cy++) {
+    for (let cx = Math.floor((RX + GX - C) / C); cx <= Math.floor((RX + RW + GX) / C); cx++) {
+      const X = cx * C + Math.floor(hash(cx, cy, 61) * (C * 0.5)) - GX;
+      const Y = cy * C + Math.floor(hash(cx, cy, 62) * (C * 0.5)) - GY;
       if (X < 0 || Y < 0 || X > M.w - 8 || Y > M.h - 8) continue;
 
       const d = sd(X + 4, Y + 6);
@@ -113,6 +118,25 @@ function verdantDeco(x, M, rect, GX, GY, sd, near) {
           const imW = IMGEL[wKey];
           if (imW && !(X + imW.width < RX || X > RX + RW || Y + imW.height < RY || Y > RY + RH)) {
             x.drawImage(imW, X - (imW.width >> 1), Y - (imW.height >> 1));
+          }
+        }
+        continue;
+      }
+
+      if (isMeadow) {
+        // Padang Angin gaya referensi pemilik: rumput bersih mulus tanpa rumput acak, bunga klaster 2-4 kuntum berjarak lega
+        if (hash(cx, cy, 63) < 0.22) {
+          const num = 2 + Math.floor(hash(cx, cy, 64) * 3);
+          const fKeys = ['flower_white_single', 'flower_white_med', 'flower_blue_single', 'flower_blue_med', 'flower_cream_single',
+            'deco_flower_w', 'deco_flower_b', 'deco_fl_w1', 'deco_fl_w2', 'deco_fl_v1', 'deco_fl_v2', 'deco_fl_p1'];
+          const offs = [[0, 0], [7, 4], [-6, 5], [4, -5]];
+          for (let f = 0; f < num; f++) {
+            const k = fKeys[Math.floor(hash(cx * 9 + f, cy * 9 + f, 65) * fKeys.length)];
+            const imF = typeof IMGEL !== 'undefined' ? (IMGEL[k] || IMGEL['deco_' + k] || IMGEL.deco_flower_w) : null;
+            if (!imF) continue;
+            const fx = X + offs[f][0], fy = Y + offs[f][1];
+            if (fx + imF.width < RX || fx > RX + RW || fy + imF.height < RY || fy > RY + RH) continue;
+            x.drawImage(imF, fx, fy);
           }
         }
         continue;
@@ -156,7 +180,7 @@ function verdantDeco(x, M, rect, GX, GY, sd, near) {
 // kaki batu/semak/tunggul ditumbuhi rumput (dipanggil bakeGround setelah bayangan; x ditranslasi -RX,-RY)
 const VBASE = /rock|bush|stump|log/;
 function verdantBase(x, M, rect) {
-  if (!VERDANT[M.ground] || M.indoor) return;
+  if (!VERDANT[M.ground] || M.ground === 'meadow' || M.indoor) return;
   const im = (typeof IMGEL !== 'undefined' && (IMGEL.clutter_grass1 || IMGEL.fclutter_grass_tuft || IMGEL.deco_tuft));
   if (!im) return;
   if (!M._vbase) M._vbase = mapObjects(M).filter(o => VBASE.test(o[0]) && OBJ[o[0]]).map(o => [o[1], o[2], (OBJ[o[0]].col || [16])[0] + 8]);
@@ -287,4 +311,26 @@ function verdantEdgePix(M, X, Y, d) {
   if (da < 0) return [Math.floor(T[3][ti] * 0.80), Math.floor(T[3][ti + 1] * 0.78), Math.floor(T[3][ti + 2] * 0.70)];
   if (da < 1.6) return [Math.floor(T[0][ti] * 0.70), Math.floor(T[0][ti + 1] * 0.74), Math.floor(T[0][ti + 2] * 0.62)];
   return null;
+}
+
+// Jembatan kayu rustik estetik sesuai referensi pemilik (Gambar 1)
+function bridgeWoodPix(u, v, len, wid) {
+  const isPost = (u < 7 || u > len - 7) && (v < 6 || v > wid - 6);
+  if (isPost) {
+    const pu = u < 7 ? u : (len - u), pv = v < 6 ? v : (wid - v);
+    if (pu === 0 || pv === 0) return [90, 54, 28];
+    if (pu <= 2 && pv <= 2) return [238, 208, 164];
+    return [178, 124, 76];
+  }
+  if (v < 5 || v > wid - 5) {
+    const e = v < 5 ? v : (wid - v);
+    return e <= 1 ? [212, 163, 110] : e <= 3 ? [164, 112, 66] : [78, 44, 22];
+  }
+  const p = (u + 1000) % 8;
+  if (p === 0) return [58, 32, 18];
+  if (p === 1) return [204, 160, 106];
+  if ((v === 6 || v === wid - 7) && (p === 3 || p === 4)) return [42, 20, 10];
+  const sh = p === 7 ? -20 : p === 2 ? 10 : 0, g = Math.floor((hash(u >> 2, v >> 1, 19) - 0.5) * 16);
+  const r = Math.max(0, Math.min(255, 158 + sh + g)), gg = Math.max(0, Math.min(255, 104 + sh + Math.floor(g * 0.7)));
+  return [r, gg, Math.max(0, Math.min(255, 62 + sh + Math.floor(g * 0.5)))];
 }

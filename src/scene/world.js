@@ -291,10 +291,8 @@ class World extends Phaser.Scene {
     // Efek rumput/semak bergoyang (#91) & hamburan daun rontok Cobo (T533)
     if (!locked && !pl.dead && this.bushes && this.bushes.length) {
       for (const b of this.bushes) {
-        if (!b.active) continue;
-        const d = Math.hypot(pl.x - b.x, pl.y - b.y);
-        if (d < 18 && !b._swaying) {
-          b._swaying = true;
+        if (!b.active || b._swaying || Math.hypot(pl.x - b.x, pl.y - b.y) >= 18) continue;
+        b._swaying = true;
           if (this.jx) this.jx('pop', b.x, b.y - 6, 2, { tint: 0x6ec048 });
           if (typeof sfx === 'function') sfx('bush');
           this.tweens.add({

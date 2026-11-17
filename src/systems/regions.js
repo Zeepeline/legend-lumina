@@ -3,7 +3,7 @@
 // (NPC, monster, hewan hidup; kamera diselaraskan dengan WORLD_POS). Hanya wilayah aktif (G.scene) yang
 // memegang pemain, input, HUD, musik, waktu & efek layar. Menyeberang = serah-terima kendali ke wilayah
 // yang sudah berjalan, tanpa memuat ulang. Tiap wilayah tetap memakai koordinat lokalnya (skrip cerita aman).
-const REG_LOAD = 960, REG_KEEP = 1400, REG_MAX = 7;
+const REG_LOAD = 820, REG_KEEP = 1150, REG_MAX = 3;
 const REG = new Map(); // id peta → scene pasif
 let regSeq = 0;
 function regionsOn() { return !window.REGIONS_OFF && !BENUA; }

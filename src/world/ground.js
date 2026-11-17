@@ -130,31 +130,44 @@ function genGround(M, rect) {
     return { m: d2 - d1, id, v: (x - fx) + (y - fy) };
   };
   const VW = VERDANT[M.ground] && !GP.ice && verdantTiles(M);
-  const water = (i, t, x, y) => { if (VW) { put(i, verdantWater(t, x + GX, y + GY)); return; } let c = GP.ice ? (t > .82 ? '#e8f8ff' : t > .55 ? '#c4e8f8' : '#a8d8f0') : t > .82 ? '#7cd0f0' : t > .55 ? '#4aa6e0' : '#3a8ed0'; const rp = Math.sin(x * .15 + y * .9) + Math.sin(x * .05 - y * .3) * 1.3; if (rp > 1.85 && t < .8) c = '#a8e8ff'; put(i, h2r(c)); };
+  const water = (i, t, x, y) => {
+    if (!GP.ice && M.ground !== 'cave' && typeof verdantWater === 'function') { put(i, verdantWater(t, x + GX, y + GY)); return; }
+    put(i, h2r(GP.ice ? (t > .82 ? '#e8f8ff' : t > .55 ? '#c4e8f8' : '#a8d8f0') : (t > .82 ? '#7cd0f0' : t > .55 ? '#4aa6e0' : '#3a8ed0')));
+  };
   for (let y = RY; y < RY + RH; y++) for (let x = RX; x < RX + RW; x++) {
     const i = ((y - RY) * RW + (x - RX)) * 4;
     if (R) {
       const ry = riverY(R, x), dv = Math.abs(y - ry), hw = R.w / 2;
       if (x >= R.bridge[0] && x <= R.bridge[1] && dv < hw + 5) {
-        const bx = x - R.bridge[0], bw = R.bridge[1] - R.bridge[0];
-        if (bx < 3 || bx > bw - 3) { put(i, h2r('#5e3b20')); continue; }
-        const ly = (y + 1000) % 6; put(i, ly === 0 ? h2r('#6e4222') : ly === 1 ? h2r('#c8945a') : h2r('#a8703e'), (hash(x >> 3, Math.floor((y + 1000) / 6), 5) - .5) * .12); continue;
+        const bx = x - R.bridge[0], bw = R.bridge[1] - R.bridge[0], by = Math.round(y - (ry - hw - 5)), bh = Math.round((hw + 5) * 2);
+        if (typeof bridgeWoodPix === 'function') { put(i, bridgeWoodPix(by, bx, bh, bw)); continue; }
+        const ly = (y + 1000) % 8; put(i, ly === 0 ? h2r('#382012') : ly === 1 ? h2r('#cca06a') : h2r('#9e683e')); continue;
       }
       if (dv < hw) { water(i, dv / hw, x, y); continue; }
-      if (VW && dv < hw + 13) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }
+      if (typeof verdantBank === 'function' && dv < hw + 13) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }
       else if (dv < hw + 4) { put(i, h2r(dv < hw + 1.5 ? '#8a7a5a' : '#cdb684')); continue; }
     }
     let inPond = false;
+    if (M.id === 'lake' && x >= 832 && x <= 886 && y >= 700 && y <= 722 && typeof bridgeWoodPix === 'function') {
+      put(i, bridgeWoodPix(x - 832, y - 700, 54, 22)); continue;
+    }
     if (PL.length) {
       const we = waterE(PL, x, y, GX, GY), wr = waterE.r;
       if (we < 1) {
         const ds = sd(x, y);
-        if (ds < 1.5) { if (ds > -1.5) { put(i, h2r('#5e3b20')); continue; } const ly = (y + 1000) % 6; put(i, h2r(ly === 0 ? '#6e4222' : ly === 1 ? '#c8945a' : '#a8703e')); continue; }
+        if (ds < 2.0) {
+          const u = Math.round(x + y * 0.12), v = Math.round((ds + 2.0) * 3.5);
+          if (typeof bridgeWoodPix === 'function') { put(i, bridgeWoodPix(u, v, 9999, 14)); continue; }
+          const ly = (y + 1000) % 8; put(i, ly === 0 ? h2r('#382012') : ly === 1 ? h2r('#cca06a') : h2r('#9e683e')); continue;
+        }
         water(i, wr < 92 ? Math.max(we, .5) : we, x, y); continue;
       }
-      if (we < 1 + (VW ? 13 : 5) / wr) {
-        if (VW) { const b = verdantBank(M, (we - 1) * wr, x + GX, y + GY, waterE(PL, x, y + 4, GX, GY) < we); if (b) { put(i, b); continue; } }
-        else { put(i, h2r(we < 1 + 2 / wr ? '#8a7a5a' : '#d6c08c')); continue; }
+      if (we < 1 + 13 / wr) {
+        if (typeof verdantBank === 'function') {
+          const b = verdantBank(M, (we - 1) * wr, x + GX, y + GY, waterE(PL, x, y + 4, GX, GY) < we);
+          if (b) { put(i, b); continue; }
+        }
+        put(i, h2r(we < 1 + 2 / wr ? '#8a7a5a' : '#d6c08c')); continue;
       }
     }
     if (inPond) continue;
@@ -175,13 +188,8 @@ function genGround(M, rect) {
         if (im && im.width) {
           const gx = ((x + GX) % 64 + 64) % 64, gy = ((y + GY) % 64 + 64) % 64;
           const ti = (gy * 64 + gx) * 4;
-          if (!M._cobbleData) {
-            const [tc, tx] = mk(64, 64); tx.drawImage(im, 0, 0);
-            M._cobbleData = tx.getImageData(0, 0, 64, 64).data;
-          }
-          const cd = M._cobbleData;
-          put(i, [cd[ti], cd[ti + 1], cd[ti + 2]], d > -1.5 ? -.12 : 0);
-          continue;
+          if (!M._cobbleData) { const [, tx] = mk(64, 64); tx.drawImage(im, 0, 0); M._cobbleData = tx.getImageData(0, 0, 64, 64).data; }
+          const cd = M._cobbleData; put(i, [cd[ti], cd[ti + 1], cd[ti + 2]], d > -1.5 ? -.12 : 0); continue;
         }
         // Fallback paving abu-abu jika gambar belum di-cache
         const v = vor(x, y, 8, 12);
@@ -218,28 +226,21 @@ function genGround(M, rect) {
   }
   const vOK = VERDANT[M.ground] && verdantTiles(M);
   if (vOK) verdantDeco(x, M, [RX, RY, RW, RH], GX, GY, sd, near);
-  if (!vOK) for (let n = 0; n < W * H / (M.flowers ? 60 : 90); n++) {
-    const X = Math.floor(hash(n, 1, 21) * W), Y = Math.floor(hash(n, 2, 21) * H); if (out(X, Y)) continue;
-    if (near(X, Y)) continue;
+  if (!vOK && M.ground !== 'meadow') for (let n = 0; n < W * H / 1600; n++) {
+    const X = Math.floor(hash(n, 1, 21) * W), Y = Math.floor(hash(n, 2, 21) * H); if (out(X, Y) || near(X, Y)) continue;
     const d = sd(X, Y);
-    // Tepi jalan tanah bertabur rumput liar & kerikil alami ala Dimraeth (menghilangkan garis kaku)
     if (d >= -1.5 && d <= 3.2 && GP.path === 'dirt') {
-      if (hash(n, 5, 21) > 0.48) {
-        px(x, GP.tuft, X, Y); px(x, GP.tuft, X - 1, Y); px(x, GP.tuft2, X, Y - 1);
-      } else if (hash(n, 5, 21) > 0.28) {
-        px(x, '#9a8870', X, Y); px(x, '#7a6a58', X + 1, Y);
-      }
+      if (hash(n, 5, 21) > 0.48) { px(x, GP.tuft, X, Y); px(x, GP.tuft2, X, Y - 1); }
+      else if (hash(n, 5, 21) > 0.28) { px(x, '#9a8870', X, Y); px(x, '#7a6a58', X + 1, Y); }
       continue;
     }
     if (d < 3) continue;
-    const r = hash(n, 3, 21), forest = M.ground === 'forest';
-    if (r < (M.flowers ? .55 : .78)) { px(x, GP.tuft, X, Y); px(x, GP.tuft, X - 1, Y - 1); px(x, GP.tuft, X + 1, Y - 1); px(x, GP.tuft2, X, Y - 2); }
-    else if (r < .97 || forest) {
-      const fl = GP.ice ? ['#ffffff', '#cfe6fa', '#b4d4f0'][Math.floor(hash(n, 4, 21) * 3)] :
-        ['#ffffff', '#fff0b0', '#ffc8d4', '#d8c8f8', '#ffd09c'][Math.floor(hash(n, 4, 21) * 5)];
-      px(x, fl, X, Y - 1); px(x, fl, X - 1, Y); px(x, fl, X + 1, Y); px(x, fl, X, Y + 1); px(x, GP.ice ? '#ffffff' : '#ffea88', X, Y);
-    }
-    else { ellF(x, '#d6d0c4', X, Y, 2.5, 1.6); px(x, '#f0ece2', X - 1, Y - 1); }
+    const r = hash(n, 3, 21);
+    if (r < 0.7) { px(x, GP.tuft, X, Y); px(x, GP.tuft2, X, Y - 1); }
+    else if (r < 0.95) {
+      const fl = GP.ice ? '#cfe6fa' : ['#ffffff', '#fff0b0', '#ffc8d4', '#d8c8f8'][Math.floor(hash(n, 4, 21) * 4)];
+      px(x, fl, X, Y); px(x, GP.ice ? '#ffffff' : '#ffea88', X, Y - 1);
+    } else { ellF(x, '#d6d0c4', X, Y, 2.5, 1.6); }
   }
   for (const [gx, gy, gw, gh, t] of (M.gardens || [])) {
     fr(x, '#5e3b20', gx - 2, gy - 2, gw + 4, gh + 4); fr(x, '#8a5a32', gx, gy, gw, gh);
