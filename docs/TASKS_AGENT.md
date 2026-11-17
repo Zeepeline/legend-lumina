@@ -4102,45 +4102,102 @@ Fokus: menyuntikkan kehidupan pada alam, cuaca, vegetasi, air, dan pemukiman den
 - Lakukan: secara berkala (tiap 12–18 detik), picu hembusan angin (*wind gust*): pepohonan bergoyang lebih cepat sesaat dan hamburkan 4–7 partikel daun melayang melintasi layar secara diagonal mengikuti arah angin (hijau di hutan, oranye di senja, kristal es di puncak).
 - Hasil: angin berhembus periodik menggugurkan dedaunan melayang yang memperkuat suasana alam.
 
-### [ ] T567. **Berkas Sinar Matahari Menembus Kanopi Hutan (*God Rays / Crepuscular Canopy Beams*)** — referensi: Sea of Stars, Secret of Mana
+### [x] T567. **Berkas Sinar Matahari Menembus Kanopi Hutan (*God Rays / Crepuscular Canopy Beams*)** — referensi: Sea of Stars, Secret of Mana
 - File: `src/systems/atmos.js` & `src/systems/grade.js`.
 - Lakukan: di area Hutan Lumina dan Reruntuhan Aurel pada pagi hingga siang hari, proyeksikan 3–4 berkas sinar cahaya miring lembut (*semi-transparent light shafts* alpha 0.08–0.12) yang bergerak perlahan di sela tajuk pohon disertai butiran debu/spora hutan bercahaya (*floating dust motes*).
 - Hasil: suasana hutan terasa magis dengan pendaran berkas sinar matahari menembus pepohonan.
 
-### [ ] T568. **Riak Air Langkah Kaki di Tepian & Genangan (*Footstep Water Ripple Rings*)** — referensi: Zelda: Link's Awakening, Sea of Stars
+### [x] T568. **Riak Air Langkah Kaki di Tepian & Genangan (*Footstep Water Ripple Rings*)** — referensi: Zelda: Link's Awakening, Sea of Stars
 - File: `src/world/water.js` & `src/systems/juice.js`.
 - Lakukan: saat Arka melangkah di air dangkal, tepian danau, atau genangan air hujan, cetak cincin riak elips tipis (1 px) yang mengembang keluar lalu memudar dalam 0.5s disertai cipratan droplet air mikro (*water droplets*).
 - Hasil: berjalan di tepian air menghasilkan lingkaran riak gelombang yang realistis.
 
-### [ ] T569. **Pantulan Bayangan Air di Kolam Tenang (*Specular Calm Water Reflections*)** — referensi: Chrono Trigger, Sea of Stars
+### [x] T569. **Pantulan Bayangan Air di Kolam Tenang (*Specular Calm Water Reflections*)** — referensi: Chrono Trigger, Sea of Stars
 - File: `src/world/water.js` & `src/systems/waterflow.js`.
 - Lakukan: di Danau Cermin dan kolam desa yang tenang, gambar bayangan cermin terbalik semi-transparan (alpha 0.22) dari sprite pohon tepi dan Arka di permukaan air, diberi distorsi gelombang horizontal lembut (sine shift 1 px) agar tampak seperti pantulan air alami.
 - Hasil: air danau yang tenang memantulkan bayangan pohon dan karakter secara halus.
 
-### [ ] T570. **Kepulan Asap Cerobong Desa Tertiup Angin (*Wind-Drifted Chimney Hearth Smoke*)** — referensi: Stardew Valley, Final Fantasy IX
+### [x] T570. **Kepulan Asap Cerobong Desa Tertiup Angin (*Wind-Drifted Chimney Hearth Smoke*)** — referensi: Stardew Valley, Final Fantasy IX
 - File: `src/world/spawn/spawn_1.js` & `src/systems/juice.js`.
 - Lakukan: cerobong rumah warga desa dan tungku pandai besi memancarkan kepulan asap piksel bulat lembut berkala (tiap 1.2s) yang membubung ke atas, membesar perlahan, lalu menipis dan meliuk condong mengikuti arah angin desa.
 - Hasil: rumah dan bengkel desa tampak berpenghuni dengan kepulan asap cerobong yang meliuk alami.
 
-### [ ] T571. **Bayangan Awan Melintas di Dunia Luar (*Drifting Cloud Shadows Across Ground*)** — referensi: Chrono Trigger, Dragon Quest XI
+### [x] T571. **Bayangan Awan Melintas di Dunia Luar (*Drifting Cloud Shadows Across Ground*)** — referensi: Chrono Trigger, Dragon Quest XI
 - File: `src/systems/atmos.js` & `src/world/ground.js`.
 - Lakukan: tambahkan lapisan bayangan awan procedural berukuran besar (alpha 0.07–0.10) yang merayap perlahan melintasi daratan dari barat daya ke timur laut di atas permukaan tanah, memberikan efek langit dan awan bergerak dinamis.
 - Hasil: tanah dunia luar sesekali disapu bayangan awan berjalan yang memanjakan mata.
 
-### [ ] T572. **Lentera Bergoyang & Berpendar Hangat di Malam Hari (*Swaying Lanterns with Warm Breathing Halos*)** — referensi: Octopath Traveler, Eastward
+### [x] T572. **Lentera Bergoyang & Berpendar Hangat di Malam Hari (*Swaying Lanterns with Warm Breathing Halos*)** — referensi: Octopath Traveler, Eastward
 - File: `src/world/spawn/spawn_1.js` & `src/systems/atmos.js`.
 - Lakukan: lentera tiang dan lampu gantung di pos jaga desa berayun pendulum lembut (±3 derajat) tertiup angin; saat malam tiba, lentera memproyeksikan halo cahaya oranye hangat yang berdenyut mikro (*breathing flicker 1.8s*) menerangi tiang dan tanah di bawahnya.
 - Hasil: lampu desa berayun dan memancarkan pendaran hangat yang hidup saat malam hari.
 
-### [ ] T573. **Riak Tetesan Hujan di Permukaan Air (*Raindrop Impact Rings on Water*)** — referensi: Zelda: A Link to the Past, Stardew Valley
+### [x] T573. **Riak Tetesan Hujan di Permukaan Air (*Raindrop Impact Rings on Water*)** — referensi: Zelda: A Link to the Past, Stardew Valley
 - File: `src/world/water.js` & `src/systems/atmos.js`.
 - Lakukan: saat cuaca hujan aktif (`isRaining()`), kolam, sungai, dan danau secara acak memunculkan riak lingkaran konsentris kecil (2–4 lingkaran mikro per detik per layar) di permukaan air yang mensimulasikan tetesan hujan jatuh ke air.
 - Hasil: permukaan air merespons cuaca hujan dengan riak-riak tetesan air yang natural.
 
-### [ ] T574. **Hembusan Angin Tebasan Bilah Pedang Terhadap Tanaman (*Blade Slash Wind Sway on Foliage*)** — referensi: Zelda: Breath of the Wild, Ghost of Tsushima
+### [x] T574. **Hembusan Angin Tebasan Bilah Pedang Terhadap Tanaman (*Blade Slash Wind Sway on Foliage*)** — referensi: Zelda: Breath of the Wild, Ghost of Tsushima
 - File: `src/systems/combat.js` & `src/world/objects.js`.
 - Lakukan: saat Arka mengeksekusi ayunan pedang atau kombo tebasan, rumput hias, semak bunga, dan ilalang dalam radius jangkauan bilah pedang (24 px) merunduk kencang menjauh dari arah tebasan selama 0.15 detik sebelum membal kembali ke posisi semula.
 - Hasil: ayunan senjata terasa bertenaga karena menciptakan hembusan angin yang menggoyangkan vegetasi di sekitarnya.
+
+---
+
+## W. GELOMBANG 22 — Ekosistem & Kehidupan NPC Organik (T575–T579)
+Fokus: menyempurnakan fisika pergerakan, proporsi tubuh, kecerdasan buatan (AI), dan interaksi sosial NPC agar dunia Lumina terasa berpenghuni nyata, hidup, dan bernapas ala JRPG modern (Red Dead Redemption 2, Octopath Traveler II, Stardew Valley, Genshin Impact).
+
+### [ ] T575. **Fisika Pergerakan Halus NPC (Anti-Seret, Akselerasi/Deselerasi & Bobbing Langkah)** — referensi: Octopath Traveler II, Eastward
+- File: `src/npc/brain.js` & `src/npc/npcs.js`.
+- Masalah: NPC saat ini langsung melonjak ke kecepatan penuh dan berhenti mendadak saat sampai atau saat didekati Arka (`setVelocity` instan), sehingga tampak kaku seperti diseret atau diteleportasi.
+- Lakukan:
+  1. Ganti manipulasi kecepatan instan dengan interpolasi lerp lembut (*smooth velocity ramping*): kecepatan NPC berakselerasi bertahap saat mulai berjalan dan melambat halus (*gentle deceleration*) saat mendekati target (radius 18 px).
+  2. Saat Arka mendekat (< 30 px) atau saat diajak bicara, NPC tidak membeku instan; terapkan pengereman bertahap selama 0.2 detik lalu menoleh perlahan ke arah Arka.
+  3. Tambahkan efek langkah mikro (*footstep stride bobbing*): saat berjalan, tambahkan getaran vertikal ritmis lembut (`scaleY` membal 0.98–1.02 dan offset Y sine wave kecil ±0.8 px seirama langkah) serta hembusan debu mikro sesekali saat memutar arah.
+  4. Berikan jeda ancang-ancang arah (*turn anticipation*): saat mengubah arah pandang/gerak lebih dari 90 derajat, NPC berhenti sesaat (0.15 detik) untuk menoleh sebelum melangkahkan kaki.
+- Hasil: gerakan patroli dan jalan-jalan NPC tampak luwes, natural, memiliki bobot fisik, dan bebas dari kesan "diseret".
+
+### [ ] T576. **Standardisasi Proporsi & Rasio Ukuran NPC Sebanding Arka** — referensi: Chrono Trigger, Sea of Stars
+- File: `src/scene/world.js`, `src/art/characters.js`, & `src/gfx/textures.js`.
+- Masalah: Sprite NPC lama berukuran 20×26 px sehingga tampak terlalu kurus, kerdil, atau tidak proporsional saat berdiri bersisian dengan sprite Arka (hero_arka frame 48×40 dengan tinggi karakter ~30–32 px).
+- Lakukan:
+  1. Sesuaikan skala visual rendering sprite NPC (`s.setScale(...)`) atau kanvas pembentuk sprite agar rasio tinggi dan volume tubuhnya seimbang harmonis dengan Arka.
+  2. Terapkan diferensiasi tinggi badan berbasis peran (`ROLE_HEIGHT_TIER`):
+     - *Anak-anak* (`child`, `rudi`, `girl`, `kb1`, `kb4`): rasio tinggi 0.78x Arka (~24 px), tubuh lebih mungil dan lincah.
+     - *Warga biasa & wanita* (`citizen`, `farmer`, `inn`, `woman`): rasio tinggi 0.95–1.0x Arka (~30–31 px).
+     - *Penjaga, pemburu & pandai besi* (`guard`, `smith`, `hunter`, `gj1`, `gj2`): rasio tinggi 1.05–1.08x Arka (~33–34 px) dengan postur tegap.
+     - *Tetua & petapa* (`elder`, `hermit`): sedikit membungkuk (~28–29 px) namun berbusana jubah bervolume.
+  3. Sesuaikan ukuran collider kaki (`s.body.setSize`) dan bayangan dasar elips (`shadow`) agar proporsional dengan skala baru tiap karakter.
+- Hasil: semua NPC memiliki proporsi tubuh yang serasi, seimbang, dan konsisten saat berdampingan dengan Arka.
+
+### [ ] T577. **Sistem Perilaku Mikro & Gestur Hidup NPC (*Micro-Idle Behaviors & Living Gestures*)** — referensi: Red Dead Redemption 2, Stardew Valley
+- File: `src/npc/brain.js` & `src/npc/npcs.js`.
+- Lakukan:
+  1. Saat NPC sedang diam atau menunggu di tempat kerja, sematkan tingkah laku mikro acak berkala (tiap 3–7 detik):
+     - Menoleh ke kiri/kanan mengamati sekeliling secara independen.
+     - Menghela napas/merenggangkan punggung (sedikit stretch vertikal).
+     - Menepuk debu pakaian atau menyeka dahi sehabis bekerja (pandai besi, petani, koki).
+     - Warga yang duduk di bangku sesekali menyilangkan kaki, menyesap teh, atau menengadah memandang langit.
+  2. Variasikan kecepatan jalan santai antar NPC (warga tua berjalan lebih lambat ~22 spd, anak-anak berlari ~45 spd, pengantar surat melangkah gesit ~36 spd).
+- Hasil: NPC yang sedang berdiam tidak lagi mematung kaku, melainkan menunjukkan gerak-gerik alami makhluk hidup.
+
+### [ ] T578. **Interaksi Sosial Spontan Antar Warga (*Dynamic Citizen Encounters & Chatter*)** — referensi: The Legend of Zelda: Majora's Mask, Skyrim
+- File: `src/npc/brain.js` & `src/npc/crowd.js`.
+- Lakukan:
+  1. Saat dua NPC patroli/warga berpapasan dalam jarak dekat (radius 24 px) di jalan setapak:
+     - Keduanya melambat, saling menoleh menghadap satu sama lain, dan berhenti sejenak (1.5–3 detik).
+     - Muncul balon emote dialog sosial berbalas mikro (misal NPC 1: `👋` / `☀️`, lalu NPC 2 membalas: `😊` / `💬`).
+     - Setelah selesai bertegur sapa, keduanya mengangguk kecil lalu melanjutkan rute masing-masing tanpa tabrakan.
+  2. Saat berkumpul di dekat sumur desa, papan pengumuman, atau bangku taman, NPC dapat membentuk lingkaran obrolan kecil kelompok (2–3 warga) bertukar cerita.
+- Hasil: desa dan kota terasa ramai dengan interaksi sosial warga yang saling menyapa secara mandiri.
+
+### [ ] T579. **Reaksi Situasional NPC Terhadap Aksi Pemain (*Reactive Awareness to Arka's Actions*)** — referensi: Breath of the Wild, GTA
+- File: `src/npc/brain.js`, `src/scene/world.js`, & `src/systems/combat.js`.
+- Lakukan:
+  1. *Lari Cepat / Dash*: Jika Arka melakukan roll/dash kencang memotong jalan tepat di samping NPC (< 20 px), NPC sedikit tersentak ke samping dengan emote `❗` atau `😮` sesaat sebelum kembali tenang.
+  2. *Ayunan Senjata di Desa*: Jika Arka mengayunkan pedang atau menembakkan panah dekat warga sipil/anak-anak (< 36 px), NPC melangkah mundur 1 langkah dengan postur terkejut / cemas (`💦` / `😨`) dan melontarkan teguran ringan ("Hati-hati Arka!", "Jangan main senjata di sini!").
+  3. *Cuaca Ekstrem / Hujan Badai*: Saat hujan deras turun, NPC yang belum sempat masuk rumah mempercepat langkahnya sambil mengangkat tangan menaungi kepala, atau berteduh di bawah emperan atap rumah terdekat.
+- Hasil: NPC memiliki kesadaran penuh terhadap lingkungan dan tindakan pemain di sekitarnya.
 
 ---
 

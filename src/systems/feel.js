@@ -280,6 +280,28 @@ World.prototype.create = function () {
           }
         }
       }
+      // T574: Hembusan Angin Tebasan Bilah Pedang Terhadap Tanaman (Zelda: BOTW, Ghost of Tsushima)
+      if ((pl.atkT || 0) > 0) {
+        if (!pl._swWind && this.bushes && this.bushes.length) {
+          pl._swWind = 1;
+          const facing = pl.flipX ? -1 : 1;
+          for (let i = 0; i < this.bushes.length; i++) {
+            const b = this.bushes[i];
+            if (!b || !b.active || b._sway) continue;
+            const dx = b.x - pl.x, dy = b.y - pl.y;
+            if (dx * dx + dy * dy < 1296) {
+              b._sway = 1;
+              this.tweens.add({
+                targets: b, scaleY: 0.72, scaleX: 1.25, rotation: facing * 0.22, duration: 90, yoyo: true,
+                onComplete: () => { b.scaleY = 1; b.scaleX = 1; b.rotation = 0; b._sway = 0; }
+              });
+              if (this.jx) this.jx('pop', b.x, b.y - 4, 2, { tint: 0x5cb85c });
+            }
+          }
+        }
+      } else {
+        pl._swWind = 0;
+      }
     });
   }
   return r;

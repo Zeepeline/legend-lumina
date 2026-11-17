@@ -88,6 +88,54 @@ Object.assign(World.prototype, {
         sf.img.destroy(); this._shoreFoam.splice(i, 1);
       }
     }
+    // T568: Riak Air Langkah Kaki di Tepian & Dangkal (Zelda: Link's Awakening, Sea of Stars)
+    const pl = this.pl;
+    if (pl && pl.body && pl.body.velocity.length() > 10 && !OPT.lite) {
+      const inWater = waterFlowAt(pl.x + off[0], pl.y + off[1]) || isShorelineAt(this.M, pl.x, pl.y, off[0], off[1]);
+      if (inWater) {
+        this._wStepT = (this._wStepT || 0) + dt;
+        if (this._wStepT > 0.28) {
+          this._wStepT = 0;
+          const rip = this.add.ellipse(pl.x, pl.y, 8, 4).setStrokeStyle(1, 0xd0ecfc, 0.85).setDepth(-9.3e5);
+          this.tweens.add({
+            targets: rip, scaleX: 2.5, scaleY: 2.2, alpha: 0, duration: 480, ease: 'Quad.easeOut',
+            onComplete: () => { rip.destroy(); }
+          });
+          if (this.jx) this.jx('pop', pl.x, pl.y, 2, { tint: 0xa8d8ea });
+        }
+      }
+    }
+    // T569: Pantulan Bayangan Air di Kolam Tenang & Danau (Chrono Trigger, Sea of Stars)
+    if (pl && pl.visible && !OPT.lite) {
+      const nearCalm = (this.M && (this.M.id === 'lake' || this.M.id === 'village' || this.M.id === 'meadow')) &&
+        (waterFlowAt(pl.x + off[0], pl.y + 12 + off[1]) || isShorelineAt(this.M, pl.x, pl.y + 8, off[0], off[1]));
+      if (nearCalm && pl.texture) {
+        if (!this._plRefl || !this._plRefl.scene) {
+          this._plRefl = this.add.sprite(pl.x, pl.y, pl.texture.key).setOrigin(0.5, 0)
+            .setTint(0x6aa6d6).setAlpha(0.22).setDepth(-9.4e5);
+        }
+        const waveX = Math.sin(this.t * 3.8 + pl.y * 0.1) * 1.2;
+        this._plRefl.setVisible(true).setTexture(pl.texture.key, pl.frame.name)
+          .setPosition(pl.x + waveX, pl.y - 1).setScale(pl.scaleX, -0.65).setFlipX(pl.flipX);
+      } else if (this._plRefl && this._plRefl.visible) {
+        this._plRefl.setVisible(false);
+      }
+    }
+    // T573: Riak Tetesan Hujan di Permukaan Air (Zelda: A Link to the Past, Stardew Valley)
+    if (this.weather === 'rain' && !OPT.lite) {
+      this._rainRipT = (this._rainRipT || 0) + dt;
+      if (this._rainRipT > 0.22) {
+        this._rainRipT = 0;
+        const rx = cam.x + Math.random() * cam.width, ry = cam.y + Math.random() * cam.height;
+        if (waterFlowAt(rx + off[0], ry + off[1])) {
+          const rrip = this.add.ellipse(rx, ry, 4, 2).setStrokeStyle(1, 0xdcf2ff, 0.75).setDepth(-9.35e5);
+          this.tweens.add({
+            targets: rrip, scaleX: 2.8, scaleY: 2.4, alpha: 0, duration: 320, ease: 'Quad.easeOut',
+            onComplete: () => { rrip.destroy(); }
+          });
+        }
+      }
+    }
   }
 });
 const _updFlow0 = World.prototype.update;

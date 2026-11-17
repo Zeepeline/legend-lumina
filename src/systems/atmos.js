@@ -36,6 +36,17 @@ function godrayTex(sc) {
   x.fill();
   sc.textures.addCanvas('godray_beam', c);
 }
+function cloudShadowTex(sc) {
+  if (sc.textures.exists('cloud_shadow')) return;
+  const N = 256, [c, x] = mk(N, N);
+  x.fillStyle = 'rgba(10, 20, 35, 0.45)';
+  x.beginPath();
+  x.ellipse(70, 70, 60, 38, 0.2, 0, Math.PI * 2);
+  x.ellipse(180, 160, 75, 48, -0.15, 0, Math.PI * 2);
+  x.ellipse(140, 95, 50, 32, 0.1, 0, Math.PI * 2);
+  x.fill();
+  sc.textures.addCanvas('cloud_shadow', c);
+}
 Object.assign(World.prototype, {
   updAmbientMotes(dt, outdoor, cave, n) {
     if (OPT.lite || (!outdoor && !cave)) {
@@ -154,6 +165,34 @@ Object.assign(World.prototype, {
     }
   },
 
+  // T567: Berkas Sinar Matahari Menembus Kanopi Hutan (Sea of Stars, Secret of Mana)
+  updGodRays(dt, outdoor) {
+    const isForest = this.M && (this.M.id === 'forest' || this.M.id === 'deepwood' || this.M.id === 'ruins');
+    const h = (typeof S !== 'undefined' && S.time != null) ? S.time : 12;
+    const isDay = outdoor && isForest && h >= 6.5 && h <= 15.5 && !OPT.lite;
+    if (!isDay) {
+      if (this._godRays) for (const r of this._godRays) r.setVisible(false);
+      return;
+    }
+    godrayTex(this);
+    const vw = typeof VW !== 'undefined' ? VW : 480;
+    if (!this._godRays) {
+      this._godRays = [];
+      const offsets = [0.15, 0.42, 0.68, 0.88];
+      for (let i = 0; i < 4; i++) {
+        const ray = this.add.image(vw * offsets[i], 12, 'godray_beam')
+          .setScrollFactor(0).setDepth(1.94e5).setOrigin(0.5, 0).setRotation(-0.24)
+          .setBlendMode(Phaser.BlendModes.ADD);
+        this._godRays.push(ray);
+      }
+    }
+    for (let i = 0; i < this._godRays.length; i++) {
+      const r = this._godRays[i];
+      const pulseA = 0.08 + Math.sin(this.t * 1.4 + i * 1.5) * 0.035;
+      r.setVisible(true).setAlpha(pulseA).setScale(1.2 + Math.sin(this.t * 0.8 + i) * 0.1, 1.4);
+    }
+  },
+
   updAtmos(dt) {
     if (G.title || !this.M) return;
     if (this.M.indoor && this._bgM !== this.M) { this._bgM = this.M; this.cameras.main.setBackgroundColor('#0e0907'); } /* luar ruangan sempit: gelap, bukan hijau */
@@ -162,9 +201,14 @@ Object.assign(World.prototype, {
     this.updAmbientMotes(dt, outdoor, cave, n);
     this.updCritters(dt, outdoor);
     this.updWindGust(dt, outdoor);
+    this.updGodRays(dt, outdoor);
     if (this._atmosM !== this.M || !this._fogL || !this._fogL[0].active) {
       (this._fogL || []).forEach(o => o.destroy()); (this._glP || []).forEach(o => o.destroy()); fogSheetTex(this);
       if (this._canopyL && this._canopyL.active) this._canopyL.destroy();
+      if (this._cloudL && this._cloudL.active) this._cloudL.destroy();
+      cloudShadowTex(this);
+      this._cloudL = outdoor && !cave && !OPT.lite ? this.add.tileSprite(0, 0, VW, VH, 'cloud_shadow')
+        .setOrigin(0).setScrollFactor(0).setDepth(-9.2e5).setAlpha(0.08) : null;
       this._canopyL = (this.M && this.M.id === 'deepwood' && this.textures.exists('canopy_overhang'))
         ? this.add.tileSprite(0, 0, VW, 52, 'canopy_overhang').setOrigin(0).setScrollFactor(0).setDepth(1.98e5).setAlpha(0.92) : null;
       this._fogL = [0, 1].map(k => this.add.tileSprite(0, 0, VW, VH, 'fogsheet').setOrigin(0).setScrollFactor(0).setDepth(1.9e5 + k).setAlpha(0)
@@ -187,6 +231,12 @@ Object.assign(World.prototype, {
       f.tilePositionY = cam.scrollY * (k ? .55 : .3) + this.t * (k ? 1.5 : .8);
       f.setTint(n > .3 ? 0x8090b8 : (isDw ? 0x88b090 : 0xffffff));
     });
+    // T571: Bayangan Awan Melintas di Tanah (Chrono Trigger, Dragon Quest XI)
+    if (this._cloudL && this._cloudL.active) {
+      this._cloudL.setVisible(outdoor && !cave && n < 0.65);
+      this._cloudL.tilePositionX = cam.scrollX * 0.25 + this.t * 8;
+      this._cloudL.tilePositionY = cam.scrollY * 0.25 - this.t * 4;
+    }
     // cahaya hangat lampu kecil + lentera Arka saat malam
     const ga = outdoor ? Math.max(0, Math.min(.6, (n - .12) * 1.4)) : 0, fogBoost = 1 + this._fogA * .8;
     if (!this._lant) this._lant = this.add.image(0, 0, 'nlL').setTint(0xffd890).setBlendMode(Phaser.BlendModes.ADD).setDepth(2e5 + 2);

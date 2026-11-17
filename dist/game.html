@@ -5014,6 +5014,23 @@ const OBJ_SPAWN = {};
 Object.assign(OBJ_SPAWN, {
   verdant_bush(s) { (this.bushes = this.bushes || []).push(s); },
   verdant_bush_small(s) { (this.bushes = this.bushes || []).push(s); },
+  // T572: Lentera Bergoyang & Berpendar Hangat (Octopath Traveler, Eastward)
+  lampPost(s, x, y, opt, d, type) {
+    this.lights.push({ x, y: y - 28, big: 1 });
+    if (!OPT.lite && this.tweens) {
+      s.setOrigin(0.5, 1);
+      const delay = Math.abs(((x * 0.05 + y * 0.03) * 600) % 1800);
+      this.tweens.add({ targets: s, rotation: 0.04, duration: 1800, delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
+  },
+  gpt_city_lamp(s, x, y, opt, d, type) {
+    this.lights.push({ x, y: y - 28, big: 1 });
+    if (!OPT.lite && this.tweens) {
+      s.setOrigin(0.5, 1);
+      const delay = Math.abs(((x * 0.05 + y * 0.03) * 600) % 1800);
+      this.tweens.add({ targets: s, rotation: 0.04, duration: 1900, delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
+  },
   shrine(s, x, y, opt, d, type) {
     { this.wall(x - 56, y - 30, 14, 12); this.wall(x + 42, y - 30, 14, 12); s.setDepth(y - 60); }
   },
@@ -5039,6 +5056,17 @@ Object.assign(OBJ_SPAWN, {
       frequency: 160
     }).setDepth(y + 1);
     this.lights.push({ x, y: y - 14, big: 1 });
+    // T570: Kepulan Asap Cerobong Desa Tertiup Angin (Stardew Valley, Final Fantasy IX)
+    if (!OPT.lite && this.add) {
+      this.add.particles(x - 8, y - 48, 'smoke', {
+        lifespan: 2800,
+        speedY: { min: -22, max: -14 },
+        speedX: { min: 4, max: 12 },
+        scale: { start: 0.45, end: 1.6 },
+        alpha: { start: 0.6, end: 0 },
+        frequency: 720
+      }).setDepth(y + 20);
+    }
   },
   pebbles(s, x, y, opt, d, type) {
     this.inter.push({
@@ -5642,6 +5670,11 @@ Object.assign(OBJ_SPAWN, {
   },
   lamp(s, x, y, opt, d, type) {
     this.lights.push({ x, y: y - 24, big: 1 });
+    if (!OPT.lite && this.tweens) {
+      s.setOrigin(0.5, 1);
+      const delay = Math.abs(((x * 0.05 + y * 0.03) * 600) % 1700);
+      this.tweens.add({ targets: s, rotation: 0.04, duration: 1750, delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
   },
   viewpoint(s, x, y, opt, d, type) {
     this.lights.push({ x, y: y - 10 });
@@ -18139,6 +18172,28 @@ World.prototype.create = function () {
           }
         }
       }
+      // T574: Hembusan Angin Tebasan Bilah Pedang Terhadap Tanaman (Zelda: BOTW, Ghost of Tsushima)
+      if ((pl.atkT || 0) > 0) {
+        if (!pl._swWind && this.bushes && this.bushes.length) {
+          pl._swWind = 1;
+          const facing = pl.flipX ? -1 : 1;
+          for (let i = 0; i < this.bushes.length; i++) {
+            const b = this.bushes[i];
+            if (!b || !b.active || b._sway) continue;
+            const dx = b.x - pl.x, dy = b.y - pl.y;
+            if (dx * dx + dy * dy < 1296) {
+              b._sway = 1;
+              this.tweens.add({
+                targets: b, scaleY: 0.72, scaleX: 1.25, rotation: facing * 0.22, duration: 90, yoyo: true,
+                onComplete: () => { b.scaleY = 1; b.scaleX = 1; b.rotation = 0; b._sway = 0; }
+              });
+              if (this.jx) this.jx('pop', b.x, b.y - 4, 2, { tint: 0x5cb85c });
+            }
+          }
+        }
+      } else {
+        pl._swWind = 0;
+      }
     });
   }
   return r;
@@ -26728,6 +26783,54 @@ Object.assign(World.prototype, {
         sf.img.destroy(); this._shoreFoam.splice(i, 1);
       }
     }
+    // T568: Riak Air Langkah Kaki di Tepian & Dangkal (Zelda: Link's Awakening, Sea of Stars)
+    const pl = this.pl;
+    if (pl && pl.body && pl.body.velocity.length() > 10 && !OPT.lite) {
+      const inWater = waterFlowAt(pl.x + off[0], pl.y + off[1]) || isShorelineAt(this.M, pl.x, pl.y, off[0], off[1]);
+      if (inWater) {
+        this._wStepT = (this._wStepT || 0) + dt;
+        if (this._wStepT > 0.28) {
+          this._wStepT = 0;
+          const rip = this.add.ellipse(pl.x, pl.y, 8, 4).setStrokeStyle(1, 0xd0ecfc, 0.85).setDepth(-9.3e5);
+          this.tweens.add({
+            targets: rip, scaleX: 2.5, scaleY: 2.2, alpha: 0, duration: 480, ease: 'Quad.easeOut',
+            onComplete: () => { rip.destroy(); }
+          });
+          if (this.jx) this.jx('pop', pl.x, pl.y, 2, { tint: 0xa8d8ea });
+        }
+      }
+    }
+    // T569: Pantulan Bayangan Air di Kolam Tenang & Danau (Chrono Trigger, Sea of Stars)
+    if (pl && pl.visible && !OPT.lite) {
+      const nearCalm = (this.M && (this.M.id === 'lake' || this.M.id === 'village' || this.M.id === 'meadow')) &&
+        (waterFlowAt(pl.x + off[0], pl.y + 12 + off[1]) || isShorelineAt(this.M, pl.x, pl.y + 8, off[0], off[1]));
+      if (nearCalm && pl.texture) {
+        if (!this._plRefl || !this._plRefl.scene) {
+          this._plRefl = this.add.sprite(pl.x, pl.y, pl.texture.key).setOrigin(0.5, 0)
+            .setTint(0x6aa6d6).setAlpha(0.22).setDepth(-9.4e5);
+        }
+        const waveX = Math.sin(this.t * 3.8 + pl.y * 0.1) * 1.2;
+        this._plRefl.setVisible(true).setTexture(pl.texture.key, pl.frame.name)
+          .setPosition(pl.x + waveX, pl.y - 1).setScale(pl.scaleX, -0.65).setFlipX(pl.flipX);
+      } else if (this._plRefl && this._plRefl.visible) {
+        this._plRefl.setVisible(false);
+      }
+    }
+    // T573: Riak Tetesan Hujan di Permukaan Air (Zelda: A Link to the Past, Stardew Valley)
+    if (this.weather === 'rain' && !OPT.lite) {
+      this._rainRipT = (this._rainRipT || 0) + dt;
+      if (this._rainRipT > 0.22) {
+        this._rainRipT = 0;
+        const rx = cam.x + Math.random() * cam.width, ry = cam.y + Math.random() * cam.height;
+        if (waterFlowAt(rx + off[0], ry + off[1])) {
+          const rrip = this.add.ellipse(rx, ry, 4, 2).setStrokeStyle(1, 0xdcf2ff, 0.75).setDepth(-9.35e5);
+          this.tweens.add({
+            targets: rrip, scaleX: 2.8, scaleY: 2.4, alpha: 0, duration: 320, ease: 'Quad.easeOut',
+            onComplete: () => { rrip.destroy(); }
+          });
+        }
+      }
+    }
   }
 });
 const _updFlow0 = World.prototype.update;
@@ -26762,6 +26865,31 @@ function moteTex(sc) {
   const [c, x] = mk(4, 4); x.fillStyle = '#ffffff';
   x.fillRect(1, 0, 2, 4); x.fillRect(0, 1, 4, 2);
   sc.textures.addCanvas('mote_dot', c);
+}
+function godrayTex(sc) {
+  if (sc.textures.exists('godray_beam')) return;
+  const [c, x] = mk(64, 180);
+  const grad = x.createLinearGradient(0, 0, 32, 180);
+  grad.addColorStop(0, 'rgba(255, 255, 220, 0.45)');
+  grad.addColorStop(0.5, 'rgba(255, 250, 190, 0.22)');
+  grad.addColorStop(1, 'rgba(255, 250, 190, 0)');
+  x.fillStyle = grad;
+  x.beginPath();
+  x.moveTo(12, 0); x.lineTo(36, 0); x.lineTo(54, 180); x.lineTo(0, 180);
+  x.closePath();
+  x.fill();
+  sc.textures.addCanvas('godray_beam', c);
+}
+function cloudShadowTex(sc) {
+  if (sc.textures.exists('cloud_shadow')) return;
+  const N = 256, [c, x] = mk(N, N);
+  x.fillStyle = 'rgba(10, 20, 35, 0.45)';
+  x.beginPath();
+  x.ellipse(70, 70, 60, 38, 0.2, 0, Math.PI * 2);
+  x.ellipse(180, 160, 75, 48, -0.15, 0, Math.PI * 2);
+  x.ellipse(140, 95, 50, 32, 0.1, 0, Math.PI * 2);
+  x.fill();
+  sc.textures.addCanvas('cloud_shadow', c);
 }
 Object.assign(World.prototype, {
   updAmbientMotes(dt, outdoor, cave, n) {
@@ -26881,6 +27009,34 @@ Object.assign(World.prototype, {
     }
   },
 
+  // T567: Berkas Sinar Matahari Menembus Kanopi Hutan (Sea of Stars, Secret of Mana)
+  updGodRays(dt, outdoor) {
+    const isForest = this.M && (this.M.id === 'forest' || this.M.id === 'deepwood' || this.M.id === 'ruins');
+    const h = (typeof S !== 'undefined' && S.time != null) ? S.time : 12;
+    const isDay = outdoor && isForest && h >= 6.5 && h <= 15.5 && !OPT.lite;
+    if (!isDay) {
+      if (this._godRays) for (const r of this._godRays) r.setVisible(false);
+      return;
+    }
+    godrayTex(this);
+    const vw = typeof VW !== 'undefined' ? VW : 480;
+    if (!this._godRays) {
+      this._godRays = [];
+      const offsets = [0.15, 0.42, 0.68, 0.88];
+      for (let i = 0; i < 4; i++) {
+        const ray = this.add.image(vw * offsets[i], 12, 'godray_beam')
+          .setScrollFactor(0).setDepth(1.94e5).setOrigin(0.5, 0).setRotation(-0.24)
+          .setBlendMode(Phaser.BlendModes.ADD);
+        this._godRays.push(ray);
+      }
+    }
+    for (let i = 0; i < this._godRays.length; i++) {
+      const r = this._godRays[i];
+      const pulseA = 0.08 + Math.sin(this.t * 1.4 + i * 1.5) * 0.035;
+      r.setVisible(true).setAlpha(pulseA).setScale(1.2 + Math.sin(this.t * 0.8 + i) * 0.1, 1.4);
+    }
+  },
+
   updAtmos(dt) {
     if (G.title || !this.M) return;
     if (this.M.indoor && this._bgM !== this.M) { this._bgM = this.M; this.cameras.main.setBackgroundColor('#0e0907'); } /* luar ruangan sempit: gelap, bukan hijau */
@@ -26889,9 +27045,14 @@ Object.assign(World.prototype, {
     this.updAmbientMotes(dt, outdoor, cave, n);
     this.updCritters(dt, outdoor);
     this.updWindGust(dt, outdoor);
+    this.updGodRays(dt, outdoor);
     if (this._atmosM !== this.M || !this._fogL || !this._fogL[0].active) {
       (this._fogL || []).forEach(o => o.destroy()); (this._glP || []).forEach(o => o.destroy()); fogSheetTex(this);
       if (this._canopyL && this._canopyL.active) this._canopyL.destroy();
+      if (this._cloudL && this._cloudL.active) this._cloudL.destroy();
+      cloudShadowTex(this);
+      this._cloudL = outdoor && !cave && !OPT.lite ? this.add.tileSprite(0, 0, VW, VH, 'cloud_shadow')
+        .setOrigin(0).setScrollFactor(0).setDepth(-9.2e5).setAlpha(0.08) : null;
       this._canopyL = (this.M && this.M.id === 'deepwood' && this.textures.exists('canopy_overhang'))
         ? this.add.tileSprite(0, 0, VW, 52, 'canopy_overhang').setOrigin(0).setScrollFactor(0).setDepth(1.98e5).setAlpha(0.92) : null;
       this._fogL = [0, 1].map(k => this.add.tileSprite(0, 0, VW, VH, 'fogsheet').setOrigin(0).setScrollFactor(0).setDepth(1.9e5 + k).setAlpha(0)
@@ -26914,6 +27075,12 @@ Object.assign(World.prototype, {
       f.tilePositionY = cam.scrollY * (k ? .55 : .3) + this.t * (k ? 1.5 : .8);
       f.setTint(n > .3 ? 0x8090b8 : (isDw ? 0x88b090 : 0xffffff));
     });
+    // T571: Bayangan Awan Melintas di Tanah (Chrono Trigger, Dragon Quest XI)
+    if (this._cloudL && this._cloudL.active) {
+      this._cloudL.setVisible(outdoor && !cave && n < 0.65);
+      this._cloudL.tilePositionX = cam.scrollX * 0.25 + this.t * 8;
+      this._cloudL.tilePositionY = cam.scrollY * 0.25 - this.t * 4;
+    }
     // cahaya hangat lampu kecil + lentera Arka saat malam
     const ga = outdoor ? Math.max(0, Math.min(.6, (n - .12) * 1.4)) : 0, fogBoost = 1 + this._fogA * .8;
     if (!this._lant) this._lant = this.add.image(0, 0, 'nlL').setTint(0xffd890).setBlendMode(Phaser.BlendModes.ADD).setDepth(2e5 + 2);

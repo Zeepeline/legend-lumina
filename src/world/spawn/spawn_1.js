@@ -4,6 +4,23 @@ const OBJ_SPAWN = {};
 Object.assign(OBJ_SPAWN, {
   verdant_bush(s) { (this.bushes = this.bushes || []).push(s); },
   verdant_bush_small(s) { (this.bushes = this.bushes || []).push(s); },
+  // T572: Lentera Bergoyang & Berpendar Hangat (Octopath Traveler, Eastward)
+  lampPost(s, x, y, opt, d, type) {
+    this.lights.push({ x, y: y - 28, big: 1 });
+    if (!OPT.lite && this.tweens) {
+      s.setOrigin(0.5, 1);
+      const delay = Math.abs(((x * 0.05 + y * 0.03) * 600) % 1800);
+      this.tweens.add({ targets: s, rotation: 0.04, duration: 1800, delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
+  },
+  gpt_city_lamp(s, x, y, opt, d, type) {
+    this.lights.push({ x, y: y - 28, big: 1 });
+    if (!OPT.lite && this.tweens) {
+      s.setOrigin(0.5, 1);
+      const delay = Math.abs(((x * 0.05 + y * 0.03) * 600) % 1800);
+      this.tweens.add({ targets: s, rotation: 0.04, duration: 1900, delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
+  },
   shrine(s, x, y, opt, d, type) {
     { this.wall(x - 56, y - 30, 14, 12); this.wall(x + 42, y - 30, 14, 12); s.setDepth(y - 60); }
   },
@@ -29,6 +46,17 @@ Object.assign(OBJ_SPAWN, {
       frequency: 160
     }).setDepth(y + 1);
     this.lights.push({ x, y: y - 14, big: 1 });
+    // T570: Kepulan Asap Cerobong Desa Tertiup Angin (Stardew Valley, Final Fantasy IX)
+    if (!OPT.lite && this.add) {
+      this.add.particles(x - 8, y - 48, 'smoke', {
+        lifespan: 2800,
+        speedY: { min: -22, max: -14 },
+        speedX: { min: 4, max: 12 },
+        scale: { start: 0.45, end: 1.6 },
+        alpha: { start: 0.6, end: 0 },
+        frequency: 720
+      }).setDepth(y + 20);
+    }
   },
   pebbles(s, x, y, opt, d, type) {
     this.inter.push({

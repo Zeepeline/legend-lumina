@@ -243,6 +243,11 @@ Object.assign(OBJ_SPAWN, {
   },
   lamp(s, x, y, opt, d, type) {
     this.lights.push({ x, y: y - 24, big: 1 });
+    if (!OPT.lite && this.tweens) {
+      s.setOrigin(0.5, 1);
+      const delay = Math.abs(((x * 0.05 + y * 0.03) * 600) % 1700);
+      this.tweens.add({ targets: s, rotation: 0.04, duration: 1750, delay, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
   },
   viewpoint(s, x, y, opt, d, type) {
     this.lights.push({ x, y: y - 10 });

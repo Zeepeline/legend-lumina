@@ -87,13 +87,13 @@ _Lantai & perabot interior_
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
 `OBJ` 7 · `MAPS` 369
 
-## src/world/spawn/spawn_1.js (389 baris)
+## src/world/spawn/spawn_1.js (417 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-`OBJ_SPAWN` 3 · obj `verdant_bush` 5 · obj `verdant_bush_small` 6 · obj `shrine` 7 · obj `cavemouth` 10 · obj `sign` 13 · obj `forge` 23 · obj `pebbles` 33 · obj `telescope` 41 · obj `altar` 49 · obj `fieldoven` 57 · obj `dripstone` 65 · obj `frostflower` 73 · obj `totem` 81 · obj `pigeons` 89 · obj `teatable` 122 · obj `lotuspad` 130 · obj `dockboat` 138 · obj `coffeeshrub` 193 · obj `coffeekettle` 201 · obj `orchidrock` 209 · obj `canaryperch` 217 · obj `woodlandshrine` 225 · obj `bellows` 233 · obj `ringbooth` 241 · obj `archerytarget` 249 · obj `lakelighthouse` 257 · obj `streetdrum` 265 · obj `dummy` 273 · obj `pot` 281 · obj `well` 291 · obj `apple1` 306 · obj `bench` 311 · obj `bell` 327 · obj `campfire` 335 · obj `alchemytable` 352 · obj `scenicbench` 361 · obj `mailbox` 379
+`OBJ_SPAWN` 3 · obj `verdant_bush` 5 · obj `verdant_bush_small` 6 · obj `lampPost` 8 · obj `gpt_city_lamp` 16 · obj `shrine` 24 · obj `cavemouth` 27 · obj `sign` 30 · obj `forge` 40 · obj `pebbles` 61 · obj `telescope` 69 · obj `altar` 77 · obj `fieldoven` 85 · obj `dripstone` 93 · obj `frostflower` 101 · obj `totem` 109 · obj `pigeons` 117 · obj `teatable` 150 · obj `lotuspad` 158 · obj `dockboat` 166 · obj `coffeeshrub` 221 · obj `coffeekettle` 229 · obj `orchidrock` 237 · obj `canaryperch` 245 · obj `woodlandshrine` 253 · obj `bellows` 261 · obj `ringbooth` 269 · obj `archerytarget` 277 · obj `lakelighthouse` 285 · obj `streetdrum` 293 · obj `dummy` 301 · obj `pot` 309 · obj `well` 319 · obj `apple1` 334 · obj `bench` 339 · obj `bell` 355 · obj `campfire` 363 · obj `alchemytable` 380 · obj `scenicbench` 389 · obj `mailbox` 407
 
-## src/world/spawn/spawn_2.js (320 baris)
+## src/world/spawn/spawn_2.js (325 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 219 · obj `tree_redwood` 226 · obj `goblin_torch` 229 · obj `goblin_cauldron` 232 · obj `cryst` 241 · obj `lamp` 244 · obj `viewpoint` 247 · obj `lumina_shard` 281 · obj `gatehouse` 303
+obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 219 · obj `tree_redwood` 226 · obj `goblin_torch` 229 · obj `goblin_cauldron` 232 · obj `cryst` 241 · obj `lamp` 244 · obj `viewpoint` 252 · obj `lumina_shard` 286 · obj `gatehouse` 308
 
 ## src/world/ground.js (386 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
@@ -351,7 +351,7 @@ _Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
 `.updInteractHint()` 6 · `.updEnemyBars()` 42 · `.retryBoss()` 68 · `levelUpDetail()` 74 · `.setTimeout()` 80 · `TIPS` 102 · `showTip()` 113 · `.updTips()` 132 · `.updPeaceHud()` 142 · `.updMinimap()` 147 · `.swapWeapon()` 181 · `.updStamina()` 192 · `.tryClimb()` 209 · `applyPadOpt()` 237
 
-## src/systems/feel.js (287 baris)
+## src/systems/feel.js (309 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
 `ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 164 · `.hurtAnim()` 171 · `.hasLineOfSight()` 173 · `_spawnEnemy` 189 · `_killEnemy` 209 · `_feelCr` 240
 
@@ -559,13 +559,13 @@ _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TA
 _T442, T445 & Elevated Border Cliffs:_
 
 
-## src/systems/waterflow.js (101 baris)
+## src/systems/waterflow.js (149 baris)
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
-`FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `foamTex()` 32 · `isShorelineAt()` 39 · `.updFlow()` 51 · `_updFlow0` 93
+`FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `foamTex()` 32 · `isShorelineAt()` 39 · `.updFlow()` 51 · `_updFlow0` 141
 
-## src/systems/atmos.js (200 baris)
+## src/systems/atmos.js (264 baris)
 _Suasana cahaya & kabut (wilayah aktif saja):_
-`ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `.updAmbientMotes()` 26 · `.updCritters()` 75 · `.updWindGust()` 116 · `.updAtmos()` 143
+`ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `godrayTex()` 25 · `cloudShadowTex()` 39 · `.updAmbientMotes()` 51 · `.updCritters()` 100 · `.updWindGust()` 141 · `.updGodRays()` 169 · `.updAtmos()` 196
 
 ## src/systems/sunbeams.js (74 baris)
 _T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_
