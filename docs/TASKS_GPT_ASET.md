@@ -133,11 +133,11 @@ Obrolan "Patokan". Kerjakan A1 dulu: itu jadi STYLE KEY untuk semua obrolan lain
 
 ## B. Tanah, air, tebing, ladang
 Obrolan "Tanah".
-### [x] G011. padang: tekstur tanah utama (mulus, diulang)
+### [ ] G011. padang: tekstur tanah utama (mulus, diulang)
 - Simpan: `assets/raw/gpt2/tanah/padang_dasar.png` · Ukuran di game: 256×256 px di game (diulang tanpa sambungan)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of sun-baked yellow-green meadow grass. Very low contrast, no single object stands out, subtle variation only.`
 - Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol.
-### [x] G012. padang: tekstur tanah kedua (jalan/petak)
+### [ ] G012. padang: tekstur tanah kedua (jalan/petak)
 - Simpan: `assets/raw/gpt2/tanah/padang_jalan.png` · Ukuran di game: 256×256 px di game (diulang)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of warm ochre dirt.`
 - Cek: Mulus saat diulang 2×2.
