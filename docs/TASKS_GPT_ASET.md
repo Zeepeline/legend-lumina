@@ -177,10 +177,10 @@ Obrolan "Tanah".
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_dasar.png` · Ukuran di game: 256×256 px di game (diulang tanpa sambungan)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of dark mossy forest floor with moss tufts. Very low contrast, no single object stands out, subtle variation only.`
 - Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol. Selesai disetujui & mulus sempurna.
-### [ ] G022. hutan dalam: tekstur tanah kedua (jalan/petak)
+### [x] G022. hutan dalam: tekstur tanah kedua (jalan/petak)
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_jalan.png` · Ukuran di game: 256×256 px di game (diulang)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of damp dark-brown soil with roots.`
-- Cek: Mulus saat diulang 2×2.
+- Cek: Mulus saat diulang 2×2. Selesai disetujui & mulus sempurna.
 ### [ ] G023. hutan dalam: potongan tepi antara rumput & jalan
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_tepi.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Edge pieces where dark mossy forest floor with moss tufts overlaps damp dark-brown soil with roots: the grass edge is soft and scalloped with small leafy bumps (no hard line). Row 1: straight edge facing up, right, down, left. Row 2: four outer corners. Row 3: four inner corners. Row 4: four small isolated grass islands. Each piece shows ONLY the grass part with its leafy rim; the rest of the cell is magenta.`
