@@ -26,7 +26,6 @@ MAPS.forest = {
   ],
   river: { y: 600, amp: 30, k: .009, w: 36, bridge: [380, 432] },
   objs: [
-    ['bridge_wood', 406, 585],
     ['reeds', 260, 440], ['reeds', 280, 445], ['reeds', 850, 750], ['reeds', 870, 755],
     ['stele', 556, 1004, { lore: 'prasasti_hutan' }],
     ['sign', 450, 300, { text: 'Papan arah: ↑ Desa Lumina · ← Hutan Dalam · → Jalur Sungai' }],

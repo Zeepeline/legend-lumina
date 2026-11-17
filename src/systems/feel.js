@@ -260,6 +260,26 @@ World.prototype.create = function () {
       if (this._xraySpr && this._xraySpr.scene && this._xraySpr.visible) {
         this._xraySpr.setVisible(false);
       }
+      // T563: Efek Rumput & Semak Terbelah Saat Berjalan (Zelda: Minish Cap, Eastward)
+      if (moving && this.bushes && this.bushes.length) {
+        this._bT = (this._bT || 0) + 1;
+        if (this._bT % 6 === 0) {
+          for (let i = 0; i < this.bushes.length; i++) {
+            const b = this.bushes[i];
+            if (!b || !b.active || b._sway) continue;
+            const dx = pl.x - b.x, dy = pl.y - (b.y - 6);
+            if (dx * dx + dy * dy < 576) {
+              b._sway = 1;
+              const rot = pl.body.velocity.x > 0 ? 0.12 : -0.12;
+              this.tweens.add({
+                targets: b, scaleY: 0.8, scaleX: 1.15, rotation: rot, duration: 110, yoyo: true,
+                onComplete: () => { b.scaleY = 1; b.scaleX = 1; b.rotation = 0; b._sway = 0; }
+              });
+              if (this.jx) this.jx('pop', b.x, b.y - 4, 2, { tint: 0x76b852 });
+            }
+          }
+        }
+      }
     });
   }
   return r;

@@ -135,10 +135,10 @@ function genGround(M, rect) {
     const i = ((y - RY) * RW + (x - RX)) * 4;
     if (R) {
       const ry = riverY(R, x), dv = Math.abs(y - ry), hw = R.w / 2;
-      if (x >= R.bridge[0] && x <= R.bridge[1] && dv < hw) {
-        water(i, dv / hw, x, y);
-        PX[i] = Math.floor(PX[i] * 0.78); PX[i + 1] = Math.floor(PX[i + 1] * 0.78); PX[i + 2] = Math.floor(PX[i + 2] * 0.85);
-        continue;
+      if (x >= R.bridge[0] && x <= R.bridge[1] && dv < hw + 5) {
+        const bx = x - R.bridge[0], bw = R.bridge[1] - R.bridge[0];
+        if (bx < 3 || bx > bw - 3) { put(i, h2r('#5e3b20')); continue; }
+        const ly = (y + 1000) % 6; put(i, ly === 0 ? h2r('#6e4222') : ly === 1 ? h2r('#c8945a') : h2r('#a8703e'), (hash(x >> 3, Math.floor((y + 1000) / 6), 5) - .5) * .12); continue;
       }
       if (dv < hw) { water(i, dv / hw, x, y); continue; }
       if (VW && dv < hw + 13) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }

@@ -1,15 +1,9 @@
 'use strict';
 // Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World
 Object.assign(OBJ_SPAWN, {
-  bridge_wood(s, x, y) {
-    s.setOrigin(0.5, 0.5).setPosition(x, y).setDepth(y - 45);
-  },
-  bridge_wood_long(s, x, y) {
-    s.setOrigin(0.5, 0.5).setPosition(x, y).setDepth(y - 45);
-  },
   brokenbridge(s, x, y, opt, d, type) {
     if (S.flags && S.flags.bridge_fixed) {
-      s.setTexture('bridge_wood_long').setScale(1, 1).setOrigin(0.5, 0.5).setDepth(y - 45);
+      s.setTexture('log').setScale(1.2, 0.9);
     } else {
       s.setTint(0x8a7050);
       this.inter.push({
@@ -31,7 +25,7 @@ Object.assign(OBJ_SPAWN, {
               await sleep(250);
               sfx('chest');
               this.sparkle(x, y - 8, 'spark', 12);
-              s.clearTint().setTexture('bridge_wood_long').setScale(1, 1).setOrigin(0.5, 0.5).setDepth(y - 45);
+              s.clearTint().setTexture('log').setScale(1.2, 0.9);
               updHud();
               if (typeof checkTitles === 'function') checkTitles();
               await say('KLOK! KLOK! Jembatan kayu berhasil diperbaiki! Jalan pintas menyeberang sungai kini terbuka lebar.');

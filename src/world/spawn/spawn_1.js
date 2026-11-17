@@ -2,6 +2,8 @@
 // Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World
 const OBJ_SPAWN = {};
 Object.assign(OBJ_SPAWN, {
+  verdant_bush(s) { (this.bushes = this.bushes || []).push(s); },
+  verdant_bush_small(s) { (this.bushes = this.bushes || []).push(s); },
   shrine(s, x, y, opt, d, type) {
     { this.wall(x - 56, y - 30, 14, 12); this.wall(x + 42, y - 30, 14, 12); s.setDepth(y - 60); }
   },
@@ -91,6 +93,31 @@ Object.assign(OBJ_SPAWN, {
         await this.feedCityPigeons(x, y);
       }
     });
+    // T565: Kawanan Burung Mematuk Tanah & Terbang Kabur (Zelda: Minish Cap, Eastward)
+    const checkEv = () => {
+      if (!s.active || !this.sys || !this.sys.isActive()) return;
+      const pl = this.pl;
+      if (pl && !s._fled) {
+        const d2 = (pl.x - x) * (pl.x - x) + (pl.y - y) * (pl.y - y);
+        const fast = pl.body && pl.body.velocity.length() > 40;
+        const atk = (pl.atkT || 0) > 0 || pl.rolling;
+        if (d2 < 1764 && (fast || atk || d2 < 576)) {
+          s._fled = true;
+          if (this.jx) this.jx('pop', x, y - 6, 3, { tint: 0xe6eef8 });
+          this.tweens.add({
+            targets: s, y: y - 80, x: x + (Math.random() * 50 - 25), scaleX: 0.5, scaleY: 0.5, alpha: 0,
+            duration: 650, ease: 'Quad.easeOut',
+            onComplete: () => {
+              this.time.delayedCall(12000, () => {
+                if (s.active) { s.setPosition(x, y).setScale(1).setAlpha(1); s._fled = false; }
+              });
+            }
+          });
+        }
+      }
+    };
+    this.events.on('postupdate', checkEv);
+    s.once('destroy', () => { this.events.off('postupdate', checkEv); });
   },
   teatable(s, x, y, opt, d, type) {
     this.inter.push({

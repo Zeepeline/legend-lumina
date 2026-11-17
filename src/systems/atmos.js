@@ -22,6 +22,20 @@ function moteTex(sc) {
   x.fillRect(1, 0, 2, 4); x.fillRect(0, 1, 4, 2);
   sc.textures.addCanvas('mote_dot', c);
 }
+function godrayTex(sc) {
+  if (sc.textures.exists('godray_beam')) return;
+  const [c, x] = mk(64, 180);
+  const grad = x.createLinearGradient(0, 0, 32, 180);
+  grad.addColorStop(0, 'rgba(255, 255, 220, 0.45)');
+  grad.addColorStop(0.5, 'rgba(255, 250, 190, 0.22)');
+  grad.addColorStop(1, 'rgba(255, 250, 190, 0)');
+  x.fillStyle = grad;
+  x.beginPath();
+  x.moveTo(12, 0); x.lineTo(36, 0); x.lineTo(54, 180); x.lineTo(0, 180);
+  x.closePath();
+  x.fill();
+  sc.textures.addCanvas('godray_beam', c);
+}
 Object.assign(World.prototype, {
   updAmbientMotes(dt, outdoor, cave, n) {
     if (OPT.lite || (!outdoor && !cave)) {
@@ -71,12 +85,83 @@ Object.assign(World.prototype, {
     }
   },
 
+  // T564: Kupu-Kupu Siang & Kunang-Kunang Malam Reaktif (Stardew Valley, Sea of Stars)
+  updCritters(dt, outdoor) {
+    if (OPT.lite || !outdoor) {
+      if (this._critters) for (const c of this._critters) c.img.setVisible(false);
+      return;
+    }
+    moteTex(this);
+    if (!this._critters) {
+      this._critters = [];
+      for (let i = 0; i < 6; i++) {
+        const img = this.add.image(0, 0, 'mote_dot').setDepth(1.9e5).setBlendMode(Phaser.BlendModes.ADD);
+        this._critters.push({ img, x: 0, y: 0, vx: 0, vy: 0, t: Math.random() * 10, active: false });
+      }
+    }
+    const pl = this.pl; if (!pl) return;
+    const h = (typeof S !== 'undefined' && S.time != null) ? S.time : 12;
+    const isNight = h >= 19 || h < 5;
+    const tint = isNight ? 0xb8ff60 : (this.M && this.M.id === 'meadow' ? 0xffec78 : 0x7be4ff);
+    for (const c of this._critters) {
+      if (!c.active) {
+        c.x = pl.x + (Math.random() * 2 - 1) * 160;
+        c.y = pl.y + (Math.random() * 2 - 1) * 120;
+        c.active = true;
+      }
+      c.t += dt;
+      const d = Math.hypot(pl.x - c.x, pl.y - c.y);
+      if (d < 28) {
+        const ang = Math.atan2(c.y - pl.y, c.x - pl.x);
+        c.vx += Math.cos(ang) * 90; c.vy += Math.sin(ang) * 90;
+      }
+      c.vx *= 0.92; c.vy *= 0.92;
+      const wanderX = Math.sin(c.t * 2.2) * 18, wanderY = Math.cos(c.t * 1.8) * 14;
+      c.x += (c.vx + wanderX) * dt; c.y += (c.vy + wanderY) * dt;
+      if (d > 240) c.active = false;
+      const flap = isNight ? 1 : Math.abs(Math.sin(c.t * 16));
+      const pulseA = isNight ? (0.4 + 0.5 * Math.sin(c.t * 3.5)) : 0.85;
+      c.img.setVisible(true).setPosition(c.x, c.y).setTint(tint)
+        .setScale(flap * 0.8 + 0.3, 0.9).setAlpha(pulseA);
+    }
+  },
+
+  // T566: Hembusan Angin & Guguran Daun Melayang (Octopath Traveler, Ghost of Tsushima)
+  updWindGust(dt, outdoor) {
+    if (OPT.lite || !outdoor) return;
+    this._gustT = (this._gustT || 0) + dt;
+    if (this._gustT > 14) {
+      this._gustT = 0;
+      moteTex(this);
+      const cam = this.cameras.main;
+      const isSnow = this.M && this.M.ground === 'snow';
+      const h = (typeof S !== 'undefined' && S.time != null) ? S.time : 12;
+      const isDusk = h >= 16 && h < 19.5;
+      const tint = isSnow ? 0xe2f4f8 : (isDusk ? 0xf0932b : 0x6ab04c);
+      const n = rnd(4, 7);
+      for (let i = 0; i < n; i++) {
+        const startX = cam.scrollX + rnd(-20, cam.width * 0.7);
+        const startY = cam.scrollY + rnd(-30, 40);
+        const leaf = this.add.image(startX, startY, 'mote_dot')
+          .setDepth(1.95e5).setTint(tint).setScale(rnd(0.8, 1.4), rnd(0.5, 0.9)).setAlpha(0.9);
+        this.tweens.add({
+          targets: leaf,
+          x: startX + rnd(180, 260), y: startY + rnd(120, 180),
+          rotation: rnd(3, 8), alpha: 0, duration: rnd(1800, 2600), ease: 'Sine.easeOut',
+          onComplete: () => { leaf.destroy(); }
+        });
+      }
+    }
+  },
+
   updAtmos(dt) {
     if (G.title || !this.M) return;
     if (this.M.indoor && this._bgM !== this.M) { this._bgM = this.M; this.cameras.main.setBackgroundColor('#0e0907'); } /* luar ruangan sempit: gelap, bukan hijau */
     const outdoor = !this.M.indoor && !this.M.dark, cave = this.M && this.M.ground === 'cave';
     const n = typeof nightAmt === 'function' ? nightAmt() : 0;
     this.updAmbientMotes(dt, outdoor, cave, n);
+    this.updCritters(dt, outdoor);
+    this.updWindGust(dt, outdoor);
     if (this._atmosM !== this.M || !this._fogL || !this._fogL[0].active) {
       (this._fogL || []).forEach(o => o.destroy()); (this._glP || []).forEach(o => o.destroy()); fogSheetTex(this);
       if (this._canopyL && this._canopyL.active) this._canopyL.destroy();
