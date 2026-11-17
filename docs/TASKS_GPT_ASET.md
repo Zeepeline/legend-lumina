@@ -153,10 +153,10 @@ Obrolan "Tanah".
 - Simpan: `assets/raw/gpt2/tanah/padang_tepiair.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Shoreline pieces where sun-baked yellow-green meadow grass meets calm water: a thin darker earth lip, a few reeds and pebbles at the waterline. Row 1: straight shore facing up, right, down, left. Row 2: outer corners. Row 3: inner corners. Row 4: four small rocks/reed clumps standing in water. Only the land part is drawn; water area is magenta.`
 - Cek: Hanya bagian darat yang digambar; air = magenta. Selesai dipotong 12 ubin tepian 32×32 px + 4 objek air (batu & alang-alang) bersih transparan.
-### [ ] G016. hutan: tekstur tanah utama (mulus, diulang)
+### [x] G016. hutan: tekstur tanah utama (mulus, diulang)
 - Simpan: `assets/raw/gpt2/tanah/hutan_dasar.png` · Ukuran di game: 256×256 px di game (diulang tanpa sambungan)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of slightly deeper green forest grass with tiny leaf litter. Very low contrast, no single object stands out, subtle variation only.`
-- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol.
+- Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol. Selesai disetujui & mulus sempurna (selisih sambungan hanya 0.26 RGB).
 ### [ ] G017. hutan: tekstur tanah kedua (jalan/petak)
 - Simpan: `assets/raw/gpt2/tanah/hutan_jalan.png` · Ukuran di game: 256×256 px di game (diulang)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of brown-ochre forest dirt with twigs.`
