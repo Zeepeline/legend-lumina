@@ -5827,6 +5827,9 @@ function genGround(M, rect) {
       if (d < 3) c = h2r('#6e6680'); else if (d < 6) c = h2r('#4a4456');
       put(i, c); continue;
     }
+    if (VERDANT[M.ground] && GP.path === 'dirt' && d >= -7 && d <= 7 && typeof verdantEdgePix === 'function') {
+      const ve = verdantEdgePix(M, x + GX, y + GY, d); if (ve) { put(i, ve); continue; }
+    }
     if (d < 0) {
       if (M.pathType === 'paving' || M.ground === 'paving') {
         const im = IMGEL.gnd_city_cobble;
@@ -5847,7 +5850,7 @@ function genGround(M, rect) {
         put(i, v.m < 1.3 ? [90, 84, 100] : CP[Math.floor(hash(v.id, 3, 13) * 4)], d > -1.5 ? -.12 : 0);
         continue;
       }
-      if (GP.path === 'dirt' && VERDANT[M.ground] && (d < -2 || hash(x + GX, y + GY, 32) < .5)) { const vp = verdantPix(M, x + GX, y + GY, 1); if (vp) { put(i, vp); continue; } }
+      if (GP.path === 'dirt' && VERDANT[M.ground]) { const vp = verdantPix(M, x + GX, y + GY, 1); if (vp) { put(i, vp); continue; } }
       if (GP.path === 'dirt') { const n = vnoise(x, y, 6, 3), k = n < .3 ? 1 : n < .7 ? 0 : 2; let c = DIRT[k]; if (hash(x, y, 8) > .985) c = h2r('#8a7a6a'); put(i, c, d > -2 ? -.12 : 0); continue; }
       const v = vor(x, y, 7, 11);
       if (v.m < 1.25) { put(i, d > -1.5 ? MORT2 : MORT); continue; }
@@ -7401,7 +7404,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
 const GAME_VERSION = '1.48.0';
-const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
+const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.18 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() {
   if (!AU.ctx) return;
@@ -8650,6 +8653,31 @@ function verdantReflect(x, M, rect) {
     x.restore();
   }
 }
+// Tepi jalan berenda daun alami (scalloped leaf rim) meniru konsep G001
+function verdantScallop(X, Y) {
+  const C = 11, gx = Math.floor(X / C), gy = Math.floor(Y / C);
+  let minD = 999;
+  for (let j = -1; j <= 1; j++) {
+    for (let i = -1; i <= 1; i++) {
+      const cx = gx + i, cy = gy + j;
+      const jx = (cx + 0.2 + 0.6 * hash(cx, cy, 51)) * C;
+      const jy = (cy + 0.2 + 0.6 * hash(cx, cy, 52)) * C;
+      const d = Math.hypot(X - jx, Y - jy);
+      if (d < minD) minD = d;
+    }
+  }
+  return Math.max(0, 7.5 - minD) * 1.15;
+}
+function verdantEdgePix(M, X, Y, d) {
+  if (d < -7 || d > 7) return null;
+  const T = verdantTiles(); if (!T) return null;
+  const da = d + verdantScallop(X, Y) - 3.6;
+  const ti = (vMod(Y) * 128 + vMod(X)) * 4;
+  if (da < -1.8) return [T[3][ti], T[3][ti + 1], T[3][ti + 2]];
+  if (da < 0) return [Math.floor(T[3][ti] * 0.80), Math.floor(T[3][ti + 1] * 0.78), Math.floor(T[3][ti + 2] * 0.70)];
+  if (da < 1.6) return [Math.floor(T[0][ti] * 0.70), Math.floor(T[0][ti + 1] * 0.74), Math.floor(T[0][ti + 2] * 0.62)];
+  return null;
+}
 
 'use strict';
 // Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png).
@@ -8820,9 +8848,10 @@ class World extends Phaser.Scene {
     this.weather = M.id === 'swamp' ? 'fog' : (!M.indoor && !M.dark && !G.title && hash(S.day, M.w, Math.floor(S.time / 6)) < .25) ? 'rain' : 'clear';
     if (!P) this.makeActiveFx();
     // kamera
-    const cam = this.cameras.main; cam.setBounds(Math.min(0, Math.round((M.w - VW) / 2)), Math.min(0, Math.round((M.h - VH) / 2)), Math.max(M.w, VW), Math.max(M.h, VH)); cam.setRoundPixels(true);
-    this.camFollow = !G.title;
-    this.cx = clamp(pl.x - VW / 2, 0, M.w - VW); this.cy = clamp(pl.y - 12 - VH / 2, 0, M.h - VH);
+    const cam = this.cameras.main, z0 = (M && M.zoom) || (typeof OPT !== 'undefined' && OPT.zoom) || 1.18;
+    cam.setZoom(z0).setRoundPixels(true);
+    cam.setBounds(Math.min(0, Math.round((M.w - VW) / 2)), Math.min(0, Math.round((M.h - VH) / 2)), Math.max(M.w, VW), Math.max(M.h, VH));
+    this.camFollow = !G.title; this.cx = clamp(pl.x - VW / 2, 0, M.w - VW); this.cy = clamp(pl.y - 12 - VH / 2, 0, M.h - VH);
     if (G.title) { pl.setVisible(false); pl.sh.setVisible(false); this.cx = 250; this.cy = 160; }
     cam.setScroll(Math.round(this.cx), Math.round(this.cy));
     this.initOpen(data); // dunia terbuka: wilayah tetangga & batas kamera (systems/openworld.js)
@@ -9059,7 +9088,7 @@ class World extends Phaser.Scene {
       const tx = pl.x - VW / 2, ty = pl.y - 12 - VH / 2, k = Math.exp(-this.dt * 9);
       let ox = (this.cx - tx) * k, oy = (this.cy - ty) * k;
       if (Math.abs(ox) < .5) ox = 0; if (Math.abs(oy) < .5) oy = 0;
-      const B = this.camB || { x0: 0, y0: 0, x1: M.w, y1: M.h }, z = M.zoom || 1; /* peta sempit → di tengah; zoom = interior gambar */
+      const B = this.camB || { x0: 0, y0: 0, x1: M.w, y1: M.h }, z = (M && M.zoom) || (typeof OPT !== 'undefined' && OPT.zoom) || 1.18;
       const cc = (v, a, b, V) => { const W = V / z, d = (V - W) / 2; return (b - a < W ? Math.round((a + b - W) / 2) : clamp(v + d, a, b - W)) - d; };
       const sx = cc(Math.round(pl.x) - VW / 2 + Math.round(ox), B.x0, B.x1, VW), sy = cc(Math.round(pl.y) - 12 - VH / 2 + Math.round(oy), B.y0, B.y1, VH);
       this.cx = tx + ox; this.cy = ty + oy;

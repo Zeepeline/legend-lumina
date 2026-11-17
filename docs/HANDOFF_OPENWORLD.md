@@ -151,12 +151,8 @@ PERF=1 npx playwright test tests/perf.spec.js  # cek frame (bandingkan dengan NO
 5. Cek deploy: `gh run list -R Zeepeline/legend-lumina -w pages.yml -L 1`.
 6. Laporkan ke user dalam Bahasa Indonesia, singkat, tanpa spoiler.
 
-## 7. Peta file
-- `src/scene/world.js` — scene utama (create/update, `passive`, `makeActiveFx`/`dropActiveFx`, `camStep`, `checkZones`). Perilaku per objek di `src/world/spawn/`.
-- `src/systems/regions.js` — multi-scene wilayah & handoff.
-- `src/systems/openworld.js` — `initOpen`, `updCross`, lintas wilayah.
-- `src/systems/stream.js` — streaming tanah, `groundOverview` (dipakai peta).
-- `src/world/layout.js` — `WORLD_POS`, `PERALIHAN`, `buildPeralihan`, `NEIGH`.
-- `src/world/maps/*` — definisi peta per wilayah.
-- `tools/check-layout.js`, `tools/bundle.py` — validasi & bundle.
-- `tests/openworld.spec.js`, `tests/perf.spec.js` — tes open world & kinerja.
+## 8. Catatan Pemolesan Gaya G001 (Senja Emas & Verdant)
+- **Tepi Jalan Berenda Daun (Scalloped Leaf Rim):** Menggantikan dither kasar `hash() < .5` dengan fungsi prosedural `verdantScallop` + `verdantEdgePix` di `src/world/ground_verdant.js` & `src/world/ground.js`. Menghasilkan tepi rumput bergelombang lengkung alami, rim gelap, dan bayangan lembut di atas tanah jalan setapak.
+- **Kamera Sinematik Luar Ruang:** Default zoom kamera luar ruang disetel ke `1.18x` di `OPT.zoom` (`src/core/state.js`) & `camStep` (`src/scene/world.js`) untuk mencocokkan proporsi karakter terhadap pepohonan dan bentang alam sesuai gambar acuan Style Key G001.
+- **Tekstur Dasar:** Mempertahankan tekstur hybrid bawaan `gnd_*.png` yang stabil dan bersih.
+

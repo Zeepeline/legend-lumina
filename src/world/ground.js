@@ -164,6 +164,9 @@ function genGround(M, rect) {
       if (d < 3) c = h2r('#6e6680'); else if (d < 6) c = h2r('#4a4456');
       put(i, c); continue;
     }
+    if (VERDANT[M.ground] && GP.path === 'dirt' && d >= -7 && d <= 7 && typeof verdantEdgePix === 'function') {
+      const ve = verdantEdgePix(M, x + GX, y + GY, d); if (ve) { put(i, ve); continue; }
+    }
     if (d < 0) {
       if (M.pathType === 'paving' || M.ground === 'paving') {
         const im = IMGEL.gnd_city_cobble;
@@ -184,7 +187,7 @@ function genGround(M, rect) {
         put(i, v.m < 1.3 ? [90, 84, 100] : CP[Math.floor(hash(v.id, 3, 13) * 4)], d > -1.5 ? -.12 : 0);
         continue;
       }
-      if (GP.path === 'dirt' && VERDANT[M.ground] && (d < -2 || hash(x + GX, y + GY, 32) < .5)) { const vp = verdantPix(M, x + GX, y + GY, 1); if (vp) { put(i, vp); continue; } }
+      if (GP.path === 'dirt' && VERDANT[M.ground]) { const vp = verdantPix(M, x + GX, y + GY, 1); if (vp) { put(i, vp); continue; } }
       if (GP.path === 'dirt') { const n = vnoise(x, y, 6, 3), k = n < .3 ? 1 : n < .7 ? 0 : 2; let c = DIRT[k]; if (hash(x, y, 8) > .985) c = h2r('#8a7a6a'); put(i, c, d > -2 ? -.12 : 0); continue; }
       const v = vor(x, y, 7, 11);
       if (v.m < 1.25) { put(i, d > -1.5 ? MORT2 : MORT); continue; }

@@ -139,3 +139,28 @@ function verdantReflect(x, M, rect) {
     x.restore();
   }
 }
+// Tepi jalan berenda daun alami (scalloped leaf rim) meniru konsep G001
+function verdantScallop(X, Y) {
+  const C = 11, gx = Math.floor(X / C), gy = Math.floor(Y / C);
+  let minD = 999;
+  for (let j = -1; j <= 1; j++) {
+    for (let i = -1; i <= 1; i++) {
+      const cx = gx + i, cy = gy + j;
+      const jx = (cx + 0.2 + 0.6 * hash(cx, cy, 51)) * C;
+      const jy = (cy + 0.2 + 0.6 * hash(cx, cy, 52)) * C;
+      const d = Math.hypot(X - jx, Y - jy);
+      if (d < minD) minD = d;
+    }
+  }
+  return Math.max(0, 7.5 - minD) * 1.15;
+}
+function verdantEdgePix(M, X, Y, d) {
+  if (d < -7 || d > 7) return null;
+  const T = verdantTiles(); if (!T) return null;
+  const da = d + verdantScallop(X, Y) - 3.6;
+  const ti = (vMod(Y) * 128 + vMod(X)) * 4;
+  if (da < -1.8) return [T[3][ti], T[3][ti + 1], T[3][ti + 2]];
+  if (da < 0) return [Math.floor(T[3][ti] * 0.80), Math.floor(T[3][ti + 1] * 0.78), Math.floor(T[3][ti + 2] * 0.70)];
+  if (da < 1.6) return [Math.floor(T[0][ti] * 0.70), Math.floor(T[0][ti + 1] * 0.74), Math.floor(T[0][ti + 2] * 0.62)];
+  return null;
+}

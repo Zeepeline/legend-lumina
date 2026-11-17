@@ -78,9 +78,10 @@ class World extends Phaser.Scene {
     this.weather = M.id === 'swamp' ? 'fog' : (!M.indoor && !M.dark && !G.title && hash(S.day, M.w, Math.floor(S.time / 6)) < .25) ? 'rain' : 'clear';
     if (!P) this.makeActiveFx();
     // kamera
-    const cam = this.cameras.main; cam.setBounds(Math.min(0, Math.round((M.w - VW) / 2)), Math.min(0, Math.round((M.h - VH) / 2)), Math.max(M.w, VW), Math.max(M.h, VH)); cam.setRoundPixels(true);
-    this.camFollow = !G.title;
-    this.cx = clamp(pl.x - VW / 2, 0, M.w - VW); this.cy = clamp(pl.y - 12 - VH / 2, 0, M.h - VH);
+    const cam = this.cameras.main, z0 = (M && M.zoom) || (typeof OPT !== 'undefined' && OPT.zoom) || 1.18;
+    cam.setZoom(z0).setRoundPixels(true);
+    cam.setBounds(Math.min(0, Math.round((M.w - VW) / 2)), Math.min(0, Math.round((M.h - VH) / 2)), Math.max(M.w, VW), Math.max(M.h, VH));
+    this.camFollow = !G.title; this.cx = clamp(pl.x - VW / 2, 0, M.w - VW); this.cy = clamp(pl.y - 12 - VH / 2, 0, M.h - VH);
     if (G.title) { pl.setVisible(false); pl.sh.setVisible(false); this.cx = 250; this.cy = 160; }
     cam.setScroll(Math.round(this.cx), Math.round(this.cy));
     this.initOpen(data); // dunia terbuka: wilayah tetangga & batas kamera (systems/openworld.js)
@@ -317,7 +318,7 @@ class World extends Phaser.Scene {
       const tx = pl.x - VW / 2, ty = pl.y - 12 - VH / 2, k = Math.exp(-this.dt * 9);
       let ox = (this.cx - tx) * k, oy = (this.cy - ty) * k;
       if (Math.abs(ox) < .5) ox = 0; if (Math.abs(oy) < .5) oy = 0;
-      const B = this.camB || { x0: 0, y0: 0, x1: M.w, y1: M.h }, z = M.zoom || 1; /* peta sempit → di tengah; zoom = interior gambar */
+      const B = this.camB || { x0: 0, y0: 0, x1: M.w, y1: M.h }, z = (M && M.zoom) || (typeof OPT !== 'undefined' && OPT.zoom) || 1.18;
       const cc = (v, a, b, V) => { const W = V / z, d = (V - W) / 2; return (b - a < W ? Math.round((a + b - W) / 2) : clamp(v + d, a, b - W)) - d; };
       const sx = cc(Math.round(pl.x) - VW / 2 + Math.round(ox), B.x0, B.x1, VW), sy = cc(Math.round(pl.y) - 12 - VH / 2 + Math.round(oy), B.y0, B.y1, VH);
       this.cx = tx + ox; this.cy = ty + oy;
