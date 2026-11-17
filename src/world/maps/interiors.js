@@ -57,3 +57,13 @@ MAPS.arsip = makeRoom('arsip', 'Arsip Akademi Cahaya', [0, 0], {
   exits: [{ x: 140, y: 254, w: 40, h: 40, to: 'kakademi', tx: 700, ty: 400, dir: 'down', label: 'Distrik Akademi' }],
   loreSpots: [[64, 84, 'arsip_selene'], [104, 84, 'arsip_rongga'], [176, 84, 'arsip_bram'], [216, 84, 'arsip_morgath']],
 });
+MAPS.arena = {
+  id: 'arena', name: 'Arena Uji Tempur (Vertical Slice)', w: 440, h: 360, bgm: 'battle', ground: 'room', indoor: 1,
+  walls: [[20, 20, 400, 24], [20, 316, 400, 24], [20, 20, 24, 320], [396, 20, 24, 320]],
+  exits: [{ x: 190, y: 310, w: 60, h: 30, to: 'village', tx: 180, ty: 460, dir: 'down', label: 'Kembali ke Desa' }],
+  doors: [[220, 40, 'Papan Uji Tempur: "Uji bobot ayunan pedang Arka, hit-stop kontak, suara tebasan, dan reaksi musuh Serigala & Goblin."']],
+  enemies: [
+    ['wolf', 310, 150],
+    ['goblin', 130, 150]
+  ]
+};

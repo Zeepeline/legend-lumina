@@ -43,11 +43,19 @@ const JX_CFG = {
 Object.assign(World.prototype, {
   // pancarkan n partikel: o = { ang (radian), spread (derajat), tint, rx, ry (sebaran posisi) }
   jx(name, x, y, n, o = {}) {
+    if (typeof name === 'number') {
+      const k = (o && o.kind) || 'spark';
+      return this.jx(k, name, x, y, { tint: o?.col || o?.tint || 0xffffff });
+    }
+    if (!name || !JX_CFG[name]) return;
     if (OPT.lite) n = Math.ceil(n / 2);
     const J = this._jx || (this._jx = { em: {}, st: {} });
     let em = J.em[name];
     if (!em || !em.scene) {
-      jxTextures(this.textures); const [tex, cfg] = JX_CFG[name], st = J.st[name] = { ang: 0, spread: 180, tint: 0xffffff };
+      jxTextures(this.textures);
+      const entry = JX_CFG[name];
+      if (!entry) return;
+      const [tex, cfg] = entry, st = J.st[name] = { ang: 0, spread: 180, tint: 0xffffff };
       const c = Object.assign({ emitting: false, tint: { onEmit: () => st.tint } }, cfg);
       if (cfg.speed) c.angle = { onEmit: () => st.ang + (Math.random() * 2 - 1) * st.spread };
       em = J.em[name] = this.add.particles(0, 0, tex, c);

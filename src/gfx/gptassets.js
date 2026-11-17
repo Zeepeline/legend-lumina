@@ -2,8 +2,8 @@
 // Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py
 // (dibersihkan sesuai docs/VALIDATION_RULES.md, ukurannya disamakan dengan tekstur lama agar tata letak tetap benar).
 const GPT_SWAP = [
-  "i_treeA", "treeAd", "treeSn", "i_apple1", "i_orange1",
-  "i_bushP", "i_bushW", "i_bushP2", "bush", "bushv", "rock",
+  "i_treeA", "treeAd", "treeSn", "i_apple1",
+  "i_bushP", "i_bushW", "bush", "bushv", "rock",
   "i_rockWoods", "log", "hay", "i_cart", "crate", "barrel", "fence", "sign", "lamp",
   "mush", "stele", "i_houseA", "i_houseB", "i_houseC", "i_market", "windmill", "pebbles",
   "verdant_tree", "verdant_rock_large", "verdant_rock_med", "verdant_rock_pillar",
@@ -60,6 +60,16 @@ function applyGptSwap(T, A) {
     if (T.exists('well')) T.remove('well');
     const tw = T.addImage('well', IMGEL['gpt_v_village_well']);
     tw.add(0, 0, 0, 0, IMGEL['gpt_v_village_well'].width, IMGEL['gpt_v_village_well'].height);
+  }
+  for (const tk of ['tree_apple_fruit', 'tree_apple_bare']) {
+    const img = IMGEL[tk];
+    if (img && img.width > img.height * 4) {
+      if (T.exists(tk)) T.remove(tk);
+      const t = T.addImage(tk, img);
+      const fw = img.width / 8, animKey = tk + '_sway';
+      for (let i = 0; i < 8; i++) t.add(i, 0, i * fw, 0, fw, img.height);
+      if (A && !A.exists(animKey)) A.create({ key: animKey, frames: [...Array(8).keys()].map(i => ({ key: tk, frame: i })), frameRate: 4, repeat: -1 });
+    }
   }
   for (const k of GPT_SWAP) {
     const img = IMGEL['gpt_' + k]; if (!img) continue;

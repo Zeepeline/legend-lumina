@@ -4,8 +4,7 @@ const WEAPON_STYLE = {
   sword: { cd: .32, lock: .2, pts: [[14, 15]], mul: 1, crit: .1, kb: 1, fxs: 1 },
   spear: { cd: .38, lock: .22, pts: [[12, 9], [22, 9], [31, 9]], mul: 1, crit: .12, kb: .7, fxs: 1 },
   axe: { cd: .62, lock: .34, pts: [[13, 21]], mul: 1.25, crit: .18, kb: 1.6, fxs: 1.45, delay: 110 },
-  bow: { cd: .42, lock: .16 }
-};
+  bow: { cd: .42, lock: .16 } };
 Object.assign(World.prototype, {
   // Gaya serang per jenis senjata (ITEMS[..].wt): sword (default), spear, axe, bow
   attack() {
@@ -19,13 +18,18 @@ Object.assign(World.prototype, {
     }
     this.atkBuf = false;
     const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword', W = WEAPON_STYLE[wt];
-    pl.atkCd = W.cd; pl.atkT = W.lock; sfx(wt === 'bow' ? 'jump' : 'swing');
-    if (wt === 'bow') return this.shootArrow();
-    // kombo 5 serangan beruntun: ketuk beruntun (1..5), tebasan ke-5 finisher kuat & mendorong jauh
     pl.combo = this.t - (pl.lastAtk || -9) < W.cd + .5 ? (pl.combo || 0) % 5 + 1 : 1; pl.lastAtk = this.t;
     const fin = pl.combo === 5, cMul = [1, 1, 1.1, 1.22, 1.38, 1.85][pl.combo] || 1, cKb = fin ? 2.1 : pl.combo >= 3 ? 1.3 : 1;
+    pl.atkCd = W.cd; pl.atkT = W.lock; sfx(wt === 'bow' ? 'jump' : (fin || wt === 'axe' ? 'swing_heavy' : 'swing'));
+    if (wt === 'bow') return this.shootArrow();
     if (fin) { pl.atkCd += .18; this.time.delayedCall(40, () => sfx('crit')); popWorld(pl.x, pl.y - 30, 'KOMBO!', 'crit'); }
     const [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx), ox = pl.x + dx * 3, oy = pl.y - 9 + dy * 2;
+    // Langkah maju bertumpu saat menebas (Forward Lunge kinetik)
+    const lungeDist = fin ? 9 : (pl.combo >= 3 ? 6 : 4);
+    if (pl.body) {
+      pl.body.setVelocity(dx * lungeDist * 28, dy * lungeDist * 28);
+      this.time.delayedCall(fin ? 90 : 60, () => { if (pl.body && !pl.dead) pl.body.setVelocity(0, 0); });
+    }
     if (wt !== 'spear' && !this.textures.exists('vfx_swing_combo')) {
       const sl = this.add.sprite(ox, oy, 'slash').setOrigin(4 / 28, .5).setRotation(ang).setDepth(pl.y + (dy < 0 ? -2 : 3)).setFlipY((dx < 0) !== (pl.combo === 2)).setScale(W.fxs * (fin ? 1.35 : 1)); if (fin) sl.setTint(0xffe08a);
       sl.play('slash'); sl.once('animationcomplete', () => sl.destroy());
@@ -46,19 +50,13 @@ Object.assign(World.prototype, {
             hit.add(e); e.lastSwing = curSwing; const crit = Math.random() < W.crit + (st.crit || 0); const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1;
             // Deteksi Serangan dari Belakang / Backstab (#13)
             let isBackstab = false;
-            if (e.dir && pl.dir) {
-              const eDirV = DIRV[e.dir] || [0, 1], plDirV = DIRV[pl.dir] || [0, 1];
-              // Menghadap ke arah yang hampir sama (musuh membelakangi Arka)
-              if (eDirV[0] === plDirV[0] && eDirV[1] === plDirV[1]) {
-                isBackstab = true;
-              }
-            }
+            if (e.dir && pl.dir && e.dir === pl.dir) isBackstab = true;
             const curWpnId = S.eq?.wpn, isNightTime = S.time >= 19 || S.time < 5;
             if (curWpnId === 'leg_moon' && isNightTime) isBackstab = true;
             const finalCrit = crit || isBackstab, finalDmg = st.atk * W.mul * cMul * (isBackstab ? 1.8 : 1);
             if (isBackstab && e.hp > 0) {
               popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 16, 'DARI BELAKANG!', 'purp');
-              sfx('crit'); this.hitStop(0.07, 18); this.camShake(100, .005);
+              sfx('crit'); this.hitStop(0.12, 28); this.camShake(100, .005);
               S.st = S.st || {}; S.st.backstabs = (S.st.backstabs || 0) + 1;
             }
             this.hitEnemy(e, finalDmg, finalCrit, (e.spr.x - pl.x) / n * W.kb * cKb, (e.spr.y - pl.y) / n * W.kb * cKb);
@@ -67,11 +65,9 @@ Object.assign(World.prototype, {
             if (curWpnId === 'leg_sun') { this.sparkle(e.spr.x, e.spr.y - 10, 'doto', 6); if (typeof applyStatus === 'function') applyStatus(e, 'burn', 3); }
             else if (curWpnId === 'leg_quake') { this.camShake(100, .005); sfx('boom'); }
             if (curGem === 'shard' && Math.random() < 0.25) this.freezeEnemy(e, 1.2);
-            else if (curGem === 'spore' && typeof applyStatus === 'function') applyStatus(e, 'poison', 4); else if (curGem === 'amethyst_gem' && finalCrit) {
-              const healAmt = 3;
-              S.hp = Math.min(stat().maxhp, S.hp + healAmt);
-              popWorld(pl.x, pl.y - 20, `+${healAmt} HP (Hisap)`, 'heal');
-              updHud();
+            else if (curGem === 'spore' && typeof applyStatus === 'function') applyStatus(e, 'poison', 4);
+            else if (curGem === 'amethyst_gem' && finalCrit) {
+              S.hp = Math.min(stat().maxhp, S.hp + 3); popWorld(pl.x, pl.y - 20, '+3 HP (Hisap)', 'heal'); updHud();
             }
           }
         }
@@ -123,8 +119,8 @@ Object.assign(World.prototype, {
   },
   useItem(id) {
     const it = ITEMS[id], st = stat(); if (it.tool) return this.useTool(id);
-    if (it.hp) { if (S.hp >= st.maxhp && !it.buff) { sfx('buzz'); return false; } const h = Math.min(it.hp, st.maxhp - S.hp); S.hp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h, 'heal'); }
-    if (it.mp) { if (S.mp >= st.maxmp && !it.buff) { sfx('buzz'); return false; } const h = Math.min(it.mp, st.maxmp - S.mp); S.mp += h; popWorld(this.pl.x, this.pl.y - 28, '+' + h + ' MP', 'mpc'); }
+    if (it.hp) { if (S.hp >= st.maxhp && !it.buff) { sfx('buzz'); return false; } S.hp = Math.min(st.maxhp, S.hp + it.hp); popWorld(this.pl.x, this.pl.y - 28, '+' + Math.min(it.hp, st.maxhp - S.hp), 'heal'); }
+    if (it.mp) { if (S.mp >= st.maxmp && !it.buff) { sfx('buzz'); return false; } S.mp = Math.min(st.maxmp, S.mp + it.mp); popWorld(this.pl.x, this.pl.y - 28, '+' + Math.min(it.mp, st.maxmp - S.mp) + ' MP', 'mpc'); }
     if (it.buff) { for (const [k, sec] of it.buff) S.buff[k] = Math.max(S.buff[k] || 0, sec); popWorld(this.pl.x, this.pl.y - 40, it.buff.map(([k]) => BUFF[k].n).join(' & ') + '!', 'xp'); updStatusHud(this); }
     if (it.cure) { if (!Object.keys(this.pst).length && !it.hp) { sfx('buzz'); return false; } this.cure(); popWorld(this.pl.x, this.pl.y - 40, 'pulih!', 'heal'); }
     addItem(id, -1); sfx('heal'); this.sparkle(this.pl.x, this.pl.y - 10, it.mp ? 'dot' : 'dotg'); updHud(); return true;
@@ -149,10 +145,10 @@ Object.assign(World.prototype, {
     sfx(crit ? 'crit' : 'hit'); if (crit) shake();
     const fatal = e.hp <= 0;
     const isComboFin = this.pl?.combo === 5 || this.pl?.combo === 3;
-    const hsDur = (e.boss && fatal) ? .22 : fatal ? .09 : crit ? .08 : isComboFin ? .06 : .035;
-    const hsVib = (fatal || crit) ? 25 : isComboFin ? 16 : 10;
+    const hsDur = (e.boss && fatal) ? .24 : fatal ? .14 : crit ? .12 : isComboFin ? .095 : .065;
+    const hsVib = (fatal || crit) ? 35 : isComboFin ? 24 : 14;
     this.hitStop(hsDur, hsVib);
-    if (crit || fatal || e.boss) this.camShake(fatal ? 110 : 80, fatal ? .005 : .003);
+    if (crit || fatal || e.boss || isComboFin) this.camShake(fatal ? 120 : (crit || isComboFin) ? 80 : 50, fatal ? .005 : .003);
     e.spr.setTintFill(0xffffff); e.flash = .09;
     let breakPoise = false;
     if (hasPoise && !isStagger) {
@@ -172,8 +168,12 @@ Object.assign(World.prototype, {
       const kb = (heavy ? (e.D.ai === 'turret' ? 0 : 40) : 175) * kbScale;
       e.kb = heavy ? .06 : .17; e.kbx = nx * kb; e.kby = ny * kb;
     } else { e.kb = 0; }
-    // squash saat terkena
-    this.tweens.add({ targets: e.spr, scaleX: e.sc * 1.2, scaleY: e.sc * .82, duration: 60, yoyo: true });
+    // Reaksi badan elastis (squash membal berbobot)
+    const baseSc = e.sc || 1;
+    this.tweens.add({
+      targets: e.spr, scaleX: baseSc * 1.32, scaleY: baseSc * .72, duration: 55, yoyo: true, ease: 'Quad.easeOut',
+      onComplete: () => { if (e.spr && e.spr.active) { e.spr.scaleX = baseSc; e.spr.scaleY = baseSc; } }
+    });
     if (e.st === 'wind' && !e.boss && canKb) e.st = 'chase';
     const isHd = ['slime_hd', 'wolf_hd', 'wolf_elite_hd', 'goblin_hd', 'goblin_archer_hd', 'goblin_shaman'].includes(e.D?.tex);
     if (isHd && e.spr?.anims && e.hp > 0 && canKb) {
@@ -389,11 +389,11 @@ Object.assign(World.prototype, {
     this.tweens.add({ targets: pl, angle: 90, alpha: .4, duration: 500 });
     await sleep(1300);
     const B = this.curBoss;
-    if (B && B.zone !== undefined && this.bossOn) { G.lock--; const again = await this.retryBoss(); G.lock++;
-      if (again) { await fadeTo(1); const st0 = stat(); S.hp = st0.maxhp; S.mp = st0.maxmp; G.lock--; this.trans = true; const z = B.zone; this.scene.restart({ map: this.M.id, x: z ? z[0] + z[2] / 2 : this.pl.x, y: z ? z[1] + z[3] + 40 : this.pl.y + 60, dir: 'up' }); return; } }
-    await fadeTo(1);
-    S.gold = Math.floor(S.gold / 2); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp;
-    G.lock--; this.trans = true;
+    if (B && B.zone !== undefined && this.bossOn) {
+      G.lock--; const again = await this.retryBoss(); G.lock++;
+      if (again) { await fadeTo(1); const st0 = stat(); S.hp = st0.maxhp; S.mp = st0.maxmp; G.lock--; this.trans = true; const z = B.zone; this.scene.restart({ map: this.M.id, x: z ? z[0] + z[2] / 2 : this.pl.x, y: z ? z[1] + z[3] + 40 : this.pl.y + 60, dir: 'up' }); return; }
+    }
+    await fadeTo(1); S.gold = Math.floor(S.gold / 2); const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; G.lock--; this.trans = true;
     this.scene.restart({ map: 'inn', x: 160, y: 200, dir: 'down', quiet: true, after: async () => { await sleep(400); await talk('Bu Rina', ['Syukurlah kamu sadar! Pemburu menemukanmu pingsan dan membawamu ke sini.', 'Separuh uangmu hilang entah ke mana... Musuh yang kamu lawan masih menunggu di sana. Siapkan ramuan dan perlengkapan yang lebih kuat, ya.']); } });
   },
 });

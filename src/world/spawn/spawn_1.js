@@ -277,68 +277,9 @@ Object.assign(OBJ_SPAWN, {
     });
   },
   apple1(s, x, y, opt, d, type) {
-    const isOrange = type === 'orange1';
-    this.inter.push({
-      x, y: y - 10, r: 20,
-      fn: async () => {
-        G.lock++;
-        sfx('swing');
-        this.tweens.add({
-          targets: s, angle: 4, duration: 70, yoyo: true, repeat: 4,
-          onComplete: () => { s.angle = 0; }
-        });
-        this.puff(x, y - 6);
-        
-        for (let i = 0; i < 4; i++) {
-          const leaf = this.add.image(x + rnd(-16, 16), y - 24, 'leaf').setDepth(y + 1);
-          this.tweens.add({
-            targets: leaf,
-            y: y + rnd(-4, 6),
-            x: leaf.x + rnd(-12, 12),
-            angle: rnd(-30, 30),
-            alpha: 0,
-            duration: rnd(600, 900),
-            onComplete: () => leaf.destroy()
-          });
-        }
-
-        const roll = Math.random();
-        if (roll < 0.35) {
-          const fruitId = isOrange ? 'orange' : 'apple';
-          addItem(fruitId, 1);
-          sfx('blip');
-          updHud();
-          this.sparkle(x, y - 12, 'dotg', 8);
-          popWorld(x, y - 20, `+${ITEMS[fruitId].n}`, 'xp');
-          await say(`Kamu menggoyang dahan pohon dengan kuat. Buah ${ITEMS[fruitId].n} yang ranum jatuh ke tanganmu!`);
-        } else if (roll < 0.55) {
-          const coinGain = rnd(4, 9);
-          S.gold += coinGain;
-          sfx('coin');
-          updHud();
-          this.sparkle(x, y - 12, 'doto', 10);
-          popWorld(x, y - 20, `+${coinGain} G`, 'gold');
-          await say(`Terdengar bunyi gemerincing dari sela dahan! Seseorang tampaknya pernah menyembunyikan koin tua di sini (+${coinGain} G).`);
-        } else if (roll > 0.88) {
-          sfx('buzz');
-          sfx('hurt');
-          this.camShake(180, .005);
-          const st = stat();
-          const dmg = Math.min(S.hp - 1, 8);
-          if (dmg > 0) S.hp -= dmg;
-          updHud();
-          addItem('honey', 1);
-          popWorld(this.pl.x, this.pl.y - 18, `-${dmg} HP (Sengatan Lebah!)`, 'crit');
-          await say(
-            `DENGG!! Kawanan lebah liar terusik dari sarangnya dan menyengatmu (-${dmg} HP), ` +
-            `namun kamu berhasil mengamankan Sarang Madu Liar! (+1 Madu Liar)`
-          );
-        } else {
-          await say('Kamu menggoyang pohon. Dedaunan berguguran tertiup angin sepoi-sepoi, namun belum ada buah yang jatuh.');
-        }
-        G.lock--;
-      }
-    });
+    if (typeof setupAppleTree === 'function') {
+      setupAppleTree(this, s, x, y, opt, d, type);
+    }
   },
   bench(s, x, y, opt, d, type) {
     this.inter.push({

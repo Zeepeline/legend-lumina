@@ -72,6 +72,7 @@ const ICONS_DEF = {
   scale: ['scale', { C: '#6ab84a', L: '#c8f088', D: '#3a7a2a' }],
   ecto: ['ecto', { C: '#d8e8ff', L: '#ffffff', E: '#4a3a6a' }],
   ore: ['ore', { C: '#8a8494', L: '#c8c2d2', D: '#4e4858', Y: '#ffd23a' }],
+  iron: ['ore', { C: '#7a828e', L: '#b4bece', D: '#3e4450', Y: '#9aa2b0' }],
   wsword: ['sword', { L: '#c08a5a', W: '#e8c090', G: '#8a5a32', K: '#5a3a20' }],
   ispear: ['spear', { K: '#8a5a32', L: '#8a96b0', W: '#eef4ff' }],
   fspear: ['spear', { K: '#4a6a9a', L: '#9ad4f4', W: '#f0faff' }],

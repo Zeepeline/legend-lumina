@@ -52,6 +52,7 @@ function auInit() {
     const len = AU.ctx.sampleRate; AU.noise = AU.ctx.createBuffer(1, len, AU.ctx.sampleRate); const d = AU.noise.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     if (AU.tag) { routeTag(AU.tag); tagSetVol(AU.tag, tagVolFor(AU.tagCur)); }
     if (AU.cur) { const c = AU.cur; AU.cur = null; playBGM(c); }
+    loadSfxBuffers();
   } catch (e) { AU.ctx = null; }
 }
 function tone(f, t, d, type, vol, dest) { if (!f) return; const o = AU.ctx.createOscillator(), gn = AU.ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(vol, t + .01); gn.gain.setValueAtTime(vol, t + Math.max(.012, d - .04)); gn.gain.linearRampToValueAtTime(0, t + d); o.connect(gn); gn.connect(dest); o.start(t); o.stop(t + d + .03); }
@@ -155,10 +156,64 @@ setInterval(() => {
   if (AU.tag) return; const q = AU.seq; if (!q || !AU.ctx) return; const sp = 60 / q.tr.bpm;
   for (const v of q.vs) { while (!v.done && v.t < AU.ctx.currentTime + .3) { const n = v.n[v.i]; const d = n.b * sp; tone(n.f, v.t, d * .9, v.type, v.vol, AU.music); v.t += d; v.i++; if (v.i >= v.n.length) { if (q.tr.loop) v.i = 0; else v.done = true; } } }
 }, 60);
+const SFX_FILES = {
+  swing: 'assets/audio/swing_light.wav',
+  swing_heavy: 'assets/audio/swing_heavy.wav',
+  hit: 'assets/audio/hit_punch_heavy.ogg',
+  hit_punch: 'assets/audio/hit_punch_med.ogg',
+  crit: 'assets/audio/hit_deep.wav',
+  chop: 'assets/audio/slash_chop.ogg',
+  slice: 'assets/audio/slash_slice.ogg',
+  metal: 'assets/audio/hit_metal.ogg',
+  hurt: 'assets/audio/hit_heavy.wav'
+};
+const _SFX_BUFFERS = {};
+
+function loadSfxBuffers() {
+  if (!AU.ctx) return;
+  for (const [k, url] of Object.entries(SFX_FILES)) {
+    if (_SFX_BUFFERS[k]) continue;
+    fetch(url)
+      .then(res => res.arrayBuffer())
+      .then(buf => AU.ctx.decodeAudioData(buf))
+      .then(decoded => { _SFX_BUFFERS[k] = decoded; })
+      .catch(() => {});
+  }
+}
+
+function playBufferSfx(k, vol = 1.0, rate = 1.0) {
+  if (!AU.ctx || !_SFX_BUFFERS[k]) return false;
+  try {
+    const src = AU.ctx.createBufferSource();
+    src.buffer = _SFX_BUFFERS[k];
+    if (rate !== 1.0) src.playbackRate.value = rate;
+    const gn = AU.ctx.createGain();
+    const sfxVol = (typeof OPT !== 'undefined' ? OPT.sfx / 3 : 1) * vol;
+    gn.gain.value = Math.max(0, Math.min(1.5, sfxVol));
+    src.connect(gn);
+    gn.connect(_sfxDest || AU.sfx || AU.master);
+    src.start();
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 let _lastSfx = {}, _sfxDest = null;
 function sfx(n, rate = 1) {
   if (!AU.ctx) return; const t = AU.ctx.currentTime, D = _sfxDest || AU.sfx, r = rate > 0 ? rate : 1;
   if (_lastSfx[n] && t - _lastSfx[n] < .04) return; _lastSfx[n] = t;
+
+  if (n === 'swing') {
+    if (playBufferSfx('swing', 0.85, (0.95 + Math.random() * 0.1) * r)) return;
+  } else if (n === 'hit') {
+    if (playBufferSfx('hit', 1.0, (0.95 + Math.random() * 0.1) * r)) return;
+  } else if (n === 'crit') {
+    if (playBufferSfx('crit', 1.1, (0.95 + Math.random() * 0.1) * r)) return;
+  } else if (n === 'hurt') {
+    if (playBufferSfx('hurt', 0.9, (0.95 + Math.random() * 0.1) * r)) return;
+  }
+
   switch (n) {
     case 'cur': tone(990 * r, t, .035, 'square', .16, D); break;
     case 'ok': tone(660 * r, t, .05, 'square', .22, D); tone(990 * r, t + .05, .07, 'square', .22, D); break;

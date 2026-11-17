@@ -71,7 +71,7 @@
       this.time.delayedCall(i * 35, () => {
         if (!this.scene.isActive()) return;
         this.spawnHazardZone(px, py, 'fire', 2.8);
-        this.jx(px, py, 6, { kind: 'spark', col: 0xff4422, vy: -30 });
+        this.jx('spark', px, py, 6, { tint: 0xff4422 });
       });
     }
   };
@@ -92,7 +92,7 @@
           S.hp = Math.min(st.maxhp, S.hp + Math.max(1, Math.round(st.maxhp * 0.04)));
           if (S.sta != null) S.sta = Math.min(st.maxsta, S.sta + 8);
           updHud();
-          this.jx(fx, fy - 8, 4, { kind: 'star', col: 0xffd700, vy: -20 });
+          this.jx('star', fx, fy - 8, 4, { tint: 0xffd700 });
           popWorld(pl.x, pl.y - 18, '+PULIH', 'heal');
         }
         const pulse = this.add.circle(fx, fy - 6, 8, 0xffaa33, 0.45).setDepth(-8.5e5);

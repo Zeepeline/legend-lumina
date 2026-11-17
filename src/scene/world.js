@@ -304,6 +304,10 @@ class World extends Phaser.Scene {
       }
     }
     for (const o of this.npcs) if (o.mark) { o.mark.setVisible(!G.title && this.npcHasQuest(o.n.id)); o.mark.x = o.spr.x; }
+    if (this._appleTrees && ((this._appleCheckT = (this._appleCheckT || 0) + this.dt) > 2)) {
+      this._appleCheckT = 0;
+      for (const t of this._appleTrees) t.checkFruit();
+    }
     if (!locked && !pl.dead) this.checkZones();
   }
   puff(x, y) { const p = this.add.image(x, y, 'smoke').setScale(.35).setAlpha(.5).setDepth(y - 1).setTint(this.M.id === 'cave' ? 0x8a8494 : 0xe8dcc0); this.tweens.add({ targets: p, scale: .8, alpha: 0, y: y - 4, duration: 380, onComplete: () => p.destroy() }); }

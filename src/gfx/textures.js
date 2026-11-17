@@ -4,14 +4,15 @@
 const ICONS = {}, IMGEL = {};
 // Gambar dari gambar referensi ada di assets/img/<nama>.png → tekstur Phaser 'i_<nama>'
 const IMG_LIST = [
-  "apple1", "bench", "bigtree", "bushG1", "bushG2", "bushP", "bushP2", "bushW",
-  "fountain", "houseA", "houseB", "houseC", "market", "orange1", "planter", "pot",
+  "apple1", "bench", "bigtree", "bushG1", "bushG2", "bushP", "bushW",
+  "fountain", "houseA", "houseB", "houseC", "market", "planter", "pot",
   "treeA", "stumpWoods",
   "lampPost", "crateCart", "benchWood", "hero_custom", "mon_slime_hd", "mon_wolf_hd", "mon_wolf_elite_hd", "mon_goblin_hd", "mon_goblin_archer_hd",
   "mon_goblin_shaman", "mon_goblin_elite",
   "goblin_fortress", "goblin_gate", "goblin_hut", "goblin_tower", "goblin_cage", "goblin_forge", "goblin_shrine",
   "goblin_cauldron", "goblin_totem", "goblin_torch", "goblin_wagon", "goblin_banner",
   "vfx_swing_combo", "vfx_hit_impact", "vfx_charge_spin",
+  "tree_apple_fruit", "tree_apple_bare",
   "gnd_city_cobble",
   "gpt_gatehouse", "gpt_gatehouse_top", "gpt_cwall", "gpt_ctower", "gpt_city_bridge",
   "gpt_city_lamp", "gpt_city_lamp2", "gpt_city_banner", "gpt_city_banner_sm",

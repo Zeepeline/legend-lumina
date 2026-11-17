@@ -69,7 +69,7 @@ MAPS.village = {
     ['market', 746, 222], ['barrel', 816, 215], ['crate', 560, 215],
     
     ['bell', 440, 260],
-    ['dummy', 150, 445],
+    ['dummy', 150, 445], ['sign', 214, 440],
      
     ['lampPost', 440, 305], ['lampPost', 584, 305],
     ['lamp', 380, 410], ['lamp', 644, 400],
@@ -120,6 +120,7 @@ MAPS.village = {
   animals: [['cat', 480, 345, 0], ['cat', 540, 345, 1], ['fox', 640, 600, 0], ['cat', 320, 235, 0], ['fox', 270, 600, 0]],
   doors: [[180, 215, 'Pondok Kayu Pak Joko.'], [680, 530, 'Rumah Tepi Sungai.'], [355, 213, 'Rumah Pak Darto & Lina.'],
     [630, 213, { to: 'inn' }], [512, 556, { to: 'home' }], [245, 390, 'Rumah Bu Lastri. Ada bau kue jahe...'],
-    [742, 411, 'Bengkel Pak Besi. Bau arang dan besi panas.'], [513, 66, { to: 'elderhome' }]],
+    [742, 411, 'Bengkel Pak Besi. Bau arang dan besi panas.'], [513, 66, { to: 'elderhome' }],
+    [180, 440, { to: 'arena', tx: 220, ty: 280, label: 'Arena Latihan' }]],
   butterflies: 7,
 };
