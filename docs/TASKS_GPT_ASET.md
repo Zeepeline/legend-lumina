@@ -114,7 +114,7 @@ Obrolan "Patokan". Kerjakan A1 dulu: itu jadi STYLE KEY untuk semua obrolan lain
 - Simpan: `assets/raw/gpt2/patokan/salju.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of a snowy mountain pass: soft blue-white snow with warm sunlit highlights, frosted pines, icy rocks, a frozen pond. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: Warna & cahaya cocok dengan blok gaya; tidak ada teks/logo; skala karakter kecil.
-### [ ] G007. Gambar patokan suasana: gua
+### [x] G007. Gambar patokan suasana: gua
 - Simpan: `assets/raw/gpt2/patokan/gua.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of a stone cave: dark warm-grey rock floor, purple crystals glowing softly, stalagmites, a narrow path lit by a torch. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: Warna & cahaya cocok dengan blok gaya; tidak ada teks/logo; skala karakter kecil.
