@@ -135,10 +135,10 @@ function genGround(M, rect) {
     const i = ((y - RY) * RW + (x - RX)) * 4;
     if (R) {
       const ry = riverY(R, x), dv = Math.abs(y - ry), hw = R.w / 2;
-      if (x >= R.bridge[0] && x <= R.bridge[1] && dv < hw + 5) {
-        const bx = x - R.bridge[0], bw = R.bridge[1] - R.bridge[0];
-        if (bx < 3 || bx > bw - 3) { put(i, h2r('#5e3b20')); continue; }
-        const ly = (y + 1000) % 6; put(i, ly === 0 ? h2r('#6e4222') : ly === 1 ? h2r('#c8945a') : h2r('#a8703e'), (hash(x >> 3, Math.floor((y + 1000) / 6), 5) - .5) * .12); continue;
+      if (x >= R.bridge[0] && x <= R.bridge[1] && dv < hw) {
+        water(i, dv / hw, x, y);
+        PX[i] = Math.floor(PX[i] * 0.78); PX[i + 1] = Math.floor(PX[i + 1] * 0.78); PX[i + 2] = Math.floor(PX[i + 2] * 0.85);
+        continue;
       }
       if (dv < hw) { water(i, dv / hw, x, y); continue; }
       if (VW && dv < hw + 13) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }
@@ -276,11 +276,12 @@ function blockRects(M) {
 }
 function scatter(M, spec) {
   const sd = makeSD(M), out = [], R = M.river, ponds = pondsAll(M);
-  const ok = (x, y, t) => {
+  const isTree = t => /tree|pine|round/i.test(t);
+  const ok = (x, y, isT) => {
     const d = sd(x, y);
     if (spec.near) { if (d < spec.near[0] || d > spec.near[1]) return false; }
     else if (d < spec.min) return false;
-    if (R && Math.abs(y - riverY(R, x)) < R.w / 2 + 14) return false;
+    if (R && Math.abs(y - riverY(R, x)) < R.w / 2 + 16) return false;
     if (ponds.length && waterE(ponds, x, y, ...waterGXY(M)) < 1.25) return false;
     for (const o of M.objs) if (Math.hypot(o[1] - x, o[2] - y) < (OBJ[o[0]].mm ? 70 : 26)) return false;
     for (const c of M.chests || []) if (Math.hypot(c.x - x, c.y - y) < 30) return false;
@@ -291,32 +292,44 @@ function scatter(M, spec) {
     for (const B of M.bosses || []) { const z = B.zone; if (x > z[0] - 20 && x < z[0] + z[2] + 20 && y > z[1] - 20 && y < z[1] + z[3] + 30) return false; }
     if (M.ring && Math.hypot(x - M.ring.cx, y - M.ring.cy) < M.ring.r + 22) return false;
     if (M.mochi && Math.hypot(x - M.mochi.x, y - M.mochi.y) < 30) return false;
-    for (const ex of mapDoors(M)) if (x > ex.x - 64 && x < ex.x + ex.w + 64 && y > ex.y - 64 && y < ex.y + ex.h + 72) return false; /* jalur pintu bebas */
-    for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < (spec.sp || 24)) return false;
-    return true;
-  };
-  const clump = !!M._paths0 && !spec.near, tries = clump ? Math.round(spec.n * 1.7) : spec.n;
-  for (let n = 0; n < tries; n++) {
-    const x = 20 + hash(n, 1, 31 + M.w) * (M.w - 40), y = 40 + hash(n, 2, 31 + M.w) * (M.h - 40);
-    if (clump && hash(n, 8, 31) > Math.min(1, Math.max(.08, (vnoise(x, y, 170, 93) - .3) * 2.4))) continue;
-    const edge = !spec.near && (x < 70 || x > M.w - 70 || y > M.h - 50);
-    if (edge && sd(x, y) < 10) continue;
-    if (!edge && !ok(x, y)) continue; if (edge && !ok2(x, y)) continue;
-    let r = hash(n, 3, 31), type = spec.types[0][0];
-    for (const [t, p] of spec.types) { if (r < p) { type = t; break; } r -= p; }
-    // Objek peralihan: dalam 400 px dari tepi salju (T456)
-    if (M.id === 'meadow' || M.id === 'pl_meadow_snow') {
-      const distToSnow = M.id === 'meadow' ? Math.max(0, y - (M.h - 400)) : Math.max(0, 400 - y);
-      if (distToSnow > 0) {
-        const pineProb = distToSnow / 400;
-        if (hash(n, 7, 33) < pineProb) {
-          if (type === 'verdant_tree' || type === 'treeA' || type === 'treeB') type = 'pine';
+    for (const ex of mapDoors(M)) if (x > ex.x - 64 && x < ex.x + ex.w + 64 && y > ex.y - 64 && y < ex.y + ex.h + 72) return false;
+    if (isT) {
+      let grp = 0;
+      for (const t of out) {
+        if (!isTree(t[0])) continue;
+        const dt = Math.hypot(t[1] - x, t[2] - y);
+        if (dt < (spec.sp || 52)) return false;
+        if (dt <= 82) { grp++; if (grp >= 3) return false; }
+      }
+      for (const t of out) {
+        if (!isTree(t[0])) continue;
+        const dt = Math.hypot(t[1] - x, t[2] - y);
+        if (dt > 82 && dt < 118) {
+          let c = 0; for (const o of out) if (isTree(o[0]) && Math.hypot(t[1] - o[1], t[2] - o[2]) <= 82) c++;
+          if (c >= 3) return false;
         }
       }
+    } else {
+      for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < (spec.sp || 26)) return false;
+    }
+    return true;
+  };
+  const clump = !!M._paths0 && !spec.near, tries = Math.min(clump ? Math.round(spec.n * 1.2) : spec.n, 900);
+  for (let n = 0; n < tries; n++) {
+    const x = 24 + hash(n, 1, 31 + M.w) * (M.w - 48), y = 44 + hash(n, 2, 31 + M.w) * (M.h - 48);
+    if (clump && hash(n, 8, 31) > Math.min(1, Math.max(.12, (vnoise(x, y, 170, 93) - .3) * 2.2))) continue;
+    let r = hash(n, 3, 31), type = spec.types[0][0];
+    for (const [t, p] of spec.types) { if (r < p) { type = t; break; } r -= p; }
+    const isT = isTree(type);
+    const edge = !spec.near && (x < 70 || x > M.w - 70 || y > M.h - 50);
+    if (edge && sd(x, y) < 10) continue;
+    if (!ok(x, y, isT)) continue;
+    if (M.id === 'meadow' || M.id === 'pl_meadow_snow') {
+      const distToSnow = M.id === 'meadow' ? Math.max(0, y - (M.h - 400)) : Math.max(0, 400 - y);
+      if (distToSnow > 0 && hash(n, 7, 33) < distToSnow / 400 && (type === 'verdant_tree' || type === 'treeA' || type === 'treeB')) type = 'pine';
     }
     out.push([type, Math.round(x), Math.round(y)]);
   }
-  function ok2(x, y) { for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < 20) return false; for (const ex of mapDoors(M)) if (x > ex.x - 64 && x < ex.x + ex.w + 64 && y > ex.y - 64 && y < ex.y + ex.h + 72) return false; return true; }
   return out;
 }
 function openSides(M) {
@@ -334,26 +347,18 @@ function openSides(M) {
 }
 function borderTrees(M) {
   const out = [], b = M.border; if (!b) return out; let n = 0;
-  const open = openSides(M), inGap = (g, v) => g && v > g[0] - 14 && v < g[1] + 14;
+  const open = openSides(M), inGap = (g, v) => g && v > g[0] - 22 && v < g[1] + 22;
   const T = b.types || ['pined', 'pine', 'round'], tp = (k, s2) => T[Math.floor(hash(k, 9, s2) * T.length)];
-  if (!open.N) for (let y = 34; y <= b.top + 6; y += 18) for (let x = 8 + ((y / 18) % 2) * 14; x < M.w; x += 30) {
-    if (inGap(b.gapT, x)) continue; n++; out.push([tp(n, 41), x + Math.round((hash(n, 2, 41) - .5) * 10), y + Math.round(hash(n, 3, 41) * 6)]);
+  if (!open.N) for (let x = 24; x < M.w - 20; x += 64) {
+    if (inGap(b.gapT, x)) continue; n++; out.push([tp(n, 41), x + Math.round((hash(n, 2, 41) - .5) * 12), Math.max(16, b.top - 12)]);
   }
-  for (let y = b.top + 20; y < M.h + 40; y += 24) {
-    if (!open.W) for (const x of [14, 36]) { if (inGap(b.gapL, y)) continue; n++; out.push([tp(n, 42), x + Math.round((hash(n, 2, 42) - .5) * 8), y]); }
-    if (!open.E) for (const x of [M.w - 36, M.w - 14]) { if (inGap(b.gapR, y)) continue; n++; out.push([tp(n, 42), x + Math.round((hash(n, 2, 42) - .5) * 8), y]); }
+  for (let y = b.top + 32; y < b.bottom - 16; y += 64) {
+    if (!open.W && !inGap(b.gapL, y)) { n++; out.push([tp(n, 42), Math.max(16, b.left - 16), y]); }
+    if (!open.E && !inGap(b.gapR, y)) { n++; out.push([tp(n, 42), Math.min(M.w - 16, b.right + 16), y]); }
   }
-  if (!open.S) for (let y = b.bottom + 16; y < M.h + 50; y += 20) for (let x = 50 + ((y / 20) % 2) * 14; x < M.w - 40; x += 28) {
-    if (inGap(b.gap, x)) continue; n++; out.push([tp(n, 43), x, y]);
+  if (!open.S) for (let x = 32; x < M.w - 30; x += 64) {
+    if (inGap(b.gap, x)) continue; n++; out.push([tp(n, 43), x + Math.round((hash(n, 2, 43) - .5) * 12), b.bottom + 24]);
   }
-  if (M._paths0) { // tahap D: tepi hutan tak lurus (teluk & tanjung pohon ke dalam)
-    const deep = v => Math.floor(Math.max(0, vnoise(v, M.w, 150, 91) - .3) * 6), add = (x, y, s2) => { n++; out.push([tp(n, s2), Math.round(x + (hash(n, 4, s2) - .5) * 16), Math.round(y + (hash(n, 5, s2) - .5) * 12)]); };
-    if (!open.N) for (let x = 20; x < M.w - 20; x += 30) { if (inGap(b.gapT, x)) continue; for (let k = 1; k <= deep(x); k++) add(x, b.top + 6 + k * 22, 44); }
-    if (!open.S) for (let x = 50; x < M.w - 40; x += 28) { if (inGap(b.gap, x)) continue; for (let k = 1; k <= deep(x + 999); k++) add(x, b.bottom + 6 - k * 22, 45); }
-    if (!open.W) for (let y = b.top + 20; y < M.h; y += 24) { if (inGap(b.gapL, y)) continue; for (let k = 1; k <= deep(y + 1999); k++) add(36 + k * 24, y, 46); }
-    if (!open.E) for (let y = b.top + 20; y < M.h; y += 24) { if (inGap(b.gapR, y)) continue; for (let k = 1; k <= deep(y + 2999); k++) add(M.w - 36 - k * 24, y, 47); }
-  }
-  /* jalur pintu perbatasan selalu bebas pohon tepi (termasuk baris tambahan tahap D) */
   const exs = mapDoors(M);
   return out.filter(o => !exs.some(ex => o[1] > ex.x - 56 && o[1] < ex.x + ex.w + 56 && o[2] > ex.y - 56 && o[2] < ex.y + ex.h + 64));
 }

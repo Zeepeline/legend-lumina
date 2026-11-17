@@ -12,7 +12,7 @@ const IMG_LIST = [
   "goblin_fortress", "goblin_gate", "goblin_hut", "goblin_tower", "goblin_cage", "goblin_forge", "goblin_shrine",
   "goblin_cauldron", "goblin_totem", "goblin_torch", "goblin_wagon", "goblin_banner",
   "vfx_swing_combo", "vfx_hit_impact", "vfx_charge_spin",
-  "tree_apple_fruit", "tree_apple_bare", "tree_redwood",
+  "tree_apple_fruit", "tree_apple_bare", "tree_redwood", "bridge_wood", "bridge_wood_long",
   "gnd_city_cobble",
   "gpt_gatehouse", "gpt_gatehouse_top", "gpt_cwall", "gpt_ctower", "gpt_city_bridge",
   "gpt_city_lamp", "gpt_city_lamp2", "gpt_city_banner", "gpt_city_banner_sm",

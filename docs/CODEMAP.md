@@ -83,21 +83,21 @@ _Efek: tebasan, api, proyektil, cahaya, bayangan_
 _Lantai & perabot interior_
 `FURN` 4 · `drawFurn()` 5 · `genRoom()` 15 · `artMusicBox()` 28
 
-## src/world/objects.js (370 baris)
+## src/world/objects.js (372 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 369
+`OBJ` 7 · `MAPS` 371
 
 ## src/world/spawn/spawn_1.js (362 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 `OBJ_SPAWN` 3 · obj `shrine` 5 · obj `cavemouth` 8 · obj `sign` 11 · obj `forge` 21 · obj `pebbles` 31 · obj `telescope` 39 · obj `altar` 47 · obj `fieldoven` 55 · obj `dripstone` 63 · obj `frostflower` 71 · obj `totem` 79 · obj `pigeons` 87 · obj `teatable` 95 · obj `lotuspad` 103 · obj `dockboat` 111 · obj `coffeeshrub` 166 · obj `coffeekettle` 174 · obj `orchidrock` 182 · obj `canaryperch` 190 · obj `woodlandshrine` 198 · obj `bellows` 206 · obj `ringbooth` 214 · obj `archerytarget` 222 · obj `lakelighthouse` 230 · obj `streetdrum` 238 · obj `dummy` 246 · obj `pot` 254 · obj `well` 264 · obj `apple1` 279 · obj `bench` 284 · obj `bell` 300 · obj `campfire` 308 · obj `alchemytable` 325 · obj `scenicbench` 334 · obj `mailbox` 352
 
-## src/world/spawn/spawn_2.js (320 baris)
+## src/world/spawn/spawn_2.js (326 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 219 · obj `tree_redwood` 226 · obj `goblin_torch` 229 · obj `goblin_cauldron` 232 · obj `cryst` 241 · obj `lamp` 244 · obj `viewpoint` 247 · obj `lumina_shard` 281 · obj `gatehouse` 303
+obj `bridge_wood` 4 · obj `bridge_wood_long` 7 · obj `brokenbridge` 10 · obj `board` 48 · obj `bombbarrel` 57 · obj `bramble` 87 · obj `minestone` 90 · obj `village_vault` 120 · obj `mirror_memory` 130 · obj `fame_board` 140 · obj `bounty_board` 149 · obj `deadtree` 158 · obj `rune_pillar` 186 · obj `fountain` 198 · obj `windmill` 210 · obj `treeA` 217 · obj `treeRedwood` 225 · obj `tree_redwood` 232 · obj `goblin_torch` 235 · obj `goblin_cauldron` 238 · obj `cryst` 247 · obj `lamp` 250 · obj `viewpoint` 253 · obj `lumina_shard` 287 · obj `gatehouse` 309
 
-## src/world/ground.js (381 baris)
+## src/world/ground.js (386 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 112 · `blockRects()` 261 · `scatter()` 277 · `openSides()` 322 · `borderTrees()` 335 · `ringObjects()` 360 · `mapObjects()` 365 · `mapWalls()` 369
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 112 · `blockRects()` 261 · `scatter()` 277 · `openSides()` 335 · `borderTrees()` 348 · `ringObjects()` 365 · `mapObjects()` 370 · `mapWalls()` 374
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
@@ -107,7 +107,7 @@ _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai 
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
 
 
-## src/world/maps/forest.js (109 baris)
+## src/world/maps/forest.js (110 baris)
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
@@ -135,7 +135,7 @@ _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan k
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 
-## src/world/maps/wild.js (188 baris)
+## src/world/maps/wild.js (189 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
 `ruinRing` 5 · `deepwoodPaths` 15 · `deepwoodPonds` 21 · `snailSwarm` 22
 

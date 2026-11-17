@@ -48,6 +48,7 @@ const snailSwarm = (paths, ponds, cx, cy, rMin, rMax, turns, n, startA = 0, type
     if (x < 55 || x > 2345 || y < 65 || y > 1735) continue;
     if (distP(x, y) < 42) continue;
     if (inWater(x, y)) continue;
+    if (out.some(o => Math.hypot(o[1] - x, o[2] - y) < 64)) continue;
     out.push([types[i % types.length], x, y]);
   }
   return out;
@@ -109,10 +110,10 @@ MAPS.deepwood = {
     ['sign', 570, 1660, { text: 'WILAYAH SUKU AKAR GELAP\nPendatang akan dijadikan tumbal kristal!' }],
     ['sign', 2300, 690, { text: 'HUTAN DALAM\nJangan tinggalkan jalan setapak. Lumut bercahaya menunjukkan arah pulang.' }],
     // Gugusan Pohon Snail Swarm Theory: Kurva Spiral Keong Membungkus Arena
-    ...snailSwarm(deepwoodPaths, deepwoodPonds, 520, 400, 230, 520, 1.3, 26, Math.PI * 0.5, ['treeRedwood', 'pined']),
-    ...snailSwarm(deepwoodPaths, deepwoodPonds, 380, 1540, 220, 460, 1.2, 22, -Math.PI * 0.4, ['treeRedwood', 'pined']),
-    ...snailSwarm(deepwoodPaths, deepwoodPonds, 2000, 330, 160, 420, 1.25, 18, 0, ['treeRedwood', 'pined']),
-    ...snailSwarm(deepwoodPaths, deepwoodPonds, 1400, 860, 230, 480, 1.15, 20, Math.PI * 0.2, ['treeRedwood', 'pined'])],
+    ...snailSwarm(deepwoodPaths, deepwoodPonds, 520, 400, 230, 520, 1.3, 10, Math.PI * 0.5, ['treeRedwood', 'pined']),
+    ...snailSwarm(deepwoodPaths, deepwoodPonds, 380, 1540, 220, 460, 1.2, 8, -Math.PI * 0.4, ['treeRedwood', 'pined']),
+    ...snailSwarm(deepwoodPaths, deepwoodPonds, 2000, 330, 160, 420, 1.25, 8, 0, ['treeRedwood', 'pined']),
+    ...snailSwarm(deepwoodPaths, deepwoodPonds, 1400, 860, 230, 480, 1.15, 8, Math.PI * 0.2, ['treeRedwood', 'pined'])],
   walls: [[0, 0, 2400, 30], [0, 0, 40, 1800], [2360, 0, 40, 700], [2360, 760, 40, 1040], [0, 1770, 2400, 30]],
   exits: [{ x: 2388, y: 700, w: 12, h: 60, to: 'forest', tx: 60, ty: 730, dir: 'right', label: 'Hutan Lumina' }],
   npcs: [{ id: 'sambo', ch: 'darma', name: 'Sambo, Pemburu Gelap', x: 1600, y: 1360, dir: 'down', wander: 18 }],

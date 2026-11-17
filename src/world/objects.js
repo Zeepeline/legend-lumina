@@ -251,6 +251,8 @@ const OBJ = {
   minestone: { key: "geoderock", col: [18, 10, 0], sh: [14, 3], fade: 1 },
   bombbarrel: { key: "barrel", col: [14, 6, 0], sh: [10, 3] },
   mailbox: { key: "sign", col: [10, 6, 0], sh: [8, 2], fade: 1 },
+  bridge_wood: { key: "bridge_wood", col: [0, 0, 0] },
+  bridge_wood_long: { key: "bridge_wood_long", col: [0, 0, 0] },
   brokenbridge: { key: "log", col: [28, 10, 0], sh: [16, 4] },
   scenicbench: { key: "i_bench", col: [42, 8, 2], sh: [22, 3] },
   viewpoint: { key: "stele", col: [14, 8, 0], sh: [10, 3], fade: 1 },
