@@ -90,7 +90,7 @@ LAYOUT CODES used in my tasks:
 
 ## A. Gambar patokan suasana
 Obrolan "Patokan". Kerjakan A1 dulu: itu jadi STYLE KEY untuk semua obrolan lain.
-### [ ] G001. Gambar patokan suasana: padang
+### [x] G001. Gambar patokan suasana: padang
 - Simpan: `assets/raw/gpt2/patokan/padang.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of a sunny meadow clearing: worn ochre dirt patches with soft leafy scalloped edges inside yellow-green grass, clumps of dark olive ferns, a few wildflowers, a lone broad tree casting a soft shadow, light shafts from the upper left. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: INI GAMBAR KUNCI. Setelah disetujui pemilik, lampirkan gambar ini di SETIAP obrolan berikutnya sebagai "style key".
