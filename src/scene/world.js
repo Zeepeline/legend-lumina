@@ -299,7 +299,6 @@ class World extends Phaser.Scene {
             targets: b, angle: pl.x < b.x ? 14 : -14, scaleY: 0.88, duration: 80, yoyo: true, repeat: 2,
             onComplete: () => { b.angle = 0; b.scaleY = 1; this.time.delayedCall(380, () => { b._swaying = false; }); }
           });
-        }
       }
     }
     for (const o of this.npcs) if (o.mark) { o.mark.setVisible(!G.title && this.npcHasQuest(o.n.id)); o.mark.x = o.spr.x; }

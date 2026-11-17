@@ -9471,17 +9471,14 @@ class World extends Phaser.Scene {
     // Efek rumput/semak bergoyang (#91) & hamburan daun rontok Cobo (T533)
     if (!locked && !pl.dead && this.bushes && this.bushes.length) {
       for (const b of this.bushes) {
-        if (!b.active || b._swaying || Math.abs(pl.x - b.x) > 20 || Math.abs(pl.y - b.y) > 20) continue;
-        const dx = pl.x - b.x, dy = pl.y - b.y;
-        if (dx * dx + dy * dy < 324) {
-          b._swaying = true;
+        if (!b.active || b._swaying || Math.hypot(pl.x - b.x, pl.y - b.y) >= 18) continue;
+        b._swaying = true;
           if (this.jx) this.jx('pop', b.x, b.y - 6, 2, { tint: 0x6ec048 });
           if (typeof sfx === 'function') sfx('bush');
           this.tweens.add({
             targets: b, angle: pl.x < b.x ? 14 : -14, scaleY: 0.88, duration: 80, yoyo: true, repeat: 2,
             onComplete: () => { b.angle = 0; b.scaleY = 1; this.time.delayedCall(380, () => { b._swaying = false; }); }
           });
-        }
       }
     }
     for (const o of this.npcs) if (o.mark) { o.mark.setVisible(!G.title && this.npcHasQuest(o.n.id)); o.mark.x = o.spr.x; }

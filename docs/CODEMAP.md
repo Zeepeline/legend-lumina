@@ -199,9 +199,9 @@ _Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024).
 _Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._
 `INT_SIZE` 5 · `INT_FLAT` 14 · `INT_RUG` 16 · `intDims()` 17 · `rug9()` 18 · `genRoomSheet()` 30 · `_genRoom0` 78 · `sheetWalls()` 81 · `regIntTex()` 88
 
-## src/scene/world.js (400 baris)
+## src/scene/world.js (397 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
-`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 100 · `.dropActiveFx()` 113 · `.wall()` 114 · `.shadow()` 115 · `.spawnObj()` 116 · `.spawnChest()` 134 · `.spawnCrystal()` 141 · `.spawnBarrier()` 149 · `.spawnMochi()` 156 · `.spawnNpc()` 160 · `.face()` 171 · `.spawnCritter()` 172 · `.spawnFly()` 177 · `.spawnEnemy()` 182 · `.camShake()` 212 · `.update()` 213 · `.puff()` 314 · `.camStep()` 315 · `.pump()` 364 · `.front()` 373 · `.actionA()` 374 · `.sparkle()` 384 · `.checkZones()` 388
+`.constructor()` 5 · `.create()` 6 · `.makeActiveFx()` 100 · `.dropActiveFx()` 113 · `.wall()` 114 · `.shadow()` 115 · `.spawnObj()` 116 · `.spawnChest()` 134 · `.spawnCrystal()` 141 · `.spawnBarrier()` 149 · `.spawnMochi()` 156 · `.spawnNpc()` 160 · `.face()` 171 · `.spawnCritter()` 172 · `.spawnFly()` 177 · `.spawnEnemy()` 182 · `.camShake()` 212 · `.update()` 213 · `.puff()` 311 · `.camStep()` 312 · `.pump()` 361 · `.front()` 370 · `.actionA()` 371 · `.sparkle()` 381 · `.checkZones()` 385
 
 ## src/systems/scene_nav.js (14 baris)
 _Navigasi scene: pindah peta (goto, memuat ulang scene) & penjaga awal cerita (guardStop). Mode benua membungkus goto (benua_scene.js)._
