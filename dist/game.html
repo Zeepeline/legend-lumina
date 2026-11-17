@@ -24799,10 +24799,6 @@ Object.assign(World.prototype, {
       await talkKangKembara();
       return;
     }
-    if (id === 'gj1' || id === 'gj2') {
-      await this.talkGateGuard(o, nm, T);
-      return;
-    }
     if (!(await this.learnTalk(id, T, gain)) && !(await this.ch5Talk(id, nm, T, gain)) && !(await this.storyTalk(id, nm, T, gain, o.n))) switch (id) {
       case 'elder':
         if (has('courier_parcel') && S.courierTimer?.target === 'elder') {
@@ -27261,6 +27257,20 @@ Object.assign(World.prototype, {
     }
   },
 
+  // T584: Panji Berombak Tertiup Angin & Efek Suasana Kota Megah (Ghost of Tsushima, Sea of Stars)
+  updBanners(dt) {
+    if (!this.banners || !this.banners.length) return;
+    const isStormy = this.weather === 'rain' || this.weather === 'storm';
+    const waveSp = isStormy ? 5.2 : 3.2;
+    const waveAmp = isStormy ? 0.12 : 0.07;
+    for (let i = 0; i < this.banners.length; i++) {
+      const b = this.banners[i];
+      if (!b || !b.active || !b.visible) continue;
+      b.rotation = Math.sin(this.t * waveSp + b.x * 0.04) * waveAmp;
+      b.scaleX = 1 + Math.sin(this.t * (waveSp * 1.5) + b.y * 0.05) * 0.04;
+    }
+  },
+
   updAtmos(dt) {
     if (G.title || !this.M) return;
     if (this.M.indoor && this._bgM !== this.M) { this._bgM = this.M; this.cameras.main.setBackgroundColor('#0e0907'); } /* luar ruangan sempit: gelap, bukan hijau */
@@ -27270,6 +27280,7 @@ Object.assign(World.prototype, {
     this.updCritters(dt, outdoor);
     this.updWindGust(dt, outdoor);
     this.updGodRays(dt, outdoor);
+    this.updBanners(dt);
     if (this._atmosM !== this.M || !this._fogL || !this._fogL[0].active) {
       (this._fogL || []).forEach(o => o.destroy()); (this._glP || []).forEach(o => o.destroy()); fogSheetTex(this);
       if (this._canopyL && this._canopyL.active) this._canopyL.destroy();

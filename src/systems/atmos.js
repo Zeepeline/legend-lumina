@@ -193,6 +193,20 @@ Object.assign(World.prototype, {
     }
   },
 
+  // T584: Panji Berombak Tertiup Angin & Efek Suasana Kota Megah (Ghost of Tsushima, Sea of Stars)
+  updBanners(dt) {
+    if (!this.banners || !this.banners.length) return;
+    const isStormy = this.weather === 'rain' || this.weather === 'storm';
+    const waveSp = isStormy ? 5.2 : 3.2;
+    const waveAmp = isStormy ? 0.12 : 0.07;
+    for (let i = 0; i < this.banners.length; i++) {
+      const b = this.banners[i];
+      if (!b || !b.active || !b.visible) continue;
+      b.rotation = Math.sin(this.t * waveSp + b.x * 0.04) * waveAmp;
+      b.scaleX = 1 + Math.sin(this.t * (waveSp * 1.5) + b.y * 0.05) * 0.04;
+    }
+  },
+
   updAtmos(dt) {
     if (G.title || !this.M) return;
     if (this.M.indoor && this._bgM !== this.M) { this._bgM = this.M; this.cameras.main.setBackgroundColor('#0e0907'); } /* luar ruangan sempit: gelap, bukan hijau */
