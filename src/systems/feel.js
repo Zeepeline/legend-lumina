@@ -261,12 +261,13 @@ World.prototype.create = function () {
         this._xraySpr.setVisible(false);
       }
       // T563: Efek Rumput & Semak Terbelah Saat Berjalan (Zelda: Minish Cap, Eastward)
-      if (moving && this.bushes && this.bushes.length) {
+      if (moving && this.bushes && this.bushes.length && !OPT.lite) {
         this._bT = (this._bT || 0) + 1;
-        if (this._bT % 6 === 0) {
+        if (this._bT % 8 === 0) {
           for (let i = 0; i < this.bushes.length; i++) {
             const b = this.bushes[i];
             if (!b || !b.active || b._sway) continue;
+            if (Math.abs(pl.x - b.x) > 24 || Math.abs(pl.y - b.y) > 24) continue;
             const dx = pl.x - b.x, dy = pl.y - (b.y - 6);
             if (dx * dx + dy * dy < 576) {
               b._sway = 1;
@@ -275,27 +276,29 @@ World.prototype.create = function () {
                 targets: b, scaleY: 0.8, scaleX: 1.15, rotation: rot, duration: 110, yoyo: true,
                 onComplete: () => { b.scaleY = 1; b.scaleX = 1; b.rotation = 0; b._sway = 0; }
               });
-              if (this.jx) this.jx('pop', b.x, b.y - 4, 2, { tint: 0x76b852 });
+              if (this.jx) this.jx('pop', b.x, b.y - 4, 1, { tint: 0x76b852 });
             }
           }
         }
       }
       // T574: Hembusan Angin Tebasan Bilah Pedang Terhadap Tanaman (Zelda: BOTW, Ghost of Tsushima)
-      if ((pl.atkT || 0) > 0) {
-        if (!pl._swWind && this.bushes && this.bushes.length) {
+      const isAtk = (pl._atk > 0) || (pl._heavy > 0) || ((pl.atkT || 0) > 0);
+      if (isAtk) {
+        if (!pl._swWind && this.bushes && this.bushes.length && !OPT.lite) {
           pl._swWind = 1;
           const facing = pl.flipX ? -1 : 1;
           for (let i = 0; i < this.bushes.length; i++) {
             const b = this.bushes[i];
             if (!b || !b.active || b._sway) continue;
+            if (Math.abs(pl.x - b.x) > 40 || Math.abs(pl.y - b.y) > 40) continue;
             const dx = b.x - pl.x, dy = b.y - pl.y;
-            if (dx * dx + dy * dy < 1296) {
+            if (dx * dx + dy * dy < 1600) {
               b._sway = 1;
               this.tweens.add({
                 targets: b, scaleY: 0.72, scaleX: 1.25, rotation: facing * 0.22, duration: 90, yoyo: true,
                 onComplete: () => { b.scaleY = 1; b.scaleX = 1; b.rotation = 0; b._sway = 0; }
               });
-              if (this.jx) this.jx('pop', b.x, b.y - 4, 2, { tint: 0x5cb85c });
+              if (this.jx) this.jx('pop', b.x, b.y - 4, 1, { tint: 0x5cb85c });
             }
           }
         }

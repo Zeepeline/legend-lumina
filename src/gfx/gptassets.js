@@ -46,9 +46,19 @@ function applyGptSwap(T, A) {
     const tc = T.addImage('cwall', IMGEL['gpt_cwall']);
     tc.add(0, 0, 0, 0, IMGEL['gpt_cwall'].width, IMGEL['gpt_cwall'].height);
   }
-  const cityProps = ['gpt_city_lamp', 'gpt_city_banner', 'gpt_city_banner_sm', 'gpt_city_fence',
+  if (IMGEL['gpt_ctower']) {
+    if (T.exists('ctower')) T.remove('ctower');
+    const tt = T.addImage('ctower', IMGEL['gpt_ctower']);
+    tt.add(0, 0, 0, 0, IMGEL['gpt_ctower'].width, IMGEL['gpt_ctower'].height);
+  }
+  if (IMGEL['gpt_city_bridge']) {
+    if (T.exists('city_bridge')) T.remove('city_bridge');
+    const tb = T.addImage('city_bridge', IMGEL['gpt_city_bridge']);
+    tb.add(0, 0, 0, 0, IMGEL['gpt_city_bridge'].width, IMGEL['gpt_city_bridge'].height);
+  }
+  const cityProps = ['gpt_city_lamp', 'gpt_city_lamp2', 'gpt_city_banner', 'gpt_city_banner_sm', 'gpt_city_fence',
     'gpt_city_rock_lg', 'gpt_city_rock_sm', 'gpt_city_flower_w', 'gpt_city_flower_p',
-    'gpt_city_cliff_l', 'gpt_city_cliff_r'];
+    'gpt_city_cliff_l', 'gpt_city_cliff_r', 'gpt_city_cart', 'gpt_city_board', 'gpt_city_bridge', 'gpt_ctower'];
   for (const cp of cityProps) {
     if (IMGEL[cp]) {
       if (T.exists(cp)) T.remove(cp);

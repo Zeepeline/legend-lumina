@@ -31,6 +31,7 @@ MAPS.meadow = {
     ['fence', 230, 250], ['fence', 248, 250], ['fence', 340, 250], ['fence', 358, 250],
     ['houseA', 140, 252], ['houseB', 480, 246], ['crate', 214, 352], ['barrel', 232, 356], ['crate', 214, 396],
     ['sign', 420, 300, { text: 'DESA KINCIR\nLumbung gandum Benua Lumina.' }],
+    ['pigeons', 360, 280],
     ['teatable', 430, 246],
     ['scenicbench', 280, 860],
     ['cavemouth', 1200, 170],

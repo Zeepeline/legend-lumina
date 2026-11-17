@@ -32,6 +32,7 @@ MAPS.village = {
     ['houseBrown', 180, 215],
     ['houseRed', 680, 530],
     ['well', 512, 345],
+    ['pigeons', 485, 340],
     // Pelataran sumur asimetris (T421)
     ['board', 552, 325],
     ['crateCart', 585, 355],

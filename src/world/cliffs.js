@@ -83,7 +83,7 @@
   }
 
   function getBorderSegments(M) {
-    if (M.indoor || M.borderCliffs === false) return [];
+    if (M.indoor || !M.borderCliffs) return [];
     if (M.id && (M.id.startsWith('k') || M.id.startsWith('pl_'))) return [];
     const b = M.border;
     if (!b) return [];

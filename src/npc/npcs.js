@@ -159,6 +159,16 @@ Object.assign(World.prototype, {
       }
     }
 
+    // T583: Protokol Penjaga Gerbang Siaga saat Arka Mendekat (Zelda: Twilight Princess, Suikoden)
+    if ((o.n.id === 'gj1' || o.n.id === 'gj2') && dPl < 46 && (!o.saluteCd || o.saluteCd <= 0) && !locked) {
+      o.saluteCd = 6;
+      this.face(o, this.pl.x > s.x ? 'right' : 'left');
+      if (this.npcEmote) this.npcEmote(o, '🛡️', 1.4);
+      if (this.jx) this.jx('chip', s.x, s.y - 2, 2, { tint: 0xc8c0b0 });
+      popBark(o, pick(['Hormat, petualang!', 'Lapor! Gerbang kota aman.', 'Silakan masuk ke Lumina.']));
+    }
+    if (o.saluteCd > 0) o.saluteCd -= dt;
+
     if (o.n.still) { if (o.walking) { s.setVelocity(0); o.walking = false; } return; } // NPC sengaja diam (jarang; beri alasan di data peta)
     this.npcBrain(o, dt, locked, dPl);
   },

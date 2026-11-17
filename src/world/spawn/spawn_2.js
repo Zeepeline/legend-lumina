@@ -305,10 +305,65 @@ Object.assign(OBJ_SPAWN, {
       }
     });
   },
+  scenicbench(s, x, y, opt, d, type) {
+    this.inter.push({
+      x, y: y + 2, r: 22,
+      fn: async () => {
+        G.lock++;
+        sfx('heal');
+        this.sparkle(x, y - 8, 'dotg', 10);
+        const st = stat();
+        S.hp = Math.min(st.maxhp, S.hp + 30);
+        S.mp = Math.min(st.maxmp, S.mp + 20);
+        S.viewpoints = S.viewpoints || {};
+        S.viewpoints[this.M.id] = true;
+        updHud();
+        await say(`Duduk santai di titik pemandangan alam yang indah. Angin bertiup sepoi-sepoi menyejukkan hati. (HP +30, MP +20).`);
+        G.lock--;
+      }
+    });
+  },
+  mailbox(s, x, y, opt, d, type) {
+    this.inter.push({
+      x, y: y + 2, r: 20,
+      fn: async () => {
+        if (typeof openMailbox === 'function') await openMailbox();
+        else await say('Kotak surat kayu di depan rumah Arka.');
+      }
+    });
+  },
+  // T580: Gapura Batu Megah, Lorong Bayangan & Atap Parapet Berlapis
   gatehouse(s, x, y, opt, d, type) {
+    this.wall(x - 86, y - 28, 44, 28);
+    this.wall(x + 42, y - 28, 44, 28);
+    this.add.ellipse(x, y - 22, 76, 30, 0x06050a, 0.45).setDepth(y - 20);
     if (IMGEL.gpt_gatehouse_top) {
       this.add.image(x, y, 'gpt_gatehouse_top').setOrigin(.5, 1).setDepth(y + 160);
     }
+  },
+  ctower(s, x, y) {
+    this.wall(x - 30, y - 32, 60, 30);
+  },
+  city_bridge(s, x, y) {
+    s.setOrigin(0.5, 0.5).setDepth(y - 45);
+  },
+  gpt_city_banner(s, x, y) {
+    s.setOrigin(0.5, 0.08);
+    (this.banners = this.banners || []).push(s);
+  },
+  gpt_city_banner_sm(s, x, y) {
+    s.setOrigin(0.5, 0.08);
+    (this.banners = this.banners || []).push(s);
+  },
+  gpt_city_board(s, x, y, opt) {
+    this.inter.push({
+      x, y: y + 2, r: 24,
+      fn: async () => {
+        const defaultTxt = 'MAKLUMAT KERAJAAN LUMINA:\n1. Patuhi hukum distrik kota.\n' +
+          '2. Waspadai monster di luar gerbang.\n3. Laporkan hal janggal ke pos jaga.';
+        await say(opt && opt.text ? opt.text : defaultTxt);
+      }
+    });
   },
 });
 OBJ_SPAWN.stele = OBJ_SPAWN.sign;

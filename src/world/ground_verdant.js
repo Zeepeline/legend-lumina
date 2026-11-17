@@ -180,11 +180,11 @@ const VWC = {
 function verdantWater(t, X, Y) {
   const b = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5, v = t + b * .035 + vnoise(X, Y, 64, 21) * .2 - .1;
   let c = v > .84 ? VWC.shal : v > .35 ? VWC.mid : VWC.deep;
-  // jaring wajik caustics berlian persis referensi pemilik
+  // jaring wajik caustics berlian secepat kilat (bitwise mask)
   if (t < .86) {
-    const w1 = Math.abs((X + Y * 1.25) % 18 - 9), w2 = Math.abs((X - Y * 1.25) % 18 - 9);
-    if (w1 < 1.35 && w2 < 1.35) c = VWC.spark;
-    else if (w1 < 1.35 || w2 < 1.35) c = VWC.caustic;
+    const w1 = (X + Y) & 15, w2 = (X - Y + 32) & 15;
+    if (w1 <= 1 && w2 <= 1) c = VWC.spark;
+    else if (w1 <= 1 || w2 <= 1) c = VWC.caustic;
   } else if (t >= .95) {
     c = VWC.foam; // buih putih lembut di kontak daratan
   }
@@ -198,13 +198,14 @@ const VSTONE = {
 };
 function vCobble(X, Y) {
   const C = 13, gx = Math.floor(X / C), gy = Math.floor(Y / C);
-  let f1 = 99, f2 = 99, dy1 = 0, dx1 = 0;
+  let f1 = 9999, f2 = 9999, dy1 = 0, dx1 = 0;
   for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
     const cx = (gx + i) * C + hash(gx + i, gy + j, 41) * C, cy = (gy + j) * C + hash(gx + i, gy + j, 42) * C;
-    const dd = Math.hypot(X - cx, Y - cy);
-    if (dd < f1) { f2 = f1; f1 = dd; dx1 = X - cx; dy1 = Y - cy; } else if (dd < f2) f2 = dd;
+    const ddx = X - cx, ddy = Y - cy, dd2 = ddx * ddx + ddy * ddy;
+    if (dd2 < f1) { f2 = f1; f1 = dd2; dx1 = ddx; dy1 = ddy; } else if (dd2 < f2) f2 = dd2;
   }
-  if (f2 - f1 < 1.2) return VSTONE.gap; // celah antarbatu bulat
+  const d1 = Math.sqrt(f1), d2 = Math.sqrt(f2);
+  if (d2 - d1 < 1.2) return VSTONE.gap; // celah antarbatu bulat
   const val = dy1 * .9 + dx1 * .35;
   return val < -2.4 ? VSTONE.hi : val > 2.6 ? VSTONE.lo : VSTONE.mid;
 }

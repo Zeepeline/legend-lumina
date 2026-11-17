@@ -4853,9 +4853,13 @@ const OBJ = {
   barrel: { key: "barrel", col: [12, 6, 0], sh: [7, 2] },
   crate: { key: "crate", col: [14, 6, 0], sh: [8, 2] },
   gatehouse: { key: "gatehouse", col: [0, 0, 0], sh: [120, 8], mm: 1 },
-  cwall: { key: "cwall", col: [132, 26, 0], sh: [66, 6] },
+  ctower: { key: "ctower", col: [64, 40, 0], sh: [34, 8], mm: 1 },
   cwall: { key: "cwall", col: [68, 26, 0], sh: [34, 6] },
+  city_bridge: { key: "gpt_city_bridge", col: [0, 0, 0] },
+  gpt_city_cart: { key: "gpt_city_cart", col: [36, 16, 2], sh: [20, 5], mm: 1 },
+  gpt_city_board: { key: "gpt_city_board", col: [32, 10, 0], sh: [16, 4] },
   gpt_city_lamp: { key: "gpt_city_lamp", col: [14, 8, 0], sh: [8, 3] },
+  gpt_city_lamp2: { key: "gpt_city_lamp2", col: [14, 8, 0], sh: [8, 3] },
   gpt_city_banner: { key: "gpt_city_banner", col: [12, 6, 0], sh: [8, 3] },
   gpt_city_banner_sm: {
     key: "gpt_city_banner_sm",
@@ -5019,6 +5023,8 @@ const OBJ_SPAWN = {};
 Object.assign(OBJ_SPAWN, {
   verdant_bush(s) { (this.bushes = this.bushes || []).push(s); },
   verdant_bush_small(s) { (this.bushes = this.bushes || []).push(s); },
+  bushy(s) { (this.bushes = this.bushes || []).push(s); },
+  bushv(s) { (this.bushes = this.bushes || []).push(s); },
   // T572: Lentera Bergoyang & Berpendar Hangat (Octopath Traveler, Eastward)
   lampPost(s, x, y, opt, d, type) {
     this.lights.push({ x, y: y - 28, big: 1 });
@@ -5401,33 +5407,6 @@ Object.assign(OBJ_SPAWN, {
       }
     });
   },
-  scenicbench(s, x, y, opt, d, type) {
-    this.inter.push({
-      x, y: y + 2, r: 22,
-      fn: async () => {
-        G.lock++;
-        sfx('heal');
-        this.sparkle(x, y - 8, 'dotg', 10);
-        const st = stat();
-        S.hp = Math.min(st.maxhp, S.hp + 30);
-        S.mp = Math.min(st.maxmp, S.mp + 20);
-        S.viewpoints = S.viewpoints || {};
-        S.viewpoints[this.M.id] = true;
-        updHud();
-        await say(`Duduk santai di titik pemandangan alam yang indah. Angin bertiup sepoi-sepoi menyejukkan hati. (HP +30, MP +20).`);
-        G.lock--;
-      }
-    });
-  },
-  mailbox(s, x, y, opt, d, type) {
-    this.inter.push({
-      x, y: y + 2, r: 20,
-      fn: async () => {
-        if (typeof openMailbox === 'function') await openMailbox();
-        else await say('Kotak surat kayu di depan rumah Arka.');
-      }
-    });
-  },
 });
 
 'use strict';
@@ -5737,10 +5716,65 @@ Object.assign(OBJ_SPAWN, {
       }
     });
   },
+  scenicbench(s, x, y, opt, d, type) {
+    this.inter.push({
+      x, y: y + 2, r: 22,
+      fn: async () => {
+        G.lock++;
+        sfx('heal');
+        this.sparkle(x, y - 8, 'dotg', 10);
+        const st = stat();
+        S.hp = Math.min(st.maxhp, S.hp + 30);
+        S.mp = Math.min(st.maxmp, S.mp + 20);
+        S.viewpoints = S.viewpoints || {};
+        S.viewpoints[this.M.id] = true;
+        updHud();
+        await say(`Duduk santai di titik pemandangan alam yang indah. Angin bertiup sepoi-sepoi menyejukkan hati. (HP +30, MP +20).`);
+        G.lock--;
+      }
+    });
+  },
+  mailbox(s, x, y, opt, d, type) {
+    this.inter.push({
+      x, y: y + 2, r: 20,
+      fn: async () => {
+        if (typeof openMailbox === 'function') await openMailbox();
+        else await say('Kotak surat kayu di depan rumah Arka.');
+      }
+    });
+  },
+  // T580: Gapura Batu Megah, Lorong Bayangan & Atap Parapet Berlapis
   gatehouse(s, x, y, opt, d, type) {
+    this.wall(x - 86, y - 28, 44, 28);
+    this.wall(x + 42, y - 28, 44, 28);
+    this.add.ellipse(x, y - 22, 76, 30, 0x06050a, 0.45).setDepth(y - 20);
     if (IMGEL.gpt_gatehouse_top) {
       this.add.image(x, y, 'gpt_gatehouse_top').setOrigin(.5, 1).setDepth(y + 160);
     }
+  },
+  ctower(s, x, y) {
+    this.wall(x - 30, y - 32, 60, 30);
+  },
+  city_bridge(s, x, y) {
+    s.setOrigin(0.5, 0.5).setDepth(y - 45);
+  },
+  gpt_city_banner(s, x, y) {
+    s.setOrigin(0.5, 0.08);
+    (this.banners = this.banners || []).push(s);
+  },
+  gpt_city_banner_sm(s, x, y) {
+    s.setOrigin(0.5, 0.08);
+    (this.banners = this.banners || []).push(s);
+  },
+  gpt_city_board(s, x, y, opt) {
+    this.inter.push({
+      x, y: y + 2, r: 24,
+      fn: async () => {
+        const defaultTxt = 'MAKLUMAT KERAJAAN LUMINA:\n1. Patuhi hukum distrik kota.\n' +
+          '2. Waspadai monster di luar gerbang.\n3. Laporkan hal janggal ke pos jaga.';
+        await say(opt && opt.text ? opt.text : defaultTxt);
+      }
+    });
   },
 });
 OBJ_SPAWN.stele = OBJ_SPAWN.sign;
@@ -6275,6 +6309,7 @@ MAPS.village = {
     ['houseBrown', 180, 215],
     ['houseRed', 680, 530],
     ['well', 512, 345],
+    ['pigeons', 485, 340],
     // Pelataran sumur asimetris (T421)
     ['board', 552, 325],
     ['crateCart', 585, 355],
@@ -6510,6 +6545,7 @@ MAPS.meadow = {
     ['fence', 230, 250], ['fence', 248, 250], ['fence', 340, 250], ['fence', 358, 250],
     ['houseA', 140, 252], ['houseB', 480, 246], ['crate', 214, 352], ['barrel', 232, 356], ['crate', 214, 396],
     ['sign', 420, 300, { text: 'DESA KINCIR\nLumbung gandum Benua Lumina.' }],
+    ['pigeons', 360, 280],
     ['teatable', 430, 246],
     ['scenicbench', 280, 860],
     ['cavemouth', 1200, 170],
@@ -8883,11 +8919,11 @@ const VWC = {
 function verdantWater(t, X, Y) {
   const b = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5, v = t + b * .035 + vnoise(X, Y, 64, 21) * .2 - .1;
   let c = v > .84 ? VWC.shal : v > .35 ? VWC.mid : VWC.deep;
-  // jaring wajik caustics berlian persis referensi pemilik
+  // jaring wajik caustics berlian secepat kilat (bitwise mask)
   if (t < .86) {
-    const w1 = Math.abs((X + Y * 1.25) % 18 - 9), w2 = Math.abs((X - Y * 1.25) % 18 - 9);
-    if (w1 < 1.35 && w2 < 1.35) c = VWC.spark;
-    else if (w1 < 1.35 || w2 < 1.35) c = VWC.caustic;
+    const w1 = (X + Y) & 15, w2 = (X - Y + 32) & 15;
+    if (w1 <= 1 && w2 <= 1) c = VWC.spark;
+    else if (w1 <= 1 || w2 <= 1) c = VWC.caustic;
   } else if (t >= .95) {
     c = VWC.foam; // buih putih lembut di kontak daratan
   }
@@ -8901,13 +8937,14 @@ const VSTONE = {
 };
 function vCobble(X, Y) {
   const C = 13, gx = Math.floor(X / C), gy = Math.floor(Y / C);
-  let f1 = 99, f2 = 99, dy1 = 0, dx1 = 0;
+  let f1 = 9999, f2 = 9999, dy1 = 0, dx1 = 0;
   for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
     const cx = (gx + i) * C + hash(gx + i, gy + j, 41) * C, cy = (gy + j) * C + hash(gx + i, gy + j, 42) * C;
-    const dd = Math.hypot(X - cx, Y - cy);
-    if (dd < f1) { f2 = f1; f1 = dd; dx1 = X - cx; dy1 = Y - cy; } else if (dd < f2) f2 = dd;
+    const ddx = X - cx, ddy = Y - cy, dd2 = ddx * ddx + ddy * ddy;
+    if (dd2 < f1) { f2 = f1; f1 = dd2; dx1 = ddx; dy1 = ddy; } else if (dd2 < f2) f2 = dd2;
   }
-  if (f2 - f1 < 1.2) return VSTONE.gap; // celah antarbatu bulat
+  const d1 = Math.sqrt(f1), d2 = Math.sqrt(f2);
+  if (d2 - d1 < 1.2) return VSTONE.gap; // celah antarbatu bulat
   const val = dy1 * .9 + dx1 * .35;
   return val < -2.4 ? VSTONE.hi : val > 2.6 ? VSTONE.lo : VSTONE.mid;
 }
@@ -17358,6 +17395,16 @@ Object.assign(World.prototype, {
       }
     }
 
+    // T583: Protokol Penjaga Gerbang Siaga saat Arka Mendekat (Zelda: Twilight Princess, Suikoden)
+    if ((o.n.id === 'gj1' || o.n.id === 'gj2') && dPl < 46 && (!o.saluteCd || o.saluteCd <= 0) && !locked) {
+      o.saluteCd = 6;
+      this.face(o, this.pl.x > s.x ? 'right' : 'left');
+      if (this.npcEmote) this.npcEmote(o, '🛡️', 1.4);
+      if (this.jx) this.jx('chip', s.x, s.y - 2, 2, { tint: 0xc8c0b0 });
+      popBark(o, pick(['Hormat, petualang!', 'Lapor! Gerbang kota aman.', 'Silakan masuk ke Lumina.']));
+    }
+    if (o.saluteCd > 0) o.saluteCd -= dt;
+
     if (o.n.still) { if (o.walking) { s.setVelocity(0); o.walking = false; } return; } // NPC sengaja diam (jarang; beri alasan di data peta)
     this.npcBrain(o, dt, locked, dPl);
   },
@@ -18319,12 +18366,13 @@ World.prototype.create = function () {
         this._xraySpr.setVisible(false);
       }
       // T563: Efek Rumput & Semak Terbelah Saat Berjalan (Zelda: Minish Cap, Eastward)
-      if (moving && this.bushes && this.bushes.length) {
+      if (moving && this.bushes && this.bushes.length && !OPT.lite) {
         this._bT = (this._bT || 0) + 1;
-        if (this._bT % 6 === 0) {
+        if (this._bT % 8 === 0) {
           for (let i = 0; i < this.bushes.length; i++) {
             const b = this.bushes[i];
             if (!b || !b.active || b._sway) continue;
+            if (Math.abs(pl.x - b.x) > 24 || Math.abs(pl.y - b.y) > 24) continue;
             const dx = pl.x - b.x, dy = pl.y - (b.y - 6);
             if (dx * dx + dy * dy < 576) {
               b._sway = 1;
@@ -18333,27 +18381,29 @@ World.prototype.create = function () {
                 targets: b, scaleY: 0.8, scaleX: 1.15, rotation: rot, duration: 110, yoyo: true,
                 onComplete: () => { b.scaleY = 1; b.scaleX = 1; b.rotation = 0; b._sway = 0; }
               });
-              if (this.jx) this.jx('pop', b.x, b.y - 4, 2, { tint: 0x76b852 });
+              if (this.jx) this.jx('pop', b.x, b.y - 4, 1, { tint: 0x76b852 });
             }
           }
         }
       }
       // T574: Hembusan Angin Tebasan Bilah Pedang Terhadap Tanaman (Zelda: BOTW, Ghost of Tsushima)
-      if ((pl.atkT || 0) > 0) {
-        if (!pl._swWind && this.bushes && this.bushes.length) {
+      const isAtk = (pl._atk > 0) || (pl._heavy > 0) || ((pl.atkT || 0) > 0);
+      if (isAtk) {
+        if (!pl._swWind && this.bushes && this.bushes.length && !OPT.lite) {
           pl._swWind = 1;
           const facing = pl.flipX ? -1 : 1;
           for (let i = 0; i < this.bushes.length; i++) {
             const b = this.bushes[i];
             if (!b || !b.active || b._sway) continue;
+            if (Math.abs(pl.x - b.x) > 40 || Math.abs(pl.y - b.y) > 40) continue;
             const dx = b.x - pl.x, dy = b.y - pl.y;
-            if (dx * dx + dy * dy < 1296) {
+            if (dx * dx + dy * dy < 1600) {
               b._sway = 1;
               this.tweens.add({
                 targets: b, scaleY: 0.72, scaleX: 1.25, rotation: facing * 0.22, duration: 90, yoyo: true,
                 onComplete: () => { b.scaleY = 1; b.scaleX = 1; b.rotation = 0; b._sway = 0; }
               });
-              if (this.jx) this.jx('pop', b.x, b.y - 4, 2, { tint: 0x5cb85c });
+              if (this.jx) this.jx('pop', b.x, b.y - 4, 1, { tint: 0x5cb85c });
             }
           }
         }
@@ -24749,6 +24799,10 @@ Object.assign(World.prototype, {
       await talkKangKembara();
       return;
     }
+    if (id === 'gj1' || id === 'gj2') {
+      await this.talkGateGuard(o, nm, T);
+      return;
+    }
     if (!(await this.learnTalk(id, T, gain)) && !(await this.ch5Talk(id, nm, T, gain)) && !(await this.storyTalk(id, nm, T, gain, o.n))) switch (id) {
       case 'elder':
         if (has('courier_parcel') && S.courierTimer?.target === 'elder') {
@@ -26764,7 +26818,7 @@ waterRelocate();
   }
 
   function getBorderSegments(M) {
-    if (M.indoor || M.borderCliffs === false) return [];
+    if (M.indoor || !M.borderCliffs) return [];
     if (M.id && (M.id.startsWith('k') || M.id.startsWith('pl_'))) return [];
     const b = M.border;
     if (!b) return [];
@@ -26862,7 +26916,7 @@ waterRelocate();
 'use strict';
 // Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,
 // sungai berliku `river` = ke timur). Di danau: riak pelan bergeser. Hanya di sekitar layar, maks ±70 garis.
-const FLOW_MAX = 70;
+const FLOW_MAX = 28;
 // arah aliran di titik global (gx, gy): { x, y, v } atau null bila bukan air (tepi air juga null agar riak tidak menempel batu)
 function waterFlowAt(gx, gy) {
   for (const id in WORLD_POS) {
@@ -26932,12 +26986,15 @@ Object.assign(World.prototype, {
       if (!dead && f.chk > .3) { f.chk = 0; const d = waterFlowAt(f.img.x + off[0], f.img.y + off[1]); if (!d) dead = true; else { f.d = d; f.img.setRotation(Math.atan2(d.y, d.x)); } }
       if (dead) { f.img.destroy(); this._flow.splice(i, 1); }
     }
-    // T544: buih ombak pasang surut tepi air (siklus 3.2 detik)
-    for (let k = 0; k < 2 && this._shoreFoam.length < 32; k++) {
+    // T544: buih ombak pasang surut tepi air (siklus 3.2 detik, hemat perulangan)
+    this._foamSpawnT = (this._foamSpawnT || 0) + dt;
+    if (this._foamSpawnT > 0.45 && this._shoreFoam.length < 14) {
+      this._foamSpawnT = 0;
       const rx = cam.x + Math.random() * cam.width, ry = cam.y + Math.random() * cam.height;
-      if (!isShorelineAt(this.M, rx, ry, off[0], off[1])) continue;
-      const img = this.add.image(rx, ry, 'shorefoam').setDepth(-9.4e5).setAlpha(0);
-      this._shoreFoam.push({ img, x: rx, y: ry, life: 3.2, t: Math.random() * 3.2 });
+      if (isShorelineAt(this.M, rx, ry, off[0], off[1])) {
+        const img = this.add.image(rx, ry, 'shorefoam').setDepth(-9.4e5).setAlpha(0);
+        this._shoreFoam.push({ img, x: rx, y: ry, life: 3.2, t: Math.random() * 3.2 });
+      }
     }
     for (let i = this._shoreFoam.length - 1; i >= 0; i--) {
       const sf = this._shoreFoam[i]; sf.t += dt;
@@ -26949,35 +27006,36 @@ Object.assign(World.prototype, {
         sf.img.destroy(); this._shoreFoam.splice(i, 1);
       }
     }
-    // T568: Riak Air Langkah Kaki di Tepian & Dangkal (Zelda: Link's Awakening, Sea of Stars)
+    // T568 & T569: Caching status air pemain (hemat 95% pemanggilan waterFlowAt)
     const pl = this.pl;
-    if (pl && pl.body && pl.body.velocity.length() > 10 && !OPT.lite) {
-      const inWater = waterFlowAt(pl.x + off[0], pl.y + off[1]) || isShorelineAt(this.M, pl.x, pl.y, off[0], off[1]);
-      if (inWater) {
+    if (pl && !OPT.lite) {
+      this._plWaterT = (this._plWaterT || 0) + dt;
+      if (this._plWaterT > 0.16 || this._plInWater == null) {
+        this._plWaterT = 0;
+        this._plInWater = !!(waterFlowAt(pl.x + off[0], pl.y + off[1]) || isShorelineAt(this.M, pl.x, pl.y, off[0], off[1]));
+        const isCalm = (this.M && (this.M.id === 'lake' || this.M.id === 'village' || this.M.id === 'meadow'));
+        this._plNearCalm = isCalm && !!(waterFlowAt(pl.x + off[0], pl.y + 12 + off[1]) || isShorelineAt(this.M, pl.x, pl.y + 8, off[0], off[1]));
+      }
+      if (pl.body && pl.body.velocity.length() > 10 && this._plInWater) {
         this._wStepT = (this._wStepT || 0) + dt;
-        if (this._wStepT > 0.28) {
+        if (this._wStepT > 0.32) {
           this._wStepT = 0;
-          const rip = this.add.ellipse(pl.x, pl.y, 8, 4).setStrokeStyle(1, 0xd0ecfc, 0.85).setDepth(-9.3e5);
+          const rip = this.add.ellipse(pl.x, pl.y, 8, 4).setStrokeStyle(1, 0xd0ecfc, 0.85).setDepth(pl.y - 0.5);
           this.tweens.add({
-            targets: rip, scaleX: 2.5, scaleY: 2.2, alpha: 0, duration: 480, ease: 'Quad.easeOut',
+            targets: rip, scaleX: 2.4, scaleY: 2.0, alpha: 0, duration: 420, ease: 'Quad.easeOut',
             onComplete: () => { rip.destroy(); }
           });
-          if (this.jx) this.jx('pop', pl.x, pl.y, 2, { tint: 0xa8d8ea });
+          if (this.jx) this.jx('pop', pl.x, pl.y, 1, { tint: 0xa8d8ea });
         }
       }
-    }
-    // T569: Pantulan Bayangan Air di Kolam Tenang & Danau (Chrono Trigger, Sea of Stars)
-    if (pl && pl.visible && !OPT.lite) {
-      const nearCalm = (this.M && (this.M.id === 'lake' || this.M.id === 'village' || this.M.id === 'meadow')) &&
-        (waterFlowAt(pl.x + off[0], pl.y + 12 + off[1]) || isShorelineAt(this.M, pl.x, pl.y + 8, off[0], off[1]));
-      if (nearCalm && pl.texture) {
+      if (pl.visible && this._plNearCalm && pl.texture) {
         if (!this._plRefl || !this._plRefl.scene) {
           this._plRefl = this.add.sprite(pl.x, pl.y, pl.texture.key).setOrigin(0.5, 0)
-            .setTint(0x6aa6d6).setAlpha(0.22).setDepth(-9.4e5);
+            .setTint(0x6aa6d6).setAlpha(0.22).setDepth(pl.y - 0.8);
         }
         const waveX = Math.sin(this.t * 3.8 + pl.y * 0.1) * 1.2;
         this._plRefl.setVisible(true).setTexture(pl.texture.key, pl.frame.name)
-          .setPosition(pl.x + waveX, pl.y - 1).setScale(pl.scaleX, -0.65).setFlipX(pl.flipX);
+          .setPosition(pl.x + waveX, pl.y - 1).setScale(pl.scaleX, -0.65).setFlipX(pl.flipX).setDepth(pl.y - 0.8);
       } else if (this._plRefl && this._plRefl.visible) {
         this._plRefl.setVisible(false);
       }
@@ -26989,7 +27047,7 @@ Object.assign(World.prototype, {
         this._rainRipT = 0;
         const rx = cam.x + Math.random() * cam.width, ry = cam.y + Math.random() * cam.height;
         if (waterFlowAt(rx + off[0], ry + off[1])) {
-          const rrip = this.add.ellipse(rx, ry, 4, 2).setStrokeStyle(1, 0xdcf2ff, 0.75).setDepth(-9.35e5);
+          const rrip = this.add.ellipse(rx, ry, 4, 2).setStrokeStyle(1, 0xdcf2ff, 0.75).setDepth(ry - 0.5);
           this.tweens.add({
             targets: rrip, scaleX: 2.8, scaleY: 2.4, alpha: 0, duration: 320, ease: 'Quad.easeOut',
             onComplete: () => { rrip.destroy(); }
@@ -27473,9 +27531,19 @@ function applyGptSwap(T, A) {
     const tc = T.addImage('cwall', IMGEL['gpt_cwall']);
     tc.add(0, 0, 0, 0, IMGEL['gpt_cwall'].width, IMGEL['gpt_cwall'].height);
   }
-  const cityProps = ['gpt_city_lamp', 'gpt_city_banner', 'gpt_city_banner_sm', 'gpt_city_fence',
+  if (IMGEL['gpt_ctower']) {
+    if (T.exists('ctower')) T.remove('ctower');
+    const tt = T.addImage('ctower', IMGEL['gpt_ctower']);
+    tt.add(0, 0, 0, 0, IMGEL['gpt_ctower'].width, IMGEL['gpt_ctower'].height);
+  }
+  if (IMGEL['gpt_city_bridge']) {
+    if (T.exists('city_bridge')) T.remove('city_bridge');
+    const tb = T.addImage('city_bridge', IMGEL['gpt_city_bridge']);
+    tb.add(0, 0, 0, 0, IMGEL['gpt_city_bridge'].width, IMGEL['gpt_city_bridge'].height);
+  }
+  const cityProps = ['gpt_city_lamp', 'gpt_city_lamp2', 'gpt_city_banner', 'gpt_city_banner_sm', 'gpt_city_fence',
     'gpt_city_rock_lg', 'gpt_city_rock_sm', 'gpt_city_flower_w', 'gpt_city_flower_p',
-    'gpt_city_cliff_l', 'gpt_city_cliff_r'];
+    'gpt_city_cliff_l', 'gpt_city_cliff_r', 'gpt_city_cart', 'gpt_city_board', 'gpt_city_bridge', 'gpt_ctower'];
   for (const cp of cityProps) {
     if (IMGEL[cp]) {
       if (T.exists(cp)) T.remove(cp);

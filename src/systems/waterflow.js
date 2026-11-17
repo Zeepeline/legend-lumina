@@ -1,7 +1,7 @@
 'use strict';
 // Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,
 // sungai berliku `river` = ke timur). Di danau: riak pelan bergeser. Hanya di sekitar layar, maks ±70 garis.
-const FLOW_MAX = 70;
+const FLOW_MAX = 28;
 // arah aliran di titik global (gx, gy): { x, y, v } atau null bila bukan air (tepi air juga null agar riak tidak menempel batu)
 function waterFlowAt(gx, gy) {
   for (const id in WORLD_POS) {
@@ -71,12 +71,15 @@ Object.assign(World.prototype, {
       if (!dead && f.chk > .3) { f.chk = 0; const d = waterFlowAt(f.img.x + off[0], f.img.y + off[1]); if (!d) dead = true; else { f.d = d; f.img.setRotation(Math.atan2(d.y, d.x)); } }
       if (dead) { f.img.destroy(); this._flow.splice(i, 1); }
     }
-    // T544: buih ombak pasang surut tepi air (siklus 3.2 detik)
-    for (let k = 0; k < 2 && this._shoreFoam.length < 32; k++) {
+    // T544: buih ombak pasang surut tepi air (siklus 3.2 detik, hemat perulangan)
+    this._foamSpawnT = (this._foamSpawnT || 0) + dt;
+    if (this._foamSpawnT > 0.45 && this._shoreFoam.length < 14) {
+      this._foamSpawnT = 0;
       const rx = cam.x + Math.random() * cam.width, ry = cam.y + Math.random() * cam.height;
-      if (!isShorelineAt(this.M, rx, ry, off[0], off[1])) continue;
-      const img = this.add.image(rx, ry, 'shorefoam').setDepth(-9.4e5).setAlpha(0);
-      this._shoreFoam.push({ img, x: rx, y: ry, life: 3.2, t: Math.random() * 3.2 });
+      if (isShorelineAt(this.M, rx, ry, off[0], off[1])) {
+        const img = this.add.image(rx, ry, 'shorefoam').setDepth(-9.4e5).setAlpha(0);
+        this._shoreFoam.push({ img, x: rx, y: ry, life: 3.2, t: Math.random() * 3.2 });
+      }
     }
     for (let i = this._shoreFoam.length - 1; i >= 0; i--) {
       const sf = this._shoreFoam[i]; sf.t += dt;
@@ -88,35 +91,36 @@ Object.assign(World.prototype, {
         sf.img.destroy(); this._shoreFoam.splice(i, 1);
       }
     }
-    // T568: Riak Air Langkah Kaki di Tepian & Dangkal (Zelda: Link's Awakening, Sea of Stars)
+    // T568 & T569: Caching status air pemain (hemat 95% pemanggilan waterFlowAt)
     const pl = this.pl;
-    if (pl && pl.body && pl.body.velocity.length() > 10 && !OPT.lite) {
-      const inWater = waterFlowAt(pl.x + off[0], pl.y + off[1]) || isShorelineAt(this.M, pl.x, pl.y, off[0], off[1]);
-      if (inWater) {
+    if (pl && !OPT.lite) {
+      this._plWaterT = (this._plWaterT || 0) + dt;
+      if (this._plWaterT > 0.16 || this._plInWater == null) {
+        this._plWaterT = 0;
+        this._plInWater = !!(waterFlowAt(pl.x + off[0], pl.y + off[1]) || isShorelineAt(this.M, pl.x, pl.y, off[0], off[1]));
+        const isCalm = (this.M && (this.M.id === 'lake' || this.M.id === 'village' || this.M.id === 'meadow'));
+        this._plNearCalm = isCalm && !!(waterFlowAt(pl.x + off[0], pl.y + 12 + off[1]) || isShorelineAt(this.M, pl.x, pl.y + 8, off[0], off[1]));
+      }
+      if (pl.body && pl.body.velocity.length() > 10 && this._plInWater) {
         this._wStepT = (this._wStepT || 0) + dt;
-        if (this._wStepT > 0.28) {
+        if (this._wStepT > 0.32) {
           this._wStepT = 0;
-          const rip = this.add.ellipse(pl.x, pl.y, 8, 4).setStrokeStyle(1, 0xd0ecfc, 0.85).setDepth(-9.3e5);
+          const rip = this.add.ellipse(pl.x, pl.y, 8, 4).setStrokeStyle(1, 0xd0ecfc, 0.85).setDepth(pl.y - 0.5);
           this.tweens.add({
-            targets: rip, scaleX: 2.5, scaleY: 2.2, alpha: 0, duration: 480, ease: 'Quad.easeOut',
+            targets: rip, scaleX: 2.4, scaleY: 2.0, alpha: 0, duration: 420, ease: 'Quad.easeOut',
             onComplete: () => { rip.destroy(); }
           });
-          if (this.jx) this.jx('pop', pl.x, pl.y, 2, { tint: 0xa8d8ea });
+          if (this.jx) this.jx('pop', pl.x, pl.y, 1, { tint: 0xa8d8ea });
         }
       }
-    }
-    // T569: Pantulan Bayangan Air di Kolam Tenang & Danau (Chrono Trigger, Sea of Stars)
-    if (pl && pl.visible && !OPT.lite) {
-      const nearCalm = (this.M && (this.M.id === 'lake' || this.M.id === 'village' || this.M.id === 'meadow')) &&
-        (waterFlowAt(pl.x + off[0], pl.y + 12 + off[1]) || isShorelineAt(this.M, pl.x, pl.y + 8, off[0], off[1]));
-      if (nearCalm && pl.texture) {
+      if (pl.visible && this._plNearCalm && pl.texture) {
         if (!this._plRefl || !this._plRefl.scene) {
           this._plRefl = this.add.sprite(pl.x, pl.y, pl.texture.key).setOrigin(0.5, 0)
-            .setTint(0x6aa6d6).setAlpha(0.22).setDepth(-9.4e5);
+            .setTint(0x6aa6d6).setAlpha(0.22).setDepth(pl.y - 0.8);
         }
         const waveX = Math.sin(this.t * 3.8 + pl.y * 0.1) * 1.2;
         this._plRefl.setVisible(true).setTexture(pl.texture.key, pl.frame.name)
-          .setPosition(pl.x + waveX, pl.y - 1).setScale(pl.scaleX, -0.65).setFlipX(pl.flipX);
+          .setPosition(pl.x + waveX, pl.y - 1).setScale(pl.scaleX, -0.65).setFlipX(pl.flipX).setDepth(pl.y - 0.8);
       } else if (this._plRefl && this._plRefl.visible) {
         this._plRefl.setVisible(false);
       }
@@ -128,7 +132,7 @@ Object.assign(World.prototype, {
         this._rainRipT = 0;
         const rx = cam.x + Math.random() * cam.width, ry = cam.y + Math.random() * cam.height;
         if (waterFlowAt(rx + off[0], ry + off[1])) {
-          const rrip = this.add.ellipse(rx, ry, 4, 2).setStrokeStyle(1, 0xdcf2ff, 0.75).setDepth(-9.35e5);
+          const rrip = this.add.ellipse(rx, ry, 4, 2).setStrokeStyle(1, 0xdcf2ff, 0.75).setDepth(ry - 0.5);
           this.tweens.add({
             targets: rrip, scaleX: 2.8, scaleY: 2.4, alpha: 0, duration: 320, ease: 'Quad.easeOut',
             onComplete: () => { rrip.destroy(); }

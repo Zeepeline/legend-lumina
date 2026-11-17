@@ -83,17 +83,17 @@ _Efek: tebasan, api, proyektil, cahaya, bayangan_
 _Lantai & perabot interior_
 `FURN` 4 · `drawFurn()` 5 · `genRoom()` 15 · `artMusicBox()` 28
 
-## src/world/objects.js (375 baris)
+## src/world/objects.js (379 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 374
+`OBJ` 7 · `MAPS` 378
 
-## src/world/spawn/spawn_1.js (417 baris)
+## src/world/spawn/spawn_1.js (392 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-`OBJ_SPAWN` 3 · obj `verdant_bush` 5 · obj `verdant_bush_small` 6 · obj `lampPost` 8 · obj `gpt_city_lamp` 16 · obj `shrine` 24 · obj `cavemouth` 27 · obj `sign` 30 · obj `forge` 40 · obj `pebbles` 61 · obj `telescope` 69 · obj `altar` 77 · obj `fieldoven` 85 · obj `dripstone` 93 · obj `frostflower` 101 · obj `totem` 109 · obj `pigeons` 117 · obj `teatable` 150 · obj `lotuspad` 158 · obj `dockboat` 166 · obj `coffeeshrub` 221 · obj `coffeekettle` 229 · obj `orchidrock` 237 · obj `canaryperch` 245 · obj `woodlandshrine` 253 · obj `bellows` 261 · obj `ringbooth` 269 · obj `archerytarget` 277 · obj `lakelighthouse` 285 · obj `streetdrum` 293 · obj `dummy` 301 · obj `pot` 309 · obj `well` 319 · obj `apple1` 334 · obj `bench` 339 · obj `bell` 355 · obj `campfire` 363 · obj `alchemytable` 380 · obj `scenicbench` 389 · obj `mailbox` 407
+`OBJ_SPAWN` 3 · obj `verdant_bush` 5 · obj `verdant_bush_small` 6 · obj `bushy` 7 · obj `bushv` 8 · obj `lampPost` 10 · obj `gpt_city_lamp` 18 · obj `shrine` 26 · obj `cavemouth` 29 · obj `sign` 32 · obj `forge` 42 · obj `pebbles` 63 · obj `telescope` 71 · obj `altar` 79 · obj `fieldoven` 87 · obj `dripstone` 95 · obj `frostflower` 103 · obj `totem` 111 · obj `pigeons` 119 · obj `teatable` 152 · obj `lotuspad` 160 · obj `dockboat` 168 · obj `coffeeshrub` 223 · obj `coffeekettle` 231 · obj `orchidrock` 239 · obj `canaryperch` 247 · obj `woodlandshrine` 255 · obj `bellows` 263 · obj `ringbooth` 271 · obj `archerytarget` 279 · obj `lakelighthouse` 287 · obj `streetdrum` 295 · obj `dummy` 303 · obj `pot` 311 · obj `well` 321 · obj `apple1` 336 · obj `bench` 341 · obj `bell` 357 · obj `campfire` 365 · obj `alchemytable` 382
 
-## src/world/spawn/spawn_2.js (325 baris)
+## src/world/spawn/spawn_2.js (380 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 219 · obj `tree_redwood` 226 · obj `goblin_torch` 229 · obj `goblin_cauldron` 232 · obj `cryst` 241 · obj `lamp` 244 · obj `viewpoint` 252 · obj `lumina_shard` 286 · obj `gatehouse` 308
+obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 219 · obj `tree_redwood` 226 · obj `goblin_torch` 229 · obj `goblin_cauldron` 232 · obj `cryst` 241 · obj `lamp` 244 · obj `viewpoint` 252 · obj `lumina_shard` 286 · obj `scenicbench` 308 · obj `mailbox` 326 · obj `gatehouse` 336 · obj `ctower` 344 · obj `city_bridge` 347 · obj `gpt_city_banner` 350 · obj `gpt_city_banner_sm` 354 · obj `gpt_city_board` 358
 
 ## src/world/ground.js (397 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
@@ -103,7 +103,7 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
 `WATER_WIDEN` 6 · `pondsBase()` 7 · `WGLOB` 25 · `waterGlobal()` 26 · `pondsAll()` 40 · `pondsNear()` 49 · `waterE()` 52 · `mapDoors()` 69 · `waterGXY()` 70 · `WATER_MOVABLE` 73 · `waterRelocate()` 74
 
-## src/world/maps/village.js (127 baris)
+## src/world/maps/village.js (128 baris)
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
 
 
@@ -111,7 +111,7 @@ _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
-## src/world/maps/meadow.js (95 baris)
+## src/world/maps/meadow.js (96 baris)
 _Peta: Padang Angin_
 
 
@@ -191,9 +191,9 @@ _Panggang bayangan objek ke tekstur tanah_
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `imgSubdir()` 23 · `loadImgs()` 42 · `addStrip()` 56 · `darkTree()` 61 · `NPC_W` 63 · `regPortrait()` 64 · `regChar()` 69 · `buildTextures()` 86
 
-## src/world/ground_verdant.js (290 baris)
+## src/world/ground_verdant.js (291 baris)
 _Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024)._
-`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `V_TILES` 13 · `CLUTTER_PADANG` 19 · `CLUTTER_FOREST` 25 · `CLUTTER_DEEPWOOD` 32 · `ISLANDS_PADANG` 39 · `ISLANDS_FOREST` 40 · `ISLANDS_DEEPWOOD` 41 · `WATER_DECO_PADANG` 42 · `WATER_DECO_FOREST` 43 · `VT_MAP` 54 · `verdantTiles()` 55 · `vModW` 72 · `vDirtN` 74 · `vDirtT` 75 · `verdantPix()` 78 · `verdantDeco()` 93 · `VBASE` 157 · `verdantBase()` 158 · `VWC` 176 · `verdantWater()` 180 · `VSTONE` 195 · `vCobble()` 199 · `verdantBank()` 212 · `regVerdantTex()` 226 · `verdantReflect()` 235 · `verdantScallop()` 264 · `verdantEdgePix()` 279
+`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `V_TILES` 13 · `CLUTTER_PADANG` 19 · `CLUTTER_FOREST` 25 · `CLUTTER_DEEPWOOD` 32 · `ISLANDS_PADANG` 39 · `ISLANDS_FOREST` 40 · `ISLANDS_DEEPWOOD` 41 · `WATER_DECO_PADANG` 42 · `WATER_DECO_FOREST` 43 · `VT_MAP` 54 · `verdantTiles()` 55 · `vModW` 72 · `vDirtN` 74 · `vDirtT` 75 · `verdantPix()` 78 · `verdantDeco()` 93 · `VBASE` 157 · `verdantBase()` 158 · `VWC` 176 · `verdantWater()` 180 · `VSTONE` 195 · `vCobble()` 199 · `verdantBank()` 213 · `regVerdantTex()` 227 · `verdantReflect()` 236 · `verdantScallop()` 265 · `verdantEdgePix()` 280
 
 ## src/world/interior_sheet.js (89 baris)
 _Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._
@@ -335,9 +335,9 @@ _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 _Segel kuil, Mochi hilang, kristal, peti harta_
 `.touchBarrier()` 4 · `.takeMochi()` 20 · `.useCrystal()` 24 · `.openChest()` 37 · `interactRunePillar()` 96
 
-## src/npc/npcs.js (189 baris)
+## src/npc/npcs.js (199 baris)
 _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_
-`NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 85 · `.updCritter()` 165
+`NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 85 · `.updCritter()` 175
 
 ## src/npc/brain.js (197 baris)
 _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, mengobrol, duduk, berpatroli), pulang saat malam._
@@ -351,7 +351,7 @@ _Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
 `.updInteractHint()` 6 · `.updEnemyBars()` 42 · `.retryBoss()` 68 · `levelUpDetail()` 74 · `.setTimeout()` 80 · `TIPS` 102 · `showTip()` 113 · `.updTips()` 132 · `.updPeaceHud()` 142 · `.updMinimap()` 147 · `.swapWeapon()` 181 · `.updStamina()` 192 · `.tryClimb()` 209 · `applyPadOpt()` 237
 
-## src/systems/feel.js (309 baris)
+## src/systems/feel.js (312 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
 `ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 164 · `.hurtAnim()` 171 · `.hasLineOfSight()` 173 · `_spawnEnemy` 189 · `_killEnemy` 209 · `_feelCr` 240
 
@@ -559,11 +559,11 @@ _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TA
 _T442, T445 & Elevated Border Cliffs:_
 
 
-## src/systems/waterflow.js (149 baris)
+## src/systems/waterflow.js (153 baris)
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
-`FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `foamTex()` 32 · `isShorelineAt()` 39 · `.updFlow()` 51 · `_updFlow0` 141
+`FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `foamTex()` 32 · `isShorelineAt()` 39 · `.updFlow()` 51 · `_updFlow0` 145
 
-## src/systems/atmos.js (264 baris)
+## src/systems/atmos.js (265 baris)
 _Suasana cahaya & kabut (wilayah aktif saja):_
 `ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `godrayTex()` 25 · `cloudShadowTex()` 39 · `.updAmbientMotes()` 51 · `.updCritters()` 100 · `.updWindGust()` 141 · `.updGodRays()` 169 · `.updAtmos()` 196
 
@@ -575,7 +575,7 @@ _T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_
 _T447: Bayangan awan berjalan_
 
 
-## src/gfx/gptassets.js (87 baris)
+## src/gfx/gptassets.js (97 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
 `GPT_SWAP` 4 · `GPT_LOOK` 13 · `applyGptSwap()` 26
 

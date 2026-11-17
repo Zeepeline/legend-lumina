@@ -202,6 +202,7 @@ Object.assign(World.prototype, {
     this.updCritters(dt, outdoor);
     this.updWindGust(dt, outdoor);
     this.updGodRays(dt, outdoor);
+    this.updBanners(dt);
     if (this._atmosM !== this.M || !this._fogL || !this._fogL[0].active) {
       (this._fogL || []).forEach(o => o.destroy()); (this._glP || []).forEach(o => o.destroy()); fogSheetTex(this);
       if (this._canopyL && this._canopyL.active) this._canopyL.destroy();
