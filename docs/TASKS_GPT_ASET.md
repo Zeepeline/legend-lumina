@@ -98,7 +98,7 @@ Obrolan "Patokan". Kerjakan A1 dulu: itu jadi STYLE KEY untuk semua obrolan lain
 - Simpan: `assets/raw/gpt2/patokan/hutan.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of a forest clearing: tall broad-leaf trees around the edges with dense dark canopies, mossy roots, fern beds, a winding dirt path, a fallen log, light shafts and floating pollen. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: Warna & cahaya cocok dengan blok gaya; tidak ada teks/logo; skala karakter kecil.
-### [ ] G003. Gambar patokan suasana: hutan dalam
+### [x] G003. Gambar patokan suasana: hutan dalam
 - Simpan: `assets/raw/gpt2/patokan/hutan_dalam.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of an old deep forest: giant mossy trunks, hanging vines, dim green-gold light, mushrooms, a small stream with stepping stones. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: Warna & cahaya cocok dengan blok gaya; tidak ada teks/logo; skala karakter kecil.
