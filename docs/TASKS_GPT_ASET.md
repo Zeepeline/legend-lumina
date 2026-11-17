@@ -157,10 +157,10 @@ Obrolan "Tanah".
 - Simpan: `assets/raw/gpt2/tanah/hutan_dasar.png` · Ukuran di game: 256×256 px di game (diulang tanpa sambungan)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of slightly deeper green forest grass with tiny leaf litter. Very low contrast, no single object stands out, subtle variation only.`
 - Cek: Saat dijajarkan 2×2 tidak terlihat garis sambungan; tidak ada objek menonjol. Selesai disetujui & mulus sempurna (selisih sambungan hanya 0.26 RGB).
-### [ ] G017. hutan: tekstur tanah kedua (jalan/petak)
+### [x] G017. hutan: tekstur tanah kedua (jalan/petak)
 - Simpan: `assets/raw/gpt2/tanah/hutan_jalan.png` · Ukuran di game: 256×256 px di game (diulang)
 - Prompt: `[LAYOUT: SEAMLESS] Seamless tiling ground texture of brown-ochre forest dirt with twigs.`
-- Cek: Mulus saat diulang 2×2.
+- Cek: Mulus saat diulang 2×2. Selesai disetujui & mulus sempurna (selisih sambungan hanya ~1.0 RGB).
 ### [ ] G018. hutan: potongan tepi antara rumput & jalan
 - Simpan: `assets/raw/gpt2/tanah/hutan_tepi.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Edge pieces where slightly deeper green forest grass with tiny leaf litter overlaps brown-ochre forest dirt with twigs: the grass edge is soft and scalloped with small leafy bumps (no hard line). Row 1: straight edge facing up, right, down, left. Row 2: four outer corners. Row 3: four inner corners. Row 4: four small isolated grass islands. Each piece shows ONLY the grass part with its leafy rim; the rest of the cell is magenta.`
