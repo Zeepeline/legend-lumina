@@ -153,7 +153,10 @@ function buildTextures(sc) {
   if (typeof regIntTex === 'function') regIntTex(T);
   if (typeof regVerdantTex === 'function') regVerdantTex(T);
   // Daftarkan otomatis objek yang teksturnya belum ada: cari fungsi global art<Nama> yang cocok (tanpa peduli huruf besar), atau alias gambar
-  const ALIAS = { i_cart: 'i_crateCart', i_treePine: 'i_treeA', i_treeWoodsPine: 'i_treeA', i_treeOak: 'i_stumpWoods', i_rockWoods: 'rock' };
+  const ALIAS = {
+    i_cart: 'i_crateCart', i_treePine: 'i_treeA', i_treeWoodsPine: 'i_treeA', i_treeOak: 'i_stumpWoods', i_rockWoods: 'rock',
+    dock: 'deco_water_dock', boat: 'deco_water_boat', lotuspad: 'deco_water_lilypad', reeds: 'deco_water_reeds_lush'
+  };
   const artFns = Object.keys(window).filter(n => /^art[A-Z]/.test(n) && typeof window[n] === 'function');
   for (const [k, o] of Object.entries(OBJ)) {
     if (T.exists(o.key)) continue;

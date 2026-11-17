@@ -365,5 +365,10 @@ const OBJ = {
     sh: [40, 6],
     fade: 1,
   },
+  water_rock_cluster: { key: "deco_water_rock_cluster", col: [36, 16, 0], sh: [32, 8], fade: 1 },
+  water_rock_med: { key: "deco_water_rock_med", col: [24, 10, 0], sh: [20, 6], fade: 1 },
+  water_rock_small: { key: "deco_water_rock_small", col: [14, 6, 0], sh: [12, 4] },
+  water_stepstone: { key: "deco_water_stepstone", col: [12, 6, 0], sh: [0, 0] },
+  water_reeds_lush: { key: "deco_water_reeds_lush", col: [12, 6, 0], sh: [10, 3] },
 };
 const MAPS = {};

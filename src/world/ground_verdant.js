@@ -4,7 +4,11 @@
 const VERDANT = {};
 const VBAY = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const VDECO = ['tuft', 'sprout_a', 'sprout_b', 'sprout_c', 'flower_w', 'flower_w2', 'flower_w3', 'flower_b', 'flower_b2', 'flowers', 'flowers_w',
-  'mushroom', 'pebble', 'pebbles', 'reeds', ...['w', 'p', 'y', 'v'].flatMap(c => [1, 2, 3].map(n => 'fl_' + c + n))];
+  'mushroom', 'pebble', 'pebbles', 'reeds',
+  'water_rock_cluster', 'water_rock_med', 'water_rock_small', 'water_pebble',
+  'water_stepstone', 'water_lilypad', 'water_lotus', 'water_reeds_lush', 'water_reeds_short',
+  'water_dock', 'water_boat', 'water_pier',
+  ...['w', 'p', 'y', 'v'].flatMap(c => [1, 2, 3].map(n => 'fl_' + c + n))];
 
 const V_TILES = [
   'gnd_meadow_base', 'gnd_meadow_path',
@@ -168,42 +172,54 @@ function verdantBase(x, M, rect) {
   }
 }
 
-// air sungai & danau gaya Verdant: biru-hijau dalam, tepi dangkal berdither, riak garis pendek (X, Y global; t 0 = tengah, 1 = tepi)
-const VWC = { deep: [46, 110, 186], mid: [58, 134, 212], shal: [94, 168, 228], line: [40, 94, 172], spark: [196, 230, 248] };
+// air sungai & danau gaya referensi pemilik: biru jernih kaya, jaring caustics wajik/diamond, buih kontak tepi
+const VWC = {
+  deep: [38, 120, 194], mid: [48, 140, 218], shal: [78, 172, 238],
+  caustic: [122, 204, 255], spark: [242, 250, 255], foam: [228, 245, 255]
+};
 function verdantWater(t, X, Y) {
   const b = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5, v = t + b * .035 + vnoise(X, Y, 64, 21) * .2 - .1;
-  let c = v > .84 ? VWC.shal : v > .3 ? VWC.mid : VWC.deep;
-  const cx = Math.floor(X / 14), cy = Math.floor(Y / 7);
-  if (t < .85 && hash(cx, cy, 91) < .22) {
-    const x0 = cx * 14 + Math.floor(hash(cx, cy, 92) * 8), y0 = cy * 7 + Math.floor(hash(cx, cy, 93) * 5), L = 2 + Math.floor(hash(cx, cy, 94) * 4);
-    if (Y === y0 && X >= x0 && X < x0 + L) c = L > 4 ? VWC.spark : VWC.line;
+  let c = v > .84 ? VWC.shal : v > .35 ? VWC.mid : VWC.deep;
+  // jaring wajik caustics berlian persis referensi pemilik
+  if (t < .86) {
+    const w1 = Math.abs((X + Y * 1.25) % 18 - 9), w2 = Math.abs((X - Y * 1.25) % 18 - 9);
+    if (w1 < 1.35 && w2 < 1.35) c = VWC.spark;
+    else if (w1 < 1.35 || w2 < 1.35) c = VWC.caustic;
+  } else if (t >= .95) {
+    c = VWC.foam; // buih putih lembut di kontak daratan
   }
   return c;
 }
 
-// tepi air alami: batu bulat beragam ukuran (sel Voronoi), lebar bibir naik-turun, sebagian tanpa batu (rumput langsung ke air).
-// d = jarak px di luar air; north = air ada di selatan titik ini (tepi utara: batu lebih tebal). null = rumput biasa.
-const VSTONE = { hi: [196, 192, 186], mid: [156, 152, 150], lo: [118, 114, 116], gap: [66, 66, 64] };
+// tepi air alami: batu kali bulat halus (smooth boulders), highlight melengkung, celah gelap, & buih air
+const VSTONE = {
+  hi: [184, 182, 192], mid: [128, 124, 138], lo: [82, 80, 94],
+  gap: [48, 50, 62], foam: [228, 245, 255]
+};
 function vCobble(X, Y) {
-  const C = 8, gx = Math.floor(X / C), gy = Math.floor(Y / C); let f1 = 99, f2 = 99, dy1 = 0, dx1 = 0;
+  const C = 13, gx = Math.floor(X / C), gy = Math.floor(Y / C);
+  let f1 = 99, f2 = 99, dy1 = 0, dx1 = 0;
   for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
-    const cx = (gx + i) * C + hash(gx + i, gy + j, 41) * C, cy = (gy + j) * C + hash(gx + i, gy + j, 42) * C, dd = Math.hypot(X - cx, Y - cy);
+    const cx = (gx + i) * C + hash(gx + i, gy + j, 41) * C, cy = (gy + j) * C + hash(gx + i, gy + j, 42) * C;
+    const dd = Math.hypot(X - cx, Y - cy);
     if (dd < f1) { f2 = f1; f1 = dd; dx1 = X - cx; dy1 = Y - cy; } else if (dd < f2) f2 = dd;
   }
-  if (f2 - f1 < .8) return VSTONE.gap;                       // celah antarbatu
-  return dy1 + dx1 * .4 < -1.6 ? VSTONE.hi : dy1 > 1.8 ? VSTONE.lo : VSTONE.mid;
+  if (f2 - f1 < 1.2) return VSTONE.gap; // celah antarbatu bulat
+  const val = dy1 * .9 + dx1 * .35;
+  return val < -2.4 ? VSTONE.hi : val > 2.6 ? VSTONE.lo : VSTONE.mid;
 }
 
 function verdantBank(M, d, X, Y, north) {
-  const n = vnoise(X, Y, 46, 61), rw = n < .3 ? 0 : (north ? 3.5 : 2) + (n - .3) * (north ? 12 : 9) + (hash(X >> 2, Y >> 2, 63) - .5) * 1.6;
+  const n = vnoise(X, Y, 46, 61), rw = n < .28 ? 0 : (north ? 3.5 : 2) + (n - .28) * (north ? 12 : 9) + (hash(X >> 2, Y >> 2, 63) - .5) * 1.6;
   if (rw <= 0) {
-    if (d < 1) return [40, 74, 46];
-    if (d < 3.2) { const c = verdantPix(M, X, Y); return c && c.map((v, k) => Math.min(255, v * (k === 1 ? 1.12 : 1.04))); }
+    if (d < 1.2) return VSTONE.foam;
+    if (d < 3.5) { const c = verdantPix(M, X, Y); return c && c.map((v, k) => Math.min(255, v * (k === 1 ? 1.14 : 1.05))); }
     return null;
   }
+  if (d < 1.2) return VSTONE.foam; // garis buih putih di pertemuan batu dan air
   if (d < rw - 1) return vCobble(X, Y);
   if (d < rw) return VSTONE.gap;
-  if (d < rw + 2.6) { const c = verdantPix(M, X, Y); return c && c.map((v, k) => Math.min(255, v * (k === 1 ? 1.14 : 1.05))); }
+  if (d < rw + 2.6) { const c = verdantPix(M, X, Y); return c && c.map((v, k) => Math.min(255, v * (k === 1 ? 1.15 : 1.06))); }
   return null;
 }
 

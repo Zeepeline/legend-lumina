@@ -83,9 +83,9 @@ _Efek: tebasan, api, proyektil, cahaya, bayangan_
 _Lantai & perabot interior_
 `FURN` 4 · `drawFurn()` 5 · `genRoom()` 15 · `artMusicBox()` 28
 
-## src/world/objects.js (370 baris)
+## src/world/objects.js (375 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 369
+`OBJ` 7 · `MAPS` 374
 
 ## src/world/spawn/spawn_1.js (417 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
@@ -95,9 +95,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 219 · obj `tree_redwood` 226 · obj `goblin_torch` 229 · obj `goblin_cauldron` 232 · obj `cryst` 241 · obj `lamp` 244 · obj `viewpoint` 252 · obj `lumina_shard` 286 · obj `gatehouse` 308
 
-## src/world/ground.js (386 baris)
+## src/world/ground.js (397 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 112 · `blockRects()` 261 · `scatter()` 277 · `openSides()` 335 · `borderTrees()` 348 · `ringObjects()` 365 · `mapObjects()` 370 · `mapWalls()` 374
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 112 · `blockRects()` 272 · `scatter()` 288 · `openSides()` 346 · `borderTrees()` 359 · `ringObjects()` 376 · `mapObjects()` 381 · `mapWalls()` 385
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
@@ -187,13 +187,13 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 25 · `shadowIndex()` 26
 
-## src/gfx/textures.js (195 baris)
+## src/gfx/textures.js (198 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `imgSubdir()` 23 · `loadImgs()` 42 · `addStrip()` 56 · `darkTree()` 61 · `NPC_W` 63 · `regPortrait()` 64 · `regChar()` 69 · `buildTextures()` 86
 
-## src/world/ground_verdant.js (274 baris)
+## src/world/ground_verdant.js (290 baris)
 _Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024)._
-`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `V_TILES` 9 · `CLUTTER_PADANG` 15 · `CLUTTER_FOREST` 21 · `CLUTTER_DEEPWOOD` 28 · `ISLANDS_PADANG` 35 · `ISLANDS_FOREST` 36 · `ISLANDS_DEEPWOOD` 37 · `WATER_DECO_PADANG` 38 · `WATER_DECO_FOREST` 39 · `VT_MAP` 50 · `verdantTiles()` 51 · `vModW` 68 · `vDirtN` 70 · `vDirtT` 71 · `verdantPix()` 74 · `verdantDeco()` 89 · `VBASE` 153 · `verdantBase()` 154 · `VWC` 172 · `verdantWater()` 173 · `VSTONE` 186 · `vCobble()` 187 · `verdantBank()` 197 · `regVerdantTex()` 210 · `verdantReflect()` 219 · `verdantScallop()` 248 · `verdantEdgePix()` 263
+`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `V_TILES` 13 · `CLUTTER_PADANG` 19 · `CLUTTER_FOREST` 25 · `CLUTTER_DEEPWOOD` 32 · `ISLANDS_PADANG` 39 · `ISLANDS_FOREST` 40 · `ISLANDS_DEEPWOOD` 41 · `WATER_DECO_PADANG` 42 · `WATER_DECO_FOREST` 43 · `VT_MAP` 54 · `verdantTiles()` 55 · `vModW` 72 · `vDirtN` 74 · `vDirtT` 75 · `verdantPix()` 78 · `verdantDeco()` 93 · `VBASE` 157 · `verdantBase()` 158 · `VWC` 176 · `verdantWater()` 180 · `VSTONE` 195 · `vCobble()` 199 · `verdantBank()` 212 · `regVerdantTex()` 226 · `verdantReflect()` 235 · `verdantScallop()` 264 · `verdantEdgePix()` 279
 
 ## src/world/interior_sheet.js (89 baris)
 _Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._
