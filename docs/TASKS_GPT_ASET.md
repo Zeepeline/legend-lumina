@@ -1,4 +1,4 @@
-# TASKS_GPT_ASET — daftar tugas ChatGPT untuk aset gaya "Senja Emas"
+# TASKS_GPT_ASET — daftar tugas ChatGPT (G001–G376) untuk aset gaya "Senja Emas"
 
 Tujuan: seluruh aset dunia Legenda Lumina (tanah, tumbuhan, bangunan, karakter, musuh, efek, UI, ikon) dibuat ulang dalam satu gaya
 baru yang hangat dan keemasan, setara kualitas screenshot acuan pemilik (16-11-2026). Semua desain ORISINAL milik Legenda Lumina.
@@ -14,7 +14,7 @@ patokan treeA (AGENTS.md).
 2. Setelah ChatGPT menjawab OK, kirim prompt tugas satu per satu (baris "Prompt" tiap tugas). Satu tugas = satu gambar.
 3. Simpan hasil ke nama file di baris "Simpan" lalu kirim ke Claude/agen untuk dipotong & dipasang. Centang `[x]` tugasnya.
 4. Jangan unggah screenshot game lain ke ChatGPT dan jangan menyebut nama game lain di prompt: semua aset harus desain kita sendiri.
-5. Urutan disarankan: A1 → B (padang, hutan, desa) → C pohon & semak → E rumah desa → H NPC desa → I musuh → K efek → sisanya.
+5. Urutan disarankan: A1 → B (padang, hutan, desa) → C pohon & semak → N hutan alami → E rumah desa → H NPC desa → I musuh → K efek → sisanya.
 
 ## Blok GAYA UMUM (tempel di pesan pembuka setiap obrolan)
 ```
@@ -65,6 +65,9 @@ LAYOUT CODES used in my tasks:
   (pola sama: latar magenta → alfa, perkecil ke ukuran game di baris "Ukuran di game", buang semburat magenta di tepi). VFX: latar hitam → mode ADD.
 - Tekstur SEAMLESS diperkecil ke 256×256 lalu dipakai `genGround` (`src/world/ground_verdant.js`) menggantikan `gnd_*`; potongan tepi dipasang
   di sepanjang batas rumput–jalan (pola `verdantBank`).
+- Bagian N: `pangkal_*` ditaruh di bawah setiap pohon (depth = y pohon − 1); `kanopi_*` mengisi celah antar pohon rapat (depth tinggi,
+  transparan saat menutupi pemain seperti `fades`); `bayangan_kanopi` = lapisan MULTIPLY di area rapat; `akar_raksasa` & `pohon_tumbang` = tembok
+  alami (collision); `dahan_depan` = lapisan paling atas di Hutan Dalam; lantai & pohon berganti bertahap dari pinggir ke inti.
 - Aset baru wajib lolos `docs/VALIDATION_RULES.md`. Bila hasil ChatGPT tidak rapi (jumlah baris/kolom salah, ukuran beda), minta ulang SATU baris saja.
 
 ## Ringkasan isi
@@ -83,6 +86,7 @@ LAYOUT CODES used in my tasks:
 | K | Efek visual | 30 |
 | L | UI | 18 |
 | M | Ikon (432 ikon) | 12 |
+| N | Hutan alami: pangkal pohon, kanopi, pohon per umur, tumbuhan bawah, lantai hutan, penghalang, inti magis | 31 |
 
 ## A. Gambar patokan suasana
 Obrolan "Patokan". Kerjakan A1 dulu: itu jadi STYLE KEY untuk semua obrolan lain.
@@ -1396,3 +1400,148 @@ Obrolan "Ikon".
 ### [ ] G345. Ikon: ekonomi
 - Simpan: `assets/raw/gpt2/ikon/ekonomi.png` · Ukuran di game: ikon 16×16 px
 - Prompt: `[LAYOUT: ICON 6x6] 36 economy icons: coins, gem, receipts, shop scales, bounty poster, fame star, reputation laurel. Same lighting and outline for all icons.`
+
+## N. Hutan alami (tambahan 17-11-2026)
+Obrolan "Vegetasi" (lanjutan). Tujuan: pohon terlihat tumbuh dari tanah, kanopi menyatu, lantai & tumbuhan berubah dari pinggir ke inti hutan, dan ada penghalang alami. Kerjakan setelah G001 & bagian C.
+
+### [ ] G346. Gambar patokan: hutan dari pinggir ke inti
+- Simpan: `assets/raw/gpt2/patokan/hutan_kedalaman.png` · Ukuran di game: bukan untuk dipotong (acuan suasana)
+- Prompt: `[LAYOUT: CONCEPT] Concept frame showing a forest getting deeper from left to right: left = sunny forest edge with young trees, grass and flowers; middle = dense mature forest, shaded floor, ferns, roots crossing the path; right = ancient dark core with giant mossy trees, mist and faint magical glow. One small original adventurer for scale.`
+- Cek: Perubahan dari pinggir ke inti terlihat jelas dari warna, cahaya, ukuran pohon dan lantai.
+
+### [ ] G347. Pangkal pohon: akar menjalar & lumut
+- Simpan: `assets/raw/gpt2/vegetasi/pangkal_pohon.png` · Ukuran di game: lebar 24–48 px, tinggi 8–16 px
+- Prompt: `[LAYOUT: STAMP 4x4] 16 tree base pieces drawn WITHOUT the trunk above: root flares spreading into the ground, moss collars, small ferns and grass hugging the base, a few with exposed roots and pebbles. Flat to the ground, wider than tall; the center top is left open where a trunk will stand.`
+- Cek: Hanya bagian tanah/akar; tidak ada batang. Bisa ditaruh di bawah pohon mana pun.
+
+### [ ] G348. Pangkal pohon raksasa
+- Simpan: `assets/raw/gpt2/vegetasi/pangkal_raksasa.png` · Ukuran di game: lebar 64–96 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 huge tree bases for giant ancient trees: thick buttress roots arching over the ground, moss, mushrooms between roots, one with a hollow, one with a small spring. Without the upper trunk.`
+- Cek: Akar cukup besar untuk jadi penghalang jalan.
+
+### [ ] G349. Kanopi penyambung (tanpa batang)
+- Simpan: `assets/raw/gpt2/vegetasi/kanopi_sambung.png` · Ukuran di game: lebar 64–128 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 large leafy canopy masses WITHOUT trunks, seen from above at 3/4 angle, irregular organic outlines, sunlit tops and deep shaded undersides, designed to overlap neighboring trees and close gaps in a dense forest roof.`
+- Cek: Tepinya tidak bulat sempurna; bisa ditumpuk dengan kanopi pohon lain.
+
+### [ ] G350. Kanopi tepi atap hutan
+- Simpan: `assets/raw/gpt2/vegetasi/kanopi_tepi.png` · Ukuran di game: potongan 32–64 px
+- Prompt: `[LAYOUT: STAMP 4x4] Canopy edge pieces for a continuous forest roof: straight edges facing down, up, left and right, outer corners, inner corners, and four ragged gap fillers. Leaves only, no trunks.`
+- Cek: Tepi bawah kanopi (yang menghadap kamera) paling detail.
+
+### [ ] G351. Bayangan kanopi di lantai
+- Simpan: `assets/raw/gpt2/vegetasi/bayangan_kanopi.png` · Ukuran di game: 256×256 px (diulang, digambar transparan)
+- Prompt: `[LAYOUT: SEAMLESS] Seamless dappled shade pattern for a forest floor: soft dark leaf-shadow shapes with small sunlit gaps, drawn in flat dark olive on a pure white background (the game will use it as a shadow mask). Pixel clusters, no blur.`
+- Cek: Saat diulang tidak terlihat sambungan; hanya 2 warna (gelap & putih).
+
+### [ ] G352. Anakan pohon
+- Simpan: `assets/raw/gpt2/vegetasi/anakan.png` · Ukuran di game: tinggi 12–24 px
+- Prompt: `[LAYOUT: STAMP 4x4] 16 tree saplings and seedlings: thin stems with a few leaves, small young bushes turning into trees, a sapling with a protective stick, a sprouting acorn.`
+
+### [ ] G353. Pohon muda
+- Simpan: `assets/raw/gpt2/vegetasi/pohon_muda.png` · Ukuran di game: tinggi 32–48 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 young forest trees: slender trunks, small airy canopies with light passing through, slightly different species (oak-like, birch-like with pale bark, chestnut-like, maple-like).`
+- Cek: Lebih kecil & lebih terang dari pohon dewasa.
+
+### [ ] G354. Pohon dewasa variasi spesies
+- Simpan: `assets/raw/gpt2/vegetasi/pohon_dewasa_b.png` · Ukuran di game: tinggi 64–80 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 mature forest trees of different species from the earlier forest trees: pale-barked birch-like tree, broad chestnut-like tree, tall ash-like tree, a leaning tree with a split trunk.`
+- Cek: Siluet tiap pohon berbeda jelas.
+
+### [ ] G355. Pohon raksasa akar terbuka
+- Simpan: `assets/raw/gpt2/vegetasi/pohon_raksasa.png` · Ukuran di game: tinggi 96–128 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 giant ancient forest trees: massive trunks with exposed roots, vines and moss, canopies that would cover a whole clearing, one with a doorway-like hollow, one with glowing mushrooms on the bark.`
+
+### [ ] G356. Tumbuhan bawah rapat
+- Simpan: `assets/raw/gpt2/vegetasi/semak_tinggi.png` · Ukuran di game: tinggi 16–32 px
+- Prompt: `[LAYOUT: STAMP 4x4] 16 dense understory clumps: tall ferns, thick head-high bushes, tangled shrubs, young bamboo-like stems, wild grasses gone to seed. Dark shaded bottoms, sunlit tips.`
+- Cek: Cukup tinggi untuk menutupi sebagian badan karakter.
+
+### [ ] G357. Tumbuhan berdaun lebar
+- Simpan: `assets/raw/gpt2/vegetasi/daun_lebar.png` · Ukuran di game: tinggi 12–28 px
+- Prompt: `[LAYOUT: STAMP 4x4] 16 broad-leaf forest floor plants: huge heart-shaped leaves, wide lily-like leaves, hosta-like clumps, giant clover, wild ginger, leafy plants with small flowers.`
+
+### [ ] G358. Dinding semak tepi jalan
+- Simpan: `assets/raw/gpt2/vegetasi/pagar_semak.png` · Ukuran di game: potongan 32×24 px
+- Prompt: `[LAYOUT: STAMP 4x4] Natural thicket wall pieces made of tangled bushes, ferns and brambles for lining forest paths: horizontal piece, vertical piece, corners, ends, a gap with a small opening, a variant with flowers, a variant with thorns.`
+- Cek: Harus terlihat tumbuh alami, bukan pagar yang dipangkas.
+
+### [ ] G359. Tepi jalan setapak hutan (tidak rapi)
+- Simpan: `assets/raw/gpt2/tanah/hutan_tepi_jalan.png` · Ukuran di game: potongan ±32×32 px
+- Prompt: `[LAYOUT: STAMP 4x4] Messy forest path edges where grass, ferns and moss creep onto a dirt path: straight edges facing up, right, down, left, outer corners, inner corners, and four tufts of grass growing in the middle of the path. Only the vegetation is drawn; the path area is magenta.`
+- Cek: Tepinya menjorok tidak rata; beberapa daun & rumput keluar ke jalan.
+
+### [ ] G360. Akar melintang jalan
+- Simpan: `assets/raw/gpt2/vegetasi/akar_melintang.png` · Ukuran di game: panjang 16–48 px
+- Prompt: `[LAYOUT: STAMP 4x4] 16 roots crossing a forest path: thin roots, thick roots rising out of the ground and diving back in, roots with moss, horizontal and diagonal directions. Flat, low to the ground.`
+
+### [ ] G361. Daun gugur & jejak di jalan
+- Simpan: `assets/raw/gpt2/tanah/hutan_jejak.png` · Ukuran di game: 6–24 px
+- Prompt: `[LAYOUT: STAMP 4x4] 16 small path details: scattered fallen leaves, leaf piles, muddy footprints, hoof prints, small puddles, broken twigs, acorns and pine cones, a lost feather.`
+
+### [ ] G362. Pohon tumbang melintang (penghalang)
+- Simpan: `assets/raw/gpt2/alam/pohon_tumbang.png` · Ukuran di game: panjang 48–96 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 large fallen trees lying across the ground: one horizontal, one diagonal, one broken in two with a gap you could squeeze through, one overgrown with moss and mushrooms. Roots of the fallen tree visible at one end.`
+- Cek: Cukup besar untuk menghalangi jalan (dipakai sebagai tembok alami).
+
+### [ ] G363. Batang berlubang & sarang
+- Simpan: `assets/raw/gpt2/alam/batang_sarang.png` · Ukuran di game: 16–48 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 forest story objects: hollow log big enough to crawl through, tree stump with an animal den, bird nest in a broken branch on the ground, beehive hanging from a low branch.`
+
+### [ ] G364. Batu besar berlumut setengah terkubur
+- Simpan: `assets/raw/gpt2/alam/batu_lumut.png` · Ukuran di game: 24–64 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 large mossy boulders half sunk into the forest floor, ferns growing around them, one with an old carved mark, one split by a tree root.`
+
+### [ ] G365. Sisa-sisa cerita hutan
+- Simpan: `assets/raw/gpt2/alam/sisa_hutan.png` · Ukuran di game: 8–32 px
+- Prompt: `[LAYOUT: STAMP 4x4] 16 small story remains in a forest: animal skull and bones, abandoned campfire ring, arrows stuck in a tree root, torn cloth on a branch, rusty sword in moss, broken cart wheel, old trap, fallen lantern, scattered coins, a weathered wooden marker.`
+- Cek: Tidak ada tulisan; gaya gelap tapi tidak sadis.
+
+### [ ] G366. Tanah hutan gelap
+- Simpan: `assets/raw/gpt2/tanah/hutan_gelap.png` · Ukuran di game: 256×256 px (diulang)
+- Prompt: `[LAYOUT: SEAMLESS] Seamless dark forest soil texture with small roots, decayed leaf bits and tiny moss spots.`
+- Cek: Mulus saat diulang.
+
+### [ ] G367. Lumpur hutan
+- Simpan: `assets/raw/gpt2/tanah/hutan_lumpur.png` · Ukuran di game: 256×256 px (diulang)
+- Prompt: `[LAYOUT: SEAMLESS] Seamless wet forest mud texture with shallow puddles and footprints, dark brown and olive.`
+
+### [ ] G368. Hamparan daun gugur
+- Simpan: `assets/raw/gpt2/tanah/hutan_daun.png` · Ukuran di game: 256×256 px (diulang)
+- Prompt: `[LAYOUT: SEAMLESS] Seamless carpet of fallen leaves on a forest floor, mostly ochre, brown and dull green leaves.`
+
+### [ ] G369. Karpet lumut
+- Simpan: `assets/raw/gpt2/tanah/hutan_lumut.png` · Ukuran di game: 256×256 px (diulang)
+- Prompt: `[LAYOUT: SEAMLESS] Seamless thick moss carpet texture, deep green with lighter cushions and tiny sprouts.`
+
+### [ ] G370. Tepi antar lantai hutan
+- Simpan: `assets/raw/gpt2/tanah/hutan_tepi_lantai.png` · Ukuran di game: potongan ±32×32 px
+- Prompt: `[LAYOUT: STAMP 4x4] Soft organic transition pieces where moss and leaf litter spread over dark forest soil: straight edges facing up, right, down, left, outer corners, inner corners, four small moss islands. Only the moss/leaf part is drawn; the rest is magenta.`
+
+### [ ] G371. Akar raksasa pembatas jalur
+- Simpan: `assets/raw/gpt2/vegetasi/akar_raksasa.png` · Ukuran di game: tebal 16–24 px
+- Prompt: `[LAYOUT: STAMP 4x4] Giant root barrier pieces that wall off forest areas: long horizontal root, long vertical root, corners, T-junction, root end diving into the ground, root arch you can walk under, broken root with a gap. Thick, mossy, clearly impassable.`
+- Cek: Terbaca jelas sebagai halangan, tapi tetap alami (bukan tembok).
+
+### [ ] G372. Rumput tinggi tersibak
+- Simpan: `assets/raw/gpt2/vegetasi/rumput_sibak.png` · Ukuran di game: tinggi 16–20 px
+- Prompt: `[LAYOUT: ANIM 4x2] Row 1: a tall grass clump parting when someone walks through it (4 frames: still, pushed apart, fully parted, springing back). Row 2: a fern clump doing the same.`
+
+### [ ] G373. Dahan lapisan depan
+- Simpan: `assets/raw/gpt2/vegetasi/dahan_depan.png` · Ukuran di game: lebar 96–192 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 overhanging leafy branches seen very close to the camera, drawn as dark olive silhouettes with a few lit leaf edges: branch reaching from the left, from the right, from the top, and a hanging vine curtain. They will be drawn above everything.`
+- Cek: Gelap & sederhana agar tidak menutupi permainan.
+
+### [ ] G374. Pohon inti hutan magis
+- Simpan: `assets/raw/gpt2/vegetasi/pohon_inti.png` · Ukuran di game: tinggi 96–128 px
+- Prompt: `[LAYOUT: OBJ 2x2] 4 trees of a cursed magical forest core: twisted dark bark, faintly glowing teal or violet veins, sparse ashen leaves, one with crystals growing from it, one with hanging spirit lanterns of light.`
+- Cek: Langsung terasa "berbahaya" dibanding pohon biasa.
+
+### [ ] G375. Tanah inti terkutuk
+- Simpan: `assets/raw/gpt2/tanah/hutan_inti.png` · Ukuran di game: 256×256 px (diulang)
+- Prompt: `[LAYOUT: SEAMLESS] Seamless cursed forest floor: dark violet-grey soil, withered grass, thin glowing cracks, small dead leaves.`
+
+### [ ] G376. Tumbuhan inti magis
+- Simpan: `assets/raw/gpt2/vegetasi/tumbuhan_inti.png` · Ukuran di game: 8–32 px
+- Prompt: `[LAYOUT: STAMP 4x4] 16 strange plants of a magical forest core: glowing mushrooms, thorny black vines, pale ghost flowers, crystal sprouts, withered bushes, pulsing pods.`
+
