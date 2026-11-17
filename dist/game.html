@@ -8619,15 +8619,8 @@ function verdantDeco(x, M, rect, GX, GY, sd, near) {
       if (X < 0 || Y < 0 || X > M.w - 8 || Y > M.h - 8) continue;
 
       const d = sd(X + 4, Y + 6);
-      // Pulau rumput/lumut alami di tengah jalan lebar
-      if (d < -14 && hash(cx, cy, 65) < 0.06 && useNew) {
-        const islKey = islands[Math.floor(hash(cx, cy, 66) * islands.length)];
-        const imIsl = IMGEL[islKey];
-        if (imIsl && !(X + imIsl.width < RX || X > RX + RW || Y + imIsl.height < RY || Y > RY + RH)) {
-          x.drawImage(imIsl, X - (imIsl.width >> 1), Y - (imIsl.height >> 1));
-          continue;
-        }
-      }
+      // Jalan tanah harus bersih dari semak/tanaman liar
+      if (d < 4) continue;
 
       // Hiasan tepi air / alang-alang
       if (near(X + 4, Y + 6)) {
