@@ -24,16 +24,18 @@ Object.assign(World.prototype, {
       const texKey = 'ch_' + ch;
       if (!this.textures.exists(texKey)) continue;
 
-      const spr = this.physics.add.sprite(sx, sy, texKey, 'down0').setOrigin(.5, 1).setDepth(sy);
-      spr.body.setSize(12, 7).setOffset((spr.width - 12) / 2, spr.height - 8);
+      const sc = (ch === 'child' || ch === 'girl') ? 0.96 : (ch === 'elder' ? 1.16 : 1.20);
+      const spr = this.physics.add.sprite(sx, sy, texKey, 'down0').setOrigin(.5, 1).setDepth(sy).setScale(sc);
+      spr.body.setSize(Math.round(11 * sc), Math.round(6 * sc)).setOffset(Math.round((spr.width - 11 * sc) / 2), Math.round(spr.height - 7 * sc));
       spr.setImmovable(true);
       spr.setCollideWorldBounds(true);
       if (this.walls) this.physics.add.collider(spr, this.walls);
 
-      const sh = this.add.image(sx, sy, 'shadow').setAlpha(.22);
+      const sh = this.add.image(sx, sy, 'shadow').setAlpha(.22).setScale(sc * 1.05, sc * 0.9);
       const person = {
         spr, sh, ch,
-        speed: rnd(18, 28),
+        baseSc: sc,
+        speed: rnd(20, 29),
         tx: sx, ty: sy,
         idleT: rnd(1, 3),
         walking: false,
@@ -85,15 +87,19 @@ Object.assign(World.prototype, {
       const it = this.inter.find(item => item.crowdPerson === c);
       if (it) { it.x = s.x; it.y = s.y; }
 
+      const baseSc = c.baseSc || 1.2;
       if (c.idleT > 0) {
         c.idleT -= dt;
-        s.setVelocity(0, 0);
-        if (c.walking) {
+        s.body.velocity.x *= Math.max(0, 1 - dt * 10);
+        s.body.velocity.y *= Math.max(0, 1 - dt * 10);
+        if (c.walking && Math.hypot(s.body.velocity.x, s.body.velocity.y) < 2) {
           c.walking = false;
+          s.setVelocity(0, 0);
           s.anims.stop();
           const sd = (c.dir === 'left' || c.dir === 'right') ? 'side' : c.dir;
           s.setFrame(sd + '0');
         }
+        s.scaleY = baseSc * (1 + Math.sin(this.t * 3.927) * 0.012);
         continue;
       }
 
@@ -113,12 +119,21 @@ Object.assign(World.prototype, {
         continue;
       }
 
-      // Berjalan menuju target
+      // Berjalan menuju target dengan akselerasi lerp & stride bobbing (T575)
       c.walking = true;
       const angle = Math.atan2(c.ty - s.y, c.tx - s.x);
-      const vx = Math.cos(angle) * c.speed;
-      const vy = Math.sin(angle) * c.speed;
-      s.setVelocity(vx, vy);
+      const targetSp = distToTarget < 18 ? c.speed * Math.max(0.3, distToTarget / 18) : c.speed;
+      const targetVx = Math.cos(angle) * targetSp;
+      const targetVy = Math.sin(angle) * targetSp;
+      const curVx = s.body.velocity.x, curVy = s.body.velocity.y;
+      const accel = Math.min(1, dt * 8);
+      const nVx = curVx + (targetVx - curVx) * accel;
+      const nVy = curVy + (targetVy - curVy) * accel;
+      s.setVelocity(nVx, nVy);
+
+      c.stepT = (c.stepT || 0) + dt * c.speed * 0.28;
+      s.scaleY = baseSc * (1 + Math.sin(c.stepT * 8) * 0.02);
+      s.scaleX = baseSc * (1 - Math.sin(c.stepT * 8) * 0.01);
 
       // Orientasi arah hadap & animasi jalan
       let dir = 'down';

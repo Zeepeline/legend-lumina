@@ -10,6 +10,14 @@ const NPC_ROLE = {
 // NPC penting cerita: tetap di sekitar pos (radius kecil), tidak pulang saat malam
 const STORY_NPC = ['elder', 'girl', 'farmer', 'merchant', 'child', 'smith', 'inn', 'hunter', 'hermit', 'nila', 'ratih', 'gun', 'rudi', 'lestari', 'wati', 'darma', 'ka4', 'ka5', 'kmerchant', 'joko', 'bayu', 'sambo', 'pancing', 'kafilah', 'gj1', 'gj2'];
 // tempat kerja per peran (jenis objek di peta) & ikon kegiatan
+const NPC_SCALES = {
+  child: 0.96, girl: 0.96, rudi: 0.96, kb1: 0.94, kb4: 0.94, ka2: 0.96,
+  guard: 1.28, smith: 1.28, hunter: 1.26, gj1: 1.28, gj2: 1.28, kp8: 1.28, sambo: 1.26,
+  elder: 1.16, hermit: 1.16, ka4: 1.16, temple_priest: 1.18,
+  inn: 1.20, farmer: 1.22, joko: 1.22, wati: 1.20, darma: 1.22, lestari: 1.20,
+  merchant: 1.22, kmerchant: 1.22, bayu: 1.22, ratih: 1.18, gun: 1.22, pancing: 1.22,
+  default: 1.20
+};
 const WORK = {
   smith: { objs: ['anvil', 'forge', 'bellows'], icon: ['🔨', '🔥', '⚒'], fx: 'spark', dur: [4, 8] },
   farmer: { objs: ['hay', 'fence', 'fieldoven', 'windmill', 'cheesebarrel'], icon: ['🌱', '💧', '🌾'], fx: 'dust', dur: [4, 9] },
@@ -30,11 +38,17 @@ const IDLE_ICON = ['💬', '🎵', '👋', '😊', '☀', '🍎', '❗', '❓'];
 
 Object.assign(World.prototype, {
   npcBrainInit(o) {
-    const id = o.n.id, M = this.M;
+    const id = o.n.id, M = this.M, s = o.spr;
     o.role = o.n.role || NPC_ROLE[id] || NPC_ROLE[o.ch] || (o.n.lines ? 'citizen' : 'citizen');
     o.story = STORY_NPC.includes(id) || !!o.n.story;
     o.leash = o.n.leash || (o.story ? (M.indoor ? 50 : 90) : M.indoor ? 60 : 380);
-    o.st = 'think'; o.t = rnd(.3, 2); o.goal = null; o.stuck = 0; o.lx = o.spr.x; o.ly = o.spr.y;
+    o.st = 'think'; o.t = rnd(.3, 2); o.goal = null; o.stuck = 0; o.lx = s.x; o.ly = s.y;
+    // Standardisasi proporsi rasio sebanding Arka (T576)
+    const sc = NPC_SCALES[id] || NPC_SCALES[o.ch] || NPC_SCALES[o.role] || NPC_SCALES.default;
+    o.baseSc = sc; s.setScale(sc);
+    if (o.sh) o.sh.setScale(sc * 1.05, sc * 0.9);
+    if (s.body) s.body.setSize(Math.round(11 * sc), Math.round(6 * sc)).setOffset(Math.round((s.width - 11 * sc) / 2), Math.round(s.height - 7 * sc));
+    o.turnDelay = 0; o.socialCd = rnd(6, 14); o.stepT = 0;
     // tempat kerja terdekat dari pos asal
     const W = WORK[o.role]; o.work = [];
     if (W) for (const [t, x, y] of M.objs || []) if (W.objs.includes(t) && Math.hypot(x - o.home.x, y - o.home.y) < o.leash + 60) o.work.push([x, y + 14]);
@@ -84,23 +98,61 @@ Object.assign(World.prototype, {
     if (other.length && Math.random() < .4) { const n = other[Math.floor(Math.random() * other.length)]; return { x: n.spr.x + (s.x < n.spr.x ? -18 : 18), y: n.spr.y, act: 'chat', with: n, dur: rnd(3, 7) }; }
     return { x: h.x + rnd(-1, 1) * Math.min(o.leash, 120), y: h.y + rnd(-1, 1) * Math.min(o.leash, 80), act: 'look', dur: rnd(1.5, 4) };
   },
-  npcWalkAnim(o, dx, dy) { const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'); if (dir !== o.dir || !o.walking) { o.dir = dir; o.spr.flipX = dir === 'left'; o.spr.play(o.ch + '_' + (dir === 'left' || dir === 'right' ? 'side' : dir), true); } o.walking = true; },
+  npcWalkAnim(o, dx, dy) {
+    const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+    if (dir !== o.dir || !o.walking) {
+      if (o.walking && o.dir && ((dir === 'left' && o.dir === 'right') || (dir === 'right' && o.dir === 'left') || (dir === 'up' && o.dir === 'down') || (dir === 'down' && o.dir === 'up'))) {
+        o.turnDelay = 0.12;
+      }
+      o.dir = dir; o.spr.flipX = dir === 'left';
+      o.spr.play(o.ch + '_' + (dir === 'left' || dir === 'right' ? 'side' : dir), true);
+    }
+    o.walking = true;
+  },
   npcBrain(o, dt, locked, dPl) {
     const s = o.spr; if (!o.role) this.npcBrainInit(o);
-    if (o.emoT > 0) { o.emoT -= dt; o.emo.setPosition(s.x, s.y - 30); if (o.emoT <= 0) o.emo.setVisible(false); }
+    if (o.emoT > 0) { o.emoT -= dt; o.emo.setPosition(s.x, s.y - 30 * (o.baseSc || 1)); if (o.emoT <= 0) o.emo.setVisible(false); }
     // pulang / keluar rumah
     if (o.away) { if (!isNight() && Math.random() < dt * .3) { o.away = false; s.setVisible(true); s.body.enable = true; o.sh.setVisible(true); o.st = 'think'; o.t = .5; } return; }
-    // berhenti saat pemain mendekat / dialog
-    if (locked || (dPl < 30 && !G.title)) { if (o.walking) { s.setVelocity(0); o.walking = false; s.anims.stop(); this.face(o, o.dir); } if (dPl < 30 && !locked && o.st !== 'greet') { const dx = this.pl.x - s.x, dy = this.pl.y - s.y; this.face(o, Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up')); o.st = 'greet'; o.t = 1; } return; }
+    // perlambatan lembut saat pemain mendekat / dialog terkunci (T575 anti-sentak)
+    if (locked || (dPl < 32 && !G.title)) {
+      const curSp = Math.hypot(s.body.velocity.x, s.body.velocity.y);
+      if (o.walking || curSp > 2) {
+        s.body.velocity.x *= Math.max(0, 1 - dt * 10);
+        s.body.velocity.y *= Math.max(0, 1 - dt * 10);
+        if (curSp < 3) { s.setVelocity(0); o.walking = false; s.anims.stop(); this.face(o, o.dir); }
+      }
+      if (dPl < 32 && !locked && o.st !== 'greet') {
+        const dx = this.pl.x - s.x, dy = this.pl.y - s.y;
+        this.face(o, Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'));
+        o.st = 'greet'; o.t = 1.2;
+      }
+      return;
+    }
     if (o.st === 'greet') { o.t -= dt; if (o.t <= 0) o.st = 'think'; return; }
     o.t -= dt;
     if (o.st === 'think') { if (o.t > 0) return; o.goal = this.npcPickGoal(o); o.st = 'walk'; o.t = 12; o.stuck = 0; o.lx = s.x; o.ly = s.y; return; }
     if (o.st === 'walk') {
+      if (o.turnDelay > 0) { o.turnDelay -= dt; s.setVelocity(0); return; }
       const g = o.goal, dx = g.x - s.x, dy = g.y - s.y, d = Math.hypot(dx, dy);
-      if (d < 6 || o.t <= 0) { s.setVelocity(0); o.walking = false; s.anims.stop();
-        if (g.act === 'home') { o.away = true; s.setVisible(false); s.body.enable = false; o.sh.setVisible(false); if (o.emo) o.emo.setVisible(false); return; }
-        o.st = 'act'; o.t = g.dur || 3; o.actT = 0; this.npcActStart(o, g); return; }
-      const sp = g.run ? 52 : o.role === 'guard' ? 26 : 30; s.setVelocity(dx / d * sp, dy / d * sp); this.npcWalkAnim(o, dx, dy);
+      if (d < 5 || o.t <= 0) {
+        s.body.velocity.x *= Math.max(0, 1 - dt * 12);
+        s.body.velocity.y *= Math.max(0, 1 - dt * 12);
+        if (Math.hypot(s.body.velocity.x, s.body.velocity.y) < 2) {
+          s.setVelocity(0); o.walking = false; s.anims.stop();
+          if (g.act === 'home') { o.away = true; s.setVisible(false); s.body.enable = false; o.sh.setVisible(false); if (o.emo) o.emo.setVisible(false); return; }
+          o.st = 'act'; o.t = g.dur || 3; o.actT = 0; this.npcActStart(o, g); return;
+        }
+      }
+      // Target speed dengan deselerasi lembut di ujung rute & akselerasi lerp (T575)
+      let sp = g.spd || (g.run ? 48 : o.role === 'elder' ? 22 : o.role === 'guard' ? 26 : o.role === 'child' ? 36 : 29);
+      if (this.weather === 'rain' && !this.M.indoor) sp *= 1.25;
+      if (d < 20) sp *= Math.max(0.3, d / 20);
+      const targetVx = (dx / (d || 1)) * sp, targetVy = (dy / (d || 1)) * sp;
+      const curVx = s.body.velocity.x, curVy = s.body.velocity.y;
+      const accel = Math.min(1, dt * 8.5);
+      s.setVelocity(curVx + (targetVx - curVx) * accel, curVy + (targetVy - curVy) * accel);
+      this.npcWalkAnim(o, dx, dy);
       // macet (menabrak tembok/objek): geser ke samping, lalu menyerah & pilih tujuan lain
       o.stuck += dt; if (o.stuck > .7) { const moved = Math.hypot(s.x - o.lx, s.y - o.ly); o.stuck = 0; o.lx = s.x; o.ly = s.y; if (moved < 4) { o.goal = { x: s.x + rnd(-40, 40), y: s.y + rnd(-30, 30), act: 'look', dur: .5 }; if (++o.fails > 2) { o.fails = 0; o.st = 'think'; o.t = rnd(.5, 1.5); s.setVelocity(0); } } else o.fails = 0; }
       return;
@@ -126,7 +178,17 @@ Object.assign(World.prototype, {
     else if (g.act === 'sweep') { o.actT = rnd(1.2, 2); this.face(o, pick(['left', 'right', 'down'])); this.npcEmote(o, '🧹', 1.2); }
     else if (g.act === 'kindle') { o.actT = rnd(1.2, 2); this.face(o, 'up'); this.npcEmote(o, '🔥', 1.2); this.sparkle(s.x, s.y - 12, 'smoke', 2); }
     else if (g.act === 'shelter') { o.actT = rnd(2, 4); this.face(o, 'down'); if (Math.random() < .3) this.npcEmote(o, '🌧', 1.4); }
-    else { o.actT = rnd(1.5, 3); this.face(o, pick(['left', 'right', 'down', 'up'])); if (Math.random() < .25) this.npcEmote(o, pick(IDLE_ICON), 1.4); }
+    else {
+      // Gestur mikro idle (T577)
+      o.actT = rnd(1.5, 3.2);
+      const dice = Math.random();
+      if (dice < .35) { this.face(o, pick(['left', 'right', 'down'])); }
+      else if (dice < .6 && o.baseSc) {
+        s.scaleY = o.baseSc * 1.04;
+        this.time.delayedCall(220, () => { if (s.active) s.scaleY = o.baseSc; });
+      }
+      if (Math.random() < .25) this.npcEmote(o, pick(['🎵', '😊', '☕', '📖', '✨', '🍎', '💭', '☀️', '👀']), 1.4);
+    }
   },
 });
 

@@ -84,10 +84,64 @@ function updBarks(cam, dt) {
 Object.assign(World.prototype, {
   updNpc(o, dt, locked) {
     const s = o.spr; s.setDepth(s.y); o.sh.setPosition(s.x, s.y - 1).setDepth(s.y - .5); if (o.mark) o.mark.y = s.y - 31 + Math.sin(this.t * 6) * 1.5;
-    // T540: Napas halus NPC saat diam (Cobo #19)
-    if (!o.walking && s) s.scaleY = 1 + Math.sin(this.t * 3.927 + (s.x * 0.04)) * 0.012;
-    else if (s && s.scaleY !== 1) s.scaleY = 1;
+    const baseSc = o.baseSc || 1.2;
+    // T575: Napas halus saat diam & getaran ritmis langkah kaki saat berjalan (stride bobbing)
+    if (!o.walking && s) {
+      s.scaleY = baseSc * (1 + Math.sin(this.t * 3.927 + (s.x * 0.04)) * 0.012);
+      s.scaleX = baseSc;
+    } else if (o.walking && s) {
+      const curSp = Math.hypot(s.body.velocity.x, s.body.velocity.y);
+      o.stepT = (o.stepT || 0) + dt * curSp * 0.28;
+      s.scaleY = baseSc * (1 + Math.sin(o.stepT * 8) * 0.024);
+      s.scaleX = baseSc * (1 - Math.sin(o.stepT * 8) * 0.012);
+    }
     const dPl = Math.hypot(this.pl.x - s.x, this.pl.y - s.y);
+
+    // T579: Kesadaran reaktif terhadap aksi pemain (dash/roll kencang & ayunan senjata dekat warga)
+    if (this.pl && this.pl._roll > 0 && dPl < 24 && (!o.reactCd || o.reactCd <= 0)) {
+      o.reactCd = 2.5;
+      const pushX = (s.x - this.pl.x > 0 ? 1 : -1) * 3;
+      s.x += pushX;
+      popBark(o, pick(['Waduh!', 'Awas nabrak!', 'Kaget aku!']));
+      if (this.npcEmote) this.npcEmote(o, '❗', 1.2);
+    }
+    const plAtk = this.pl && (this.pl._atk > 0 || this.pl._heavy > 0 || this.pl._bow > 0);
+    if (plAtk && dPl < 34 && (!o.reactCd || o.reactCd <= 0) && !this.M.indoor) {
+      o.reactCd = 3;
+      if (o.role === 'guard' || o.role === 'gate') {
+        popBark(o, 'Hati-hati senjatamu, petualang!');
+        if (this.npcEmote) this.npcEmote(o, '⚔️', 1.4);
+      } else {
+        const pushX = (s.x - this.pl.x > 0 ? 1 : -1) * 4;
+        s.x += pushX;
+        popBark(o, pick(['Hei, jangan main senjata!', 'Waduh, pelan-pelan!', 'Awas kena orang!']));
+        if (this.npcEmote) this.npcEmote(o, '😨', 1.4);
+      }
+    }
+    if (o.reactCd > 0) o.reactCd -= dt;
+
+    // T578: Interaksi sosial berpapasan dua arah antar warga
+    o.socialCd = (o.socialCd || rnd(6, 14)) - dt;
+    if (o.socialCd <= 0 && o.walking && !locked && !G.title) {
+      for (const other of this.npcs) {
+        if (other === o || other.away || !other.spr.visible || (other.socialCd && other.socialCd > 0)) continue;
+        const dOther = Math.hypot(other.spr.x - s.x, other.spr.y - s.y);
+        if (dOther < 26) {
+          o.socialCd = rnd(16, 26); other.socialCd = rnd(16, 26);
+          this.face(o, other.spr.x > s.x ? 'right' : 'left');
+          this.face(other, s.x > other.spr.x ? 'right' : 'left');
+          s.setVelocity(0); other.spr.setVelocity(0);
+          o.walking = false; other.walking = false;
+          o.st = 'act'; other.st = 'act';
+          o.t = 1.8; other.t = 1.8;
+          popBark(o, pick(['Halo!', 'Pagi!', 'Cuaca cerah ya.', 'Mari.', 'Sehat selalu!']));
+          this.time.delayedCall(700, () => {
+            if (other.spr.active) popBark(other, pick(['Halo juga!', 'Iya, cerah!', 'Semoga lancar!', 'Mari!']));
+          });
+          break;
+        }
+      }
+    }
 
     // Reaksi sapaan spontan saat pemain lewat di dekat NPC (jarak 34px)
     o.barkCd = (o.barkCd || rnd(2, 6)) - dt;
