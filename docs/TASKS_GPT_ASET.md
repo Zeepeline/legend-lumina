@@ -185,10 +185,10 @@ Obrolan "Tanah".
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_tepi.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Edge pieces where dark mossy forest floor with moss tufts overlaps damp dark-brown soil with roots: the grass edge is soft and scalloped with small leafy bumps (no hard line). Row 1: straight edge facing up, right, down, left. Row 2: four outer corners. Row 3: four inner corners. Row 4: four small isolated grass islands. Each piece shows ONLY the grass part with its leafy rim; the rest of the cell is magenta.`
 - Cek: Tepi rumput bergerigi daun lembut seperti gambar patokan; bagian jalan = magenta. Selesai dipotong 12 ubin tepi 32×32 px + 4 pulau lumut stepping patch.
-### [ ] G024. hutan dalam: hiasan tanah kecil
+### [x] G024. hutan dalam: hiasan tanah kecil
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_hiasan.png` · Ukuran di game: tiap hiasan 6–20 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] 16 small ground decorations for dark mossy forest floor with moss tufts: grass tufts, tiny weeds, pebbles, twigs, fallen leaves, small flowers, a mushroom. All tiny and flat to the ground.`
-- Cek: Kecil & rendah; tidak ada yang lebih besar dari 1/4 sel.
+- Cek: Kecil & rendah; tidak ada yang lebih besar dari 1/4 sel. Selesai dipotong 16 varian + ekspor 16 sprite game ke `assets/img/nature/dwclutter_*.png`.
 ### [ ] G025. hutan dalam: tepi air (tebing kecil tanah ke air)
 - Simpan: `assets/raw/gpt2/tanah/hutan_dalam_tepiair.png` · Ukuran di game: tiap potongan ±32×32 px di game
 - Prompt: `[LAYOUT: STAMP 4x4] Shoreline pieces where dark mossy forest floor with moss tufts meets calm water: a thin darker earth lip, a few reeds and pebbles at the waterline. Row 1: straight shore facing up, right, down, left. Row 2: outer corners. Row 3: inner corners. Row 4: four small rocks/reed clumps standing in water. Only the land part is drawn; water area is magenta.`
