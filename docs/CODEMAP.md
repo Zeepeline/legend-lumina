@@ -191,9 +191,9 @@ _Panggang bayangan objek ke tekstur tanah_
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS` 4 · `IMG_LIST` 6 · `imgSubdir()` 23 · `loadImgs()` 42 · `addStrip()` 56 · `darkTree()` 61 · `NPC_W` 63 · `regPortrait()` 64 · `regChar()` 69 · `buildTextures()` 86
 
-## src/world/ground_verdant.js (276 baris)
+## src/world/ground_verdant.js (274 baris)
 _Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024)._
-`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `V_TILES` 9 · `CLUTTER_PADANG` 15 · `CLUTTER_FOREST` 21 · `CLUTTER_DEEPWOOD` 28 · `ISLANDS_PADANG` 35 · `ISLANDS_FOREST` 36 · `ISLANDS_DEEPWOOD` 37 · `WATER_DECO_PADANG` 38 · `WATER_DECO_FOREST` 39 · `VT_MAP` 50 · `verdantTiles()` 51 · `vModW` 68 · `vDirtN` 70 · `vDirtT` 71 · `verdantPix()` 74 · `verdantDeco()` 89 · `VBASE` 155 · `verdantBase()` 156 · `VWC` 174 · `verdantWater()` 175 · `VSTONE` 188 · `vCobble()` 189 · `verdantBank()` 199 · `regVerdantTex()` 212 · `verdantReflect()` 221 · `verdantScallop()` 250 · `verdantEdgePix()` 265
+`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `V_TILES` 9 · `CLUTTER_PADANG` 15 · `CLUTTER_FOREST` 21 · `CLUTTER_DEEPWOOD` 28 · `ISLANDS_PADANG` 35 · `ISLANDS_FOREST` 36 · `ISLANDS_DEEPWOOD` 37 · `WATER_DECO_PADANG` 38 · `WATER_DECO_FOREST` 39 · `VT_MAP` 50 · `verdantTiles()` 51 · `vModW` 68 · `vDirtN` 70 · `vDirtT` 71 · `verdantPix()` 74 · `verdantDeco()` 89 · `VBASE` 153 · `verdantBase()` 154 · `VWC` 172 · `verdantWater()` 173 · `VSTONE` 186 · `vCobble()` 187 · `verdantBank()` 197 · `regVerdantTex()` 210 · `verdantReflect()` 219 · `verdantScallop()` 248 · `verdantEdgePix()` 263
 
 ## src/world/interior_sheet.js (89 baris)
 _Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._

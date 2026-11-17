@@ -66,9 +66,9 @@ function verdantTiles(M) {
 }
 
 const vModW = (v, sz) => ((v % sz) + sz) % sz;
-// nilai bercak tanah (0..1) pada koordinat global
+// nilai bercak tanah (0..1) pada koordinat global (ambang tinggi agar tidak menjadi polkadot)
 const vDirtN = (X, Y) => vnoise(X, Y, 30, 13) * .75 + vnoise(X, Y, 9, 14) * .25;
-const vDirtT = M => M.ground === 'village' ? .70 : M.ground === 'forest' ? .76 : .74;
+const vDirtT = M => M.ground === 'village' ? .82 : M.ground === 'forest' ? .87 : .85;
 
 // warna tanah verdant per piksel (X, Y global); null = petak belum termuat
 function verdantPix(M, X, Y, path) {
@@ -85,28 +85,26 @@ function verdantPix(M, X, Y, path) {
   return [s[ti], s[ti + 1], s[ti + 2]];
 }
 
-// ornamen: grid 22 px global + geser acak, digambar ke kanvas tanah (x sudah ditranslasi -RX,-RY)
+// ornamen: grid 36 px global + geser acak (jarak seimbang & lapang, tidak menumpuk)
 function verdantDeco(x, M, rect, GX, GY, sd, near) {
-  const [RX, RY, RW, RH] = rect, C = 22, fm = M.flowers ? 2 : 1;
+  const [RX, RY, RW, RH] = rect, C = 36, fm = M.flowers ? 1.6 : 1;
   const isDeep = M.id === 'deepwood', isForest = M.ground === 'forest' && !isDeep;
   const cList = isDeep ? CLUTTER_DEEPWOOD : isForest ? CLUTTER_FOREST : CLUTTER_PADANG;
-  const islands = isDeep ? ISLANDS_DEEPWOOD : isForest ? ISLANDS_FOREST : ISLANDS_PADANG;
   const waterDeco = isForest || isDeep ? WATER_DECO_FOREST : WATER_DECO_PADANG;
   const useNew = typeof IMGEL !== 'undefined' && IMGEL[cList[0]];
 
-  for (let cy = Math.floor((RY + GY - 24) / C); cy <= Math.floor((RY + RH + GY) / C); cy++) {
-    for (let cx = Math.floor((RX + GX - 24) / C); cx <= Math.floor((RX + RW + GX) / C); cx++) {
-      const X = cx * C + Math.floor(hash(cx, cy, 61) * 16) - GX;
-      const Y = cy * C + Math.floor(hash(cx, cy, 62) * 16) - GY;
+  for (let cy = Math.floor((RY + GY - 36) / C); cy <= Math.floor((RY + RH + GY) / C); cy++) {
+    for (let cx = Math.floor((RX + GX - 36) / C); cx <= Math.floor((RX + RW + GX) / C); cx++) {
+      const X = cx * C + Math.floor(hash(cx, cy, 61) * 20) - GX;
+      const Y = cy * C + Math.floor(hash(cx, cy, 62) * 20) - GY;
       if (X < 0 || Y < 0 || X > M.w - 8 || Y > M.h - 8) continue;
 
       const d = sd(X + 4, Y + 6);
-      // Jalan tanah harus bersih dari semak/tanaman liar
-      if (d < 4) continue;
+      if (d < 4) continue; // Jalan setapak tanah bersih lapang
 
       // Hiasan tepi air / alang-alang
       if (near(X + 4, Y + 6)) {
-        if (hash(cx, cy, 67) < 0.18 && useNew) {
+        if (hash(cx, cy, 67) < 0.15 && useNew) {
           const wKey = waterDeco[Math.floor(hash(cx, cy, 68) * waterDeco.length)];
           const imW = IMGEL[wKey];
           if (imW && !(X + imW.width < RX || X > RX + RW || Y + imW.height < RY || Y > RY + RH)) {
@@ -115,29 +113,29 @@ function verdantDeco(x, M, rect, GX, GY, sd, near) {
         }
         continue;
       }
-      if (d < 4) continue;
 
       let im = null;
       if (useNew) {
         const r = hash(cx, cy, 63);
         const onDirt = vDirtN(X + GX + 4, Y + GY + 6) > vDirtT(M);
         if (onDirt) {
-          if (r < 0.22) {
+          if (r < 0.15) {
             const idx = 8 + Math.floor(hash(cx, cy, 64) * 8);
             im = IMGEL[cList[idx % cList.length]];
           }
         } else {
-          if (r < (0.24 * fm)) {
+          // Bunga liar & rumput kecil tumbuh manis dengan ruang napas luas
+          if (r < (0.16 * fm)) {
             const idx = Math.floor(hash(cx, cy, 64) * 8);
             im = IMGEL[cList[idx]];
           }
         }
       } else {
-        const W = [['tuft', .18], ['sprout_c', .03], ['sprout_a', .015],
-          ['fl_w', .12 * fm], ['fl_p', .07 * fm], ['fl_y', .04 * fm], ['fl_v', .03 * fm],
+        const W = [['tuft', .12], ['sprout_c', .02], ['sprout_a', .01],
+          ['fl_w', .08 * fm], ['fl_p', .04 * fm], ['fl_y', .03 * fm], ['fl_v', .02 * fm],
           ['mushroom', isForest ? .01 : 0]];
         let r = hash(cx, cy, 63), k = null;
-        if (vDirtN(X + GX + 4, Y + GY + 6) > vDirtT(M)) k = r < .12 ? 'pebble' : null;
+        if (vDirtN(X + GX + 4, Y + GY + 6) > vDirtT(M)) k = r < .08 ? 'pebble' : null;
         else for (const [n, p] of W) { if (r < p) { k = n; break; } r -= p; }
         if (k) {
           if (k.startsWith('fl_')) k += 1 + Math.floor(hash(cx, cy, 64) * 3);
