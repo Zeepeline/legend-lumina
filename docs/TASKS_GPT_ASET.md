@@ -94,7 +94,7 @@ Obrolan "Patokan". Kerjakan A1 dulu: itu jadi STYLE KEY untuk semua obrolan lain
 - Simpan: `assets/raw/gpt2/patokan/padang.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of a sunny meadow clearing: worn ochre dirt patches with soft leafy scalloped edges inside yellow-green grass, clumps of dark olive ferns, a few wildflowers, a lone broad tree casting a soft shadow, light shafts from the upper left. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: INI GAMBAR KUNCI. Setelah disetujui pemilik, lampirkan gambar ini di SETIAP obrolan berikutnya sebagai "style key".
-### [ ] G002. Gambar patokan suasana: hutan
+### [x] G002. Gambar patokan suasana: hutan
 - Simpan: `assets/raw/gpt2/patokan/hutan.png` · Ukuran di game: bukan untuk dipotong (acuan suasana & warna)
 - Prompt: `[LAYOUT: CONCEPT] Concept frame of a forest clearing: tall broad-leaf trees around the edges with dense dark canopies, mossy roots, fern beds, a winding dirt path, a fallen log, light shafts and floating pollen. Include one small original adventurer (about 32 px tall in game scale) for scale.`
 - Cek: Warna & cahaya cocok dengan blok gaya; tidak ada teks/logo; skala karakter kecil.
