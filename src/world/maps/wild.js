@@ -14,7 +14,9 @@ const ruinRing = (cx, cy, r, n) => { const w = r, h = r * .6, P = 4 * (w + h), o
 // pusat spiral kosong lapang untuk area pertempuran bebas tabrakan (combat clearing).
 const deepwoodPaths = [
   [2400, 730, 1900, 730, 13], [1900, 730, 1500, 980, 12], [1500, 980, 1100, 900, 12], [1100, 900, 700, 560, 12], [700, 560, 520, 420, 12],
-  [1500, 980, 1600, 1400, 10], [1600, 1400, 1200, 1580, 10], [1100, 900, 900, 1300, 10], [1900, 730, 2000, 360, 10]
+  [1500, 980, 1600, 1400, 10], [1600, 1400, 1200, 1580, 10], [1100, 900, 900, 1300, 10],
+  [900, 1300, 720, 1500, 10], [720, 1500, 600, 1710, 10], [600, 1710, 440, 1710, 10],
+  [1900, 730, 2000, 360, 10]
 ];
 const deepwoodPonds = [[1250, 470, 150, 70], [1420, 560, 90, 50], [330, 1250, 160, 90], [1900, 1500, 140, 70]];
 const snailSwarm = (paths, ponds, cx, cy, rMin, rMax, turns, n, startA = 0, types = ['treeRedwood']) => {
@@ -52,7 +54,7 @@ const snailSwarm = (paths, ponds, cx, cy, rMin, rMax, turns, n, startA = 0, type
 };
 
 MAPS.deepwood = {
-  id: 'deepwood', name: 'Hutan Dalam', w: 2400, h: 1800, bgm: 'field', ground: 'forest', scale: 2.2,
+  id: 'deepwood', name: 'Hutan Dalam', w: 2400, h: 1800, bgm: 'deepwood', ground: 'forest', scale: 2.2,
   paths: deepwoodPaths,
   cliffs: [
     // Plato Bertingkat Reruntuhan Aurel (Dataran Tinggi Suci di barat laut)

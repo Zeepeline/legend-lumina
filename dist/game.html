@@ -5001,7 +5001,7 @@ const OBJ = {
   },
   verdant_cliff_slope: {
     key: "verdant_cliff_slope",
-    col: [60, 20, 0],
+    col: [0, 0, 0],
     sh: [40, 6],
     fade: 1,
   },
@@ -6291,8 +6291,11 @@ MAPS.village = {
 // Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)
 // ---------------- HUTAN ----------------
 MAPS.forest = {
-  id: 'forest', name: 'Hutan Lumina', w: 1280, h: 1200, bgm: 'field', ground: 'forest',
-  paths: [[0, 730, 220, 730, 11], [1280, 530, 1060, 530, 11], 
+  id: 'forest', name: 'Hutan Lumina', w: 1280, h: 1200, bgm: 'forest', ground: 'forest',
+  paths: [
+    [0, 730, 220, 730, 12], [220, 730, 410, 690, 12], [220, 730, 200, 560, 11],
+    [1280, 530, 1060, 530, 12], [1060, 530, 1000, 320, 12],
+    [1060, 530, 930, 530, 12], [930, 530, 780, 620, 12], [780, 620, 700, 780, 12],
     [640, 0, 640, 160, 14], [640, 160, 420, 260, 14], [420, 260, 380, 440, 14], [380, 440, 400, 560, 14], [400, 560, 410, 690, 14],
     [410, 690, 700, 780, 14], [700, 780, 640, 920, 14], [640, 920, 640, 1010, 14],
     [420, 260, 760, 320, 12], [760, 320, 1000, 320, 12],
@@ -6356,6 +6359,7 @@ MAPS.forest = {
   ],
   crystal: { x: 640, y: 1076 },
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 700], [0, 760, 40, 440], [1240, 0, 40, 500], [1240, 560, 40, 640], [0, 1170, 1280, 30]],
+  border: { top: 50, bottom: 1150, left: 45, right: 1235, gapT: [600, 680], gapL: [700, 760], gapR: [500, 560], types: ['pined', 'pine', 'verdant_tree'] },
   exits: [
     { x: 0, y: 700, w: 12, h: 60, to: 'deepwood', tx: 2340, ty: 730, dir: 'left', label: 'Hutan Dalam' },
     { x: 1268, y: 500, w: 12, h: 60, to: 'river', tx: 60, ty: 530, dir: 'right', label: 'Jalur Sungai' },
@@ -6563,6 +6567,7 @@ MAPS.swamp = {
     { id: 's4', x: 510, y: 290, item: 'potion3' }
   ],
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 450], [0, 510, 40, 450], [1240, 0, 40, 960], [0, 930, 1280, 30]],
+  border: { top: 40, bottom: 920, left: 45, right: 1235, gapT: [600, 680], gapL: [450, 510], types: ['deadtree', 'stump', 'willow'] },
   exits: [
     { x: 0, y: 450, w: 12, h: 60, to: 'river', tx: 2540, ty: 480, dir: 'left', label: 'Jalur Sungai' },
     { x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }
@@ -6916,7 +6921,9 @@ const ruinRing = (cx, cy, r, n) => { const w = r, h = r * .6, P = 4 * (w + h), o
 // pusat spiral kosong lapang untuk area pertempuran bebas tabrakan (combat clearing).
 const deepwoodPaths = [
   [2400, 730, 1900, 730, 13], [1900, 730, 1500, 980, 12], [1500, 980, 1100, 900, 12], [1100, 900, 700, 560, 12], [700, 560, 520, 420, 12],
-  [1500, 980, 1600, 1400, 10], [1600, 1400, 1200, 1580, 10], [1100, 900, 900, 1300, 10], [1900, 730, 2000, 360, 10]
+  [1500, 980, 1600, 1400, 10], [1600, 1400, 1200, 1580, 10], [1100, 900, 900, 1300, 10],
+  [900, 1300, 720, 1500, 10], [720, 1500, 600, 1710, 10], [600, 1710, 440, 1710, 10],
+  [1900, 730, 2000, 360, 10]
 ];
 const deepwoodPonds = [[1250, 470, 150, 70], [1420, 560, 90, 50], [330, 1250, 160, 90], [1900, 1500, 140, 70]];
 const snailSwarm = (paths, ponds, cx, cy, rMin, rMax, turns, n, startA = 0, types = ['treeRedwood']) => {
@@ -6954,7 +6961,7 @@ const snailSwarm = (paths, ponds, cx, cy, rMin, rMax, turns, n, startA = 0, type
 };
 
 MAPS.deepwood = {
-  id: 'deepwood', name: 'Hutan Dalam', w: 2400, h: 1800, bgm: 'field', ground: 'forest', scale: 2.2,
+  id: 'deepwood', name: 'Hutan Dalam', w: 2400, h: 1800, bgm: 'deepwood', ground: 'forest', scale: 2.2,
   paths: deepwoodPaths,
   cliffs: [
     // Plato Bertingkat Reruntuhan Aurel (Dataran Tinggi Suci di barat laut)
@@ -9094,7 +9101,7 @@ class World extends Phaser.Scene {
       this.bushes = this.bushes || [];
       this.bushes.push(s);
     }
-    if (opt && opt.flip) s.setFlipX(true);
+    if (opt) { if (opt.flip || opt.flipX) s.setFlipX(true); if (opt.flipY) s.setFlipY(true); if (opt.tint) s.setTint(opt.tint); }
     if (d.col && d.col[0]) this.wall(x - d.col[0] / 2, y - d.col[1] - d.col[2], d.col[0], d.col[1]);
     if (d.fade) this.fades.push({ s, l: x - s.width / 2 + 6, r: x + s.width / 2 - 6, t: y - s.height + 8, b: y - (d.col ? d.col[1] + d.col[2] : 4) });
     if (d.chim) {
@@ -17664,7 +17671,16 @@ function levelUpDetail(oldLv) {
 // jeda otomatis saat aplikasi/tab disembunyikan (#877)
 document.addEventListener('visibilitychange', () => {
   const g = window.__game && window.__game.sc; if (!g || !g.scene) return;
-  try { if (document.hidden) { g.scene.pause(); if (AU.ctx) AU.ctx.suspend(); if (!G.title) saveGame(g); } else { g.scene.resume(); if (AU.ctx) AU.ctx.resume(); } } catch (_) { }
+  try {
+    if (document.hidden) {
+      if (g.scene.isActive && g.scene.isActive()) g.scene.pause();
+      if (AU.ctx) AU.ctx.suspend();
+      if (!G.title) saveGame(g);
+    } else {
+      if (g.scene.isPaused && g.scene.isPaused()) g.scene.resume();
+      if (AU.ctx) AU.ctx.resume();
+    }
+  } catch (_) { }
 });
 // ---------------- TUTORIAL BERTAHAP (#73) ----------------
 // Tips muncul sekali saat situasinya terjadi (bukan rentetan di awal). Bisa dimatikan di Pengaturan.
@@ -18049,12 +18065,15 @@ World.prototype.killEnemy = function (e) {
 // T540: Napas halus karakter Arka saat diam (Cobo #19)
 const _feelCr = World.prototype.create;
 World.prototype.create = function () {
+  this._xraySpr = null;
   const r = _feelCr.apply(this, arguments);
   if (!this._feelHook) {
     this._feelHook = 1;
+    this.events.on('shutdown', () => { this._xraySpr = null; });
     this.events.on('postupdate', () => {
+      if (!this.sys || !this.sys.isActive() || !this.add) return;
       const pl = this.pl;
-      if (!pl || pl.dead || !pl.body) return;
+      if (!pl || pl.dead || !pl.body || !pl.texture) return;
       const moving = pl.body.velocity.length() > 2;
       const busy = (pl.atkT || 0) > 0 || (pl.inv || 0) > 0 || pl.isClimbing || pl.rolling;
       if (!moving && !busy) {
@@ -18062,18 +18081,9 @@ World.prototype.create = function () {
       } else if (pl.scaleY !== 1 && !busy) {
         pl.scaleY = 1;
       }
-      // T543: Siluet tembus pandang X-ray saat di balik kanopi pohon / atap (Cobo #3)
-      const occluded = (this.fades || []).some(f => !G.title && pl.x > f.l && pl.x < f.r && pl.y < f.b && pl.y > f.t);
-      if (occluded) {
-        if (!this._xraySpr && this.add) {
-          this._xraySpr = this.add.image(pl.x, pl.y, pl.texture.key, pl.frame.name)
-            .setDepth(9.1e4).setTint(0x70eeff).setAlpha(0.68).setOrigin(pl.originX, pl.originY);
-        }
-        if (this._xraySpr) {
-          this._xraySpr.setVisible(true).setPosition(pl.x, pl.y)
-            .setTexture(pl.texture.key, pl.frame.name).setFlipX(pl.flipX).setScale(pl.scaleX, pl.scaleY);
-        }
-      } else if (this._xraySpr && this._xraySpr.visible) {
+      // Kanopi pohon sudah otomatis tembus pandang (alpha 0.55 di world.js),
+      // matikan sprite siluet duplikat agar tidak tampak 2 Arka saat dash di balik pohon.
+      if (this._xraySpr && this._xraySpr.scene && this._xraySpr.visible) {
         this._xraySpr.setVisible(false);
       }
     });
@@ -18123,22 +18133,35 @@ function bgmFor(M) {
   return b;
 }
 // pergantian lagu dengan memudar
+let _bgmFadeInt = null, _bgmFadeTimer = null;
 function swapBGM(name, fadeSec = 1) {
-  if (AU.cur === name) return;
+  if (_bgmFadeInt) { clearInterval(_bgmFadeInt); _bgmFadeInt = null; }
+  if (_bgmFadeTimer) { clearTimeout(_bgmFadeTimer); _bgmFadeTimer = null; }
+  if (AU.cur === name) {
+    if (AU.tag) tagSetVol(AU.tag, tagVolFor(name));
+    return;
+  }
   if (!AU.ctx) return playBGM(name);
+  const fileOld = AU_FILES[AU.cur], fileNew = AU_FILES[name];
+  if (fileOld && fileOld === fileNew && AU.tag && !AU.tag.paused) {
+    AU.cur = name; AU.tagCur = name;
+    tagSetVol(AU.tag, tagVolFor(name));
+    return;
+  }
   const g = AU.music.gain, v = .09 * OPT.mus / 3, t = AU.ctx.currentTime;
   const fo = Math.min(.5, fadeSec * .5), fi = Math.max(.5, fadeSec * .5);
   g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + fo);
   if (AU.tag) {
     const startVol = tagGetVol(AU.tag);
     let fadeStep = 0;
-    const fInt = setInterval(() => {
+    _bgmFadeInt = setInterval(() => {
       fadeStep++;
       if (AU.tag) tagSetVol(AU.tag, Math.max(0, startVol * (1 - fadeStep / 10)));
-      if (fadeStep >= 10) clearInterval(fInt);
+      if (fadeStep >= 10) { clearInterval(_bgmFadeInt); _bgmFadeInt = null; }
     }, Math.round(fo * 100));
   }
-  setTimeout(() => {
+  _bgmFadeTimer = setTimeout(() => {
+    _bgmFadeTimer = null;
     playBGM(name); if (!AU.ctx) return;
     const t2 = AU.ctx.currentTime; g.cancelScheduledValues(t2); g.setValueAtTime(0, t2); g.linearRampToValueAtTime(v, t2 + fi);
   }, Math.round(fo * 1000));
@@ -21472,7 +21495,9 @@ Object.assign(World.prototype, {
 // Berjalan tiap 0.25 detik untuk menghemat draw-calls & rendering di HP.
 
 (() => {
-  const CULL_MARGIN = 64;
+  const CULL_MARGIN_X = 120;
+  const CULL_MARGIN_TOP = 260; // Mengakomodasi kanopi pohon redwood setinggi 216 px
+  const CULL_MARGIN_BOT = 80;
   const CULL_INTERVAL = 0.25;
 
   const W = World.prototype;
@@ -21504,10 +21529,10 @@ Object.assign(World.prototype, {
     if (!cam || !this._cullables || !this._cullables.length) return;
 
     const vw = cam.worldView;
-    const minX = vw.x - CULL_MARGIN;
-    const maxX = vw.right + CULL_MARGIN;
-    const minY = vw.y - CULL_MARGIN;
-    const maxY = vw.bottom + CULL_MARGIN;
+    const minX = vw.x - CULL_MARGIN_X;
+    const maxX = vw.right + CULL_MARGIN_X;
+    const minY = vw.y - CULL_MARGIN_TOP;
+    const maxY = vw.bottom + CULL_MARGIN_BOT;
 
     let writeIdx = 0;
     const list = this._cullables;
@@ -22921,17 +22946,21 @@ function setupAppleTree(scene, s, x, y, opt, d, type) {
         .setAlpha(p.a)
         .setDepth(y - 0.8);
 
-      // Goyangan bayangan kanopi sinkron dengan gelombang angin global (T534)
-      const windPhase = ((x * 0.035 + y * 0.025) * 400) % 1400;
-      this.tweens.add({
-        targets: sh,
-        x: x + p.offX + 2.4,
-        duration: 1400,
-        delay: Math.abs(windPhase),
-        yoyo: true,
-        repeat: -1,
-        ease: 'Sine.easeInOut'
-      });
+      // Optimasi performa: Hindari 500+ tweens aktif sekaligus yang bikin stutter.
+      // Cukup beri goyangan halus jika bukan OPT.lite dan dibatasi maksimal 24 pohon.
+      this._treeShCount = (this._treeShCount || 0) + 1;
+      if (!OPT.lite && this._treeShCount <= 24) {
+        const windPhase = ((x * 0.035 + y * 0.025) * 400) % 1400;
+        this.tweens.add({
+          targets: sh,
+          x: x + p.offX + 2.4,
+          duration: 1400,
+          delay: Math.abs(windPhase),
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut'
+        });
+      }
     }
 
     return s;
@@ -26377,10 +26406,10 @@ waterRelocate();
 })();
 
 'use strict';
-// T442 & T445: Data tebing M.cliffs = [[x1, y1, x2, y2, 'S'|'N'|'E'|'W'], ...]
-// Membentangkan verdant_cliff_straight tiap 100 px, verdant_cliff_corner di sambungan/ujung,
-// verdant_cliff_slope bila bersilangan dengan jalur M.paths.
-// Pada peta salju (M.ground === 'snow'), aset tebing diberi tint salju atau dialihkan ke varian salju.
+// T442, T445 & Elevated Border Cliffs:
+// Sistem tebing bertingkat (Tier 1 & Tier 2) di area perbatasan luar peta.
+// Area perbatasan ditinggikan 1-2 tingkat dataran lebih tinggi dari playable zone.
+// Jalur dan pintu keluar otomatis dipasangi lereng tanjakan (verdant_cliff_slope) yang bisa dilalui.
 (function () {
   function dist(x1, y1, x2, y2) { return Math.hypot(x2 - x1, y2 - y1); }
 
@@ -26388,7 +26417,6 @@ waterRelocate();
     if (!M.paths || !M.paths.length) return false;
     for (const p of M.paths) {
       if (!Array.isArray(p)) continue;
-      // Format paths: [x1, y1, x2, y2, w] atau array titik [[x1, y1], [x2, y2], ...]
       if (p.length === 5 && typeof p[0] === 'number') {
         const ax = p[0], ay = p[1], bx = p[2], by = p[3];
         const dAB = dist(ax, ay, bx, by);
@@ -26410,16 +26438,90 @@ waterRelocate();
     return false;
   }
 
+  function isSlope(M, cx, cy, radius) {
+    const rad = radius || 48;
+    if (pathIntersects(M, cx, cy, rad)) return true;
+    if (M.exits && M.exits.length) {
+      for (const ex of M.exits) {
+        const ecx = ex.x + (ex.w || 16) / 2, ecy = ex.y + (ex.h || 16) / 2;
+        if (dist(cx, cy, ecx, ecy) <= rad + 28) return true;
+      }
+    }
+    const b = M.border;
+    if (b) {
+      if (b.gap && cy >= b.bottom - 45 && cx >= b.gap[0] - 25 && cx <= b.gap[1] + 25) return true;
+      if (b.gapT && cy <= b.top + 45 && cx >= b.gapT[0] - 25 && cx <= b.gapT[1] + 25) return true;
+      if (b.gapL && cx <= b.left + 45 && cy >= b.gapL[0] - 25 && cy <= b.gapL[1] + 25) return true;
+      if (b.gapR && cx >= b.right - 45 && cy >= b.gapR[0] - 25 && cy <= b.gapR[1] + 25) return true;
+    }
+    return false;
+  }
+
+  function isInWater(M, cx, cy) {
+    if (M.river) {
+      const R = M.river;
+      const ry = R.y + Math.sin(cx * (R.k || 0.009)) * (R.amp || 30);
+      if (Math.abs(cy - ry) < (R.w || 36) / 2 + 15) return true;
+    }
+    if (M.ponds && M.ponds.length) {
+      for (const P of M.ponds) {
+        const dx = (cx - P[0]) / (P[2] || 25), dy = (cy - P[1]) / (P[3] || 25);
+        if (dx * dx + dy * dy < 1.15) return true;
+      }
+    }
+    return false;
+  }
+
+  function isBlocked(M, cx, cy) {
+    if (M.npcs) {
+      for (const n of M.npcs) if (dist(cx, cy, n.x, n.y) < 42) return true;
+    }
+    const KEY_OBJS = ['bigtree', 'shrine', 'woodlandshrine', 'ranch', 'stele', 'crystal', 'fence', 'house'];
+    if (M.objs) {
+      for (const o of M.objs) {
+        if (KEY_OBJS.some(k => o[0].includes(k)) && dist(cx, cy, o[1], o[2]) < 45) return true;
+      }
+    }
+    if (M.ranch) {
+      const R = M.ranch;
+      if (cx >= R.x - 20 && cx <= R.x + R.w + 20 && cy >= R.y - 20 && cy <= R.y + R.h + 20) return true;
+    }
+    return false;
+  }
+
+  function getBorderSegments(M) {
+    if (M.indoor || M.borderCliffs === false) return [];
+    if (M.id && (M.id.startsWith('k') || M.id.startsWith('pl_'))) return [];
+    const b = M.border;
+    if (!b) return [];
+    const segs = [];
+    const l = b.left, r = b.right, t = b.top, bot = b.bottom;
+
+    segs.push([l, t, r, t, 'S', 2]);
+    segs.push([l, t + 45, r, t + 45, 'S', 1]);
+    segs.push([l, bot - 45, r, bot - 45, 'N', 1]);
+    segs.push([l, bot, r, bot, 'N', 2]);
+    segs.push([l, t + 45, l, bot - 45, 'E', 2]);
+    segs.push([l + 45, t + 45, l + 45, bot - 45, 'E', 1]);
+    segs.push([r, t + 45, r, bot - 45, 'W', 2]);
+    segs.push([r - 45, t + 45, r - 45, bot - 45, 'W', 1]);
+    return segs;
+  }
+
   function buildCliffData(M) {
     if (M._cliffsBuilt) return;
     M._cliffsBuilt = true;
-    if (!M.cliffs || !M.cliffs.length) return;
+
+    const bSegs = getBorderSegments(M);
+    const allCliffs = (M.cliffs || []).concat(bSegs);
+    if (!allCliffs.length) return;
+
     M._cliffObjs = [];
     M._cliffWalls = [];
     const isSnow = (M.ground === 'snow');
 
-    M.cliffs.forEach(cSeg => {
-      const [x1, y1, x2, y2, dir] = cSeg;
+    allCliffs.forEach(cSeg => {
+      const [x1, y1, x2, y2, dir, tier] = cSeg;
       const totalLen = dist(x1, y1, x2, y2);
       if (totalLen <= 0) return;
       const steps = Math.max(1, Math.round(totalLen / 100));
@@ -26428,8 +26530,10 @@ waterRelocate();
       for (let s = 0; s <= steps; s++) {
         const cx = Math.round(x1 + dx * s);
         const cy = Math.round(y1 + dy * s);
+        if (isInWater(M, cx, cy) || isBlocked(M, cx, cy)) continue;
+
         const isCorner = (s === 0 || s === steps);
-        const onSlope = pathIntersects(M, cx, cy, 45);
+        const onSlope = isSlope(M, cx, cy, 48);
 
         let type = 'verdant_cliff_straight';
         if (onSlope) {
@@ -26442,10 +26546,11 @@ waterRelocate();
         if (dir === 'N') extra.flipY = true;
         if (dir === 'W') extra.flipX = true;
         if (isSnow) extra.tint = 0xd8eeff;
+        if (tier === 2) extra.tier2 = true;
+
         M._cliffObjs.push([type, cx, cy, extra]);
 
         if (!onSlope) {
-          // Wall tabrakan selebar segmen (tebal 24)
           const wx = cx - 45, wy = cy - 12;
           M._cliffWalls.push([wx, wy, 90, 24]);
         }

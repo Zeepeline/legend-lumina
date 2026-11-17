@@ -239,12 +239,15 @@ World.prototype.killEnemy = function (e) {
 // T540: Napas halus karakter Arka saat diam (Cobo #19)
 const _feelCr = World.prototype.create;
 World.prototype.create = function () {
+  this._xraySpr = null;
   const r = _feelCr.apply(this, arguments);
   if (!this._feelHook) {
     this._feelHook = 1;
+    this.events.on('shutdown', () => { this._xraySpr = null; });
     this.events.on('postupdate', () => {
+      if (!this.sys || !this.sys.isActive() || !this.add) return;
       const pl = this.pl;
-      if (!pl || pl.dead || !pl.body) return;
+      if (!pl || pl.dead || !pl.body || !pl.texture) return;
       const moving = pl.body.velocity.length() > 2;
       const busy = (pl.atkT || 0) > 0 || (pl.inv || 0) > 0 || pl.isClimbing || pl.rolling;
       if (!moving && !busy) {
@@ -252,18 +255,9 @@ World.prototype.create = function () {
       } else if (pl.scaleY !== 1 && !busy) {
         pl.scaleY = 1;
       }
-      // T543: Siluet tembus pandang X-ray saat di balik kanopi pohon / atap (Cobo #3)
-      const occluded = (this.fades || []).some(f => !G.title && pl.x > f.l && pl.x < f.r && pl.y < f.b && pl.y > f.t);
-      if (occluded) {
-        if (!this._xraySpr && this.add) {
-          this._xraySpr = this.add.image(pl.x, pl.y, pl.texture.key, pl.frame.name)
-            .setDepth(9.1e4).setTint(0x70eeff).setAlpha(0.68).setOrigin(pl.originX, pl.originY);
-        }
-        if (this._xraySpr) {
-          this._xraySpr.setVisible(true).setPosition(pl.x, pl.y)
-            .setTexture(pl.texture.key, pl.frame.name).setFlipX(pl.flipX).setScale(pl.scaleX, pl.scaleY);
-        }
-      } else if (this._xraySpr && this._xraySpr.visible) {
+      // Kanopi pohon sudah otomatis tembus pandang (alpha 0.55 di world.js),
+      // matikan sprite siluet duplikat agar tidak tampak 2 Arka saat dash di balik pohon.
+      if (this._xraySpr && this._xraySpr.scene && this._xraySpr.visible) {
         this._xraySpr.setVisible(false);
       }
     });

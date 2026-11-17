@@ -107,7 +107,7 @@ _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai 
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
 
 
-## src/world/maps/forest.js (105 baris)
+## src/world/maps/forest.js (109 baris)
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
@@ -119,7 +119,7 @@ _Peta: Padang Angin_
 _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 
 
-## src/world/maps/swamp.js (59 baris)
+## src/world/maps/swamp.js (60 baris)
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
@@ -135,9 +135,9 @@ _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan k
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 
-## src/world/maps/wild.js (186 baris)
+## src/world/maps/wild.js (188 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
-`ruinRing` 5 · `deepwoodPaths` 15 · `deepwoodPonds` 19 · `snailSwarm` 20
+`ruinRing` 5 · `deepwoodPaths` 15 · `deepwoodPonds` 21 · `snailSwarm` 22
 
 ## src/world/maps/interiors.js (70 baris)
 _Interior: penginapan, rumah pohon, rumah Lina_
@@ -347,17 +347,17 @@ _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, m
 _Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed._
 `CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 60 · `.clearCrowd()` 138 · `.initCrowd()` 148 · `_initPolishCrowd` 170 · `_dropActiveFxCrowd` 177 · `_updAmbP` 210
 
-## src/systems/qol.js (232 baris)
+## src/systems/qol.js (241 baris)
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
-`.updInteractHint()` 6 · `.updEnemyBars()` 42 · `.retryBoss()` 68 · `levelUpDetail()` 74 · `.setTimeout()` 80 · `TIPS` 93 · `showTip()` 104 · `.updTips()` 123 · `.updPeaceHud()` 133 · `.updMinimap()` 138 · `.swapWeapon()` 172 · `.updStamina()` 183 · `.tryClimb()` 200 · `applyPadOpt()` 228
+`.updInteractHint()` 6 · `.updEnemyBars()` 42 · `.retryBoss()` 68 · `levelUpDetail()` 74 · `.setTimeout()` 80 · `TIPS` 102 · `showTip()` 113 · `.updTips()` 132 · `.updPeaceHud()` 142 · `.updMinimap()` 147 · `.swapWeapon()` 181 · `.updStamina()` 192 · `.tryClimb()` 209 · `applyPadOpt()` 237
 
-## src/systems/feel.js (273 baris)
+## src/systems/feel.js (267 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
 `ELITE_RATE` 4 · `DODGERS` 5 · `LEVEL_WILAYAH` 6 · `markOver()` 7 · `dangerEdge()` 13 · `.makeElite()` 19 · `.updFeel()` 44 · `.dangerFrom()` 164 · `.hurtAnim()` 171 · `.hasLineOfSight()` 173 · `_spawnEnemy` 189 · `_killEnemy` 209 · `_feelCr` 240
 
-## src/systems/sound.js (116 baris)
+## src/systems/sound.js (129 baris)
 _Suara gelombang 4: lagu per wilayah (#86), musik dinamis (#87), desa malam (#911),_
-`bgmFor()` 33 · `swapBGM()` 43 · `sfxAt()` 64 · `_stepLeft` 73 · `stepSound()` 74 · `segD()` 89 · `.groundAt()` 91 · `.updSound()` 101
+`bgmFor()` 33 · `_bgmFadeInt` 43 · `swapBGM()` 44 · `sfxAt()` 77 · `_stepLeft` 86 · `stepSound()` 87 · `segD()` 102 · `.groundAt()` 104 · `.updSound()` 114
 
 ## src/systems/craft.js (283 baris)
 _Gelombang 5: poin atribut (#16), kerajinan (#26), bom & alat lempar (#29, #407),_
@@ -447,7 +447,7 @@ _Warna Langit/Cahaya Ikut Bioma (T457)_
 _Mode benua: buang petak objek yang jauh dari Arka (memori). Mencatat semua yang dibuat spawnObj per petak lalu menghancurkannya._
 `UNLOAD_FAR` 3 · `.unloadFar()` 20
 
-## src/systems/cull.js (61 baris)
+## src/systems/cull.js (63 baris)
 _Optimalisasi Kamera Culling (T487)_
 
 
@@ -487,7 +487,7 @@ _Sistem Pohon Apel Siklus Berbuah & Tanpa Buah (8 Frame Wind Sway)_
 _Pantulan Karakter di Air (T460) — referensi: RPG klasik / Sea of Stars_
 
 
-## src/systems/tree_shadows.js (63 baris)
+## src/systems/tree_shadows.js (67 baris)
 _Bayangan Daun Bergoyang & Proyeksi Miring Dinamis (T448, T552) — referensi: Cobo #18, Stardew_
 
 
@@ -555,8 +555,8 @@ _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung da
 _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),_
 `ORG_SKIP` 5 · `ORG_FILL` 6 · `orgPlanned()` 7 · `orgCurve()` 9
 
-## src/world/cliffs.js (104 baris)
-_T442 & T445: Data tebing M.cliffs = [[x1, y1, x2, y2, 'S'|'N'|'E'|'W'], ...]_
+## src/world/cliffs.js (180 baris)
+_T442, T445 & Elevated Border Cliffs:_
 
 
 ## src/systems/waterflow.js (101 baris)

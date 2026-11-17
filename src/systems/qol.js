@@ -86,7 +86,16 @@ function levelUpDetail(oldLv) {
 // jeda otomatis saat aplikasi/tab disembunyikan (#877)
 document.addEventListener('visibilitychange', () => {
   const g = window.__game && window.__game.sc; if (!g || !g.scene) return;
-  try { if (document.hidden) { g.scene.pause(); if (AU.ctx) AU.ctx.suspend(); if (!G.title) saveGame(g); } else { g.scene.resume(); if (AU.ctx) AU.ctx.resume(); } } catch (_) { }
+  try {
+    if (document.hidden) {
+      if (g.scene.isActive && g.scene.isActive()) g.scene.pause();
+      if (AU.ctx) AU.ctx.suspend();
+      if (!G.title) saveGame(g);
+    } else {
+      if (g.scene.isPaused && g.scene.isPaused()) g.scene.resume();
+      if (AU.ctx) AU.ctx.resume();
+    }
+  } catch (_) { }
 });
 // ---------------- TUTORIAL BERTAHAP (#73) ----------------
 // Tips muncul sekali saat situasinya terjadi (bukan rentetan di awal). Bisa dimatikan di Pengaturan.

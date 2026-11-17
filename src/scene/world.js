@@ -120,7 +120,7 @@ class World extends Phaser.Scene {
       this.bushes = this.bushes || [];
       this.bushes.push(s);
     }
-    if (opt && opt.flip) s.setFlipX(true);
+    if (opt) { if (opt.flip || opt.flipX) s.setFlipX(true); if (opt.flipY) s.setFlipY(true); if (opt.tint) s.setTint(opt.tint); }
     if (d.col && d.col[0]) this.wall(x - d.col[0] / 2, y - d.col[1] - d.col[2], d.col[0], d.col[1]);
     if (d.fade) this.fades.push({ s, l: x - s.width / 2 + 6, r: x + s.width / 2 - 6, t: y - s.height + 8, b: y - (d.col ? d.col[1] + d.col[2] : 4) });
     if (d.chim) {

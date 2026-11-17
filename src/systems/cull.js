@@ -4,7 +4,9 @@
 // Berjalan tiap 0.25 detik untuk menghemat draw-calls & rendering di HP.
 
 (() => {
-  const CULL_MARGIN = 64;
+  const CULL_MARGIN_X = 120;
+  const CULL_MARGIN_TOP = 260; // Mengakomodasi kanopi pohon redwood setinggi 216 px
+  const CULL_MARGIN_BOT = 80;
   const CULL_INTERVAL = 0.25;
 
   const W = World.prototype;
@@ -36,10 +38,10 @@
     if (!cam || !this._cullables || !this._cullables.length) return;
 
     const vw = cam.worldView;
-    const minX = vw.x - CULL_MARGIN;
-    const maxX = vw.right + CULL_MARGIN;
-    const minY = vw.y - CULL_MARGIN;
-    const maxY = vw.bottom + CULL_MARGIN;
+    const minX = vw.x - CULL_MARGIN_X;
+    const maxX = vw.right + CULL_MARGIN_X;
+    const minY = vw.y - CULL_MARGIN_TOP;
+    const maxY = vw.bottom + CULL_MARGIN_BOT;
 
     let writeIdx = 0;
     const list = this._cullables;

@@ -44,17 +44,21 @@
         .setAlpha(p.a)
         .setDepth(y - 0.8);
 
-      // Goyangan bayangan kanopi sinkron dengan gelombang angin global (T534)
-      const windPhase = ((x * 0.035 + y * 0.025) * 400) % 1400;
-      this.tweens.add({
-        targets: sh,
-        x: x + p.offX + 2.4,
-        duration: 1400,
-        delay: Math.abs(windPhase),
-        yoyo: true,
-        repeat: -1,
-        ease: 'Sine.easeInOut'
-      });
+      // Optimasi performa: Hindari 500+ tweens aktif sekaligus yang bikin stutter.
+      // Cukup beri goyangan halus jika bukan OPT.lite dan dibatasi maksimal 24 pohon.
+      this._treeShCount = (this._treeShCount || 0) + 1;
+      if (!OPT.lite && this._treeShCount <= 24) {
+        const windPhase = ((x * 0.035 + y * 0.025) * 400) % 1400;
+        this.tweens.add({
+          targets: sh,
+          x: x + p.offX + 2.4,
+          duration: 1400,
+          delay: Math.abs(windPhase),
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut'
+        });
+      }
     }
 
     return s;

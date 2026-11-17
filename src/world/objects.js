@@ -361,7 +361,7 @@ const OBJ = {
   },
   verdant_cliff_slope: {
     key: "verdant_cliff_slope",
-    col: [60, 20, 0],
+    col: [0, 0, 0],
     sh: [40, 6],
     fade: 1,
   },

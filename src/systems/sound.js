@@ -40,22 +40,35 @@ function bgmFor(M) {
   return b;
 }
 // pergantian lagu dengan memudar
+let _bgmFadeInt = null, _bgmFadeTimer = null;
 function swapBGM(name, fadeSec = 1) {
-  if (AU.cur === name) return;
+  if (_bgmFadeInt) { clearInterval(_bgmFadeInt); _bgmFadeInt = null; }
+  if (_bgmFadeTimer) { clearTimeout(_bgmFadeTimer); _bgmFadeTimer = null; }
+  if (AU.cur === name) {
+    if (AU.tag) tagSetVol(AU.tag, tagVolFor(name));
+    return;
+  }
   if (!AU.ctx) return playBGM(name);
+  const fileOld = AU_FILES[AU.cur], fileNew = AU_FILES[name];
+  if (fileOld && fileOld === fileNew && AU.tag && !AU.tag.paused) {
+    AU.cur = name; AU.tagCur = name;
+    tagSetVol(AU.tag, tagVolFor(name));
+    return;
+  }
   const g = AU.music.gain, v = .09 * OPT.mus / 3, t = AU.ctx.currentTime;
   const fo = Math.min(.5, fadeSec * .5), fi = Math.max(.5, fadeSec * .5);
   g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + fo);
   if (AU.tag) {
     const startVol = tagGetVol(AU.tag);
     let fadeStep = 0;
-    const fInt = setInterval(() => {
+    _bgmFadeInt = setInterval(() => {
       fadeStep++;
       if (AU.tag) tagSetVol(AU.tag, Math.max(0, startVol * (1 - fadeStep / 10)));
-      if (fadeStep >= 10) clearInterval(fInt);
+      if (fadeStep >= 10) { clearInterval(_bgmFadeInt); _bgmFadeInt = null; }
     }, Math.round(fo * 100));
   }
-  setTimeout(() => {
+  _bgmFadeTimer = setTimeout(() => {
+    _bgmFadeTimer = null;
     playBGM(name); if (!AU.ctx) return;
     const t2 = AU.ctx.currentTime; g.cancelScheduledValues(t2); g.setValueAtTime(0, t2); g.linearRampToValueAtTime(v, t2 + fi);
   }, Math.round(fo * 1000));
