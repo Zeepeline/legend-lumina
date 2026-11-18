@@ -39,16 +39,18 @@ function isoMove(sc, a, vx, vy, dt) {
   return false;
 }
 
+// Lembar diam isometrik (hero_idle_iso.png) desainnya beda dengan Arka asli → tidak dipakai sampai lembar Arka 8 arah yang sama desainnya siap
+const ISO_IDLE_SHEET = false;
 class IsoHero {
   constructor(sc, x, y) {
     Object.assign(this, { sc, x, y, z: 0, hp: 100, max: 100, st: 'move', t: 0, combo: 0, comboWin: 0, fsx: 0, fsy: 1, kbx: 0, kby: 0, inv: 0, rad: 5 });
     this.sh = sc.add.image(0, 0, 'fx_shadow').setScale(.7);
-    const key = sc.textures.exists('hero_iso_idle') ? 'hero_iso_idle' : 'hero';
+    const key = ISO_IDLE_SHEET && sc.textures.exists('hero_iso_idle') ? 'hero_iso_idle' : 'hero';
     this.spr = sc.add.sprite(0, 0, key, 0).setOrigin(.5, .92);
   }
   face(sx, sy) { if (sx || sy) { const n = Math.hypot(sx, sy); this.fsx = sx / n; this.fsy = sy / n; } }
   frame(row, f) {
-    if (row === 'idle_' && this.sc.textures.exists('hero_iso_idle')) {
+    if (row === 'idle_' && ISO_IDLE_SHEET && this.sc.textures.exists('hero_iso_idle')) {
       if (this.spr.texture.key !== 'hero_iso_idle') this.spr.setTexture('hero_iso_idle');
       const d = isoDirOf(this.fsx, this.fsy);
       this.spr.setFrame(d.row * 4 + (Math.min(3, f) || 0));
