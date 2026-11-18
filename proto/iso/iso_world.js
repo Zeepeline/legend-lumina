@@ -24,6 +24,7 @@ class IsoWorld extends IsoScene {
     this.load.json('isoIndex', ISO_DIR + 'index.json');
     this.load.json('isoWorld', ISO_DIR + 'world.json');
     this.load.image('treeA', 'assets/img/treeA.png');
+    this.load.image('bridge_v', 'assets/img/nature/bridge_wood_h.png'); this.load.image('bridge_h', 'assets/img/nature/bridge_wood.png');
     this.load.spritesheet('hero', 'assets/img/hero_arka.png', { frameWidth: 48, frameHeight: 40 });
     this.load.spritesheet('hero_iso_idle', 'assets/img/iso/hero_idle_iso.png', { frameWidth: 48, frameHeight: 44 });
     this.load.spritesheet('wolf_hd', 'assets/img/mon_wolf_hd.png', { frameWidth: 128, frameHeight: 96 });
@@ -140,6 +141,7 @@ class IsoWorld extends IsoScene {
       const im = this.textures.get('x_' + n).getSourceImage();
       b.save(); b.globalAlpha = al; b.translate(x, y); b.rotate(rot); b.scale(sx * (fl ? -1 : 1), sy); b.drawImage(im, -ox * im.width, -oy * im.height); b.restore();
     }
+    this.bridges(b, W, H);
     const PW = W + H, PH = Math.ceil((W + H) / 2), X0 = isoX(r.ox, r.oy) - H, Y0 = isoY(r.ox, r.oy); r.floorKeys = [];
     for (let ty = 0; ty < PH; ty += ISO_TILE) for (let tx = 0; tx < PW; tx += ISO_TILE) {
       const cw = Math.min(ISO_TILE, PW - tx), ch = Math.min(ISO_TILE, PH - ty), cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
@@ -149,6 +151,29 @@ class IsoWorld extends IsoScene {
       const key = 'iso_floor_' + r.id + '_' + tx + '_' + ty; if (this.textures.exists(key)) this.textures.remove(key);
       this.textures.addCanvas(key, cv); r.floorKeys.push(key); r.objs.push(this.add.image(X0 + tx, Y0 + ty, key).setOrigin(0).setDepth(-1e5));
     }
+  }
+  // jembatan: jalan tanah yang diapit air (atas-bawah / kiri-kanan) → papan kayu aset bridge_wood + tepi gelap
+  bridges(b, W, H) {
+    const im = b.getImageData(0, 0, W, H), d = im.data, N = W * H, wet = new Uint8Array(N), dirt = new Uint8Array(N), M = 44;
+    for (let i = 0; i < N; i++) { const r = d[i * 4], g = d[i * 4 + 1], bl = d[i * 4 + 2]; wet[i] = bl > r + 40 && bl > g - 10 ? 1 : 0; dirt[i] = r > 150 && r > g && g > bl + 20 ? 1 : 0; }
+    const up = new Uint16Array(N).fill(999), dn = new Uint16Array(N).fill(999), lf = new Uint16Array(N).fill(999), rt = new Uint16Array(N).fill(999);
+    for (let x = 0; x < W; x++) { let a = 999, c = 999; for (let y = 0; y < H; y++) { const i = y * W + x; a = wet[i] ? 0 : a + 1; up[i] = a; } for (let y = H - 1; y >= 0; y--) { const i = y * W + x; c = wet[i] ? 0 : c + 1; dn[i] = c; } }
+    for (let y = 0; y < H; y++) { let a = 999, c = 999; for (let x = 0; x < W; x++) { const i = y * W + x; a = wet[i] ? 0 : a + 1; lf[i] = a; } for (let x = W - 1; x >= 0; x--) { const i = y * W + x; c = wet[i] ? 0 : c + 1; rt[i] = c; } }
+    const pat = k => { const s = this.textures.get(k).getSourceImage(), c = document.createElement('canvas'); c.width = s.width; c.height = s.height; const g = c.getContext('2d'); g.drawImage(s, 0, 0); return [g.getImageData(0, 0, c.width, c.height).data, c.width, c.height]; };
+    const PV = pat('bridge_v'), PH2 = pat('bridge_h'), mask = new Uint8Array(N); let n = 0;
+    for (let i = 0; i < N; i++) {
+      if (!dirt[i]) continue;
+      if (up[i] < M && dn[i] < M && up[i] + dn[i] < 80) { mask[i] = 1; n++; } else if (lf[i] < M && rt[i] < M && lf[i] + rt[i] < 80) { mask[i] = 2; n++; }
+    }
+    if (!n) return;
+    for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+      const i = y * W + x, m = mask[i]; if (!m) continue;
+      const [P, pw, ph] = m === 1 ? PV : PH2, u = m === 1 ? 8 + (x % (pw - 16)) : 8 + (x % (pw - 16)), v = m === 1 ? 20 + (y % (ph - 40)) : 8 + (y % (ph - 16));
+      const j = (v * pw + u) * 4, edge = !mask[i - 1] || !mask[i + 1] || !mask[i - W] || !mask[i + W];
+      const k = edge ? .45 : 1, ok = P[j + 3] > 200 && P[j + 2] < P[j] + 10; /* celah transparan/biru di aset → kayu gelap */
+      d[i * 4] = (ok ? P[j] : 74) * k; d[i * 4 + 1] = (ok ? P[j + 1] : 48) * k; d[i * 4 + 2] = (ok ? P[j + 2] : 30) * k;
+    }
+    b.putImageData(im, 0, 0);
   }
   // rumput asli → bintik rumput prototipe (PAL.grass, helai gelap/terang), bayangan & tepi asli tetap lewat faktor terang
   lushGrass(g, w, h, ox, oy) {
