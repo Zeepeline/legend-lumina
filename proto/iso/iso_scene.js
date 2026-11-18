@@ -21,11 +21,12 @@ class IsoScene extends Phaser.Scene {
   create() {
     const A = this.anims, wa = (k, a, b, fps, rep) => A.create({ key: k, frames: A.generateFrameNumbers('wolf_hd', { start: a, end: b }), frameRate: fps, repeat: rep });
     wa('w_idle', 0, 6, 8, -1); wa('w_run', 14, 20, 13, -1); wa('w_pounce', 28, 32, 14, 0); wa('w_hurt', 35, 39, 14, 0); wa('w_die', 42, 45, 8, 0); wa('w_howl', 49, 54, 12, 0);
-    fxTextures(this.textures);
+    if (new URLSearchParams(location.search).get('tanah') === 'lembut') softTextures(this.textures); fxTextures(this.textures);
     // tanah
     const TM = new URLSearchParams(location.search).get('tanah'), src = k => this.textures.get(k).getSourceImage();
-    const G = TM === 'asli' ? bakeGroundTex({ grass: src('gnd_grass'), light: src('gnd_grass_light'), dark: src('gnd_grass_dark'), dirt: src('gnd_dirt'),
-      cobble: src('gnd_city_cobble') }) : bakeGround(); this.ter = G.ter; this.textures.addCanvas('iso_ground', G.c);
+    const tsrc = { grass: src('gnd_grass'), light: src('gnd_grass_light'), dark: src('gnd_grass_dark'), dirt: src('gnd_dirt'), cobble: src('gnd_city_cobble') };
+    const G = TM === 'asli' ? bakeGroundTex(tsrc) : TM === 'lembut' ? bakeGroundSoft(tsrc) : bakeGround();
+    this.ter = G.ter; this.textures.addCanvas('iso_ground', G.c);
     this.add.image(-G.ox, -G.oy, 'iso_ground').setOrigin(0).setDepth(-1e5);
     this.waterFx(G);
     // rumah
@@ -65,6 +66,7 @@ class IsoScene extends Phaser.Scene {
     const cam = this.cameras.main; cam.setRoundPixels(true); this.fit();
     this.scale.on('resize', () => this.fit());
     if (this.game.renderer.type === Phaser.WEBGL && cam.postFX) { cam.postFX.addVignette(.5, .5, .95, .12); }
+    this._soft = new URLSearchParams(location.search).get('tanah') === 'lembut';
     this.pe = this.add.particles(0, 0, 'fx_sq', { emitting: false, lifespan: { min: 200, max: 480 }, speed: { min: 60, max: 190 }, gravityY: 260,
       scale: { start: 1.5, end: .4 }, tint: { onEmit: () => this._tint }, angle: { onEmit: () => this._ang + rndR(-this._spr, this._spr) } }).setDepth(9e5);
     this.motes = this.add.particles(0, 0, 'fx_dot', { lifespan: 4200, frequency: 260, speedY: { min: -6, max: -2 }, speedX: { min: -4, max: 6 },
@@ -73,7 +75,7 @@ class IsoScene extends Phaser.Scene {
     this.motes.ops.alpha.onUpdate = (p, k, t) => Math.sin(t * Math.PI) * .7;
     this.hs = 0; this.shakeT = 0;
     // UI
-    this.scene.add('ui', IsoUI, true); this.ui = this.scene.get('ui'); isoInput(this); this.makeHud();
+    this.scene.add('ui', IsoUI, true); this.ui = this.scene.get('ui'); isoInput(this); this.makeHud(); if (this._soft) softScene(this);
     window.__iso = this;
   }
   fit() { const h = this.scale.height; this.cameras.main.setZoom(Math.max(1, h / ISO.VH)); }
