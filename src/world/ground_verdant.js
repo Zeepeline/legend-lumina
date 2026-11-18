@@ -196,55 +196,32 @@ function verdantBase(x, M, rect) {
   }
 }
 
-// air sungai & danau gaya referensi pemilik: biru jernih kaya, jaring caustics wajik/diamond, buih kontak tepi
+// air sungai & danau gaya referensi pemilik: biru jernih kaya, riak lembut, buih kontak tepi
 const VWC = {
-  deep: [38, 120, 194], mid: [48, 140, 218], shal: [78, 172, 238],
-  caustic: [122, 204, 255], spark: [242, 250, 255], foam: [228, 245, 255]
+  deep: [42, 118, 196], mid: [58, 146, 222], shal: [96, 186, 240],
+  ripple: [172, 226, 255], foam: [224, 244, 255]
 };
 function verdantWater(t, X, Y) {
   const b = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5, v = t + b * .035 + vnoise(X, Y, 64, 21) * .2 - .1;
   let c = v > .84 ? VWC.shal : v > .35 ? VWC.mid : VWC.deep;
-  // jaring wajik caustics berlian secepat kilat (bitwise mask)
-  if (t < .86) {
-    const w1 = (X + Y) & 15, w2 = (X - Y + 32) & 15;
-    if (w1 <= 1 && w2 <= 1) c = VWC.spark;
-    else if (w1 <= 1 || w2 <= 1) c = VWC.caustic;
-  } else if (t >= .95) {
-    c = VWC.foam; // buih putih lembut di kontak daratan
-  }
+  // riak gelombang air alami mengalir lembut
+  const rip = Math.sin(X * 0.12 + Y * 0.6) + Math.sin(X * 0.05 - Y * 0.25) * 1.2;
+  if (rip > 1.82 && t < 0.8) c = VWC.ripple;
+  else if (t >= 0.94) c = VWC.foam; // buih putih lembut di kontak daratan
   return c;
 }
 
-// tepi air alami: batu kali bulat halus (smooth boulders), highlight melengkung, celah gelap, & buih air
-const VSTONE = {
-  hi: [184, 182, 192], mid: [128, 124, 138], lo: [82, 80, 94],
-  gap: [48, 50, 62], foam: [228, 245, 255]
+// tepi air alami: tepian pasir keemasan & kerikil sungai halus menyatu mulus tanpa celah hitam
+const VBANK = {
+  sand: [196, 178, 142], sand2: [172, 154, 120], pebble: [142, 128, 108], foam: [224, 244, 255]
 };
-function vCobble(X, Y) {
-  const C = 13, gx = Math.floor(X / C), gy = Math.floor(Y / C);
-  let f1 = 9999, f2 = 9999, dy1 = 0, dx1 = 0;
-  for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
-    const cx = (gx + i) * C + hash(gx + i, gy + j, 41) * C, cy = (gy + j) * C + hash(gx + i, gy + j, 42) * C;
-    const ddx = X - cx, ddy = Y - cy, dd2 = ddx * ddx + ddy * ddy;
-    if (dd2 < f1) { f2 = f1; f1 = dd2; dx1 = ddx; dy1 = ddy; } else if (dd2 < f2) f2 = dd2;
-  }
-  const d1 = Math.sqrt(f1), d2 = Math.sqrt(f2);
-  if (d2 - d1 < 1.2) return VSTONE.gap; // celah antarbatu bulat
-  const val = dy1 * .9 + dx1 * .35;
-  return val < -2.4 ? VSTONE.hi : val > 2.6 ? VSTONE.lo : VSTONE.mid;
-}
-
 function verdantBank(M, d, X, Y, north) {
-  const n = vnoise(X, Y, 46, 61), rw = n < .28 ? 0 : (north ? 3.5 : 2) + (n - .28) * (north ? 12 : 9) + (hash(X >> 2, Y >> 2, 63) - .5) * 1.6;
-  if (rw <= 0) {
-    if (d < 1.2) return VSTONE.foam;
-    if (d < 3.5) { const c = verdantPix(M, X, Y); return c && c.map((v, k) => Math.min(255, v * (k === 1 ? 1.14 : 1.05))); }
-    return null;
+  if (d < 1.1) return VBANK.foam;
+  const n = vnoise(X, Y, 32, 51), w = (north ? 3.5 : 2.0) + n * 4.0;
+  if (d < w) {
+    const p = hash(X >> 2, Y >> 2, 73);
+    return p > 0.6 ? VBANK.pebble : p > 0.25 ? VBANK.sand2 : VBANK.sand;
   }
-  if (d < 1.2) return VSTONE.foam; // garis buih putih di pertemuan batu dan air
-  if (d < rw - 1) return vCobble(X, Y);
-  if (d < rw) return VSTONE.gap;
-  if (d < rw + 2.6) { const c = verdantPix(M, X, Y); return c && c.map((v, k) => Math.min(255, v * (k === 1 ? 1.15 : 1.06))); }
   return null;
 }
 

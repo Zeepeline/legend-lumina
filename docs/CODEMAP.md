@@ -95,9 +95,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 219 · obj `tree_redwood` 226 · obj `goblin_torch` 229 · obj `goblin_cauldron` 232 · obj `cryst` 241 · obj `lamp` 244 · obj `viewpoint` 252 · obj `lumina_shard` 286 · obj `scenicbench` 308 · obj `mailbox` 326 · obj `gatehouse` 336 · obj `ctower` 344 · obj `city_bridge` 347 · obj `gpt_city_banner` 350 · obj `gpt_city_banner_sm` 354 · obj `gpt_city_board` 358
 
-## src/world/ground.js (398 baris)
+## src/world/ground.js (400 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 112 · `blockRects()` 273 · `scatter()` 289 · `openSides()` 347 · `borderTrees()` 360 · `ringObjects()` 377 · `mapObjects()` 382 · `mapWalls()` 386
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 112 · `blockRects()` 275 · `scatter()` 291 · `openSides()` 349 · `borderTrees()` 362 · `ringObjects()` 379 · `mapObjects()` 384 · `mapWalls()` 388
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
@@ -111,7 +111,7 @@ _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
-## src/world/maps/meadow.js (96 baris)
+## src/world/maps/meadow.js (92 baris)
 _Peta: Padang Angin_
 
 
@@ -191,9 +191,9 @@ _Panggang bayangan objek ke tekstur tanah_
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 34 · `loadImgs()` 53 · `addStrip()` 67 · `darkTree()` 72 · `NPC_W` 74 · `regPortrait()` 75 · `regChar()` 80 · `buildTextures()` 97
 
-## src/world/ground_verdant.js (337 baris)
+## src/world/ground_verdant.js (314 baris)
 _Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024)._
-`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `MEADOW_FLOWERS` 12 · `V_TILES` 17 · `CLUTTER_PADANG` 23 · `CLUTTER_FOREST` 29 · `CLUTTER_DEEPWOOD` 36 · `ISLANDS_PADANG` 43 · `ISLANDS_FOREST` 44 · `ISLANDS_DEEPWOOD` 45 · `WATER_DECO_PADANG` 46 · `WATER_DECO_FOREST` 47 · `VT_MAP` 58 · `verdantTiles()` 59 · `vModW` 76 · `vDirtN` 78 · `vDirtT` 79 · `verdantPix()` 82 · `verdantDeco()` 97 · `VBASE` 181 · `verdantBase()` 182 · `VWC` 200 · `verdantWater()` 204 · `VSTONE` 219 · `vCobble()` 223 · `verdantBank()` 237 · `regVerdantTex()` 251 · `verdantReflect()` 260 · `verdantScallop()` 289 · `verdantEdgePix()` 304 · `bridgeWoodPix()` 317
+`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `MEADOW_FLOWERS` 12 · `V_TILES` 17 · `CLUTTER_PADANG` 23 · `CLUTTER_FOREST` 29 · `CLUTTER_DEEPWOOD` 36 · `ISLANDS_PADANG` 43 · `ISLANDS_FOREST` 44 · `ISLANDS_DEEPWOOD` 45 · `WATER_DECO_PADANG` 46 · `WATER_DECO_FOREST` 47 · `VT_MAP` 58 · `verdantTiles()` 59 · `vModW` 76 · `vDirtN` 78 · `vDirtT` 79 · `verdantPix()` 82 · `verdantDeco()` 97 · `VBASE` 181 · `verdantBase()` 182 · `VWC` 200 · `verdantWater()` 204 · `VBANK` 215 · `verdantBank()` 218 · `regVerdantTex()` 228 · `verdantReflect()` 237 · `verdantScallop()` 266 · `verdantEdgePix()` 281 · `bridgeWoodPix()` 294
 
 ## src/world/interior_sheet.js (89 baris)
 _Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._

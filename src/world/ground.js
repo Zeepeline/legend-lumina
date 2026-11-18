@@ -254,17 +254,19 @@ function genGround(M, rect) {
       }
     }
   }
-  // teratai di kolam (ala referensi pemilik)
-  if (!GP.ice) for (const P of (M.ponds || [])) for (let n = 0; n < 7; n++) {
-    const a = hash(n, 1, 77) * 6.28, r = .3 + hash(n, 2, 77) * .5;
-    const X = P[0] + Math.cos(a) * P[2] * r, Y = P[1] + Math.sin(a) * P[3] * r;
-    if (waterE(ponds, X, Y, GX, GY) > .8) continue;
-    const pad = typeof IMGEL !== 'undefined' ? (n % 2 ? IMGEL.deco_water_lotus : IMGEL.deco_water_lilypad) : null;
-    if (pad && pad.width) {
-      x.drawImage(pad, X - pad.width / 4, Y - pad.height / 4, pad.width / 2, pad.height / 2);
-    } else {
-      ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5);
-      if (n % 2) { px(x, '#ffb4d8', X + 1, Y - 1); px(x, '#ffffff', X + 2, Y - 1); }
+  // teratai hanya di danau/kolam luas, bukan di alur sungai sempit mengalir
+  if (!GP.ice) for (const P of (M.ponds || [])) {
+    if ((P[2] || 0) < 65 || (P[3] || 0) < 50) continue;
+    for (let n = 0; n < 3; n++) {
+      const a = hash(n, 1, 77) * 6.28, r = .25 + hash(n, 2, 77) * .45;
+      const X = P[0] + Math.cos(a) * P[2] * r, Y = P[1] + Math.sin(a) * P[3] * r;
+      if (waterE(ponds, X, Y, GX, GY) > .75) continue;
+      const pad = typeof IMGEL !== 'undefined' ? (n % 2 ? IMGEL.deco_water_lotus : IMGEL.deco_water_lilypad) : null;
+      if (pad && pad.width) {
+        x.drawImage(pad, X - pad.width / 4, Y - pad.height / 4, pad.width / 2, pad.height / 2);
+      } else {
+        ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5);
+      }
     }
   }
   return c;

@@ -87,9 +87,5 @@ MAPS.meadow = {
       ['verdant_rock_med', .18], ['verdant_rock_large', .08], ['rock', .1]]
   },
   butterflies: 10,
-  // T444: Tebing sungai di sisi barat sungai bagian utara
-  cliffs: [
-    [670, 70, 670, 220, 'E'],
-    [650, 270, 650, 390, 'E'],
-  ],
+  cliffs: [],
 };
