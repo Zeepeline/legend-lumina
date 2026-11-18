@@ -5,11 +5,11 @@ const IMAP = {
   N: 40,
   plaza: [24, 24, 4.2],
   houses: [ // tapak ubin [tx, ty, w, d] + gaya
-    { t: [13, 25, 4, 3], roof: ['#c9a24e', '#a8843c', '#8a6a2e'], chimney: 1 },
-    { t: [27, 14, 4, 3], roof: ['#b0583c', '#8e4430', '#6e3426'] },
-    { t: [14, 18, 3, 3], roof: ['#c9a24e', '#a8843c', '#8a6a2e'], wallCol: '#d9c39a', wallColDk: '#b39a70' },
-    { t: [31, 23, 4, 3], roof: ['#b0583c', '#8e4430', '#6e3426'], chimney: 1 },
-    { t: [22, 32, 4, 3], roof: ['#9a7a4a', '#7d6038', '#62492a'], wallCol: '#cfb48a', wallColDk: '#a98e64', name: 'Rumah Arka' },
+    { t: [13, 25, 4, 3], variant: 'jerami', roof: ['#c9a24e', '#a8843c', '#8a6a2e'], chimney: 1 },
+    { t: [27, 14, 4, 3], variant: 'merah', flip: 1, roof: ['#b0583c', '#8e4430', '#6e3426'] },
+    { t: [14, 18, 3, 3], variant: 'batu', roof: ['#c9a24e', '#a8843c', '#8a6a2e'], wallCol: '#d9c39a', wallColDk: '#b39a70' },
+    { t: [31, 23, 4, 3], variant: 'kayu', flip: 1, roof: ['#b0583c', '#8e4430', '#6e3426'], chimney: 1 },
+    { t: [22, 32, 4, 3], variant: 'lumut', roof: ['#9a7a4a', '#7d6038', '#62492a'], wallCol: '#cfb48a', wallColDk: '#a98e64', name: 'Rumah Arka' },
   ],
   pond: [35, 18, 3.2],
   rot: [30.5, 31.5, 2.4], /* tanah rusak di sekitar kristal retak (sarang serigala) */

@@ -33,9 +33,11 @@ class IsoScene extends Phaser.Scene {
     this.houses = IMAP.houses.map((h, i) => {
       const [tx, ty, w, d] = h.t, x0 = tx * ISO.T, y0 = ty * ISO.T;
       let img;
-      if (this.textures.exists('iso_house_a') && (i === 0 || i === 4)) {
-        const cx = x0 + w * ISO.T * .5, cy = y0 + d * ISO.T * .5;
-        img = this.add.image(isoX(cx, cy), isoY(cx, cy), 'iso_house_a').setOrigin(.5, .92).setScale(.9);
+      if (this.textures.exists('iso_house_a')) { /* semua rumah dari gambar detail yang sama + varian atap → gaya seragam */
+        const vk = h.variant || ['merah', 'jerami', 'batu', 'kayu', 'lumut'][i % 5], key = 'iso_house_' + vk;
+        if (!this.textures.exists(key)) this.textures.addCanvas(key, houseVariant(this.textures.get('iso_house_a').getSourceImage(), HOUSE_VARIANTS[vk]));
+        const cx = x0 + w * ISO.T * .5, cy = y0 + d * ISO.T * .5, sc = .72 + (w + d) * .03;
+        img = this.add.image(isoX(cx, cy), isoY(cx, cy), key).setOrigin(.5, .92).setScale(sc).setFlipX(!!h.flip);
       } else {
         const art = houseCanvas(Object.assign({ w, d }, h)); this.textures.addCanvas('house' + i, art.c);
         img = this.add.image(isoX(x0, y0) - art.ox, isoY(x0, y0) - art.oy, 'house' + i).setOrigin(0);

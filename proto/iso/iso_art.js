@@ -116,3 +116,30 @@ function fxTextures(T) {
   add('fx_dust', 40, 20, x => { x.strokeStyle = 'rgba(240,226,192,.7)'; x.lineCap = 'round';
     for (let i = 0; i < 3; i++) { x.lineWidth = 4 - i; x.beginPath(); x.ellipse(20, 14, 16 - i * 2, 7 - i, 0, Math.PI * 1.1, Math.PI * 1.9); x.stroke(); } });
 }
+
+// Varian rumah dari SATU gambar pixel art (house_a) agar semua rumah sama detailnya: atap diwarnai ulang (hue/saturasi,
+// kecerahan tiap piksel dipertahankan → shading & detail tetap), plester sedikit digeser. Pintu & bunga dikecualikan.
+const HOUSE_VARIANTS = {
+  merah: null,
+  jerami: { roof: [44, .55, 1.08], wall: [38, .32] },
+  batu: { roof: [210, .16, .92], wall: [30, .18] },
+  kayu: { roof: [24, .45, .78], wall: [32, .4] },
+  lumut: { roof: [150, .32, .9], wall: [40, .25] }, /* sentuhan fantasi: atap genteng hijau-teal */
+};
+function rgb2hsv(r, g, b) { r /= 255; g /= 255; b /= 255; const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn;
+  let h = 0; if (d) h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return [(h * 60 + 360) % 360, mx ? d / mx : 0, mx]; }
+function hsv2rgb(h, s, v) { const c = v * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = v - c;
+  const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+  return [(r + m) * 255, (g + m) * 255, (b + m) * 255]; }
+function houseVariant(img, o) {
+  const c = mkCanvas(img.width, img.height), x = c.getContext('2d'); x.drawImage(img, 0, 0); if (!o) return c;
+  const d = x.getImageData(0, 0, c.width, c.height), D = d.data, W = c.width, H = c.height;
+  for (let i = 0; i < D.length; i += 4) {
+    if (!D[i + 3]) continue; const px = (i / 4) % W, py = Math.floor(i / 4 / W), [h, s, v] = rgb2hsv(D[i], D[i + 1], D[i + 2]);
+    const keep = py > H * .47 && px < W * .55; // pintu, jendela & kotak bunga
+    if (!keep && (h < 32 || h > 345) && s > .42 && v > .25 && py < H * .72) { const [r, g, b] = hsv2rgb(o.roof[0], Math.min(1, s * o.roof[1] * 1.6), Math.min(1, v * o.roof[2]));
+      D[i] = r; D[i + 1] = g; D[i + 2] = b; continue; }
+    if (o.wall && h > 25 && h < 50 && s < .45 && s > .12 && v > .7) { const [r, g, b] = hsv2rgb(o.wall[0], s * (o.wall[1] / .3), v); D[i] = r; D[i + 1] = g; D[i + 2] = b; }
+  }
+  x.putImageData(d, 0, 0); return c;
+}
