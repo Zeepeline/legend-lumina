@@ -12,6 +12,8 @@ class IsoScene extends Phaser.Scene {
     for (const k of IMG) this.load.image(k, 'assets/img/' + k + '.png');
     this.load.spritesheet('hero', 'assets/img/hero_arka.png', { frameWidth: 48, frameHeight: 40 });
     this.load.spritesheet('hero_iso_idle', 'assets/img/iso/hero_idle_iso.png', { frameWidth: 48, frameHeight: 44 });
+    for (const k of ['gnd_grass', 'gnd_grass_light', 'gnd_grass_dark', 'gnd_dirt']) this.load.image(k, 'assets/img/' + k + '.png');
+    this.load.image('gnd_city_cobble', 'assets/img/ground/gnd_city_cobble.png');
     this.load.image('iso_house_a', 'assets/img/iso/house_a.png');
     this.load.image('cliff_stairs', 'assets/img/iso/cliff_stairs.png');
     this.load.spritesheet('wolf_hd', 'assets/img/mon_wolf_hd.png', { frameWidth: 128, frameHeight: 96 });
@@ -21,7 +23,9 @@ class IsoScene extends Phaser.Scene {
     wa('w_idle', 0, 6, 8, -1); wa('w_run', 14, 20, 13, -1); wa('w_pounce', 28, 32, 14, 0); wa('w_hurt', 35, 39, 14, 0); wa('w_die', 42, 45, 8, 0); wa('w_howl', 49, 54, 12, 0);
     fxTextures(this.textures);
     // tanah
-    const G = bakeGround(); this.ter = G.ter; this.textures.addCanvas('iso_ground', G.c);
+    const TM = new URLSearchParams(location.search).get('tanah'), src = k => this.textures.get(k).getSourceImage();
+    const G = TM === 'asli' ? bakeGroundTex({ grass: src('gnd_grass'), light: src('gnd_grass_light'), dark: src('gnd_grass_dark'), dirt: src('gnd_dirt'),
+      cobble: src('gnd_city_cobble') }) : bakeGround(); this.ter = G.ter; this.textures.addCanvas('iso_ground', G.c);
     this.add.image(-G.ox, -G.oy, 'iso_ground').setOrigin(0).setDepth(-1e5);
     this.waterFx(G);
     // rumah

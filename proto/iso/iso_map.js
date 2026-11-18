@@ -119,3 +119,65 @@ function isoProps() {
   }
   return P;
 }
+
+// ── Mode tekstur asli (?tanah=asli): tekstur tanah & jalan game top-down (gnd_grass/_light/_dark, gnd_dirt, gnd_city_cobble)
+// diproyeksikan ke isometrik per piksel. Jalan dihitung per titik (bukan per ubin) → tepi berliku alami seperti game awal.
+function texData(img) { const c = mkCanvas(img.width, img.height), x = c.getContext('2d'); x.drawImage(img, 0, 0); return { w: img.width, h: img.height, d: x.getImageData(0, 0, img.width, img.height).data }; }
+function vnoise(x, y, s, seed) { // noise nilai halus
+  const gx = x / s, gy = y / s, ix = Math.floor(gx), iy = Math.floor(gy), fx = gx - ix, fy = gy - iy, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy);
+  const a = hash2(ix, iy, seed), b = hash2(ix + 1, iy, seed), c = hash2(ix, iy + 1, seed), d = hash2(ix + 1, iy + 1, seed);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+function terrainPt(wx, wy) { // jenis tanah di titik dunia (px)
+  const cx = wx / ISO.T, cy = wy / ISO.T, P = IMAP.plaza, wob = (vnoise(wx, wy, 10, 3) - .5) * .9;
+  if (Math.hypot(cx - IMAP.pond[0], cy - IMAP.pond[1]) < IMAP.pond[2] + wob * .6) return 'water';
+  if (IMAP.rot && Math.hypot(cx - IMAP.rot[0], cy - IMAP.rot[1]) < IMAP.rot[2] + wob) return 'rot';
+  for (const [fx, fy, fw, fh] of IMAP.farms) if (cx >= fx && cx < fx + fw && cy >= fy && cy < fy + fh) return 'farm';
+  if (Math.hypot(cx - P[0], cy - P[1]) < P[2] + wob * .35) return 'stone';
+  const R = IMAP.ramp, s = cx + cy, d = cx - cy; if (d >= R.d0 && d <= R.d1 && s >= R.s0 - .3 && s <= R.s1 + .2) return 'stone';
+  for (const [ax, ay, bx, by, w] of IMAP.paths) if (segDist(cx, cy, ax, ay, bx, by) < w * .5 + wob * .45 + .2) return 'dirt';
+  return 'grass';
+}
+function bakeGroundTex(src) {
+  const N = IMAP.N, T = ISO.T, ox = N * T + 24, oy = ISO.ZH + 24, W = N * 2 * T + 48, H = N * T + ISO.ZH + 64;
+  const c = mkCanvas(W, H), x = c.getContext('2d'), out = x.createImageData(W, H), O = out.data;
+  const S = {}; for (const k in src) S[k] = texData(src[k]);
+  const smp = (t, wx, wy) => { const px = ((Math.floor(wx) % t.w) + t.w) % t.w, py = ((Math.floor(wy) % t.h) + t.h) % t.h, i = (py * t.w + px) * 4; return [t.d[i], t.d[i + 1], t.d[i + 2]]; };
+  const fallback = {}; // jenis tanpa tekstur asli → ubin prosedural
+  const ter = [], zt = [];
+  for (let ty = 0; ty < N; ty++) { ter[ty] = []; zt[ty] = []; for (let tx = 0; tx < N; tx++) { ter[ty][tx] = terrainAt(tx, ty); zt[ty][tx] = zAt((tx + .5) * T, (ty + .5) * T); } }
+  const order = []; for (let ty = 0; ty < N; ty++) for (let tx = 0; tx < N; tx++) order.push([tx, ty]);
+  order.sort((a, b) => (zt[a[1]][a[0]] - zt[b[1]][b[0]]) || (a[0] + a[1] - b[0] - b[1]));
+  const put = (px, py, r, g, b) => { if (px < 0 || py < 0 || px >= W || py >= H) return; const i = (py * W + px) * 4; O[i] = r; O[i + 1] = g; O[i + 2] = b; O[i + 3] = 255; };
+  const colAt = (wx, wy) => {
+    const k = terrainPt(wx, wy);
+    if (k === 'grass') { const n = vnoise(wx, wy, 70, 11) + (hash2(wx | 0, wy | 0, 5) - .5) * .12; return smp(n < .36 ? S.dark : n > .66 ? S.light : S.grass, wx, wy); }
+    if (k === 'dirt') return smp(S.dirt, wx, wy);
+    if (k === 'stone') return smp(S.cobble, wx * .75, wy * .75);
+    const tx = Math.floor(wx / T), ty = Math.floor(wy / T), v = Math.floor(hash2(tx, ty, 1) * 4), key = k + v;
+    const t = fallback[key] || (fallback[key] = tileCanvas(k, v).getContext('2d').getImageData(0, 0, 32, 16).data);
+    const lx = clampN(Math.floor(wx - tx * T - (wy - ty * T) + 16), 0, 31), ly = clampN(Math.floor((wx - tx * T + wy - ty * T) / 2), 0, 15), i = (ly * 32 + lx) * 4;
+    return [t[i], t[i + 1], t[i + 2]];
+  };
+  for (const [tx, ty] of order) {
+    const z = zt[ty][tx], bx = ox + (tx - ty) * T - T, by = oy + (tx + ty) * T / 2 - z * ISO.ZH;
+    // muka tebing
+    const zl = ty + 1 < N ? zt[ty + 1][tx] : 0, zr = tx + 1 < N ? zt[ty][tx + 1] : 0;
+    for (const [dz, left] of [[z - zl, true], [z - zr, false]]) {
+      const h = Math.round(dz * ISO.ZH); if (h < 2) continue;
+      for (let i = 0; i < 16; i++) for (let j = 0; j < h; j++) {
+        const px = left ? bx + i : bx + 16 + i, py = Math.floor((left ? by + 8 + i / 2 : by + 16 - i / 2) + j), n = hash2(tx * 16 + i, ty * 16 + j, left ? 1 : 2);
+        const pal = left ? PAL.cliffL : PAL.cliffR, cc = hexRGB(j < 2 ? '#2f5a1a' : j > h - 3 || n < .06 ? PAL.cliffRoot : pal[Math.floor(n * 3)]); put(px, py, ...cc);
+      }
+    }
+    for (let py = 0; py < 16; py++) for (let px = 0; px < 32; px++) {
+      if (!inDia(px, py)) continue; const sx = px - 16 + .5, sy = py + .5, wx = tx * T + sy + sx / 2, wy = ty * T + sy - sx / 2;
+      let [r, g, b] = colAt(wx, wy);
+      // tepi rumput: garis gelap tipis di sisi rumput yang berbatasan dengan jalan/batu
+      if (terrainPt(wx, wy) === 'grass') { const k2 = terrainPt(wx + 2, wy + 2); if (k2 === 'dirt' || k2 === 'stone') { r *= .7; g *= .72; b *= .7; } }
+      put(bx + px, by + py, r | 0, g | 0, b | 0);
+    }
+  }
+  x.putImageData(out, 0, 0);
+  return { c, ox, oy, ter, zt };
+}
