@@ -125,7 +125,7 @@ const IsoWind = typeof Phaser !== 'undefined' && Phaser.Renderer.WebGL ? class e
   onPreRender() { /* sekali per frame; satu pipeline untuk semua objek → tanpa ganti-ganti jalur gambar */
     const sc = window.__iso, cam = sc && sc.cameras && sc.cameras.main;
     this.set1f('uTime', this.game.loop.time / 1000);
-    if (cam) { this.set2f('uCam', cam.worldView.x, cam.worldView.y); this.set1f('uZoom', cam.zoom); }
+    if (cam) { const z = cam.zoom; this.set2f('uCam', cam.scrollX + cam.width * (1 - 1 / z) / 2, cam.scrollY + cam.height * (1 - 1 / z) / 2); this.set1f('uZoom', z); } /* dari scroll frame ini (worldView bisa telat 1 frame) */
   }
 } : null;
 const ISO_SWAY = /tree|apple|bush|willow|pine|reeds|deco_tuft/i;

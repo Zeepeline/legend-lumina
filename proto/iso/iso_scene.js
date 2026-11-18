@@ -186,11 +186,15 @@ class IsoScene extends Phaser.Scene {
     else if (k === 'lunge') noise(.18, 700, 2400, .3, 1.2);
   }
   update(_, dms) {
-    const dt = Math.min(.05, dms / 1000); IN.poll(dt);
-    if (this.hs > 0) { this.hs -= dt; this.anims.pauseAll(); this.render(true); return; }
-    this.anims.resumeAll();
-    this.hero.update(dt); for (const w of this.wolves) w.update(dt);
-    this.render(false);
+    /* HP lambat: waktu nyata dipecah jadi langkah ≤ 1/30 dtk → kecepatan tetap sama walau fps turun (bukan gerak lambat) */
+    const total = Math.min(.2, (this.game.loop.rawDelta || dms) / 1000), /* waktu nyata: delta Phaser dihaluskan/dipatok 16,7 ms → gerak lambat di HP */ n = Math.max(1, Math.ceil(total / .034)), dt = total / n;
+    for (let i = 0; i < n; i++) {
+      IN.poll(dt);
+      if (this.hs > 0) { this.hs -= dt; this.anims.pauseAll(); continue; }
+      this.anims.resumeAll();
+      this.hero.update(dt); for (const w of this.wolves) w.update(dt);
+    }
+    this.render(this.hs > 0);
   }
   render(frozen) {
     const H = this.hero;
@@ -222,6 +226,6 @@ function isoUseWorld() { const q = new URLSearchParams(location.search); return 
 window.addEventListener('load', () => {
   const W = isoUseWorld() && typeof IsoWind === 'function'; /* dunia: semua objek satu pipeline angin (tanpa ganti jalur gambar) */
   new Phaser.Game({ type: Phaser.AUTO, parent: 'game', pixelArt: true, backgroundColor: '#2a3a1c', scene: [isoUseWorld() ? IsoWorld : IsoScene],
-    render: W ? { pipeline: { IsoWind }, defaultPipeline: 'IsoWind', autoMobilePipeline: false } : {},
+    render: W ? { pipeline: { IsoWind }, defaultPipeline: 'IsoWind', autoMobilePipeline: false } : {}, fps: { smoothStep: false },
     scale: { mode: Phaser.Scale.RESIZE, width: window.innerWidth, height: window.innerHeight }, input: { activePointers: 3 } });
 });

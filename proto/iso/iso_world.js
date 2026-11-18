@@ -353,7 +353,7 @@ class IsoWorld extends IsoScene {
       this.time.delayedCall(220, () => { /* lompat: tunggu wilayah tujuan termuat lalu cari titik lapang */
         Object.assign(this.hero, { x: r.ox + r.w / 2, y: r.oy + r.h / 2 }); this.stream();
         const go = () => { if (r.st !== 'ready') return this.time.delayedCall(150, go); const [x, y] = this.findSpawn(r); Object.assign(this.hero, { x, y }); this.spawn = [x, y];
-          const c = this.cameras.main; c.scrollX = isoX(x, y) - c.width / 2; c.scrollY = isoY(x, y) - 14 - c.height / 2; c.fadeIn(300); };
+          const c = this.cameras.main; c.scrollX = isoX(x, y) - c.width / 2; c.scrollY = isoY(x, y) - 14 - c.height / 2; this._cx = undefined; c.fadeIn(300); };
         go();
       });
     };
@@ -393,7 +393,10 @@ class IsoWorld extends IsoScene {
     }
     this.hpBar.width = 100 * H.hp / H.max;
     const cam = this.cameras.main, tx = hs - cam.width / 2, ty = isoY(H.x, H.y, H.z) - 14 - cam.height / 2;
-    cam.scrollX += (tx - cam.scrollX) * .14; cam.scrollY += (ty - cam.scrollY) * .14;
+    /* kamera mulus (nilai pecahan disimpan sendiri) tapi digeser per piksel layar utuh → semua objek bergeser bersama, tidak bergetar */
+    if (this._cx === undefined) { this._cx = cam.scrollX; this._cy = cam.scrollY; }
+    const k = 1 - Math.pow(1 - .14, Math.min(4, (this.game.loop.rawDelta || 16.7) / 16.7)); this._cx += (tx - this._cx) * k; this._cy += (ty - this._cy) * k;
+    const z = cam.zoom; cam.scrollX = Math.round(this._cx * z) / z; cam.scrollY = Math.round(this._cy * z) / z;
     this.motes.setPosition(hs, isoY(H.x, H.y));
     if (this.rainSplash) this.rainSplash.setPosition(cam.scrollX + cam.width / 2, cam.scrollY + cam.height / 2);
   }
