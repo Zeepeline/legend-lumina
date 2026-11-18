@@ -11,6 +11,7 @@ class IsoScene extends Phaser.Scene {
   preload() {
     for (const k of IMG) this.load.image(k, 'assets/img/' + k + '.png');
     this.load.spritesheet('hero', 'assets/img/hero_arka.png', { frameWidth: 48, frameHeight: 40 });
+    this.load.spritesheet('hero_iso_idle', 'assets/img/iso/hero_idle_iso.png', { frameWidth: 48, frameHeight: 44 });
     this.load.spritesheet('wolf_hd', 'assets/img/mon_wolf_hd.png', { frameWidth: 128, frameHeight: 96 });
   }
   create() {
@@ -45,7 +46,7 @@ class IsoScene extends Phaser.Scene {
     // kamera, rona warna, efek
     const cam = this.cameras.main; cam.setRoundPixels(true); this.fit();
     this.scale.on('resize', () => this.fit());
-    if (this.game.renderer.type === Phaser.WEBGL && cam.postFX) { cam.postFX.addColorMatrix().set(GRADE); cam.postFX.addVignette(.5, .5, .9, .2); }
+    if (this.game.renderer.type === Phaser.WEBGL && cam.postFX) { cam.postFX.addVignette(.5, .5, .95, .12); }
     this.pe = this.add.particles(0, 0, 'fx_sq', { emitting: false, lifespan: { min: 200, max: 480 }, speed: { min: 60, max: 190 }, gravityY: 260,
       scale: { start: 1.5, end: .4 }, tint: { onEmit: () => this._tint }, angle: { onEmit: () => this._ang + rndR(-this._spr, this._spr) } }).setDepth(9e5);
     this.motes = this.add.particles(0, 0, 'fx_dot', { lifespan: 4200, frequency: 260, speedY: { min: -6, max: -2 }, speedX: { min: -4, max: 6 },

@@ -11,6 +11,12 @@ const COMBO = [ // per pukulan: durasi kunci, frame benturan, langkah maju, dama
   { t: .46, hit: .2, step: 120, dmg: 18, hs: .13, kb: 260, row: 'atk3_' },
 ];
 function dirOf(sx, sy) { return Math.abs(sx) > Math.abs(sy) * .8 ? 'side' : sy < 0 ? 'up' : 'down'; }
+function isoDirOf(sx, sy) {
+  const ax = Math.abs(sx), ay = Math.abs(sy);
+  if (ay > 0 && ax < ay * .45) return { row: sy < 0 ? 4 : 0, flip: false };
+  if (ax > 0 && ay < ax * .45) return { row: 2, flip: sx < 0 };
+  return { row: sy < 0 ? 3 : 1, flip: sx < 0 };
+}
 
 // gerak dengan tabrakan: batas peta, air, tebing (lompatan tinggi), rumah (persegi), objek (lingkaran)
 function isoMove(sc, a, vx, vy, dt) {
@@ -35,11 +41,22 @@ class IsoHero {
   constructor(sc, x, y) {
     Object.assign(this, { sc, x, y, z: 0, hp: 100, max: 100, st: 'move', t: 0, combo: 0, comboWin: 0, fsx: 0, fsy: 1, kbx: 0, kby: 0, inv: 0, rad: 5 });
     this.sh = sc.add.image(0, 0, 'fx_shadow').setScale(.7);
-    this.spr = sc.add.sprite(0, 0, 'hero', 0).setOrigin(.5, .92);
+    const key = sc.textures.exists('hero_iso_idle') ? 'hero_iso_idle' : 'hero';
+    this.spr = sc.add.sprite(0, 0, key, 0).setOrigin(.5, .92);
   }
   face(sx, sy) { if (sx || sy) { const n = Math.hypot(sx, sy); this.fsx = sx / n; this.fsy = sy / n; } }
-  frame(row, f) { const d = dirOf(this.fsx, this.fsy), key = HERO_ROWS[row + (row.endsWith('_') ? d : '')] ?? HERO_ROWS[row];
-    this.spr.setFrame(key * 4 + Math.min(3, f)); this.spr.flipX = d === 'side' && this.fsx < 0; }
+  frame(row, f) {
+    if (row === 'idle_' && this.sc.textures.exists('hero_iso_idle')) {
+      if (this.spr.texture.key !== 'hero_iso_idle') this.spr.setTexture('hero_iso_idle');
+      const d = isoDirOf(this.fsx, this.fsy);
+      this.spr.setFrame(d.row * 4 + (Math.min(3, f) || 0));
+      this.spr.flipX = d.flip;
+      return;
+    }
+    if (this.spr.texture.key !== 'hero') this.spr.setTexture('hero');
+    const d = dirOf(this.fsx, this.fsy), key = HERO_ROWS[row + (row.endsWith('_') ? d : '')] ?? HERO_ROWS[row];
+    this.spr.setFrame(key * 4 + Math.min(3, f)); this.spr.flipX = d === 'side' && this.fsx < 0;
+  }
   update(dt) {
     const sc = this.sc; this.t += dt; this.inv -= dt; this.comboWin -= dt;
     if (this.st === 'dead') { this.frame('die', Math.floor(this.t * 5)); return; }
