@@ -7,6 +7,8 @@ const ISO_DIR = 'proto/iso/maps/';
 const ISO_FLAT = /puddle|decal|crack|leafpile|petal/; // tempelan tanah: dipanggang ke lantai lalu ikut diproyeksikan
 const ISO_SKIP = /shadow|cr_cloud/; // bayangan top-down & awan: dibuang (bayangan iso dibuat sendiri)
 const ISO_TILE = 2048; // potongan tekstur lantai (batas aman GPU HP 4096)
+const ISO_CAMZ = .62; // kamera ditarik jauh seperti pratinjau desa prototipe yang disetujui pemilik
+const ISO_NOLUSH = /^(cave|snow|swamp)$/; // wilayah dengan tanah khas: rumput tidak diganti
 
 class IsoWorld extends IsoScene {
   init() {
@@ -17,6 +19,7 @@ class IsoWorld extends IsoScene {
   }
   preload() {
     this.load.json('isoIndex', ISO_DIR + 'index.json');
+    this.load.image('treeA', 'assets/img/treeA.png');
     this.load.json('peta', ISO_DIR + this.pid + '.json');
     this.load.image('gsrc', ISO_DIR + this.pid + '_ground.webp');
     this.load.spritesheet('hero', 'assets/img/hero_arka.png', { frameWidth: 48, frameHeight: 40 });
@@ -53,6 +56,7 @@ class IsoWorld extends IsoScene {
       if (tall && !up) this.add.image(img.x + 4, img.y - 1, 'fx_shadow').setScale(Math.min(4, img.displayWidth / 24), Math.min(2.4, img.displayWidth / 40)).setDepth(-5e4).setAlpha(.7);
       this.props.push({ img, d: x + y, tall, al, b: tall ? img.getBounds() : null });
     }
+    this.forestRing(); this.cameras.main.setBackgroundColor(ISO_NOLUSH.test(this.pid) ? '#14110c' : '#22381a');
     this.makeExits(D.exits);
     // aktor
     const [hx, hy] = this.spawnQ || this.findSpawn(); this.spawn = [hx, hy];
@@ -87,13 +91,42 @@ class IsoWorld extends IsoScene {
     for (let ty = 0; ty < PH; ty += ISO_TILE) for (let tx = 0; tx < PW; tx += ISO_TILE) {
       const cw = Math.min(ISO_TILE, PW - tx), ch = Math.min(ISO_TILE, PH - ty), cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
       const g = cv.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
-      g.setTransform(1, .5, -1, .5, H - tx, -ty); g.drawImage(base, 0, 0);
+      g.setTransform(1, .5, -1, .5, H - tx, -ty); g.drawImage(base, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
+      if (!ISO_NOLUSH.test(this.pid)) this.lushGrass(g, cw, ch, tx - H, ty);
       const key = 'iso_floor_' + tx + '_' + ty; if (this.textures.exists(key)) this.textures.remove(key);
       this.textures.addCanvas(key, cv); this.add.image(-H + tx, ty, key).setOrigin(0).setDepth(-1e5);
     }
     // tepi peta: bayangan lembut agar ujung belah ketupat tidak terpotong tajam
     const e = this.add.graphics().setDepth(-9.9e4); e.lineStyle(10, 0x0c0a06, .35);
     e.strokePoints([[0, 0], [W, 0], [W, H], [0, H]].map(([x, y]) => ({ x: isoX(x, y), y: isoY(x, y) })), true);
+  }
+  // rumput asli → bintik rumput prototipe (PAL.grass, helai gelap/terang), bayangan & tepi asli tetap lewat faktor terang
+  lushGrass(g, w, h, ox, oy) {
+    const im = g.getImageData(0, 0, w, h), d = im.data, P = PAL.grass.map(hexRGB), dk = hexRGB(PAL.grassDk), lt = P[3];
+    for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
+      const i = (py * w + px) * 4; if (d[i + 3] < 8) continue;
+      const r = d[i], gg = d[i + 1], b = d[i + 2]; if (!(gg > r + 16 && gg > b + 16)) continue;
+      const X = px + ox, Y = py + oy, n = hash2(X, Y, 5);
+      let c = n < .62 ? P[0] : n < .8 ? P[1] : n < .9 ? P[2] : n < .97 ? P[3] : P[4];
+      if (hash2(X >> 1, Y, 9) < .012) c = dk; else if (hash2(X >> 1, Y + 1, 9) < .012) c = lt; /* helai rumput */
+      const f = Math.min(1.12, Math.max(.55, (r + gg + b) / 380)) * (.82 + vnoise(X, Y * 2, 120, 3) * .2);
+      d[i] = c[0] * f; d[i + 1] = c[1] * f; d[i + 2] = c[2] * f;
+    }
+    g.putImageData(im, 0, 0);
+  }
+  // sabuk hutan lebat di luar batas peta (hiasan tanpa tabrakan, seperti prototipe)
+  forestRing() {
+    const T = 16, R = 12, W = Math.ceil(this.MW / T), H = Math.ceil(this.MH / T), key = 'treeA';
+    if (!this.textures.exists(key) || ISO_NOLUSH.test(this.pid)) return;
+    for (let k = 1; k <= R; k++) for (let t = -R; t < Math.max(W, H) + R; t++) {
+      for (const [tx, ty] of [[t, -k], [-k, t], [t, H - 1 + k], [W - 1 + k, t]]) {
+        if (tx < -R || ty < -R || tx > W + R || ty > H + R || hash2(tx + 99, ty + 99, k) > .5) continue;
+        const x = (tx + hash2(tx, ty, 51)) * T, y = (ty + hash2(tx, ty, 52)) * T;
+        const sx = Math.round(isoX(x, y)), sy = Math.round(isoY(x, y)), sc = .85 + hash2(tx, ty, 53) * .4;
+        this.add.image(sx + 3, sy, 'fx_shadow').setScale(2.2 * sc, 1.3 * sc).setDepth(-5e4).setAlpha(.6);
+        this.add.image(sx, sy, key).setOrigin(.5, 1).setScale(sc).setDepth(x + y);
+      }
+    }
   }
   // ── tembok: persegi kartesius asli, dicari lewat kisi 64 px ──
   buildWalls(walls) {
@@ -122,7 +155,7 @@ class IsoWorld extends IsoScene {
       const cx = e.x + e.w / 2, cy = e.y + e.h / 2, ok = !!this.IDX[e.to];
       const g = this.add.graphics().setDepth(-4.8e4); g.fillStyle(ok ? 0xfff0b0 : 0x9a9080, .22);
       g.fillPoints([[e.x, e.y], [e.x + e.w, e.y], [e.x + e.w, e.y + e.h], [e.x, e.y + e.h]].map(([x, y]) => ({ x: isoX(x, y), y: isoY(x, y) })), true);
-      this.add.text(isoX(cx, cy), isoY(cx, cy) - 16, '➜ ' + (e.label || (this.IDX[e.to] || {}).name || e.to), { fontFamily: 'monospace', fontSize: '8px',
+      this.add.text(isoX(cx, cy), isoY(cx, cy) - 16, '➜ ' + (e.label || (this.IDX[e.to] || {}).name || e.to), { fontFamily: 'monospace', fontSize: '13px',
         color: ok ? '#fff2c0' : '#b8b0a0', stroke: '#1a140a', strokeThickness: 3 }).setOrigin(.5).setDepth(8e5);
     }
   }
@@ -150,6 +183,7 @@ class IsoWorld extends IsoScene {
     s.onchange = () => { location.search = '?peta=' + s.value; };
     document.body.appendChild(s);
   }
+  fit() { const h = this.scale.height; this.cameras.main.setZoom(Math.max(1, h / ISO.VH) * ISO_CAMZ); }
   spawnWave() { }
   killWolf(w) {
     this.hitStop(.12); this.shake(160, .006); w.spr.setTintFill(0xffffff); /* mati: putih lalu memudar */
