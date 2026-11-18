@@ -108,7 +108,8 @@ const ISO_WIND_VS = [
   'varying vec2 outTexCoord;', 'varying float outTexId;', 'varying float outTintEffect;', 'varying vec4 outTint;',
   'void main () {',
   '  vec2 p = inPosition;',
-  '  float top = 1.0 - inTexCoord.y; top = top * top;',
+  '  float flag = step(0.99, inTint.g) * step(inTint.g, 0.9985);',
+  '  float top = 1.0 - inTexCoord.y; top = top * top * flag;',
   '  vec2 w = p / uZoom + uCam;',
   '  float ph = w.x * 0.013 + w.y * 0.021;',
   '  float gust = 0.55 + 0.45 * sin(uTime * 0.33 + w.x * 0.0021 - w.y * 0.0013);',
@@ -121,18 +122,14 @@ const ISO_WIND_VS = [
   '}'].join('\n');
 const IsoWind = typeof Phaser !== 'undefined' && Phaser.Renderer.WebGL ? class extends Phaser.Renderer.WebGL.Pipelines.MultiPipeline {
   constructor(game) { super({ game, name: 'IsoWind', vertShader: ISO_WIND_VS }); }
-  onBind() {
-    const sc = window.__iso, cam = sc && sc.cameras.main;
+  onPreRender() { /* sekali per frame; satu pipeline untuk semua objek → tanpa ganti-ganti jalur gambar */
+    const sc = window.__iso, cam = sc && sc.cameras && sc.cameras.main;
     this.set1f('uTime', this.game.loop.time / 1000);
-    if (cam) { this.set2f('uCam', cam.scrollX + cam.width / 2 - cam.width / (2 * cam.zoom), cam.scrollY + cam.height / 2 - cam.height / (2 * cam.zoom)); this.set1f('uZoom', cam.zoom); }
+    if (cam) { this.set2f('uCam', cam.worldView.x, cam.worldView.y); this.set1f('uZoom', cam.zoom); }
   }
 } : null;
 const ISO_SWAY = /tree|apple|bush|willow|pine|reeds|deco_tuft/i;
 Object.assign(IsoWorld.prototype, {
-  windOn() { // dipanggil di create: daftarkan pipeline sekali
-    const R = this.game.renderer; if (!IsoWind || R.type !== Phaser.WEBGL) return;
-    if (!R.pipelines.has('IsoWind')) R.pipelines.add('IsoWind', new IsoWind(this.game));
-    this.wind = true;
-  },
-  sway(img) { if (this.wind && img && img.texture && ISO_SWAY.test(img.texture.key)) img.setPipeline('IsoWind'); return img; },
+  windOn() { this.wind = !!IsoWind && this.game.renderer.type === Phaser.WEBGL && this.game.renderer.pipelines.has('IsoWind'); },
+  sway(img) { if (this.wind && img && img.texture && ISO_SWAY.test(img.texture.key) && !img.isTinted) img.setTint(0xfefefe); return img; }, /* tanda goyang untuk shader */
 });

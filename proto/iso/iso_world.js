@@ -15,7 +15,7 @@ const ISO_PROTO = 'village', ISO_PXO = 192, ISO_PYO = 36; // Desa Lumina = denah
 const PROTO_ZAT = zAt;
 // pemilik: desa cukup 6 bangunan (5 rumah inti + kincir); bangunan tambahan lain tidak dipasang
 const ISO_KEEP = ['gpt_v_inn_2story', 'gpt_v_blacksmith_forge', 'gpt_v_house_red_cottage', 'gpt_v_house_red_shop', 'gpt_v_house_brown_cottage', 'gpt_v_windmill']; // tinggi tanah prototipe (dataran tinggi + tangga), dipakai di dalam kotak desa
-const ISO_LOAD = 700, ISO_DROP = 1500; // jarak muat / buang wilayah dari Arka (px dunia)
+const ISO_LOAD = 520, ISO_DROP = 1150; // jarak muat / buang wilayah dari Arka (px dunia)
 
 class IsoWorld extends IsoScene {
   init() {
@@ -62,7 +62,8 @@ class IsoWorld extends IsoScene {
     // kamera & efek (sama dengan prototipe)
     const cam = this.cameras.main; cam.setRoundPixels(true); this.fit(); this.scale.on('resize', () => this.fit());
     cam.setBackgroundColor(ISO_NOLUSH.test(this.pid) && !this.open ? '#14110c' : '#22381a');
-    if (this.game.renderer.type === Phaser.WEBGL && cam.postFX) cam.postFX.addVignette(.5, .5, .95, .12);
+    this.lite = !this.game.device.os.desktop || /[?&]ringan=1/.test(location.search); /* HP: tanpa efek layar penuh (bloom/warna/vinyet) */
+    if (!this.lite && this.game.renderer.type === Phaser.WEBGL && cam.postFX) cam.postFX.addVignette(.5, .5, .95, .12);
     this.pe = this.add.particles(0, 0, 'fx_sq', { emitting: false, lifespan: { min: 200, max: 480 }, speed: { min: 60, max: 190 }, gravityY: 260,
       scale: { start: 1.5, end: .4 }, tint: { onEmit: () => this._tint }, angle: { onEmit: () => this._ang + rndR(-this._spr, this._spr) } }).setDepth(9e5);
     this.motes = this.add.particles(0, 0, 'fx_dot', { lifespan: 4200, frequency: 260, speedY: { min: -6, max: -2 }, speedX: { min: -4, max: 6 },
@@ -70,9 +71,11 @@ class IsoWorld extends IsoScene {
       emitZone: { type: 'random', source: new Phaser.Geom.Rectangle(-260, -160, 520, 320) } }).setDepth(9e5);
     this.motes.ops.alpha.onUpdate = (p, k, t) => Math.sin(t * Math.PI) * .7;
     this.hs = 0; this.exitArmed = false; this.ready = false;
-    this.scene.add('ui', IsoUI, true); this.ui = this.scene.get('ui'); isoInput(this); this.makeHud(); this.mapPicker(); softScene(this);
+    this.scene.add('ui', IsoUI, true); this.ui = this.scene.get('ui'); isoInput(this); this.makeHud(); this.mapPicker(); if (!this.lite) softScene(this);
+    else if (this.game.renderer.type === Phaser.WEBGL && cam.postFX) { const cm = cam.postFX.addColorMatrix(); cm.contrast(-.05); cm.saturate(.08, true); cm.brightness(1.08, true); } /* HP: rona warna saja */
     const H = this.hero; cam.scrollX = isoX(H.x, H.y) - cam.width / 2; cam.scrollY = isoY(H.x, H.y) - 14 - cam.height / 2;
     this.stream(); this.time.addEvent({ delay: 400, loop: true, callback: () => this.stream() });
+    this.time.addEvent({ delay: 200, loop: true, callback: () => this.cull() });
     window.__iso = this;
     const cq = new URLSearchParams(location.search).get('cuaca'); if (cq) this.cuaca(cq);
   }
@@ -93,6 +96,15 @@ class IsoWorld extends IsoScene {
       emitZone: { type: 'random', source: new Phaser.Geom.Rectangle(-420, -230, 840, 460) } }).setDepth(9e5);
     this.rainFx = [dim, drops, splash]; this.rainSplash = splash;
     this.toast('Hujan turun membasahi tanah…'); return 'hujan';
+  }
+  // objek di luar layar tidak digambar (batas disimpan sekali; objek diam)
+  cull() {
+    const v = this.cameras.main.worldView, m = 140, x0 = v.x - m, y0 = v.y - m, x1 = v.right + m, y1 = v.bottom + m;
+    for (const o of this.children.list) {
+      if (o._nc || o.depth >= 9e5 || o.type === 'ParticleEmitter' || o.type === 'Graphics' && !o._cg) continue;
+      if (!o._bb) { if (!o.getBounds || o.type === 'Sprite') { o._nc = 1; continue; } o._bb = o.getBounds(); }
+      const b = o._bb, on = b.right > x0 && b.x < x1 && b.bottom > y0 && b.y < y1; if (o.visible !== on) o.visible = on;
+    }
   }
   // ── streaming wilayah: muat yang dekat Arka, buang yang jauh ──
   regAt(x, y) { return this.regs.find(r => x >= r.ox && x < r.ox + r.w && y >= r.oy && y < r.oy + r.h); }
@@ -373,7 +385,7 @@ class IsoWorld extends IsoScene {
     }
     // pohon/rumah di depan Arka jadi tembus pandang
     const pd = H.x + H.y, hs = isoX(H.x, H.y), hy = isoY(H.x, H.y) - 12;
-    for (const p of this.props) p.img.setAlpha(p.d > pd && p.b.contains(hs, hy) ? Math.min(p.al, .45) : p.al);
+    for (const p of this.props) if (p.img.visible) p.img.setAlpha(p.d > pd && p.b.contains(hs, hy) ? Math.min(p.al, .45) : p.al);
     const hz = isoY(H.x, H.y, H.z); /* rumah desa prototipe: kedalaman relatif Arka + tembus pandang (sama dengan prototipe) */
     for (const h of this.houses) {
       const front = H.x >= h.x + h.w || H.y >= h.y + h.d, over = h.img.getBounds().contains(hs, hz - 10);

@@ -44,7 +44,7 @@ const ISO_IDLE_SHEET = false;
 class IsoHero {
   constructor(sc, x, y) {
     Object.assign(this, { sc, x, y, z: 0, hp: 100, max: 100, st: 'move', t: 0, combo: 0, comboWin: 0, fsx: 0, fsy: 1, kbx: 0, kby: 0, inv: 0, rad: 5 });
-    this.sh = sc.add.image(0, 0, 'fx_shadow').setScale(.7);
+    this.sh = sc.add.image(0, 0, 'fx_shadow').setScale(.7); this.sh._nc = 1;
     const key = ISO_IDLE_SHEET && sc.textures.exists('hero_iso_idle') ? 'hero_iso_idle' : 'hero';
     this.spr = sc.add.sprite(0, 0, key, 0).setOrigin(.5, .92);
   }
@@ -108,7 +108,7 @@ let WOLF_TOKEN = null; // hanya satu serigala boleh ancang-ancang/menerjang seka
 class IsoWolf {
   constructor(sc, x, y) {
     Object.assign(this, { sc, x, y, z: 0, hp: 34, max: 34, st: 'idle', t: rndR(0, 1), kbx: 0, kby: 0, rad: 7, fl: 0, orb: Math.random() * 6.28 });
-    this.sh = sc.add.image(0, 0, 'fx_shadow').setScale(1.2, 1);
+    this.sh = sc.add.image(0, 0, 'fx_shadow').setScale(1.2, 1); this.sh._nc = 1;
     this.spr = sc.add.sprite(0, 0, 'wolf_hd', 0).setOrigin(.5, .86).setScale(.42);
     this.spr.play('w_idle');
   }
