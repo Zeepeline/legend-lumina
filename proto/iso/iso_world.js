@@ -74,6 +74,25 @@ class IsoWorld extends IsoScene {
     const H = this.hero; cam.scrollX = isoX(H.x, H.y) - cam.width / 2; cam.scrollY = isoY(H.x, H.y) - 14 - cam.height / 2;
     this.stream(); this.time.addEvent({ delay: 400, loop: true, callback: () => this.stream() });
     window.__iso = this;
+    const cq = new URLSearchParams(location.search).get('cuaca'); if (cq) this.cuaca(cq);
+  }
+  // ── cuaca: __iso.cuaca('hujan' | 'cerah') atau iso.html?cuaca=hujan ──
+  cuaca(jenis) {
+    const u = this.ui, T = this.textures;
+    if (!T.exists('fx_rain')) { const c = document.createElement('canvas'); c.width = 2; c.height = 14; const g = c.getContext('2d');
+      const gr = g.createLinearGradient(0, 0, 0, 14); gr.addColorStop(0, 'rgba(220,235,255,0)'); gr.addColorStop(1, 'rgba(220,235,255,.85)'); g.fillStyle = gr; g.fillRect(0, 0, 2, 14); T.addCanvas('fx_rain', c); }
+    if (this.rainFx) { for (const o of this.rainFx) o.destroy(); this.rainFx = null; }
+    this.hujan = jenis === 'hujan';
+    if (!this.hujan) { this.toast('Cuaca cerah'); return 'cerah'; }
+    const W = u.scale.width, H = u.scale.height;
+    const dim = u.add.rectangle(0, 0, W, H, 0x2a3446, .28).setOrigin(0).setDepth(-1);
+    const drops = u.add.particles(0, 0, 'fx_rain', { x: { min: -40, max: W + 80 }, y: -20, lifespan: { min: 450, max: 650 }, speedY: { min: 620, max: 760 },
+      speedX: -120, rotate: 9, scaleY: { min: 1.1, max: 1.8 }, scaleX: 1.2, alpha: { min: .55, max: .95 }, quantity: 7, frequency: 16 }).setDepth(0);
+    const splash = this.add.particles(0, 0, 'fx_dot', { lifespan: 260, speed: { min: 10, max: 30 }, angle: { min: 200, max: 340 }, scale: { start: .6, end: 0 },
+      alpha: { start: .7, end: 0 }, tint: 0xdcebff, quantity: 2, frequency: 40,
+      emitZone: { type: 'random', source: new Phaser.Geom.Rectangle(-420, -230, 840, 460) } }).setDepth(9e5);
+    this.rainFx = [dim, drops, splash]; this.rainSplash = splash;
+    this.toast('Hujan turun membasahi tanah…'); return 'hujan';
   }
   // ── streaming wilayah: muat yang dekat Arka, buang yang jauh ──
   regAt(x, y) { return this.regs.find(r => x >= r.ox && x < r.ox + r.w && y >= r.oy && y < r.oy + r.h); }
@@ -382,5 +401,6 @@ class IsoWorld extends IsoScene {
     const cam = this.cameras.main, tx = hs - cam.width / 2, ty = isoY(H.x, H.y, H.z) - 14 - cam.height / 2;
     cam.scrollX += (tx - cam.scrollX) * .14; cam.scrollY += (ty - cam.scrollY) * .14;
     this.motes.setPosition(hs, isoY(H.x, H.y));
+    if (this.rainSplash) this.rainSplash.setPosition(cam.scrollX + cam.width / 2, cam.scrollY + cam.height / 2);
   }
 }

@@ -17,6 +17,7 @@ Tidak memakai kode `src/` sama sekali dan tidak dimuat `index.html`, jadi game u
   Arka ≤700 px dan dibuang saat >1500 px (`ISO_LOAD`/`ISO_DROP`). Pintu antar wilayah luar diabaikan (menyambung langsung); gua/dalam ruangan = halaman `?peta=<id>`.
 - **Desa Lumina = denah prototipe** (`buildProto`): titik 0 dunia = pojok denah 640×640 di dalam kotak desa asli (geser 192, 36); tanah bertingkat
   (`zAt` hanya di dalam denah), rumah & alun-alun prototipe, lahan pengisi berhutan + 3 jalan ke Danau/Hutan/Padang. Jembatan otomatis (`bridges`).
+- Cuaca: `__iso.cuaca("hujan")` / `__iso.cuaca("cerah")` di konsol, atau `iso.html?cuaca=hujan`.
 - Kamera zoom ×0,62, gaya lembut (`bakeGroundSoft` + `softScene`; rumput wilayah lain diganti tekstur gnd_grass lewat `lushGrass`), hutan lebat di tepi dunia (`forestRing`).
 
 ## Peta asli game dalam isometrik
