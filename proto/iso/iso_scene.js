@@ -12,6 +12,7 @@ class IsoScene extends Phaser.Scene {
     for (const k of IMG) this.load.image(k, 'assets/img/' + k + '.png');
     this.load.spritesheet('hero', 'assets/img/hero_arka.png', { frameWidth: 48, frameHeight: 40 });
     this.load.spritesheet('hero_iso_idle', 'assets/img/iso/hero_idle_iso.png', { frameWidth: 48, frameHeight: 44 });
+    this.load.image('iso_house_a', 'assets/img/iso/house_a.png');
     this.load.spritesheet('wolf_hd', 'assets/img/mon_wolf_hd.png', { frameWidth: 128, frameHeight: 96 });
   }
   create() {
@@ -24,8 +25,15 @@ class IsoScene extends Phaser.Scene {
     this.waterFx(G);
     // rumah
     this.houses = IMAP.houses.map((h, i) => {
-      const [tx, ty, w, d] = h.t, art = houseCanvas(Object.assign({ w, d }, h)); this.textures.addCanvas('house' + i, art.c);
-      const x0 = tx * ISO.T, y0 = ty * ISO.T, img = this.add.image(isoX(x0, y0) - art.ox, isoY(x0, y0) - art.oy, 'house' + i).setOrigin(0);
+      const [tx, ty, w, d] = h.t, x0 = tx * ISO.T, y0 = ty * ISO.T;
+      let img;
+      if (this.textures.exists('iso_house_a') && (i === 0 || i === 4)) {
+        const cx = x0 + w * ISO.T * .5, cy = y0 + d * ISO.T * .5;
+        img = this.add.image(isoX(cx, cy), isoY(cx, cy), 'iso_house_a').setOrigin(.5, .92).setScale(.9);
+      } else {
+        const art = houseCanvas(Object.assign({ w, d }, h)); this.textures.addCanvas('house' + i, art.c);
+        img = this.add.image(isoX(x0, y0) - art.ox, isoY(x0, y0) - art.oy, 'house' + i).setOrigin(0);
+      }
       const sh = this.add.ellipse(isoX(x0 + w * ISO.T, y0 + d * ISO.T * .5) + 6, isoY(x0 + w * ISO.T, y0 + d * ISO.T) - 2, (w + d) * 10, (w + d) * 3, 0x282412, .28).setDepth(-9e4);
       return { x: x0, y: y0, w: w * ISO.T, d: d * ISO.T, img, base: x0 + y0 + (w + d) * ISO.T - 10, sh };
     });
