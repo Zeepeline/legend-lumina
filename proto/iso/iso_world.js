@@ -43,6 +43,8 @@ class IsoWorld extends IsoScene {
       this.MX0 = Math.min(...this.regs.map(r => r.ox)) - 400; this.MY0 = Math.min(...this.regs.map(r => r.oy)) - 400;
       this.MW = Math.max(...this.regs.map(r => r.ox + r.w)) + 400; this.MH = Math.max(...this.regs.map(r => r.oy + r.h)) + 400;
       const PN = IMAP.N * ISO.T; window.zAt = (x, y) => x >= 0 && y >= 0 && x < PN && y < PN ? PROTO_ZAT(x, y) : 0;
+      this.protoProps = isoProps(); /* pohon dihitung SEBELUM jalan baru → posisi sama persis dengan gambar acuan */
+      this.newPaths = [[34, 12, 40.5, 13.6, 1.4], [12, 29, 11.5, 32, 1.4], [11.5, 32, -.5, 32.2, 1.4], [24, 30, 19, 31, 1.4], [19, 31, 19, 40.5, 1.5]];
       IMAP.paths.push([34, 12, 40.5, 13.6, 1.4], [12, 29, 11.5, 32, 1.4], [11.5, 32, -.5, 32.2, 1.4], [24, 30, 19, 31, 1.4], [19, 31, 19, 40.5, 1.5]); /* ke Padang, Danau, Hutan */
       if (!WJ[this.pid]) this.pid = 'village';
     } else {
@@ -155,8 +157,13 @@ class IsoWorld extends IsoScene {
       const base2 = x0 + y0 + (w + d) * T - 10; img.setDepth(base2);
       return { x: x0, y: y0, w: w * T, d: d * T, img, base: base2 };
     });
-    for (const p of isoProps()) {
-      if (p.x < 0 || p.y < 0 || p.x >= PN || p.y >= PN) continue; /* hutan luar denah diganti lahan pengisi */
+    const seg = (x, y, a, c, e, f) => { const vx = e - a, vy = f - c, t = Math.max(0, Math.min(1, ((x - a) * vx + (y - c) * vy) / (vx * vx + vy * vy))); return Math.hypot(x - a - vx * t, y - c - vy * t); };
+    const roadsW = roads.map(([a, c, e, f]) => [...P(a, c), ...P(e, f)]);
+    for (const p of this.protoProps) {
+      if (this.newPaths.some(([a, c, e, f, w]) => seg(p.x / T, p.y / T, a, c, e, f) < w * .5 + .4)) continue; /* hanya yang tepat di jalan baru */
+      const out = p.x < 0 || p.y < 0 || p.x >= PN || p.y >= PN;
+      if (out && roadsW.some(q => seg(p.x, p.y, ...q) < 26)) continue; /* sabuk hutan luar: buka celah jalan sambungan */
+      if (out && p.tree) p.r = 6;
       const sx = isoX(p.x, p.y), sy = isoY(p.x, p.y, zAt(p.x, p.y));
       if (p.flat) { this.add.image(sx, sy, p.k).setOrigin(.5, .8).setDepth(-5e4 + p.x + p.y); continue; }
       const img = this.add.image(sx, sy, p.k).setOrigin(.5, .94).setScale(p.s).setDepth(p.x + p.y);
@@ -167,10 +174,9 @@ class IsoWorld extends IsoScene {
     }
     if (this.textures.exists('cliff_stairs')) this.add.image(isoX(138, 122), isoY(138, 122, 0) + 4, 'cliff_stairs').setOrigin(.5, .8).setDepth(260);
     isoFantasy(this);
-    // pohon di lahan pengisi (bukan di jalan), padat seperti tepi hutan prototipe
-    const seg = (x, y, a, c, e, f) => { const vx = e - a, vy = f - c, t = Math.max(0, Math.min(1, ((x - a) * vx + (y - c) * vy) / (vx * vx + vy * vy))); return Math.hypot(x - a - vx * t, y - c - vy * t); };
+    // pohon di lahan pengisi di luar sabuk hutan prototipe (≥4 ubin dari denah), bukan di jalan
     for (let ly = 8; ly < r.h; ly += 18) for (let lx = 8; lx < r.w; lx += 18) {
-      if (lx > ISO_PXO - 14 && lx < ISO_PXO + PN + 14 && ly > ISO_PYO - 14 && ly < ISO_PYO + PN + 14) continue;
+      if (lx > ISO_PXO - 70 && lx < ISO_PXO + PN + 70 && ly > ISO_PYO - 70 && ly < ISO_PYO + PN + 70) continue;
       const jx = lx + (hash2(lx, ly, 61) - .5) * 12, jy = ly + (hash2(lx, ly, 62) - .5) * 12;
       if (hash2(lx, ly, 63) > .5 || roads.some(q => seg(jx, jy, ...q) < 34)) continue;
       const [x, y] = P(jx, jy), sx = isoX(x, y), sy = isoY(x, y), sc = .8 + hash2(lx, ly, 64) * .4;
