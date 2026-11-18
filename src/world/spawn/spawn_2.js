@@ -211,15 +211,17 @@ Object.assign(OBJ_SPAWN, {
   treeA(s, x, y, opt, d, type) {
     const k = (d && d.key) || type || 'i_treeA';
     const animKey = k + '_sway'; /* dulu 'treeA_sway' (tidak pernah terdaftar) → treeA/treeB tidak bergoyang */
-    if (this.anims.exists(animKey)) {
-      s.play({ key: animKey, startFrame: Math.abs(Math.round(x * 7 + y * 13)) % 8 });
+    const an = this.anims.get(animKey);
+    if (an && an.frames.length) {
+      s.play({ key: animKey, startFrame: (Math.abs(Math.round(x * 7 + y * 13)) % an.frames.length) || 0 });
       s.anims.timeScale = 0.85 + (Math.abs(Math.sin(x * 12.9898 + y * 78.233)) * 0.3);
     }
   },
   treeRedwood(s, x, y, opt, d, type) {
     const animKey = 'tree_redwood_sway';
-    if (this.anims.exists(animKey)) {
-      s.play({ key: animKey, startFrame: Math.abs(Math.round(x * 7 + y * 13)) % 8 });
+    const an = this.anims.get(animKey);
+    if (an && an.frames.length) {
+      s.play({ key: animKey, startFrame: (Math.abs(Math.round(x * 7 + y * 13)) % an.frames.length) || 0 });
       s.anims.timeScale = 0.85 + (Math.abs(Math.sin(x * 12.9898 + y * 78.233)) * 0.3);
     }
   },

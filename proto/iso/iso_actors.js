@@ -21,10 +21,11 @@ function isoDirOf(sx, sy) {
 // gerak dengan tabrakan: batas peta, air, tebing (lompatan tinggi), rumah (persegi), objek (lingkaran)
 function isoMove(sc, a, vx, vy, dt) {
   const tryP = (nx, ny) => {
-    const N = IMAP.N * ISO.T, R = a.rad || 5;
-    if (nx < R || ny < R || nx > N - R || ny > N - R) return false;
+    const R = a.rad || 5, MW = sc.MW || IMAP.N * ISO.T, MH = sc.MH || IMAP.N * ISO.T;
+    if (nx < R || ny < R || nx > MW - R || ny > MH - R) return false;
+    if (sc.wallAt && sc.wallAt(nx, ny, R)) return false; /* tembok asli peta game */
     const tx = Math.floor(nx / ISO.T), ty = Math.floor(ny / ISO.T);
-    if (sc.ter[ty] && sc.ter[ty][tx] === 'water') return false;
+    if (sc.ter && sc.ter[ty] && sc.ter[ty][tx] === 'water') return false;
     if (Math.abs(zAt(nx, ny) - zAt(a.x, a.y)) > .3) return false;
     for (const h of sc.houses) if (nx > h.x - R && nx < h.x + h.w + R && ny > h.y - R && ny < h.y + h.d + R) return false;
     for (const p of sc.solids) { const d = Math.hypot(nx - p.x, ny - p.y); if (d < p.r + R && d < Math.hypot(a.x - p.x, a.y - p.y)) return false; }

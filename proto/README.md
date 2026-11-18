@@ -11,3 +11,11 @@ Tidak memakai kode `src/` sama sekali dan tidak dimuat `index.html`, jadi game u
 - `iso_scene.js` scene, urutan kedalaman (rumah relatif pemain), tembus pandang, efek, suara berlapis WebAudio, HUD, gelombang serigala.
 - `iso_fantasy.js` sentuhan dunia fantasi (`docs/DUNIA_FANTASI.md`): Kristal Utama + sinar + batu melayang di akar Pohon Induk, kristal kecil,
   bunga lentera, lentera kristal, debu cahaya, dan tanah rusak + kristal retak ungu + duri di sarang serigala.
+
+## Peta asli game dalam isometrik (bawaan `iso.html`)
+- `iso.html` / `iso.html?peta=<id>` membuka **peta asli game** (21 peta luar: desa, hutan, padang, gua, rawa, salju, danau, jalan raya, 4 distrik kota,
+  hutan dalam, sungai, 7 jalur penghubung `pl_*`). Pilih peta lewat menu kanan atas; pintu antar peta berfungsi. Desa prototipe lama: `?peta=proto`.
+- `iso_world.js` (`IsoWorld`): lantai top-down asli + tempelan tanah dipanggang lalu diproyeksikan 2:1 per potongan 2048 px; objek asli di posisi
+  terproyeksi (origin/skala/flip sama); tembok persegi asli (kisi 64 px) untuk tabrakan; pintu → `?peta=<tujuan>&x=&y=`. Musuh sementara = serigala.
+- Data: `node tools/export_iso_maps.js [id ...]` (server di :8010) → `proto/iso/maps/<id>.json`, `<id>_ground.webp`, `tex/*.png`, `index.json`.
+  Ekspor ulang setelah peta game berubah.

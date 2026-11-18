@@ -37,7 +37,7 @@ MAPS.swamp = {
     { id: 's4', x: 510, y: 290, item: 'potion3' }
   ],
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 450], [0, 510, 40, 450], [1240, 0, 40, 960], [0, 930, 1280, 30]],
-  border: { top: 40, bottom: 920, left: 45, right: 1235, gapT: [600, 680], gapL: [450, 510], types: ['deadtree', 'stump', 'willow'] },
+  border: { top: 40, bottom: 920, left: 45, right: 1235, gapT: [600, 680], gapL: [450, 510], types: ['deadtree', 'stump', 'meadowwillow'] },
   exits: [
     { x: 0, y: 450, w: 12, h: 60, to: 'river', tx: 2540, ty: 480, dir: 'left', label: 'Jalur Sungai' },
     { x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }

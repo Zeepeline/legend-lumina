@@ -91,9 +91,9 @@ _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 `OBJ_SPAWN` 3 · obj `verdant_bush` 5 · obj `verdant_bush_small` 6 · obj `bushy` 7 · obj `bushv` 8 · obj `lampPost` 10 · obj `gpt_city_lamp` 18 · obj `shrine` 26 · obj `cavemouth` 29 · obj `sign` 32 · obj `forge` 42 · obj `pebbles` 63 · obj `telescope` 71 · obj `altar` 79 · obj `fieldoven` 87 · obj `dripstone` 95 · obj `frostflower` 103 · obj `totem` 111 · obj `pigeons` 119 · obj `teatable` 152 · obj `lotuspad` 160 · obj `dockboat` 168 · obj `coffeeshrub` 223 · obj `coffeekettle` 231 · obj `orchidrock` 239 · obj `canaryperch` 247 · obj `woodlandshrine` 255 · obj `bellows` 263 · obj `ringbooth` 271 · obj `archerytarget` 279 · obj `lakelighthouse` 287 · obj `streetdrum` 295 · obj `dummy` 303 · obj `pot` 311 · obj `well` 321 · obj `apple1` 336 · obj `bench` 341 · obj `bell` 357 · obj `campfire` 365 · obj `alchemytable` 382
 
-## src/world/spawn/spawn_2.js (380 baris)
+## src/world/spawn/spawn_2.js (382 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 219 · obj `tree_redwood` 226 · obj `goblin_torch` 229 · obj `goblin_cauldron` 232 · obj `cryst` 241 · obj `lamp` 244 · obj `viewpoint` 252 · obj `lumina_shard` 286 · obj `scenicbench` 308 · obj `mailbox` 326 · obj `gatehouse` 336 · obj `ctower` 344 · obj `city_bridge` 347 · obj `gpt_city_banner` 350 · obj `gpt_city_banner_sm` 354 · obj `gpt_city_board` 358
+obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 220 · obj `tree_redwood` 228 · obj `goblin_torch` 231 · obj `goblin_cauldron` 234 · obj `cryst` 243 · obj `lamp` 246 · obj `viewpoint` 254 · obj `lumina_shard` 288 · obj `scenicbench` 310 · obj `mailbox` 328 · obj `gatehouse` 338 · obj `ctower` 346 · obj `city_bridge` 349 · obj `gpt_city_banner` 352 · obj `gpt_city_banner_sm` 356 · obj `gpt_city_board` 360
 
 ## src/world/ground.js (400 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
@@ -575,7 +575,7 @@ _T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_
 _T447: Bayangan awan berjalan_
 
 
-## src/gfx/gptassets.js (97 baris)
+## src/gfx/gptassets.js (103 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
 `GPT_SWAP` 4 · `GPT_LOOK` 13 · `applyGptSwap()` 26
 

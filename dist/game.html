@@ -5623,15 +5623,17 @@ Object.assign(OBJ_SPAWN, {
   treeA(s, x, y, opt, d, type) {
     const k = (d && d.key) || type || 'i_treeA';
     const animKey = k + '_sway'; /* dulu 'treeA_sway' (tidak pernah terdaftar) → treeA/treeB tidak bergoyang */
-    if (this.anims.exists(animKey)) {
-      s.play({ key: animKey, startFrame: Math.abs(Math.round(x * 7 + y * 13)) % 8 });
+    const an = this.anims.get(animKey);
+    if (an && an.frames.length) {
+      s.play({ key: animKey, startFrame: (Math.abs(Math.round(x * 7 + y * 13)) % an.frames.length) || 0 });
       s.anims.timeScale = 0.85 + (Math.abs(Math.sin(x * 12.9898 + y * 78.233)) * 0.3);
     }
   },
   treeRedwood(s, x, y, opt, d, type) {
     const animKey = 'tree_redwood_sway';
-    if (this.anims.exists(animKey)) {
-      s.play({ key: animKey, startFrame: Math.abs(Math.round(x * 7 + y * 13)) % 8 });
+    const an = this.anims.get(animKey);
+    if (an && an.frames.length) {
+      s.play({ key: animKey, startFrame: (Math.abs(Math.round(x * 7 + y * 13)) % an.frames.length) || 0 });
       s.anims.timeScale = 0.85 + (Math.abs(Math.sin(x * 12.9898 + y * 78.233)) * 0.3);
     }
   },
@@ -6684,7 +6686,7 @@ MAPS.swamp = {
     { id: 's4', x: 510, y: 290, item: 'potion3' }
   ],
   walls: [[0, 0, 600, 30], [680, 0, 600, 30], [0, 0, 40, 450], [0, 510, 40, 450], [1240, 0, 40, 960], [0, 930, 1280, 30]],
-  border: { top: 40, bottom: 920, left: 45, right: 1235, gapT: [600, 680], gapL: [450, 510], types: ['deadtree', 'stump', 'willow'] },
+  border: { top: 40, bottom: 920, left: 45, right: 1235, gapT: [600, 680], gapL: [450, 510], types: ['deadtree', 'stump', 'meadowwillow'] },
   exits: [
     { x: 0, y: 450, w: 12, h: 60, to: 'river', tx: 2540, ty: 480, dir: 'left', label: 'Jalur Sungai' },
     { x: 600, y: 0, w: 80, h: 12, to: 'meadow', tx: 1000, ty: 990, dir: 'up', label: 'Padang Angin' }
@@ -7620,7 +7622,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.48.0';
+const GAME_VERSION = '1.48.1';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.18 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
 function applyOpt() {
@@ -27606,7 +27608,10 @@ function applyGptSwap(T, A) {
       const t = T.addImage(tk, img);
       const fw = img.width / 8, animKey = tk + '_sway';
       for (let i = 0; i < 8; i++) t.add(i, 0, i * fw, 0, fw, img.height);
-      if (A && !A.exists(animKey)) A.create({ key: animKey, frames: [...Array(8).keys()].map(i => ({ key: tk, frame: i })), frameRate: 4, repeat: -1 });
+      if (A) { /* tekstur dibuat ulang → anim lama menunjuk frame mati */
+        if (A.exists(animKey)) A.remove(animKey);
+        A.create({ key: animKey, frames: [...Array(8).keys()].map(i => ({ key: tk, frame: i })), frameRate: 4, repeat: -1 });
+      }
     }
   }
   for (const k of GPT_SWAP) {
@@ -27616,7 +27621,10 @@ function applyGptSwap(T, A) {
     if ((k === 'i_treeA' || k === 'treeAd' || k === 'treeSn') && img.width > img.height * 4) {
       const fw = img.width / 8, animKey = k + '_sway';
       for (let i = 0; i < 8; i++) t.add(i, 0, i * fw, 0, fw, img.height);
-      if (A && !A.exists(animKey)) A.create({ key: animKey, frames: [...Array(8).keys()].map(i => ({ key: k, frame: i })), frameRate: 4, repeat: -1 });
+      if (A) { /* tekstur dibuat ulang → anim lama menunjuk frame mati */
+        if (A.exists(animKey)) A.remove(animKey);
+        A.create({ key: animKey, frames: [...Array(8).keys()].map(i => ({ key: k, frame: i })), frameRate: 4, repeat: -1 });
+      }
     } else {
       t.add(0, 0, 0, 0, img.width, img.height);
     }

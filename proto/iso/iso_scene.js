@@ -217,7 +217,9 @@ class IsoScene extends Phaser.Scene {
   }
 }
 
+// ?peta=<id> (bawaan: village) = peta asli game; ?peta=proto atau ?tanah=… = desa prototipe lama
+function isoUseWorld() { const q = new URLSearchParams(location.search); return typeof IsoWorld !== 'undefined' && !q.get('tanah') && q.get('peta') !== 'proto'; }
 window.addEventListener('load', () => {
-  new Phaser.Game({ type: Phaser.AUTO, parent: 'game', pixelArt: true, backgroundColor: '#2a3a1c', scene: [IsoScene],
+  new Phaser.Game({ type: Phaser.AUTO, parent: 'game', pixelArt: true, backgroundColor: '#2a3a1c', scene: [isoUseWorld() ? IsoWorld : IsoScene],
     scale: { mode: Phaser.Scale.RESIZE, width: window.innerWidth, height: window.innerHeight }, input: { activePointers: 3 } });
 });

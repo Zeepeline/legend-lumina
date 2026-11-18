@@ -78,7 +78,10 @@ function applyGptSwap(T, A) {
       const t = T.addImage(tk, img);
       const fw = img.width / 8, animKey = tk + '_sway';
       for (let i = 0; i < 8; i++) t.add(i, 0, i * fw, 0, fw, img.height);
-      if (A && !A.exists(animKey)) A.create({ key: animKey, frames: [...Array(8).keys()].map(i => ({ key: tk, frame: i })), frameRate: 4, repeat: -1 });
+      if (A) { /* tekstur dibuat ulang → anim lama menunjuk frame mati */
+        if (A.exists(animKey)) A.remove(animKey);
+        A.create({ key: animKey, frames: [...Array(8).keys()].map(i => ({ key: tk, frame: i })), frameRate: 4, repeat: -1 });
+      }
     }
   }
   for (const k of GPT_SWAP) {
@@ -88,7 +91,10 @@ function applyGptSwap(T, A) {
     if ((k === 'i_treeA' || k === 'treeAd' || k === 'treeSn') && img.width > img.height * 4) {
       const fw = img.width / 8, animKey = k + '_sway';
       for (let i = 0; i < 8; i++) t.add(i, 0, i * fw, 0, fw, img.height);
-      if (A && !A.exists(animKey)) A.create({ key: animKey, frames: [...Array(8).keys()].map(i => ({ key: k, frame: i })), frameRate: 4, repeat: -1 });
+      if (A) { /* tekstur dibuat ulang → anim lama menunjuk frame mati */
+        if (A.exists(animKey)) A.remove(animKey);
+        A.create({ key: animKey, frames: [...Array(8).keys()].map(i => ({ key: k, frame: i })), frameRate: 4, repeat: -1 });
+      }
     } else {
       t.add(0, 0, 0, 0, img.width, img.height);
     }
