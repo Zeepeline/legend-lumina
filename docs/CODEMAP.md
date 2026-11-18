@@ -607,7 +607,7 @@ _"Juice" v1.45: lapisan partikel & animasi tambahan di atas sistem yang ada (tan
 _Rona warna "sore keemasan" ala screenshot Dimraeth pemilik (v1.47.0): seluruh layar luar-ruang digeser ke kuning-zaitun hangat,_
 `GRADE_OFF` 6 · `GRADE_M` 7 · `isGoldenHour()` 8 · `gradeOn()` 12 · `gradeCam()` 16
 
-## src/systems/isoview.js (80 baris)
+## src/systems/isoview.js (84 baris)
 _TAMPILAN ISOMETRIK untuk game utama (tahap 1). Saklar: ?iso=1 (diingat di localStorage 'lumina_iso'), matikan: ?iso=0._
 `ISO_VIEW` 11 · `ISO_ZOOM` 18 · `ISO_FLATD` 19 · `isoActive()` 20 · `isoScenes()` 21
 

@@ -3,7 +3,7 @@
 // Logika, fisika, tembok, NPC, misi, simpanan TIDAK berubah (tetap top-down); hanya tampilan diproyeksikan 2:1:
 //   layar = pusat + zoom·(x − y, (x + y) / 2) relatif pusat kamera.
 // • Kamera World (luar ruang) & GL: matriks proyeksi; worldView = kotak dunia yang terlihat → cull/stream/ambient tetap benar.
-// • Objek tegak (depth > ISO_FLATD): selama render diputar −45° & diskala (0,707; 1,414) → tampil berdiri; kedalaman + x.
+// • Objek tegak (depth > −5e5; lapisan tanah game ≤ −8e5): selama render diputar −45° & diskala (0,707; 1,414) → tampil berdiri; kedalaman + x.
 // • Objek layar (scrollFactor 0): posisi & bentuk dikompensasi penuh → tidak ikut miring.
 // • Arah gerak: masukan layar → arah dunia (Input.vec). Kamera tanpa batas peta (pandangan belah ketupat).
 // Ruang dalam (gambar ruangan pemilik), judul, gua bergambar ruangan: tetap top-down.
@@ -16,7 +16,7 @@ const ISO_VIEW = (() => {
   } catch (_) { return false; }
 })();
 const ISO_ZOOM = .72; // kamera lebih jauh di isometrik (pemilik suka pandangan luas seperti pratinjau prototipe)
-const ISO_FLATD = -50, ISO_R = -Math.PI / 4, ISO_SX = Math.SQRT1_2, ISO_SY = Math.SQRT2;
+const ISO_FLATD = -5e5, ISO_R = -Math.PI / 4, ISO_SX = Math.SQRT1_2, ISO_SY = Math.SQRT2;
 function isoActive() { const A = G.scene; return ISO_VIEW && !!(A && A.M && !A.M.indoor && !G.title && A.M.ground !== 'room'); }
 function isoScenes(game) { return game.scene.scenes.filter(s => s.sys.isActive() && s.cameras && (s instanceof World || s.sys.settings.key === 'GL')); }
 if (ISO_VIEW && typeof Phaser !== 'undefined') {
@@ -54,9 +54,13 @@ if (ISO_VIEW && typeof Phaser !== 'undefined') {
       for (const o of s.children.list) {
         if (!o.visible || o.isoFlat || o.rotation === undefined || o.type === 'ParticleEmitter') continue;
         const sf0 = o.scrollFactorX === 0;
-        if (!sf0 && o.depth <= ISO_FLATD) continue; /* tanah, genangan, bayangan datar → ikut diproyeksikan */
+        if (!sf0 && (o.depth <= ISO_FLATD || o.type === 'Graphics' || o.displayWidth > 420 || o.displayHeight > 420)) continue;
+        /* ↑ tanah, lapisan rona/cahaya besar, gambar Graphics di tanah (zona bahaya) → ikut diproyeksikan, tidak ditegakkan */
         COMP.push(o, o.x, o.y, o.rotation, o.scaleX, o.scaleY);
-        if (sf0) { const u = o.x - ox, v = o.y - oy; o.x = ox + .5 * u + v; o.y = oy - .5 * u + v; }
+        if (sf0) { /* objek layar: batalkan proyeksi & zoom tambahan iso → tetap di posisi/ukuran layar semula */
+          const k = 1 / ISO_ZOOM, u = (o.x - ox) * k, v = (o.y - oy) * k; o.x = ox + .5 * u + v; o.y = oy - .5 * u + v;
+          o.rotation += ISO_R; o.scaleX *= ISO_SX * k; o.scaleY *= ISO_SY * k; continue;
+        }
         else { /* kedalaman isometrik: depth game (≈ y) + x; tetap selama game tidak mengubah depth */
           if (o.depth !== o._isoD) o._isoB = o.depth;
           const nd = Math.abs(o._isoB - o.y) < 600 ? o._isoB + o.x : o._isoB; if (o.depth !== nd) o.depth = nd; o._isoD = o.depth;
