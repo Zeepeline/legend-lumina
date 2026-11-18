@@ -32,6 +32,9 @@ Visi 12 · Prinsip Storytelling 27 · Pacing 45 · Tujuan Pemain 65 · Immediate
 ## GEOGRAFI.md — GEOGRAFI — aturan dunia, sungai, kota & penanda (Benua Lumina) (109 baris, ~2600 token)
 1. Prinsip (hasil riset game & kartografi) 7 · 2. Peta ketinggian benua (tinggi → rendah) 15 · 3. Sistem sungai (koordinat GLOBAL, air = rangkaian elips `ponds: [cx, cy, rx, ry]` di data peta) 26 · 4. Penanda per wilayah (pakai objek yang SUDAH ada di `OBJ`; cek `grep -n "^  nama:" src/world/objects.js`) 39 · 5. Checklist sebelum push perubahan peta 51 · 6. Status Implementasi Geografi (Gelombang 8 T332–T360) 55 · 7. Tata kota & desa abad pertengahan (prinsip city builder, wujud medieval) 61 · §8 Pola tanah (Verdant Ground) 102
 
+## HANDOFF_ISO.md — HANDOFF — Tampilan isometrik di game utama (19 baris, ~400 token)
+Tahap 1 (selesai, v1.49.0) — `src/systems/isoview.js` 6 · Sisa (urut prioritas) 12
+
 ## HANDOFF_OPENWORLD.md — HANDOFF — Open World Legenda Lumina (lanjutan) (159 baris, ~4200 token)
 0. Aturan wajib 6 · 1. Tujuan besar (permintaan user) 14 · DEFINISI SELESAI (ditegaskan user 12 Nov, dengan screenshot) 21 · Bug kecil yang terlihat di screenshot 29 · 0b. MODE BENUA = ARAH UTAMA (keputusan pemilik 13 Nov): satu peta raksasa, file per wilayah tetap 32 · 1b. Update v1.27.4 (gradasi & hutan pengisi) 66 · 1c. Update v1.27.5 (lapisan tanah bersama) 73 · 1d. v1.27.6 78 · 2. Yang SUDAH selesai 81 · Cara kerja regions (penting dipahami) 89 · 3. YANG HARUS DIKERJAKAN BERIKUTNYA (urut) 101 · Langkah 2 — Isi benua, buka batas, tanpa ujung 103 · Langkah 3 — Haluskan 109 · Tahap 3 — Gerak (pilihan user) [SELESAI v1.27.3] 113 · Tahap 4 — Konten eksplorasi [SELESAI v1.27.3] 119 · 4. Gotcha teknis (sudah pernah bikin bug) 123 · 5. Tes 132 · 6. Rutinitas rilis 146 · 8. Catatan Pemolesan Gaya G001 (Senja Emas & Verdant) 154
 
