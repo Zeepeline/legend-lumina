@@ -6017,7 +6017,7 @@ function genGround(M, rect) {
     return c;
   }
   const vOK = VERDANT[M.ground] && verdantTiles(M);
-  if (vOK) verdantDeco(x, M, [RX, RY, RW, RH], GX, GY, sd, near);
+  if (vOK || M.ground === 'meadow') verdantDeco(x, M, [RX, RY, RW, RH], GX, GY, sd, near);
   if (!vOK && M.ground !== 'meadow') for (let n = 0; n < W * H / 1600; n++) {
     const X = Math.floor(hash(n, 1, 21) * W), Y = Math.floor(hash(n, 2, 21) * H); if (out(X, Y) || near(X, Y)) continue;
     const d = sd(X, Y);
@@ -8755,7 +8755,7 @@ function buildTextures(sc) {
 'use strict';
 // Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024).
 // Ubin ground 256×256 px, tepi jalan berenda daun alami, ornamen clutter & pulau rumput.
-const VERDANT = { village: true, forest: true, deepwood: true, meadow: true };
+const VERDANT = {};
 const VBAY = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const VDECO = ['tuft', 'sprout_a', 'sprout_b', 'sprout_c', 'flower_w', 'flower_w2', 'flower_w3', 'flower_b', 'flower_b2', 'flowers', 'flowers_w',
   'mushroom', 'pebble', 'pebbles', 'reeds',

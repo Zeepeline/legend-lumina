@@ -225,7 +225,7 @@ function genGround(M, rect) {
     return c;
   }
   const vOK = VERDANT[M.ground] && verdantTiles(M);
-  if (vOK) verdantDeco(x, M, [RX, RY, RW, RH], GX, GY, sd, near);
+  if (vOK || M.ground === 'meadow') verdantDeco(x, M, [RX, RY, RW, RH], GX, GY, sd, near);
   if (!vOK && M.ground !== 'meadow') for (let n = 0; n < W * H / 1600; n++) {
     const X = Math.floor(hash(n, 1, 21) * W), Y = Math.floor(hash(n, 2, 21) * H); if (out(X, Y) || near(X, Y)) continue;
     const d = sd(X, Y);
