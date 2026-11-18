@@ -13,6 +13,7 @@ class IsoScene extends Phaser.Scene {
     this.load.spritesheet('hero', 'assets/img/hero_arka.png', { frameWidth: 48, frameHeight: 40 });
     this.load.spritesheet('hero_iso_idle', 'assets/img/iso/hero_idle_iso.png', { frameWidth: 48, frameHeight: 44 });
     this.load.image('iso_house_a', 'assets/img/iso/house_a.png');
+    this.load.image('cliff_stairs', 'assets/img/iso/cliff_stairs.png');
     this.load.spritesheet('wolf_hd', 'assets/img/mon_wolf_hd.png', { frameWidth: 128, frameHeight: 96 });
   }
   create() {
@@ -47,6 +48,10 @@ class IsoScene extends Phaser.Scene {
       else this.add.image(sx + 2, sy, 'fx_shadow').setScale(img.displayWidth / 22, .9).setDepth(-5e4);
       if (p.r) this.solids.push({ x: p.x, y: p.y, r: p.r });
       this.props.push({ img, x: p.x, y: p.y, tree: p.tree });
+    }
+    if (this.textures.exists('cliff_stairs')) {
+      const rx = 138, ry = 122;
+      this.add.image(isoX(rx, ry), isoY(rx, ry, 0) + 4, 'cliff_stairs').setOrigin(.5, .8).setDepth(rx + ry);
     }
     isoFantasy(this);
     // aktor

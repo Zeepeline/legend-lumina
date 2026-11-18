@@ -6,9 +6,9 @@ const PAL = {
   rot: ['#6a5a72', '#5e5068', '#74647c', '#4a3e54'], rotCrack: '#a070c8',
   dirt: ['#c8a868', '#bf9f60', '#ad8f53', '#d2b474'], dirtDk: '#957a46',
   stone: ['#b9ad8a', '#a99e7d', '#c7bc98', '#9a8f70'], stoneGap: '#7d735a',
-  water: ['#4f7a6a', '#4a7363', '#557f6e'], waterDk: '#3c5e52', farm: ['#8a6a3a', '#7d5f33', '#94733f'], farmRow: '#6a4f2a',
-  cliffL: ['#9a8a62', '#8e7f5a', '#a6966c'], cliffR: ['#6e6146', '#64583f', '#77694c'], cliffRoot: '#4a4030',
-  shadow: 'rgba(40,36,20,.32)', outline: '#2a2618',
+  water: ['#3a88c8', '#4b98dc', '#2f74ae'], waterDk: '#245a8a', farm: ['#8a6a3a', '#7d5f33', '#94733f'], farmRow: '#6a4f2a',
+  cliffL: ['#8e948c', '#80867e', '#9ba299'], cliffR: ['#5a6058', '#4e544c', '#686e66'], cliffRoot: '#343832',
+  shadow: 'rgba(30,34,28,.32)', outline: '#20241e',
 };
 function hexRGB(h) { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
 function mkCanvas(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
