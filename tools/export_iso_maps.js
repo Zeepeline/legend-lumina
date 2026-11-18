@@ -43,7 +43,8 @@ const OUT = path.join(__dirname, '..', 'proto', 'iso', 'maps');
             c.flipX ? 1 : 0, +c.alpha.toFixed(2), Math.round(c.depth), c.isTinted ? c.tintTopLeft : 0, +c.rotation.toFixed(3)]);
         }
         const walls = sc.walls.getChildren().map(z => [Math.round(z.x - z.width / 2), Math.round(z.y - z.height / 2), Math.round(z.width), Math.round(z.height)]);
-        const g = bakeGround(sc, M);
+        /* lantai TANPA bayangan objek top-down (bayangan iso dibuat sendiri) → rumput semua peta seragam seperti Desa */
+        const g = genGround(M), gx = g.getContext('2d'); verdantBase(gx, M); if (typeof verdantReflect === 'function') verdantReflect(gx, M);
         window.__tex = tex;
         return { id: M.id, name: M.name, w: M.w, h: M.h, objs, walls, exits: (M.exits || []).map(e => ({ x: e.x, y: e.y, w: e.w, h: e.h, to: e.to, tx: e.tx, ty: e.ty, dir: e.dir, label: e.label })),
           enemies: (sc.enemies || []).map(e => [e.id || (e.D && e.D.tex), Math.round(e.spr.x), Math.round(e.spr.y)]), ground: g.toDataURL('image/png'), texKeys: Object.keys(tex) };

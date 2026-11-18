@@ -4,7 +4,8 @@
 //   iso.html?peta=forest            → buka Hutan Lumina
 //   iso.html?peta=forest&x=640&y=600 → muncul di titik itu
 const ISO_DIR = 'proto/iso/maps/';
-const ISO_FLAT = /shadow|cr_cloud|puddle|decal|crack|leafpile|petal/; // tempelan tanah: dipanggang ke lantai lalu ikut diproyeksikan
+const ISO_FLAT = /puddle|decal|crack|leafpile|petal/; // tempelan tanah: dipanggang ke lantai lalu ikut diproyeksikan
+const ISO_SKIP = /shadow|cr_cloud/; // bayangan top-down & awan: dibuang (bayangan iso dibuat sendiri)
 const ISO_TILE = 2048; // potongan tekstur lantai (batas aman GPU HP 4096)
 
 class IsoWorld extends IsoScene {
@@ -38,7 +39,7 @@ class IsoWorld extends IsoScene {
     // objek: tempelan tanah dipanggang ke lantai, sisanya berdiri di posisi terproyeksi
     const flat = [], stand = [];
     for (const o of D.objs) {
-      if (!this.textures.exists('x_' + o[0])) continue;
+      if (!this.textures.exists('x_' + o[0]) || ISO_SKIP.test(o[0])) continue;
       (ISO_FLAT.test(o[0]) || o[9] < o[2] - 30 ? flat : stand).push(o);
     }
     this.bakeFloor(flat);

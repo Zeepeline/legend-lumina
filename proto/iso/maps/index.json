@@ -9,7 +9,7 @@
   "name": "Hutan Lumina",
   "w": 1280,
   "h": 1200,
-  "n": 431
+  "n": 430
  },
  "meadow": {
   "name": "Padang Angin",
@@ -75,7 +75,7 @@
   "name": "Hutan Dalam",
   "w": 2400,
   "h": 1800,
-  "n": 658
+  "n": 655
  },
  "river": {
   "name": "Jalur Sungai Senja",
