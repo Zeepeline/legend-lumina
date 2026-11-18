@@ -37,7 +37,7 @@ Object.assign(IsoWorld.prototype, {
   // pasang satu pohon (+ bayangan, + semak di kaki pohon tepi hutan); dens 0..1 menentukan ukuran & jenis
   natTree(r, x, y, dens, R, solid) {
     const sx = Math.round(isoX(x, y)), sy = Math.round(isoY(x, y, zAt(x, y)));
-    const apple = dens < .5 && R() < .1, s = (apple ? .5 : .78 + R() * .34) * (.82 + .3 * dens);
+    const apple = false, s = (.78 + R() * .34) * (.82 + .3 * dens); /* satu jenis pohon */
     const img = this.sway(this.add.image(sx, sy, apple ? 'apple1' : 'treeA').setOrigin(.5, .94).setScale(s).setDepth(x + y).setFlipX(R() < .5));
     const sh = this.add.image(sx + 7, sy - 1, 'fx_shadow').setScale(2.6 * s, 1.9 * s).setDepth(-5e4).setAlpha(.55 + .35 * dens);
     r.objs.push(img, sh); r.props.push({ img, d: x + y, al: 1, b: img.getBounds() });

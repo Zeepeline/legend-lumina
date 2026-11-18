@@ -15,7 +15,8 @@ const ISO_PROTO = 'village', ISO_PXO = 192, ISO_PYO = 36; // Desa Lumina = denah
 const PROTO_ZAT = zAt;
 // pemilik: desa cukup 6 bangunan (5 rumah inti + kincir); bangunan tambahan lain tidak dipasang
 const ISO_KEEP = ['gpt_v_inn_2story', 'gpt_v_blacksmith_forge', 'gpt_v_house_red_cottage', 'gpt_v_house_red_shop', 'gpt_v_house_brown_cottage', 'gpt_v_windmill']; // tinggi tanah prototipe (dataran tinggi + tangga), dipakai di dalam kotak desa
-const ISO_LOAD = 520, ISO_DROP = 1150; // jarak muat / buang wilayah dari Arka (px dunia)
+const ISO_LOAD = 520, ISO_DROP = 1150;
+const ISO_TREE = /^(i_treeA|treeA|treeAd|tree_apple|tree_redwood|i_bigtree|apple|round|pine|oak)/i; // jenis pohon ekspor yang diseragamkan jadi treeA // jarak muat / buang wilayah dari Arka (px dunia)
 
 class IsoWorld extends IsoScene {
   init() {
@@ -147,9 +148,10 @@ class IsoWorld extends IsoScene {
     this.bakeFloor(r, flat); this.textures.remove('g_' + r.id); /* sumber lantai tak dipakai lagi setelah diproyeksikan */
     for (const [n, lx, ly, ox, oy, sx, sy, fl, al, dep, tint, rot] of stand) {
       const x = lx + r.ox, y = ly + r.oy;
-      const img = this.add.image(Math.round(isoX(x, y)), Math.round(isoY(x, y)), 'x_' + n).setOrigin(ox, oy).setScale(sx, sy).setFlipX(!!fl)
-        .setAlpha(al).setRotation(rot);
-      if (tint) img.setTint(tint);
+      const uni = ISO_TREE.test(n) && !/snow/.test(r.id); /* pemilik: semua pohon satu jenis (treeA), letak tetap acak */
+      const img = uni ? this.add.image(Math.round(isoX(x, y)), Math.round(isoY(x, y)), 'treeA').setOrigin(.5, .94).setScale(.82 + hash2(lx | 0, ly | 0, 3) * .3).setFlipX(hash2(lx | 0, ly | 0, 4) < .5)
+        : this.add.image(Math.round(isoX(x, y)), Math.round(isoY(x, y)), 'x_' + n).setOrigin(ox, oy).setScale(sx, sy).setFlipX(!!fl).setAlpha(al).setRotation(rot);
+      if (tint && !uni) img.setTint(tint);
       this.sway(img);
       const up = dep > ly + 30 ? 400 : 0; img.setDepth(x + y + up); r.objs.push(img);
       const tall = img.displayHeight > 40 && al > .5;
@@ -233,12 +235,27 @@ class IsoWorld extends IsoScene {
     this.bridges(b, W, H, r); this.projectFloor(r, base, -1e5);
   }
   projectFloor(r, base, depth) {
-    const W = r.w, H = r.h, PW = W + H, PH = Math.ceil((W + H) / 2), X0 = isoX(r.ox, r.oy) - H, Y0 = isoY(r.ox, r.oy); r.floorKeys = [];
+    /* tepi melebar 28 px (piksel tepi diteruskan) yang memudar → menimpa wilayah tetangga dengan lembut: tanpa garis/celah lurus di perbatasan */
+    const P = 28, W = r.w + P * 2, H = r.h + P * 2, ex = document.createElement('canvas'); ex.width = W; ex.height = H;
+    const e = ex.getContext('2d'), bw = r.w, bh = r.h; e.imageSmoothingEnabled = false;
+    e.drawImage(base, 0, 0, bw, 1, P, 0, bw, P); e.drawImage(base, 0, bh - 1, bw, 1, P, P + bh, bw, P);
+    e.drawImage(base, 0, 0, 1, bh, 0, P, P, bh); e.drawImage(base, bw - 1, 0, 1, bh, P + bw, P, P, bh);
+    for (const [sx, sy, dx, dy] of [[0, 0, 0, 0], [bw - 1, 0, P + bw, 0], [0, bh - 1, 0, P + bh], [bw - 1, bh - 1, P + bw, P + bh]]) e.drawImage(base, sx, sy, 1, 1, dx, dy, P, P);
+    e.drawImage(base, P, P);
+    e.globalCompositeOperation = 'destination-in';
+    const fade = (x0, y0, x1, y1, rx, ry, rw, rh) => { const g = e.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)'); e.fillStyle = g; e.fillRect(rx, ry, rw, rh); };
+    const m = document.createElement('canvas'); m.width = W; m.height = H; const mg = m.getContext('2d'); /* topeng: kali alfa empat sisi */
+    mg.fillStyle = '#000'; mg.fillRect(0, 0, W, H); mg.globalCompositeOperation = 'destination-in';
+    for (const [x0, y0, x1, y1] of [[0, 0, P + 2, 0], [W, 0, W - P - 2, 0], [0, 0, 0, P + 2], [0, H, 0, H - P - 2]]) {
+      const g = mg.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)'); mg.fillStyle = g; mg.fillRect(0, 0, W, H);
+    }
+    e.drawImage(m, 0, 0); e.globalCompositeOperation = 'source-over'; void fade;
+    const PW = W + H, PH = Math.ceil((W + H) / 2), X0 = isoX(r.ox - P, r.oy - P) - H, Y0 = isoY(r.ox - P, r.oy - P); r.floorKeys = [];
     for (let ty = 0; ty < PH; ty += ISO_TILE) for (let tx = 0; tx < PW; tx += ISO_TILE) {
       const cw = Math.min(ISO_TILE, PW - tx), ch = Math.min(ISO_TILE, PH - ty), cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
       const g = cv.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
-      g.setTransform(1, .5, -1, .5, H - tx, -ty); g.drawImage(base, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
-      const key = 'iso_floor_' + r.id + '_' + tx + '_' + ty; if (this.textures.exists(key)) this.textures.remove(key);
+      g.setTransform(1, .5, -1, .5, H - tx, -ty); g.drawImage(ex, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
+      const key = 'iso_floor_' + r.id + '_' + depth + '_' + tx + '_' + ty; if (this.textures.exists(key)) this.textures.remove(key);
       this.textures.addCanvas(key, cv); r.floorKeys.push(key); r.objs.push(this.add.image(X0 + tx, Y0 + ty, key).setOrigin(0).setDepth(depth));
     }
   }

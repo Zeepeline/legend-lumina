@@ -21,33 +21,35 @@ function isoInput(sc) {
   sc.input.keyboard.on('keydown-K', () => IN._rollQ = .2); sc.input.keyboard.on('keydown-SHIFT', () => IN._rollQ = .2);
   sc.input.addPointer(2);
   const ui = sc.ui, W = () => sc.scale.width, H = () => sc.scale.height;
-  const base = ui.add.circle(0, 0, 34, 0xffffff, .12).setStrokeStyle(2, 0xffffff, .35).setVisible(false);
-  const knob = ui.add.circle(0, 0, 15, 0xffffff, .38).setVisible(false);
+  const JR = 58; /* kontrol besar untuk HP (permintaan pemilik) */
+  const base = ui.add.circle(0, 0, JR, 0xffffff, .12).setStrokeStyle(3, 0xffffff, .4);
+  const knob = ui.add.circle(0, 0, 26, 0xffffff, .4);
+  const rest = () => { base.setPosition(JR + 30, H() - JR - 26).setAlpha(.55); knob.setPosition(base.x, base.y).setAlpha(.55); };
   const btn = (k, col, r) => {
     const c = ui.add.circle(0, 0, r, col, .28).setStrokeStyle(2, 0xffffff, .5);
-    const t = ui.add.text(0, 0, k, { fontFamily: 'monospace', fontSize: '9px', color: '#fff' }).setOrigin(.5);
+    const t = ui.add.text(0, 0, k, { fontFamily: 'monospace', fontSize: '12px', color: '#fff', stroke: '#1a140a', strokeThickness: 3 }).setOrigin(.5);
     return { c, t, r };
   };
-  const bA = btn('SERANG', 0xd2643c, 24), bR = btn('GULING', 0x3c8cd2, 17);
+  const bA = btn('SERANG', 0xd2643c, 42), bR = btn('GULING', 0x3c8cd2, 31);
   const place = () => {
-    bA.c.setPosition(W() - 42, H() - 44); bA.t.setPosition(W() - 42, H() - 44);
-    bR.c.setPosition(W() - 92, H() - 30); bR.t.setPosition(W() - 92, H() - 30);
+    bA.c.setPosition(W() - 62, H() - 66); bA.t.setPosition(W() - 62, H() - 66);
+    bR.c.setPosition(W() - 150, H() - 40); bR.t.setPosition(W() - 150, H() - 40); if (joyId < 0) rest();
   };
-  place(); sc.scale.on('resize', place);
   let joyId = -1, jx = 0, jy = 0;
-  const hitB = (b, p) => Math.hypot(p.x - b.c.x, p.y - b.c.y) < b.r + 8;
+  place(); sc.scale.on('resize', place);
+  const hitB = (b, p) => Math.hypot(p.x - b.c.x, p.y - b.c.y) < b.r + 12;
   ui.input.on('pointerdown', p => {
     if (hitB(bA, p)) { IN._atkQ = .2; bA.c.setFillStyle(0xd2643c, .6); return; }
     if (hitB(bR, p)) { IN._rollQ = .2; bR.c.setFillStyle(0x3c8cd2, .6); return; }
-    if (p.x < W() * .5 && joyId < 0) { joyId = p.id; jx = p.x; jy = p.y; base.setPosition(jx, jy).setVisible(true); knob.setPosition(jx, jy).setVisible(true); }
+    if (p.x < W() * .5 && joyId < 0) { joyId = p.id; jx = p.x; jy = p.y; base.setPosition(jx, jy).setAlpha(1); knob.setPosition(jx, jy).setAlpha(1); }
   });
   ui.input.on('pointermove', p => {
-    if (p.id !== joyId) return; let dx = p.x - jx, dy = p.y - jy; const d = Math.hypot(dx, dy), m = 30;
+    if (p.id !== joyId) return; let dx = p.x - jx, dy = p.y - jy; const d = Math.hypot(dx, dy), m = JR - 10;
     if (d > m) { dx = dx / d * m; dy = dy / d * m; } knob.setPosition(jx + dx, jy + dy); IN.jsx = dx / m; IN.jsy = dy / m;
   });
   const up = p => {
     bA.c.setFillStyle(0xd2643c, .28); bR.c.setFillStyle(0x3c8cd2, .28);
-    if (p.id === joyId) { joyId = -1; IN.jsx = IN.jsy = 0; base.setVisible(false); knob.setVisible(false); }
+    if (p.id === joyId) { joyId = -1; IN.jsx = IN.jsy = 0; rest(); }
   };
   ui.input.on('pointerup', up); ui.input.on('pointerupoutside', up);
   IN.poll = dt => {
