@@ -11,6 +11,8 @@ const ISO_SKIP = /shadow|cr_cloud/; // bayangan top-down & awan: dibuang (bayang
 const ISO_TILE = 2048; // potongan tekstur lantai (batas aman GPU HP 4096)
 const ISO_CAMZ = .62; // kamera ditarik jauh seperti pratinjau desa prototipe yang disetujui pemilik
 const ISO_NOLUSH = /^(cave|snow|swamp|pl_river_swamp)$/; // wilayah dengan tanah khas: rumput tidak diganti
+const ISO_PROTO = 'village', ISO_PXO = 192, ISO_PYO = 36; // Desa Lumina = denah prototipe (640×640) di dalam kotak desa asli, digeser (192, 36)
+const PROTO_ZAT = zAt; // tinggi tanah prototipe (dataran tinggi + tangga), dipakai di dalam kotak desa
 const ISO_LOAD = 700, ISO_DROP = 1500; // jarak muat / buang wilayah dari Arka (px dunia)
 
 class IsoWorld extends IsoScene {
@@ -18,16 +20,12 @@ class IsoWorld extends IsoScene {
     const q = new URLSearchParams(location.search);
     this.pid = q.get('peta') || 'village';
     this.spawnQ = q.get('x') ? [+q.get('x'), +q.get('y')] : null;
-    window.zAt = () => 0; /* peta game datar: tanpa tebing prototipe */
   }
   preload() {
+    IsoScene.prototype.preload.call(this); /* aset desa prototipe + Arka + serigala */
     this.load.json('isoIndex', ISO_DIR + 'index.json');
     this.load.json('isoWorld', ISO_DIR + 'world.json');
-    this.load.image('treeA', 'assets/img/treeA.png');
     this.load.image('bridge_v', 'assets/img/nature/bridge_wood_h.png'); this.load.image('bridge_h', 'assets/img/nature/bridge_wood.png');
-    this.load.spritesheet('hero', 'assets/img/hero_arka.png', { frameWidth: 48, frameHeight: 40 });
-    this.load.spritesheet('hero_iso_idle', 'assets/img/iso/hero_idle_iso.png', { frameWidth: 48, frameHeight: 44 });
-    this.load.spritesheet('wolf_hd', 'assets/img/mon_wolf_hd.png', { frameWidth: 128, frameHeight: 96 });
   }
   create() {
     const A = this.anims, wa = (k, a, b, fps, rep) => A.exists(k) || A.create({ key: k, frames: A.generateFrameNumbers('wolf_hd', { start: a, end: b }), frameRate: fps, repeat: rep });
@@ -37,18 +35,22 @@ class IsoWorld extends IsoScene {
     this.open = !!WJ[this.pid] || !this.IDX[this.pid];
     // wilayah: dunia terbuka = semua wilayah luar ruang di posisi global (digeser agar semua positif); peta terpisah = satu wilayah
     if (this.open) {
-      const ids = Object.keys(WJ), x0 = Math.min(...ids.map(i => WJ[i][0])) - 400, y0 = Math.min(...ids.map(i => WJ[i][1])) - 400;
+      const ids = Object.keys(WJ), x0 = WJ[ISO_PROTO][0] + ISO_PXO, y0 = WJ[ISO_PROTO][1] + ISO_PYO; /* titik 0 = pojok desa prototipe */
       this.regs = ids.map(id => ({ id, ox: WJ[id][0] - x0, oy: WJ[id][1] - y0, w: WJ[id][2], h: WJ[id][3] }));
+      this.MX0 = Math.min(...this.regs.map(r => r.ox)) - 400; this.MY0 = Math.min(...this.regs.map(r => r.oy)) - 400;
       this.MW = Math.max(...this.regs.map(r => r.ox + r.w)) + 400; this.MH = Math.max(...this.regs.map(r => r.oy + r.h)) + 400;
+      const PN = IMAP.N * ISO.T; window.zAt = (x, y) => x >= 0 && y >= 0 && x < PN && y < PN ? PROTO_ZAT(x, y) : 0;
+      IMAP.paths.push([34, 12, 40.5, 13.6, 1.4], [12, 29, 11.5, 32, 1.4], [11.5, 32, -.5, 32.2, 1.4], [24, 30, 19, 31, 1.4], [19, 31, 19, 40.5, 1.5]); /* ke Padang, Danau, Hutan */
       if (!WJ[this.pid]) this.pid = 'village';
     } else {
-      const m = this.IDX[this.pid]; this.regs = [{ id: this.pid, ox: 0, oy: 0, w: m.w, h: m.h }]; this.MW = m.w; this.MH = m.h;
+      const m = this.IDX[this.pid]; this.regs = [{ id: this.pid, ox: 0, oy: 0, w: m.w, h: m.h }]; this.MW = m.w; this.MH = m.h; window.zAt = () => 0;
     }
     for (const r of this.regs) Object.assign(r, { st: 'none', objs: [], props: [], wolves: [], exits: [] });
     this.ter = null; this.houses = []; this.solids = []; this.props = []; this.wolves = []; this.wave = 1; this.loadQ = [];
     // Arka
     const R0 = this.regs.find(r => r.id === this.pid), [lx, ly] = this.spawnQ || [R0.w / 2, R0.h / 2];
     this.spawn = [R0.ox + lx, R0.oy + ly]; this.needSpawn = !this.spawnQ;
+    if (this.open && R0.id === ISO_PROTO && !this.spawnQ) { this.spawn = [24 * ISO.T, 28.5 * ISO.T]; this.needSpawn = false; }
     this.hero = new IsoHero(this, this.spawn[0], this.spawn[1]); this.hero.face(0, 1);
     // kamera & efek (sama dengan prototipe)
     const cam = this.cameras.main; cam.setRoundPixels(true); this.fit(); this.scale.on('resize', () => this.fit());
@@ -74,7 +76,7 @@ class IsoWorld extends IsoScene {
     for (const r of this.regs) {
       const d = this.dist(r, H.x, H.y);
       if (d < ISO_LOAD && r.st === 'none') { r.st = 'queued'; this.loadQ.push(r); }
-      else if (d > ISO_DROP && r.st === 'ready') this.unloadReg(r);
+      else if (d > ISO_DROP && r.st === 'ready' && !r.keep) this.unloadReg(r);
     }
     this.loadQ.sort((a, b) => this.dist(a, H.x, H.y) - this.dist(b, H.x, H.y)); this.nextLoad();
     const cur = this.regAt(H.x, H.y); if (cur && cur !== this.curReg) { this.curReg = cur; this.hudName.setText('ISOMETRIK · ' + ((this.IDX[cur.id] || {}).name || cur.id));
@@ -83,6 +85,7 @@ class IsoWorld extends IsoScene {
   nextLoad() {
     if (this.loading || !this.loadQ.length) return;
     const r = this.loadQ.shift(); if (r.st !== 'queued') return this.nextLoad();
+    if (this.open && r.id === ISO_PROTO) { this.buildProto(r); return this.nextLoad(); }
     this.loading = r; r.st = 'loading'; const L = this.load, jk = 'r_' + r.id;
     const onJson = (k, t, D) => { if (k !== jk) return; for (const n of new Set(D.objs.map(o => o[0]))) if (!this.textures.exists('x_' + n)) L.image('x_' + n, ISO_DIR + 'tex/' + n + '.png'); };
     L.on('filecomplete-json-' + jk, onJson);
@@ -118,11 +121,60 @@ class IsoWorld extends IsoScene {
       const x = ex + r.ox, y = ey + r.oy; if (this.wallAt(x, y, 6) || Math.hypot(x - this.hero.x, y - this.hero.y) < 260) continue;
       const w = new IsoWolf(this, x, y); w.reg = r; r.wolves.push(w); this.wolves.push(w);
     }
+    this.regReady(r);
+  }
+  regReady(r) {
     this.props = this.regs.flatMap(q => q.props);
     if (!this.ready && r === this.regAt(this.spawn[0], this.spawn[1])) {
       if (this.needSpawn) { const [x, y] = this.findSpawn(r); Object.assign(this.hero, { x, y }); this.spawn = [x, y]; }
       this.ready = true; this.cameras.main.fadeIn(350);
     }
+  }
+  // ── Desa Lumina = denah prototipe (gambar pratinjau pemilik) + lahan pengisi sampai tepi kotak desa asli ──
+  buildProto(r) {
+    r.D = { exits: [], enemies: [] }; r.wg = new Map(); r.st = 'ready'; r.keep = true;
+    const T = ISO.T, PN = IMAP.N * T, P = (x, y) => [x - ISO_PXO, y - ISO_PYO]; /* lokal kotak desa → koordinat dunia */
+    // lahan pengisi: rumput + jalan dari tepi denah ke tiga sambungan
+    const roads = [[ISO_PXO + PN, ISO_PYO + 218, 1024, 267], [ISO_PXO, ISO_PYO + 515, 0, 590], [ISO_PXO + 312, ISO_PYO + PN, 512, 712]];
+    const base = document.createElement('canvas'); base.width = r.w; base.height = r.h; const b = base.getContext('2d');
+    b.fillStyle = '#5ea338'; b.fillRect(0, 0, r.w, r.h); b.strokeStyle = '#c8a868'; b.lineCap = 'round'; b.lineWidth = 26;
+    for (const [a, c, e, f] of roads) { b.beginPath(); b.moveTo(a, c); b.quadraticCurveTo((a + e) / 2 + (c - f) * .15, (c + f) / 2, e, f); b.stroke(); }
+    this.projectFloor(r, base, -1.1e5);
+    // denah prototipe apa adanya (titik 0 dunia = pojok denah)
+    const G = bakeGround(); this.ter = G.ter; if (this.textures.exists('iso_ground')) this.textures.remove('iso_ground');
+    this.textures.addCanvas('iso_ground', G.c); this.add.image(-G.ox, -G.oy, 'iso_ground').setOrigin(0).setDepth(-1e5); this.waterFx(G);
+    const allB = IMAP.houses.concat((IMAP.extra || []).map(([img, tx, ty, w, d]) => ({ t: [tx, ty, w, d], img })));
+    this.houses = allB.filter(h => this.textures.exists(h.img)).map(h => {
+      const [tx, ty, w, d] = h.t, x0 = tx * T, y0 = ty * T, cx = x0 + w * T * .5, cy = y0 + d * T * .5;
+      const tex = this.textures.get(h.img).getSourceImage(), img = this.add.image(isoX(cx, cy), isoY(cx, cy) + 8, h.img).setOrigin(.5, 1).setScale((w + d) * T * 1.08 / tex.width);
+      this.add.ellipse(isoX(x0 + w * T, y0 + d * T * .5) + 6, isoY(x0 + w * T, y0 + d * T) - 2, (w + d) * 10, (w + d) * 3, 0x282412, .28).setDepth(-9e4);
+      const base2 = x0 + y0 + (w + d) * T - 10; img.setDepth(base2);
+      return { x: x0, y: y0, w: w * T, d: d * T, img, base: base2 };
+    });
+    for (const p of isoProps()) {
+      if (p.x < 0 || p.y < 0 || p.x >= PN || p.y >= PN) continue; /* hutan luar denah diganti lahan pengisi */
+      const sx = isoX(p.x, p.y), sy = isoY(p.x, p.y, zAt(p.x, p.y));
+      if (p.flat) { this.add.image(sx, sy, p.k).setOrigin(.5, .8).setDepth(-5e4 + p.x + p.y); continue; }
+      const img = this.add.image(sx, sy, p.k).setOrigin(.5, .94).setScale(p.s).setDepth(p.x + p.y);
+      if (p.tree) { this.add.image(sx + 8, sy - 1, 'fx_shadow').setScale(2.4 * p.s, 1.8 * p.s).setDepth(-5e4); img.setFlipX(hash2(p.x, p.y, 2) < .5); }
+      else this.add.image(sx + 2, sy, 'fx_shadow').setScale(img.displayWidth / 22, .9).setDepth(-5e4);
+      if (p.r) this.solids.push({ x: p.x, y: p.y, r: p.r });
+      if (p.tree) r.props.push({ img, d: p.x + p.y, al: 1, b: img.getBounds() });
+    }
+    if (this.textures.exists('cliff_stairs')) this.add.image(isoX(138, 122), isoY(138, 122, 0) + 4, 'cliff_stairs').setOrigin(.5, .8).setDepth(260);
+    isoFantasy(this);
+    // pohon di lahan pengisi (bukan di jalan), padat seperti tepi hutan prototipe
+    const seg = (x, y, a, c, e, f) => { const vx = e - a, vy = f - c, t = Math.max(0, Math.min(1, ((x - a) * vx + (y - c) * vy) / (vx * vx + vy * vy))); return Math.hypot(x - a - vx * t, y - c - vy * t); };
+    for (let ly = 8; ly < r.h; ly += 18) for (let lx = 8; lx < r.w; lx += 18) {
+      if (lx > ISO_PXO - 14 && lx < ISO_PXO + PN + 14 && ly > ISO_PYO - 14 && ly < ISO_PYO + PN + 14) continue;
+      const jx = lx + (hash2(lx, ly, 61) - .5) * 12, jy = ly + (hash2(lx, ly, 62) - .5) * 12;
+      if (hash2(lx, ly, 63) > .5 || roads.some(q => seg(jx, jy, ...q) < 34)) continue;
+      const [x, y] = P(jx, jy), sx = isoX(x, y), sy = isoY(x, y), sc = .8 + hash2(lx, ly, 64) * .4;
+      this.add.image(sx + 8, sy - 1, 'fx_shadow').setScale(2.4 * sc, 1.8 * sc).setDepth(-5e4);
+      const img = this.add.image(sx, sy, 'treeA').setOrigin(.5, .94).setScale(sc).setDepth(x + y).setFlipX(hash2(lx, ly, 65) < .5);
+      this.solids.push({ x, y, r: 7 }); r.props.push({ img, d: x + y, al: 1, b: img.getBounds() });
+    }
+    this.regReady(r);
   }
   unloadReg(r) {
     for (const o of r.objs) o.destroy();
@@ -141,15 +193,17 @@ class IsoWorld extends IsoScene {
       const im = this.textures.get('x_' + n).getSourceImage();
       b.save(); b.globalAlpha = al; b.translate(x, y); b.rotate(rot); b.scale(sx * (fl ? -1 : 1), sy); b.drawImage(im, -ox * im.width, -oy * im.height); b.restore();
     }
-    this.bridges(b, W, H);
-    const PW = W + H, PH = Math.ceil((W + H) / 2), X0 = isoX(r.ox, r.oy) - H, Y0 = isoY(r.ox, r.oy); r.floorKeys = [];
+    this.bridges(b, W, H); this.projectFloor(r, base, -1e5);
+  }
+  projectFloor(r, base, depth) {
+    const W = r.w, H = r.h, PW = W + H, PH = Math.ceil((W + H) / 2), X0 = isoX(r.ox, r.oy) - H, Y0 = isoY(r.ox, r.oy); r.floorKeys = [];
     for (let ty = 0; ty < PH; ty += ISO_TILE) for (let tx = 0; tx < PW; tx += ISO_TILE) {
       const cw = Math.min(ISO_TILE, PW - tx), ch = Math.min(ISO_TILE, PH - ty), cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
       const g = cv.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
       g.setTransform(1, .5, -1, .5, H - tx, -ty); g.drawImage(base, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
       if (!ISO_NOLUSH.test(r.id)) this.lushGrass(g, cw, ch, X0 + tx, Y0 + ty);
       const key = 'iso_floor_' + r.id + '_' + tx + '_' + ty; if (this.textures.exists(key)) this.textures.remove(key);
-      this.textures.addCanvas(key, cv); r.floorKeys.push(key); r.objs.push(this.add.image(X0 + tx, Y0 + ty, key).setOrigin(0).setDepth(-1e5));
+      this.textures.addCanvas(key, cv); r.floorKeys.push(key); r.objs.push(this.add.image(X0 + tx, Y0 + ty, key).setOrigin(0).setDepth(depth));
     }
   }
   // jembatan: jalan tanah yang diapit air (atas-bawah / kiri-kanan) → papan kayu aset bridge_wood + tepi gelap
@@ -297,7 +351,7 @@ class IsoWorld extends IsoScene {
   render() {
     const H = this.hero;
     for (const a of [H, ...this.wolves]) {
-      a.z = 0; const sx = isoX(a.x, a.y), sy = isoY(a.x, a.y);
+      a.z = zAt(a.x, a.y); const sx = isoX(a.x, a.y), sy = isoY(a.x, a.y, a.z);
       a.spr.setPosition(Math.round(sx + (a.st === 'wind' ? Math.sin(a.t * 70) * .8 : 0)), Math.round(sy)).setDepth(a.x + a.y + 1);
       a.sh.setPosition(Math.round(sx), Math.round(sy)).setDepth(-4.5e4);
       if (a.fl > 0) { a.fl -= .016; if (a.fl <= 0 && a.st !== 'dead') a.spr.clearTint(); }
@@ -306,8 +360,13 @@ class IsoWorld extends IsoScene {
     // pohon/rumah di depan Arka jadi tembus pandang
     const pd = H.x + H.y, hs = isoX(H.x, H.y), hy = isoY(H.x, H.y) - 12;
     for (const p of this.props) p.img.setAlpha(p.d > pd && p.b.contains(hs, hy) ? Math.min(p.al, .45) : p.al);
+    const hz = isoY(H.x, H.y, H.z); /* rumah desa prototipe: kedalaman relatif Arka + tembus pandang (sama dengan prototipe) */
+    for (const h of this.houses) {
+      const front = H.x >= h.x + h.w || H.y >= h.y + h.d, over = h.img.getBounds().contains(hs, hz - 10);
+      h.img.setDepth(over ? (front ? pd - 1 : pd + 2) : h.base); h.img.setAlpha(over && !front ? .55 : 1);
+    }
     this.hpBar.width = 100 * H.hp / H.max;
-    const cam = this.cameras.main, tx = hs - cam.width / 2, ty = isoY(H.x, H.y) - 14 - cam.height / 2;
+    const cam = this.cameras.main, tx = hs - cam.width / 2, ty = isoY(H.x, H.y, H.z) - 14 - cam.height / 2;
     cam.scrollX += (tx - cam.scrollX) * .14; cam.scrollY += (ty - cam.scrollY) * .14;
     this.motes.setPosition(hs, isoY(H.x, H.y));
   }

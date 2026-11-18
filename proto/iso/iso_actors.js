@@ -22,7 +22,8 @@ function isoDirOf(sx, sy) {
 function isoMove(sc, a, vx, vy, dt) {
   const tryP = (nx, ny) => {
     const R = a.rad || 5, MW = sc.MW || IMAP.N * ISO.T, MH = sc.MH || IMAP.N * ISO.T;
-    if (nx < R || ny < R || nx > MW - R || ny > MH - R) return false;
+    const X0 = sc.MX0 || 0, Y0 = sc.MY0 || 0; /* dunia terbuka: koordinat bisa negatif (desa prototipe di titik 0) */
+    if (nx < X0 + R || ny < Y0 + R || nx > MW - R || ny > MH - R) return false;
     if (sc.wallAt && sc.wallAt(nx, ny, R)) return false; /* tembok asli peta game */
     const tx = Math.floor(nx / ISO.T), ty = Math.floor(ny / ISO.T);
     if (sc.ter && sc.ter[ty] && sc.ter[ty][tx] === 'water') return false;
