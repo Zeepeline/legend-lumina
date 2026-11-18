@@ -12,7 +12,12 @@ Tidak memakai kode `src/` sama sekali dan tidak dimuat `index.html`, jadi game u
 - `iso_fantasy.js` sentuhan dunia fantasi (`docs/DUNIA_FANTASI.md`): Kristal Utama + sinar + batu melayang di akar Pohon Induk, kristal kecil,
   bunga lentera, lentera kristal, debu cahaya, dan tanah rusak + kristal retak ungu + duri di sarang serigala.
 
-## Peta asli game dalam isometrik (bawaan `iso.html`)
+## Dunia terbuka isometrik (bawaan `iso.html`)
+- Semua wilayah luar ruang menyatu di posisi global mode benua (`maps/world.json` dari `node tools/export_iso_world.js`); wilayah dimuat saat
+  Arka ≤700 px dan dibuang saat >1500 px (`ISO_LOAD`/`ISO_DROP`). Pintu antar wilayah luar diabaikan (menyambung langsung); gua/dalam ruangan = halaman `?peta=<id>`.
+- Kamera zoom ×0,62, rumput bintik gaya prototipe (`lushGrass`), hutan lebat di tepi dunia (`forestRing`).
+
+## Peta asli game dalam isometrik
 - `iso.html` / `iso.html?peta=<id>` membuka **peta asli game** (21 peta luar: desa, hutan, padang, gua, rawa, salju, danau, jalan raya, 4 distrik kota,
   hutan dalam, sungai, 7 jalur penghubung `pl_*`). Pilih peta lewat menu kanan atas; pintu antar peta berfungsi. Desa prototipe lama: `?peta=proto`.
 - `iso_world.js` (`IsoWorld`): lantai top-down asli + tempelan tanah dipanggang lalu diproyeksikan 2:1 per potongan 2048 px; objek asli di posisi
