@@ -9,3 +9,5 @@ Tidak memakai kode `src/` sama sekali dan tidak dimuat `index.html`, jadi game u
 - `iso_actors.js` Arka (kombo 3 dengan langkah maju & hit-stop, guling i-frame) dan serigala (mengitari, ancang-ancang dengan cincin di tanah,
   menerjang, jeda pulih; hanya satu serigala menyerang sekaligus).
 - `iso_scene.js` scene, urutan kedalaman (rumah relatif pemain), tembus pandang, efek, suara berlapis WebAudio, HUD, gelombang serigala.
+- `iso_fantasy.js` sentuhan dunia fantasi (`docs/DUNIA_FANTASI.md`): Kristal Utama + sinar + batu melayang di akar Pohon Induk, kristal kecil,
+  bunga lentera, lentera kristal, debu cahaya, dan tanah rusak + kristal retak ungu + duri di sarang serigala.

@@ -20,7 +20,7 @@ Proyek: action RPG top-down untuk browser/HP, **Phaser 3.80.1**, skrip klasik gl
 | Menaruh objek/dekorasi/peta | `docs/PLACEMENT_RULES.md` (+ `docs/GEOGRAFI.md` untuk sungai, kota, penanda) |
 | NPC, dialog, rutinitas | `docs/NPC_RULES.md` |
 | Cerita, misi, bab, boss | `docs/GAME_DESIGN.md` (+ `SPOILER_ENDING.md`, rahasia) |
-| Wilayah/kota/dungeon baru | `docs/WORLD_DESIGN.md` (checklist bag. 23) + `docs/BENUA_LUMINA.md` |
+| Wilayah/kota/dungeon baru | `docs/WORLD_DESIGN.md` (checklist bag. 23) + `docs/BENUA_LUMINA.md` + `docs/DUNIA_FANTASI.md` |
 | Gambar/aset/animasi/VFX tempur | `docs/TASKS_GPT_ASET.md` (gaya Senja Emas), `docs/ART_BIBLE.md`, `ASSET_RULES.md`, `VALIDATION_RULES.md`, `ANIMATION_RULES.md`, `COMBAT_VFX_RULES.md` |
 | Cek apakah fitur lama sudah ada | `grep -n "kata" docs/arsip/*.md` |
 
@@ -65,5 +65,5 @@ Proyek: action RPG top-down untuk browser/HP, **Phaser 3.80.1**, skrip klasik gl
 - **Juice partikel & animasi (v1.45.0):** `systems/juice.js` — `jx(nama,x,y,n,opsi)` 4 pemancar bersama (spark/chip/mote/star); percikan & serpihan kena pukul, butiran saat mati/ancang-ancang, ekor proyektil, bayangan guling, naik level (sorak), pulih, memancing, bangkit. Pose khusus Arka lewat `pl._emote`. v1.46.0 ala Dimraeth: zona bahaya di tanah (`jxTele`), aura status (`jxAura`), kawah hantaman, nisan Jejak Cahaya; `sparkle()` kini memakai pemancar bersama.
 - **Rona warna keemasan (v1.47.0):** `systems/grade.js` — ColorMatrix + vinyet di kamera World & scene tanah `GL` (acuan screenshot Dimraeth pemilik); mati di dalam ruangan/gua/salju/`OPT.lite`; `OPT.grade = false` mematikan.
 - **Aset gaya "Senja Emas" (rencana):** 376 tugas ChatGPT di `docs/TASKS_GPT_ASET.md` (bagian N = hutan alami) (tanah, tumbuhan, bangunan, NPC, musuh, VFX, UI, ikon); hasil ke `assets/raw/gpt2/`. Setelah tanah + vegetasi masuk, gaya ini menggantikan patokan treeA.
-- **Prototipe isometrik (18-11-2026):** `iso.html` + `proto/iso/` (terpisah dari game, disetujui pemilik). Aset isometrik: 105 tugas ChatGPT di `docs/TASKS_GPT_ISO.md` (mulai Arka 8 arah).
+- **Prototipe isometrik (18-11-2026):** `iso.html` + `proto/iso/` (terpisah dari game, disetujui pemilik). Aset isometrik: 128 tugas ChatGPT di `docs/TASKS_GPT_ISO.md` (mulai Arka 8 arah). Dunia fantasi kadar sedang: `docs/DUNIA_FANTASI.md`.
 - **Berikutnya:** konten ekspansi Bab 6 (`BENUA_LUMINA.md` bag. 7) & eksplorasi teka-teki kuil kuno.

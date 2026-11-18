@@ -2,8 +2,9 @@
 // Seni prosedural prototipe isometrik (gaya "Senja Emas": rumput kuning-hijau, tanah oker, bayangan zaitun, cahaya dari kiri atas).
 // Ubin belah ketupat 32×16 digambar per piksel (tajam, tanpa anti-alias). Rumah isometrik digambar dari poligon lalu alfanya ditegaskan.
 const PAL = {
-  grass: ['#a9b94e', '#9fb047', '#93a541', '#b7c45c', '#7f9038'], grassDk: '#5f6e2c', grassRim: '#4d5a24',
-  dirt: ['#c9ae62', '#bfa45b', '#b49955', '#d3b96f'], dirtDk: '#9a8549',
+  grass: ['#5ea338', '#579c33', '#4c8a2b', '#6aaf42', '#3b6c20'], grassDk: '#3b6c20', grassRim: '#2f5a1a',
+  rot: ['#6a5a72', '#5e5068', '#74647c', '#4a3e54'], rotCrack: '#a070c8',
+  dirt: ['#c8a868', '#bf9f60', '#ad8f53', '#d2b474'], dirtDk: '#957a46',
   stone: ['#b9ad8a', '#a99e7d', '#c7bc98', '#9a8f70'], stoneGap: '#7d735a',
   water: ['#4f7a6a', '#4a7363', '#557f6e'], waterDk: '#3c5e52', farm: ['#8a6a3a', '#7d5f33', '#94733f'], farmRow: '#6a4f2a',
   cliffL: ['#9a8a62', '#8e7f5a', '#a6966c'], cliffR: ['#6e6146', '#64583f', '#77694c'], cliffRoot: '#4a4030',
@@ -26,6 +27,7 @@ function tileCanvas(kind, v) {
       const gx = (px + Math.floor(py / 4) * 3) % 8, gy = py % 4;
       col = gx === 0 || gy === 0 ? PAL.stoneGap : PAL.stone[Math.floor(hash2(Math.floor((px + Math.floor(py / 4) * 3) / 8), Math.floor(py / 4), v) * 4)];
     }
+    else if (kind === 'rot') col = n < .03 ? PAL.rotCrack : PAL.rot[Math.floor(hash2(px >> 1, py >> 1, v + 7) * 4)];
     else if (kind === 'water') col = n < .7 ? PAL.water[0] : n < .9 ? PAL.water[1] : PAL.water[2];
     else if (kind === 'farm') col = (py + Math.floor(px / 2)) % 4 === 0 ? PAL.farmRow : PAL.farm[Math.floor(n * 3)];
     set(px, py, col);

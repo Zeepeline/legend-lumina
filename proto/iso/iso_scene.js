@@ -1,6 +1,6 @@
 'use strict';
 // Scene prototipe isometrik: muat aset, panggang tanah, pasang rumah/objek, jalankan aktor, efek tempur, kamera, HUD.
-const IMG = ['treeA', 'apple1', 'bigtree', 'bushG1', 'bushG2', 'bushP', 'gpt_verdant_rock_med', 'gpt_verdant_stump', 'gpt_v_village_well', 'lampPost',
+const IMG = ['treeA', 'apple1', 'bigtree', 'bushG1', 'bushG2', 'bushP', 'gpt_verdant_rock_med', 'gpt_verdant_rock_large', 'gpt_verdant_stump', 'gpt_v_village_well', 'lampPost',
   'gpt_barrel', 'benchWood', 'crateCart', 'deco_fl_y1', 'deco_fl_p2', 'deco_tuft', 'deco_pebbles', 'deco_mushroom'];
 const GRADE = [1.05, .12, 0, 0, -4, 0, 1.04, 0, 0, -2, 0, .04, .84, 0, 0, 0, 0, 0, 1, 0];
 
@@ -40,6 +40,7 @@ class IsoScene extends Phaser.Scene {
       if (p.r) this.solids.push({ x: p.x, y: p.y, r: p.r });
       this.props.push({ img, x: p.x, y: p.y, tree: p.tree });
     }
+    isoFantasy(this);
     // aktor
     this.hero = new IsoHero(this, 24 * ISO.T, 28.5 * ISO.T); this.hero.face(-.4, 1);
     this.wolves = []; this.wave = 0; this.spawnWave();

@@ -12,6 +12,7 @@ const IMAP = {
     { t: [22, 32, 4, 3], roof: ['#9a7a4a', '#7d6038', '#62492a'], wallCol: '#cfb48a', wallColDk: '#a98e64', name: 'Rumah Arka' },
   ],
   pond: [35, 18, 3.2],
+  rot: [30.5, 31.5, 2.4], /* tanah rusak di sekitar kristal retak (sarang serigala) */
   farms: [[6, 26, 5, 5]],
   paths: [ // ruas jalan tanah [tx1, ty1, tx2, ty2, lebar ubin]
     [24, 24, 10.5, 8.5, 1.6], [24, 24, 34, 12, 1.4], [24, 24, 24, 30, 1.5], [24, 24, 38, 30, 1.4], [24, 24, 12, 29, 1.3], [24, 30, 31, 33, 1.6],
@@ -34,6 +35,7 @@ function segDist(px, py, ax, ay, bx, by) {
 function terrainAt(tx, ty) {
   const cx = tx + .5, cy = ty + .5, P = IMAP.plaza, wob = (hash2(tx, ty, 9) - .5) * .7;
   if (Math.hypot(cx - IMAP.pond[0], cy - IMAP.pond[1]) < IMAP.pond[2] + wob * .6) return 'water';
+  if (Math.hypot(cx - IMAP.rot[0], cy - IMAP.rot[1]) < IMAP.rot[2] + wob) return 'rot';
   for (const [fx, fy, fw, fh] of IMAP.farms) if (tx >= fx && tx < fx + fw && ty >= fy && ty < fy + fh) return 'farm';
   if (Math.hypot(cx - P[0], cy - P[1]) < P[2] + wob * .3) return 'stone';
   const R = IMAP.ramp, s = cx + cy, d = cx - cy; if (d >= R.d0 && d <= R.d1 && s >= R.s0 - .3 && s <= R.s1 + .2) return 'stone';
@@ -94,7 +96,7 @@ function isoProps() {
   const P = [], N = IMAP.N, used = new Set(), ter = (tx, ty) => terrainAt(tx, ty);
   const add = (k, tx, ty, s = 1, r = 6, o = {}) => { P.push(Object.assign({ k, x: (tx + .5) * ISO.T, y: (ty + .5) * ISO.T, s, r }, o)); used.add(tx + ',' + ty); };
   add('gpt_v_village_well', 24, 24, .5, 12);
-  add('bigtree', 4, 5, .55, 22); add('benchWood', 4, 10, 1, 6); add('lampPost', 10, 4, 1, 3); add('lampPost', 6, 10, 1, 3);
+  add('bigtree', 4, 6, 1, 30, { tree: 1 }); add('benchWood', 4, 10, 1, 6); add('lampPost', 10, 4, 1, 3); add('lampPost', 6, 10, 1, 3);
   add('lampPost', 20, 21, 1, 3); add('lampPost', 27, 27, 1, 3); add('benchWood', 26, 20, 1, 6); add('gpt_barrel', 18, 23, 1, 4); add('gpt_barrel', 19, 23, 1, 4);
   add('crateCart', 29, 21, 1, 10);
   const inHouse = (tx, ty) => IMAP.houses.some(h => tx >= h.t[0] - 1 && tx <= h.t[0] + h.t[2] && ty >= h.t[1] - 1 && ty <= h.t[1] + h.t[3]);

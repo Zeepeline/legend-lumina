@@ -1,4 +1,4 @@
-# TASKS_GPT_ISO — tugas ChatGPT untuk versi ISOMETRIK (I001–I105)
+# TASKS_GPT_ISO — tugas ChatGPT untuk versi ISOMETRIK (I001–I128)
 
 Dasar: prototipe isometrik Desa Lumina (`iso.html`, `proto/iso/`, 18-11-2026) disetujui pemilik ("cukup bagus dibanding top-down").
 Dokumen ini hanya berisi aset yang BERBEDA untuk isometrik. Aset yang tetap dipakai dari `docs/TASKS_GPT_ASET.md`:
@@ -13,7 +13,8 @@ interior, jembatan/pagar (2 arah), efek yang menempel di tanah.
 2. Kirim prompt tugas satu per satu. Satu tugas = satu gambar. Simpan ke nama file di "Simpan", kirim ke Claude, centang `[x]`.
 3. Bagian lain: obrolan baru per bagian, pesan pertama sama (+ lampirkan hasil I014 "Patokan isometrik: desa" sebagai STYLE KEY ISO bila sudah ada).
 4. Jangan unggah screenshot game lain dan jangan menyebut nama game lain: semua desain milik Legenda Lumina.
-5. Urutan: A (Arka) → B patokan desa → D bangunan desa → C tebing & air → F NPC desa → sisanya.
+5. Dunia fantasi kadar sedang: lihat `docs/DUNIA_FANTASI.md` (aturan sudah masuk blok GAYA ISO).
+6. Urutan: A (Arka) → B patokan desa → I kristal & Pohon Induk → D bangunan desa → C tebing & air → F NPC desa → sisanya.
 
 ## Blok GAYA ISO (pesan pembuka setiap obrolan)
 ```
@@ -25,6 +26,11 @@ STYLE RULES for every image in this chat:
   Shadows fall to the lower right, soft cool-neutral tone, never pure black.
 - Palette: fresh natural green grass (#5ea338, #4c8a2b, #3b6c20), clean natural earth path (#c8a868, #ad8f53), plaster (#f0e2c8), timber (#6a4a2c),
   thatch (#d2a852), red tile (#b84a32), stone (#9ba09d, #6e7270), darkest tone #1e201d. Crisp, natural, clear, no dusk/sunset tint, no neon.
+- FANTASY WORLD (moderate): this is NOT Earth. Homes stay warm and familiar, but the world shows magic born from glowing Lumina crystals:
+  teal-white hexagonal crystals (#7fe0d8 core #e8fffb) jutting from ground or cliffs with small floating pebbles around them,
+  softly glowing plants (lantern flowers, lumen moss, glowing mushrooms), giant mossy roots arching out of the ground, pale ancient ruins
+  with carved vine-and-sun motifs. Glow is a small accent (about 10% of the image), never neon, never over the whole scene.
+  Near corruption: dark violet-grey soil, black thorns, cracked dull crystals with violet cracks (#7a4a9a).
 - Shading: 3-4 tones per material, chunky readable pixel clusters, very little dithering.
 - Outlines: 1-pixel outline in a darker shade of the local color on characters and objects; floor tiles have no outline.
 - Scale: one game pixel = one art pixel. A human is about 32 px tall. A floor diamond is 32x16 px. One height level (cliff) is 26 px.
@@ -130,32 +136,32 @@ Obrolan "Patokan ISO". Lampirkan `assets/reference/iso_ref.png` (screenshot prot
 
 ### [ ] I014. Patokan isometrik: desa
 - Simpan: `assets/raw/iso/patokan/desa.png` · Ukuran di game: acuan, tidak dipotong
-- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a farming village on two ground levels: a raised grassy plateau with a stone stair, timber cottages, a stone plaza with a well, dirt paths, a pond. One small original hero (about 32 px tall in game scale) for scale.`
+- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a farming village on two ground levels: on the raised plateau a colossal ancient Mother Tree whose roots embrace a huge glowing Lumina crystal (a thin beam of light rises from it, pebbles float around it), a stone stair, timber cottages with small crystal lanterns and curled roof ridges, a stone plaza with a well, glowing lantern flowers in gardens, dirt paths, a pond. One small original hero (about 32 px tall in game scale) for scale.`
 - Cek: Kerjakan "desa" dulu. Setelah disetujui = STYLE KEY ISO, lampirkan di semua obrolan lain.
 
 ### [ ] I015. Patokan isometrik: hutan
 - Simpan: `assets/raw/iso/patokan/hutan.png` · Ukuran di game: acuan, tidak dipotong
-- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a forest clearing that gets deeper toward the top: young trees at the bottom, dense mature forest, an ancient dark core with giant roots and mist. One small original hero (about 32 px tall in game scale) for scale.`
+- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a forest that gets deeper toward the top: young trees at the bottom, dense mature forest with lumen moss glowing softly on trunks and glowing mushrooms, an ancient core with tower-sized trees, giant roots forming arches and bridges, pale Aurel ruins swallowed by roots. One small original hero (about 32 px tall in game scale) for scale.`
 
 ### [ ] I016. Patokan isometrik: rawa
 - Simpan: `assets/raw/iso/patokan/rawa.png` · Ukuran di game: acuan, tidak dipotong
-- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a murky swamp with boardwalks over olive water, reeds, twisted trees, mist. One small original hero (about 32 px tall in game scale) for scale.`
+- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a murky swamp with boardwalks over olive water, roofs and pillars of a sunken ancient town rising from the water, giant mushrooms, twisted trees, thin mist, a cracked violet crystal with black thorns near the edge. One small original hero (about 32 px tall in game scale) for scale.`
 
 ### [ ] I017. Patokan isometrik: gua
 - Simpan: `assets/raw/iso/patokan/gua.png` · Ukuran di game: acuan, tidak dipotong
-- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a cave on two levels with a rock ledge, crystals, a torch-lit path. One small original hero (about 32 px tall in game scale) for scale.`
+- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of an old abandoned mine cave on two levels: teal crystal veins in the walls, carved-out crystal pits, old mine rails, a dormant stone golem with glowing seams, a crystal-torch-lit path. One small original hero (about 32 px tall in game scale) for scale.`
 
 ### [ ] I018. Patokan isometrik: salju
 - Simpan: `assets/raw/iso/patokan/salju.png` · Ukuran di game: acuan, tidak dipotong
-- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a snowy mountain pass with icy cliffs on several height levels, frosted pines, a frozen pond. One small original hero (about 32 px tall in game scale) for scale.`
+- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a snowy mountain pass on a ridge shaped like a dragon's spine, icy cliffs on several levels, ice crystals, ancient stone torches, frosted pines, a frozen pond, faint daytime aurora ribbons. One small original hero (about 32 px tall in game scale) for scale.`
 
 ### [ ] I019. Patokan isometrik: kota
 - Simpan: `assets/raw/iso/patokan/kota.png` · Ukuran di game: acuan, tidak dipotong
-- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a market town street with stone houses, a raised city wall walkway, cobblestones, a fountain. One small original hero (about 32 px tall in game scale) for scale.`
+- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a lakeside market town called the city of a thousand lanterns: crystal lanterns everywhere, stone houses with curled roof ridges, a raised city wall walkway, a stone bridge over a mirror-like lake, an academy tower with a crystal glass dome. One small original hero (about 32 px tall in game scale) for scale.`
 
 ### [ ] I020. Patokan isometrik: markas goblin
 - Simpan: `assets/raw/iso/patokan/markas_goblin.png` · Ukuran di game: acuan, tidak dipotong
-- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a goblin war camp on a muddy hill, log palisade with a gate, hide huts, watch platform. One small original hero (about 32 px tall in game scale) for scale.`
+- Prompt: `[LAYOUT: ISO CONCEPT] Isometric game screen of a goblin war camp on a muddy hill: log palisade with a gate, hide huts, watch platform, stolen Lumina crystals strapped to bone totems. One small original hero (about 32 px tall in game scale) for scale.`
 
 ### [ ] I021. Patokan isometrik: arena
 - Simpan: `assets/raw/iso/patokan/arena.png` · Ukuran di game: acuan, tidak dipotong
@@ -267,122 +273,122 @@ Obrolan "Bangunan ISO".
 
 ### [ ] I043. Bangunan isometrik: rumah a
 - Simpan: `assets/raw/iso/bangunan/rumah_a.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] small timber cottage, cream plaster, thatched roof, flower box. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] small timber cottage, cream plaster, thatched roof, flower box. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I044. Bangunan isometrik: rumah b
 - Simpan: `assets/raw/iso/bangunan/rumah_b.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] two-storey village house, red tile roof, wooden balcony. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] two-storey village house, red tile roof, wooden balcony. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I045. Bangunan isometrik: rumah c
 - Simpan: `assets/raw/iso/bangunan/rumah_c.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] long farmhouse with a covered porch and firewood stack. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] long farmhouse with a covered porch and firewood stack. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I046. Bangunan isometrik: rumah d
 - Simpan: `assets/raw/iso/bangunan/rumah_d.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] stone cottage, slate roof, chimney. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] stone cottage, slate roof, chimney. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I047. Bangunan isometrik: rumah arka
 - Simpan: `assets/raw/iso/bangunan/rumah_arka.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] the hero's modest family home with a small vegetable patch. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] the hero's modest family home with a small vegetable patch. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I048. Bangunan isometrik: rumah pemburu
 - Simpan: `assets/raw/iso/bangunan/rumah_pemburu.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] dark-wood hunter cabin with antlers above the door. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] dark-wood hunter cabin with antlers above the door. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I049. Bangunan isometrik: toko
 - Simpan: `assets/raw/iso/bangunan/toko.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] shop house with an empty hanging sign bracket and awning. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] shop house with an empty hanging sign bracket and awning. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I050. Bangunan isometrik: penginapan
 - Simpan: `assets/raw/iso/bangunan/penginapan.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] two-storey village inn, warm windows, benches outside. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] two-storey village inn, warm windows, benches outside. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I051. Bangunan isometrik: pandai besi
 - Simpan: `assets/raw/iso/bangunan/pandai_besi.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] blacksmith workshop with an open side, forge glow, chimney. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] blacksmith workshop with an open side, forge glow, chimney. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I052. Bangunan isometrik: balai desa
 - Simpan: `assets/raw/iso/bangunan/balai_desa.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] village hall with a bell on the roof. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] village hall with a bell on the roof. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I053. Bangunan isometrik: rumah pohon tetua
 - Simpan: `assets/raw/iso/bangunan/rumah_pohon_tetua.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] the village elder's house built into a giant ancient tree. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] the village elder's house built into a giant ancient tree. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I054. Bangunan isometrik: akademi
 - Simpan: `assets/raw/iso/bangunan/akademi.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] town academy, stone, arched windows, small tower. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] town academy, stone, arched windows, small tower. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I055. Bangunan isometrik: gerbang kota
 - Simpan: `assets/raw/iso/bangunan/gerbang_kota.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] town gatehouse with two towers and wooden doors. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] town gatehouse with two towers and wooden doors. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I056. Bangunan isometrik: kincir angin
 - Simpan: `assets/raw/iso/bangunan/kincir_angin.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] windmill (separate sail piece on a second cell for rotation). The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] windmill (separate sail piece on a second cell for rotation). Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I057. Bangunan isometrik: mercusuar
 - Simpan: `assets/raw/iso/bangunan/mercusuar.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] lakeside lighthouse with a keeper hut. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] lakeside lighthouse with a keeper hut. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I058. Bangunan isometrik: menara jam
 - Simpan: `assets/raw/iso/bangunan/menara_jam.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] clockwork tower. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] clockwork tower. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I059. Bangunan isometrik: kuil hutan
 - Simpan: `assets/raw/iso/bangunan/kuil_hutan.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] woodland shrine with a wooden roof. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] woodland shrine with a wooden roof. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I060. Bangunan isometrik: pos jaga
 - Simpan: `assets/raw/iso/bangunan/pos_jaga.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] wooden watchtower with a ladder. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] wooden watchtower with a ladder. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I061. Bangunan isometrik: pasar
 - Simpan: `assets/raw/iso/bangunan/pasar.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] 4 market stalls with cloth canopies (2x2). The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] 4 market stalls with cloth canopies (2x2). Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I062. Bangunan isometrik: mulut gua
 - Simpan: `assets/raw/iso/bangunan/mulut_gua.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] cave entrance in a rock cliff with support beams. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] cave entrance in a rock cliff with support beams. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I063. Bangunan isometrik: reruntuhan
 - Simpan: `assets/raw/iso/bangunan/reruntuhan.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] ancient ruins: broken columns, collapsed arch, cracked floor (2x2). The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] ancient Aurel ruins in pale cream stone with carved vine-and-sun motifs: broken columns, collapsed arch, octagonal cracked floor, giant roots wrapping them (2x2). Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I064. Bangunan isometrik: gubuk goblin
 - Simpan: `assets/raw/iso/bangunan/gubuk_goblin.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] 4 goblin hide huts (2x2). The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] 4 goblin hide huts (2x2). Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I065. Bangunan isometrik: palisade goblin
 - Simpan: `assets/raw/iso/bangunan/palisade_goblin.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] spiked log palisade pieces in both isometric directions with a gate. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] spiked log palisade pieces in both isometric directions with a gate. Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 ### [ ] I066. Bangunan isometrik: menara goblin
 - Simpan: `assets/raw/iso/bangunan/menara_goblin.png` · Ukuran di game: rumah 64–128 px lebar
-- Prompt: `[LAYOUT: ISO BUILDING] goblin lookout tower and cage (2 cells). The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
+- Prompt: `[LAYOUT: ISO BUILDING] goblin lookout tower and cage (2 cells). Fantasy touch: a small crystal lantern by the door, carved vine motifs on beams, slightly curled roof ridge ends. The front door is on the LEFT-FRONT wall (facing down-left toward the camera).`
 - Cek: Dinding kiri-depan terang, kanan-depan gelap; tapak bangunan belah ketupat 2:1; tidak ada tulisan.
 
 
@@ -587,4 +593,107 @@ Obrolan "Efek ISO".
 ### [ ] I105. Catatan efek lain
 - Prompt: `(tidak perlu digenerate ulang) Efek yang melayang (percikan, api, es, petir, partikel, cuaca) dari TASKS_GPT_ASET bagian K tetap dipakai.`
 - Cek: Lewati.
+
+## I. Aset dunia fantasi (tambahan 18-11-2026)
+Obrolan "Fantasi ISO". Pegangan: `docs/DUNIA_FANTASI.md` (kadar fantasi sedang, siang cerah natural, cahaya aksen ±10%).
+Kerjakan setelah patokan desa (I014). Urutan: I106 kristal → Kristal Utama → Pohon Induk → bunga lentera & lumen → sisanya.
+
+### [ ] I106. Kristal Lumina (sehat & retak)
+- Simpan: `assets/raw/iso/fantasi/kristal.png` · Ukuran di game: 16–96 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] Row 1 healthy teal-white Lumina crystals: small cluster, medium cluster, tall single prism, huge crystal set in rock. Row 2 the same four but corrupted: dull, cracked with violet glowing cracks, black thorns at the base.`
+- Cek: Kristal sehat menyala teal; retak = kusam ungu.
+
+### [ ] I107. Kristal Utama di akar Pohon Induk
+- Simpan: `assets/raw/iso/fantasi/kristal_utama.png` · Ukuran di game: ±96×128 px
+- Prompt: `[LAYOUT: ISO BUILDING] The great Lumina crystal of the village: a giant teal-white hexagonal crystal embraced by enormous mossy tree roots, small pebbles floating around it, a stone ring of old carved stones at its base.`
+- Cek: Paling penting: jadi penanda desa.
+
+### [ ] I108. Pohon Induk (kanopi)
+- Simpan: `assets/raw/iso/fantasi/pohon_induk.png` · Ukuran di game: ±192×192 px
+- Prompt: `[LAYOUT: ISO BUILDING] The colossal ancient Mother Tree trunk and canopy seen isometrically (without the crystal at its base): massive twisting trunk, roots spreading out, a canopy as wide as a house cluster with small glowing lantern flowers in it.`
+
+### [ ] I109. Sinar & cahaya kristal
+- Simpan: `assets/raw/iso/fantasi/sinar.png` · Ukuran di game: tinggi 64–256 px
+- Prompt: `[LAYOUT: VFX 4x4] Row 1 a thin vertical beam of soft light rising from a crystal (4 frames), row 2 crystal pulse ring on the ground (4), row 3 floating light motes (4), row 4 crystal shine glint (4).`
+- Cek: Latar HITAM.
+
+### [ ] I110. Batu melayang
+- Simpan: `assets/raw/iso/fantasi/batu_melayang.png` · Ukuran di game: 8–64 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] 8 floating rocks from pebble to house-sized boulder, each with dangling roots and earth under it, mossy top; no ground under them (they hover).`
+- Cek: Bayangan digambar terpisah oleh game.
+
+### [ ] I111. Pulau batu melayang besar
+- Simpan: `assets/raw/iso/fantasi/pulau_melayang.png` · Ukuran di game: ±128 px
+- Prompt: `[LAYOUT: ISO BUILDING] A small floating rock island with grass, one tree, a tiny crystal and hanging roots, for sacred places and boss arenas.`
+
+### [ ] I112. Akar raksasa: gapura & jembatan
+- Simpan: `assets/raw/iso/fantasi/akar_gapura.png` · Ukuran di game: 64–128 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] Giant mossy roots as big as houses: root arch you can walk under (2 isometric directions), root bridge over a gap (2 directions), root wall piece, root emerging from the ground, root diving back in, a hollow root tunnel entrance.`
+
+### [ ] I113. Akar rusak (wilayah berbahaya)
+- Simpan: `assets/raw/iso/fantasi/akar_rusak.png` · Ukuran di game: 32–96 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] Corrupted giant roots: blackened bark with violet glowing veins, black thorns, dead grey moss; same 8 shapes as healthy giant roots.`
+
+### [ ] I114. Bunga lentera
+- Simpan: `assets/raw/iso/fantasi/bunga_lentera.png` · Ukuran di game: 8–24 px
+- Prompt: `[LAYOUT: ISO TILE 4x4] 16 lantern flower plants: row 1 closed in daylight, row 2 open and glowing teal-blue, row 3 garden rows of them, row 4 single tall lantern lilies.`
+
+### [ ] I115. Lumut & jamur lumen
+- Simpan: `assets/raw/iso/fantasi/lumen.png` · Ukuran di game: 8–32 px
+- Prompt: `[LAYOUT: ISO TILE 4x4] 16 pieces: lumen moss patches on ground, lumen moss on a stump, on a rock, on a trunk base, glowing mushroom clusters (small to large), a giant glowing mushroom.`
+
+### [ ] I116. Rumput ujung perak & flora padang
+- Simpan: `assets/raw/iso/fantasi/flora_padang.png` · Ukuran di game: 8–24 px
+- Prompt: `[LAYOUT: ISO TILE 4x4] 16 fantasy meadow plants: silver-tipped grass clumps, crystal-dew clover, wind-bell flowers, puffball seed plants, spiral ferns.`
+
+### [ ] I117. Pohon berdaun kristal
+- Simpan: `assets/raw/iso/fantasi/pohon_kristal.png` · Ukuran di game: 64–96 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] 4 sacred trees with crystal leaves (teal, white, pale gold, frosted blue) and 4 young saplings of them.`
+
+### [ ] I118. Pohon menara Hutan Dalam
+- Simpan: `assets/raw/iso/fantasi/pohon_menara.png` · Ukuran di game: 128–256 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] 4 tower-sized ancient trees (only the lower trunk and roots fit the frame, canopy cut off at the top as if going above the camera), 4 matching canopy pieces seen from above.`
+
+### [ ] I119. Reruntuhan Aurel: set bangunan
+- Simpan: `assets/raw/iso/fantasi/aurel.png` · Ukuran di game: 32–128 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] Pale cream ancient Aurel architecture with carved vine-and-sun motifs: broken colonnade, sun gate arch, octagonal plaza tile set, toppled statue, stair to nowhere, dome fragment, carved wall with a glowing rune, root-wrapped tower stump.`
+
+### [ ] I120. Teknologi Penjaga Cahaya
+- Simpan: `assets/raw/iso/fantasi/penjaga.png` · Ukuran di game: 16–64 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] Ancient light-guardian objects: crystal torch, teleport statue (off and on), glowing inscription stone, dormant golem seat, light-puzzle mirror pedestal, light-beam receiver, sealed crystal door.`
+- Cek: Simbol/rune saja, tanpa huruf.
+
+### [ ] I121. Lentera kristal & perabot desa fantasi
+- Simpan: `assets/raw/iso/fantasi/lentera.png` · Ukuran di game: 12–40 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] Village fantasy props: crystal lantern post, small crystal lantern by a door, hanging lantern string, crystal well cover, rune milestone, shrine to the Mother Tree, crystal wind chime, offering basket of glowing flowers.`
+
+### [ ] I122. Pemukiman tenggelam (Rawa Senja)
+- Simpan: `assets/raw/iso/fantasi/tenggelam.png` · Ukuran di game: 32–128 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] Sunken ancient town pieces rising from swamp water: half-sunk roof, leaning pillar, arched window above water, broken bridge, sunken statue head, tower top, stairs into water, mossy wall.`
+
+### [ ] I123. Punggung naga (Puncak Beku)
+- Simpan: `assets/raw/iso/fantasi/tulang_naga.png` · Ukuran di game: 32–128 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] Mountain rock formations shaped like a dragon's spine and ribs, covered in snow and ice crystals, plus ancient stone torches with blue flame.`
+
+### [ ] I124. Kota Seribu Lentera: bangunan khas
+- Simpan: `assets/raw/iso/fantasi/kota_lentera.png` · Ukuran di game: 64–128 px
+- Prompt: `[LAYOUT: ISO OBJ 4x2] Lakeside city landmarks: academy tower with crystal glass dome, lantern bridge piece, council hall facade, harbor lantern pier, canal arch, lantern market stall, rooftop lantern string, statue of a light guardian.`
+
+### [ ] I125. Hewan fantasi damai
+- Simpan: `assets/raw/iso/fantasi/hewan.png` · Ukuran di game: 8–32 px
+- Prompt: `[LAYOUT: ANIMAL 4x4] Rows: crystal-antlered deer, rabbit with glowing fur tips, light butterflies (flying), long-tailed blue bird. Each row: idle, walk, flee, special (4 frames each).`
+- Cek: Lembut, bukan menakutkan.
+
+### [ ] I126. Hewan fantasi damai 2
+- Simpan: `assets/raw/iso/fantasi/hewan2.png` · Ukuran di game: 8–32 px
+- Prompt: `[LAYOUT: ANIMAL 4x4] Rows: spiral-horned snow goat, glowing lumen fish (swimming), giant firefly, moss tortoise. Each row: idle, walk, flee, special.`
+
+### [ ] I127. Langit & latar jauh
+- Simpan: `assets/raw/iso/fantasi/langit.png` · Ukuran di game: latar layar
+- Prompt: `[LAYOUT: ISO CONCEPT] Wide background strip for map edges and title screens: distant floating islands, the far silhouette of the Mother Tree with its light beam, mountains shaped like a dragon spine, two moons in a clear day sky. No foreground.`
+
+### [ ] I128. Tanah dekat kristal & tanah rusak
+- Simpan: `assets/raw/iso/fantasi/tanah_kutub.png` · Ukuran di game: ubin 32×16 px
+- Prompt: `[LAYOUT: ISO TILE 4x4] Row 1-2: lush blessed ground near crystals (vivid grass with tiny glowing specks, crystal-dew pebbles, flowers). Row 3-4: corrupted ground (violet-grey soil, withered grass, thin violet cracks, black thorn sprouts).`
+- Cek: Dua kutub dunia: harmonis & rusak.
 
