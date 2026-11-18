@@ -14,6 +14,9 @@ class IsoScene extends Phaser.Scene {
     this.load.spritesheet('hero_iso_idle', 'assets/img/iso/hero_idle_iso.png', { frameWidth: 48, frameHeight: 44 });
     for (const k of ['gnd_grass', 'gnd_grass_light', 'gnd_grass_dark', 'gnd_dirt']) this.load.image(k, 'assets/img/' + k + '.png');
     this.load.image('gnd_city_cobble', 'assets/img/ground/gnd_city_cobble.png');
+    for (const k of ['gpt_v_inn_2story', 'gpt_v_blacksmith_forge', 'gpt_v_house_red_cottage', 'gpt_v_house_red_shop', 'gpt_v_house_brown_cottage', 'gpt_v_tavern_brown',
+      'gpt_v_chapel_church', 'gpt_v_guild_townhall', 'gpt_v_windmill', 'gpt_v_barn_ranch', 'gpt_v_watchtower', 'gpt_v_house_brown_wing', 'gpt_v_market_stall'])
+      this.load.image(k, 'assets/img/' + k + '.png');
     this.load.image('iso_house_a', 'assets/img/iso/house_a.png');
     this.load.image('cliff_stairs', 'assets/img/iso/cliff_stairs.png');
     this.load.spritesheet('wolf_hd', 'assets/img/mon_wolf_hd.png', { frameWidth: 128, frameHeight: 96 });
@@ -30,10 +33,14 @@ class IsoScene extends Phaser.Scene {
     this.add.image(-G.ox, -G.oy, 'iso_ground').setOrigin(0).setDepth(-1e5);
     this.waterFx(G);
     // rumah
-    this.houses = IMAP.houses.map((h, i) => {
+    const allB = IMAP.houses.concat((IMAP.extra || []).map(([img, tx, ty, w, d]) => ({ t: [tx, ty, w, d], img })));
+    this.houses = allB.map((h, i) => {
       const [tx, ty, w, d] = h.t, x0 = tx * ISO.T, y0 = ty * ISO.T;
       let img;
-      if (this.textures.exists('iso_house_a')) { /* semua rumah dari gambar detail yang sama + varian atap → gaya seragam */
+      if (h.img && this.textures.exists(h.img)) { /* bangunan game awal apa adanya (sudah bersudut 3/4) */
+        const cx = x0 + w * ISO.T * .5, cy = y0 + d * ISO.T * .5, tex = this.textures.get(h.img).getSourceImage(), sc = (w + d) * ISO.T * 1.08 / tex.width;
+        img = this.add.image(isoX(cx, cy), isoY(cx, cy) + 8, h.img).setOrigin(.5, 1).setScale(sc);
+      } else if (this.textures.exists('iso_house_a')) { /* semua rumah dari gambar detail yang sama + varian atap → gaya seragam */
         const vk = h.variant || ['merah', 'jerami', 'batu', 'kayu', 'lumut'][i % 5], key = 'iso_house_' + vk;
         if (!this.textures.exists(key)) this.textures.addCanvas(key, houseVariant(this.textures.get('iso_house_a').getSourceImage(), HOUSE_VARIANTS[vk]));
         const cx = x0 + w * ISO.T * .5, cy = y0 + d * ISO.T * .5, sc = .72 + (w + d) * .03;

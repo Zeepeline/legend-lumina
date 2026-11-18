@@ -5,11 +5,15 @@ const IMAP = {
   N: 40,
   plaza: [24, 24, 4.2],
   houses: [ // tapak ubin [tx, ty, w, d] + gaya
-    { t: [13, 25, 4, 3], variant: 'jerami', roof: ['#c9a24e', '#a8843c', '#8a6a2e'], chimney: 1 },
-    { t: [27, 14, 4, 3], variant: 'merah', flip: 1, roof: ['#b0583c', '#8e4430', '#6e3426'] },
-    { t: [14, 18, 3, 3], variant: 'batu', roof: ['#c9a24e', '#a8843c', '#8a6a2e'], wallCol: '#d9c39a', wallColDk: '#b39a70' },
-    { t: [31, 23, 4, 3], variant: 'kayu', flip: 1, roof: ['#b0583c', '#8e4430', '#6e3426'], chimney: 1 },
-    { t: [22, 32, 4, 3], variant: 'lumut', roof: ['#9a7a4a', '#7d6038', '#62492a'], wallCol: '#cfb48a', wallColDk: '#a98e64', name: 'Rumah Arka' },
+    { t: [13, 25, 4, 3], img: 'gpt_v_inn_2story', variant: 'jerami', roof: ['#c9a24e', '#a8843c', '#8a6a2e'], chimney: 1 },
+    { t: [27, 14, 4, 3], img: 'gpt_v_blacksmith_forge', variant: 'merah', roof: ['#b0583c', '#8e4430', '#6e3426'] },
+    { t: [14, 18, 3, 3], img: 'gpt_v_house_red_cottage', variant: 'batu', roof: ['#c9a24e', '#a8843c', '#8a6a2e'], wallCol: '#d9c39a', wallColDk: '#b39a70' },
+    { t: [31, 23, 4, 3], img: 'gpt_v_house_red_shop', variant: 'kayu', roof: ['#b0583c', '#8e4430', '#6e3426'], chimney: 1 },
+    { t: [22, 32, 4, 3], img: 'gpt_v_house_brown_cottage', variant: 'lumut', roof: ['#9a7a4a', '#7d6038', '#62492a'], wallCol: '#cfb48a', wallColDk: '#a98e64', name: 'Rumah Arka' },
+  ],
+  extra: [ // bangunan game awal tambahan: [kunci, tx, ty, w, d]
+    ['gpt_v_tavern_brown', 30, 8, 4, 3], ['gpt_v_chapel_church', 19, 9, 3, 3], ['gpt_v_guild_townhall', 6, 19, 4, 3],
+    ['gpt_v_windmill', 6, 33, 3, 3], ['gpt_v_barn_ranch', 12, 33, 4, 3], ['gpt_v_watchtower', 17, 13, 2, 2], ['gpt_v_house_brown_wing', 8, 13, 3, 3],
   ],
   pond: [35, 18, 3.2],
   rot: [30.5, 31.5, 2.4], /* tanah rusak di sekitar kristal retak (sarang serigala) */
@@ -99,7 +103,7 @@ function isoProps() {
   add('bigtree', 4, 6, 1, 30, { tree: 1 }); add('benchWood', 4, 10, 1, 6); add('lampPost', 10, 4, 1, 3); add('lampPost', 6, 10, 1, 3);
   add('lampPost', 20, 21, 1, 3); add('lampPost', 27, 27, 1, 3); add('benchWood', 26, 20, 1, 6); add('gpt_barrel', 18, 23, 1, 4); add('gpt_barrel', 19, 23, 1, 4);
   add('crateCart', 29, 21, 1, 10);
-  const inHouse = (tx, ty) => IMAP.houses.some(h => tx >= h.t[0] - 1 && tx <= h.t[0] + h.t[2] && ty >= h.t[1] - 1 && ty <= h.t[1] + h.t[3]);
+  const inHouse = (tx, ty) => IMAP.houses.concat((IMAP.extra || []).map(e => ({ t: e.slice(1) }))).some(h => tx >= h.t[0] - 1 && tx <= h.t[0] + h.t[2] && ty >= h.t[1] - 1 && ty <= h.t[1] + h.t[3]);
   // pohon: sabuk hutan di tepi peta + rumpun di dataran tinggi & padang
   for (let ty = 0; ty < N; ty++) for (let tx = 0; tx < N; tx++) {
     if (used.has(tx + ',' + ty) || ter(tx, ty) !== 'grass' || inHouse(tx, ty)) continue;
