@@ -32,7 +32,7 @@ class IsoWorld extends IsoScene {
   create() {
     const A = this.anims, wa = (k, a, b, fps, rep) => A.exists(k) || A.create({ key: k, frames: A.generateFrameNumbers('wolf_hd', { start: a, end: b }), frameRate: fps, repeat: rep });
     wa('w_idle', 0, 6, 8, -1); wa('w_run', 14, 20, 13, -1); wa('w_pounce', 28, 32, 14, 0); wa('w_hurt', 35, 39, 14, 0); wa('w_die', 42, 45, 8, 0); wa('w_howl', 49, 54, 12, 0);
-    softTextures(this.textures); fxTextures(this.textures); /* gaya lembut = gambar acuan pemilik (?tanah=lembut) */
+    softTextures(this.textures); fxTextures(this.textures); window.__iso = this; this.windOn(); /* angin sebelum wilayah pertama dibangun */ /* gaya lembut = gambar acuan pemilik (?tanah=lembut) */
     const src = k => this.textures.get(k).getSourceImage();
     this.tsrc = { grass: src('gnd_grass'), light: src('gnd_grass_light'), dark: src('gnd_grass_dark'), dirt: src('gnd_dirt'), cobble: src('gnd_city_cobble') };
     this.gT = { grass: texData(this.tsrc.grass), light: texData(this.tsrc.light), dark: texData(this.tsrc.dark) };
@@ -138,6 +138,7 @@ class IsoWorld extends IsoScene {
       const img = this.add.image(Math.round(isoX(x, y)), Math.round(isoY(x, y)), 'x_' + n).setOrigin(ox, oy).setScale(sx, sy).setFlipX(!!fl)
         .setAlpha(al).setRotation(rot);
       if (tint) img.setTint(tint);
+      this.sway(img);
       const up = dep > ly + 30 ? 400 : 0; img.setDepth(x + y + up); r.objs.push(img);
       const tall = img.displayHeight > 40 && al > .5;
       if (tall && !up) r.objs.push(this.add.image(img.x + 4, img.y - 1, 'fx_shadow').setScale(Math.min(4, img.displayWidth / 24), Math.min(2.4, img.displayWidth / 40)).setDepth(-5e4).setAlpha(.7));
@@ -188,7 +189,7 @@ class IsoWorld extends IsoScene {
       if (out && p.tree) p.r = 6;
       const sx = isoX(p.x, p.y), sy = isoY(p.x, p.y, zAt(p.x, p.y));
       if (p.flat) { this.add.image(sx, sy, p.k).setOrigin(.5, .8).setDepth(-5e4 + p.x + p.y); continue; }
-      const img = this.add.image(sx, sy, p.k).setOrigin(.5, .94).setScale(p.s).setDepth(p.x + p.y);
+      const img = this.sway(this.add.image(sx, sy, p.k).setOrigin(.5, .94).setScale(p.s).setDepth(p.x + p.y));
       if (p.tree) { this.add.image(sx + 8, sy - 1, 'fx_shadow').setScale(2.4 * p.s, 1.8 * p.s).setDepth(-5e4); img.setFlipX(hash2(p.x, p.y, 2) < .5); }
       else this.add.image(sx + 2, sy, 'fx_shadow').setScale(img.displayWidth / 22, .9).setDepth(-5e4);
       if (p.r) this.solids.push({ x: p.x, y: p.y, r: p.r });

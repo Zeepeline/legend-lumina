@@ -19,6 +19,7 @@ Tidak memakai kode `src/` sama sekali dan tidak dimuat `index.html`, jadi game u
   (`zAt` hanya di dalam denah), rumah & alun-alun prototipe, lahan pengisi berhutan + 3 jalan ke Danau/Hutan/Padang. Jembatan otomatis (`bridges`).
 - Pohon alami (`iso_nature.js`): Poisson disk berjari-jari variabel + peta kepadatan noise (rumpun, celah, tepi hutan berangsur, semak di pinggir);
   dipakai untuk desa (`natVillage`) & hutan tepi dunia (`natRing`). Air dari gambar lantai jadi tabrakan (`waterGrid`).
+- Angin: pohon/semak bergoyang lewat shader verteks `IsoWind` (pipeline WebGL, `sway(img)`), tanpa lembar sprite.
 - Cuaca: `__iso.cuaca("hujan")` / `__iso.cuaca("cerah")` di konsol, atau `iso.html?cuaca=hujan`.
 - Kamera zoom ×0,62, gaya lembut (`bakeGroundSoft` + `softScene`; rumput wilayah lain diganti tekstur gnd_grass lewat `lushGrass`), hutan lebat di tepi dunia (`forestRing`).
 

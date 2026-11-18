@@ -38,13 +38,13 @@ Object.assign(IsoWorld.prototype, {
   natTree(r, x, y, dens, R, solid) {
     const sx = Math.round(isoX(x, y)), sy = Math.round(isoY(x, y, zAt(x, y)));
     const apple = dens < .5 && R() < .1, s = (apple ? .5 : .78 + R() * .34) * (.82 + .3 * dens);
-    const img = this.add.image(sx, sy, apple ? 'apple1' : 'treeA').setOrigin(.5, .94).setScale(s).setDepth(x + y).setFlipX(R() < .5);
+    const img = this.sway(this.add.image(sx, sy, apple ? 'apple1' : 'treeA').setOrigin(.5, .94).setScale(s).setDepth(x + y).setFlipX(R() < .5));
     const sh = this.add.image(sx + 7, sy - 1, 'fx_shadow').setScale(2.6 * s, 1.9 * s).setDepth(-5e4).setAlpha(.55 + .35 * dens);
     r.objs.push(img, sh); r.props.push({ img, d: x + y, al: 1, b: img.getBounds() });
     if (solid) this.solids.push({ x, y, r: 5 + 3 * s });
     if (dens > .15 && dens < .65 && R() < .4) { /* semak di tepi hutan (peralihan pohon → padang) */
       const bx = x + (R() - .5) * 22, by = y + 6 + R() * 8, k = ['bushG1', 'bushG2', 'bushP'][Math.floor(R() * 3)];
-      if (this.textures.exists(k)) r.objs.push(this.add.image(isoX(bx, by), isoY(bx, by, zAt(bx, by)), k).setOrigin(.5, .9).setScale(.55 + R() * .25).setDepth(bx + by));
+      if (this.textures.exists(k)) r.objs.push(this.sway(this.add.image(isoX(bx, by), isoY(bx, by, zAt(bx, by)), k).setOrigin(.5, .9).setScale(.55 + R() * .25).setDepth(bx + by)));
     }
   },
   // Desa: inti lapang, sabuk hutan berangsur di tepi denah, lahan pengisi berhutan, jalan & rumah kosong
@@ -96,4 +96,43 @@ Object.assign(IsoWorld.prototype, {
     r.wat = { w, h, a };
   },
   wetAt(r, lx, ly) { const W = r.wat; if (!W) return false; const i = Math.floor(lx / 4), j = Math.floor(ly / 4); return i >= 0 && j >= 0 && i < W.w && j < W.h && W.a[j * W.w + i] === 1; },
+});
+
+// ── Angin: pohon & semak bergoyang lewat shader verteks (tanpa lembar sprite) ──
+// Sudut atas gambar digeser mendatar (pangkal diam) → lengkung goyang; fase dari posisi dunia, embusan berkala.
+const ISO_WIND_VS = [
+  '#define SHADER_NAME ISO_WIND_VS', 'precision mediump float;',
+  'uniform mat4 uProjectionMatrix;', 'uniform int uRoundPixels;', 'uniform vec2 uResolution;',
+  'uniform float uTime;', 'uniform vec2 uCam;', 'uniform float uZoom;',
+  'attribute vec2 inPosition;', 'attribute vec2 inTexCoord;', 'attribute float inTexId;', 'attribute float inTintEffect;', 'attribute vec4 inTint;',
+  'varying vec2 outTexCoord;', 'varying float outTexId;', 'varying float outTintEffect;', 'varying vec4 outTint;',
+  'void main () {',
+  '  vec2 p = inPosition;',
+  '  float top = 1.0 - inTexCoord.y; top = top * top;',
+  '  vec2 w = p / uZoom + uCam;',
+  '  float ph = w.x * 0.013 + w.y * 0.021;',
+  '  float gust = 0.55 + 0.45 * sin(uTime * 0.33 + w.x * 0.0021 - w.y * 0.0013);',
+  '  float s = (sin(uTime * 1.6 + ph) * 0.75 + sin(uTime * 2.7 + ph * 1.7) * 0.3) * gust;',
+  '  p.x += s * top * 2.4 * uZoom;',
+  '  p.y += abs(s) * top * 0.35 * uZoom;',
+  '  gl_Position = uProjectionMatrix * vec4(p, 1.0, 1.0);',
+  '  if (uRoundPixels == 1) { gl_Position.xy = floor(((gl_Position.xy + 1.0) * 0.5 * uResolution) + 0.5) / uResolution * 2.0 - 1.0; }',
+  '  outTexCoord = inTexCoord; outTexId = inTexId; outTint = inTint; outTintEffect = inTintEffect;',
+  '}'].join('\n');
+const IsoWind = typeof Phaser !== 'undefined' && Phaser.Renderer.WebGL ? class extends Phaser.Renderer.WebGL.Pipelines.MultiPipeline {
+  constructor(game) { super({ game, name: 'IsoWind', vertShader: ISO_WIND_VS }); }
+  onBind() {
+    const sc = window.__iso, cam = sc && sc.cameras.main;
+    this.set1f('uTime', this.game.loop.time / 1000);
+    if (cam) { this.set2f('uCam', cam.scrollX + cam.width / 2 - cam.width / (2 * cam.zoom), cam.scrollY + cam.height / 2 - cam.height / (2 * cam.zoom)); this.set1f('uZoom', cam.zoom); }
+  }
+} : null;
+const ISO_SWAY = /tree|apple|bush|willow|pine|reeds|deco_tuft/i;
+Object.assign(IsoWorld.prototype, {
+  windOn() { // dipanggil di create: daftarkan pipeline sekali
+    const R = this.game.renderer; if (!IsoWind || R.type !== Phaser.WEBGL) return;
+    if (!R.pipelines.has('IsoWind')) R.pipelines.add('IsoWind', new IsoWind(this.game));
+    this.wind = true;
+  },
+  sway(img) { if (this.wind && img && img.texture && ISO_SWAY.test(img.texture.key)) img.setPipeline('IsoWind'); return img; },
 });
