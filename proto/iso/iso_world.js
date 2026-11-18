@@ -12,7 +12,9 @@ const ISO_TILE = 2048; // potongan tekstur lantai (batas aman GPU HP 4096)
 const ISO_CAMZ = .62; // kamera ditarik jauh seperti pratinjau desa prototipe yang disetujui pemilik
 const ISO_NOLUSH = /^(cave|snow|swamp|pl_river_swamp)$/; // wilayah dengan tanah khas: rumput tidak diganti
 const ISO_PROTO = 'village', ISO_PXO = 192, ISO_PYO = 36; // Desa Lumina = denah prototipe (640×640) di dalam kotak desa asli, digeser (192, 36)
-const PROTO_ZAT = zAt; // tinggi tanah prototipe (dataran tinggi + tangga), dipakai di dalam kotak desa
+const PROTO_ZAT = zAt;
+// pemilik: desa cukup 6 bangunan (5 rumah inti + kincir); bangunan tambahan lain tidak dipasang
+const ISO_KEEP = ['gpt_v_inn_2story', 'gpt_v_blacksmith_forge', 'gpt_v_house_red_cottage', 'gpt_v_house_red_shop', 'gpt_v_house_brown_cottage', 'gpt_v_windmill']; // tinggi tanah prototipe (dataran tinggi + tangga), dipakai di dalam kotak desa
 const ISO_LOAD = 700, ISO_DROP = 1500; // jarak muat / buang wilayah dari Arka (px dunia)
 
 class IsoWorld extends IsoScene {
@@ -150,7 +152,7 @@ class IsoWorld extends IsoScene {
     const G = bakeGroundSoft(this.tsrc); this.ter = G.ter; if (this.textures.exists('iso_ground')) this.textures.remove('iso_ground');
     this.textures.addCanvas('iso_ground', G.c); this.add.image(-G.ox, -G.oy, 'iso_ground').setOrigin(0).setDepth(-1e5); this.waterFx(G);
     const allB = IMAP.houses.concat((IMAP.extra || []).map(([img, tx, ty, w, d]) => ({ t: [tx, ty, w, d], img })));
-    this.houses = allB.filter(h => this.textures.exists(h.img)).map(h => {
+    this.houses = allB.filter(h => this.textures.exists(h.img) && ISO_KEEP.includes(h.img)).map(h => {
       const [tx, ty, w, d] = h.t, x0 = tx * T, y0 = ty * T, cx = x0 + w * T * .5, cy = y0 + d * T * .5;
       const tex = this.textures.get(h.img).getSourceImage(), img = this.add.image(isoX(cx, cy), isoY(cx, cy) + 8, h.img).setOrigin(.5, 1).setScale((w + d) * T * 1.08 / tex.width);
       this.add.ellipse(isoX(x0 + w * T, y0 + d * T * .5) + 6, isoY(x0 + w * T, y0 + d * T) - 2, (w + d) * 10, (w + d) * 3, 0x282412, .28).setDepth(-9e4);
