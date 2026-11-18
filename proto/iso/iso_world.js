@@ -181,6 +181,7 @@ class IsoWorld extends IsoScene {
     const seg = (x, y, a, c, e, f) => { const vx = e - a, vy = f - c, t = Math.max(0, Math.min(1, ((x - a) * vx + (y - c) * vy) / (vx * vx + vy * vy))); return Math.hypot(x - a - vx * t, y - c - vy * t); };
     const roadsW = roads.map(([a, c, e, f]) => [...P(a, c), ...P(e, f)]);
     for (const p of this.protoProps) {
+      if (p.tree) continue; /* pohon ditata ulang secara alami (natVillage) */
       if (this.newPaths.some(([a, c, e, f, w]) => seg(p.x / T, p.y / T, a, c, e, f) < w * .5 + .4)) continue; /* hanya yang tepat di jalan baru */
       const out = p.x < 0 || p.y < 0 || p.x >= PN || p.y >= PN;
       if (out && roadsW.some(q => seg(p.x, p.y, ...q) < 26)) continue; /* sabuk hutan luar: buka celah jalan sambungan */
@@ -195,16 +196,7 @@ class IsoWorld extends IsoScene {
     }
     if (this.textures.exists('cliff_stairs')) this.add.image(isoX(138, 122), isoY(138, 122, 0) + 4, 'cliff_stairs').setOrigin(.5, .8).setDepth(260);
     isoFantasy(this);
-    // pohon di lahan pengisi di luar sabuk hutan prototipe (≥4 ubin dari denah), bukan di jalan
-    for (let ly = 8; ly < r.h; ly += 18) for (let lx = 8; lx < r.w; lx += 18) {
-      if (lx > ISO_PXO - 70 && lx < ISO_PXO + PN + 70 && ly > ISO_PYO - 70 && ly < ISO_PYO + PN + 70) continue;
-      const jx = lx + (hash2(lx, ly, 61) - .5) * 12, jy = ly + (hash2(lx, ly, 62) - .5) * 12;
-      if (hash2(lx, ly, 63) > .5 || roads.some(q => seg(jx, jy, ...q) < 34)) continue;
-      const [x, y] = P(jx, jy), sx = isoX(x, y), sy = isoY(x, y), sc = .8 + hash2(lx, ly, 64) * .4;
-      this.add.image(sx + 8, sy - 1, 'fx_shadow').setScale(2.4 * sc, 1.8 * sc).setDepth(-5e4);
-      const img = this.add.image(sx, sy, 'treeA').setOrigin(.5, .94).setScale(sc).setDepth(x + y).setFlipX(hash2(lx, ly, 65) < .5);
-      this.solids.push({ x, y, r: 7 }); r.props.push({ img, d: x + y, al: 1, b: img.getBounds() });
-    }
+    this.natVillage(r, roads, P);
     this.regReady(r);
   }
   unloadReg(r) {
@@ -225,7 +217,7 @@ class IsoWorld extends IsoScene {
       b.save(); b.globalAlpha = al; b.translate(x, y); b.rotate(rot); b.scale(sx * (fl ? -1 : 1), sy); b.drawImage(im, -ox * im.width, -oy * im.height); b.restore();
     }
     if (!ISO_NOLUSH.test(r.id)) this.lushGrass(b, W, H, r.ox, r.oy);
-    this.bridges(b, W, H); this.projectFloor(r, base, -1e5);
+    this.bridges(b, W, H, r); this.projectFloor(r, base, -1e5);
   }
   projectFloor(r, base, depth) {
     const W = r.w, H = r.h, PW = W + H, PH = Math.ceil((W + H) / 2), X0 = isoX(r.ox, r.oy) - H, Y0 = isoY(r.ox, r.oy); r.floorKeys = [];
@@ -238,7 +230,7 @@ class IsoWorld extends IsoScene {
     }
   }
   // jembatan: jalan tanah yang diapit air (atas-bawah / kiri-kanan) → papan kayu aset bridge_wood + tepi gelap
-  bridges(b, W, H) {
+  bridges(b, W, H, r) {
     const im = b.getImageData(0, 0, W, H), d = im.data, N = W * H, wet = new Uint8Array(N), dirt = new Uint8Array(N), M = 44;
     for (let i = 0; i < N; i++) { const r = d[i * 4], g = d[i * 4 + 1], bl = d[i * 4 + 2]; wet[i] = bl > r + 40 && bl > g - 10 ? 1 : 0; dirt[i] = r > 150 && r > g && g > bl + 20 ? 1 : 0; }
     const up = new Uint16Array(N).fill(999), dn = new Uint16Array(N).fill(999), lf = new Uint16Array(N).fill(999), rt = new Uint16Array(N).fill(999);
@@ -250,6 +242,7 @@ class IsoWorld extends IsoScene {
       if (!dirt[i]) continue;
       if (up[i] < M && dn[i] < M && up[i] + dn[i] < 80) { mask[i] = 1; n++; } else if (lf[i] < M && rt[i] < M && lf[i] + rt[i] < 80) { mask[i] = 2; n++; }
     }
+    if (r) this.waterGrid(r, wet, mask, W, H);
     if (!n) return;
     for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
       const i = y * W + x, m = mask[i]; if (!m) continue;
@@ -276,21 +269,7 @@ class IsoWorld extends IsoScene {
     g.putImageData(im, 0, 0);
   }
   // hutan lebat di luar dunia (bagian tepi wilayah yang tidak bersambung dengan wilayah lain), hiasan tanpa tabrakan
-  forestRing(r) {
-    const T = 16, RW = 8, W = Math.ceil(r.w / T), H = Math.ceil(r.h / T);
-    if (ISO_NOLUSH.test(r.id) && r.id !== 'snow') return;
-    for (let k = 1; k <= RW; k++) for (let t = -RW; t < Math.max(W, H) + RW; t++) {
-      for (const [tx, ty] of [[t, -k], [-k, t], [t, H - 1 + k], [W - 1 + k, t]]) {
-        if (tx < -RW || ty < -RW || tx > W + RW || ty > H + RW) continue;
-        const gx = r.ox + tx * T, gy = r.oy + ty * T; if (hash2(gx + 99, gy + 99, 7) > .45) continue;
-        const x = gx + hash2(gx, gy, 51) * T, y = gy + hash2(gx, gy, 52) * T;
-        if (this.regs.some(q => x > q.ox - 12 && x < q.ox + q.w + 12 && y > q.oy - 12 && y < q.oy + q.h + 12)) continue; /* tepi bersambung: kosongkan */
-        const sx = Math.round(isoX(x, y)), sy = Math.round(isoY(x, y)), sc = .85 + hash2(gx, gy, 53) * .4;
-        if (k <= 3) r.objs.push(this.add.image(sx + 3, sy, 'fx_shadow').setScale(2.2 * sc, 1.3 * sc).setDepth(-5e4).setAlpha(.6));
-        r.objs.push(this.add.image(sx, sy, 'treeA').setOrigin(.5, 1).setScale(sc).setDepth(x + y));
-      }
-    }
-  }
+  forestRing(r) { this.natRing(r); }
   // ── tembok: persegi kartesius asli per wilayah (kisi 64 px); di luar wilayah / wilayah belum dimuat = buntu ──
   wallGrid(walls) {
     const G = new Map(), C = 64;
@@ -300,14 +279,16 @@ class IsoWorld extends IsoScene {
   }
   wallAt(x, y, rad) {
     const r = this.regAt(x, y); if (!r || r.st !== 'ready') return true;
-    const lx = x - r.ox, ly = y - r.oy, L = r.wg.get(Math.floor(lx / 64) + ',' + Math.floor(ly / 64)); if (!L) return false;
+    const lx = x - r.ox, ly = y - r.oy;
+    if (r.wat && (this.wetAt(r, lx, ly) || this.wetAt(r, lx - rad, ly) || this.wetAt(r, lx + rad, ly) || this.wetAt(r, lx, ly - rad) || this.wetAt(r, lx, ly + rad))) return true; /* air */
+    const L = r.wg.get(Math.floor(lx / 64) + ',' + Math.floor(ly / 64)); if (!L) return false;
     for (const w of L) if (lx > w[0] - rad && lx < w[0] + w[2] + rad && ly > w[1] - rad && ly < w[1] + w[3] + rad) return true;
     return false;
   }
   findSpawn(r) { // tengah wilayah; bila tembok, cari titik lapang terdekat melingkar
     const cx = r.ox + r.w / 2, cy = r.oy + r.h / 2;
     for (let d = 0; d < 600; d += 12) for (let a = 0; a < 6.28; a += .4) {
-      const x = cx + Math.cos(a) * d, y = cy + Math.sin(a) * d; if (!this.wallAt(x, y, 10) && !this.inExit(x, y, 20)) return [x, y];
+      const x = cx + Math.cos(a) * d, y = cy + Math.sin(a) * d; if (!this.wallAt(x, y, 22) && !this.inExit(x, y, 20)) return [x, y];
     }
     return [cx, cy];
   }
