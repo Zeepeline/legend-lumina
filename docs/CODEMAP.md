@@ -483,7 +483,7 @@ _Gelombang 20 (T553–T562): 10 Trik Lanjutan Suasana & Mekanik ala Cobo / Mythe
 _Sistem Pohon Apel Siklus Berbuah & Tanpa Buah (8 Frame Wind Sway)_
 `isAppleTreeFruiting()` 6 · `setupAppleTree()` 21
 
-## src/systems/reflect.js (55 baris)
+## src/systems/reflect.js (60 baris)
 _Pantulan Karakter di Air (T460) — referensi: RPG klasik / Sea of Stars_
 
 

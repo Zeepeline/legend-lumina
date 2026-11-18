@@ -137,15 +137,16 @@ function genGround(M, rect) {
   for (let y = RY; y < RY + RH; y++) for (let x = RX; x < RX + RW; x++) {
     const i = ((y - RY) * RW + (x - RX)) * 4;
     if (R) {
-      const ry = riverY(R, x), dv = Math.abs(y - ry), hw = R.w / 2;
-      if (x >= R.bridge[0] && x <= R.bridge[1] && dv < hw + 5) {
+      const ry = riverY(R, x), onBr = x >= R.bridge[0] && x <= R.bridge[1], dv = Math.abs(y - ry);
+      const hw = R.w / 2 * 1.15 + (onBr ? 0 : (vnoise(x + GX, y + GY, 22, 51) * .55 + vnoise(x + GX, y + GY, 7, 53) * .45 - .5) * 14);
+      if (onBr && dv < hw + 5) {
         const bx = x - R.bridge[0], bw = R.bridge[1] - R.bridge[0], by = Math.round(y - (ry - hw - 5)), bh = Math.round((hw + 5) * 2);
         if (typeof bridgeWoodPix === 'function') { put(i, bridgeWoodPix(by, bx, bh, bw)); continue; }
         const ly = (y + 1000) % 8; put(i, ly === 0 ? h2r('#382012') : ly === 1 ? h2r('#cca06a') : h2r('#9e683e')); continue;
       }
       if (dv < hw) { water(i, dv / hw, x, y); continue; }
-      if (typeof verdantBank === 'function' && dv < hw + 13) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }
-      else if (dv < hw + 4) { put(i, h2r(dv < hw + 1.5 ? '#8a7a5a' : '#cdb684')); continue; }
+      if (typeof verdantBank === 'function' && dv < hw + 20) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }
+      else if (dv < hw + 5) { put(i, h2r(dv < hw + 1.5 ? '#8a7a5a' : '#d2b473')); continue; }
     }
     let inPond = false;
     if (M.id === 'lake' && x >= 832 && x <= 886 && y >= 700 && y <= 722 && typeof bridgeWoodPix === 'function') {
@@ -162,12 +163,12 @@ function genGround(M, rect) {
         }
         water(i, wr < 92 ? Math.max(we, .5) : we, x, y); continue;
       }
-      if (we < 1 + 13 / wr) {
+      if (we < 1 + 20 / wr) {
         if (typeof verdantBank === 'function') {
           const b = verdantBank(M, (we - 1) * wr, x + GX, y + GY, waterE(PL, x, y + 4, GX, GY) < we);
           if (b) { put(i, b); continue; }
         }
-        put(i, h2r(we < 1 + 2 / wr ? '#8a7a5a' : '#d6c08c')); continue;
+        put(i, h2r(we < 1 + 2 / wr ? '#8a7a5a' : '#d2b473')); continue;
       }
     }
     if (inPond) continue;

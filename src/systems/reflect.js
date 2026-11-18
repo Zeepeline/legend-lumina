@@ -12,8 +12,12 @@
 
     const pl = this.pl;
     if (!pl || !pl.active || pl.dead || G.title || G.lock > 0) {
-      if (this.reflectSpr) this.reflectSpr.setVisible(false);
+      if (this.reflectSpr && this.reflectSpr.scene) this.reflectSpr.setVisible(false);
       return;
+    }
+
+    if (this.reflectSpr && (!this.reflectSpr.scene || !this.reflectSpr.active)) {
+      this.reflectSpr = null;
     }
 
     if (!this.reflectSpr && this.add) {
@@ -23,10 +27,11 @@
         .setAlpha(0.25)
         .setTint(0x60a0f0)
         .setDepth(pl.y - 1);
+      this.events?.once('shutdown', () => { this.reflectSpr = null; });
     }
 
     const rSpr = this.reflectSpr;
-    if (!rSpr) return;
+    if (!rSpr || !rSpr.scene) return;
 
     // Cek apakah ada air dalam jarak <= 30 px di selatan pemain
     const checkY = pl.y + 16;

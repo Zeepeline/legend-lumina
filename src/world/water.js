@@ -3,7 +3,7 @@
 // lalu garis pantai diberi liuk noise (teluk & tanjung). Dipakai untuk gambar tanah, tabrakan, dan sebaran objek.
 // waterE(...) < 1 = air. Setelah dipanggil: waterE.r = jari-jari elips terdekat (px), waterE.cy = pusat y-nya.
 // Elips berurutan yang kecil (sungai) & berdekatan (< 220 px) disambung dengan elips perantara agar alur tidak putus.
-const WATER_WIDEN = 1.3;
+const WATER_WIDEN = 1.55;
 function pondsBase(M) {
   if (M._pondsB && M._pondsB.src === M.ponds) return M._pondsB;
   // sungai (elips kecil ≤ 70 px) dilebarkan 1.3× agar terasa seperti sungai, bukan parit; danau besar tetap
@@ -60,8 +60,8 @@ function waterE(L, x, y, GX = 0, GY = 0) {
   const r = Math.min(bp[2], bp[3]); waterE.r = r; waterE.cy = bp[1];
   if (best > 2.4) return best;
   const s = sum > 0 ? -k * Math.log(sum) : best;
-  const A = Math.max(3, Math.min(34, r * .2)), sc = Math.max(10, Math.min(80, r * .45)), X = x + GX, Y = y + GY;
-  const n = vnoise(X, Y, sc, 51) * .7 + vnoise(X, Y, sc * .35, 52) * .3;
+  const A = Math.max(6, Math.min(44, r * .32)), sc = Math.max(12, Math.min(84, r * .48)), X = x + GX, Y = y + GY;
+  const n = vnoise(X, Y, sc, 51) * .52 + vnoise(X, Y, sc * .32, 52) * .30 + vnoise(X, Y, 7, 53) * .18;
   return s + (n - .5) * 2 * A / r;
 }
 // posisi global peta (untuk noise yang menyambung antarwilayah)

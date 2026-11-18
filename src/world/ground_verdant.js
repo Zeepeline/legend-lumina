@@ -198,29 +198,35 @@ function verdantBase(x, M, rect) {
 
 // air sungai & danau gaya referensi pemilik: biru jernih kaya, riak lembut, buih kontak tepi
 const VWC = {
-  deep: [42, 118, 196], mid: [58, 146, 222], shal: [96, 186, 240],
-  ripple: [172, 226, 255], foam: [224, 244, 255]
+  deep: [35, 71, 122], mid: [39, 145, 176], shal: [74, 217, 226],
+  ripple: [158, 252, 249], foam: [184, 255, 254]
 };
 function verdantWater(t, X, Y) {
-  const b = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5, v = t + b * .035 + vnoise(X, Y, 64, 21) * .2 - .1;
-  let c = v > .84 ? VWC.shal : v > .35 ? VWC.mid : VWC.deep;
-  // riak gelombang air alami mengalir lembut
-  const rip = Math.sin(X * 0.12 + Y * 0.6) + Math.sin(X * 0.05 - Y * 0.25) * 1.2;
-  if (rip > 1.82 && t < 0.8) c = VWC.ripple;
-  else if (t >= 0.94) c = VWC.foam; // buih putih lembut di kontak daratan
+  const b = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5;
+  const n = vnoise(X, Y, 56, 21) * .22 + vnoise(X, Y, 14, 23) * .08 - .15;
+  const v = t + b * .03 + n;
+  let c = v > .74 ? VWC.shal : v > .34 ? VWC.mid : VWC.deep;
+  // kilau bintang/riak halus pada permukaan air tenang
+  const sp = hash(X >> 2, Y >> 2, 89);
+  if (sp > .991 && t < .85 && (X & 3) === 1 && (Y & 3) === 1) c = VWC.ripple;
+  else if (t >= .94) c = VWC.foam;
   return c;
 }
 
-// tepi air alami: tepian pasir keemasan & kerikil sungai halus menyatu mulus tanpa celah hitam
+// tepi air alami: bibir pasir bertingkat (wet -> mid -> dry) dengan gerigi organik max
 const VBANK = {
-  sand: [196, 178, 142], sand2: [172, 154, 120], pebble: [142, 128, 108], foam: [224, 244, 255]
+  rim: [26, 66, 94], wet: [170, 138, 82], sand: [210, 180, 115],
+  dry: [229, 204, 144], pebble: [142, 128, 108]
 };
 function verdantBank(M, d, X, Y, north) {
-  if (d < 1.1) return VBANK.foam;
-  const n = vnoise(X, Y, 32, 51), w = (north ? 3.5 : 2.0) + n * 4.0;
+  if (d < 1.3) return VBANK.rim;
+  const n = vnoise(X, Y, 28, 51) * .65 + vnoise(X, Y, 7, 53) * .35;
+  const w = (north ? 9.5 : 7.5) + n * 9.0;
   if (d < w) {
+    if (d < w * .28) return VBANK.wet;
     const p = hash(X >> 2, Y >> 2, 73);
-    return p > 0.6 ? VBANK.pebble : p > 0.25 ? VBANK.sand2 : VBANK.sand;
+    if (p > .92) return VBANK.pebble;
+    return d < w * .68 ? VBANK.sand : VBANK.dry;
   }
   return null;
 }

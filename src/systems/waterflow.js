@@ -4,29 +4,32 @@
 const FLOW_MAX = 28;
 // arah aliran di titik global (gx, gy): { x, y, v } atau null bila bukan air (tepi air juga null agar riak tidak menempel batu)
 function waterFlowAt(gx, gy) {
+  const mul = (typeof G !== 'undefined' && G.scene && G.scene.weather === 'rain') ? 1.3 : 1;
   for (const id in WORLD_POS) {
     const M = MAPS[id]; if (!M || M.indoor || GROUND[M.ground] && GROUND[M.ground].ice) continue;
     const [ox, oy] = WORLD_POS[id], x = gx - ox, y = gy - oy;
     if (x < 0 || y < 0 || x > M.w || y > M.h) continue;
     const R = M.river;
     if (R && Math.abs(y - riverY(R, x)) < R.w / 2 - 5 && !(x >= R.bridge[0] && x <= R.bridge[1])) {
-      const dy = (riverY(R, x + 6) - riverY(R, x - 6)) / 12, n = Math.hypot(1, dy); return { x: 1 / n, y: dy / n, v: 34 };
+      const dy = (riverY(R, x + 6) - riverY(R, x - 6)) / 12, n = Math.hypot(1, dy); return { x: 1 / n, y: dy / n, v: 32 * mul };
     }
     const L = pondsAll(M); if (!L.length || waterE(L, x, y, ox, oy) > .8) return null;
     const B = pondsBase(M); let bi = -1, bd = 1e9;
     for (let i = 0; i < B.length; i++) { const d = Math.hypot((x - B[i][0]) / B[i][2], (y - B[i][1]) / B[i][3]); if (d < bd) { bd = d; bi = i; } }
-    const P = B[bi], a = B[bi - 1], b = B[bi + 1], ok = q => q && Math.min(q[2], q[3]) <= 92 && Math.hypot(q[0] - P[0], q[1] - P[1]) < 130;
-    if (!P || Math.min(P[2], P[3]) > 92 || (!ok(a) && !ok(b))) return { x: .9, y: .3, v: 5 };   // danau: riak pelan
+    const P = B[bi], r = P ? Math.min(P[2], P[3]) : 99;
+    const a = B[bi - 1], b = B[bi + 1], ok = q => q && Math.min(q[2], q[3]) <= 110 && Math.hypot(q[0] - P[0], q[1] - P[1]) < 150;
+    if (!P || r > 92 || (!ok(a) && !ok(b))) return { x: .9, y: .3, v: 5 * mul };   // danau: riak pelan
     const f = ok(b) ? b : P, s = ok(a) ? a : P, dx = f[0] - s[0], dy = f[1] - s[1], n = Math.hypot(dx, dy) || 1;
-    return { x: dx / n, y: dy / n, v: 30 };
+    const v = (r <= 35 ? 40 : r <= 55 ? 28 : 18) * mul; // situasional: sempit = deras, lebar = lembut
+    return { x: dx / n, y: dy / n, v };
   }
   return null;
 }
 function flowTex(sc) {
   if (sc.textures.exists('flowln')) return;
   const [c, x] = mk(9, 2);
-  for (let i = 0; i < 9; i++) { const a = Math.sin(i / 8 * Math.PI); x.fillStyle = `rgba(226,242,255,${(a * .95).toFixed(2)})`; x.fillRect(i, 0, 1, 1); }
-  x.fillStyle = 'rgba(40,94,172,.55)'; x.fillRect(2, 1, 5, 1);   // bayangan riak
+  for (let i = 0; i < 9; i++) { const a = Math.sin(i / 8 * Math.PI); x.fillStyle = `rgba(158,252,249,${(a * .9).toFixed(2)})`; x.fillRect(i, 0, 1, 1); }
+  x.fillStyle = 'rgba(35,71,122,.45)'; x.fillRect(2, 1, 5, 1);   // bayangan riak
   sc.textures.addCanvas('flowln', c);
 }
 function foamTex(sc) { // T544: tekstur buih ombak tepi pantai (Cobo #5)
