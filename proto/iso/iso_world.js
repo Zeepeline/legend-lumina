@@ -30,7 +30,10 @@ class IsoWorld extends IsoScene {
   create() {
     const A = this.anims, wa = (k, a, b, fps, rep) => A.exists(k) || A.create({ key: k, frames: A.generateFrameNumbers('wolf_hd', { start: a, end: b }), frameRate: fps, repeat: rep });
     wa('w_idle', 0, 6, 8, -1); wa('w_run', 14, 20, 13, -1); wa('w_pounce', 28, 32, 14, 0); wa('w_hurt', 35, 39, 14, 0); wa('w_die', 42, 45, 8, 0); wa('w_howl', 49, 54, 12, 0);
-    fxTextures(this.textures);
+    softTextures(this.textures); fxTextures(this.textures); /* gaya lembut = gambar acuan pemilik (?tanah=lembut) */
+    const src = k => this.textures.get(k).getSourceImage();
+    this.tsrc = { grass: src('gnd_grass'), light: src('gnd_grass_light'), dark: src('gnd_grass_dark'), dirt: src('gnd_dirt'), cobble: src('gnd_city_cobble') };
+    this.gT = { grass: texData(this.tsrc.grass), light: texData(this.tsrc.light), dark: texData(this.tsrc.dark) };
     this.IDX = this.cache.json.get('isoIndex') || {}; const WJ = this.cache.json.get('isoWorld') || {};
     this.open = !!WJ[this.pid] || !this.IDX[this.pid];
     // wilayah: dunia terbuka = semua wilayah luar ruang di posisi global (digeser agar semua positif); peta terpisah = satu wilayah
@@ -63,7 +66,7 @@ class IsoWorld extends IsoScene {
       emitZone: { type: 'random', source: new Phaser.Geom.Rectangle(-260, -160, 520, 320) } }).setDepth(9e5);
     this.motes.ops.alpha.onUpdate = (p, k, t) => Math.sin(t * Math.PI) * .7;
     this.hs = 0; this.exitArmed = false; this.ready = false;
-    this.scene.add('ui', IsoUI, true); this.ui = this.scene.get('ui'); isoInput(this); this.makeHud(); this.mapPicker();
+    this.scene.add('ui', IsoUI, true); this.ui = this.scene.get('ui'); isoInput(this); this.makeHud(); this.mapPicker(); softScene(this);
     const H = this.hero; cam.scrollX = isoX(H.x, H.y) - cam.width / 2; cam.scrollY = isoY(H.x, H.y) - 14 - cam.height / 2;
     this.stream(); this.time.addEvent({ delay: 400, loop: true, callback: () => this.stream() });
     window.__iso = this;
@@ -103,6 +106,7 @@ class IsoWorld extends IsoScene {
     const flat = [], stand = [];
     for (const o of D.objs) {
       if (!this.textures.exists('x_' + o[0]) || ISO_SKIP.test(o[0])) continue;
+      if (o[1] < -8 || o[2] < -8 || o[1] > r.w + 8 || o[2] > r.h + 40) continue; /* salinan objek wilayah tetangga (ikut terekspor) */
       (ISO_FLAT.test(o[0]) || o[9] < o[2] - 30 ? flat : stand).push(o);
     }
     this.bakeFloor(r, flat); this.textures.remove('g_' + r.id); /* sumber lantai tak dipakai lagi setelah diproyeksikan */
@@ -139,9 +143,9 @@ class IsoWorld extends IsoScene {
     const base = document.createElement('canvas'); base.width = r.w; base.height = r.h; const b = base.getContext('2d');
     b.fillStyle = '#5ea338'; b.fillRect(0, 0, r.w, r.h); b.strokeStyle = '#c8a868'; b.lineCap = 'round'; b.lineWidth = 26;
     for (const [a, c, e, f] of roads) { b.beginPath(); b.moveTo(a, c); b.quadraticCurveTo((a + e) / 2 + (c - f) * .15, (c + f) / 2, e, f); b.stroke(); }
-    this.projectFloor(r, base, -1.1e5);
+    this.lushGrass(b, r.w, r.h, r.ox, r.oy); this.projectFloor(r, base, -1.1e5);
     // denah prototipe apa adanya (titik 0 dunia = pojok denah)
-    const G = bakeGround(); this.ter = G.ter; if (this.textures.exists('iso_ground')) this.textures.remove('iso_ground');
+    const G = bakeGroundSoft(this.tsrc); this.ter = G.ter; if (this.textures.exists('iso_ground')) this.textures.remove('iso_ground');
     this.textures.addCanvas('iso_ground', G.c); this.add.image(-G.ox, -G.oy, 'iso_ground').setOrigin(0).setDepth(-1e5); this.waterFx(G);
     const allB = IMAP.houses.concat((IMAP.extra || []).map(([img, tx, ty, w, d]) => ({ t: [tx, ty, w, d], img })));
     this.houses = allB.filter(h => this.textures.exists(h.img)).map(h => {
@@ -193,6 +197,7 @@ class IsoWorld extends IsoScene {
       const im = this.textures.get('x_' + n).getSourceImage();
       b.save(); b.globalAlpha = al; b.translate(x, y); b.rotate(rot); b.scale(sx * (fl ? -1 : 1), sy); b.drawImage(im, -ox * im.width, -oy * im.height); b.restore();
     }
+    if (!ISO_NOLUSH.test(r.id)) this.lushGrass(b, W, H, r.ox, r.oy);
     this.bridges(b, W, H); this.projectFloor(r, base, -1e5);
   }
   projectFloor(r, base, depth) {
@@ -201,7 +206,6 @@ class IsoWorld extends IsoScene {
       const cw = Math.min(ISO_TILE, PW - tx), ch = Math.min(ISO_TILE, PH - ty), cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
       const g = cv.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
       g.setTransform(1, .5, -1, .5, H - tx, -ty); g.drawImage(base, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
-      if (!ISO_NOLUSH.test(r.id)) this.lushGrass(g, cw, ch, X0 + tx, Y0 + ty);
       const key = 'iso_floor_' + r.id + '_' + tx + '_' + ty; if (this.textures.exists(key)) this.textures.remove(key);
       this.textures.addCanvas(key, cv); r.floorKeys.push(key); r.objs.push(this.add.image(X0 + tx, Y0 + ty, key).setOrigin(0).setDepth(depth));
     }
@@ -229,16 +233,17 @@ class IsoWorld extends IsoScene {
     }
     b.putImageData(im, 0, 0);
   }
-  // rumput asli → bintik rumput prototipe (PAL.grass, helai gelap/terang), bayangan & tepi asli tetap lewat faktor terang
+  // rumput asli → rumput gaya lembut (tekstur gnd_grass/_dark/_light dicampur noise, sama dengan bakeGroundSoft); bayangan & tepi asli tetap
   lushGrass(g, w, h, ox, oy) {
-    const im = g.getImageData(0, 0, w, h), d = im.data, P = PAL.grass.map(hexRGB), dk = hexRGB(PAL.grassDk), lt = P[3];
+    const im = g.getImageData(0, 0, w, h), d = im.data, S = this.gT;
+    const smp = (t, x, y) => { const i = (((y % t.h) + t.h) % t.h * t.w + (((x % t.w) + t.w) % t.w)) * 4; return t.d.subarray(i, i + 3); };
     for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
       const i = (py * w + px) * 4; if (d[i + 3] < 8) continue;
       const r = d[i], gg = d[i + 1], b = d[i + 2]; if (!(gg > r + 16 && gg > b + 16)) continue;
-      const X = px + ox, Y = py + oy, n = hash2(X, Y, 5);
-      let c = n < .62 ? P[0] : n < .8 ? P[1] : n < .9 ? P[2] : n < .97 ? P[3] : P[4];
-      if (hash2(X >> 1, Y, 9) < .012) c = dk; else if (hash2(X >> 1, Y + 1, 9) < .012) c = lt; /* helai rumput */
-      const f = Math.min(1.12, Math.max(.55, (r + gg + b) / 380)) * (.82 + vnoise(X, Y * 2, 120, 3) * .2);
+      const X = px + ox, Y = py + oy, n = vnoise(X, Y, 70, 11), a = smp(S.grass, X, Y);
+      let c = a; if (n < .4) { const k = sstep(.3, .4, n), q = smp(S.dark, X, Y); c = [q[0] + (a[0] - q[0]) * k, q[1] + (a[1] - q[1]) * k, q[2] + (a[2] - q[2]) * k]; }
+      else if (n > .62) { const k = sstep(.62, .72, n), q = smp(S.light, X, Y); c = [a[0] + (q[0] - a[0]) * k, a[1] + (q[1] - a[1]) * k, a[2] + (q[2] - a[2]) * k]; }
+      const f = Math.min(1.08, Math.max(.55, (r + gg + b) / 330));
       d[i] = c[0] * f; d[i + 1] = c[1] * f; d[i + 2] = c[2] * f;
     }
     g.putImageData(im, 0, 0);
