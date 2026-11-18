@@ -10,7 +10,8 @@ function isGoldenHour() {
   return h >= 15.5 && h <= 18.6;
 }
 function gradeOn(M) {
-  return M && !M.indoor && !GRADE_OFF.test(M.id || '') && !OPT.lite && OPT.grade !== false && isGoldenHour();
+  // Gaya visual natural: rona warna senja dinonaktifkan agar warna game tetap natural dan jernih
+  return false;
 }
 function gradeCam(sc, cam, on, vig) {
   if (sc.game.renderer.type !== Phaser.WEBGL || !cam.postFX) return false;

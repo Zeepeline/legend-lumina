@@ -21,10 +21,10 @@ STYLE RULES for every image in this chat:
 - ISOMETRIC pixel art for a mobile action RPG, true 2:1 isometric projection: floor tiles are diamonds twice as wide as tall,
   camera looks down at the classic isometric angle. Follow the attached screenshot for camera angle, scale and colors.
 - Original designs only; do not imitate characters, creatures, logos or assets from any existing game.
-- Warm late-afternoon golden light from the UPPER LEFT. Left-facing surfaces are lit, right-facing surfaces are in shade.
-  Shadows fall to the lower right, soft deep olive, never pure black.
-- Palette: yellow-green grass (#a9b94e, #93a541, #5f6e2c), ochre earth (#c9ae62, #9a8549), plaster (#e8d2a6), timber (#6a4a2c),
-  thatch (#c9a24e), red tile (#b0583c), stone (#b9ad8a, #7d735a), darkest tone #1e1c16. Slightly desaturated, no neon.
+- Natural daylight illumination from the UPPER LEFT. Clean, bright natural daylight, neutral sunlight, no yellow/orange twilight tint. Left-facing surfaces are lit, right-facing surfaces are in soft shade.
+  Shadows fall to the lower right, soft cool-neutral tone, never pure black.
+- Palette: fresh natural green grass (#5ea338, #4c8a2b, #3b6c20), clean natural earth path (#c8a868, #ad8f53), plaster (#f0e2c8), timber (#6a4a2c),
+  thatch (#d2a852), red tile (#b84a32), stone (#9ba09d, #6e7270), darkest tone #1e201d. Crisp, natural, clear, no dusk/sunset tint, no neon.
 - Shading: 3-4 tones per material, chunky readable pixel clusters, very little dithering.
 - Outlines: 1-pixel outline in a darker shade of the local color on characters and objects; floor tiles have no outline.
 - Scale: one game pixel = one art pixel. A human is about 32 px tall. A floor diamond is 32x16 px. One height level (cliff) is 26 px.
