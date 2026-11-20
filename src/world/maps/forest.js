@@ -20,11 +20,11 @@ MAPS.forest = {
   ],
   // Anak Sungai Cermin (T341): hulu tepi atas (60, 0) mengalir ke selatan menyatu ke sungai hutan di (60, 620)
   ponds: [
-    [60, 0, 26, 36], [60, 50, 26, 36], [60, 110, 26, 36], [60, 170, 26, 36],
-    [60, 230, 26, 36], [60, 290, 26, 36], [60, 350, 26, 36], [60, 410, 26, 36],
-    [60, 470, 26, 36], [60, 530, 26, 36], [60, 580, 26, 36], [60, 620, 28, 36],
+    [60, 0, 38, 36], [60, 50, 38, 36], [60, 110, 38, 36], [60, 170, 38, 36],
+    [60, 230, 38, 36], [60, 290, 38, 36], [60, 350, 38, 36], [60, 410, 38, 36],
+    [60, 470, 38, 36], [60, 530, 38, 36], [60, 580, 38, 36], [60, 620, 42, 38],
   ],
-  river: { y: 600, amp: 30, k: .009, w: 36, bridge: [380, 432] },
+  river: { y: 600, amp: 30, k: .009, w: 50, bridge: [380, 432] },
   objs: [
     ['reeds', 260, 440], ['reeds', 280, 445], ['reeds', 850, 750], ['reeds', 870, 755],
     ['stele', 556, 1004, { lore: 'prasasti_hutan' }],
@@ -34,7 +34,7 @@ MAPS.forest = {
     ['sign', 440, 280, { text: 'SIMPANG TIGA HUTAN\n← Barat: Hutan Dalam (Berbahaya)\n→ Timur: Jalur Sungai Senja\n↑ Utara: Desa Lumina' }],
     ['campfire', 650, 180],
     ['woodlandshrine', 500, 350],
-    ['pebbles', 95, 170], ['pebbles', 30, 410], ['mush', 95, 290], ['bushG1', 95, 470],
+    ['pebbles', 128, 170], ['pebbles', 30, 410], ['mush', 132, 290], ['bushG1', 132, 470],
     ['treeWoodsRound', 250, 480], ['treeWoodsPine', 520, 160],
     ['stumpWoods', 740, 880], ['rockWoods', 500, 840],
     ['log', 228, 760], ['rock', 130, 880],

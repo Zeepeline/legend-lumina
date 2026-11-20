@@ -20,7 +20,7 @@ S = newState();
 let game = null;
 loadImgs().then(() => {
   game = new Phaser.Game({
-    type: Phaser.AUTO, parent: 'screen', width: VW, height: VH, pixelArt: true, roundPixels: true, backgroundColor: '#2f4a2a',
+    type: Phaser.AUTO, parent: 'screen', width: VW, height: VH, pixelArt: true, roundPixels: true, backgroundColor: '#5ea338',
     physics: { default: 'arcade', arcade: { debug: false, fixedStep: false } }, scale: { mode: Phaser.Scale.NONE }, scene: [World],
     input: { keyboard: false, mouse: false, touch: false, gamepad: false }, audio: { noAudio: true }, banner: false,
   });

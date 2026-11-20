@@ -9,6 +9,12 @@ Pemilik memilih: tampilan isometrik dipasang DI GAME UTAMA (bukan prototipe), su
 - Objek layar (scrollFactor 0): kompensasi penuh. Partikel tidak dikompensasi (posisi tetap terproyeksi).
 - `Input.vec()` layar → dunia; kamera tanpa batas peta saat iso. Ruang dalam/judul tetap top-down.
 
+## Aset Ubin Isometrik & Ketinggian (19-11-2026) — `proto/iso/`
+- Ubin rumput belah ketupat 2:1 (`I023`, `assets/img/iso/tiles/grass_00`..`15` & lembar `iso_tileset_32x16.png`).
+- Balok elevasi tebing batu (`I029`, `assets/img/iso/blocks/block_00`..`15`, tangga, tanjakan, pantai air).
+- Pembersihan sambungan (*seam cleaning*): halo magenta dihapus, outline AI dipangkas (*inward sampling*), dan tepian dihaluskan (*soft feathering* 2–3px + `alpha_composite`) sehingga tidak ada gerigi tajam atau garis grid pemisah.
+- Integrasi kanvas `proto/iso/iso_map.js` dan `iso_art.js` disinkronkan ke ukuran 32×16 px.
+
 ## Sisa (urut prioritas)
 1. Malam & cahaya (`camStep` night/dark: titik hapus memakai `L.x - scrollX` top-down) → proyeksikan posisi lampu.
 2. Arah hadap Arka/serangan: `pl.dir` dari vektor dunia → sprite menghadap diagonal; pertimbangkan arah dari vektor layar.

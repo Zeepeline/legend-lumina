@@ -49,10 +49,10 @@ function terrainAt(tx, ty) {
 }
 
 // panggang seluruh tanah ke satu kanvas; kembalikan { c, ox, oy } (ox,oy = posisi layar titik dunia 0,0 di kanvas)
-function bakeGround() {
+function bakeGround(sc) {
   const N = IMAP.N, T = ISO.T, ox = N * T + 24, oy = ISO.ZH + 24, W = N * 2 * T + 48, H = N * T + ISO.ZH + 64;
   const c = mkCanvas(W, H), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
-  const cache = {}, tile = (k, v) => cache[k + v] || (cache[k + v] = tileCanvas(k, v));
+  const cache = {}, tile = (k, v) => cache[k + v] || (cache[k + v] = tileCanvas(k, v, sc));
   const ter = [], zt = [];
   for (let ty = 0; ty < N; ty++) { ter[ty] = []; zt[ty] = []; for (let tx = 0; tx < N; tx++) { ter[ty][tx] = terrainAt(tx, ty); zt[ty][tx] = zAt((tx + .5) * T, (ty + .5) * T); } }
   const scr = (tx, ty, z) => [ox + (tx - ty) * T - T, oy + (tx + ty) * T / 2 - z * ISO.ZH];
@@ -75,8 +75,9 @@ function bakeGround() {
     face(z - zl, true); face(z - zr, false);
     x.drawImage(tile(k, Math.floor(hash2(tx, ty, 1) * 4)), sx, sy);
   }
-  // tepi rumput bergerigi daun di atas jalan/batu/tanah garapan (rumput "menjorok" lembut)
-  for (const [tx, ty] of order) {
+  // tepi rumput bergerigi daun di atas jalan/batu/tanah garapan (hanya untuk mode prosedural kanvas tanpa tileset)
+  const hasIsoSheet = sc && sc.textures && sc.textures.exists('iso_tileset');
+  if (!hasIsoSheet) for (const [tx, ty] of order) {
     if (ter[ty][tx] !== 'grass') continue; const z = zt[ty][tx], [sx, sy] = scr(tx, ty, z);
     const nb = [[0, -1, 16, 4], [1, 0, 24, 8], [0, 1, 16, 12], [-1, 0, 8, 8]];
     for (const [dx, dy] of nb) {

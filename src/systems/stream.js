@@ -29,9 +29,11 @@ Object.assign(World.prototype, {
   // daftar potongan lapisan L yang dibutuhkan untuk tampilan (koordinat wilayah aktif), terdekat dulu
   gNeed(L, vx, vy, ring) {
     const lx = vx - L.ox, ly = vy - L.oy;
+    const iso = typeof isoActive === 'function' && isoActive();
+    const spanW = iso ? VW * 2 : VW, spanH = iso ? VH * 2 : VH;
     const i0 = Math.max(0, Math.floor(lx / GT) - ring), j0 = Math.max(0, Math.floor(ly / GT) - ring);
-    const i1 = Math.min(L.cols - 1, Math.floor((lx + VW) / GT) + ring), j1 = Math.min(L.rows - 1, Math.floor((ly + VH) / GT) + ring);
-    const cx = (lx + VW / 2) / GT, cy = (ly + VH / 2) / GT, out = [];
+    const i1 = Math.min(L.cols - 1, Math.floor((lx + spanW) / GT) + ring), j1 = Math.min(L.rows - 1, Math.floor((ly + spanH) / GT) + ring);
+    const cx = (lx + spanW / 2) / GT, cy = (ly + spanH / 2) / GT, out = [];
     for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) out.push([i, j, Math.hypot(i + .5 - cx, j + .5 - cy)]);
     return out.sort((a, b) => a[2] - b[2]);
   },
@@ -45,7 +47,11 @@ Object.assign(World.prototype, {
       this.gSpent += performance.now() - a; this.gBaked = (this.gBaked || 0) + 1;
     }
     GTC.delete(k); GTC.set(k, this.t || 0);
-    if (!this.gImgs.has(k)) this.gImgs.set(k, this.add.image(L.ox + i * GT, L.oy + j * GT, k).setOrigin(0).setDepth(-1e6));
+    if (!this.gImgs.has(k)) {
+      const img = this.add.image(L.ox + i * GT, L.oy + j * GT, k).setOrigin(0).setDepth(-1e6);
+      if (typeof isoActive === 'function' && isoActive()) img.setScale(1.015); /* overlap tipis cegah celah garis antar-chunk di sudut miring */
+      this.gImgs.set(k, img);
+    }
     return true;
   },
   updGround() {

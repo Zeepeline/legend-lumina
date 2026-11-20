@@ -226,16 +226,20 @@ Object.assign(World.prototype, {
     });
   },
   spawnRainEmitters() {
-    this.add.particles(0, 0, 'rain_bg', {
-      x: { min: -40, max: VW + 50 }, y: -12, lifespan: 850,
+    if (this._rainEm && this._rainEm.every(e => e && e.active)) return;
+    const xMin = -Math.round(VW * .5), xMax = Math.round(VW * 1.5), yTop = -Math.round(VH * .4);
+    const e1 = this.add.particles(0, 0, 'rain_bg', {
+      x: { min: xMin, max: xMax }, y: yTop, lifespan: 1200,
       speedY: { min: 230, max: 280 }, speedX: { min: -56, max: -42 },
-      alpha: { start: .38, end: .14 }, frequency: 14, quantity: 2
+      alpha: { start: .38, end: .14 }, frequency: 12, quantity: 3
     }).setScrollFactor(0).setDepth(1.94e5);
-    this.add.particles(0, 0, 'rain', {
-      x: { min: -40, max: VW + 60 }, y: -16, lifespan: 620,
+    const e2 = this.add.particles(0, 0, 'rain', {
+      x: { min: xMin, max: xMax }, y: yTop, lifespan: 900,
       speedY: { min: 350, max: 430 }, speedX: { min: -88, max: -66 },
-      alpha: { start: .82, end: .28 }, frequency: 10, quantity: 2
+      alpha: { start: .82, end: .28 }, frequency: 9, quantity: 3
     }).setScrollFactor(0).setDepth(1.95e5);
+    this._rainEm = [e1, e2];
+    if (this.fxObjs) this.fxObjs.push(e1, e2);
   },
   rainSplash(x, y) {
     const beads = [], cnt = 3 + (Math.random() < .45 ? 1 : 0);
@@ -247,16 +251,25 @@ Object.assign(World.prototype, {
   },
   updRainFx(dt) {
     if (this.weather !== 'rain' || G.title || this.M.indoor || this.M.dark) {
+      if (this._rainEm) for (const e of this._rainEm) if (e && e.active) { e.emitting = false; e.setVisible(false); }
       if (this._rainG && this._rainG.active) this._rainG.clear();
       if (this._rainFl && this._rainFl.active) this._rainFl.setAlpha(0);
+      if (this._rainMist && this._rainMist.active) this._rainMist.setAlpha(0);
       return;
     }
+    if (!this._rainEm || this._rainEm.some(e => !e || !e.active)) this.spawnRainEmitters();
+    for (const e of this._rainEm) if (e && e.active) { e.emitting = true; e.setVisible(true); }
     if (!this._rainG || !this._rainG.active) {
       this._rainG = this.add.graphics().setDepth(1.93e5);
       if (this.fxObjs) this.fxObjs.push(this._rainG);
     }
+    if (!this._rainMist || !this._rainMist.active) {
+      this._rainMist = this.add.rectangle(VW / 2, VH / 2, VW * 2.5, VH * 2.5, 0x1c3450, 1).setScrollFactor(0).setDepth(1.92e5).setAlpha(0);
+      if (this.fxObjs) this.fxObjs.push(this._rainMist);
+    }
+    this._rainMist.setAlpha(.06);
     if (!this._rainFl || !this._rainFl.active) {
-      this._rainFl = this.add.rectangle(0, 0, VW, VH, 0xd0e8ff, 1).setOrigin(0).setScrollFactor(0).setDepth(1.98e5).setAlpha(0);
+      this._rainFl = this.add.rectangle(VW / 2, VH / 2, VW * 2.5, VH * 2.5, 0xd0e8ff, 1).setScrollFactor(0).setDepth(1.98e5).setAlpha(0);
       if (this.fxObjs) this.fxObjs.push(this._rainFl);
     }
     this._rainSp = this._rainSp || [];

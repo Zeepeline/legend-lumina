@@ -328,7 +328,7 @@ class World extends Phaser.Scene {
     }
     updPops(cam);
     if (this.night) {
-      const d = this.night, sx = cam.scrollX, sy = cam.scrollY, n = nightAmt(), rain = this.weather === 'rain' ? .22 : 0;
+      const d = this.night, sx = cam.scrollX, sy = cam.scrollY, n = nightAmt(), rain = this.weather === 'rain' ? .09 : 0;
       d.clear();
       if (n + rain > .02) {
         const col = n > .05 ? lerpCol(0x40220c, 0x0a1238, clamp((n - .1) / .3, 0, 1)) : 0x16243a;

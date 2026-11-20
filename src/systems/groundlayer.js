@@ -7,7 +7,7 @@ class GroundLayer extends Phaser.Scene {
   constructor() { super({ key: 'GL' }); }
   create() {
     this.t = 0; this.gImgs = new Map(); this.gL = []; this.gStream = true; this.gIds = ''; this.wild = new Map(); this.wildT = 0;
-    this.cameras.main.setBackgroundColor('#2f4a2a');
+    this.cameras.main.setBackgroundColor('#5ea338');
   }
   update(time, dl) {
     const dt = Math.min(dl, 100) / 1000, A = G.scene; this.t += dt;

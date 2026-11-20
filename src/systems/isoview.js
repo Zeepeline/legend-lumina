@@ -15,7 +15,7 @@ const ISO_VIEW = (() => {
     return localStorage.getItem('lumina_iso') === '1';
   } catch (_) { return false; }
 })();
-const ISO_ZOOM = .72; // kamera lebih jauh di isometrik (pemilik suka pandangan luas seperti pratinjau prototipe)
+const ISO_ZOOM = .88; // kamera lebih tajam di isometrik (menghindari burik akibat downscale 0.72×)
 const ISO_FLATD = -5e5, ISO_R = -Math.PI / 4, ISO_SX = Math.SQRT1_2, ISO_SY = Math.SQRT2;
 function isoActive() { const A = G.scene; return ISO_VIEW && !!(A && A.M && !A.M.indoor && !G.title && A.M.ground !== 'room'); }
 function isoScenes(game) { return game.scene.scenes.filter(s => s.sys.isActive() && s.cameras && (s instanceof World || s.sys.settings.key === 'GL')); }
@@ -26,7 +26,7 @@ if (ISO_VIEW && typeof Phaser !== 'undefined') {
     pre0.call(this);
     if (!this.isoOn) return;
     const z = this.zoomX * ISO_ZOOM, ox = this.width * this.originX, oy = this.height * this.originY;
-    this.matrix.setTransform(z, .5 * z, -z, .5 * z, this.x + ox, this.y + oy); this.matrix.translate(-ox, -oy);
+    this.matrix.setTransform(z, .5 * z, -z, .5 * z, Math.round(this.x + ox), Math.round(this.y + oy)); this.matrix.translate(-ox, -oy);
     const mx = this.scrollX + this.width / 2, my = this.scrollY + this.height / 2, h = (this.width / 4 + this.height / 2) / z;
     this.worldView.setTo(mx - h, my - h, 2 * h, 2 * h);
   };

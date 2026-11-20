@@ -1,7 +1,7 @@
 'use strict';
 // Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024).
 // Ubin ground 256×256 px, tepi jalan berenda daun alami, ornamen clutter & pulau rumput.
-const VERDANT = {};
+const VERDANT = { meadow: 1, forest: 1, village: 1 };
 const VBAY = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const VDECO = ['tuft', 'sprout_a', 'sprout_b', 'sprout_c', 'flower_w', 'flower_w2', 'flower_w3', 'flower_b', 'flower_b2', 'flowers', 'flowers_w',
   'mushroom', 'pebble', 'pebbles', 'reeds',
@@ -75,29 +75,25 @@ function verdantTiles(M) {
 
 const vModW = (v, sz) => ((v % sz) + sz) % sz;
 // nilai bercak tanah (0..1) pada koordinat global (ambang tinggi agar tidak menjadi polkadot)
-const vDirtN = (X, Y) => vnoise(X, Y, 30, 13) * .75 + vnoise(X, Y, 9, 14) * .25;
-const vDirtT = M => M.ground === 'village' ? .82 : M.ground === 'forest' ? .87 : .85;
+const vDirtN = (X, Y) => vnoise(X, Y, 54, 13) * .68 + vnoise(X, Y, 16, 14) * .32;
+const vDirtT = M => M.ground === 'village' ? .82 : M.ground === 'forest' ? .62 : .84;
 
 // warna tanah verdant per piksel (X, Y global); null = petak belum termuat
 function verdantPix(M, X, Y, path) {
   const T = verdantTiles(M); if (!T) return null;
-  const sz = T[0].size || 128;
   const t = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5;
-  const ti = (vModW(Y, sz) * sz + vModW(X, sz)) * 4;
-  let s;
-  if (path || vDirtN(X, Y) > vDirtT(M) + t * .05) s = T[3];
-  else {
-    const v = vnoise(X, Y, 56, 11) * .75 + vnoise(X, Y, 20, 12) * .25;
-    s = v > .6 + t * .1 ? T[1] : v < .4 + t * .1 ? T[2] : T[0];
-  }
-  return [s[ti], s[ti + 1], s[ti + 2]];
+  const dn = vDirtN(X, Y), dt = vDirtT(M) + t * .04;
+  const s = (path || dn > dt) ? T[3] : T[0];
+  const w = s.w || s.size || 128, h = s.h || s.size || 128;
+  const ti = (vModW(Y, h) * w + vModW(X, w)) * 4;
+  return [s[ti] || 0, s[ti + 1] || 0, s[ti + 2] || 0];
 }
 
 // ornamen: grid teratur global + geser acak (jarak seimbang & lapang, tidak menumpuk)
 function verdantDeco(x, M, rect, GX, GY, sd, near) {
   const [RX, RY, RW, RH] = rect, isMeadow = M.ground === 'meadow';
-  const C = isMeadow ? 84 : 36, fm = M.flowers ? 1.6 : 1;
   const isDeep = M.id === 'deepwood', isForest = M.ground === 'forest' && !isDeep;
+  const C = isMeadow ? 84 : (isForest || isDeep ? 28 : 36), fm = M.flowers ? 1.6 : 1;
   const cList = isDeep ? CLUTTER_DEEPWOOD : isForest ? CLUTTER_FOREST : CLUTTER_PADANG;
   const waterDeco = isForest || isDeep ? WATER_DECO_FOREST : WATER_DECO_PADANG;
   const useNew = typeof IMGEL !== 'undefined' && IMGEL[cList[0]];
@@ -152,8 +148,8 @@ function verdantDeco(x, M, rect, GX, GY, sd, near) {
             im = IMGEL[cList[idx % cList.length]];
           }
         } else {
-          // Bunga liar & rumput kecil tumbuh manis dengan ruang napas luas
-          if (r < (0.16 * fm)) {
+          // Bunga liar & rumput kecil tumbuh subur mengisi lantai hutan agar tidak datar
+          if (r < (0.36 * fm)) {
             const idx = Math.floor(hash(cx, cy, 64) * 8);
             im = IMGEL[cList[idx]];
           }
@@ -177,21 +173,35 @@ function verdantDeco(x, M, rect, GX, GY, sd, near) {
   }
 }
 
-// kaki batu/semak/tunggul ditumbuhi rumput (dipanggil bakeGround setelah bayangan; x ditranslasi -RX,-RY)
-const VBASE = /rock|bush|stump|log/;
+// kaki batu/semak/tunggul ditumbuhi rumput & bayangan kontak (dipanggil bakeGround setelah bayangan; x ditranslasi -RX,-RY)
+const VBASE = /tree|pine|rock|bush|stump|log/;
 function verdantBase(x, M, rect) {
-  if (!VERDANT[M.ground] || M.ground === 'meadow' || M.indoor) return;
-  const im = (typeof IMGEL !== 'undefined' && (IMGEL.clutter_grass1 || IMGEL.fclutter_grass_tuft || IMGEL.deco_tuft));
-  if (!im) return;
+  if (!VERDANT[M.ground] || M.indoor) return;
+  const ims = typeof IMGEL !== 'undefined' ? [
+    IMGEL.clutter_grass1, IMGEL.fclutter_grass_tuft, IMGEL.deco_tuft,
+    IMGEL.clutter_grass2, IMGEL.deco_fl_w1, IMGEL.deco_flower_w, IMGEL.deco_pebble
+  ].filter(Boolean) : [];
   if (!M._vbase) M._vbase = mapObjects(M).filter(o => VBASE.test(o[0]) && OBJ[o[0]]).map(o => [o[1], o[2], (OBJ[o[0]].col || [16])[0] + 8]);
   const [RX, RY, RW, RH] = rect || [0, 0, M.w, M.h];
   for (const [ox, oy, w] of M._vbase) {
     if (ox + w < RX - 16 || ox - w > RX + RW + 16 || oy < RY - 8 || oy - 20 > RY + RH) continue;
+    x.fillStyle = 'rgba(10, 24, 8, 0.44)';
+    x.beginPath();
+    x.ellipse(ox, oy + 1, w * 0.72, Math.max(3, w * 0.26), 0, 0, Math.PI * 2);
+    x.fill();
     const n = 3 + Math.floor(hash(ox, oy, 71) * 3);
     for (let k = 0; k < n; k++) {
-      const X = Math.round(ox + (hash(ox, oy, 72 + k) - .5) * w * 1.15 - im.width / 2);
-      const Y = Math.round(oy - im.height + 3 + hash(ox, oy, 80 + k) * 4);
-      x.drawImage(im, X, Y);
+      if (ims.length) {
+        const im = ims[Math.floor(hash(ox, oy, 75 + k) * ims.length)];
+        const X = Math.round(ox + (hash(ox, oy, 72 + k) - .5) * w * 1.15 - im.width / 2);
+        const Y = Math.round(oy - im.height + 3 + hash(ox, oy, 80 + k) * 4);
+        x.drawImage(im, X, Y);
+      } else {
+        const X = Math.round(ox + (hash(ox, oy, 72 + k) - .5) * w * 1.15);
+        const Y = Math.round(oy - 2 + hash(ox, oy, 80 + k) * 3);
+        x.fillStyle = '#6cb646'; x.fillRect(X, Y, 2, 4);
+        x.fillStyle = '#447e2b'; x.fillRect(X - 1, Y + 2, 2, 3);
+      }
     }
   }
 }
@@ -203,9 +213,9 @@ const VWC = {
 };
 function verdantWater(t, X, Y) {
   const b = VBAY[(Y & 3) * 4 + (X & 3)] / 16 - .5;
-  const n = vnoise(X, Y, 56, 21) * .22 + vnoise(X, Y, 14, 23) * .08 - .15;
+  const n = vnoise(X, Y, 48, 21) * .32 + vnoise(X, Y, 14, 23) * .14 - .23;
   const v = t + b * .03 + n;
-  let c = v > .74 ? VWC.shal : v > .34 ? VWC.mid : VWC.deep;
+  let c = v > .74 ? VWC.shal : v > .28 ? VWC.mid : VWC.deep;
   // kilau bintang/riak halus pada permukaan air tenang
   const sp = hash(X >> 2, Y >> 2, 89);
   if (sp > .991 && t < .85 && (X & 3) === 1 && (Y & 3) === 1) c = VWC.ripple;
@@ -213,20 +223,28 @@ function verdantWater(t, X, Y) {
   return c;
 }
 
-// tepi air alami: bibir pasir bertingkat (wet -> mid -> dry) dengan gerigi organik max
+// tepi air alami & tebing palung bertingkat (cliff canyon): bibir berundak ala referensi pemilik
 const VBANK = {
   rim: [26, 66, 94], wet: [170, 138, 82], sand: [210, 180, 115],
-  dry: [229, 204, 144], pebble: [142, 128, 108]
+  dry: [229, 204, 144], pebble: [142, 128, 108],
+  cliffTop: [53, 99, 34], cliffFace: [101, 87, 74],
+  cliffDark: [68, 56, 45], cliffHighlight: [128, 114, 97],
+  soilDark: [72, 54, 34], soil: [102, 78, 52], lip: [46, 86, 26]
 };
 function verdantBank(M, d, X, Y, north) {
   if (d < 1.3) return VBANK.rim;
   const n = vnoise(X, Y, 28, 51) * .65 + vnoise(X, Y, 7, 53) * .35;
-  const w = (north ? 9.5 : 7.5) + n * 9.0;
+  const w = (north ? 13.0 : 8.5) + n * 9.0;
   if (d < w) {
-    if (d < w * .28) return VBANK.wet;
+    if (d > w - 4.6) {
+      if (d > w - 1.4) return VBANK.lip;
+      const strata = ((Y + Math.floor(hash(X >> 2, Y >> 2, 17) * 3)) % 5 === 0);
+      return strata ? VBANK.cliffDark : (north ? VBANK.cliffFace : VBANK.soil);
+    }
+    if (d < w * .26) return VBANK.wet;
     const p = hash(X >> 2, Y >> 2, 73);
-    if (p > .92) return VBANK.pebble;
-    return d < w * .68 ? VBANK.sand : VBANK.dry;
+    if (p > .88) return p > .95 ? VBANK.cliffHighlight : VBANK.pebble;
+    return d < w * .62 ? VBANK.sand : VBANK.dry;
   }
   return null;
 }

@@ -41,13 +41,12 @@ function foamTex(sc) { // T544: tekstur buih ombak tepi pantai (Cobo #5)
 }
 function isShorelineAt(M, x, y, ox, oy) {
   if (!M || M.indoor) return false;
-  const R = M.river;
-  if (R && Math.abs(Math.abs(y - riverY(R, x)) - R.w / 2) < 4.5 && !(x >= R.bridge[0] && x <= R.bridge[1])) return true;
-  const L = typeof pondsAll === 'function' ? pondsAll(M) : null;
-  if (L && L.length && typeof waterE === 'function') {
-    const e = waterE(L, x, y, ox, oy);
-    if (e >= 0.94 && e <= 1.05) return true;
-  }
+  const R = M.river, L = typeof pondsAll === 'function' ? pondsAll(M) : null;
+  const inR = R && Math.abs(y - riverY(R, x)) < R.w / 2 * 1.15 - 2 && !(x >= R.bridge[0] && x <= R.bridge[1]);
+  const e = L && L.length && typeof waterE === 'function' ? waterE(L, x, y, ox, oy) : 9;
+  if (inR || e < .94) return false;
+  if (R && Math.abs(Math.abs(y - riverY(R, x)) - R.w / 2 * 1.15) < 4.5 && !(x >= R.bridge[0] && x <= R.bridge[1])) return true;
+  if (e >= .94 && e <= 1.05) return true;
   return false;
 }
 Object.assign(World.prototype, {

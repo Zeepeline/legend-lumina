@@ -95,13 +95,17 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 220 · obj `tree_redwood` 228 · obj `goblin_torch` 231 · obj `goblin_cauldron` 234 · obj `cryst` 243 · obj `lamp` 246 · obj `viewpoint` 254 · obj `lumina_shard` 288 · obj `scenicbench` 310 · obj `mailbox` 328 · obj `gatehouse` 338 · obj `ctower` 346 · obj `city_bridge` 349 · obj `gpt_city_banner` 352 · obj `gpt_city_banner_sm` 356 · obj `gpt_city_board` 360
 
-## src/world/ground.js (400 baris)
+## src/world/ground.js (340 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 112 · `blockRects()` 275 · `scatter()` 291 · `openSides()` 349 · `borderTrees()` 362 · `ringObjects()` 379 · `mapObjects()` 384 · `mapWalls()` 388
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 100 · `getTileData()` 101 · `genGround()` 112 · `blockRects()` 273 · `openSides()` 289 · `borderTrees()` 302 · `ringObjects()` 319 · `mapObjects()` 324 · `mapWalls()` 328
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
 `WATER_WIDEN` 6 · `pondsBase()` 7 · `WGLOB` 25 · `waterGlobal()` 26 · `pondsAll()` 40 · `pondsNear()` 49 · `waterE()` 52 · `mapDoors()` 69 · `waterGXY()` 70 · `WATER_MOVABLE` 73 · `waterRelocate()` 74
+
+## src/world/scatter_iso.js (103 baris)
+_Penempatan pohon & vegetasi isometrik 2.5D: Variable-Radius Poisson-Disc, fBm Groves situasional, dan Asymmetric South Clearance._
+`SCATTER_FOREST_RX` 3 · `SCATTER_TREE_RX` 4 · `scatterGroveNoise()` 6 · `scatterClearBase()` 10 · `scatterSouthClear()` 37 · `scatterPoissonOk()` 45 · `scatter()` 70
 
 ## src/world/maps/village.js (128 baris)
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
@@ -191,9 +195,9 @@ _Panggang bayangan objek ke tekstur tanah_
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 34 · `loadImgs()` 53 · `addStrip()` 67 · `darkTree()` 72 · `NPC_W` 74 · `regPortrait()` 75 · `regChar()` 80 · `buildTextures()` 97
 
-## src/world/ground_verdant.js (314 baris)
+## src/world/ground_verdant.js (338 baris)
 _Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024)._
-`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `MEADOW_FLOWERS` 12 · `V_TILES` 17 · `CLUTTER_PADANG` 23 · `CLUTTER_FOREST` 29 · `CLUTTER_DEEPWOOD` 36 · `ISLANDS_PADANG` 43 · `ISLANDS_FOREST` 44 · `ISLANDS_DEEPWOOD` 45 · `WATER_DECO_PADANG` 46 · `WATER_DECO_FOREST` 47 · `VT_MAP` 58 · `verdantTiles()` 59 · `vModW` 76 · `vDirtN` 78 · `vDirtT` 79 · `verdantPix()` 82 · `verdantDeco()` 97 · `VBASE` 181 · `verdantBase()` 182 · `VWC` 200 · `verdantWater()` 204 · `VBANK` 215 · `verdantBank()` 218 · `regVerdantTex()` 228 · `verdantReflect()` 237 · `verdantScallop()` 266 · `verdantEdgePix()` 281 · `bridgeWoodPix()` 294
+`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `MEADOW_FLOWERS` 12 · `V_TILES` 17 · `CLUTTER_PADANG` 23 · `CLUTTER_FOREST` 29 · `CLUTTER_DEEPWOOD` 36 · `ISLANDS_PADANG` 43 · `ISLANDS_FOREST` 44 · `ISLANDS_DEEPWOOD` 45 · `WATER_DECO_PADANG` 46 · `WATER_DECO_FOREST` 47 · `VT_MAP` 58 · `verdantTiles()` 59 · `vModW` 76 · `vDirtN` 78 · `vDirtT` 79 · `verdantPix()` 82 · `verdantDeco()` 93 · `VBASE` 177 · `verdantBase()` 178 · `VWC` 210 · `verdantWater()` 214 · `VBANK` 227 · `verdantBank()` 234 · `regVerdantTex()` 252 · `verdantReflect()` 261 · `verdantScallop()` 290 · `verdantEdgePix()` 305 · `bridgeWoodPix()` 318
 
 ## src/world/interior_sheet.js (89 baris)
 _Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._
@@ -223,9 +227,9 @@ _Efek visual sihir: lingkar rune, proyektil, ledakan, dan aura (T318-T322)_
 _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipakai (tingkat I–III)._
 `JURUS` 4 · `MASTERY` 13 · `tierOf` 14 · `learned` 15 · `useJurus()` 16 · `canTeach` 20 · `.learnTalk()` 23 · `.castSpell()` 38
 
-## src/systems/ambient.js (341 baris)
+## src/systems/ambient.js (354 baris)
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
-`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 213 · `.ripple()` 214 · `.spawnRainEmitters()` 228 · `.rainSplash()` 240 · `.updRainFx()` 248 · `artQuestArrow()` 322 · `.updQuestGuide()` 329
+`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 70 · `.addFly()` 77 · `.addCrit()` 84 · `.updAmbient()` 92 · `.ambOff()` 213 · `.ripple()` 214 · `.spawnRainEmitters()` 228 · `.rainSplash()` 244 · `.updRainFx()` 252 · `artQuestArrow()` 335 · `.updQuestGuide()` 342
 
 ## src/systems/status.js (125 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
@@ -411,9 +415,9 @@ _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (3)
 _Gelombang A (performa): culling objek di luar layar, entitas jauh "tidur", pengecekan berkala._
 `CULL_PAD` 4 · `.initCull()` 7 · `.updCull()` 22 · `_updEnemyP` 38 · `_updFeelP` 43 · `_updNpcP` 46 · `_updCritP` 52 · `_updHintP` 55
 
-## src/systems/stream.js (66 baris)
+## src/systems/stream.js (72 baris)
 _Gelombang B: tanah per chunk (streaming). Hanya potongan di sekitar layar yang dibuat, sisanya dibuat_
-`GT` 5 · `GTC` 6 · `GOV` 7 · `gtKey()` 8 · `groundOverview()` 9 · `gLayer()` 16 · `.initGround()` 18 · `.gFillView()` 28 · `.gNeed()` 30 · `.gEnsure()` 38 · `.updGround()` 51
+`GT` 5 · `GTC` 6 · `GOV` 7 · `gtKey()` 8 · `groundOverview()` 9 · `gLayer()` 16 · `.initGround()` 18 · `.gFillView()` 28 · `.gNeed()` 30 · `.gEnsure()` 40 · `.updGround()` 57
 
 ## src/systems/openworld.js (55 baris)
 _Dunia terbuka Tahap 1: wilayah tetangga digambar menempel di tepi wilayah aktif (tanah + objek),_
@@ -559,9 +563,9 @@ _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TA
 _T442, T445 & Elevated Border Cliffs:_
 
 
-## src/systems/waterflow.js (153 baris)
+## src/systems/waterflow.js (155 baris)
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
-`FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 25 · `foamTex()` 32 · `isShorelineAt()` 39 · `.updFlow()` 51 · `_updFlow0` 145
+`FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 28 · `foamTex()` 35 · `isShorelineAt()` 42 · `.updFlow()` 53 · `_updFlow0` 147
 
 ## src/systems/atmos.js (278 baris)
 _Suasana cahaya & kabut (wilayah aktif saja):_

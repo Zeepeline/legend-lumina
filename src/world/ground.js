@@ -27,9 +27,9 @@ function makeSD(M, rect) {
 }
 function pondE(P, x, y) { return Math.hypot((x - P[0]) / P[2], (y - P[1]) / P[3]); }
 const GROUND = {
-  village: { g: ['#427a36', '#4c8c3e', '#589c44', '#68ac4c'], edge: '#38682a', path: 'dirt', tuft: '#346428', tuft2: '#7ac456' },
-  forest: { g: ['#3a6c2e', '#447c34', '#508e3a', '#5ea042'], edge: '#2e5824', path: 'dirt', tuft: '#2c5422', tuft2: '#70b448' },
-  meadow: { g: ['#468238', '#52943e', '#60a648', '#72ba54'], edge: '#3a6c2c', path: 'dirt', tuft: '#386828', tuft2: '#86cc5c' },
+  village: { g: ['#4a843e', '#5a9c48', '#6eb452', '#82c65a'], edge: '#3d7232', path: 'dirt', tuft: '#3c6e2e', tuft2: '#8ed060' },
+  forest: { g: ['#3e7432', '#4b843a', '#5c9946', '#6eaf50'], edge: '#326026', path: 'dirt', tuft: '#305c24', tuft2: '#7ec050' },
+  meadow: { g: ['#4e8a40', '#5ea24a', '#74bc58', '#88ce64'], edge: '#407632', path: 'dirt', tuft: '#40742e', tuft2: '#96dc68' },
   swamp: { g: ['#4a6a4a', '#567a50', '#628858', '#507048'], edge: '#3e5a3e', path: 'dirt', tuft: '#3a5a3a', tuft2: '#8ab070' },
   snow: { g: ['#e2ecf6', '#eaf2fa', '#dae6f2', '#f2f7fc'], edge: '#c4d6e8', path: 'dirt', tuft: '#b4c8de', tuft2: '#ffffff', ice: 1 },
   cave: { g: ['#2c2834', '#332e3c', '#28242e', '#38323f'], path: 'cave' },
@@ -105,7 +105,7 @@ function getTileData(k) {
   if (!el || !el.width) { TILE_CACHE[k] = null; return null; }
   const [c, ctx] = mk(el.width, el.height); ctx.drawImage(el, 0, 0);
   const d = ctx.getImageData(0, 0, el.width, el.height).data;
-  d.size = el.width;
+  d.w = el.width; d.h = el.height; d.size = el.width;
   TILE_CACHE[k] = d;
   return TILE_CACHE[k];
 }
@@ -136,6 +136,7 @@ function genGround(M, rect) {
   };
   for (let y = RY; y < RY + RH; y++) for (let x = RX; x < RX + RW; x++) {
     const i = ((y - RY) * RW + (x - RX)) * 4;
+    let tR = 9, dR = 999;
     if (R) {
       const ry = riverY(R, x), onBr = x >= R.bridge[0] && x <= R.bridge[1], dv = Math.abs(y - ry);
       const hw = R.w / 2 * 1.15 + (onBr ? 0 : (vnoise(x + GX, y + GY, 22, 51) * .55 + vnoise(x + GX, y + GY, 7, 53) * .45 - .5) * 14);
@@ -144,34 +145,30 @@ function genGround(M, rect) {
         if (typeof bridgeWoodPix === 'function') { put(i, bridgeWoodPix(by, bx, bh, bw)); continue; }
         const ly = (y + 1000) % 8; put(i, ly === 0 ? h2r('#382012') : ly === 1 ? h2r('#cca06a') : h2r('#9e683e')); continue;
       }
-      if (dv < hw) { water(i, dv / hw, x, y); continue; }
-      if (typeof verdantBank === 'function' && dv < hw + 20) { const b = verdantBank(M, dv - hw, x + GX, y + GY, y < ry); if (b) { put(i, b); continue; } }
-      else if (dv < hw + 5) { put(i, h2r(dv < hw + 1.5 ? '#8a7a5a' : '#d2b473')); continue; }
+      tR = dv / hw; dR = dv - hw;
     }
-    let inPond = false;
-    if (M.id === 'lake' && x >= 832 && x <= 886 && y >= 700 && y <= 722 && typeof bridgeWoodPix === 'function') {
-      put(i, bridgeWoodPix(x - 832, y - 700, 54, 22)); continue;
-    }
-    if (PL.length) {
-      const we = waterE(PL, x, y, GX, GY), wr = waterE.r;
-      if (we < 1) {
-        const ds = sd(x, y);
-        if (ds < 2.0) {
-          const u = Math.round(x + y * 0.12), v = Math.round((ds + 2.0) * 3.5);
-          if (typeof bridgeWoodPix === 'function') { put(i, bridgeWoodPix(u, v, 9999, 14)); continue; }
-          const ly = (y + 1000) % 8; put(i, ly === 0 ? h2r('#382012') : ly === 1 ? h2r('#cca06a') : h2r('#9e683e')); continue;
-        }
-        water(i, wr < 92 ? Math.max(we, .5) : we, x, y); continue;
+    if (M.id === 'lake' && x >= 832 && x <= 886 && y >= 700 && y <= 722 && typeof bridgeWoodPix === 'function') { put(i, bridgeWoodPix(x - 832, y - 700, 54, 22)); continue; }
+    let tPL = 9, dPL = 999, wr = 30;
+    if (PL.length) { tPL = waterE(PL, x, y, GX, GY); wr = waterE.r || 30; dPL = (tPL - 1) * wr; }
+    const wt = Math.min(tR, tPL);
+    if (wt < 1) {
+      const ds = sd(x, y);
+      if (tPL < 1 && ds < 2.0) {
+        const u = Math.round(x + y * 0.12), v = Math.round((ds + 2.0) * 3.5);
+        if (typeof bridgeWoodPix === 'function') { put(i, bridgeWoodPix(u, v, 9999, 14)); continue; }
+        const ly = (y + 1000) % 8; put(i, ly === 0 ? h2r('#382012') : ly === 1 ? h2r('#cca06a') : h2r('#9e683e')); continue;
       }
-      if (we < 1 + 20 / wr) {
-        if (typeof verdantBank === 'function') {
-          const b = verdantBank(M, (we - 1) * wr, x + GX, y + GY, waterE(PL, x, y + 4, GX, GY) < we);
-          if (b) { put(i, b); continue; }
-        }
-        put(i, h2r(we < 1 + 2 / wr ? '#8a7a5a' : '#d2b473')); continue;
-      }
+      water(i, tR <= tPL ? tR : (wr < 92 ? Math.max(tPL, .25) : tPL), x, y); continue;
     }
-    if (inPond) continue;
+    const bd = Math.min(dR, dPL);
+    if (bd < 20) {
+      if (typeof verdantBank === 'function') {
+        const north = dR <= dPL ? (y < riverY(R, x)) : (waterE(PL, x, y + 4, GX, GY) < tPL);
+        const b = verdantBank(M, bd, x + GX, y + GY, north);
+        if (b) { put(i, b); continue; }
+      }
+      if (bd < 5) { put(i, h2r(bd < 1.5 ? '#8a7a5a' : '#d2b473')); continue; }
+    }
     const d = sd(x, y);
     if (cave) {
       if (d < 0) { const v = vor(x, y, 9, 21); if (v.m < 1.2) { put(i, CMORT); continue; } put(i, CSTONE[Math.floor(hash(v.id, 3, 13) * 4)], v.v < -3 ? .14 : v.v > 3 ? -.12 : 0); continue; }
@@ -288,64 +285,6 @@ function blockRects(M) {
   const key = r => r[0] + ',' + r[2], open = {}, merged = [];
   for (const r of out) { const k = key(r), o = open[k]; if (o && o[1] + o[3] === r[1]) o[3] += r[3]; else { const n = r.slice(); merged.push(n); open[k] = n; } }
   return merged;
-}
-function scatter(M, spec) {
-  const sd = makeSD(M), out = [], R = M.river, ponds = pondsAll(M);
-  const isTree = t => /tree|pine|round/i.test(t);
-  const ok = (x, y, isT) => {
-    const d = sd(x, y);
-    if (spec.near) { if (d < spec.near[0] || d > spec.near[1]) return false; }
-    else if (d < spec.min) return false;
-    if (R && Math.abs(y - riverY(R, x)) < R.w / 2 + 16) return false;
-    if (ponds.length && waterE(ponds, x, y, ...waterGXY(M)) < 1.25) return false;
-    for (const o of M.objs) if (Math.hypot(o[1] - x, o[2] - y) < (OBJ[o[0]].mm ? 70 : 26)) return false;
-    for (const c of M.chests || []) if (Math.hypot(c.x - x, c.y - y) < 30) return false;
-    for (const f of M.fish || []) if (Math.hypot(f[0] - x, f[1] - y) < 34) return false;
-    if (M.gate && (Math.hypot(M.gate.boulder[0] - x, M.gate.boulder[1] - y) < 40 || Math.hypot(M.gate.plate[0] - x, M.gate.plate[1] - y) < 40 || Math.hypot(M.gate.x - x, M.gate.y - y) < 40)) return false;
-    for (const e of M.enemies || []) if (Math.hypot(e[1] - x, e[2] - y) < 22) return false;
-    for (const n of M.npcs || []) if (Math.hypot(n.x - x, n.y - y) < 30) return false;
-    for (const B of M.bosses || []) { const z = B.zone; if (x > z[0] - 20 && x < z[0] + z[2] + 20 && y > z[1] - 20 && y < z[1] + z[3] + 30) return false; }
-    if (M.ring && Math.hypot(x - M.ring.cx, y - M.ring.cy) < M.ring.r + 22) return false;
-    if (M.mochi && Math.hypot(x - M.mochi.x, y - M.mochi.y) < 30) return false;
-    for (const ex of mapDoors(M)) if (x > ex.x - 64 && x < ex.x + ex.w + 64 && y > ex.y - 64 && y < ex.y + ex.h + 72) return false;
-    if (isT) {
-      let grp = 0;
-      for (const t of out) {
-        if (!isTree(t[0])) continue;
-        const dt = Math.hypot(t[1] - x, t[2] - y);
-        if (dt < (spec.sp || 52)) return false;
-        if (dt <= 82) { grp++; if (grp >= 3) return false; }
-      }
-      for (const t of out) {
-        if (!isTree(t[0])) continue;
-        const dt = Math.hypot(t[1] - x, t[2] - y);
-        if (dt > 82 && dt < 118) {
-          let c = 0; for (const o of out) if (isTree(o[0]) && Math.hypot(t[1] - o[1], t[2] - o[2]) <= 82) c++;
-          if (c >= 3) return false;
-        }
-      }
-    } else {
-      for (const t of out) if (Math.hypot(t[1] - x, t[2] - y) < (spec.sp || 26)) return false;
-    }
-    return true;
-  };
-  const clump = !!M._paths0 && !spec.near, tries = Math.min(clump ? Math.round(spec.n * 1.2) : spec.n, 900);
-  for (let n = 0; n < tries; n++) {
-    const x = 24 + hash(n, 1, 31 + M.w) * (M.w - 48), y = 44 + hash(n, 2, 31 + M.w) * (M.h - 48);
-    if (clump && hash(n, 8, 31) > Math.min(1, Math.max(.12, (vnoise(x, y, 170, 93) - .3) * 2.2))) continue;
-    let r = hash(n, 3, 31), type = spec.types[0][0];
-    for (const [t, p] of spec.types) { if (r < p) { type = t; break; } r -= p; }
-    const isT = isTree(type);
-    const edge = !spec.near && (x < 70 || x > M.w - 70 || y > M.h - 50);
-    if (edge && sd(x, y) < 10) continue;
-    if (!ok(x, y, isT)) continue;
-    if (M.id === 'meadow' || M.id === 'pl_meadow_snow') {
-      const distToSnow = M.id === 'meadow' ? Math.max(0, y - (M.h - 400)) : Math.max(0, 400 - y);
-      if (distToSnow > 0 && hash(n, 7, 33) < distToSnow / 400 && (type === 'verdant_tree' || type === 'treeA' || type === 'treeB')) type = 'pine';
-    }
-    out.push([type, Math.round(x), Math.round(y)]);
-  }
-  return out;
 }
 function openSides(M) {
   if (!M.id || M.indoor || typeof WORLD_POS === 'undefined' || !WORLD_POS[M.id]) return {};

@@ -6,20 +6,32 @@ const GRADE = [1.05, .12, 0, 0, -4, 0, 1.04, 0, 0, -2, 0, .04, .84, 0, 0, 0, 0, 
 
 class IsoUI extends Phaser.Scene { constructor() { super({ key: 'ui', active: false }); } }
 
+function isoSubdir(k) {
+  if (k.startsWith('hero_') || k === 'hero') return 'hero';
+  if (k.startsWith('mon_') || k === 'wolf_hd') return 'monsters';
+  if (k.startsWith('gnd_') || k.startsWith('deco_')) return 'ground';
+  if (k.startsWith('gpt_v_')) return 'buildings';
+  if (k.startsWith('iso_') || k.startsWith('cliff_')) return 'iso';
+  if (/tree|apple|bush|rock|stump/i.test(k)) return 'nature';
+  return 'props';
+}
+
 class IsoScene extends Phaser.Scene {
   constructor() { super({ key: 'iso' }); }
   preload() {
-    for (const k of IMG) this.load.image(k, 'assets/img/' + k + '.png');
-    this.load.spritesheet('hero', 'assets/img/hero_arka.png', { frameWidth: 48, frameHeight: 40 });
+    for (const k of IMG) this.load.image(k, 'assets/img/' + isoSubdir(k) + '/' + k + '.png');
+    this.load.spritesheet('hero', 'assets/img/hero/hero_arka.png', { frameWidth: 48, frameHeight: 40 });
     this.load.spritesheet('hero_iso_idle', 'assets/img/iso/hero_idle_iso.png', { frameWidth: 48, frameHeight: 44 });
-    for (const k of ['gnd_grass', 'gnd_grass_light', 'gnd_grass_dark', 'gnd_dirt']) this.load.image(k, 'assets/img/' + k + '.png');
+    for (const k of ['gnd_grass', 'gnd_grass_light', 'gnd_grass_dark', 'gnd_dirt']) this.load.image(k, 'assets/img/ground/' + k + '.png');
     this.load.image('gnd_city_cobble', 'assets/img/ground/gnd_city_cobble.png');
     for (const k of ['gpt_v_inn_2story', 'gpt_v_blacksmith_forge', 'gpt_v_house_red_cottage', 'gpt_v_house_red_shop', 'gpt_v_house_brown_cottage', 'gpt_v_tavern_brown',
       'gpt_v_chapel_church', 'gpt_v_guild_townhall', 'gpt_v_windmill', 'gpt_v_barn_ranch', 'gpt_v_watchtower', 'gpt_v_house_brown_wing', 'gpt_v_market_stall'])
-      this.load.image(k, 'assets/img/' + k + '.png');
+      this.load.image(k, 'assets/img/buildings/' + k + '.png');
     this.load.image('iso_house_a', 'assets/img/iso/house_a.png');
+    this.load.image('iso_tileset', 'assets/img/iso/iso_tileset_32x16.png');
+    this.load.image('cliff_block', 'assets/img/iso/cliff_block.png');
     this.load.image('cliff_stairs', 'assets/img/iso/cliff_stairs.png');
-    this.load.spritesheet('wolf_hd', 'assets/img/mon_wolf_hd.png', { frameWidth: 128, frameHeight: 96 });
+    this.load.spritesheet('wolf_hd', 'assets/img/monsters/mon_wolf_hd.png', { frameWidth: 128, frameHeight: 96 });
   }
   create() {
     const A = this.anims, wa = (k, a, b, fps, rep) => A.create({ key: k, frames: A.generateFrameNumbers('wolf_hd', { start: a, end: b }), frameRate: fps, repeat: rep });
@@ -28,7 +40,7 @@ class IsoScene extends Phaser.Scene {
     // tanah
     const TM = new URLSearchParams(location.search).get('tanah'), src = k => this.textures.get(k).getSourceImage();
     const tsrc = { grass: src('gnd_grass'), light: src('gnd_grass_light'), dark: src('gnd_grass_dark'), dirt: src('gnd_dirt'), cobble: src('gnd_city_cobble') };
-    const G = TM === 'asli' ? bakeGroundTex(tsrc) : TM === 'lembut' ? bakeGroundSoft(tsrc) : bakeGround();
+    const G = TM === 'asli' ? bakeGroundTex(tsrc) : TM === 'lembut' ? bakeGroundSoft(tsrc) : bakeGround(this);
     this.ter = G.ter; this.textures.addCanvas('iso_ground', G.c);
     this.add.image(-G.ox, -G.oy, 'iso_ground').setOrigin(0).setDepth(-1e5);
     this.waterFx(G);
