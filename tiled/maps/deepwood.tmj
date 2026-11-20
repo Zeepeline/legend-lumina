@@ -1,0 +1,754 @@
+{
+  "compressionlevel": -1,
+  "width": 150,
+  "height": 112,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.10.0",
+  "type": "map",
+  "version": "1.10",
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "../tilesets/objects.tsj"
+    }
+  ],
+  "layers": [
+    {
+      "id": 1,
+      "name": "Ground",
+      "type": "imagelayer",
+      "visible": true,
+      "opacity": 1,
+      "x": 0,
+      "y": 0,
+      "image": "../ground/deepwood_ground.png"
+    },
+    {
+      "id": 2,
+      "name": "Objects (Pohon, Rumah, Dekorasi)",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 1,
+          "name": "shrine",
+          "type": "shrine",
+          "x": 460.0,
+          "y": 400.0,
+          "width": 120,
+          "height": 70,
+          "visible": true,
+          "gid": 126
+        },
+        {
+          "id": 2,
+          "name": "stele",
+          "type": "stele",
+          "x": 431.5,
+          "y": 330.0,
+          "width": 17,
+          "height": 26,
+          "visible": true,
+          "gid": 129
+        },
+        {
+          "id": 3,
+          "name": "stele",
+          "type": "stele",
+          "x": 601.5,
+          "y": 470.0,
+          "width": 17,
+          "height": 26,
+          "visible": true,
+          "gid": 129
+        },
+        {
+          "id": 4,
+          "name": "rune_pillar",
+          "type": "rune_pillar",
+          "x": 464.0,
+          "y": 270.0,
+          "width": 32,
+          "height": 28,
+          "visible": true,
+          "gid": 123
+        },
+        {
+          "id": 5,
+          "name": "rune_pillar",
+          "type": "rune_pillar",
+          "x": 504.0,
+          "y": 250.0,
+          "width": 32,
+          "height": 28,
+          "visible": true,
+          "gid": 123
+        },
+        {
+          "id": 6,
+          "name": "rune_pillar",
+          "type": "rune_pillar",
+          "x": 544.0,
+          "y": 270.0,
+          "width": 32,
+          "height": 28,
+          "visible": true,
+          "gid": 123
+        },
+        {
+          "id": 7,
+          "name": "stele",
+          "type": "stele",
+          "x": 511.5,
+          "y": 220.0,
+          "width": 17,
+          "height": 26,
+          "visible": true,
+          "gid": 129
+        },
+        {
+          "id": 8,
+          "name": "root",
+          "type": "root",
+          "x": 345.0,
+          "y": 520.0,
+          "width": 70,
+          "height": 34,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 9,
+          "name": "root",
+          "type": "root",
+          "x": 665.0,
+          "y": 262.0,
+          "width": 70,
+          "height": 34,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 10,
+          "name": "root",
+          "type": "root",
+          "x": 265.0,
+          "y": 380.0,
+          "width": 70,
+          "height": 34,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 11,
+          "name": "root",
+          "type": "root",
+          "x": 525.0,
+          "y": 560.0,
+          "width": 70,
+          "height": 34,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 12,
+          "name": "root",
+          "type": "root",
+          "x": 435.0,
+          "y": 250.0,
+          "width": 70,
+          "height": 34,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 13,
+          "name": "stalag",
+          "type": "stalag",
+          "x": 351.0,
+          "y": 420.0,
+          "width": 18,
+          "height": 26,
+          "visible": true,
+          "gid": 128
+        },
+        {
+          "id": 14,
+          "name": "rock",
+          "type": "rock",
+          "x": 435.5,
+          "y": 470.0,
+          "width": 29,
+          "height": 22,
+          "visible": true,
+          "gid": 120
+        },
+        {
+          "id": 15,
+          "name": "rock",
+          "type": "rock",
+          "x": 585.5,
+          "y": 330.0,
+          "width": 29,
+          "height": 22,
+          "visible": true,
+          "gid": 120
+        },
+        {
+          "id": 16,
+          "name": "mush",
+          "type": "mush",
+          "x": 332.0,
+          "y": 470.0,
+          "width": 16,
+          "height": 14,
+          "visible": true,
+          "gid": 111
+        },
+        {
+          "id": 17,
+          "name": "mush",
+          "type": "mush",
+          "x": 692.0,
+          "y": 520.0,
+          "width": 16,
+          "height": 14,
+          "visible": true,
+          "gid": 111
+        },
+        {
+          "id": 18,
+          "name": "mush",
+          "type": "mush",
+          "x": 472.0,
+          "y": 300.0,
+          "width": 16,
+          "height": 14,
+          "visible": true,
+          "gid": 111
+        },
+        {
+          "id": 19,
+          "name": "bushG2",
+          "type": "bushG2",
+          "x": 386.0,
+          "y": 560.0,
+          "width": 48,
+          "height": 45,
+          "visible": true,
+          "gid": 27
+        },
+        {
+          "id": 20,
+          "name": "bushG2",
+          "type": "bushG2",
+          "x": 626.0,
+          "y": 250.0,
+          "width": 48,
+          "height": 45,
+          "visible": true,
+          "gid": 27
+        },
+        {
+          "id": 21,
+          "name": "bigtree",
+          "type": "bigtree",
+          "x": 1896.0,
+          "y": 330.0,
+          "width": 208,
+          "height": 230,
+          "visible": true,
+          "gid": 15
+        },
+        {
+          "id": 22,
+          "name": "stele",
+          "type": "stele",
+          "x": 2061.5,
+          "y": 380.0,
+          "width": 17,
+          "height": 26,
+          "visible": true,
+          "gid": 129
+        },
+        {
+          "id": 23,
+          "name": "campfire",
+          "type": "campfire",
+          "x": 1516.0,
+          "y": 1470.0,
+          "width": 28,
+          "height": 22,
+          "visible": true,
+          "gid": 32
+        },
+        {
+          "id": 24,
+          "name": "bramble",
+          "type": "bramble",
+          "x": 1708.0,
+          "y": 1450.0,
+          "width": 24,
+          "height": 20,
+          "visible": true,
+          "gid": 22
+        },
+        {
+          "id": 25,
+          "name": "hay",
+          "type": "hay",
+          "x": 1547.5,
+          "y": 1400.0,
+          "width": 25,
+          "height": 22,
+          "visible": true,
+          "gid": 87
+        },
+        {
+          "id": 26,
+          "name": "crate",
+          "type": "crate",
+          "x": 1631.5,
+          "y": 1390.0,
+          "width": 17,
+          "height": 17,
+          "visible": true,
+          "gid": 42
+        },
+        {
+          "id": 27,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 1651.5,
+          "y": 1400.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 28,
+          "name": "log",
+          "type": "log",
+          "x": 1587.5,
+          "y": 1460.0,
+          "width": 25,
+          "height": 18,
+          "visible": true,
+          "gid": 101
+        },
+        {
+          "id": 29,
+          "name": "sign",
+          "type": "sign",
+          "x": 1672.5,
+          "y": 1450.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 127
+        },
+        {
+          "id": 30,
+          "name": "goblin_fortress",
+          "type": "goblin_fortress",
+          "x": 177.0,
+          "y": 1500.0,
+          "width": 206,
+          "height": 153,
+          "visible": true,
+          "gid": 66
+        },
+        {
+          "id": 31,
+          "name": "root",
+          "type": "root",
+          "x": 165.0,
+          "y": 1500.0,
+          "width": 70,
+          "height": 34,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 32,
+          "name": "root",
+          "type": "root",
+          "x": 195.0,
+          "y": 1460.0,
+          "width": 70,
+          "height": 34,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 33,
+          "name": "deadtree",
+          "type": "deadtree",
+          "x": 194.0,
+          "y": 1540.0,
+          "width": 32,
+          "height": 32,
+          "visible": true
+        },
+        {
+          "id": 34,
+          "name": "goblin_shrine",
+          "type": "goblin_shrine",
+          "x": 377.5,
+          "y": 1570.0,
+          "width": 65,
+          "height": 77,
+          "visible": true,
+          "gid": 69
+        },
+        {
+          "id": 35,
+          "name": "goblin_cauldron",
+          "type": "goblin_cauldron",
+          "x": 424.0,
+          "y": 1560.0,
+          "width": 72,
+          "height": 63,
+          "visible": true,
+          "gid": 64
+        },
+        {
+          "id": 36,
+          "name": "goblin_tower",
+          "type": "goblin_tower",
+          "x": 217.5,
+          "y": 1430.0,
+          "width": 45,
+          "height": 101,
+          "visible": true,
+          "gid": 72
+        },
+        {
+          "id": 37,
+          "name": "goblin_hut",
+          "type": "goblin_hut",
+          "x": 304.0,
+          "y": 1470.0,
+          "width": 72,
+          "height": 77,
+          "visible": true,
+          "gid": 68
+        },
+        {
+          "id": 38,
+          "name": "goblin_hut",
+          "type": "goblin_hut",
+          "x": 444.0,
+          "y": 1510.0,
+          "width": 72,
+          "height": 77,
+          "visible": true,
+          "gid": 68
+        },
+        {
+          "id": 39,
+          "name": "goblin_cage",
+          "type": "goblin_cage",
+          "x": 188.5,
+          "y": 1580.0,
+          "width": 63,
+          "height": 70,
+          "visible": true,
+          "gid": 63
+        },
+        {
+          "id": 40,
+          "name": "goblin_gate",
+          "type": "goblin_gate",
+          "x": 326.5,
+          "y": 1660.0,
+          "width": 207,
+          "height": 52,
+          "visible": true,
+          "gid": 67
+        },
+        {
+          "id": 41,
+          "name": "deadtree",
+          "type": "deadtree",
+          "x": 504.0,
+          "y": 1640.0,
+          "width": 32,
+          "height": 32,
+          "visible": true
+        },
+        {
+          "id": 42,
+          "name": "root",
+          "type": "root",
+          "x": 505.0,
+          "y": 1580.0,
+          "width": 70,
+          "height": 34,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 43,
+          "name": "goblin_totem",
+          "type": "goblin_totem",
+          "x": 410.0,
+          "y": 1490.0,
+          "width": 20,
+          "height": 42,
+          "visible": true,
+          "gid": 71
+        },
+        {
+          "id": 44,
+          "name": "goblin_totem",
+          "type": "goblin_totem",
+          "x": 460.0,
+          "y": 1640.0,
+          "width": 20,
+          "height": 42,
+          "visible": true,
+          "gid": 71
+        },
+        {
+          "id": 45,
+          "name": "goblin_torch",
+          "type": "goblin_torch",
+          "x": 372.0,
+          "y": 1640.0,
+          "width": 16,
+          "height": 44,
+          "visible": true,
+          "gid": 70
+        },
+        {
+          "id": 46,
+          "name": "goblin_torch",
+          "type": "goblin_torch",
+          "x": 452.0,
+          "y": 1590.0,
+          "width": 16,
+          "height": 44,
+          "visible": true,
+          "gid": 70
+        },
+        {
+          "id": 47,
+          "name": "goblin_banner",
+          "type": "goblin_banner",
+          "x": 401.0,
+          "y": 1680.0,
+          "width": 18,
+          "height": 50,
+          "visible": true,
+          "gid": 62
+        },
+        {
+          "id": 48,
+          "name": "goblin_banner",
+          "type": "goblin_banner",
+          "x": 291.0,
+          "y": 1450.0,
+          "width": 18,
+          "height": 50,
+          "visible": true,
+          "gid": 62
+        },
+        {
+          "id": 49,
+          "name": "bones",
+          "type": "bones",
+          "x": 420.0,
+          "y": 1590.0,
+          "width": 20,
+          "height": 10,
+          "visible": true,
+          "gid": 20
+        },
+        {
+          "id": 50,
+          "name": "bones",
+          "type": "bones",
+          "x": 380.0,
+          "y": 1550.0,
+          "width": 20,
+          "height": 10,
+          "visible": true,
+          "gid": 20
+        },
+        {
+          "id": 51,
+          "name": "bones",
+          "type": "bones",
+          "x": 240.0,
+          "y": 1480.0,
+          "width": 20,
+          "height": 10,
+          "visible": true,
+          "gid": 20
+        },
+        {
+          "id": 52,
+          "name": "root",
+          "type": "root",
+          "x": 325.0,
+          "y": 1440.0,
+          "width": 70,
+          "height": 34,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 53,
+          "name": "root",
+          "type": "root",
+          "x": 405.0,
+          "y": 1530.0,
+          "width": 70,
+          "height": 34,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 54,
+          "name": "root",
+          "type": "root",
+          "x": 255.0,
+          "y": 1540.0,
+          "width": 70,
+          "height": 34,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 55,
+          "name": "sign",
+          "type": "sign",
+          "x": 562.5,
+          "y": 1660.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 127
+        },
+        {
+          "id": 56,
+          "name": "sign",
+          "type": "sign",
+          "x": 2292.5,
+          "y": 690.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 127
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "NPCs",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 57,
+          "name": "Sambo, Pemburu Gelap",
+          "type": "NPC",
+          "x": 1584,
+          "y": 1328,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "sambo"
+            }
+          ]
+        },
+        {
+          "id": 58,
+          "name": "Pak Teguh, Nelayan",
+          "type": "NPC",
+          "x": 1274,
+          "y": 768,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "pancing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Pintu Keluar (Exits)",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 59,
+          "name": "Ke forest",
+          "type": "Exit",
+          "x": 2388,
+          "y": 700,
+          "width": 12,
+          "height": 60,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "forest"
+            }
+          ]
+        },
+        {
+          "id": 60,
+          "name": "Ke forest",
+          "type": "Exit",
+          "x": 0,
+          "y": 500,
+          "width": 12,
+          "height": 60,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "forest"
+            }
+          ]
+        },
+        {
+          "id": 61,
+          "name": "Ke swamp",
+          "type": "Exit",
+          "x": 2588,
+          "y": 450,
+          "width": 12,
+          "height": 60,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "swamp"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

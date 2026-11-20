@@ -286,32 +286,18 @@ function verdantReflect(x, M, rect) {
   }
 }
 
-// Tepi jalan berenda daun alami (scalloped leaf rim) meniru konsep G001
-function verdantScallop(X, Y) {
-  const C = 11, gx = Math.floor(X / C), gy = Math.floor(Y / C);
-  let minD = 999;
-  for (let j = -1; j <= 1; j++) {
-    for (let i = -1; i <= 1; i++) {
-      const cx = gx + i, cy = gy + j;
-      const jx = (cx + 0.2 + 0.6 * hash(cx, cy, 51)) * C;
-      const jy = (cy + 0.2 + 0.6 * hash(cx, cy, 52)) * C;
-      const d = Math.hypot(X - jx, Y - jy);
-      if (d < minD) minD = d;
-    }
-  }
-  return Math.max(0, 7.5 - minD) * 1.15;
-}
-
+// Tepi jalan tanah berlekuk organik seperti sungai dengan garis tepi tipis
 function verdantEdgePix(M, X, Y, d) {
   if (d < -7 || d > 7) return null;
   const T = verdantTiles(M); if (!T) return null;
-  const sz = T[0].size || 128;
-  const da = d + verdantScallop(X, Y) - 3.6;
-  const ti = (vModW(Y, sz) * sz + vModW(X, sz)) * 4;
-  if (da < -1.8) return [T[3][ti], T[3][ti + 1], T[3][ti + 2]];
-  if (da < 0) return [Math.floor(T[3][ti] * 0.80), Math.floor(T[3][ti + 1] * 0.78), Math.floor(T[3][ti + 2] * 0.70)];
-  if (da < 1.6) return [Math.floor(T[0][ti] * 0.70), Math.floor(T[0][ti + 1] * 0.74), Math.floor(T[0][ti + 2] * 0.62)];
-  return null;
+  const w0 = (vnoise(X, Y, 22, 51) * .55 + vnoise(X, Y, 7, 53) * .45 - .5) * 9.0;
+  const da = d + w0;
+  const w = T[3].w || T[3].size || 128, h = T[3].h || T[3].size || 128;
+  const ti = (vModW(Y, h) * w + vModW(X, w)) * 4;
+  if (da < -1.2) return [T[3][ti], T[3][ti + 1], T[3][ti + 2]];
+  if (da < 0) return [Math.floor(T[3][ti] * .84), Math.floor(T[3][ti + 1] * .82), Math.floor(T[3][ti + 2] * .76)];
+  if (da < 1.2) return [Math.floor(T[0][ti] * .76), Math.floor(T[0][ti + 1] * .80), Math.floor(T[0][ti + 2] * .68)];
+  return d < 0 ? [T[0][ti], T[0][ti + 1], T[0][ti + 2]] : null;
 }
 
 // Jembatan kayu rustik estetik sesuai referensi pemilik (Gambar 1)

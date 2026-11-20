@@ -14,7 +14,7 @@ const cityLines = {
 const citizens = (list) => list.map(([id, ch, name, x, y, kind, wander = 22]) => ({ id, ch, name, x, y, dir: 'down', wander, lines: cityLines[kind] }));
 
 MAPS.road = {
-  id: 'road', name: 'Jalan Raya Lama', w: 900, h: 2000, scale: 3.4, bgm: 'field', ground: 'meadow',
+  id: 'road', name: 'Jalan Raya Lama', w: 900, h: 2000, scale: 3.4, bgm: 'field', ground: 'meadow', customGround: 'gnd_road_custom',
   paths: [[450, 2000, 450, 1500, 16], [450, 1500, 360, 1100, 16], [360, 1100, 520, 700, 16], [520, 700, 450, 300, 16], [450, 300, 450, 0, 16]],
   discs: [[400, 1260, 70], [560, 520, 60], [400, 260, 40], [500, 1720, 40]],
   objs: [['stele', 500, 1720, { lore: 'batu_mil' }],

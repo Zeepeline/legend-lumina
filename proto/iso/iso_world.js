@@ -47,8 +47,8 @@ class IsoWorld extends IsoScene {
       this.MW = Math.max(...this.regs.map(r => r.ox + r.w)) + 400; this.MH = Math.max(...this.regs.map(r => r.oy + r.h)) + 400;
       const PN = IMAP.N * ISO.T; window.zAt = (x, y) => x >= 0 && y >= 0 && x < PN && y < PN ? PROTO_ZAT(x, y) : 0;
       this.protoProps = isoProps(); /* pohon dihitung SEBELUM jalan baru → posisi sama persis dengan gambar acuan */
-      this.newPaths = [[34, 12, 40.5, 13.6, 1.4], [12, 29, 11.5, 32, 1.4], [11.5, 32, -.5, 32.2, 1.4], [24, 30, 19, 31, 1.4], [19, 31, 19, 40.5, 1.5]];
-      IMAP.paths.push([34, 12, 40.5, 13.6, 1.4], [12, 29, 11.5, 32, 1.4], [11.5, 32, -.5, 32.2, 1.4], [24, 30, 19, 31, 1.4], [19, 31, 19, 40.5, 1.5]); /* ke Padang, Danau, Hutan */
+      this.newPaths = [[34, 12, 40.5, 13.6, 1.4], [40.5, 13.6, 53, 14.5, 1.4], [12, 29, 11.5, 32, 1.4], [11.5, 32, -.5, 32.2, 1.4], [-.5, 32.2, -13, 34.6, 1.4], [24, 30, 19, 31, 1.4], [19, 31, 19, 40.5, 1.5], [19, 40.5, 20, 44, 1.5]];
+      IMAP.paths.push(...this.newPaths); /* ke Padang, Danau, Hutan hingga batas desa */
       if (!WJ[this.pid]) this.pid = 'village';
     } else {
       const m = this.IDX[this.pid]; this.regs = [{ id: this.pid, ox: 0, oy: 0, w: m.w, h: m.h }]; this.MW = m.w; this.MH = m.h; window.zAt = () => 0;
@@ -182,8 +182,8 @@ class IsoWorld extends IsoScene {
     b.fillStyle = '#5ea338'; b.fillRect(0, 0, r.w, r.h); b.strokeStyle = '#c8a868'; b.lineCap = 'round'; b.lineWidth = 26;
     for (const [a, c, e, f] of roads) { b.beginPath(); b.moveTo(a, c); b.quadraticCurveTo((a + e) / 2 + (c - f) * .15, (c + f) / 2, e, f); b.stroke(); }
     this.lushGrass(b, r.w, r.h, r.ox, r.oy); this.projectFloor(r, base, -1.1e5);
-    // denah prototipe apa adanya (titik 0 dunia = pojok denah)
-    const G = bakeGroundSoft(this.tsrc); this.ter = G.ter; if (this.textures.exists('iso_ground')) this.textures.remove('iso_ground');
+    // denah desa utuh (1024×712) menggunakan tileset rumput & batu isometrik terbaru
+    const G = bakeGround(this, [-13, -4, 53, 44]); this.ter = G.ter; if (this.textures.exists('iso_ground')) this.textures.remove('iso_ground');
     this.textures.addCanvas('iso_ground', G.c); this.add.image(-G.ox, -G.oy, 'iso_ground').setOrigin(0).setDepth(-1e5); this.waterFx(G);
     const allB = IMAP.houses.concat((IMAP.extra || []).map(([img, tx, ty, w, d]) => ({ t: [tx, ty, w, d], img })));
     this.houses = allB.filter(h => this.textures.exists(h.img) && ISO_KEEP.includes(h.img)).map(h => {
@@ -231,7 +231,7 @@ class IsoWorld extends IsoScene {
       const im = this.textures.get('x_' + n).getSourceImage();
       b.save(); b.globalAlpha = al; b.translate(x, y); b.rotate(rot); b.scale(sx * (fl ? -1 : 1), sy); b.drawImage(im, -ox * im.width, -oy * im.height); b.restore();
     }
-    if (!ISO_NOLUSH.test(r.id)) this.lushGrass(b, W, H, r.ox, r.oy);
+    if (/[?&]tanah=lembut/.test(location.search) && !ISO_NOLUSH.test(r.id)) this.lushGrass(b, W, H, r.ox, r.oy);
     this.bridges(b, W, H, r); this.projectFloor(r, base, -1e5);
   }
   projectFloor(r, base, depth) {

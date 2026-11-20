@@ -15,6 +15,7 @@ const ICONS = new Proxy(ICONS_CACHE, {
 const IMGEL = {};
 // Gambar dari gambar referensi ada di assets/img/<nama>.png → tekstur Phaser 'i_<nama>'
 const IMG_LIST = [
+  "gnd_village_custom", "gnd_forest_custom", "gnd_meadow_custom", "gnd_lake_custom", "gnd_road_custom", "gnd_deepwood_custom",
   "apple1", "bench", "bigtree", "bushG1", "bushG2", "bushP", "bushW",
   "fountain", "houseA", "houseB", "houseC", "market", "planter", "pot",
   "treeA", "stumpWoods",
@@ -24,13 +25,18 @@ const IMG_LIST = [
   "goblin_cauldron", "goblin_totem", "goblin_torch", "goblin_wagon", "goblin_banner",
   "vfx_swing_combo", "vfx_hit_impact", "vfx_charge_spin",
   "tree_apple_fruit", "tree_apple_bare", "tree_redwood",
-  "gnd_city_cobble",
+  "gnd_city_cobble", "gpt_v_blacksmith_forge",
+  "gpt_v_barn_ranch", "gpt_v_chapel_church", "gpt_v_fishing_dock", "gpt_v_guild_townhall",
+  "gpt_v_house_brown_cottage", "gpt_v_house_brown_wing", "gpt_v_house_red_cottage",
+  "gpt_v_house_red_shop", "gpt_v_inn_2story", "gpt_v_market_stall", "gpt_v_tavern_brown",
+  "gpt_v_village_monument", "gpt_v_village_well", "gpt_v_watchtower", "gpt_v_windmill", "gpt_windmill",
+  "gpt_i_houseA", "gpt_i_houseB", "gpt_i_houseC", "gpt_i_market",
   "gpt_gatehouse", "gpt_gatehouse_top", "gpt_cwall", "gpt_ctower", "gpt_city_bridge",
   "gpt_city_lamp", "gpt_city_lamp2", "gpt_city_banner", "gpt_city_banner_sm",
   "gpt_city_fence", "gpt_city_board", "gpt_city_cart", "gpt_city_flower_w", "gpt_city_flower_p",
   "gpt_city_rock_lg", "gpt_city_rock_sm", "gpt_city_cliff_s", "gpt_city_cliff_c",
   "gpt_city_guard", "npc_guard_spear", "gpt_city_cliff_l", "gpt_city_cliff_r"
-, 'npc_elder', 'npc_smith', 'npc_merchant', 'npc_farmer', 'npc_inn', 'npc_guard', 'npc_hunter', 'npc_hermit', 'npc_nila', 'npc_joko', 'npc_girl', 'npc_child', 'npc_woman', 'npc_mom', 'npc_ratih', 'npc_wati', 'npc_darma', 'npc_bayu', 'npc_lestari', 'npc_gun', 'npc_priest', 'ani_rabbit', 'ani_squirrel', 'ani_deer', 'ani_owl', 'ani_duck'];
+, 'npc_elder', 'npc_smith', 'npc_merchant', 'npc_farmer', 'npc_inn', 'npc_guard', 'npc_hunter', 'npc_hermit', 'npc_nila', 'npc_joko', 'npc_girl', 'npc_child', 'npc_woman', 'npc_mom', 'npc_ratih', 'npc_wati', 'npc_darma', 'npc_bayu', 'npc_lestari', 'npc_gun', 'npc_priest', 'npc_mila', 'hero_slave', 'ani_rabbit', 'ani_squirrel', 'ani_deer', 'ani_owl', 'ani_duck'];
 function imgSubdir(k) {
   if (k.startsWith('hero_')) return 'hero';
   if (k.startsWith('npc_')) return 'npc';
@@ -98,6 +104,7 @@ function buildTextures(sc) {
   const T = sc.textures, one = (k, c) => { if (!T.exists(k)) T.addCanvas(k, c); };
   for (const k in IMGEL) {
     if (!IMGEL[k]) continue;
+    if (!T.exists(k)) T.addImage(k, IMGEL[k]);
     if (!T.exists('i_' + k)) T.addImage('i_' + k, IMGEL[k]);
     if (k.startsWith('gpt_')) {
       const bare = k.slice(4);

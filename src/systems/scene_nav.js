@@ -4,10 +4,8 @@ Object.assign(World.prototype, {
   goto(map, x, y, dir, extra = {}) {
     if (this.trans) return; this.trans = true;
     FADE.style.opacity = 1; S.map = map; S.x = x; S.y = y; S.dir = dir; saveGame(null);
+    if (typeof this.cleanGroundCache === 'function') this.cleanGroundCache();
     setTimeout(() => this.scene.restart(Object.assign({ map, x, y, dir }, extra)), 360);
   },
-  async guardStop() {
-    G.lock++; const g = this.npcs.find(n => n.n.id === 'guard'); if (g) this.face(g, 'down');
-    await say('Tunggu! Hutan sedang berbahaya. Temui Tetua Bram di rumah pohon dulu.', 'Penjaga'); G.lock--;
-  },
+  async guardStop() {},
 });

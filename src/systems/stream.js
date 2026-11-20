@@ -2,7 +2,7 @@
 // Gelombang B: tanah per chunk (streaming). Hanya potongan di sekitar layar yang dibuat, sisanya dibuat
 // bertahap tiap frame dengan jatah waktu, potongan jauh dibuang (LRU). genGround/bakeGround menggambar
 // per potongan dengan hasil identik piksel-per-piksel dengan versi utuh. Fondasi dunia mulus.
-const GT = 64, GT_MAX = 1100, GT_BUDGET = 4, GT_MARGIN = 2; // ukuran potongan, maks potongan di memori, ms/frame, cincin potongan di luar layar
+const GT = 64, GT_MAX = 220, GT_BUDGET = 3, GT_MARGIN = 2; // ukuran potongan, maks potongan di memori, ms/frame, cincin potongan di luar layar
 const GTC = new Map(); // kunci tekstur → waktu terakhir dipakai (LRU, lintas peta)
 const GOV = {};        // ringkasan ¼ ukuran per peta untuk peta besar & peta mini
 function gtKey(M, i, j) { return 'gt:' + M.id + ':' + i + ':' + j; }
@@ -30,7 +30,7 @@ Object.assign(World.prototype, {
   gNeed(L, vx, vy, ring) {
     const lx = vx - L.ox, ly = vy - L.oy;
     const iso = typeof isoActive === 'function' && isoActive();
-    const spanW = iso ? VW * 2 : VW, spanH = iso ? VH * 2 : VH;
+    const spanW = iso ? Math.round(VW * 1.45) : VW, spanH = iso ? Math.round(VH * 1.45) : VH;
     const i0 = Math.max(0, Math.floor(lx / GT) - ring), j0 = Math.max(0, Math.floor(ly / GT) - ring);
     const i1 = Math.min(L.cols - 1, Math.floor((lx + spanW) / GT) + ring), j1 = Math.min(L.rows - 1, Math.floor((ly + spanH) / GT) + ring);
     const cx = (lx + spanW / 2) / GT, cy = (ly + spanH / 2) / GT, out = [];
@@ -60,12 +60,29 @@ Object.assign(World.prototype, {
       if (v.right < L.ox - GT * GT_MARGIN || v.x > L.ox + L.M.w + GT * GT_MARGIN || v.bottom < L.oy - GT * GT_MARGIN || v.y > L.oy + L.M.h + GT * GT_MARGIN) continue;
       for (const [i, j] of this.gNeed(L, v.x, v.y, GT_MARGIN)) {
         want.add(gtKey(L.M, i, j)); const X = L.ox + i * GT, Y = L.oy + j * GT;
-        this.gEnsure(L, i, j, X < v.right && X + GT > v.x && Y < v.bottom && Y + GT > v.y);
+        this.gEnsure(L, i, j, X < v.x + VW && X + GT > v.x && Y < v.y + VH && Y + GT > v.y);
       }
     }
     // gambar potongan jauh dilepas dari layar (teksturnya tetap disimpan sampai LRU penuh)
-    for (const [k, img] of this.gImgs) if (!want.has(k)) { const X = img.x + GT / 2, Y = img.y + GT / 2; if (Math.abs(X - (v.x + VW / 2)) > VW + GT * 3 || Math.abs(Y - (v.y + VH / 2)) > VH + GT * 3) { img.destroy(); this.gImgs.delete(k); } }
+    const cx = v.x + v.width / 2, cy = v.y + v.height / 2, rx = v.width / 2 + GT * 3, ry = v.height / 2 + GT * 3;
+    for (const [k, img] of this.gImgs) if (!want.has(k)) { const X = img.x + GT / 2, Y = img.y + GT / 2; if (Math.abs(X - cx) > rx || Math.abs(Y - cy) > ry) { img.destroy(); this.gImgs.delete(k); } }
     // LRU: buang tekstur tertua yang tidak sedang ditampilkan
-    if (GTC.size > GT_MAX) for (const k of GTC.keys()) { if (GTC.size <= GT_MAX) break; if (this.gImgs.has(k)) continue; GTC.delete(k); if (this.textures.exists(k)) this.textures.remove(k); }
+    if (GTC.size > GT_MAX) for (const k of GTC.keys()) {
+      if (GTC.size <= GT_MAX) break;
+      if (this.gImgs.has(k)) continue;
+      GTC.delete(k);
+      if (this.textures.exists(k)) this.textures.remove(k);
+    }
+  },
+  cleanGroundCache(all = false) {
+    for (const [k] of GTC) {
+      if (!all && this.gImgs && this.gImgs.has(k)) continue;
+      GTC.delete(k);
+      if (this.textures && this.textures.exists(k)) this.textures.remove(k);
+    }
+    if (all && this.gImgs) {
+      for (const [, img] of this.gImgs) img.destroy();
+      this.gImgs.clear();
+    }
   },
 });

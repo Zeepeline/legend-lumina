@@ -2,7 +2,7 @@
 // Peta: Padang Angin
 // ---------------- PADANG ANGIN ----------------
 MAPS.meadow = {
-  id: 'meadow', name: 'Padang Angin', w: 1440, h: 1040, bgm: 'meadow', ground: 'meadow', glow: [700, 500, 800],
+  id: 'meadow', name: 'Padang Angin', w: 1440, h: 1040, bgm: 'meadow', ground: 'meadow', customGround: 'gnd_meadow_custom', glow: [700, 500, 800],
   paths: [
     [0, 330, 260, 330, 14], [260, 330, 460, 460, 14], [460, 460, 820, 470, 14], [820, 470, 1040, 340, 14], [1040, 340, 1200, 200, 13],
     [460, 460, 420, 720, 12], [420, 720, 300, 840, 12], [820, 470, 1000, 700, 12], [1000, 700, 1220, 760, 12],

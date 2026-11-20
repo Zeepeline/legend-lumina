@@ -17,12 +17,15 @@ const inDia = (px, py) => Math.abs(px + .5 - 16) / 16 + Math.abs(py + .5 - 8) / 
 // satu ubin: jenis + varian (deterministik dari hash)
 function tileCanvas(kind, v, sc) {
   const tex = sc && sc.textures && sc.textures.exists('iso_tileset') ? sc.textures.get('iso_tileset').getSourceImage() : null;
-  if (tex && (kind === 'grass' || kind === 'dirt')) {
+  if (tex && (kind === 'grass' || kind === 'dirt' || kind === 'stone' || kind === 'corner')) {
     const c = mkCanvas(32, 16), x = c.getContext('2d');
-    const col = v % 4;
-    const row = kind === 'grass' ? (v < 4 ? 0 : 1) : 2;
-    x.drawImage(tex, col * 32, row * 16, 32, 16, 0, 0, 32, 16);
-    return c;
+    const col = (v >= 16 ? v - 16 : v) % 4, sub = Math.floor(v / 4) % 4;
+    const row = kind === 'grass' ? sub : kind === 'corner' ? 14
+      : kind === 'dirt' ? (v >= 16 ? 13 : 8 + sub) : (v >= 16 ? 12 : 4 + sub);
+    if (row * 16 + 16 <= tex.height) {
+      x.drawImage(tex, col * 32, row * 16, 32, 16, 0, 0, 32, 16);
+      return c;
+    }
   }
   const c = mkCanvas(32, 16), x = c.getContext('2d'), img = x.createImageData(32, 16), D = img.data;
   const set = (px, py, col) => { const [r, g, b] = hexRGB(col), i = (py * 32 + px) * 4; D[i] = r; D[i + 1] = g; D[i + 2] = b; D[i + 3] = 255; };

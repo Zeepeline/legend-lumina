@@ -13,7 +13,8 @@ function drawFurn(x, t, X, Y, v) {
   if (t === 'stove') { box(X, Y, w, h, '#9a8a84'); for (let i = 0; i < 4; i++) fr(x, '#6a5a5a', X, Y + 6 + i * 6, w, 1); fr(x, '#2a1a1a', X + 6, Y + 12, w - 12, 14); fr(x, '#ff8a2a', X + 8, Y + 17, w - 16, 9); fr(x, '#ffd84a', X + 11, Y + 20, w - 22, 6); }
 }
 function genRoom(M) {
-  const [c, x] = mk(M.w, M.h), [rx, ry, rw, rh] = M.room;
+  if (!M) return mk(320, 320)[0];
+  const [c, x] = mk(M.w || 320, M.h || 320), [rx, ry, rw, rh] = M.room || [20, 20, (M.w || 320) - 40, (M.h || 320) - 40];
   fr(x, '#140e0c', 0, 0, M.w, M.h);
   fr(x, '#5a3a30', rx - 5, ry - 41, rw + 10, rh + 46); 
   for (let y = ry; y < ry + rh + 30; y += 8) { const r = Math.floor(y / 8); for (let X = rx; X < rx + rw; X++) { if (y >= ry + rh && (X < 140 || X >= 180)) continue; const seam = (X + (r % 2) * 13) % 26 === 0; const F = M.floor || ['#9a7248', '#c89a62', '#d0a46c', '#a87e50']; fr(x, seam ? F[0] : r % 2 ? F[1] : F[2], X, y, 1, 7); fr(x, F[3], X, y + 7, 1, 1); } }

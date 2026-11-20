@@ -11,13 +11,20 @@ const HERO_ROW = {
 };
 IMG_LIST.push('hero_arka');
 function regHeroArka(T) {
-  const img = IMGEL.hero_arka; if (T.exists('ch_hero')) T.remove('ch_hero');
+  const isSlave = (typeof S !== 'undefined' && (S.skin === 'slave' || S.outfit === 'slave')) ||
+    (typeof location !== 'undefined' && /[?&]skin=slave\b/.test(location.search));
+  const img = (isSlave && IMGEL.hero_slave) ? IMGEL.hero_slave : (IMGEL.hero_arka || IMGEL.hero_slave);
+  if (T.exists('ch_hero')) T.remove('ch_hero');
   const t = T.addImage('ch_hero', img);
   for (const k in HERO_ROW) for (let i = 0; i < 4; i++) t.add(k + i, 0, i * HERO_FW, HERO_ROW[k] * HERO_FH, HERO_FW, HERO_FH);
   // nama frame lama (dipakai kode lama sebelum pemutar menimpa): down0..3 / up0..3 / side0..3
   for (const d of ['down', 'up', 'side']) ['idle_' + d + '0', 'walk_' + d + '0', 'walk_' + d + '2', 'atk1_' + d + '1'].forEach((f, i) => {
     const r = HERO_ROW[f.slice(0, -1)]; t.add(d + i, 0, +f.slice(-1) * HERO_FW, r * HERO_FH, HERO_FW, HERO_FH);
   });
+}
+function setHeroSkin(T, skin) {
+  if (typeof S !== 'undefined') S.skin = skin;
+  regHeroArka(T);
 }
 function heroFrame(sc, dt) {
   const pl = sc.pl; if (!pl || !pl.body || !pl.active) return;
@@ -46,6 +53,7 @@ function heroFrame(sc, dt) {
   if (f == null) { const n = Math.floor(A.t * fps); f = once ? Math.min(3, n) : n % 4; }
   if (pl.anims.isPlaying) pl.anims.stop();
   const name = k + f; if (pl.frame.name !== name) pl.setFrame(name);
+  if (sd === 'side') pl.flipX = pl.dir === 'left';
 }
 { const W = World.prototype, _cr = W.create;
   W.create = function (data) {

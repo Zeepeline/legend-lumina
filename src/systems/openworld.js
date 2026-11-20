@@ -41,9 +41,6 @@ Object.assign(World.prototype, {
     const n = this.owN.find(n => { const B = MAPS[n.to]; return pl.x >= n.ox && pl.x <= n.ox + B.w && pl.y >= n.oy && pl.y <= n.oy + B.h; });
     const back = () => pl.setPosition(clamp(pl.x, 4, M.w - 4), clamp(pl.y, 4, M.h - 4));
     if (!n) { back(); return; }
-    // awal cerita: penjaga melarang ke hutan (juga lewat medan peralihan menuju hutan)
-    const toForest = n.to === 'forest' || (MAPS[n.to].peralihan && MAPS[n.to].peralihan.includes('forest') && M.id === 'village');
-    if (toForest && S.stage === 0) { back(); this.guardStop(); return; }
     // wilayah tujuan sudah berjalan: serah-terima kendali (tanpa memuat ulang)
     const R = REG.get(n.to); if (R && R.sys && R.pl) { this.owHandoff(R); return; }
     // ganti wilayah aktif tanpa layar hitam: posisi & kamera dipindah ke koordinat wilayah baru

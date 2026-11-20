@@ -175,17 +175,17 @@ Obrolan "Tanah ISO".
 - Prompt: `(tidak perlu digenerate) Tekstur SEAMLESS di TASKS_GPT_ASET bagian B & N tetap dipakai: kode memutar 45° dan memipihkan 50% jadi ubin belah ketupat.`
 - Cek: Lewati.
 
-### [ ] I023. Ubin isometrik rumput: variasi tepi
+### [x] I023. Ubin isometrik rumput: variasi tepi
 - Simpan: `assets/raw/iso/tanah/tepi_rumput.png` · Ukuran di game: ubin 32×16 px
 - Prompt: `[LAYOUT: ISO TILE 4x4] 16 isometric diamond floor tiles of grass meeting other ground: row 1 plain variations, row 2 edges toward each of the 4 diamond sides, row 3 corners, row 4 small decorative variants (cracks, tufts, pebbles). Every tile is an exact 2:1 diamond.`
 - Cek: Tepi belah ketupat lurus & pas 2:1.
 
-### [ ] I024. Ubin isometrik tanah: variasi tepi
+### [x] I024. Ubin isometrik tanah: variasi tepi
 - Simpan: `assets/raw/iso/tanah/tepi_tanah.png` · Ukuran di game: ubin 32×16 px
 - Prompt: `[LAYOUT: ISO TILE 4x4] 16 isometric diamond floor tiles of dirt path meeting other ground: row 1 plain variations, row 2 edges toward each of the 4 diamond sides, row 3 corners, row 4 small decorative variants (cracks, tufts, pebbles). Every tile is an exact 2:1 diamond.`
 - Cek: Tepi belah ketupat lurus & pas 2:1.
 
-### [ ] I025. Ubin isometrik batu: variasi tepi
+### [x] I025. Ubin isometrik batu: variasi tepi
 - Simpan: `assets/raw/iso/tanah/tepi_batu.png` · Ukuran di game: ubin 32×16 px
 - Prompt: `[LAYOUT: ISO TILE 4x4] 16 isometric diamond floor tiles of stone plaza meeting other ground: row 1 plain variations, row 2 edges toward each of the 4 diamond sides, row 3 corners, row 4 small decorative variants (cracks, tufts, pebbles). Every tile is an exact 2:1 diamond.`
 - Cek: Tepi belah ketupat lurus & pas 2:1.
@@ -205,7 +205,7 @@ Obrolan "Tanah ISO".
 - Prompt: `[LAYOUT: ISO TILE 4x4] 16 isometric diamond floor tiles of cave rock floor meeting other ground: row 1 plain variations, row 2 edges toward each of the 4 diamond sides, row 3 corners, row 4 small decorative variants (cracks, tufts, pebbles). Every tile is an exact 2:1 diamond.`
 - Cek: Tepi belah ketupat lurus & pas 2:1.
 
-### [ ] I029. Blok tebing isometrik: tebing rumput
+### [x] I029. Blok tebing isometrik: tebing rumput
 - Simpan: `assets/raw/iso/tanah/tebing_rumput.png` · Ukuran di game: tinggi tebing 26 px per lantai
 - Prompt: `[LAYOUT: ISO BLOCK 4x4] Isometric height blocks of grassy earth cliff with roots and a soft grass lip: one full block (diamond top + left face + right face), left face only, right face only, outer corner, inner corner, top edge pieces facing each direction, a slope/ramp block, stone stairs block, a 2-level tall block.`
 - Cek: Muka kiri lebih terang (cahaya dari kiri atas), muka kanan lebih gelap.

@@ -1,0 +1,837 @@
+{
+  "compressionlevel": -1,
+  "width": 56,
+  "height": 125,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.10.0",
+  "type": "map",
+  "version": "1.10",
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "../tilesets/objects.tsj"
+    }
+  ],
+  "layers": [
+    {
+      "id": 1,
+      "name": "Ground",
+      "type": "imagelayer",
+      "visible": true,
+      "opacity": 1,
+      "x": 0,
+      "y": 0,
+      "image": "../ground/road_ground.png"
+    },
+    {
+      "id": 2,
+      "name": "Objects (Pohon, Rumah, Dekorasi)",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 1,
+          "name": "stele",
+          "type": "stele",
+          "x": 491.5,
+          "y": 1720.0,
+          "width": 17,
+          "height": 26,
+          "visible": true,
+          "gid": 129
+        },
+        {
+          "id": 2,
+          "name": "stele",
+          "type": "stele",
+          "x": 551.5,
+          "y": 660.0,
+          "width": 17,
+          "height": 26,
+          "visible": true,
+          "gid": 129
+        },
+        {
+          "id": 3,
+          "name": "stele",
+          "type": "stele",
+          "x": 381.5,
+          "y": 260.0,
+          "width": 17,
+          "height": 26,
+          "visible": true,
+          "gid": 129
+        },
+        {
+          "id": 4,
+          "name": "stele",
+          "type": "stele",
+          "x": 391.5,
+          "y": 1500.0,
+          "width": 17,
+          "height": 26,
+          "visible": true,
+          "gid": 129
+        },
+        {
+          "id": 5,
+          "name": "campfire",
+          "type": "campfire",
+          "x": 546.0,
+          "y": 520.0,
+          "width": 28,
+          "height": 22,
+          "visible": true,
+          "gid": 32
+        },
+        {
+          "id": 6,
+          "name": "bench",
+          "type": "bench",
+          "x": 535.5,
+          "y": 480.0,
+          "width": 49,
+          "height": 34,
+          "visible": true,
+          "gid": 13
+        },
+        {
+          "id": 7,
+          "name": "crate",
+          "type": "crate",
+          "x": 581.5,
+          "y": 520.0,
+          "width": 17,
+          "height": 17,
+          "visible": true,
+          "gid": 42
+        },
+        {
+          "id": 8,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 531.5,
+          "y": 545.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 9,
+          "name": "cart",
+          "type": "cart",
+          "x": 367.0,
+          "y": 880.0,
+          "width": 46,
+          "height": 35,
+          "visible": true,
+          "gid": 34
+        },
+        {
+          "id": 10,
+          "name": "crate",
+          "type": "crate",
+          "x": 411.5,
+          "y": 876.0,
+          "width": 17,
+          "height": 17,
+          "visible": true,
+          "gid": 42
+        },
+        {
+          "id": 11,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 371.5,
+          "y": 894.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 12,
+          "name": "rock",
+          "type": "rock",
+          "x": 285.5,
+          "y": 900.0,
+          "width": 29,
+          "height": 22,
+          "visible": true,
+          "gid": 120
+        },
+        {
+          "id": 13,
+          "name": "rock",
+          "type": "rock",
+          "x": 297.5,
+          "y": 930.0,
+          "width": 29,
+          "height": 22,
+          "visible": true,
+          "gid": 120
+        },
+        {
+          "id": 14,
+          "name": "stump",
+          "type": "stump",
+          "x": 584.0,
+          "y": 820.0,
+          "width": 32,
+          "height": 32,
+          "visible": true
+        },
+        {
+          "id": 15,
+          "name": "log",
+          "type": "log",
+          "x": 607.5,
+          "y": 1600.0,
+          "width": 25,
+          "height": 18,
+          "visible": true,
+          "gid": 101
+        },
+        {
+          "id": 16,
+          "name": "verdant_cliff_straight",
+          "type": "verdant_cliff_straight",
+          "x": 265.0,
+          "y": 1920.0,
+          "width": 110,
+          "height": 75,
+          "visible": true,
+          "gid": 156
+        },
+        {
+          "id": 17,
+          "name": "verdant_cliff_straight",
+          "type": "verdant_cliff_straight",
+          "x": 525.0,
+          "y": 1920.0,
+          "width": 110,
+          "height": 75,
+          "visible": true,
+          "gid": 156
+        },
+        {
+          "id": 18,
+          "name": "crate",
+          "type": "crate",
+          "x": 351.5,
+          "y": 1240.0,
+          "width": 17,
+          "height": 17,
+          "visible": true,
+          "gid": 42
+        },
+        {
+          "id": 19,
+          "name": "crate",
+          "type": "crate",
+          "x": 321.5,
+          "y": 1210.0,
+          "width": 17,
+          "height": 17,
+          "visible": true,
+          "gid": 42
+        },
+        {
+          "id": 20,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 421.5,
+          "y": 1290.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 21,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 441.5,
+          "y": 1294.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 22,
+          "name": "hay",
+          "type": "hay",
+          "x": 327.5,
+          "y": 1290.0,
+          "width": 25,
+          "height": 22,
+          "visible": true,
+          "gid": 87
+        },
+        {
+          "id": 23,
+          "name": "coffeekettle",
+          "type": "coffeekettle",
+          "x": 318.0,
+          "y": 1250.0,
+          "width": 24,
+          "height": 24,
+          "visible": true,
+          "gid": 39
+        },
+        {
+          "id": 24,
+          "name": "coffeeshrub",
+          "type": "coffeeshrub",
+          "x": 249.0,
+          "y": 840.0,
+          "width": 22,
+          "height": 22,
+          "visible": true,
+          "gid": 40
+        },
+        {
+          "id": 25,
+          "name": "coffeeshrub",
+          "type": "coffeeshrub",
+          "x": 629.0,
+          "y": 1500.0,
+          "width": 22,
+          "height": 22,
+          "visible": true,
+          "gid": 40
+        },
+        {
+          "id": 26,
+          "name": "goblin_fortress",
+          "type": "goblin_fortress",
+          "x": 657.0,
+          "y": 950.0,
+          "width": 206,
+          "height": 153,
+          "visible": true,
+          "gid": 66
+        },
+        {
+          "id": 27,
+          "name": "goblin_hut",
+          "type": "goblin_hut",
+          "x": 754.0,
+          "y": 890.0,
+          "width": 72,
+          "height": 77,
+          "visible": true,
+          "gid": 68
+        },
+        {
+          "id": 28,
+          "name": "goblin_tower",
+          "type": "goblin_tower",
+          "x": 697.5,
+          "y": 900.0,
+          "width": 45,
+          "height": 101,
+          "visible": true,
+          "gid": 72
+        },
+        {
+          "id": 29,
+          "name": "goblin_tower",
+          "type": "goblin_tower",
+          "x": 747.5,
+          "y": 1080.0,
+          "width": 45,
+          "height": 101,
+          "visible": true,
+          "gid": 72
+        },
+        {
+          "id": 30,
+          "name": "goblin_forge",
+          "type": "goblin_forge",
+          "x": 667.5,
+          "y": 1010.0,
+          "width": 65,
+          "height": 70,
+          "visible": true,
+          "gid": 65
+        },
+        {
+          "id": 31,
+          "name": "goblin_wagon",
+          "type": "goblin_wagon",
+          "x": 537.5,
+          "y": 1140.0,
+          "width": 45,
+          "height": 35,
+          "visible": true,
+          "gid": 73
+        },
+        {
+          "id": 32,
+          "name": "crate",
+          "type": "crate",
+          "x": 581.5,
+          "y": 1150.0,
+          "width": 17,
+          "height": 17,
+          "visible": true,
+          "gid": 42
+        },
+        {
+          "id": 33,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 531.5,
+          "y": 1160.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 34,
+          "name": "goblin_cage",
+          "type": "goblin_cage",
+          "x": 608.5,
+          "y": 1120.0,
+          "width": 63,
+          "height": 70,
+          "visible": true,
+          "gid": 63
+        },
+        {
+          "id": 35,
+          "name": "goblin_gate",
+          "type": "goblin_gate",
+          "x": 406.5,
+          "y": 1100.0,
+          "width": 207,
+          "height": 52,
+          "visible": true,
+          "gid": 67
+        },
+        {
+          "id": 36,
+          "name": "goblin_totem",
+          "type": "goblin_totem",
+          "x": 480.0,
+          "y": 1140.0,
+          "width": 20,
+          "height": 42,
+          "visible": true,
+          "gid": 71
+        },
+        {
+          "id": 37,
+          "name": "goblin_torch",
+          "type": "goblin_torch",
+          "x": 532.0,
+          "y": 1080.0,
+          "width": 16,
+          "height": 44,
+          "visible": true,
+          "gid": 70
+        },
+        {
+          "id": 38,
+          "name": "goblin_torch",
+          "type": "goblin_torch",
+          "x": 732.0,
+          "y": 990.0,
+          "width": 16,
+          "height": 44,
+          "visible": true,
+          "gid": 70
+        },
+        {
+          "id": 39,
+          "name": "goblin_banner",
+          "type": "goblin_banner",
+          "x": 491.0,
+          "y": 1070.0,
+          "width": 18,
+          "height": 50,
+          "visible": true,
+          "gid": 62
+        },
+        {
+          "id": 40,
+          "name": "goblin_banner",
+          "type": "goblin_banner",
+          "x": 711.0,
+          "y": 960.0,
+          "width": 18,
+          "height": 50,
+          "visible": true,
+          "gid": 62
+        },
+        {
+          "id": 41,
+          "name": "crate",
+          "type": "crate",
+          "x": 731.5,
+          "y": 920.0,
+          "width": 17,
+          "height": 17,
+          "visible": true,
+          "gid": 42
+        },
+        {
+          "id": 42,
+          "name": "crate",
+          "type": "crate",
+          "x": 701.5,
+          "y": 1040.0,
+          "width": 17,
+          "height": 17,
+          "visible": true,
+          "gid": 42
+        },
+        {
+          "id": 43,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 741.5,
+          "y": 1020.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 44,
+          "name": "crate",
+          "type": "crate",
+          "x": 651.5,
+          "y": 1140.0,
+          "width": 17,
+          "height": 17,
+          "visible": true,
+          "gid": 42
+        },
+        {
+          "id": 45,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 671.5,
+          "y": 1150.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 46,
+          "name": "log",
+          "type": "log",
+          "x": 567.5,
+          "y": 1180.0,
+          "width": 25,
+          "height": 18,
+          "visible": true,
+          "gid": 101
+        },
+        {
+          "id": 47,
+          "name": "sign",
+          "type": "sign",
+          "x": 462.5,
+          "y": 1210.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 127
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "NPCs",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 48,
+          "name": "Kusir Kafilah",
+          "type": "NPC",
+          "x": 394,
+          "y": 1218,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "kafilah"
+            }
+          ]
+        },
+        {
+          "id": 49,
+          "name": "Pedagang Pasar",
+          "type": "NPC",
+          "x": 624,
+          "y": 498,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "kmerchant"
+            }
+          ]
+        },
+        {
+          "id": 50,
+          "name": "Juru Lelang Bastian",
+          "type": "NPC",
+          "x": 724,
+          "y": 348,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "auctioneer"
+            }
+          ]
+        },
+        {
+          "id": 51,
+          "name": "Rudi",
+          "type": "NPC",
+          "x": 964,
+          "y": 668,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "rudi"
+            }
+          ]
+        },
+        {
+          "id": 52,
+          "name": "Guru Lestari",
+          "type": "NPC",
+          "x": 544,
+          "y": 568,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "lestari"
+            }
+          ]
+        },
+        {
+          "id": 53,
+          "name": "Pengawas Gelanggang",
+          "type": "NPC",
+          "x": 684,
+          "y": 668,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "arena_master"
+            }
+          ]
+        },
+        {
+          "id": 54,
+          "name": "Pedagang Pasar Malam",
+          "type": "NPC",
+          "x": 484,
+          "y": 608,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "night_merchant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Pintu Keluar (Exits)",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 55,
+          "name": "Ke lake",
+          "type": "Exit",
+          "x": 410,
+          "y": 1988,
+          "width": 80,
+          "height": 12,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "lake"
+            }
+          ]
+        },
+        {
+          "id": 56,
+          "name": "Ke kgate",
+          "type": "Exit",
+          "x": 410,
+          "y": 0,
+          "width": 80,
+          "height": 12,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "kgate"
+            }
+          ]
+        },
+        {
+          "id": 57,
+          "name": "Ke road",
+          "type": "Exit",
+          "x": 560,
+          "y": 888,
+          "width": 80,
+          "height": 12,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "road"
+            }
+          ]
+        },
+        {
+          "id": 58,
+          "name": "Ke kpasar",
+          "type": "Exit",
+          "x": 560,
+          "y": 388,
+          "width": 80,
+          "height": 20,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "kpasar"
+            }
+          ]
+        },
+        {
+          "id": 59,
+          "name": "Ke kgate",
+          "type": "Exit",
+          "x": 760,
+          "y": 1188,
+          "width": 80,
+          "height": 12,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "kgate"
+            }
+          ]
+        },
+        {
+          "id": 60,
+          "name": "Ke kakademi",
+          "type": "Exit",
+          "x": 760,
+          "y": 0,
+          "width": 80,
+          "height": 12,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "kakademi"
+            }
+          ]
+        },
+        {
+          "id": 61,
+          "name": "Ke kbawah",
+          "type": "Exit",
+          "x": 0,
+          "y": 590,
+          "width": 12,
+          "height": 60,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "kbawah"
+            }
+          ]
+        },
+        {
+          "id": 62,
+          "name": "Ke kpasar",
+          "type": "Exit",
+          "x": 660,
+          "y": 988,
+          "width": 80,
+          "height": 12,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "kpasar"
+            }
+          ]
+        },
+        {
+          "id": 63,
+          "name": "Ke kpasar",
+          "type": "Exit",
+          "x": 1188,
+          "y": 470,
+          "width": 12,
+          "height": 60,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "kpasar"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

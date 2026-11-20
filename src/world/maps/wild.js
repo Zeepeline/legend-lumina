@@ -55,7 +55,7 @@ const snailSwarm = (paths, ponds, cx, cy, rMin, rMax, turns, n, startA = 0, type
 };
 
 MAPS.deepwood = {
-  id: 'deepwood', name: 'Hutan Dalam', w: 2400, h: 1800, bgm: 'deepwood', ground: 'forest', scale: 2.2,
+  id: 'deepwood', name: 'Hutan Dalam', w: 2400, h: 1800, bgm: 'deepwood', ground: 'forest', customGround: 'gnd_deepwood_custom', scale: 2.2,
   paths: deepwoodPaths,
   cliffs: [
     // Plato Bertingkat Reruntuhan Aurel (Dataran Tinggi Suci di barat laut)

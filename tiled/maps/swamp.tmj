@@ -1,0 +1,347 @@
+{
+  "compressionlevel": -1,
+  "width": 80,
+  "height": 60,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.10.0",
+  "type": "map",
+  "version": "1.10",
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "../tilesets/objects.tsj"
+    }
+  ],
+  "layers": [
+    {
+      "id": 1,
+      "name": "Ground",
+      "type": "imagelayer",
+      "visible": true,
+      "opacity": 1,
+      "x": 0,
+      "y": 0,
+      "image": "../ground/swamp_ground.png"
+    },
+    {
+      "id": 2,
+      "name": "Objects (Pohon, Rumah, Dekorasi)",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 1,
+          "name": "stele",
+          "type": "stele",
+          "x": 321.5,
+          "y": 504.0,
+          "width": 17,
+          "height": 26,
+          "visible": true,
+          "gid": 129
+        },
+        {
+          "id": 2,
+          "name": "totem",
+          "type": "totem",
+          "x": 467.0,
+          "y": 290.0,
+          "width": 26,
+          "height": 32,
+          "visible": true,
+          "gid": 135
+        },
+        {
+          "id": 3,
+          "name": "lotuspad",
+          "type": "lotuspad",
+          "x": 327.0,
+          "y": 530.0,
+          "width": 26,
+          "height": 22,
+          "visible": true,
+          "gid": 102
+        },
+        {
+          "id": 4,
+          "name": "lotuspad",
+          "type": "lotuspad",
+          "x": 647.0,
+          "y": 480.0,
+          "width": 26,
+          "height": 22,
+          "visible": true,
+          "gid": 102
+        },
+        {
+          "id": 5,
+          "name": "sign",
+          "type": "sign",
+          "x": 668.5,
+          "y": 130.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 127
+        },
+        {
+          "id": 6,
+          "name": "rock",
+          "type": "rock",
+          "x": 545.5,
+          "y": 300.0,
+          "width": 29,
+          "height": 22,
+          "visible": true,
+          "gid": 120
+        },
+        {
+          "id": 7,
+          "name": "log",
+          "type": "log",
+          "x": 747.5,
+          "y": 600.0,
+          "width": 25,
+          "height": 18,
+          "visible": true,
+          "gid": 101
+        },
+        {
+          "id": 8,
+          "name": "stump",
+          "type": "stump",
+          "x": 364.0,
+          "y": 660.0,
+          "width": 32,
+          "height": 32,
+          "visible": true
+        },
+        {
+          "id": 9,
+          "name": "mush",
+          "type": "mush",
+          "x": 492.0,
+          "y": 560.0,
+          "width": 16,
+          "height": 14,
+          "visible": true,
+          "gid": 111
+        },
+        {
+          "id": 10,
+          "name": "mush",
+          "type": "mush",
+          "x": 812.0,
+          "y": 480.0,
+          "width": 16,
+          "height": 14,
+          "visible": true,
+          "gid": 111
+        },
+        {
+          "id": 11,
+          "name": "rock",
+          "type": "rock",
+          "x": 865.5,
+          "y": 700.0,
+          "width": 29,
+          "height": 22,
+          "visible": true,
+          "gid": 120
+        },
+        {
+          "id": 12,
+          "name": "bones",
+          "type": "bones",
+          "x": 590.0,
+          "y": 780.0,
+          "width": 20,
+          "height": 10,
+          "visible": true,
+          "gid": 20
+        },
+        {
+          "id": 13,
+          "name": "bones",
+          "type": "bones",
+          "x": 690.0,
+          "y": 800.0,
+          "width": 20,
+          "height": 10,
+          "visible": true,
+          "gid": 20
+        },
+        {
+          "id": 14,
+          "name": "pebbles",
+          "type": "pebbles",
+          "x": 289.0,
+          "y": 520.0,
+          "width": 22,
+          "height": 14,
+          "visible": true,
+          "gid": 114
+        },
+        {
+          "id": 15,
+          "name": "pebbles",
+          "type": "pebbles",
+          "x": 299.0,
+          "y": 525.0,
+          "width": 22,
+          "height": 14,
+          "visible": true,
+          "gid": 114
+        },
+        {
+          "id": 16,
+          "name": "lotuspad",
+          "type": "lotuspad",
+          "x": 87.0,
+          "y": 680.0,
+          "width": 26,
+          "height": 22,
+          "visible": true,
+          "gid": 102
+        },
+        {
+          "id": 17,
+          "name": "lotuspad",
+          "type": "lotuspad",
+          "x": 227.0,
+          "y": 530.0,
+          "width": 26,
+          "height": 22,
+          "visible": true,
+          "gid": 102
+        },
+        {
+          "id": 18,
+          "name": "pebbles",
+          "type": "pebbles",
+          "x": 49.0,
+          "y": 620.0,
+          "width": 22,
+          "height": 14,
+          "visible": true,
+          "gid": 114
+        },
+        {
+          "id": 19,
+          "name": "mush",
+          "type": "mush",
+          "x": 72.0,
+          "y": 550.0,
+          "width": 16,
+          "height": 14,
+          "visible": true,
+          "gid": 111
+        },
+        {
+          "id": 20,
+          "name": "mush",
+          "type": "mush",
+          "x": 442.0,
+          "y": 280.0,
+          "width": 16,
+          "height": 14,
+          "visible": true,
+          "gid": 111
+        },
+        {
+          "id": 21,
+          "name": "rock",
+          "type": "rock",
+          "x": 535.5,
+          "y": 240.0,
+          "width": 29,
+          "height": 22,
+          "visible": true,
+          "gid": 120
+        },
+        {
+          "id": 22,
+          "name": "stump",
+          "type": "stump",
+          "x": 514.0,
+          "y": 250.0,
+          "width": 32,
+          "height": 32,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "NPCs",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 23,
+          "name": "Pertapa Sura",
+          "type": "NPC",
+          "x": 588,
+          "y": 98,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "hermit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Pintu Keluar (Exits)",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 24,
+          "name": "Ke river",
+          "type": "Exit",
+          "x": 0,
+          "y": 450,
+          "width": 12,
+          "height": 60,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "river"
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "Ke meadow",
+          "type": "Exit",
+          "x": 600,
+          "y": 0,
+          "width": 80,
+          "height": 12,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "meadow"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

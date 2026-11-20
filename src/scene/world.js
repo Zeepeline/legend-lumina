@@ -37,7 +37,7 @@ class World extends Phaser.Scene {
     if (M.gate) this.spawnPuzzle();
     if (M.torches) this.spawnTorches();
     if (WARPS[M.id]) this.spawnWarp();
-    this.spawnCh4(); this.spawnCh5(); this.spawnAmbient();
+    this.spawnCh4(); this.spawnCh5(); this.spawnAmbient(); if (!G.title && this.spawnProlog) this.spawnProlog();
     // simpan otomatis
     if (!G.title && !P) { this.time.delayedCall(1200, () => { if (!G.lock && !this.pl.dead) saveGame(this); }); this.time.addEvent({ delay: 45000, loop: true, callback: () => { if (this === G.scene && !G.lock && !this.pl.dead && !this.curBoss && !this.trans) { saveGame(this); autoSaveIcon(); } } }); }
     if (M.iceGate && S.stage < 12) this.spawnIceGate();
@@ -238,8 +238,8 @@ class World extends Phaser.Scene {
             pl.dir = Math.abs(v.x) > Math.abs(v.y) * 1.05 ? (v.x > 0 ? 'right' : 'left') : (v.y > 0 ? 'down' : 'up');
             if (v.x !== 0) pl.lastSide = v.x > 0 ? 'right' : 'left';
           }
-          const k = 'hero_side';
-          pl.flipX = (pl.lastSide || (pl.dir === 'left' ? 'left' : 'right')) === 'left';
+          const k = 'hero_' + sd;
+          pl.flipX = pl.dir === 'left';
           if (pl.atkT > 0) { pl.anims.stop(); pl.setFrame(sd + (pl.atkPose || '3')); }
           else { if (pl.anims.currentAnim?.key !== k || !pl.anims.isPlaying) pl.play(k, true); pl.anims.timeScale = (.6 + m * .5) * stat().spd; }
           this.dustT -= dt; if (this.dustT <= 0 && m > .6) {
@@ -385,7 +385,6 @@ class World extends Phaser.Scene {
   checkZones() {
     const pl = this.pl, M = this.M;
     for (const ex of M.exits || []) if (!this.owSeamless(ex) && pl.x > ex.x && pl.x < ex.x + ex.w && pl.y > ex.y && pl.y < ex.y + ex.h) {
-      if (ex.to === 'forest' && S.stage === 0) { pl.y -= 6; this.guardStop(); return; }
       this.goto(ex.to, ex.tx, ex.ty, ex.dir); return;
     }
     if (!this.bossOn) for (const B of M.bosses || []) {

@@ -109,10 +109,6 @@ Object.assign(World.prototype, {
     if ((this.regT -= dt) > 0 && !first) return; this.regT = .25;
     if (!first) this.streamObjs(2);
     const pl = this.pl, id = first || regionAt(pl.x, pl.y); if (!id) return;
-    // awal cerita: penjaga melarang masuk hutan (dulu lewat pintu tepi)
-    if (S.stage === 0 && (id === 'forest' || (MAPS[id].peralihan || []).includes('forest')) && !this.bossOn) {
-      pl.setPosition(this.safeXY[0], this.safeXY[1]); pl.body.reset(this.safeXY[0], this.safeXY[1]); if (!G.lock) this.guardStop(); return;
-    }
     this.safeXY = [pl.x, pl.y];
     if (id === this.regId) return;
     const R = MAPS[id], was = this.regId; this.regId = id; this.R = R; S.map = id; S.seen[id] = 1;

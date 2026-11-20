@@ -2,36 +2,17 @@
 // Segel kuil, Mochi hilang, kristal, peti harta
 Object.assign(World.prototype, {
   async touchBarrier() {
-    const n = S.inv.seal || 0;
-    if (S.stage < 2) return talk(null, ['Dinding cahaya ungu menutup jalan ke kuil. Ada tiga lubang berbentuk kepingan di tengahnya.']);
-    if (n < 3) {
-      return talk(null, [
-        `Segel ini butuh 3 Pecahan Segel. Kamu punya ${n}/3.`,
-        'Pemimpin monster di hutan menyimpannya: perkemahan goblin (timur), kebun jamur (barat daya), sarang ular (tenggara).'
-      ]);
-    }
-    G.lock++; addItem('seal', -3); S.flags.seal_open = 1; S.stage = 3; updHud();
-    sfx('heal'); this.cameras.main.flash(500, 220, 200, 255); this.sparkle(this.barrier.s.x, this.barrier.s.y - 20, 'dot', 30);
-    this.tweens.add({ targets: this.barrier.s, alpha: 0, scaleY: 1.6, duration: 700, onComplete: () => this.barrier.s.destroy() });
-    this.walls.remove(this.barrier.w, true, true);
-    await sleep(800); banner('Segel terbuka!', 'KUIL KRISTAL', true, 1800); await sleep(1500);
-    await say('Ketiga pecahan menyatu dan segel pecah. Hawa jahat terasa dari dalam kuil...'); G.lock--; saveGame(this);
+    return talk(null, ['Reruntuhan gerbang batu kuno di tengah hutan lebat. Lumut dan sulur tanaman menutupi pilar-pilar tua ini.']);
   },
   async takeMochi() {
     G.lock++; sfx('ok'); this.mochi.destroy(); this.inter = this.inter.filter(i => !(i.x === this.M.mochi.x && i.y === this.M.mochi.y));
     S.side.mochi = 2; addItem('mochi'); updHud(); await say('Meong~! Kamu menemukan Mochi, kucing putih Lina. Ia langsung meringkuk di tasmu.'); G.lock--;
   },
   async useCrystal() {
-    if (S.stage >= 5) return talk(null, ['Kristal Lumina bersinar hangat. Rasanya tenang sekali di sini.']);
-    if (S.stage < 4) return talk(null, ['Kristalnya redup dan dingin. Ada sesuatu yang menyerap cahayanya...']);
-    G.lock++; sfx('heal'); this.crystal.setTexture('crystal_lit').play('crystal_lit');
-    this.cameras.main.flash(600, 200, 240, 255); this.sparkle(this.crystal.x, this.crystal.y - 16, 'dot', 26);
-    const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; S.stage = 5; updHud();
-    await sleep(700); banner('Kristal Lumina pulih!', 'MISI SELESAI', true, 2000); await sleep(1800);
-    await say('Cahaya kristal memulihkan seluruh tenagamu.');
-    await say('...Tanda berbentuk daun di telapak tanganmu berkedip sesaat, hangat, lalu meredup lagi. Sejak kapan tanda ini bisa menyala?');
-    learn('tanda'); await sleep(400);
-    await say('Saatnya pulang dan melapor ke Tetua Bram.');
+    G.lock++; sfx('heal');
+    this.cameras.main.flash(400, 200, 240, 255); this.sparkle(this.crystal.x, this.crystal.y - 16, 'dot', 20);
+    const st = stat(); S.hp = st.maxhp; S.mp = st.maxmp; updHud();
+    await say('Monolit kristal purba ini memancarkan hawa sejuk yang menenangkan. Tenaga dan staminamu pulih sepenuhnya.');
     G.lock--; saveGame(this);
   },
   async openChest(c, spr) {

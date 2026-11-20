@@ -2,7 +2,7 @@
 // Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)
 // World Design Review: lihat docs/BENUA_LUMINA.md (Kuil Penjaga Cahaya, Kota Lumina)
 MAPS.lake = {
-  id: 'lake', name: 'Danau Cermin', w: 1400, h: 1000, scale: 1.5, bgm: 'meadow', ground: 'meadow',
+  id: 'lake', name: 'Danau Cermin', w: 1400, h: 1000, scale: 1.5, bgm: 'meadow', ground: 'meadow', customGround: 'gnd_lake_custom',
   paths: [
     [1400, 500, 940, 500, 14], [940, 500, 900, 300, 10], [900, 300, 560, 262, 10],
     [560, 262, 240, 330, 10], [240, 330, 205, 500, 10],

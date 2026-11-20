@@ -1,0 +1,142 @@
+{
+  "compressionlevel": -1,
+  "width": 70,
+  "height": 57,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.10.0",
+  "type": "map",
+  "version": "1.10",
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "../tilesets/objects.tsj"
+    }
+  ],
+  "layers": [
+    {
+      "id": 1,
+      "name": "Ground",
+      "type": "imagelayer",
+      "visible": true,
+      "opacity": 1,
+      "x": 0,
+      "y": 0,
+      "image": "../ground/cave_ground.png"
+    },
+    {
+      "id": 2,
+      "name": "Objects (Pohon, Rumah, Dekorasi)",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 1,
+          "name": "stele",
+          "type": "stele",
+          "x": 443.5,
+          "y": 676.0,
+          "width": 17,
+          "height": 26,
+          "visible": true,
+          "gid": 129
+        },
+        {
+          "id": 2,
+          "name": "dripstone",
+          "type": "dripstone",
+          "x": 338.0,
+          "y": 440.0,
+          "width": 24,
+          "height": 30,
+          "visible": true,
+          "gid": 50
+        },
+        {
+          "id": 3,
+          "name": "dripstone",
+          "type": "dripstone",
+          "x": 828.0,
+          "y": 750.0,
+          "width": 24,
+          "height": 30,
+          "visible": true,
+          "gid": 50
+        },
+        {
+          "id": 4,
+          "name": "minestone",
+          "type": "minestone",
+          "x": 306.0,
+          "y": 670.0,
+          "width": 28,
+          "height": 26,
+          "visible": true,
+          "gid": 108
+        },
+        {
+          "id": 5,
+          "name": "minestone",
+          "type": "minestone",
+          "x": 566.0,
+          "y": 260.0,
+          "width": 28,
+          "height": 26,
+          "visible": true,
+          "gid": 108
+        },
+        {
+          "id": 6,
+          "name": "minestone",
+          "type": "minestone",
+          "x": 876.0,
+          "y": 830.0,
+          "width": 28,
+          "height": 26,
+          "visible": true,
+          "gid": 108
+        },
+        {
+          "id": 7,
+          "name": "sign",
+          "type": "sign",
+          "x": 162.5,
+          "y": 760.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 127
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Pintu Keluar (Exits)",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 8,
+          "name": "Ke meadow",
+          "type": "Exit",
+          "x": 80,
+          "y": 880,
+          "width": 80,
+          "height": 40,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "meadow"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

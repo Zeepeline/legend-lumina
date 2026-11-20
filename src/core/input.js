@@ -294,9 +294,11 @@ function layout() {
   let aw = vw - 10, ah = vh - 10;
   if (touch && !land) ah = vh - 222;
   if (!touch) ah = vh - 36;
-  // layar penuh mendatar: gambar mengisi seluruh layar; HP tegak → layar "putar HP"
+  // layar penuh mendatar: gambar mengisi seluruh layar; HP tegak → layar "putar HP" (abaikan jika tab tidak aktif)
   document.body.classList.toggle('full', LAYOUT_FULL);
-  document.body.classList.toggle('rotate', LAYOUT_FULL && touch && !land);
+  if (!document.hidden && vw > 100 && vh > 100) {
+    document.body.classList.toggle('rotate', LAYOUT_FULL && touch && !land);
+  }
   if (LAYOUT_FULL) { aw = vw; ah = vh; }
   const s = Math.max(.6, Math.min(aw / VW, ah / VH));
   const w = Math.floor(VW * s), h = Math.floor(VH * s);

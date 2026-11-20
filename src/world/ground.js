@@ -22,7 +22,7 @@ function makeSD(M, rect) {
     }
     for (const [cx, cy, r] of discs) { const v = Math.hypot(x - cx, y - cy) - r; if (v < d) d = v; }
     for (const [cx, cy, rx, ry, w] of rings) { const e = Math.hypot((x - cx) / rx, (y - cy) / ry); const v = Math.abs(e - 1) * (rx + ry) / 2 - w / 2; if (v < d) d = v; }
-    return d + d0;
+    return d + d0 - (org ? 3.5 : 0);
   };
 }
 function pondE(P, x, y) { return Math.hypot((x - P[0]) / P[2], (y - P[1]) / P[3]); }
@@ -64,7 +64,7 @@ function edgeSegs(M) {
     if (!side) continue;
     cover[side].push(r);
     const bw = blendW(M.ground, B.ground);
-    if (B.ground !== M.ground) segs.push({ side, a0: r[0], a1: r[1], G: GROUND[B.ground].g.map(h2r), first: M.id < id, bw });
+    if (B.ground !== M.ground) segs.push({ side, a0: r[0], a1: r[1], G: GROUND[B.ground].g.map(h2r), first: M.id < id, bw, bGround: B.ground });
   }
   for (const side of ['N', 'S', 'W', 'E']) { // celah kosong → hutan lebat
     const len = side === 'N' || side === 'S' ? M.w : M.h, rs = cover[side].sort((p, q) => p[0] - q[0]); let at = 0;
@@ -89,10 +89,11 @@ function edgeBlend(M) {
     }
     if (!best) return null;
     const curW = best.bw || BLEND_W;
-    const gx = x + PX, gy = y + PY, n = vnoise(gx, gy, 22, 31) * .7 + hash(gx, gy, 32) * .3;
-    const half = best.wild ? .62 : .5, p = half * (1 - bd / curW); // peluang warna tetangga
-    const useOther = best.first ? n < p : n >= 1 - p;
-    return useOther ? best.G[k % best.G.length] : null;
+    const gx = x + PX, gy = y + PY;
+    const t0 = Math.max(0, 1 - bd / curW);
+    const blendNoise = (vnoise(gx, gy, 28, 31) - 0.5) * 0.18;
+    const t = Math.max(0, Math.min(0.5, 0.5 * t0 + blendNoise * t0));
+    return { ground: best.bGround, c: best.G[k % best.G.length], t };
   };
 }
 // Bisa menggambar sebagian peta saja (rect = [x, y, w, h]) untuk tanah per chunk (systems/stream.js).
@@ -111,9 +112,23 @@ function getTileData(k) {
 }
 function genGround(M, rect) {
   if (M.ground === 'room') return genRoom(M);
+  const [RX, RY, RW, RH] = rect || [0, 0, M.w, M.h];
+  if (M.customGround && typeof IMGEL !== 'undefined' && IMGEL[M.customGround]) {
+    const src = IMGEL[M.customGround], [c, x] = mk(RW, RH);
+    if (src.width < M.w || src.height < M.h) {
+      const pat = x.createPattern(src, 'repeat');
+      x.fillStyle = pat;
+      x.translate(-RX, -RY);
+      x.fillRect(RX, RY, RW, RH);
+      x.translate(RX, RY);
+    } else {
+      x.drawImage(src, RX, RY, RW, RH, 0, 0, RW, RH);
+    }
+    return c;
+  }
   const pos = (typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id]) || [0, 0];
   const GX = pos[0], GY = pos[1];
-  const W = M.w, H = M.h, [RX, RY, RW, RH] = rect || [0, 0, W, H], img = new ImageData(RW, RH), D = img.data, sd = makeSD(M, rect), GP = GROUND[M.ground];
+  const W = M.w, H = M.h, img = new ImageData(RW, RH), D = img.data, sd = makeSD(M, rect), GP = GROUND[M.ground];
   const Gc = GP.g.map(h2r), glow = M.glow, cave = GP.path === 'cave';
   const blend = edgeBlend(M);
   const STONE = ['#eae2d6', '#ddd4c9', '#f1ebe1', '#d2c8bd'].map(h2r), MORT = h2r('#b5b8a2'), MORT2 = h2r('#9ea38a');
@@ -195,7 +210,25 @@ function genGround(M, rect) {
         put(i, v.m < 1.3 ? [90, 84, 100] : CP[Math.floor(hash(v.id, 3, 13) * 4)], d > -1.5 ? -.12 : 0);
         continue;
       }
-      if (GP.path === 'dirt' && VERDANT[M.ground]) { const vp = verdantPix(M, x + GX, y + GY, 1); if (vp) { put(i, vp); continue; } }
+      if (GP.path === 'dirt' && VERDANT[M.ground]) {
+        let vp = verdantPix(M, x + GX, y + GY, 1);
+        if (vp) {
+          const blP = blend ? blend(x, y, 0) : null;
+          if (blP && blP.t > 0.01) {
+            let cNeigh = blP.c;
+            if (blP.ground && VERDANT[blP.ground] && typeof verdantPix === 'function') {
+              const vpn = verdantPix({ ground: blP.ground }, x + GX, y + GY);
+              if (vpn) cNeigh = vpn;
+            }
+            vp = [
+              Math.round(vp[0] + (cNeigh[0] - vp[0]) * blP.t),
+              Math.round(vp[1] + (cNeigh[1] - vp[1]) * blP.t),
+              Math.round(vp[2] + (cNeigh[2] - vp[2]) * blP.t)
+            ];
+          }
+          put(i, vp); continue;
+        }
+      }
       if (GP.path === 'dirt') { const n = vnoise(x, y, 6, 3), k = n < .3 ? 1 : n < .7 ? 0 : 2; let c = DIRT[k]; if (hash(x, y, 8) > .985) c = h2r('#8a7a6a'); put(i, c, d > -2 ? -.12 : 0); continue; }
       const v = vor(x, y, 7, 11);
       if (v.m < 1.25) { put(i, d > -1.5 ? MORT2 : MORT); continue; }
@@ -207,12 +240,23 @@ function genGround(M, rect) {
     if (d < 2.2 && !(VERDANT[M.ground] && GP.path === 'dirt' && verdantTiles(M))) { put(i, EDGE, f * .5); continue; }
     if (d < 4 && hash(x, y, 4) > .5) k = Math.max(0, k - 1);
     const vc = VERDANT[M.ground] && verdantPix(M, x + GX, y + GY);
-    if (vc) {
-      if (blend && hash(x + GX, y + GY, 31) < .35) { const c2 = blend(x, y, k); if (c2) { put(i, c2, f); continue; } }
-      put(i, vc, f);
+    const baseCol = vc || Gc[k];
+    const bl = blend ? blend(x, y, k) : null;
+    if (bl && bl.t > 0.01) {
+      let cNeigh = bl.c;
+      if (bl.ground && VERDANT[bl.ground] && typeof verdantPix === 'function') {
+        const vp = verdantPix({ ground: bl.ground }, x + GX, y + GY);
+        if (vp) cNeigh = vp;
+      }
+      const t = bl.t;
+      const mixed = [
+        Math.round(baseCol[0] + (cNeigh[0] - baseCol[0]) * t),
+        Math.round(baseCol[1] + (cNeigh[1] - baseCol[1]) * t),
+        Math.round(baseCol[2] + (cNeigh[2] - baseCol[2]) * t)
+      ];
+      put(i, mixed, f);
     } else {
-      if (blend) { const c2 = blend(x, y, k); if (c2) { put(i, c2, f); continue; } }
-      put(i, Gc[k], f);
+      put(i, baseCol, f);
     }
   }
   const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);

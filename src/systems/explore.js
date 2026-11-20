@@ -9,7 +9,11 @@ const ROLE_ICON = { vendor: '🛒', smith: '⚒', inn: '🛏', cook: '🍲', eld
 function hash32(s) { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; }
 function seeded(seed) { let a = seed; return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 // ---- kabut ----
-function fogOf(id) { S.fog = S.fog || {}; return S.fog[id] || (S.fog[id] = '0'.repeat(FOG_N * FOG_N)); }
+function fogOf(id) {
+  S.fog = S.fog || {};
+  if (typeof S.fog[id] === 'string') return S.fog[id];
+  return (S.fog[id] = Array.isArray(S.fog[id]) ? S.fog[id].join('') : '0'.repeat(FOG_N * FOG_N));
+}
 function fogSeen(M, x, y) { if (M.indoor || !WILD.includes(M.id) && !/^k/.test(M.id) && M.id !== 'village') return true; const f = fogOf(M.id), cx = clamp(Math.floor(x / M.w * FOG_N), 0, FOG_N - 1), cy = clamp(Math.floor(y / M.h * FOG_N), 0, FOG_N - 1); return f[cy * FOG_N + cx] === '1'; }
 function drawFog(ctx, M, k, ox = 0, oy = 0) {
   if (M.indoor) return; const f = fogOf(M.id), cw = M.w / FOG_N * k, ch = M.h / FOG_N * k;

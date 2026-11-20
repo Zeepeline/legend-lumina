@@ -1,7 +1,7 @@
 'use strict';
 // Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)
 MAPS.snow = {
-  id: 'snow', name: 'Puncak Beku', w: 1280, h: 1200, bgm: 'cave', ground: 'snow',
+  id: 'snow', name: 'Puncak Beku', w: 1280, h: 1200, bgm: 'cave', ground: 'snow', customGround: 'gnd_snow_custom',
   // WORLD_REFACTOR tahap F: jalur mendaki zig-zag (ujung & tujuan tetap), cabang obor lepas di ketinggian berbeda
   paths: [[640, 1200, 610, 1100, 14], [610, 1100, 560, 1000, 14], [560, 1000, 605, 900, 14], [605, 900, 575, 800, 14], [575, 800, 620, 690, 14],
     [620, 690, 640, 560, 13], [640, 560, 595, 460, 13], [595, 460, 625, 380, 14], [625, 380, 640, 230, 14],

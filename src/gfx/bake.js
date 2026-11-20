@@ -27,9 +27,10 @@ function shadowIndex(sc, M) {
   if (M._shIdx) return M._shIdx;
   const list = [], grid = new Map();
   for (const o of mapObjects(M).slice().sort((a, b) => a[2] - b[2])) {
-    const d = OBJ[o[0]]; if (!d.sh) continue;
+    const d = OBJ[o[0]]; if (!d || !d.sh) continue;
     let C = SHC[d.key];
     if (!C) {
+      if (!sc.textures.exists(d.key)) continue;
       const tex = sc.textures.get(d.key), f = tex.has(0) ? tex.get(0) : tex.get();
       C = SHC[d.key] = shadowCanvas(tex.getSourceImage(), f.cutX, f.cutY, f.cutWidth, f.cutHeight);
       C.w = f.cutWidth;

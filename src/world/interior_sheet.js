@@ -28,7 +28,9 @@ function rug9(x, im, X, Y, w, h) {
   x.drawImage(im, m, m, cw, ch, X + Math.round((w - cw) / 2), Y + Math.round((h - ch) / 2), cw, ch);  // motif asli di tengah
 }
 function genRoomSheet(M) {
-  const [c, x] = mk(M.w, M.h), [rx, ry, rw, rh] = M.room, F = (col, a, b, w, h) => { x.fillStyle = col; x.fillRect(a, b, w, h); };
+  const mw = (M && M.w) || 320, mh = (M && M.h) || 320;
+  const [c, x] = mk(mw, mh), [rx, ry, rw, rh] = (M && M.room) || [20, 20, mw - 40, mh - 40];
+  const F = (col, a, b, w, h) => { x.fillStyle = col; x.fillRect(a, b, w, h); };
   x.imageSmoothingEnabled = false;
   F('#140e0c', 0, 0, M.w, M.h);
   // lantai papan melintang: tinggi papan 6 px, panjang acak, sambungan gelap, sedikit mata kayu

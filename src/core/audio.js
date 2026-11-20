@@ -154,7 +154,13 @@ function playBGM(name) {
 }
 setInterval(() => {
   if (AU.tag) return; const q = AU.seq; if (!q || !AU.ctx) return; const sp = 60 / q.tr.bpm;
-  for (const v of q.vs) { while (!v.done && v.t < AU.ctx.currentTime + .3) { const n = v.n[v.i]; const d = n.b * sp; tone(n.f, v.t, d * .9, v.type, v.vol, AU.music); v.t += d; v.i++; if (v.i >= v.n.length) { if (q.tr.loop) v.i = 0; else v.done = true; } } }
+  for (const v of q.vs) {
+    if (v.t < AU.ctx.currentTime) v.t = AU.ctx.currentTime;
+    while (!v.done && v.t < AU.ctx.currentTime + .3) {
+      const n = v.n[v.i]; const d = n.b * sp; tone(n.f, v.t, d * .9, v.type, v.vol, AU.music); v.t += d; v.i++;
+      if (v.i >= v.n.length) { if (q.tr.loop) v.i = 0; else v.done = true; }
+    }
+  }
 }, 60);
 const SFX_FILES = {
   swing: 'assets/audio/swing_light.wav',

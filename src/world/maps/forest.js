@@ -2,7 +2,7 @@
 // Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)
 // ---------------- HUTAN ----------------
 MAPS.forest = {
-  id: 'forest', name: 'Hutan Lumina', w: 1280, h: 1200, bgm: 'forest', ground: 'forest',
+  id: 'forest', name: 'Hutan Lumina', w: 1280, h: 1200, bgm: 'forest', ground: 'forest', customGround: 'gnd_forest_custom',
   paths: [
     [0, 730, 220, 730, 12], [220, 730, 410, 690, 12], [220, 730, 200, 560, 11],
     [1280, 530, 1060, 530, 12], [1060, 530, 1000, 320, 12],

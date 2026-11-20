@@ -35,34 +35,104 @@ function segDist(px, py, ax, ay, bx, by) {
   const vx = bx - ax, vy = by - ay, t = clampN(((px - ax) * vx + (py - ay) * vy) / (vx * vx + vy * vy || 1), 0, 1);
   return Math.hypot(px - ax - vx * t, py - ay - vy * t);
 }
-// jenis tanah per ubin
+// jenis tanah per ubin (desa Lumina: pusat desa memakai ubin batu rapi, jalur luar jalan tanah rustic)
 function terrainAt(tx, ty) {
-  const cx = tx + .5, cy = ty + .5, P = IMAP.plaza, wob = (hash2(tx, ty, 9) - .5) * .7;
-  if (Math.hypot(cx - IMAP.pond[0], cy - IMAP.pond[1]) < IMAP.pond[2] + wob * .6) return 'water';
-  if (Math.hypot(cx - IMAP.rot[0], cy - IMAP.rot[1]) < IMAP.rot[2] + wob) return 'rot';
+  const cx = tx + .5, cy = ty + .5, P = IMAP.plaza;
+  if (Math.hypot(cx - IMAP.pond[0], cy - IMAP.pond[1]) < IMAP.pond[2]) return 'water';
+  if (Math.hypot(cx - IMAP.rot[0], cy - IMAP.rot[1]) < IMAP.rot[2]) return 'rot';
   for (const [fx, fy, fw, fh] of IMAP.farms) if (tx >= fx && tx < fx + fw && ty >= fy && ty < fy + fh) return 'farm';
-  if (Math.hypot(cx - P[0], cy - P[1]) < P[2] + wob * .3) return 'stone';
+  if (Math.hypot(cx - P[0], cy - P[1]) < P[2]) return 'stone';
   const R = IMAP.ramp, s = cx + cy, d = cx - cy; if (d >= R.d0 && d <= R.d1 && s >= R.s0 - .3 && s <= R.s1 + .2) return 'stone';
-  for (const [ax, ay, bx, by, w] of IMAP.paths) if (segDist(cx, cy, ax, ay, bx, by) < w * .5 + wob * .35 + .25) return 'dirt';
-  if (s < IMAP.plateauS && hash2(tx, ty, 4) < .05) return 'dirt';
+  for (const [ax, ay, bx, by, w] of IMAP.paths) {
+    if (segDist(cx, cy, ax, ay, bx, by) < w * .5 + .2) {
+      return Math.hypot(cx - P[0], cy - P[1]) < 8.5 ? 'stone' : 'dirt';
+    }
+  }
   return 'grass';
 }
 
+function terAt(tx, ty, ter) {
+  return ter && ter[ty] && ter[ty][tx] !== undefined ? ter[ty][tx] : terrainAt(tx, ty);
+}
+function roadMask(tx, ty, ter) {
+  let m = 0;
+  if (terAt(tx, ty - 1, ter) === 'grass') m |= 1;
+  if (terAt(tx + 1, ty, ter) === 'grass') m |= 2;
+  if (terAt(tx, ty + 1, ter) === 'grass') m |= 4;
+  if (terAt(tx - 1, ty, ter) === 'grass') m |= 8;
+  return m;
+}
+function tileVariant(k, tx, ty, ter) {
+  const n = hash2(tx, ty, 7);
+  if (k === 'stone') {
+    const m = roadMask(tx, ty, ter);
+    return m === 0 ? 16 + Math.floor(n * 4) : m;
+  }
+  if (k === 'grass' || k === 'dirt') {
+    if (n < .80) return Math.floor(hash2(tx, ty, 3) * 4);
+    if (n < .94) return 4 + Math.floor(hash2(tx, ty, 5) * 4);
+    return hash2(tx, ty, 9) < .5 ? 12 : 14;
+  }
+  return Math.floor(n * 16);
+}
+
+// jalan tanah organik per piksel (halus seperti tepi sungai tanpa gerigi ubin)
+function paintSmoothDirt(x, W, H, ox, oy, ter, tx0, ty0, tx1, ty1, tile) {
+  const T = ISO.T, P = IMAP.plaza, im = x.getImageData(0, 0, W, H), D = im.data;
+  const dTex = [0, 1, 2, 3].map(i => tile('dirt', 16 + i).getContext('2d').getImageData(0, 0, 32, 16).data);
+  for (let ty = ty0; ty <= ty1; ty++) for (let tx = tx0; tx <= tx1; tx++) {
+    const k = ter[ty][tx]; if (k !== 'grass' && k !== 'dirt') continue;
+    const cx0 = tx + .5, cy0 = ty + .5;
+    if (Math.hypot(cx0 - P[0], cy0 - P[1]) < 7.2) continue;
+    let near = false;
+    for (const [ax, ay, bx, by, w] of IMAP.paths) {
+      if (segDist(cx0, cy0, ax, ay, bx, by) < w * .5 + 1.8) { near = true; break; }
+    }
+    if (!near) continue;
+    const z = zAt(cx0 * T, cy0 * T), sx = Math.round(ox + (tx - ty) * T - T), sy = Math.round(oy + (tx + ty) * T / 2 - z * ISO.ZH);
+    const dt = dTex[(((tx + ty) % 4) + 4) % 4];
+    for (let py = 0; py < 16; py++) for (let px = 0; px < 32; px++) {
+      if (!inDia(px, py)) continue;
+      const lx = px - 16 + .5, ly = py + .5, wx = tx * T + ly + lx / 2, wy = ty * T + ly - lx / 2;
+      const cx = wx / T, cy = wy / T; if (Math.hypot(cx - P[0], cy - P[1]) < 8.5) continue;
+      let md = 999;
+      for (const [ax, ay, bx, by, w] of IMAP.paths) { const d = segDist(cx, cy, ax, ay, bx, by) - w * .5; if (d < md) md = d; }
+      const wob = (vnoise(wx, wy, 14, 51) * .55 + vnoise(wx, wy, 5, 53) * .45 - .5) * .65;
+      const dp = (md - (.12 + wob)) * T; if (dp >= 2.2) continue;
+      const gx = sx + px, gy = sy + py; if (gx < 0 || gy < 0 || gx >= W || gy >= H) continue;
+      const di = (gy * W + gx) * 4;
+      if (dp < 0) {
+        const si = (py * 32 + px) * 4, sh = dp > -2.4 ? .80 : 1;
+        D[di] = dt[si] * sh; D[di + 1] = dt[si + 1] * sh; D[di + 2] = dt[si + 2] * sh; D[di + 3] = 255;
+      } else {
+        D[di] *= .84; D[di + 1] *= .84; D[di + 2] *= .84;
+      }
+    }
+  }
+  x.putImageData(im, 0, 0);
+}
+
 // panggang seluruh tanah ke satu kanvas; kembalikan { c, ox, oy } (ox,oy = posisi layar titik dunia 0,0 di kanvas)
-function bakeGround(sc) {
-  const N = IMAP.N, T = ISO.T, ox = N * T + 24, oy = ISO.ZH + 24, W = N * 2 * T + 48, H = N * T + ISO.ZH + 64;
+function bakeGround(sc, bounds) {
+  const T = ISO.T, tx0 = bounds ? bounds[0] : 0, ty0 = bounds ? bounds[1] : 0;
+  const tx1 = bounds ? bounds[2] : IMAP.N - 1, ty1 = bounds ? bounds[3] : IMAP.N - 1;
+  const minSx = (tx0 - ty1) * T - T, maxSx = (tx1 - ty0) * T + 16;
+  const minSy = (tx0 + ty0) * T / 2 - ISO.ZH, maxSy = (tx1 + ty1) * T / 2 + 16;
+  const ox = -minSx + 16, oy = -minSy + 16, W = Math.ceil(maxSx - minSx + 32), H = Math.ceil(maxSy - minSy + 32);
   const c = mkCanvas(W, H), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
-  const cache = {}, tile = (k, v) => cache[k + v] || (cache[k + v] = tileCanvas(k, v, sc));
-  const ter = [], zt = [];
-  for (let ty = 0; ty < N; ty++) { ter[ty] = []; zt[ty] = []; for (let tx = 0; tx < N; tx++) { ter[ty][tx] = terrainAt(tx, ty); zt[ty][tx] = zAt((tx + .5) * T, (ty + .5) * T); } }
+  const cache = {}, tile = (k, v) => cache[k + '_' + v] || (cache[k + '_' + v] = tileCanvas(k, v, sc));
+  const ter = {}, zt = {};
+  for (let ty = ty0; ty <= ty1; ty++) {
+    ter[ty] = {}; zt[ty] = {};
+    for (let tx = tx0; tx <= tx1; tx++) { ter[ty][tx] = terrainAt(tx, ty); zt[ty][tx] = zAt((tx + .5) * T, (ty + .5) * T); }
+  }
   const scr = (tx, ty, z) => [ox + (tx - ty) * T - T, oy + (tx + ty) * T / 2 - z * ISO.ZH];
-  const order = []; for (let ty = 0; ty < N; ty++) for (let tx = 0; tx < N; tx++) order.push([tx, ty]);
-  // urut: lantai rendah dulu, lalu menurut x+y
-  order.sort((a, b) => (zt[a[1]][a[0]] - zt[b[1]][b[0]]) || (a[0] + a[1] - b[0] - b[1]));
+  const order = []; for (let ty = ty0; ty <= ty1; ty++) for (let tx = tx0; tx <= tx1; tx++) order.push([tx, ty]);
+  order.sort((a, b) => (zAt((a[0] + .5) * T, (a[1] + .5) * T) - zAt((b[0] + .5) * T, (b[1] + .5) * T)) || (a[0] + a[1] - b[0] - b[1]));
+  const hasIsoSheet = sc && sc.textures && sc.textures.exists('iso_tileset');
   for (const [tx, ty] of order) {
-    const z = zt[ty][tx], k = ter[ty][tx], [sx, sy] = scr(tx, ty, z);
-    // muka tebing di bawah ubin yang lebih tinggi dari tetangga depannya (kiri-bawah: ty+1, kanan-bawah: tx+1)
-    const zl = ty + 1 < N ? zt[ty + 1][tx] : 0, zr = tx + 1 < N ? zt[ty][tx + 1] : 0;
+    const z = zAt((tx + .5) * T, (ty + .5) * T), k = ter[ty][tx], [sx, sy] = scr(tx, ty, z);
+    const zl = zAt((tx + .5) * T, (ty + 1.5) * T), zr = zAt((tx + 1.5) * T, (ty + .5) * T);
     const face = (dz, left) => {
       const h = Math.round(dz * ISO.ZH); if (h < 2) return;
       for (let i = 0; i < 16; i++) for (let j = 0; j < h; j++) {
@@ -73,16 +143,23 @@ function bakeGround(sc) {
       }
     };
     face(z - zl, true); face(z - zr, false);
-    x.drawImage(tile(k, Math.floor(hash2(tx, ty, 1) * 4)), sx, sy);
+    const tk = hasIsoSheet && k === 'dirt' ? 'grass' : k;
+    x.drawImage(tile(tk, tileVariant(tk, tx, ty, ter)), sx, sy);
+    if (hasIsoSheet && k === 'stone') {
+      const m = roadMask(tx, ty, ter);
+      if (!(m & 1) && !(m & 8) && terAt(tx - 1, ty - 1, ter) === 'grass') x.drawImage(tile('corner', 0), sx, sy);
+      if (!(m & 1) && !(m & 2) && terAt(tx + 1, ty - 1, ter) === 'grass') x.drawImage(tile('corner', 1), sx, sy);
+      if (!(m & 2) && !(m & 4) && terAt(tx + 1, ty + 1, ter) === 'grass') x.drawImage(tile('corner', 2), sx, sy);
+      if (!(m & 4) && !(m & 8) && terAt(tx - 1, ty + 1, ter) === 'grass') x.drawImage(tile('corner', 3), sx, sy);
+    }
   }
-  // tepi rumput bergerigi daun di atas jalan/batu/tanah garapan (hanya untuk mode prosedural kanvas tanpa tileset)
-  const hasIsoSheet = sc && sc.textures && sc.textures.exists('iso_tileset');
+  if (hasIsoSheet) paintSmoothDirt(x, W, H, ox, oy, ter, tx0, ty0, tx1, ty1, tile);
   if (!hasIsoSheet) for (const [tx, ty] of order) {
-    if (ter[ty][tx] !== 'grass') continue; const z = zt[ty][tx], [sx, sy] = scr(tx, ty, z);
+    if (ter[ty][tx] !== 'grass') continue; const z = zAt((tx + .5) * T, (ty + .5) * T), [sx, sy] = scr(tx, ty, z);
     const nb = [[0, -1, 16, 4], [1, 0, 24, 8], [0, 1, 16, 12], [-1, 0, 8, 8]];
     for (const [dx, dy] of nb) {
-      const qx = tx + dx, qy = ty + dy; if (qx < 0 || qy < 0 || qx >= N || qy >= N) continue;
-      const k2 = ter[qy][qx]; if (k2 === 'grass' || k2 === 'water' || Math.abs(zt[qy][qx] - z) > .1) continue;
+      const qx = tx + dx, qy = ty + dy; if (qx < tx0 || qy < ty0 || qx > tx1 || qy > ty1) continue;
+      const k2 = ter[qy][qx]; if (k2 === 'grass' || k2 === 'water' || Math.abs(zAt((qx + .5) * T, (qy + .5) * T) - z) > .1) continue;
       for (let i = 0; i < 4; i++) {
         const t = (i + .5) / 4, ex = dx === 1 ? 16 + t * 16 : dx === -1 ? t * 16 : dy === -1 ? 16 + t * 16 : t * 16;
         const ey = dx === 1 ? t * 8 + 8 : dx === -1 ? t * 8 : dy === -1 ? t * 8 : 8 + t * 8;

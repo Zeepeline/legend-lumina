@@ -266,7 +266,7 @@ async function openQuests() {
   side.push(['Lendir untuk Pak Darto', ['Bicara dengan Pak Darto', `Kumpulkan Lendir Slime (${Math.min(5, S.inv.jelly || 0)}/5)`, 'Selesai'][sd.darto], sd.darto === 2]);
   if (S.seen.meadow) side.push(['Taring untuk Pak Joko', ['Bicara dengan Pak Joko di Padang Angin', `Kumpulkan Taring Babi (${Math.min(3, S.inv.tusk || 0)}/3)`, 'Selesai'][sd.joko], sd.joko === 2]);
   if (sd.patok) side.push(['Batas Ladang Desa Kincir', ['', 'Cari patok batu kuno di ladang selatan Desa Kincir', 'Tunjukkan patok itu kepada Darma', 'Selesai'][sd.patok], sd.patok === 3]);
-  const now = STAGE_TXT[S.stage] ? STAGE_TXT[S.stage] + (S.stage === 2 ? ` (${S.inv.seal || 0}/3)` : '') + (S.stage === 15 ? ` (${['m_darto', 'm_sari', 'm_dodi'].filter(k => S.flags[k]).length}/3)` : '') : 'Belum ada tugas utama. Jelajahi dunia, misteri masih menunggu.';
+  const now = STAGE_TXT[S.stage] ? STAGE_TXT[S.stage] + (S.stage === 1 ? ` (${Math.min(3, S.inv.wood || 0)}/3)` : '') + (S.stage === 15 ? ` (${['m_darto', 'm_sari', 'm_dodi'].filter(k => S.flags[k]).length}/3)` : '') : 'Belum ada tugas utama. Jelajahi dunia, misteri masih menunggu.';
   const myst = MYSTERY.filter(m => m.open()), lore = Object.keys(LORE).filter(k => S.lore[k]);
   const tabs = ['Tujuan', 'Misteri', 'Catatan'];
   let tab = 0, sel = 0;

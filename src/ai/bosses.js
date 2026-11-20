@@ -111,11 +111,16 @@ Object.assign(World.prototype, {
     for (const o of this.enemies) if (o !== e && o.hp > 0) this.killEnemy(o);
     await sleep(1400); banner(e.D.name + ' kalah!', 'MENANG', true, 1800); await sleep(1600);
     if (B.after === 'seal') {
-      addItem('seal'); sfx('chest'); updHud(); const n = S.inv.seal || 0;
-      banner('Pecahan Segel ' + n + '/3', 'DAPAT', false, 2000);
-      await say(n >= 3 ? 'Ketiga Pecahan Segel terkumpul! Bawa ke gerbang segel di depan Kuil Kristal.' : `Kamu mendapat Pecahan Segel (${n}/3). Masih ada ${3 - n} lagi di hutan ini.`);
+      addItem('gold', 50); sfx('chest'); updHud();
+      banner('50 G Jarahan', 'MENANG', false, 2000);
+      await say('Monster penjaga hutan tumbang! Kamu menemukan kantung berisi 50 koin emas di sarangnya.');
     }
-    if (B.after === 'crystal') { await say('Grr... suara itu... berjanji... cahaya untukku...', 'Raja Goblin'); learn('suara_goblin'); S.stage = 4; updHud(); await say('Raja Goblin tumbang! Sentuh Kristal Lumina untuk memulihkan cahayanya.'); }
+    if (B.after === 'crystal') {
+      await say('Grr... manusia... tidak tahu diri...', 'Raja Goblin');
+      const c = this.M.chests.find(c => c.needFlag === 'boss');
+      if (c) { const sp = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'doto', 20); }
+      await say('Raja Goblin berhasil dikalahkan! Sebuah peti harta muncul di reruntuhan sarangnya.');
+    }
     if (B.after === 'witch') { await say('Kau tidak mengerti... Dia di bawah akar... menjanjikan cahaya abadi...', 'Morgath'); learn('suara_morgath'); S.stage = 8; updHud(); const c = this.M.chests.find(c => c.needFlag === 'witch'); const sp = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'doto', 20); await say('Morgath lenyap bersama kabutnya... Rawa Senja mulai terang.'); await say('Sebuah peti muncul di tempat ia berdiri. Setelah itu, laporkan ke Tetua Bram.'); }
     if (B.after === 'dragon') { await say('Bukan... Morgath... yang membangunkanku... Bisikan dari bawah tanah... ia memanggil namamu, anak cahaya...', 'Kryos'); learn('suara_kryos'); S.stage = 13; updHud(); const c = this.M.chests.find(c => c.needFlag === 'dragon'); const sp = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'dot', 20); sp.setAlpha(0); this.tweens.add({ targets: sp, alpha: 1, duration: 600 }); await say('Kryos hancur menjadi serpihan es berkilau... Badai salju mereda.'); await say('Sebuah peti muncul di puncak. Setelah itu, laporkan ke Tetua Bram!'); }
     if (B.after === 'golemchest') { const c = this.M.chests.find(c => c.needFlag === 'golem'); const s = this.spawnChest(c); this.sparkle(c.x, c.y - 8, 'doto', 20); s.setAlpha(0); this.tweens.add({ targets: s, alpha: 1, duration: 600 }); await say('Sebuah peti harta muncul dari reruntuhan Golem Purba!'); }

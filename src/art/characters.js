@@ -100,4 +100,5 @@ Object.assign(CHARS, {
   nila: [{ H: '#f0f4fa', C: '#3a7ac8', P: '#4a5a7a', K: '#2a3a5a', Y: '#8ad0ff' }, { hat: 1, long: 1 }],
   mom: [{ H: '#e8b040', C: '#d87a5a', K: '#5a3a2a' }, { long: 1, dress: 1, apron: 1 }],
   priest: [{ H: '#e0e4f0', C: '#f0f4fc', K: '#8aa0c8', Y: '#ffd870' }, { robe: 1, beard: 0 }],
+  mila: [{ H: '#3a2218', C: '#5a8a4a', K: '#5a3420', R: '#c83a3a' }, { ribbon: 1, dress: 1, apron: 1 }],
 });

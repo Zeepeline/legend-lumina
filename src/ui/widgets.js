@@ -21,21 +21,31 @@ function say(text, name) {
   document.body.classList.add('talking');
   return new Promise(res => {
     const prev = UIH;
-    const w = win('dlg act', (name ? `<div class="nm">${name}</div>` : '') + '<div class="tx"></div><div class="more">▼</div>');
+    const w = win('dlg act', (name ? `<div class="nm">${name}</div>` : '') +
+      '<div class="tx"></div><div class="more" style="cursor:pointer" title="Tutup">✕</div>');
     const tx = w.querySelector('.tx'); let i = 0, done = false;
     const spd = [1, 2, 4, 999][OPT.txt != null ? OPT.txt : 1] || 2;
-    const tick = setInterval(() => { i += spd + (Input.keys && (Input.keys.a || Input.keys.b) ? 3 : 0); tx.textContent = text.slice(0, i); if (i % 4 < spd && text[i] && text[i] !== ' ' && spd < 4) sfx('blip'); if (i >= text.length) finish(); }, 24);
+    const tick = setInterval(() => {
+      i += spd + (Input.keys && (Input.keys.a || Input.keys.b) ? 3 : 0);
+      tx.textContent = text.slice(0, i);
+      if (i % 4 < spd && text[i] && text[i] !== ' ' && spd < 4) sfx('blip');
+      if (i >= text.length) finish();
+    }, 24);
     function finish() { clearInterval(tick); tx.textContent = text; done = true; w.classList.add('done'); }
-    const h = k => {
-      if (k !== 'a' && k !== 'b' && k !== 'tap') return;
-      if (!done) { finish(); return; }
+    function closeDlg() {
+      clearInterval(tick);
       w.remove(); UIH = prev;
       if (!document.querySelector('.dlg')) document.body.classList.remove('talking');
       if (typeof setBgmDuck === 'function' && !document.querySelector('.dlg')) setBgmDuck(1.0);
       res();
+    }
+    const h = k => {
+      if (['a', 'b', 'tap', 'menu', 'back', 'space', 'enter'].includes(k)) {
+        if (!done) finish(); else closeDlg();
+      }
     };
     h.tap = true; UIH = h;
-    w.addEventListener('pointerdown', e => { e.stopPropagation(); press('tap'); });
+    w.addEventListener('pointerdown', e => { e.stopPropagation(); if (!done) finish(); else closeDlg(); });
   });
 }
 async function talk(name, lines) { G.lock++; try { for (const l of lines) await say(l, name); } finally { G.lock--; } }
@@ -181,7 +191,7 @@ function updHud() {
     compEl.textContent = `🧭 ${cDir}`;
   }
   const q = $('quest');
-  const prog = { 2: [S.inv.seal || 0, 3], 11: [[0, 1, 2].filter(k => S.flags['torch' + k]).length, 3], 15: [['m_darto', 'm_sari', 'm_dodi'].filter(k => S.flags[k]).length, 3], 25: [(typeof ARSIP !== 'undefined' ? ARSIP : []).filter(k => S.lore[k]).length, 4] }[S.stage];
+  const prog = { 1: [Math.min(3, S.inv.wood || 0), 3], 11: [[0, 1, 2].filter(k => S.flags['torch' + k]).length, 3], 15: [['m_darto', 'm_sari', 'm_dodi'].filter(k => S.flags[k]).length, 3], 25: [(typeof ARSIP !== 'undefined' ? ARSIP : []).filter(k => S.lore[k]).length, 4] }[S.stage];
   const txt = STAGE_TXT[S.stage];
   if (txt) {
     if (q._lastStage !== S.stage) {
