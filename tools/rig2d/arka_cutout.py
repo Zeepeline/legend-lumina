@@ -10,7 +10,7 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else '/tmp/rig2d'
 os.makedirs(OUT, exist_ok=True)
 SHEET = os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'img', 'hero', 'hero_arka.png')
 SRC = np.array(Image.open(SHEET).convert('RGBA'))
-FW, FH, CW, CH = 48, 40, 64, 60          # frame asli, kanvas hasil
+FW, FH, CW, CH = 48, 40, 96, 80          # frame asli, kanvas hasil
 OX, OY = (CW - FW) // 2, CH - FH - 6     # posisi frame asli di kanvas
 
 def frame(row): return SRC[row * FH:row * FH + FH, 0:FW].copy()
@@ -25,15 +25,18 @@ def fill_holes(img, ref, y0=24, y1=33):  # isi bekas lengan dengan warna jaket t
     return img
 
 # ── pedang pixel art (palet Arka), gagang di (1, 0), bilah ke bawah ──
-SWORD = ['.k.', 'kgk', 'kgk', 'kKk', 'GGGGG', '.kwk.', '.kwk.', '.kwk.', '.kwk.', '.kwk.', '.kwk.', '.kwk.', '.kwk.', '..k..']
-SC = {'k': (36, 28, 40, 255), 'g': (122, 76, 40, 255), 'K': (214, 170, 70, 255), 'G': (232, 186, 74, 255), 'w': (226, 232, 242, 255)}
+SWORD = ['.k.', 'kok', 'kgk', 'kgk', 'kgk', 'kKk', 'kGGGGGk', 'kGGKGGk', '.kkWkk.',
+         '.kwWsk.', '.kwWsk.', '.kwWsk.', '.kwWsk.', '.kwWsk.', '.kwWsk.', '.kwWsk.', '.kwWsk.', '.kwWsk.', '.kwWsk.',
+         '.kwWsk.', '.kwWsk.', '.kwWsk.', '..kWk..', '..kwk..', '...k...']  # pedang besar: bilah 3 px, ±17 px
+SC = {'k': (36, 28, 40, 255), 'o': (232, 186, 74, 255), 'g': (122, 76, 40, 255), 'K': (170, 120, 40, 255), 'G': (232, 186, 74, 255),
+      'w': (236, 242, 250, 255), 'W': (196, 210, 228, 255), 's': (140, 156, 182, 255)}
 def sword_img():
     w = max(len(r) for r in SWORD); im = np.zeros((len(SWORD), w, 4), np.uint8)
     for y, r in enumerate(SWORD):
         off = (w - len(r)) // 2
         for x, ch in enumerate(r):
             if ch in SC: im[y, x + off] = SC[ch]
-    return im, (w // 2, 2)  # titik genggam
+    return im, (w // 2, 3)  # titik genggam
 
 # ── RotSprite: perbesar ×8 dengan Scale2x (EPX) 3 kali, putar tetangga-terdekat, perkecil lagi ──
 def scale2x(a):
@@ -62,7 +65,7 @@ def place(canvas, part, pivot, ang, dx, dy, flip=False):
     canvas[ty[ok], tx[ok]] = part[ys[ok], xs[ok]]
 
 def arm_with_sword(arm, hand):
-    s, g = sword_img(); big = np.zeros((FH + 20, FW + 10, 4), np.uint8); big[:FH, :FW] = arm
+    s, g = sword_img(); big = np.zeros((FH + 34, FW + 20, 4), np.uint8); big[:FH, :FW] = arm
     y0, x0 = hand[1] - g[1], hand[0] - g[0]
     for y in range(s.shape[0]):
         for x in range(s.shape[1]):
@@ -91,8 +94,9 @@ R = {'down': rig_front(0), 'up': rig_front(2), 'side': rig_side(4)}
 def draw(view, P, flip=False):
     if view == 'left': return draw('right', P)[:, ::-1].copy()  # hadap kiri = cermin utuh hadap kanan
     rg = R['side' if view == 'right' else view]; cv = np.zeros((CH, CW, 4), np.uint8)
+    AX, AY = P.get('all', (0, 0))  # geser seluruh tubuh (langkah, lompat)
     def put(k, ang=0, dx=0, dy=0):
-        if k in rg: img, pv = rg[k]; place(cv, img, pv, ang, dx, dy)
+        if k in rg: img, pv = rg[k]; place(cv, img, pv, ang, dx + AX, dy + AY)
     g = P.get
     if view == 'down':
         order = [('legL', 'legL'), ('legR', 'legR'), ('armF', 'armF'), ('torso', 'torso'), ('head', 'head'), ('armS', 'armS')]
@@ -123,22 +127,23 @@ def slash(view, t):
     if view == 'up': return {'armS': (a, lean, 0), 'head': (0, lean // 2, 0)}
     return {'armS': (a, lean, 0), 'legF': (-20, 2, 0), 'legB': (15, -1, 0), 'torso': (0, lean, 0), 'head': (0, lean, 0)}
 
-VIEWS = ['down', 'left', 'up', 'right']
-ANIMS = [('idle', idle, 4), ('run', run, 8), ('slash', slash, 6)]
-sheet = Image.new('RGBA', (CW * 8, CH * len(ANIMS) * len(VIEWS)))
-FR = {}
-r = 0
-for an, fn, n in ANIMS:
-    for v in VIEWS:
-        for i in range(n):
-            im = Image.fromarray(draw(v, fn(v if v in ('down', 'up') else 'side', i / n))); FR[(an, v, i)] = im; sheet.paste(im, (i * CW, r * CH))
-        r += 1
-sheet.save(os.path.join(OUT, 'arka_rig_sheet.png'))
-S = 3; W = CW * 4; H = CH * 3; gif = []
-for t in range(24):
-    bg = Image.new('RGBA', (W, H), (74, 112, 54, 255))
-    for ai, (an, fn, n) in enumerate(ANIMS):
-        for vi, v in enumerate(VIEWS): bg.alpha_composite(FR[(an, v, t % n)], (vi * CW, ai * CH))
-    gif.append(bg.resize((W * S, H * S), Image.NEAREST).convert('RGB'))
-gif[0].save(os.path.join(OUT, 'arka_rig_preview.gif'), save_all=True, append_images=gif[1:], duration=110, loop=0)
-print('ok', sheet.size)
+if __name__ == '__main__':
+  VIEWS = ['down', 'left', 'up', 'right']
+  ANIMS = [('idle', idle, 4), ('run', run, 8), ('slash', slash, 6)]
+  sheet = Image.new('RGBA', (CW * 8, CH * len(ANIMS) * len(VIEWS)))
+  FR = {}
+  r = 0
+  for an, fn, n in ANIMS:
+      for v in VIEWS:
+          for i in range(n):
+              im = Image.fromarray(draw(v, fn(v if v in ('down', 'up') else 'side', i / n))); FR[(an, v, i)] = im; sheet.paste(im, (i * CW, r * CH))
+          r += 1
+  sheet.save(os.path.join(OUT, 'arka_rig_sheet.png'))
+  S = 3; W = CW * 4; H = CH * 3; gif = []
+  for t in range(24):
+      bg = Image.new('RGBA', (W, H), (74, 112, 54, 255))
+      for ai, (an, fn, n) in enumerate(ANIMS):
+          for vi, v in enumerate(VIEWS): bg.alpha_composite(FR[(an, v, t % n)], (vi * CW, ai * CH))
+      gif.append(bg.resize((W * S, H * S), Image.NEAREST).convert('RGB'))
+  gif[0].save(os.path.join(OUT, 'arka_rig_preview.gif'), save_all=True, append_images=gif[1:], duration=110, loop=0)
+  print('ok', sheet.size)
