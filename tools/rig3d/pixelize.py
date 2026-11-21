@@ -11,10 +11,15 @@ OUTL = (29, 26, 36, 255)
 
 raw = {os.path.basename(p)[:-4]: Image.open(p).convert('RGBA') for p in glob.glob(os.path.join(D, 'raw', '*.png'))}
 # palet bersama 20 warna dari semua frame
-big = Image.new('RGB', (72 * 12, 72 * 12))
-for i, im in enumerate(list(raw.values())[:144]):
-    bg = Image.new('RGB', im.size, (0, 0, 0)); bg.paste(im, mask=im.split()[3]); big.paste(bg, ((i % 12) * 72, (i // 12) * 72))
-pal = big.quantize(colors=20, method=Image.Quantize.MEDIANCUT)
+F = next(iter(raw.values())).size[0]
+if len(sys.argv) > 2:  # palet dari gambar acuan (mis. lembar sprite Arka asli) → warna sama persis dengan aset 2D
+    src = Image.open(sys.argv[2]).convert('RGBA'); bg = Image.new('RGB', src.size, (0, 0, 0)); bg.paste(src, mask=src.split()[3])
+    pal = bg.quantize(colors=28, method=Image.Quantize.MEDIANCUT)
+else:
+    big = Image.new('RGB', (F * 12, F * 12))
+    for i, im in enumerate(list(raw.values())[:144]):
+        bg = Image.new('RGB', im.size, (0, 0, 0)); bg.paste(im, mask=im.split()[3]); big.paste(bg, ((i % 12) * F, (i // 12) * F))
+    pal = big.quantize(colors=20, method=Image.Quantize.MEDIANCUT)
 
 def pix(im):
     a = im.split()[3].point(lambda v: 255 if v > 110 else 0)
@@ -27,7 +32,6 @@ def pix(im):
             if any(0 <= x + dx < w and 0 <= y + dy < h and px[x + dx, y + dy][3] for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))): po[x, y] = OUTL
     return out
 
-F = 72
 rows = [(a, n, d) for a, n in ANIMS for d in DIRS]
 sheet = Image.new('RGBA', (F * 8, F * len(rows)))
 frames = {}
