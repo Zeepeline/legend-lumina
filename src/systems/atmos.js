@@ -36,31 +36,48 @@ function godrayTex(sc) {
   x.fill();
   sc.textures.addCanvas('godray_beam', c);
 }
-// Bayangan awan pixel art kumulus sejati (☁️ kubah bulat bertumpuk + dasar datar, chunky pixel-stepping)
+// Generator bayangan awan fraktal berlekuk & bergerigi (FBM Fractal Jagged Pixel Cloud ala referensi pemilik)
 function cloudShadowTex(sc) {
   if (sc.textures.exists('cloud_shadow')) return;
-  const W = 384, H = 256, [c, ctx] = mk(W, H);
-  const [cTmp, tCtx] = mk(W, H);
-  const puff = (cx, cy, rx, ry) => {
-    tCtx.beginPath();
-    tCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
-    tCtx.fill();
-  };
-  tCtx.fillStyle = '#ffffff';
-  // Awan Utama Ghibli Megah: dasar datar membentang + kubah-kubah tebal bertingkat
-  puff(190, 115, 105, 36); puff(110, 108, 36, 32); puff(145, 88, 46, 42);
-  puff(195, 70, 56, 52); puff(245, 85, 48, 44); puff(280, 105, 38, 32);
-  puff(165, 125, 42, 26); puff(225, 125, 42, 26);
-  // Anak awan kecil melayang
-  puff(65, 60, 32, 15); puff(60, 55, 20, 18); puff(74, 52, 22, 20);
-  puff(330, 200, 38, 16); puff(325, 195, 22, 20); puff(342, 192, 24, 22);
-  // Kuantisasi ke grid 2x2 retro pixel steps (staircase chunky pixel art ala Cobo)
-  const B = 2, imgData = tCtx.getImageData(0, 0, W, H).data;
+  const W = 512, H = 384, GRID = 4, [c, ctx] = mk(W, H);
   ctx.fillStyle = 'rgba(12, 28, 55, 0.55)';
-  for (let y = 0; y < H; y += B) {
-    for (let x = 0; x < W; x += B) {
-      const idx = ((y + 1) * W + (x + 1)) * 4;
-      if (imgData[idx + 3] > 120) ctx.fillRect(x, y, B, B);
+  const cols = Math.floor(W / GRID), rows = Math.floor(H / GRID);
+  const grid = new Uint8Array(cols * rows);
+  const hash2d = (x, y, s) => {
+    const n = Math.sin(x * 12.9898 + y * 78.233 + s * 43.123) * 43758.5453;
+    return (n - Math.floor(n)) * 2 - 1;
+  };
+  const vnoise = (x, y, s) => {
+    const X = Math.floor(x), Y = Math.floor(y), fx = x - X, fy = y - Y;
+    const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+    const n00 = hash2d(X, Y, s), n10 = hash2d(X + 1, Y, s);
+    const n01 = hash2d(X, Y + 1, s), n11 = hash2d(X + 1, Y + 1, s);
+    return (n00 * (1 - sx) + n10 * sx) * (1 - sy) + (n01 * (1 - sx) + n11 * sy) * sy;
+  };
+  const fbm = (cx, cy, s) => {
+    return vnoise(cx * 0.04, cy * 0.04, s) * 1.0 +
+           vnoise(cx * 0.09, cy * 0.09, s + 1) * 0.55 +
+           vnoise(cx * 0.20, cy * 0.20, s + 2) * 0.35 +
+           vnoise(cx * 0.40, cy * 0.40, s + 3) * 0.18;
+  };
+  const makeCloud = (cx, cy, rx, ry, s) => {
+    for (let r = 0; r < rows; r++) {
+      for (let c0 = 0; c0 < cols; c0++) {
+        let dc = Math.abs(c0 - cx); if (dc > cols / 2) dc = cols - dc;
+        let dr = Math.abs(r - cy); if (dr > rows / 2) dr = rows - dr;
+        const dist = Math.hypot(dc / rx, dr / ry);
+        const n = fbm(c0, r, s);
+        if (dist - n * 0.45 < 0.85) grid[r * cols + c0] = 1;
+      }
+    }
+  };
+  // Formasi awan organik berlekuk ke dalam dan bergerigi tajam
+  makeCloud(45, 42, 30, 24, 1337);
+  makeCloud(105, 75, 26, 20, 555);
+  makeCloud(95, 22, 16, 12, 999);
+  for (let r = 0; r < rows; r++) {
+    for (let c0 = 0; c0 < cols; c0++) {
+      if (grid[r * cols + c0]) ctx.fillRect(c0 * GRID, r * GRID, GRID, GRID);
     }
   }
   sc.textures.addCanvas('cloud_shadow', c);

@@ -599,9 +599,9 @@ _T442, T445 & Elevated Border Cliffs:_
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
 `FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 28 · `foamTex()` 35 · `isShorelineAt()` 42 · `.updFlow()` 53 · `_updFlow0` 147
 
-## src/systems/atmos.js (299 baris)
+## src/systems/atmos.js (316 baris)
 _Suasana cahaya & kabut (wilayah aktif saja):_
-`ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `godrayTex()` 25 · `cloudShadowTex()` 40 · `.updAmbientMotes()` 69 · `.updCritters()` 118 · `.updWindGust()` 159 · `.updGodRays()` 187 · `.updBanners()` 214 · `.updAtmos()` 227
+`ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `godrayTex()` 25 · `cloudShadowTex()` 40 · `.updAmbientMotes()` 86 · `.updCritters()` 135 · `.updWindGust()` 176 · `.updGodRays()` 204 · `.updBanners()` 231 · `.updAtmos()` 244
 
 ## src/systems/sunbeams.js (38 baris)
 _T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_
