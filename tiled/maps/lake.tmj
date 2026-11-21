@@ -43,7 +43,7 @@
           "width": 120,
           "height": 70,
           "visible": true,
-          "gid": 126
+          "gid": 132
         },
         {
           "id": 2,
@@ -65,7 +65,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 4,
@@ -76,7 +76,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 5,
@@ -120,7 +120,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 9,
@@ -131,7 +131,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 10,
@@ -142,7 +142,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 11,
@@ -153,7 +153,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 12,
@@ -164,7 +164,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 13,
@@ -175,7 +175,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 14,
@@ -230,7 +230,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 19,
@@ -307,7 +307,7 @@
           "width": 17,
           "height": 26,
           "visible": true,
-          "gid": 129
+          "gid": 135
         },
         {
           "id": 26,
@@ -318,7 +318,7 @@
           "width": 15,
           "height": 26,
           "visible": true,
-          "gid": 127
+          "gid": 133
         },
         {
           "id": 27,
@@ -329,7 +329,7 @@
           "width": 110,
           "height": 90,
           "visible": true,
-          "gid": 154
+          "gid": 160
         },
         {
           "id": 28,
@@ -340,7 +340,7 @@
           "width": 110,
           "height": 75,
           "visible": true,
-          "gid": 156
+          "gid": 162
         },
         {
           "id": 29,
@@ -351,7 +351,7 @@
           "width": 48,
           "height": 36,
           "visible": true,
-          "gid": 158
+          "gid": 164
         },
         {
           "id": 30,
@@ -362,7 +362,7 @@
           "width": 52,
           "height": 35,
           "visible": true,
-          "gid": 152
+          "gid": 158
         },
         {
           "id": 31,
@@ -373,7 +373,7 @@
           "width": 32,
           "height": 32,
           "visible": true,
-          "gid": 162
+          "gid": 168
         },
         {
           "id": 32,

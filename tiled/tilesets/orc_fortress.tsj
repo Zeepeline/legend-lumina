@@ -1,0 +1,61 @@
+{
+  "columns": 0,
+  "grid": {
+    "height": 1,
+    "orientation": "orthogonal",
+    "width": 1
+  },
+  "margin": 0,
+  "name": "orc_fortress",
+  "spacing": 0,
+  "tilecount": 6,
+  "tiledversion": "1.10.0",
+  "tileheight": 240,
+  "tilewidth": 338,
+  "type": "tileset",
+  "version": "1.10",
+  "tiles": [
+    {
+      "id": 0,
+      "image": "orc_fortress/gpt_orc_gate.png",
+      "imagewidth": 338,
+      "imageheight": 240,
+      "type": "orc_gate"
+    },
+    {
+      "id": 1,
+      "image": "orc_fortress/gpt_palisade_post_banner.png",
+      "imagewidth": 159,
+      "imageheight": 199,
+      "type": "palisade_post_banner"
+    },
+    {
+      "id": 2,
+      "image": "orc_fortress/gpt_palisade_barricade.png",
+      "imagewidth": 76,
+      "imageheight": 111,
+      "type": "palisade_barricade"
+    },
+    {
+      "id": 3,
+      "image": "orc_fortress/gpt_palisade_pillar.png",
+      "imagewidth": 54,
+      "imageheight": 186,
+      "type": "palisade_pillar"
+    },
+    {
+      "id": 4,
+      "image": "orc_fortress/gpt_palisade_wall_long.png",
+      "imagewidth": 153,
+      "imageheight": 143,
+      "type": "palisade_wall_long"
+    },
+    {
+      "id": 5,
+      "image": "orc_fortress/gpt_palisade_wall_corner.png",
+      "imagewidth": 149,
+      "imageheight": 142,
+      "type": "palisade_wall_corner"
+    }
+  ]
+}

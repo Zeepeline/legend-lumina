@@ -1,2846 +1,1134 @@
-{ "compressionlevel":-1,
- "height":44,
- "infinite":false,
- "layers":[
+{
+  "compressionlevel": -1,
+  "width": 64,
+  "height": 44,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.10.0",
+  "type": "map",
+  "version": "1.10",
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "../tilesets/objects.tsj"
+    }
+  ],
+  "layers": [
+    {
+      "id": 1,
+      "name": "Ground",
+      "type": "imagelayer",
+      "visible": true,
+      "opacity": 1,
+      "x": 0,
+      "y": 0,
+      "image": "../ground/village_ground.png"
+    },
+    {
+      "id": 2,
+      "name": "Objects (Pohon, Rumah, Dekorasi)",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
         {
-         "id":1,
-         "image":"..\/ground\/village_ground.png",
-         "imageheight":712,
-         "imagewidth":1024,
-         "name":"Ground",
-         "opacity":1,
-         "type":"imagelayer",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
+          "id": 1,
+          "name": "houseA",
+          "type": "houseA",
+          "x": 305.0,
+          "y": 213.0,
+          "width": 100,
+          "height": 132,
+          "visible": true,
+          "gid": 88
+        },
         {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Objects (Pohon, Rumah, Dekorasi)",
-         "objects":[
-                {
-                 "gid":84,
-                 "height":132,
-                 "id":2,
-                 "name":"houseA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"houseA",
-                 "visible":true,
-                 "width":100,
-                 "x":305,
-                 "y":213
-                }, 
-                {
-                 "gid":87,
-                 "height":132,
-                 "id":3,
-                 "name":"houseC",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"houseC",
-                 "visible":true,
-                 "width":100,
-                 "x":591.63931976577,
-                 "y":202.902997202534
-                }, 
-                {
-                 "gid":85,
-                 "height":132,
-                 "id":4,
-                 "name":"houseB",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"houseB",
-                 "visible":true,
-                 "width":100,
-                 "x":200.255239988088,
-                 "y":424.362192640314
-                }, 
-                {
-                 "gid":85,
-                 "height":132,
-                 "id":5,
-                 "name":"houseB",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"houseB",
-                 "visible":true,
-                 "width":100,
-                 "x":329.848865771164,
-                 "y":614.253337325777
-                }, 
-                {
-                 "gid":85,
-                 "height":132,
-                 "id":6,
-                 "name":"houseB",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"houseB",
-                 "visible":true,
-                 "width":100,
-                 "x":897.019624945486,
-                 "y":141.695595290013
-                }, 
-                {
-                 "gid":86,
-                 "height":120,
-                 "id":7,
-                 "name":"houseBrown",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"houseBrown",
-                 "visible":true,
-                 "width":117,
-                 "x":121.5,
-                 "y":215
-                }, 
-                {
-                 "gid":89,
-                 "height":120,
-                 "id":8,
-                 "name":"houseRed",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"houseRed",
-                 "visible":true,
-                 "width":131,
-                 "x":603.032417665699,
-                 "y":542.366922752963
-                }, 
-                {
-                 "gid":151,
-                 "height":75,
-                 "id":9,
-                 "name":"well",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"well",
-                 "visible":true,
-                 "width":85,
-                 "x":463.395898608949,
-                 "y":374.815155764863
-                }, 
-                {
-                 "gid":40,
-                 "height":30.354496448446,
-                 "id":12,
-                 "name":"crateCart",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"crateCart",
-                 "visible":true,
-                 "width":31.8743694631291,
-                 "x":426.415506829227,
-                 "y":220.451609936763
-                }, 
-                {
-                 "gid":13,
-                 "height":23,
-                 "id":13,
-                 "name":"benchWood",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"benchWood",
-                 "visible":true,
-                 "width":32,
-                 "x":426.6913696551,
-                 "y":202.232427906003
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":15,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":80,
-                 "y":110
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":16,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":110,
-                 "y":130
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":17,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":70,
-                 "y":170
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":18,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":340,
-                 "y":80
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":19,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":390,
-                 "y":75
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":20,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":425,
-                 "y":95
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":21,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":680,
-                 "y":85
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":22,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":725,
-                 "y":90
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":23,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":770,
-                 "y":115
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":24,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":755,
-                 "y":170
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":25,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":810,
-                 "y":175
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":26,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":25,
-                 "y":330
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":27,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":15,
-                 "y":395
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":28,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":20,
-                 "y":475
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":29,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":413.596820628364,
-                 "y":646.341219176368
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":30,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":811.053304919723,
-                 "y":348.159785703609
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":31,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":676.183926675033,
-                 "y":698.818003005571
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":32,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":169.372197309417,
-                 "y":615
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":33,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":132.708807849381,
-                 "y":631.586316949194
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":34,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":90.7104588472642,
-                 "y":625.914685636372
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":35,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":245,
-                 "y":205
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":36,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":100,
-                 "y":275
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":37,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":819.458407735588,
-                 "y":315.868232202419
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":38,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":842.07806707396,
-                 "y":335.586099608146
-                }, 
-                {
-                 "gid":108,
-                 "height":41,
-                 "id":39,
-                 "name":"reeds",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"reeds",
-                 "visible":true,
-                 "width":39,
-                 "x":195.5,
-                 "y":600
-                }, 
-                {
-                 "gid":108,
-                 "height":41,
-                 "id":40,
-                 "name":"reeds",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"reeds",
-                 "visible":true,
-                 "width":39,
-                 "x":185.5,
-                 "y":595
-                }, 
-                {
-                 "gid":108,
-                 "height":41,
-                 "id":41,
-                 "name":"reeds",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"reeds",
-                 "visible":true,
-                 "width":39,
-                 "x":67.5462633451957,
-                 "y":679.501779359431
-                }, 
-                {
-                 "gid":108,
-                 "height":41,
-                 "id":43,
-                 "name":"reeds",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"reeds",
-                 "visible":true,
-                 "width":39,
-                 "x":804.535272915146,
-                 "y":306.381711011196
-                }, 
-                {
-                 "gid":97,
-                 "height":78,
-                 "id":45,
-                 "name":"market",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"market",
-                 "visible":true,
-                 "width":100,
-                 "x":696,
-                 "y":222
-                }, 
-                {
-                 "gid":8,
-                 "height":19,
-                 "id":46,
-                 "name":"barrel",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"barrel",
-                 "visible":true,
-                 "width":17,
-                 "x":807.5,
-                 "y":215
-                }, 
-                {
-                 "gid":48,
-                 "height":28,
-                 "id":49,
-                 "name":"dummy",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"dummy",
-                 "visible":true,
-                 "width":20,
-                 "x":140,
-                 "y":445
-                }, 
-                {
-                 "gid":116,
-                 "height":26,
-                 "id":50,
-                 "name":"sign",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"sign",
-                 "visible":true,
-                 "width":15,
-                 "x":206.5,
-                 "y":440
-                }, 
-                {
-                 "gid":92,
-                 "height":42,
-                 "id":51,
-                 "name":"lampPost",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"lampPost",
-                 "visible":true,
-                 "width":21,
-                 "x":429.5,
-                 "y":305
-                }, 
-                {
-                 "gid":92,
-                 "height":42,
-                 "id":52,
-                 "name":"lampPost",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"lampPost",
-                 "visible":true,
-                 "width":21,
-                 "x":479.456112852665,
-                 "y":465.039597426167
-                }, 
-                {
-                 "gid":91,
-                 "height":32,
-                 "id":53,
-                 "name":"lamp",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"lamp",
-                 "visible":true,
-                 "width":16,
-                 "x":372,
-                 "y":410
-                }, 
-                {
-                 "gid":91,
-                 "height":32,
-                 "id":54,
-                 "name":"lamp",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"lamp",
-                 "visible":true,
-                 "width":16,
-                 "x":636,
-                 "y":400
-                }, 
-                {
-                 "gid":83,
-                 "height":22,
-                 "id":61,
-                 "name":"hay",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"hay",
-                 "visible":true,
-                 "width":25,
-                 "x":72.395527397835,
-                 "y":496.782747335739
-                }, 
-                {
-                 "gid":83,
-                 "height":22,
-                 "id":62,
-                 "name":"hay",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"hay",
-                 "visible":true,
-                 "width":25,
-                 "x":657.5,
-                 "y":280
-                }, 
-                {
-                 "gid":83,
-                 "height":22,
-                 "id":63,
-                 "name":"hay",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"hay",
-                 "visible":true,
-                 "width":25,
-                 "x":723.95935110003,
-                 "y":401.343452040026
-                }, 
-                {
-                 "gid":8,
-                 "height":19,
-                 "id":64,
-                 "name":"barrel",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"barrel",
-                 "visible":true,
-                 "width":17,
-                 "x":936.5,
-                 "y":275
-                }, 
-                {
-                 "gid":107,
-                 "height":29,
-                 "id":65,
-                 "name":"pot",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"pot",
-                 "visible":true,
-                 "width":25,
-                 "x":383.5,
-                 "y":220
-                }, 
-                {
-                 "gid":107,
-                 "height":29,
-                 "id":66,
-                 "name":"pot",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"pot",
-                 "visible":true,
-                 "width":25,
-                 "x":577.5,
-                 "y":220
-                }, 
-                {
-                 "gid":96,
-                 "height":26,
-                 "id":68,
-                 "name":"mailbox",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"mailbox",
-                 "visible":true,
-                 "width":15,
-                 "x":312.5,
-                 "y":220
-                }, 
-                {
-                 "gid":83,
-                 "height":22,
-                 "id":69,
-                 "name":"hay",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"hay",
-                 "visible":true,
-                 "width":25,
-                 "x":117.5,
-                 "y":225
-                }, 
-                {
-                 "gid":8,
-                 "height":19,
-                 "id":70,
-                 "name":"barrel",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"barrel",
-                 "visible":true,
-                 "width":17,
-                 "x":145.5,
-                 "y":220
-                }, 
-                {
-                 "gid":107,
-                 "height":29,
-                 "id":71,
-                 "name":"pot",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"pot",
-                 "visible":true,
-                 "width":25,
-                 "x":277.5,
-                 "y":396
-                }, 
-                {
-                 "gid":8,
-                 "height":19,
-                 "id":74,
-                 "name":"barrel",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"barrel",
-                 "visible":true,
-                 "width":17,
-                 "x":604.127732445488,
-                 "y":559.649046202549
-                }, 
-                {
-                 "gid":39,
-                 "height":17,
-                 "id":75,
-                 "name":"crate",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"crate",
-                 "visible":true,
-                 "width":17,
-                 "x":686.5,
-                 "y":420
-                }, 
-                {
-                 "gid":8,
-                 "height":19,
-                 "id":76,
-                 "name":"barrel",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"barrel",
-                 "visible":true,
-                 "width":17,
-                 "x":781.5,
-                 "y":420
-                }, 
-                {
-                 "gid":107,
-                 "height":29,
-                 "id":77,
-                 "name":"pot",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"pot",
-                 "visible":true,
-                 "width":25,
-                 "x":532.5,
-                 "y":565
-                }, 
-                {
-                 "gid":106,
-                 "height":31,
-                 "id":78,
-                 "name":"planter",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"planter",
-                 "visible":true,
-                 "width":37,
-                 "x":553.5,
-                 "y":565
-                }, 
-                {
-                 "gid":116,
-                 "height":26,
-                 "id":81,
-                 "name":"sign",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"sign",
-                 "visible":true,
-                 "width":15,
-                 "x":64.5,
-                 "y":600
-                }, 
-                {
-                 "gid":116,
-                 "height":26,
-                 "id":82,
-                 "name":"sign",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"sign",
-                 "visible":true,
-                 "width":15,
-                 "x":540.5,
-                 "y":652
-                }, 
-                {
-                 "gid":116,
-                 "height":26,
-                 "id":83,
-                 "name":"sign",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"sign",
-                 "visible":true,
-                 "width":15,
-                 "x":952.5,
-                 "y":280
-                },
-            
-                {
-                 "gid":116,
-                 "height":26,
-                 "id":84,
-                 "name":"sign",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"sign",
-                 "visible":true,
-                 "width":15,
-                 "x":662.5,
-                 "y":230
-                }, 
-                {
-                 "gid":116,
-                 "height":26,
-                 "id":85,
-                 "name":"sign",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"sign",
-                 "visible":true,
-                 "width":15,
-                 "x":762.5,
-                 "y":240
-                }, 
-                {
-                 "gid":50,
-                 "height":15,
-                 "id":86,
-                 "name":"fence",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"fence",
-                 "visible":true,
-                 "width":21,
-                 "x":95.5,
-                 "y":365
-                }, 
-                {
-                 "gid":50,
-                 "height":15,
-                 "id":87,
-                 "name":"fence",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"fence",
-                 "visible":true,
-                 "width":21,
-                 "x":111.5,
-                 "y":365
-                }, 
-                {
-                 "gid":50,
-                 "height":15,
-                 "id":88,
-                 "name":"fence",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"fence",
-                 "visible":true,
-                 "width":21,
-                 "x":127.5,
-                 "y":365
-                }, 
-                {
-                 "gid":50,
-                 "height":15,
-                 "id":89,
-                 "name":"fence",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"fence",
-                 "visible":true,
-                 "width":21,
-                 "x":143.5,
-                 "y":365
-                }, 
-                {
-                 "gid":50,
-                 "height":15,
-                 "id":90,
-                 "name":"fence",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"fence",
-                 "visible":true,
-                 "width":21,
-                 "x":159.5,
-                 "y":365
-                }, 
-                {
-                 "gid":50,
-                 "height":15,
-                 "id":91,
-                 "name":"fence",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"fence",
-                 "visible":true,
-                 "width":21,
-                 "x":95.5,
-                 "y":420
-                }, 
-                {
-                 "gid":50,
-                 "height":15,
-                 "id":92,
-                 "name":"fence",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"fence",
-                 "visible":true,
-                 "width":21,
-                 "x":111.5,
-                 "y":420
-                }, 
-                {
-                 "gid":50,
-                 "height":15,
-                 "id":93,
-                 "name":"fence",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"fence",
-                 "visible":true,
-                 "width":21,
-                 "x":127.5,
-                 "y":420
-                }, 
-                {
-                 "gid":50,
-                 "height":15,
-                 "id":94,
-                 "name":"fence",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"fence",
-                 "visible":true,
-                 "width":21,
-                 "x":143.5,
-                 "y":420
-                }, 
-                {
-                 "gid":50,
-                 "height":15,
-                 "id":95,
-                 "name":"fence",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"fence",
-                 "visible":true,
-                 "width":21,
-                 "x":159.5,
-                 "y":420
-                }, 
-                {
-                 "gid":50,
-                 "height":15,
-                 "id":96,
-                 "name":"fence",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"fence",
-                 "visible":true,
-                 "width":21,
-                 "x":175.5,
-                 "y":420
-                }, 
-                {
-                 "gid":155,
-                 "height":125,
-                 "id":2,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":135,
-                 "x":874.766181699272,
-                 "y":422.770763792921
-                }, 
-                {
-                 "gid":124,
-                 "height":78,
-                 "id":4,
-                 "name":"treeA",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"treeA",
-                 "visible":true,
-                 "width":80,
-                 "x":431.273000375516,
-                 "y":645.065590186506
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":59,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":719.943346119799,
-                 "y":526.737090587194
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":60,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":732.631454706403,
-                 "y":527.327235172617
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":61,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":735.287105340808,
-                 "y":512.27854824432
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":62,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":723.189141339628,
-                 "y":512.27854824432
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":63,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":722.894069046916,
-                 "y":498.705222779581
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":64,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":735.58217763352,
-                 "y":498.410150486869
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":65,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":717.582767778106,
-                 "y":479.820596046031
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":66,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":718.467984656241,
-                 "y":483.656535851284
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":71,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":732.04131012098,
-                 "y":483.656535851284
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":72,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":744.13927412216,
-                 "y":483.656535851284
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":73,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":751.221009147241,
-                 "y":498.410150486869
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":74,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":751.221009147241,
-                 "y":512.868692829743
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":75,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":747.975213927412,
-                 "y":528.507524343464
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":76,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":758.00767187961,
-                 "y":528.507524343464
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":77,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":768.33520212452,
-                 "y":528.212452050752
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":78,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":762.138683977574,
-                 "y":511.688403658896
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":80,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":768.33520212452,
-                 "y":511.688403658896
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":81,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":768.040129831809,
-                 "y":496.344644437887
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":82,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":768.040129831809,
-                 "y":480.705812924166
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":83,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":757.712599586899,
-                 "y":480.705812924166
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":84,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":756.827382708764,
-                 "y":492.803776925347
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":85,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":743.254057244025,
-                 "y":479.820596046031
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":86,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":731.451165535556,
-                 "y":479.820596046031
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":87,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":722.894069046916,
-                 "y":527.622307465329
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":88,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":735.877249926232,
-                 "y":527.917379758041
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":89,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":751.221009147241,
-                 "y":528.507524343464
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":90,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":705.116989364603,
-                 "y":463.958549222798
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":91,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":720.66103081538,
-                 "y":464.231251704391
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":92,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":735.932369784565,
-                 "y":463.685846741205
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":94,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":751.749113716935,
-                 "y":464.231251704391
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":95,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":767.565857649305,
-                 "y":464.503954185983
-                }, 
-                {
-                 "gid":177,
-                 "height":16,
-                 "id":96,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":754.748841014453,
-                 "y":474.866648486501
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
+          "id": 2,
+          "name": "houseC",
+          "type": "houseC",
+          "x": 592.0,
+          "y": 203.0,
+          "width": 100,
+          "height": 132,
+          "visible": true,
+          "gid": 91
+        },
         {
-         "draworder":"topdown",
-         "id":3,
-         "name":"NPCs",
-         "objects":[
-                {
-                 "height":32,
-                 "id":97,
-                 "name":"Tetua Bram",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"string",
-                         "value":"elder"
-                        }],
-                 "rotation":0,
-                 "type":"NPC",
-                 "visible":true,
-                 "width":32,
-                 "x":470,
-                 "y":63
-                }, 
-                {
-                 "height":32,
-                 "id":98,
-                 "name":"Lina",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"string",
-                         "value":"girl"
-                        }],
-                 "rotation":0,
-                 "type":"NPC",
-                 "visible":true,
-                 "width":32,
-                 "x":364,
-                 "y":203
-                }, 
-                {
-                 "height":32,
-                 "id":99,
-                 "name":"Pak Darto",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"string",
-                         "value":"farmer"
-                        }],
-                 "rotation":0,
-                 "type":"NPC",
-                 "visible":true,
-                 "width":32,
-                 "x":314,
-                 "y":203
-                }, 
-                {
-                 "height":32,
-                 "id":100,
-                 "name":"Bu Sari",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"string",
-                         "value":"merchant"
-                        }],
-                 "rotation":0,
-                 "type":"NPC",
-                 "visible":true,
-                 "width":32,
-                 "x":714,
-                 "y":213
-                }, 
-                {
-                 "height":32,
-                 "id":101,
-                 "name":"Dodi",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"string",
-                         "value":"child"
-                        }],
-                 "rotation":0,
-                 "type":"NPC",
-                 "visible":true,
-                 "width":32,
-                 "x":524,
-                 "y":378
-                }, 
-                {
-                 "height":32,
-                 "id":102,
-                 "name":"Penjaga",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"string",
-                         "value":"guard"
-                        }],
-                 "rotation":0,
-                 "type":"NPC",
-                 "visible":true,
-                 "width":32,
-                 "x":451.49655776693,
-                 "y":666.313681311804
-                }, 
-                {
-                 "height":32,
-                 "id":103,
-                 "name":"Bu Lastri",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"string",
-                         "value":"woman"
-                        }],
-                 "rotation":0,
-                 "type":"NPC",
-                 "visible":true,
-                 "width":32,
-                 "x":244,
-                 "y":383
-                }, 
-                {
-                 "height":32,
-                 "id":104,
-                 "name":"Pak Besi",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"string",
-                         "value":"smith"
-                        }],
-                 "rotation":0,
-                 "type":"NPC",
-                 "visible":true,
-                 "width":32,
-                 "x":704,
-                 "y":403.551663264743
-                }, 
-                {
-                 "height":32,
-                 "id":105,
-                 "name":"Kiki Penggembala",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"string",
-                         "value":"chick_master"
-                        }],
-                 "rotation":0,
-                 "type":"NPC",
-                 "visible":true,
-                 "width":32,
-                 "x":804,
-                 "y":298
-                }, 
-                {
-                 "height":32,
-                 "id":106,
-                 "name":"Ayam Desa",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"string",
-                         "value":"ayam"
-                        }],
-                 "rotation":0,
-                 "type":"NPC",
-                 "visible":true,
-                 "width":32,
-                 "x":134,
-                 "y":428
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
+          "id": 3,
+          "name": "houseB",
+          "type": "houseB",
+          "x": 200.0,
+          "y": 424.0,
+          "width": 100,
+          "height": 132,
+          "visible": true,
+          "gid": 89
+        },
         {
-         "draworder":"topdown",
-         "id":4,
-         "name":"Pintu Keluar (Exits)",
-         "objects":[
-                {
-                 "height":60,
-                 "id":107,
-                 "name":"Ke lake",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"to",
-                         "type":"string",
-                         "value":"lake"
-                        }],
-                 "rotation":0,
-                 "type":"Exit",
-                 "visible":true,
-                 "width":12,
-                 "x":0,
-                 "y":560
-                }, 
-                {
-                 "height":30,
-                 "id":108,
-                 "name":"Ke forest",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"to",
-                         "type":"string",
-                         "value":"forest"
-                        }],
-                 "rotation":0,
-                 "type":"Exit",
-                 "visible":true,
-                 "width":76,
-                 "x":474,
-                 "y":700
-                }, 
-                {
-                 "height":58,
-                 "id":109,
-                 "name":"Ke meadow",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"to",
-                         "type":"string",
-                         "value":"meadow"
-                        }],
-                 "rotation":0,
-                 "type":"Exit",
-                 "visible":true,
-                 "width":30,
-                 "x":1010,
-                 "y":221
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":false,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":3,
- "nextobjectid":97,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.12.2",
- "tileheight":16,
- "tilesets":[
+          "id": 4,
+          "name": "houseB",
+          "type": "houseB",
+          "x": 330.0,
+          "y": 614.0,
+          "width": 100,
+          "height": 132,
+          "visible": true,
+          "gid": 89
+        },
         {
-         "columns":0,
-         "firstgid":1,
-         "grid":
+          "id": 5,
+          "name": "houseB",
+          "type": "houseB",
+          "x": 897.0,
+          "y": 142.0,
+          "width": 100,
+          "height": 132,
+          "visible": true,
+          "gid": 89
+        },
+        {
+          "id": 6,
+          "name": "houseBrown",
+          "type": "houseBrown",
+          "x": 121.5,
+          "y": 215.0,
+          "width": 117,
+          "height": 120,
+          "visible": true,
+          "gid": 90
+        },
+        {
+          "id": 7,
+          "name": "houseRed",
+          "type": "houseRed",
+          "x": 603.5,
+          "y": 542.0,
+          "width": 131,
+          "height": 120,
+          "visible": true,
+          "gid": 93
+        },
+        {
+          "id": 8,
+          "name": "well",
+          "type": "well",
+          "x": 463.5,
+          "y": 375.0,
+          "width": 85,
+          "height": 75,
+          "visible": true,
+          "gid": 173
+        },
+        {
+          "id": 9,
+          "name": "crateCart",
+          "type": "crateCart",
+          "x": 420.5,
+          "y": 220.0,
+          "width": 43,
+          "height": 40,
+          "visible": true,
+          "gid": 43
+        },
+        {
+          "id": 10,
+          "name": "benchWood",
+          "type": "benchWood",
+          "x": 427.0,
+          "y": 202.0,
+          "width": 32,
+          "height": 23,
+          "visible": true,
+          "gid": 14
+        },
+        {
+          "id": 11,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 80.0,
+          "y": 110.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 12,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 110.0,
+          "y": 130.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 13,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 70.0,
+          "y": 170.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 14,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 340.0,
+          "y": 80.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 15,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 390.0,
+          "y": 75.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 16,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 425.0,
+          "y": 95.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 17,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 680.0,
+          "y": 85.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 18,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 725.0,
+          "y": 90.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 19,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 770.0,
+          "y": 115.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 20,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 755.0,
+          "y": 170.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 21,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 810.0,
+          "y": 175.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 22,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 25.0,
+          "y": 330.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 23,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 15.0,
+          "y": 395.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 24,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 20.0,
+          "y": 475.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 25,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 392.0,
+          "y": 661.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 26,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 795.0,
+          "y": 480.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 27,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 676.0,
+          "y": 699.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 28,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 169.0,
+          "y": 615.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 29,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 133.0,
+          "y": 632.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 30,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 91.0,
+          "y": 626.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 31,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 245.0,
+          "y": 205.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 32,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 100.0,
+          "y": 275.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 33,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 745.0,
+          "y": 480.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 34,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 800.0,
+          "y": 520.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        },
+        {
+          "id": 35,
+          "name": "reeds",
+          "type": "reeds",
+          "x": 195.5,
+          "y": 600.0,
+          "width": 39,
+          "height": 41,
+          "visible": true,
+          "gid": 124
+        },
+        {
+          "id": 36,
+          "name": "reeds",
+          "type": "reeds",
+          "x": 185.5,
+          "y": 595.0,
+          "width": 39,
+          "height": 41,
+          "visible": true,
+          "gid": 124
+        },
+        {
+          "id": 37,
+          "name": "reeds",
+          "type": "reeds",
+          "x": 67.5,
+          "y": 680.0,
+          "width": 39,
+          "height": 41,
+          "visible": true,
+          "gid": 124
+        },
+        {
+          "id": 38,
+          "name": "reeds",
+          "type": "reeds",
+          "x": 804.5,
+          "y": 306.0,
+          "width": 39,
+          "height": 41,
+          "visible": true,
+          "gid": 124
+        },
+        {
+          "id": 39,
+          "name": "market",
+          "type": "market",
+          "x": 696.0,
+          "y": 222.0,
+          "width": 100,
+          "height": 78,
+          "visible": true,
+          "gid": 105
+        },
+        {
+          "id": 40,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 807.5,
+          "y": 215.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 41,
+          "name": "dummy",
+          "type": "dummy",
+          "x": 140.0,
+          "y": 445.0,
+          "width": 20,
+          "height": 28,
+          "visible": true,
+          "gid": 51
+        },
+        {
+          "id": 42,
+          "name": "sign",
+          "type": "sign",
+          "x": 206.5,
+          "y": 440.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 133
+        },
+        {
+          "id": 43,
+          "name": "lampPost",
+          "type": "lampPost",
+          "x": 429.5,
+          "y": 305.0,
+          "width": 21,
+          "height": 42,
+          "visible": true,
+          "gid": 100
+        },
+        {
+          "id": 44,
+          "name": "lampPost",
+          "type": "lampPost",
+          "x": 479.5,
+          "y": 465.0,
+          "width": 21,
+          "height": 42,
+          "visible": true,
+          "gid": 100
+        },
+        {
+          "id": 45,
+          "name": "lamp",
+          "type": "lamp",
+          "x": 372.0,
+          "y": 410.0,
+          "width": 16,
+          "height": 32,
+          "visible": true,
+          "gid": 99
+        },
+        {
+          "id": 46,
+          "name": "lamp",
+          "type": "lamp",
+          "x": 636.0,
+          "y": 400.0,
+          "width": 16,
+          "height": 32,
+          "visible": true,
+          "gid": 99
+        },
+        {
+          "id": 47,
+          "name": "hay",
+          "type": "hay",
+          "x": 72.5,
+          "y": 497.0,
+          "width": 25,
+          "height": 22,
+          "visible": true,
+          "gid": 87
+        },
+        {
+          "id": 48,
+          "name": "hay",
+          "type": "hay",
+          "x": 657.5,
+          "y": 280.0,
+          "width": 25,
+          "height": 22,
+          "visible": true,
+          "gid": 87
+        },
+        {
+          "id": 49,
+          "name": "hay",
+          "type": "hay",
+          "x": 723.5,
+          "y": 401.0,
+          "width": 25,
+          "height": 22,
+          "visible": true,
+          "gid": 87
+        },
+        {
+          "id": 50,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 936.5,
+          "y": 275.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 51,
+          "name": "pot",
+          "type": "pot",
+          "x": 383.5,
+          "y": 220.0,
+          "width": 25,
+          "height": 29,
+          "visible": true,
+          "gid": 123
+        },
+        {
+          "id": 52,
+          "name": "pot",
+          "type": "pot",
+          "x": 577.5,
+          "y": 200.0,
+          "width": 25,
+          "height": 29,
+          "visible": true,
+          "gid": 123
+        },
+        {
+          "id": 53,
+          "name": "mailbox",
+          "type": "mailbox",
+          "x": 312.5,
+          "y": 220.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 104
+        },
+        {
+          "id": 54,
+          "name": "hay",
+          "type": "hay",
+          "x": 117.5,
+          "y": 225.0,
+          "width": 25,
+          "height": 22,
+          "visible": true,
+          "gid": 87
+        },
+        {
+          "id": 55,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 145.5,
+          "y": 220.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 56,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 604.5,
+          "y": 560.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 57,
+          "name": "crate",
+          "type": "crate",
+          "x": 686.5,
+          "y": 420.0,
+          "width": 17,
+          "height": 17,
+          "visible": true,
+          "gid": 42
+        },
+        {
+          "id": 58,
+          "name": "barrel",
+          "type": "barrel",
+          "x": 781.5,
+          "y": 420.0,
+          "width": 17,
+          "height": 19,
+          "visible": true,
+          "gid": 9
+        },
+        {
+          "id": 59,
+          "name": "pot",
+          "type": "pot",
+          "x": 532.5,
+          "y": 565.0,
+          "width": 25,
+          "height": 29,
+          "visible": true,
+          "gid": 123
+        },
+        {
+          "id": 60,
+          "name": "planter",
+          "type": "planter",
+          "x": 553.5,
+          "y": 565.0,
+          "width": 37,
+          "height": 31,
+          "visible": true,
+          "gid": 122
+        },
+        {
+          "id": 61,
+          "name": "sign",
+          "type": "sign",
+          "x": 64.5,
+          "y": 600.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 133
+        },
+        {
+          "id": 62,
+          "name": "sign",
+          "type": "sign",
+          "x": 540.5,
+          "y": 652.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 133
+        },
+        {
+          "id": 63,
+          "name": "sign",
+          "type": "sign",
+          "x": 952.5,
+          "y": 280.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 133
+        },
+        {
+          "id": 64,
+          "name": "sign",
+          "type": "sign",
+          "x": 662.5,
+          "y": 230.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 133
+        },
+        {
+          "id": 65,
+          "name": "sign",
+          "type": "sign",
+          "x": 762.5,
+          "y": 240.0,
+          "width": 15,
+          "height": 26,
+          "visible": true,
+          "gid": 133
+        },
+        {
+          "id": 66,
+          "name": "fence",
+          "type": "fence",
+          "x": 95.5,
+          "y": 365.0,
+          "width": 21,
+          "height": 15,
+          "visible": true,
+          "gid": 53
+        },
+        {
+          "id": 67,
+          "name": "fence",
+          "type": "fence",
+          "x": 111.5,
+          "y": 365.0,
+          "width": 21,
+          "height": 15,
+          "visible": true,
+          "gid": 53
+        },
+        {
+          "id": 68,
+          "name": "fence",
+          "type": "fence",
+          "x": 127.5,
+          "y": 365.0,
+          "width": 21,
+          "height": 15,
+          "visible": true,
+          "gid": 53
+        },
+        {
+          "id": 69,
+          "name": "fence",
+          "type": "fence",
+          "x": 143.5,
+          "y": 365.0,
+          "width": 21,
+          "height": 15,
+          "visible": true,
+          "gid": 53
+        },
+        {
+          "id": 70,
+          "name": "fence",
+          "type": "fence",
+          "x": 159.5,
+          "y": 365.0,
+          "width": 21,
+          "height": 15,
+          "visible": true,
+          "gid": 53
+        },
+        {
+          "id": 71,
+          "name": "fence",
+          "type": "fence",
+          "x": 95.5,
+          "y": 420.0,
+          "width": 21,
+          "height": 15,
+          "visible": true,
+          "gid": 53
+        },
+        {
+          "id": 72,
+          "name": "fence",
+          "type": "fence",
+          "x": 111.5,
+          "y": 420.0,
+          "width": 21,
+          "height": 15,
+          "visible": true,
+          "gid": 53
+        },
+        {
+          "id": 73,
+          "name": "fence",
+          "type": "fence",
+          "x": 127.5,
+          "y": 420.0,
+          "width": 21,
+          "height": 15,
+          "visible": true,
+          "gid": 53
+        },
+        {
+          "id": 74,
+          "name": "fence",
+          "type": "fence",
+          "x": 143.5,
+          "y": 420.0,
+          "width": 21,
+          "height": 15,
+          "visible": true,
+          "gid": 53
+        },
+        {
+          "id": 75,
+          "name": "fence",
+          "type": "fence",
+          "x": 159.5,
+          "y": 420.0,
+          "width": 21,
+          "height": 15,
+          "visible": true,
+          "gid": 53
+        },
+        {
+          "id": 76,
+          "name": "fence",
+          "type": "fence",
+          "x": 175.5,
+          "y": 420.0,
+          "width": 21,
+          "height": 15,
+          "visible": true,
+          "gid": 53
+        },
+        {
+          "id": 77,
+          "name": "blacksmith",
+          "type": "blacksmith",
+          "x": 874.5,
+          "y": 505.0,
+          "width": 135,
+          "height": 125,
+          "visible": true,
+          "gid": 16
+        },
+        {
+          "id": 78,
+          "name": "treeA",
+          "type": "treeA",
+          "x": 431.0,
+          "y": 645.0,
+          "width": 80,
+          "height": 78,
+          "visible": true,
+          "gid": 143
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "NPCs",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 79,
+          "name": "Tetua Bram",
+          "type": "NPC",
+          "x": 470,
+          "y": 63,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
             {
-             "height":1,
-             "orientation":"orthogonal",
-             "width":1
-            },
-         "margin":0,
-         "name":"objects",
-         "spacing":0,
-         "tilecount":155,
-         "tileheight":230,
-         "tiles":[
-                {
-                 "id":0,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/academy____BASE.png",
-                 "imageheight":200,
-                 "imagewidth":270,
-                 "type":"academy"
-                }, 
-                {
-                 "id":1,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/fieldoven____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":26,
-                 "type":"alchemytable"
-                }, 
-                {
-                 "id":2,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/altar____BASE.png",
-                 "imageheight":28,
-                 "imagewidth":32,
-                 "type":"altar"
-                }, 
-                {
-                 "id":3,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/anvil____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":30,
-                 "type":"anvil"
-                }, 
-                {
-                 "id":4,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/tree_apple_fruit__0.png",
-                 "imageheight":144,
-                 "imagewidth":144,
-                 "type":"apple1"
-                }, 
-                {
-                 "id":5,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/tree_apple_bare__0.png",
-                 "imageheight":144,
-                 "imagewidth":144,
-                 "type":"apple2"
-                }, 
-                {
-                 "id":6,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/archerytarget____BASE.png",
-                 "imageheight":28,
-                 "imagewidth":26,
-                 "type":"archerytarget"
-                }, 
-                {
-                 "id":7,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/barrel__0.png",
-                 "imageheight":19,
-                 "imagewidth":17,
-                 "type":"barrel"
-                }, 
-                {
-                 "id":8,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/barrel__0.png",
-                 "imageheight":19,
-                 "imagewidth":17,
-                 "type":"barrelNew"
-                }, 
-                {
-                 "id":9,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/bell____BASE.png",
-                 "imageheight":28,
-                 "imagewidth":24,
-                 "type":"bell"
-                }, 
-                {
-                 "id":10,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/bellows____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":24,
-                 "type":"bellows"
-                }, 
-                {
-                 "id":11,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_bench____BASE.png",
-                 "imageheight":34,
-                 "imagewidth":49,
-                 "type":"bench"
-                }, 
-                {
-                 "id":12,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_benchWood____BASE.png",
-                 "imageheight":23,
-                 "imagewidth":32,
-                 "type":"benchWood"
-                }, 
-                {
-                 "id":13,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_bigtree____BASE.png",
-                 "imageheight":230,
-                 "imagewidth":208,
-                 "type":"bigtree"
-                }, 
-                {
-                 "id":14,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/board____BASE.png",
-                 "imageheight":26,
-                 "imagewidth":26,
-                 "type":"board"
-                }, 
-                {
-                 "id":15,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/boat____BASE.png",
-                 "imageheight":16,
-                 "imagewidth":44,
-                 "type":"boat"
-                }, 
-                {
-                 "id":16,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/barrel__0.png",
-                 "imageheight":19,
-                 "imagewidth":17,
-                 "type":"bombbarrel"
-                }, 
-                {
-                 "id":17,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/bones____BASE.png",
-                 "imageheight":10,
-                 "imagewidth":20,
-                 "type":"bones"
-                }, 
-                {
-                 "id":18,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/board____BASE.png",
-                 "imageheight":26,
-                 "imagewidth":26,
-                 "type":"bounty_board"
-                }, 
-                {
-                 "id":19,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/bramble____BASE.png",
-                 "imageheight":20,
-                 "imagewidth":24,
-                 "type":"bramble"
-                }, 
-                {
-                 "id":20,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/brazier____BASE.png",
-                 "imageheight":16,
-                 "imagewidth":18,
-                 "type":"brazier"
-                }, 
-                {
-                 "id":21,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/log__0.png",
-                 "imageheight":18,
-                 "imagewidth":25,
-                 "type":"brokenbridge"
-                }, 
-                {
-                 "id":22,
-                 "image":"..\/..\/assets\/img\/nature\/gpt_bush.png",
-                 "imageheight":14,
-                 "imagewidth":28,
-                 "type":"bush"
-                }, 
-                {
-                 "id":23,
-                 "image":"..\/..\/assets\/img\/nature\/bushG1.png",
-                 "imageheight":43,
-                 "imagewidth":47,
-                 "type":"bushG1"
-                }, 
-                {
-                 "id":24,
-                 "image":"..\/..\/assets\/img\/nature\/bushG2.png",
-                 "imageheight":45,
-                 "imagewidth":48,
-                 "type":"bushG2"
-                }, 
-                {
-                 "id":25,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_bushP__0.png",
-                 "imageheight":24,
-                 "imagewidth":34,
-                 "type":"bushP"
-                }, 
-                {
-                 "id":26,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_bushP__0.png",
-                 "imageheight":24,
-                 "imagewidth":34,
-                 "type":"bushP2"
-                }, 
-                {
-                 "id":27,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_bushW__0.png",
-                 "imageheight":24,
-                 "imagewidth":34,
-                 "type":"bushW"
-                }, 
-                {
-                 "id":28,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/bushv__0.png",
-                 "imageheight":20,
-                 "imagewidth":26,
-                 "type":"bushv"
-                }, 
-                {
-                 "id":29,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/campfire____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":28,
-                 "type":"campfire"
-                }, 
-                {
-                 "id":30,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/canaryperch____BASE.png",
-                 "imageheight":26,
-                 "imagewidth":24,
-                 "type":"canaryperch"
-                }, 
-                {
-                 "id":31,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_cart__0.png",
-                 "imageheight":35,
-                 "imagewidth":46,
-                 "type":"cart"
-                }, 
-                {
-                 "id":32,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/cavemouth____BASE.png",
-                 "imageheight":70,
-                 "imagewidth":92,
-                 "type":"cavemouth"
-                }, 
-                {
-                 "id":33,
-                 "image":"..\/..\/assets\/img\/buildings\/gpt_city_bridge.png",
-                 "imageheight":44,
-                 "imagewidth":76,
-                 "type":"city_bridge"
-                }, 
-                {
-                 "id":34,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/clockworktower____BASE.png",
-                 "imageheight":54,
-                 "imagewidth":32,
-                 "type":"clockworktower"
-                }, 
-                {
-                 "id":35,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/coffeekettle____BASE.png",
-                 "imageheight":24,
-                 "imagewidth":24,
-                 "type":"coffeekettle"
-                }, 
-                {
-                 "id":36,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/coffeeshrub____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":22,
-                 "type":"coffeeshrub"
-                }, 
-                {
-                 "id":37,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/crafttable____BASE.png",
-                 "imageheight":20,
-                 "imagewidth":24,
-                 "type":"crafttable"
-                }, 
-                {
-                 "id":38,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/crate__0.png",
-                 "imageheight":17,
-                 "imagewidth":17,
-                 "type":"crate"
-                }, 
-                {
-                 "id":39,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_crateCart____BASE.png",
-                 "imageheight":40,
-                 "imagewidth":43,
-                 "type":"crateCart"
-                }, 
-                {
-                 "id":40,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/cryst____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":22,
-                 "type":"cryst"
-                }, 
-                {
-                 "id":41,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/crystp____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":22,
-                 "type":"crystp"
-                }, 
-                {
-                 "id":42,
-                 "image":"..\/..\/assets\/img\/buildings\/gpt_ctower.png",
-                 "imageheight":124,
-                 "imagewidth":67,
-                 "type":"ctower"
-                }, 
-                {
-                 "id":43,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/cwall__0.png",
-                 "imageheight":76,
-                 "imagewidth":68,
-                 "type":"cwall"
-                }, 
-                {
-                 "id":44,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/dock____BASE.png",
-                 "imageheight":58,
-                 "imagewidth":44,
-                 "type":"dock"
-                }, 
-                {
-                 "id":45,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/dockboat____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":44,
-                 "type":"dockboat"
-                }, 
-                {
-                 "id":46,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/dripstone____BASE.png",
-                 "imageheight":30,
-                 "imagewidth":24,
-                 "type":"dripstone"
-                }, 
-                {
-                 "id":47,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/dummy____BASE.png",
-                 "imageheight":28,
-                 "imagewidth":20,
-                 "type":"dummy"
-                }, 
-                {
-                 "id":48,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/board____BASE.png",
-                 "imageheight":26,
-                 "imagewidth":26,
-                 "type":"fame_board"
-                }, 
-                {
-                 "id":49,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/fence__0.png",
-                 "imageheight":15,
-                 "imagewidth":21,
-                 "type":"fence"
-                }, 
-                {
-                 "id":50,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/fence__0.png",
-                 "imageheight":15,
-                 "imagewidth":21,
-                 "type":"fenceWood"
-                }, 
-                {
-                 "id":51,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/fieldoven____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":26,
-                 "type":"fieldoven"
-                }, 
-                {
-                 "id":52,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/forge____BASE.png",
-                 "imageheight":34,
-                 "imagewidth":34,
-                 "type":"forge"
-                }, 
-                {
-                 "id":53,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_fountain____BASE.png",
-                 "imageheight":85,
-                 "imagewidth":83,
-                 "type":"fountain"
-                }, 
-                {
-                 "id":54,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/frostflower____BASE.png",
-                 "imageheight":20,
-                 "imagewidth":20,
-                 "type":"frostflower"
-                }, 
-                {
-                 "id":55,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gatehouse__0.png",
-                 "imageheight":128,
-                 "imagewidth":197,
-                 "type":"gatehouse"
-                }, 
-                {
-                 "id":56,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/geoderock____BASE.png",
-                 "imageheight":26,
-                 "imagewidth":28,
-                 "type":"geoderock"
-                }, 
-                {
-                 "id":57,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_banner____BASE.png",
-                 "imageheight":50,
-                 "imagewidth":18,
-                 "type":"goblin_banner"
-                }, 
-                {
-                 "id":58,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_cage____BASE.png",
-                 "imageheight":70,
-                 "imagewidth":63,
-                 "type":"goblin_cage"
-                }, 
-                {
-                 "id":59,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_cauldron____BASE.png",
-                 "imageheight":63,
-                 "imagewidth":72,
-                 "type":"goblin_cauldron"
-                }, 
-                {
-                 "id":60,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_forge____BASE.png",
-                 "imageheight":70,
-                 "imagewidth":65,
-                 "type":"goblin_forge"
-                }, 
-                {
-                 "id":61,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_fortress____BASE.png",
-                 "imageheight":153,
-                 "imagewidth":206,
-                 "type":"goblin_fortress"
-                }, 
-                {
-                 "id":62,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_gate____BASE.png",
-                 "imageheight":52,
-                 "imagewidth":207,
-                 "type":"goblin_gate"
-                }, 
-                {
-                 "id":63,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_hut____BASE.png",
-                 "imageheight":77,
-                 "imagewidth":72,
-                 "type":"goblin_hut"
-                },
-            
-                {
-                 "id":64,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_shrine____BASE.png",
-                 "imageheight":77,
-                 "imagewidth":65,
-                 "type":"goblin_shrine"
-                }, 
-                {
-                 "id":65,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_torch____BASE.png",
-                 "imageheight":44,
-                 "imagewidth":16,
-                 "type":"goblin_torch"
-                }, 
-                {
-                 "id":66,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_totem____BASE.png",
-                 "imageheight":42,
-                 "imagewidth":20,
-                 "type":"goblin_totem"
-                }, 
-                {
-                 "id":67,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_tower____BASE.png",
-                 "imageheight":101,
-                 "imagewidth":45,
-                 "type":"goblin_tower"
-                }, 
-                {
-                 "id":68,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_goblin_wagon____BASE.png",
-                 "imageheight":35,
-                 "imagewidth":45,
-                 "type":"goblin_wagon"
-                }, 
-                {
-                 "id":69,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_city_banner__0.png",
-                 "imageheight":60,
-                 "imagewidth":22,
-                 "type":"gpt_city_banner"
-                }, 
-                {
-                 "id":70,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_city_banner_sm__0.png",
-                 "imageheight":46,
-                 "imagewidth":17,
-                 "type":"gpt_city_banner_sm"
-                }, 
-                {
-                 "id":71,
-                 "image":"..\/..\/assets\/img\/props\/gpt_city_board.png",
-                 "imageheight":32,
-                 "imagewidth":36,
-                 "type":"gpt_city_board"
-                }, 
-                {
-                 "id":72,
-                 "image":"..\/..\/assets\/img\/props\/gpt_city_cart.png",
-                 "imageheight":50,
-                 "imagewidth":38,
-                 "type":"gpt_city_cart"
-                }, 
-                {
-                 "id":73,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_city_cliff_l__0.png",
-                 "imageheight":56,
-                 "imagewidth":110,
-                 "type":"gpt_city_cliff_l"
-                }, 
-                {
-                 "id":74,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_city_cliff_r__0.png",
-                 "imageheight":56,
-                 "imagewidth":110,
-                 "type":"gpt_city_cliff_r"
-                }, 
-                {
-                 "id":75,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_city_fence__0.png",
-                 "imageheight":18,
-                 "imagewidth":46,
-                 "type":"gpt_city_fence"
-                }, 
-                {
-                 "id":76,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_city_flower_p__0.png",
-                 "imageheight":17,
-                 "imagewidth":28,
-                 "type":"gpt_city_flower_p"
-                }, 
-                {
-                 "id":77,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_city_flower_w__0.png",
-                 "imageheight":19,
-                 "imagewidth":24,
-                 "type":"gpt_city_flower_w"
-                }, 
-                {
-                 "id":78,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_city_lamp__0.png",
-                 "imageheight":66,
-                 "imagewidth":17,
-                 "type":"gpt_city_lamp"
-                }, 
-                {
-                 "id":79,
-                 "image":"..\/..\/assets\/img\/props\/gpt_city_lamp2.png",
-                 "imageheight":61,
-                 "imagewidth":25,
-                 "type":"gpt_city_lamp2"
-                }, 
-                {
-                 "id":80,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_city_rock_lg__0.png",
-                 "imageheight":26,
-                 "imagewidth":42,
-                 "type":"gpt_city_rock_lg"
-                }, 
-                {
-                 "id":81,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_city_rock_sm__0.png",
-                 "imageheight":18,
-                 "imagewidth":30,
-                 "type":"gpt_city_rock_sm"
-                }, 
-                {
-                 "id":82,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/hay__0.png",
-                 "imageheight":22,
-                 "imagewidth":25,
-                 "type":"hay"
-                }, 
-                {
-                 "id":83,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_houseA__0.png",
-                 "imageheight":132,
-                 "imagewidth":100,
-                 "type":"houseA"
-                }, 
-                {
-                 "id":84,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_houseB__0.png",
-                 "imageheight":132,
-                 "imagewidth":100,
-                 "type":"houseB"
-                }, 
-                {
-                 "id":85,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_v_house_brown_cottage__0.png",
-                 "imageheight":120,
-                 "imagewidth":117,
-                 "type":"houseBrown"
-                }, 
-                {
-                 "id":86,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_houseC__0.png",
-                 "imageheight":132,
-                 "imagewidth":100,
-                 "type":"houseC"
-                }, 
-                {
-                 "id":87,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_houseC__0.png",
-                 "imageheight":132,
-                 "imagewidth":100,
-                 "type":"houseD"
-                }, 
-                {
-                 "id":88,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/gpt_v_house_red_cottage__0.png",
-                 "imageheight":120,
-                 "imagewidth":131,
-                 "type":"houseRed"
-                }, 
-                {
-                 "id":89,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/lakelighthouse____BASE.png",
-                 "imageheight":52,
-                 "imagewidth":36,
-                 "type":"lakelighthouse"
-                }, 
-                {
-                 "id":90,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/lamp__0.png",
-                 "imageheight":32,
-                 "imagewidth":16,
-                 "type":"lamp"
-                }, 
-                {
-                 "id":91,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_lampPost____BASE.png",
-                 "imageheight":42,
-                 "imagewidth":21,
-                 "type":"lampPost"
-                }, 
-                {
-                 "id":92,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/log__0.png",
-                 "imageheight":18,
-                 "imagewidth":25,
-                 "type":"log"
-                }, 
-                {
-                 "id":93,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/lotuspad____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":26,
-                 "type":"lotuspad"
-                }, 
-                {
-                 "id":94,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/shard____BASE.png",
-                 "imageheight":14,
-                 "imagewidth":14,
-                 "type":"lumina_shard"
-                }, 
-                {
-                 "id":95,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/sign__0.png",
-                 "imageheight":26,
-                 "imagewidth":15,
-                 "type":"mailbox"
-                }, 
-                {
-                 "id":96,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_market__0.png",
-                 "imageheight":78,
-                 "imagewidth":100,
-                 "type":"market"
-                }, 
-                {
-                 "id":97,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/meadowwillow____BASE.png",
-                 "imageheight":54,
-                 "imagewidth":46,
-                 "type":"meadowwillow"
-                }, 
-                {
-                 "id":98,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/geoderock____BASE.png",
-                 "imageheight":26,
-                 "imagewidth":28,
-                 "type":"minestone"
-                }, 
-                {
-                 "id":99,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/altar____BASE.png",
-                 "imageheight":28,
-                 "imagewidth":32,
-                 "type":"mirror_memory"
-                }, 
-                {
-                 "id":100,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/mush__0.png",
-                 "imageheight":14,
-                 "imagewidth":16,
-                 "type":"mush"
-                }, 
-                {
-                 "id":101,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/tree_apple_fruit__0.png",
-                 "imageheight":144,
-                 "imagewidth":144,
-                 "type":"orange1"
-                }, 
-                {
-                 "id":102,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/orchidrock____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":26,
-                 "type":"orchidrock"
-                }, 
-                {
-                 "id":103,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/pebbles__0.png",
-                 "imageheight":14,
-                 "imagewidth":22,
-                 "type":"pebbles"
-                }, 
-                {
-                 "id":104,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/pigeons____BASE.png",
-                 "imageheight":20,
-                 "imagewidth":26,
-                 "type":"pigeons"
-                }, 
-                {
-                 "id":105,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_planter____BASE.png",
-                 "imageheight":31,
-                 "imagewidth":37,
-                 "type":"planter"
-                }, 
-                {
-                 "id":106,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_pot____BASE.png",
-                 "imageheight":29,
-                 "imagewidth":25,
-                 "type":"pot"
-                }, 
-                {
-                 "id":107,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/deco_reeds____BASE.png",
-                 "imageheight":41,
-                 "imagewidth":39,
-                 "type":"reeds"
-                }, 
-                {
-                 "id":108,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/ringbooth____BASE.png",
-                 "imageheight":28,
-                 "imagewidth":32,
-                 "type":"ringbooth"
-                }, 
-                {
-                 "id":109,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/rock__0.png",
-                 "imageheight":22,
-                 "imagewidth":29,
-                 "type":"rock"
-                }, 
-                {
-                 "id":110,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_rockWoods__0.png",
-                 "imageheight":22,
-                 "imagewidth":29,
-                 "type":"rockWoods"
-                }, 
-                {
-                 "id":111,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/root____BASE.png",
-                 "imageheight":34,
-                 "imagewidth":70,
-                 "type":"root"
-                }, 
-                {
-                 "id":112,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/altar____BASE.png",
-                 "imageheight":28,
-                 "imagewidth":32,
-                 "type":"rune_pillar"
-                }, 
-                {
-                 "id":113,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_bench____BASE.png",
-                 "imageheight":34,
-                 "imagewidth":49,
-                 "type":"scenicbench"
-                }, 
-                {
-                 "id":114,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/shrine____BASE.png",
-                 "imageheight":70,
-                 "imagewidth":120,
-                 "type":"shrine"
-                }, 
-                {
-                 "id":115,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/sign__0.png",
-                 "imageheight":26,
-                 "imagewidth":15,
-                 "type":"sign"
-                }, 
-                {
-                 "id":116,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/stalag____BASE.png",
-                 "imageheight":26,
-                 "imagewidth":18,
-                 "type":"stalag"
-                }, 
-                {
-                 "id":117,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/stele__0.png",
-                 "imageheight":26,
-                 "imagewidth":17,
-                 "type":"stele"
-                }, 
-                {
-                 "id":118,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/streetdrum____BASE.png",
-                 "imageheight":26,
-                 "imagewidth":26,
-                 "type":"streetdrum"
-                }, 
-                {
-                 "id":119,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_stumpWoods____BASE.png",
-                 "imageheight":36,
-                 "imagewidth":28,
-                 "type":"stumpWoods"
-                }, 
-                {
-                 "id":120,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/teatable____BASE.png",
-                 "imageheight":22,
-                 "imagewidth":28,
-                 "type":"teatable"
-                }, 
-                {
-                 "id":121,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/telescope____BASE.png",
-                 "imageheight":26,
-                 "imagewidth":22,
-                 "type":"telescope"
-                }, 
-                {
-                 "id":122,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/totem____BASE.png",
-                 "imageheight":32,
-                 "imagewidth":26,
-                 "type":"totem"
-                }, 
-                {
-                 "id":123,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_treeA__0.png",
-                 "imageheight":78,
-                 "imagewidth":80,
-                 "type":"treeA"
-                }, 
-                {
-                 "id":124,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/treeAd__0.png",
-                 "imageheight":78,
-                 "imagewidth":80,
-                 "type":"treeAd"
-                }, 
-                {
-                 "id":125,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_treeA__0.png",
-                 "imageheight":78,
-                 "imagewidth":80,
-                 "type":"treeB"
-                }, 
-                {
-                 "id":126,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/treeAd__0.png",
-                 "imageheight":78,
-                 "imagewidth":80,
-                 "type":"treeBd"
-                }, 
-                {
-                 "id":127,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_treeA__0.png",
-                 "imageheight":78,
-                 "imagewidth":80,
-                 "type":"treeOak"
-                },
-            
-                {
-                 "id":128,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/tree_redwood__0.png",
-                 "imageheight":216,
-                 "imagewidth":141,
-                 "type":"treeRedwood"
-                }, 
-                {
-                 "id":129,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/treeSn__0.png",
-                 "imageheight":78,
-                 "imagewidth":80,
-                 "type":"treeSn"
-                }, 
-                {
-                 "id":130,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/treeAd__0.png",
-                 "imageheight":78,
-                 "imagewidth":80,
-                 "type":"treeSw"
-                }, 
-                {
-                 "id":131,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_stumpWoods____BASE.png",
-                 "imageheight":36,
-                 "imagewidth":28,
-                 "type":"treeWoodsBig"
-                }, 
-                {
-                 "id":132,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/i_treeA__0.png",
-                 "imageheight":78,
-                 "imagewidth":80,
-                 "type":"treeWoodsPine"
-                }, 
-                {
-                 "id":133,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/treeAd__0.png",
-                 "imageheight":78,
-                 "imagewidth":80,
-                 "type":"treeWoodsRound"
-                }, 
-                {
-                 "id":134,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/tree_apple_bare__0.png",
-                 "imageheight":144,
-                 "imagewidth":144,
-                 "type":"tree_apple_bare"
-                }, 
-                {
-                 "id":135,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/tree_apple_fruit__0.png",
-                 "imageheight":144,
-                 "imagewidth":144,
-                 "type":"tree_apple_fruit"
-                }, 
-                {
-                 "id":136,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/tree_redwood__0.png",
-                 "imageheight":216,
-                 "imagewidth":141,
-                 "type":"tree_redwood"
-                }, 
-                {
-                 "id":137,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/verdant_bush__0.png",
-                 "imageheight":35,
-                 "imagewidth":52,
-                 "type":"verdant_bush"
-                }, 
-                {
-                 "id":138,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/verdant_bush_small__0.png",
-                 "imageheight":23,
-                 "imagewidth":32,
-                 "type":"verdant_bush_small"
-                }, 
-                {
-                 "id":139,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/verdant_cliff_corner__0.png",
-                 "imageheight":90,
-                 "imagewidth":110,
-                 "type":"verdant_cliff_corner"
-                }, 
-                {
-                 "id":140,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/verdant_cliff_slope__0.png",
-                 "imageheight":66,
-                 "imagewidth":110,
-                 "type":"verdant_cliff_slope"
-                }, 
-                {
-                 "id":141,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/verdant_cliff_straight__0.png",
-                 "imageheight":75,
-                 "imagewidth":110,
-                 "type":"verdant_cliff_straight"
-                }, 
-                {
-                 "id":142,
-                 "image":"..\/..\/assets\/img\/nature\/gpt_verdant_log.png",
-                 "imageheight":24,
-                 "imagewidth":43,
-                 "type":"verdant_log"
-                }, 
-                {
-                 "id":143,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/verdant_rock_large__0.png",
-                 "imageheight":36,
-                 "imagewidth":48,
-                 "type":"verdant_rock_large"
-                }, 
-                {
-                 "id":144,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/verdant_rock_med__0.png",
-                 "imageheight":27,
-                 "imagewidth":36,
-                 "type":"verdant_rock_med"
-                }, 
-                {
-                 "id":145,
-                 "image":"..\/..\/assets\/img\/nature\/gpt_verdant_rock_pillar.png",
-                 "imageheight":36,
-                 "imagewidth":42,
-                 "type":"verdant_rock_pillar"
-                }, 
-                {
-                 "id":146,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/verdant_stump__0.png",
-                 "imageheight":17,
-                 "imagewidth":28,
-                 "type":"verdant_stump"
-                }, 
-                {
-                 "id":147,
-                 "image":"..\/..\/assets\/img\/nature\/gpt_verdant_tree.png",
-                 "imageheight":77,
-                 "imagewidth":84,
-                 "type":"verdant_tree"
-                }, 
-                {
-                 "id":148,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/stele__0.png",
-                 "imageheight":26,
-                 "imagewidth":17,
-                 "type":"viewpoint"
-                }, 
-                {
-                 "id":149,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/crate__0.png",
-                 "imageheight":17,
-                 "imagewidth":17,
-                 "type":"village_vault"
-                }, 
-                {
-                 "id":150,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/well__0.png",
-                 "imageheight":75,
-                 "imagewidth":85,
-                 "type":"well"
-                }, 
-                {
-                 "id":151,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/windmill__0.png",
-                 "imageheight":140,
-                 "imagewidth":116,
-                 "type":"windmill"
-                }, 
-                {
-                 "id":152,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/woodlandshrine____BASE.png",
-                 "imageheight":32,
-                 "imagewidth":26,
-                 "type":"woodlandshrine"
-                }, 
-                {
-                 "id":153,
-                 "image":"..\/..\/proto\/iso\/maps\/tex\/crate__0.png",
-                 "imageheight":17,
-                 "imagewidth":17,
-                 "type":"woodpile"
-                }, 
-                {
-                 "id":154,
-                 "image":"..\/..\/assets\/img\/buildings\/gpt_v_blacksmith_forge.png",
-                 "imageheight":125,
-                 "imagewidth":135
-                }],
-         "tilewidth":270
-        }, 
+              "name": "id",
+              "type": "string",
+              "value": "elder"
+            }
+          ]
+        },
         {
-         "firstgid":156,
-         "source":"..\/tilesets\/terrain.tsj"
-        }],
- "tilewidth":16,
- "type":"map",
- "version":"1.10",
- "width":64
+          "id": 80,
+          "name": "Lina",
+          "type": "NPC",
+          "x": 364,
+          "y": 203,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "girl"
+            }
+          ]
+        },
+        {
+          "id": 81,
+          "name": "Pak Darto",
+          "type": "NPC",
+          "x": 314,
+          "y": 203,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "farmer"
+            }
+          ]
+        },
+        {
+          "id": 82,
+          "name": "Bu Sari",
+          "type": "NPC",
+          "x": 714,
+          "y": 213,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "merchant"
+            }
+          ]
+        },
+        {
+          "id": 83,
+          "name": "Dodi",
+          "type": "NPC",
+          "x": 524,
+          "y": 378,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "child"
+            }
+          ]
+        },
+        {
+          "id": 84,
+          "name": "Penjaga",
+          "type": "NPC",
+          "x": 454,
+          "y": 620,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "guard"
+            }
+          ]
+        },
+        {
+          "id": 85,
+          "name": "Bu Lastri",
+          "type": "NPC",
+          "x": 234,
+          "y": 413,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "woman"
+            }
+          ]
+        },
+        {
+          "id": 86,
+          "name": "Pak Besi",
+          "type": "NPC",
+          "x": 704,
+          "y": 403,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "smith"
+            }
+          ]
+        },
+        {
+          "id": 87,
+          "name": "Kiki Penggembala",
+          "type": "NPC",
+          "x": 804,
+          "y": 298,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "chick_master"
+            }
+          ]
+        },
+        {
+          "id": 88,
+          "name": "Ayam Desa",
+          "type": "NPC",
+          "x": 134,
+          "y": 428,
+          "width": 32,
+          "height": 32,
+          "point": false,
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "value": "ayam"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Pintu Keluar (Exits)",
+      "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "objects": [
+        {
+          "id": 89,
+          "name": "Ke lake",
+          "type": "Exit",
+          "x": 0,
+          "y": 560,
+          "width": 12,
+          "height": 60,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "lake"
+            }
+          ]
+        },
+        {
+          "id": 90,
+          "name": "Ke forest",
+          "type": "Exit",
+          "x": 474,
+          "y": 700,
+          "width": 76,
+          "height": 30,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "forest"
+            }
+          ]
+        },
+        {
+          "id": 91,
+          "name": "Ke meadow",
+          "type": "Exit",
+          "x": 1010,
+          "y": 238,
+          "width": 30,
+          "height": 58,
+          "properties": [
+            {
+              "name": "to",
+              "type": "string",
+              "value": "meadow"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

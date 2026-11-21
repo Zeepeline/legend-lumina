@@ -1,8 +1,8 @@
 'use strict'; // Pertarungan: serangan, sihir, ramuan, damage, drop, EXP, proyektil, kalah
 // pts: titik kena [jarak dari pemain, radius]; mul: pengali damage; kb: pengali dorongan
 const WEAPON_STYLE = {
-  sword: { cd: .32, lock: .2, pts: [[14, 15]], mul: 1, crit: .1, kb: 1, fxs: 1 },
-  spear: { cd: .38, lock: .22, pts: [[12, 9], [22, 9], [31, 9]], mul: 1, crit: .12, kb: .7, fxs: 1 },
+  sword: { cd: .32, lock: .2, pts: [[14, 15]], mul: 1, crit: .1, kb: 1, fxs: 1, delay: 55 }, /* delay = kena saat bilah menyapu, bukan sebelum bergerak */
+  spear: { cd: .38, lock: .22, pts: [[12, 9], [22, 9], [31, 9]], mul: 1, crit: .12, kb: .7, fxs: 1, delay: 40 },
   axe: { cd: .62, lock: .34, pts: [[13, 21]], mul: 1.25, crit: .18, kb: 1.6, fxs: 1.45, delay: 110 },
   bow: { cd: .42, lock: .16 } };
 Object.assign(World.prototype, {
@@ -18,8 +18,8 @@ Object.assign(World.prototype, {
     }
     this.atkBuf = false;
     const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword', W = WEAPON_STYLE[wt];
-    pl.combo = this.t - (pl.lastAtk || -9) < W.cd + .5 ? (pl.combo || 0) % 5 + 1 : 1; pl.lastAtk = this.t;
-    const fin = pl.combo === 5, cMul = [1, 1, 1.1, 1.22, 1.38, 1.85][pl.combo] || 1, cKb = fin ? 2.1 : pl.combo >= 3 ? 1.3 : 1;
+    pl.combo = this.t - (pl.lastAtk || -9) < W.cd + .5 ? (pl.combo || 0) % (wt === 'sword' ? 3 : 5) + 1 : 1; pl.lastAtk = this.t;
+    const fin = (wt === 'sword' && pl.combo === 3) || pl.combo === 5, cMul = [1, 1, 1.25, 1.85, 1.38, 1.85][pl.combo] || 1, cKb = fin ? 2.1 : pl.combo >= 2 ? 1.3 : 1;
     pl.atkCd = W.cd; pl.atkT = W.lock; sfx(wt === 'bow' ? 'jump' : (fin || wt === 'axe' ? 'swing_heavy' : 'swing'));
     if (wt === 'bow') return this.shootArrow();
     if (fin) { pl.atkCd += .18; this.time.delayedCall(40, () => sfx('crit')); popWorld(pl.x, pl.y - 30, 'KOMBO!', 'crit'); }
@@ -307,7 +307,7 @@ Object.assign(World.prototype, {
   },
   hurtPlayer(atk, sx, sy, fx) {
     const pl = this.pl;
-    if (pl.inv > 0 || pl.dead || G.lock > 0 || UIH) {
+    if (G.god || pl.inv > 0 || pl.dead || G.lock > 0 || UIH) {
       if ((pl.dashT > 0 || this.t - (pl.dashStartT || 0) <= .2) && !pl.perfectDodged) {
         pl.perfectDodged = true; popWorld(pl.x, pl.y - 32, 'Lolos!', 'heal'); sfx('crit');
         this.time.timeScale = this.physics.world.timeScale = 0.3;

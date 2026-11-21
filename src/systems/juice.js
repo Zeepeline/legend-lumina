@@ -197,7 +197,8 @@ Object.assign(World.prototype, {
       if (L.gh <= 0) { L.gh = .06; this.jxGhost(); if (v.length() > 60) this.jxSwoosh(pl.x, pl.y, v.x, v.y, false); }
     } else L.gh = 0;
     // pose memancing
-    if (this.fishing) { L.fish += dt; pl.flipX = pl.dir === 'left'; pl._emote = { k: 'fish_cast', f: Math.min(3, Math.floor(L.fish / .13)) }; }
+    if (this.fishing) { L.fish += dt; pl.flipX = pl.dir === 'left'; pl._emote = this.fishPull ? { k: 'fish_pull', f: Math.floor(L.fish * 6) % 4 }
+      : { k: 'fish_cast', f: Math.min(3, Math.floor(L.fish / .13)) }; }
     else if (L.fish) { L.fish = 0; pl._emote = null; }
     this.jxShots(dt);
     this.jxAura(dt);
@@ -237,8 +238,21 @@ Object.assign(World.prototype, {
   };
   W.hitFx = function (e, crit) {
     const r = _hit.apply(this, arguments), s = e && e.spr, pl = this.pl; if (!s || !s.active) return r;
-    const y = s.y - (e.D.r || 8) * (e.sc || 1), ang = pl ? Math.atan2(y - (pl.y - 7), s.x - pl.x) : 0, fin = crit || (pl && pl.combo === 5);
+    const y = s.y - (e.D.r || 8) * (e.sc || 1), ang = pl ? Math.atan2(y - (pl.y - 7), s.x - pl.x) : 0, fin = crit || (pl && (pl.combo === 3 || pl.combo === 5));
     this.jx('spark', s.x, y, fin ? 11 : 6, { ang, spread: fin ? 50 : 34, tint: crit ? 0xffe07a : 0xffffff });
+    if (!OPT.lite) { /* kipas garis putih runcing searah sabetan (varian "streak" di video referensi) */
+      const g = this.add.graphics().setDepth(s.y + 8), n = fin ? 6 : 4;
+      g.fillStyle(crit ? 0xffe07a : 0xffffff, 1);
+      for (let i = 0; i < n; i++) {
+        const a = ang + (i - (n - 1) / 2) * .26, L = (fin ? 16 : 11) + Math.random() * 6, w = 1.4, c = Math.cos(a), sn = Math.sin(a);
+        g.fillTriangle(s.x + c * 3 - sn * w, y + sn * 3 + c * w, s.x + c * 3 + sn * w, y + sn * 3 - c * w, s.x + c * L, y + sn * L);
+      }
+      this.tweens.add({ targets: g, alpha: 0, duration: 130, delay: 40, onComplete: () => g.destroy() });
+    }
+    /* kilat 2 tahap ala referensi: putih (combat_fx) lalu merah solid ±80 ms, baru normal */
+    e.flash = Math.max(e.flash || 0, .15);
+    this.time.delayedCall(70, () => { if (s.active && e.hp > 0) s.setTintFill(0xff3a2a); });
+    if (e.D.keepTint) this.time.delayedCall(155, () => { if (s.active && e.hp > 0) s.setTint(e.D.keepTint); });
     this.jx('chip', s.x, y, fin ? 8 : 4, { ang: ang - .35, spread: 55, tint: jxMat(e) });
     if (crit) this.jx('star', s.x, y, 5, { tint: 0xffd25a });
     return r;
@@ -285,12 +299,13 @@ Object.assign(World.prototype, {
     W.slashFx = function (wt, combo) {
       const pl = this.pl;
       if (pl) {
-        const [dx, dy] = DIRV[pl.dir], cIdx = ((combo || 1) - 1) % 5, fin = cIdx === 4;
+        const [dx, dy] = DIRV[pl.dir], fin = (wt === 'sword' && (combo || 1) === 3) || (combo || 1) === 5;
         const ang = Math.atan2(dy, dx);
         this.jx('spark', pl.x + dx * 14, pl.y - 7 + dy * 8, fin ? 5 : 2, {
           ang, spread: 35, tint: wt === 'axe' ? 0xffc27a : 0xfffae0
         });
         if (fin) this.jxDustRing(pl.x + dx * 16, pl.y + 2, 22);
+        else this.jx('mote', pl.x - dx * 4, pl.y - 1, 2, { tint: 0xd8c8a0, rx: 4, ry: 2 }); /* debu kecil di kaki saat menerjang */
       }
       return _slash.apply(this, arguments);
     };

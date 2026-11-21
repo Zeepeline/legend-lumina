@@ -271,6 +271,7 @@ Object.assign(World.prototype, {
         break;
       }
       case 'elite_brute': this.updEliteBrute(e, dt, dx, dy, d, aggro); break;
+      case 'samurai': this.updSamurai(e, dt, dx, dy, d, aggro); break;
       case 'walk':
         if (aggro) {
           const otherAggro = this.enemies.filter(o => o !== e && o.hp > 0 && Math.hypot(pl.x - o.spr.x, pl.y - o.spr.y) < 180);

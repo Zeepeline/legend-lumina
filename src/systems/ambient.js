@@ -3,8 +3,8 @@
 // Atur per peta di ENV. Jumlah sengaja kecil agar terasa hidup tapi tidak ramai.
 const ENV = {
   village:  { bird: 4, fly: 3, firefly: 6, cloud: 1, herb: 2 },
-  forest:   { bird: 5, fly: 4, crit: ['rabbit', 'squirrel', 'deer'], ncrit: 4, firefly: 14, fish: 1, cloud: 1, ray: 1, herb: 5, snd: ['bird', 'owl'] },
-  deepwood: { bird: 3, fly: 2, flyTint: [0xc8a0ff, 0x8ae8ff], crit: ['squirrel', 'deer'], ncrit: 3, firefly: 24, fish: 1, ray: 1, fog: 1, herb: 7, snd: ['owl', 'creak'] },
+  forest:   { bird: 5, fly: 4, crit: ['rabbit', 'squirrel', 'deer'], ncrit: 4, firefly: 14, fish: 1, cloud: 1, herb: 5, snd: ['bird', 'owl'] },
+  deepwood: { bird: 3, fly: 2, flyTint: [0xc8a0ff, 0x8ae8ff], crit: ['squirrel', 'deer'], ncrit: 3, firefly: 24, fish: 1, fog: 1, herb: 7, snd: ['owl', 'creak'] },
   meadow:   { bird: 6, fly: 7, crit: ['rabbit', 'rabbit', 'deer'], ncrit: 4, firefly: 10, cloud: 1, herb: 4 },
   river:    { bird: 4, fly: 4, crit: ['rabbit'], ncrit: 2, firefly: 14, fish: 3, cloud: 1, herb: 5, snd: ['bird', 'frog'] },
   lake:     { bird: 3, fly: 3, firefly: 18, fish: 2, cloud: 1, herb: 3, snd: ['bird', 'frog'] },
@@ -48,7 +48,6 @@ Object.assign(World.prototype, {
     for (let i = 0; i < (E.firefly || 0); i++) { const [x, y] = near(280), s = this.add.image(x, y, 'cr_glow2').setScale(rnd(.45, .75)).setTint(E.fireTint || 0xfff6a0).setBlendMode(Phaser.BlendModes.ADD).setDepth(1.5e5).setAlpha(0); this.amb.push({ k: 'fire', s, hx: x, hy: y, ph: rnd(0, 6) }); }
     if (E.cloud) for (let i = 0; i < 3; i++) { const s = this.add.image(rnd(0, M.w), rnd(0, M.h), 'cr_cloud').setScale(rnd(1.4, 2.4), rnd(1.2, 1.8)).setDepth(2).setAlpha(.0); this.cloudsA.push(s); }
     if (E.fog) for (let i = 0; i < 5; i++) { const [x, y] = near(300), s = this.add.image(x, y, 'cr_fog').setScale(rnd(1.2, 2)).setDepth(1.4e5).setAlpha(.22); this.amb.push({ k: 'fog', s, vx: rnd(4, 10) * (Math.random() < .5 ? -1 : 1) }); }
-    if (E.ray) for (let i = 0; i < 3; i++) { const [x, y] = near(200), s = this.add.image(x, y - 60, 'cr_ray').setRotation(-.45).setBlendMode(Phaser.BlendModes.ADD).setDepth(1.45e5).setAlpha(0); this.amb.push({ k: 'ray', s, ph: rnd(0, 6) }); }
     // tanaman obat & beri: di tepi jalan setapak
     const segs = M.paths || []; for (let i = 0; i < (E.herb || 0) && segs.length; i++) {
       const [x1, y1, x2, y2, w] = segs[Math.floor(Math.random() * segs.length)], t = Math.random(), off = (w || 12) + rnd(10, 22), nx = -(y2 - y1), ny = x2 - x1, l = Math.hypot(nx, ny) || 1, sg = Math.random() < .5 ? 1 : -1;

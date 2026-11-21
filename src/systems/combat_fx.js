@@ -26,7 +26,9 @@ Object.assign(World.prototype, {
   },
 
   slashFx(wt, combo) {
-    const pl = this.pl, [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx), cIdx = ((combo || 1) - 1) % 5, fin = cIdx === 4;
+    const pl = this.pl, [dx, dy] = DIRV[pl.dir], ang = Math.atan2(dy, dx);
+    const fin = (wt === 'sword' && (combo || 1) === 3) || (combo || 1) === 5;
+    const cIdx = fin ? 2 : (((combo || 1) - 1) % 3);
     const sd = (pl.dir === 'left' || pl.dir === 'right') ? 'side' : pl.dir;
     // Transisi postur tubuh Arka (windup side1 -> lunge side2 -> follow-through side3 -> idle)
     pl.atkPose = cIdx === 1 ? '3' : '1';
@@ -36,34 +38,24 @@ Object.assign(World.prototype, {
     this.time.delayedCall(195, () => { if (pl) pl.atkPose = null; });
 
     // Titik genggam tangan Arka (terkunci di telapak tangan, bukan melayang)
-    const hx = pl.x + dx * 5, hy = pl.y - 7 + dy * 4, depth = pl.y + (dy < 0 ? -2 : 4);
-    const sw = this.sword;
-    if (sw && sw.visible) {
-      this.tweens.killTweensOf(sw);
-      const sgn = dx < 0 ? -1 : 1;
-      if (wt === 'spear' || cIdx === 3) {
-        sw.setRotation(ang).setPosition(hx - dx * 2, hy - dy * 2);
-        this.tweens.add({ targets: sw, x: hx + dx * 9, y: hy + dy * 9, duration: 85, yoyo: true, onComplete: () => sw.setVisible(false) });
-      } else {
-        const a0 = [ang - 1.48 * sgn, ang + 1.02 * sgn, ang - 0.74 * sgn, ang, ang - 1.65 * sgn][cIdx];
-        const a1 = [ang + 0.42 * sgn, ang - 0.92 * sgn, ang + 0.32 * sgn, ang, ang + 0.65 * sgn][cIdx];
-        sw.setPosition(hx, hy).setRotation(a0);
-        this.tweens.add({
-          targets: sw, x: hx + dx * (fin ? 4 : 2), y: hy + dy * (fin ? 3 : 1), rotation: a1,
-          duration: wt === 'axe' ? 210 : (fin ? 175 : 135), ease: 'Cubic.easeOut', onComplete: () => sw.setVisible(false)
-        });
-      }
-    }
+    /* titik genggam = telapak tangan pada frame tebas (heroHand, systems/sword_hand.js); pedang lalu mengikuti tangan tiap frame (swordToHand) */
+    const H = this.heroHand ? this.heroHand(pl, 2) : null;
+    const hx = H ? H.x : pl.x + dx * 5, hy = H ? H.y : pl.y - 7 + dy * 4, depth = pl.y + (dy < 0 ? -2 : 4);
+    this.swingSword(wt, cIdx, fin, ang, dx, dy, hx, hy);
 
     // Jejak sapuan fisik bilah pedang (vfx_swing_combo): hanya jejak udara yang dibelah pedang, tanpa ledakan semu di ruang kosong
     if (this.textures.exists('vfx_swing_combo')) {
-      const sRow = wt === 'spear' ? 3 : cIdx;
-      const vfx = this.add.sprite(hx, hy, 'vfx_swing_combo', sRow * 4 + 1)
-        .setOrigin(14 / 48, 18 / 36).setRotation(ang).setFlipY(dx < 0)
-        .setScale(wt === 'axe' ? 1.2 : 1).setDepth(depth + 1);
-      if (ARC_TINT[S.eq.wpn]) vfx.setTint(ARC_TINT[S.eq.wpn]);
-      vfx.play('vfx_swing_' + sRow);
-      vfx.once('animationcomplete', () => vfx.destroy());
+      const sRow = wt === 'spear' ? 3 : (fin ? 4 : cIdx);
+      /* jejak baru muncul saat bilah mulai mengayun (setelah ancang-ancang), bukan saat pedang baru terangkat */
+      this.time.delayedCall(45 * (fin ? 1.45 : 1) * (wt === 'axe' ? 1.6 : 1), () => {
+        if (!this.pl || this.pl.dead) return;
+        const vfx = this.add.sprite(hx, hy, 'vfx_swing_combo', sRow * 4 + 1)
+          .setOrigin(14 / 48, 18 / 36).setRotation(ang).setFlipY(dx < 0)
+          .setScale(wt === 'axe' ? 1.2 : 1).setDepth(depth + 1);
+        if (ARC_TINT[S.eq.wpn]) vfx.setTint(ARC_TINT[S.eq.wpn]);
+        vfx.play('vfx_swing_' + sRow);
+        vfx.once('animationcomplete', () => vfx.destroy());
+      });
     } else {
       const s = (wt === 'axe' ? 1.25 : 1) * (fin ? 1.35 : 1);
       const a = this.add.image(hx + dx * 4, hy + dy * 3, this.arcTex()).setRotation(ang).setScale(s * .7).setTint(arcTint(wt));
@@ -136,6 +128,7 @@ Object.assign(World.prototype, {
       this.tweens.add({ targets: ring, scale: crit ? .8 : .55, alpha: 0, duration: 140, onComplete: () => ring.destroy() });
     }
     if (crit || fin) this.cameras.main.shake(65, .0028);
+    else this.cameras.main.shake(35, .0011); /* sentak halus di tiap pukulan */
   },
 
   updChargeFx(holdT) {
@@ -145,6 +138,7 @@ Object.assign(World.prototype, {
     pl.anims.stop(); pl.atkPose = '1'; pl.setFrame(sd + '1');
     const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword', tier = { wsword: 0 }[S.eq.wpn] ?? 1;
     const sw = this.sword.setTexture(wt === 'spear' ? 'wspear' : wt === 'axe' ? 'waxe' : 'sword' + tier);
+    sw._hold = 0; sw._shT = 0; sw._off = null; sw.setAlpha(1); /* pose jurus mengambil alih dari siaga */
     sw.setVisible(true).setPosition(pl.x - dx * 3, pl.y - 7).setFlipY(dx < 0).setDepth(pl.y + 2).setRotation(ang + 2.55 * sgn);
     if (holdT >= .45) sw.setTintFill(0xffffff); else sw.clearTint();
     if (this.textures.exists('vfx_charge_spin')) {
@@ -155,7 +149,8 @@ Object.assign(World.prototype, {
   },
   clearChargeFx() {
     if (this.chgWind) { this.chgWind.destroy(); this.chgWind = null; }
-    if (this.sword && (!this.pl || this.pl.atkT <= 0)) { this.sword.clearTint(); this.sword.setVisible(false); }
+    const sw = this.sword, held = sw && (sw._off || sw._hold || sw._shT); /* ayun/siaga/sarung: dikelola sword_hand.js */
+    if (sw && !held && (!this.pl || this.pl.atkT <= 0)) { sw.clearTint(); sw.setVisible(false); }
     if (this.pl) this.pl.atkPose = null;
   },
   spinFx(tt, hMul = 1) {
@@ -168,6 +163,7 @@ Object.assign(World.prototype, {
     this.time.delayedCall(280, () => { if (pl) { pl.flipX = pl.dir === 'left'; pl.atkPose = null; } });
     const wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword', tier = { wsword: 0 }[S.eq.wpn] ?? 1;
     const sw = this.sword.setTexture(wt === 'spear' ? 'wspear' : wt === 'axe' ? 'waxe' : 'sword' + tier);
+    sw._hold = 0; sw._shT = 0; sw._off = null; sw.setAlpha(1);
     sw.clearTint().setVisible(true).setPosition(pl.x, pl.y - 7).setFlipY(dx < 0).setDepth(pl.y + 4).setRotation(ang - 2.6 * sgn);
     this.tweens.add({ targets: sw, rotation: ang + 3.8 * sgn, duration: 240, ease: 'Cubic.easeOut', onComplete: () => sw.setVisible(false) });
     if (this.textures.exists('vfx_charge_spin')) {

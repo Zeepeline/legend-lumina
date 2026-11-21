@@ -43,7 +43,7 @@
           "width": 17,
           "height": 26,
           "visible": true,
-          "gid": 129
+          "gid": 135
         },
         {
           "id": 2,
@@ -54,7 +54,7 @@
           "width": 26,
           "height": 32,
           "visible": true,
-          "gid": 135
+          "gid": 141
         },
         {
           "id": 3,
@@ -87,7 +87,7 @@
           "width": 15,
           "height": 26,
           "visible": true,
-          "gid": 127
+          "gid": 133
         },
         {
           "id": 6,
@@ -98,7 +98,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 7,
@@ -152,7 +152,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 12,
@@ -185,7 +185,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 15,
@@ -196,7 +196,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 16,
@@ -229,7 +229,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 19,
@@ -262,7 +262,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 22,
@@ -278,39 +278,13 @@
     },
     {
       "id": 3,
-      "name": "NPCs",
-      "type": "objectgroup",
-      "visible": true,
-      "opacity": 1,
-      "objects": [
-        {
-          "id": 23,
-          "name": "Pertapa Sura",
-          "type": "NPC",
-          "x": 588,
-          "y": 98,
-          "width": 32,
-          "height": 32,
-          "point": false,
-          "properties": [
-            {
-              "name": "id",
-              "type": "string",
-              "value": "hermit"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": 4,
       "name": "Pintu Keluar (Exits)",
       "type": "objectgroup",
       "visible": true,
       "opacity": 1,
       "objects": [
         {
-          "id": 24,
+          "id": 23,
           "name": "Ke river",
           "type": "Exit",
           "x": 0,
@@ -326,7 +300,7 @@
           ]
         },
         {
-          "id": 25,
+          "id": 24,
           "name": "Ke meadow",
           "type": "Exit",
           "x": 600,

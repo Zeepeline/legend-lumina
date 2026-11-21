@@ -315,3 +315,12 @@ body.rotate #rotate i{font-style:normal;font-size:56px;animation:rotHint 1.6s ea
 @keyframes rotHint{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
 body.full #hDate{left:50%;transform:translateX(-50%);top:21px}
 body.full.talking #pad{opacity:0;pointer-events:none;transition:opacity .2s}
+
+/* HUD lebih kecil di layar penuh (v1.50): kluster HUD (darah/stamina/mana, jam-koin, misi, peta mini) diskalakan --hud-s.
+   Titik jangkar tiap panel tetap di sudutnya; peta mini & kartu misi digeser mengikuti tinggi panel yang mengecil. */
+body.full{--hud-s:.7}
+@media (max-width:900px){body.full{--hud-s:.8}} /* layar HP: sedikit lebih besar agar angka bar tetap terbaca */
+body.full #hud{transform:scale(var(--hud-s));transform-origin:0 0}
+body.full #hud2{transform:scale(var(--hud-s));transform-origin:100% 0}
+body.full #quest{transform:scale(var(--hud-s));transform-origin:100% 0;top:calc(4px + 26px * var(--hud-s))}
+body.full #mini{transform:scale(var(--hud-s));transform-origin:0 0;top:calc(4px + 50px * var(--hud-s))}

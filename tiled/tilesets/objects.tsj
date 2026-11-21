@@ -8,7 +8,7 @@
   "margin": 0,
   "name": "objects",
   "spacing": 0,
-  "tilecount": 170,
+  "tilecount": 176,
   "tiledversion": "1.10.0",
   "tileheight": 256,
   "tilewidth": 256,
@@ -801,405 +801,447 @@
     },
     {
       "id": 112,
+      "image": "../../assets/img/buildings/gpt_orc_gate.png",
+      "imagewidth": 338,
+      "imageheight": 240,
+      "type": "orc_gate"
+    },
+    {
+      "id": 113,
       "image": "../../proto/iso/maps/tex/orchidrock____BASE.png",
       "imagewidth": 26,
       "imageheight": 22,
       "type": "orchidrock"
     },
     {
-      "id": 113,
+      "id": 114,
+      "image": "../../assets/img/props/gpt_palisade_barricade.png",
+      "imagewidth": 76,
+      "imageheight": 111,
+      "type": "palisade_barricade"
+    },
+    {
+      "id": 115,
+      "image": "../../assets/img/props/gpt_palisade_pillar.png",
+      "imagewidth": 54,
+      "imageheight": 186,
+      "type": "palisade_pillar"
+    },
+    {
+      "id": 116,
+      "image": "../../assets/img/props/gpt_palisade_post_banner.png",
+      "imagewidth": 159,
+      "imageheight": 199,
+      "type": "palisade_post_banner"
+    },
+    {
+      "id": 117,
+      "image": "../../assets/img/props/gpt_palisade_wall_corner.png",
+      "imagewidth": 149,
+      "imageheight": 142,
+      "type": "palisade_wall_corner"
+    },
+    {
+      "id": 118,
+      "image": "../../assets/img/props/gpt_palisade_wall_long.png",
+      "imagewidth": 153,
+      "imageheight": 143,
+      "type": "palisade_wall_long"
+    },
+    {
+      "id": 119,
       "image": "../../proto/iso/maps/tex/pebbles__0.png",
       "imagewidth": 22,
       "imageheight": 14,
       "type": "pebbles"
     },
     {
-      "id": 114,
+      "id": 120,
       "image": "../../proto/iso/maps/tex/pigeons____BASE.png",
       "imagewidth": 26,
       "imageheight": 20,
       "type": "pigeons"
     },
     {
-      "id": 115,
+      "id": 121,
       "image": "../../proto/iso/maps/tex/i_planter____BASE.png",
       "imagewidth": 37,
       "imageheight": 31,
       "type": "planter"
     },
     {
-      "id": 116,
+      "id": 122,
       "image": "../../proto/iso/maps/tex/i_pot____BASE.png",
       "imagewidth": 25,
       "imageheight": 29,
       "type": "pot"
     },
     {
-      "id": 117,
+      "id": 123,
       "image": "../../proto/iso/maps/tex/deco_reeds____BASE.png",
       "imagewidth": 39,
       "imageheight": 41,
       "type": "reeds"
     },
     {
-      "id": 118,
+      "id": 124,
       "image": "../../proto/iso/maps/tex/ringbooth____BASE.png",
       "imagewidth": 32,
       "imageheight": 28,
       "type": "ringbooth"
     },
     {
-      "id": 119,
+      "id": 125,
       "image": "../../proto/iso/maps/tex/rock__0.png",
       "imagewidth": 29,
       "imageheight": 22,
       "type": "rock"
     },
     {
-      "id": 120,
+      "id": 126,
       "image": "../../proto/iso/maps/tex/i_rockWoods__0.png",
       "imagewidth": 29,
       "imageheight": 22,
       "type": "rockWoods"
     },
     {
-      "id": 121,
+      "id": 127,
       "image": "../../proto/iso/maps/tex/root____BASE.png",
       "imagewidth": 70,
       "imageheight": 34,
       "type": "root"
     },
     {
-      "id": 122,
+      "id": 128,
       "image": "../../proto/iso/maps/tex/altar____BASE.png",
       "imagewidth": 32,
       "imageheight": 28,
       "type": "rune_pillar"
     },
     {
-      "id": 123,
+      "id": 129,
       "image": "../../proto/iso/maps/tex/i_bench____BASE.png",
       "imagewidth": 49,
       "imageheight": 34,
       "type": "scenicbench"
     },
     {
-      "id": 124,
+      "id": 130,
       "image": "../../assets/img/buildings/gpt_v_house_red_shop.png",
       "imagewidth": 128,
       "imageheight": 125,
       "type": "shop_red"
     },
     {
-      "id": 125,
+      "id": 131,
       "image": "../../proto/iso/maps/tex/shrine____BASE.png",
       "imagewidth": 120,
       "imageheight": 70,
       "type": "shrine"
     },
     {
-      "id": 126,
+      "id": 132,
       "image": "../../proto/iso/maps/tex/sign__0.png",
       "imagewidth": 15,
       "imageheight": 26,
       "type": "sign"
     },
     {
-      "id": 127,
+      "id": 133,
       "image": "../../proto/iso/maps/tex/stalag____BASE.png",
       "imagewidth": 18,
       "imageheight": 26,
       "type": "stalag"
     },
     {
-      "id": 128,
+      "id": 134,
       "image": "../../proto/iso/maps/tex/stele__0.png",
       "imagewidth": 17,
       "imageheight": 26,
       "type": "stele"
     },
     {
-      "id": 129,
+      "id": 135,
       "image": "../../proto/iso/maps/tex/streetdrum____BASE.png",
       "imagewidth": 26,
       "imageheight": 26,
       "type": "streetdrum"
     },
     {
-      "id": 130,
+      "id": 136,
       "image": "../../proto/iso/maps/tex/i_stumpWoods____BASE.png",
       "imagewidth": 28,
       "imageheight": 36,
       "type": "stumpWoods"
     },
     {
-      "id": 131,
+      "id": 137,
       "image": "../../assets/img/buildings/gpt_v_tavern_brown.png",
       "imagewidth": 128,
       "imageheight": 125,
       "type": "tavern"
     },
     {
-      "id": 132,
+      "id": 138,
       "image": "../../proto/iso/maps/tex/teatable____BASE.png",
       "imagewidth": 28,
       "imageheight": 22,
       "type": "teatable"
     },
     {
-      "id": 133,
+      "id": 139,
       "image": "../../proto/iso/maps/tex/telescope____BASE.png",
       "imagewidth": 22,
       "imageheight": 26,
       "type": "telescope"
     },
     {
-      "id": 134,
+      "id": 140,
       "image": "../../proto/iso/maps/tex/totem____BASE.png",
       "imagewidth": 26,
       "imageheight": 32,
       "type": "totem"
     },
     {
-      "id": 135,
+      "id": 141,
       "image": "../../assets/img/buildings/gpt_v_guild_townhall.png",
       "imagewidth": 137,
       "imageheight": 150,
       "type": "townhall"
     },
     {
-      "id": 136,
+      "id": 142,
       "image": "../../proto/iso/maps/tex/i_treeA__0.png",
       "imagewidth": 80,
       "imageheight": 78,
       "type": "treeA"
     },
     {
-      "id": 137,
+      "id": 143,
       "image": "../../proto/iso/maps/tex/treeAd__0.png",
       "imagewidth": 80,
       "imageheight": 78,
       "type": "treeAd"
     },
     {
-      "id": 138,
+      "id": 144,
       "image": "../../proto/iso/maps/tex/i_treeA__0.png",
       "imagewidth": 80,
       "imageheight": 78,
       "type": "treeB"
     },
     {
-      "id": 139,
+      "id": 145,
       "image": "../../proto/iso/maps/tex/treeAd__0.png",
       "imagewidth": 80,
       "imageheight": 78,
       "type": "treeBd"
     },
     {
-      "id": 140,
+      "id": 146,
       "image": "../../proto/iso/maps/tex/i_treeA__0.png",
       "imagewidth": 80,
       "imageheight": 78,
       "type": "treeOak"
     },
     {
-      "id": 141,
+      "id": 147,
       "image": "../../proto/iso/maps/tex/tree_redwood__0.png",
       "imagewidth": 141,
       "imageheight": 216,
       "type": "treeRedwood"
     },
     {
-      "id": 142,
+      "id": 148,
       "image": "../../proto/iso/maps/tex/treeSn__0.png",
       "imagewidth": 80,
       "imageheight": 78,
       "type": "treeSn"
     },
     {
-      "id": 143,
+      "id": 149,
       "image": "../../proto/iso/maps/tex/treeAd__0.png",
       "imagewidth": 80,
       "imageheight": 78,
       "type": "treeSw"
     },
     {
-      "id": 144,
+      "id": 150,
       "image": "../../proto/iso/maps/tex/i_stumpWoods____BASE.png",
       "imagewidth": 28,
       "imageheight": 36,
       "type": "treeWoodsBig"
     },
     {
-      "id": 145,
+      "id": 151,
       "image": "../../proto/iso/maps/tex/i_treeA__0.png",
       "imagewidth": 80,
       "imageheight": 78,
       "type": "treeWoodsPine"
     },
     {
-      "id": 146,
+      "id": 152,
       "image": "../../proto/iso/maps/tex/treeAd__0.png",
       "imagewidth": 80,
       "imageheight": 78,
       "type": "treeWoodsRound"
     },
     {
-      "id": 147,
+      "id": 153,
       "image": "../../proto/iso/maps/tex/tree_apple_bare__0.png",
       "imagewidth": 144,
       "imageheight": 144,
       "type": "tree_apple_bare"
     },
     {
-      "id": 148,
+      "id": 154,
       "image": "../../proto/iso/maps/tex/tree_apple_fruit__0.png",
       "imagewidth": 144,
       "imageheight": 144,
       "type": "tree_apple_fruit"
     },
     {
-      "id": 149,
+      "id": 155,
       "image": "../../proto/iso/maps/tex/tree_redwood__0.png",
       "imagewidth": 141,
       "imageheight": 216,
       "type": "tree_redwood"
     },
     {
-      "id": 150,
+      "id": 156,
       "image": "../../assets/img/buildings/gpt_v_windmill.png",
       "imagewidth": 115,
       "imageheight": 140,
       "type": "v_windmill"
     },
     {
-      "id": 151,
+      "id": 157,
       "image": "../../proto/iso/maps/tex/verdant_bush__0.png",
       "imagewidth": 52,
       "imageheight": 35,
       "type": "verdant_bush"
     },
     {
-      "id": 152,
+      "id": 158,
       "image": "../../proto/iso/maps/tex/verdant_bush_small__0.png",
       "imagewidth": 32,
       "imageheight": 23,
       "type": "verdant_bush_small"
     },
     {
-      "id": 153,
+      "id": 159,
       "image": "../../proto/iso/maps/tex/verdant_cliff_corner__0.png",
       "imagewidth": 110,
       "imageheight": 90,
       "type": "verdant_cliff_corner"
     },
     {
-      "id": 154,
+      "id": 160,
       "image": "../../proto/iso/maps/tex/verdant_cliff_slope__0.png",
       "imagewidth": 110,
       "imageheight": 66,
       "type": "verdant_cliff_slope"
     },
     {
-      "id": 155,
+      "id": 161,
       "image": "../../proto/iso/maps/tex/verdant_cliff_straight__0.png",
       "imagewidth": 110,
       "imageheight": 75,
       "type": "verdant_cliff_straight"
     },
     {
-      "id": 156,
+      "id": 162,
       "image": "../../assets/img/nature/gpt_verdant_log.png",
       "imagewidth": 43,
       "imageheight": 24,
       "type": "verdant_log"
     },
     {
-      "id": 157,
+      "id": 163,
       "image": "../../proto/iso/maps/tex/verdant_rock_large__0.png",
       "imagewidth": 48,
       "imageheight": 36,
       "type": "verdant_rock_large"
     },
     {
-      "id": 158,
+      "id": 164,
       "image": "../../proto/iso/maps/tex/verdant_rock_med__0.png",
       "imagewidth": 36,
       "imageheight": 27,
       "type": "verdant_rock_med"
     },
     {
-      "id": 159,
+      "id": 165,
       "image": "../../assets/img/nature/gpt_verdant_rock_pillar.png",
       "imagewidth": 42,
       "imageheight": 36,
       "type": "verdant_rock_pillar"
     },
     {
-      "id": 160,
+      "id": 166,
       "image": "../../proto/iso/maps/tex/verdant_stump__0.png",
       "imagewidth": 28,
       "imageheight": 17,
       "type": "verdant_stump"
     },
     {
-      "id": 161,
+      "id": 167,
       "image": "../../assets/img/nature/gpt_verdant_tree.png",
       "imagewidth": 84,
       "imageheight": 77,
       "type": "verdant_tree"
     },
     {
-      "id": 162,
+      "id": 168,
       "image": "../../proto/iso/maps/tex/stele__0.png",
       "imagewidth": 17,
       "imageheight": 26,
       "type": "viewpoint"
     },
     {
-      "id": 163,
+      "id": 169,
       "image": "../../proto/iso/maps/tex/crate__0.png",
       "imagewidth": 17,
       "imageheight": 17,
       "type": "village_vault"
     },
     {
-      "id": 164,
+      "id": 170,
       "image": "../../assets/img/buildings/gpt_v_village_well.png",
       "imagewidth": 85,
       "imageheight": 75,
       "type": "village_well"
     },
     {
-      "id": 165,
+      "id": 171,
       "image": "../../assets/img/buildings/gpt_v_watchtower.png",
       "imagewidth": 127,
       "imageheight": 150,
       "type": "watchtower"
     },
     {
-      "id": 166,
+      "id": 172,
       "image": "../../proto/iso/maps/tex/well__0.png",
       "imagewidth": 85,
       "imageheight": 75,
       "type": "well"
     },
     {
-      "id": 167,
+      "id": 173,
       "image": "../../proto/iso/maps/tex/windmill__0.png",
       "imagewidth": 116,
       "imageheight": 140,
       "type": "windmill"
     },
     {
-      "id": 168,
+      "id": 174,
       "image": "../../proto/iso/maps/tex/woodlandshrine____BASE.png",
       "imagewidth": 26,
       "imageheight": 32,
       "type": "woodlandshrine"
     },
     {
-      "id": 169,
+      "id": 175,
       "image": "../../proto/iso/maps/tex/crate__0.png",
       "imagewidth": 17,
       "imageheight": 17,

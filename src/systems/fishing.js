@@ -91,9 +91,9 @@ World.prototype.fish = async function (f) {
     sfx('crit'); this.tweens.add({ targets: bob, y: f[1] + 2, duration: 80, yoyo: true, repeat: 4 }); popWorld(f[0], f[1] - 18, '!', 'crit');
     const hit = await new Promise(res => { const prev = UIH; let done = false; const h = k => { if (done) return; if (k === 'a' || k === 'tap') { done = true; UIH = prev; res(true); } }; h.tap = true; UIH = h; setTimeout(() => { if (!done) { done = true; UIH = prev; res(false); } }, 900); });
     if (!hit) { bob.destroy(); line.destroy(); await say('Terlambat! Ikannya lepas. Tekan SERANG tepat saat tanda ! muncul.', 'Mancing'); return; }
-    const F = pickFish(fishPool(this, baited), baited);
+    const F = pickFish(fishPool(this, baited), baited); this.fishPull = true; // pose fish_pull (juice.js)
     const r = F.d <= 1 && !F.leg ? 'ok' : await tugGame(F);
-    bob.destroy(); line.destroy();
+    this.fishPull = false; bob.destroy(); line.destroy();
     if (r === 'snap') { sfx('buzz'); this.camShake(120, .004); await say(F.leg ? 'TALINYA PUTUS! Bayangan raksasa itu menghilang ke dasar air...' : 'Talinya putus! Jangan menarik saat tali memerah.', 'Mancing'); return; }
     if (r === 'lost') { sfx('back'); await say('Ikannya berhasil kabur. Gulung lebih sabar.', 'Mancing'); return; }
     const cm = Math.round(rnd(F.cm[0], F.cm[1])), rec = F.id !== 'oldboot' && logFish(F.id, cm);
@@ -104,7 +104,7 @@ World.prototype.fish = async function (f) {
     else if (F.id === 'oldboot') await say('Yah... cuma sepatu butut.', 'Mancing');
     else await say(`Dapat ${nm}! Panjang ${cm} cm${rec ? ' — REKOR BARU!' : ''}.`, 'Mancing');
     achCheck(this);
-  } finally { this.fishing = false; G.lock--; }
+  } finally { this.fishing = false; this.fishPull = false; G.lock--; }
 };
 function fishClue(F) {
   if (F.id === 'oldboot') return 'Benda tak terduga di dasar air';

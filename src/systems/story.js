@@ -1,6 +1,16 @@
 'use strict';
-// Segel kuil, Mochi hilang, kristal, peti harta
+// Sistem cerita baru & transisi (skenario cerita lama di-reset dari 0)
 Object.assign(World.prototype, {
+  spawnCh4() {},
+  spawnCh5() {},
+  spawnIceGate() {},
+  updDragon() {},
+  ch5Enter() {},
+  async readLore(id) {
+    if (typeof LORE !== 'undefined' && LORE[id] && LORE[id][2]) {
+      return talk(null, [LORE[id][2]]);
+    }
+  },
   async touchBarrier() {
     return talk(null, ['Reruntuhan gerbang batu kuno di tengah hutan lebat. Lumut dan sulur tanaman menutupi pilar-pilar tua ini.']);
   },

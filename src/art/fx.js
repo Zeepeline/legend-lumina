@@ -93,24 +93,17 @@ function artRainBg() {
   x.beginPath(); x.moveTo(.5, 9.2); x.lineTo(2.5, .8); x.stroke();
   return c;
 }
-// bayangan karakter lembut berbobot ala Dimraeth: kontak inti pekat + sebaran halus ke kanan-bawah
+// bayangan karakter lembut (Opsi B: Smooth Soft, gradasi radial simetris natural)
 function artShadowSoft(w, h) {
   const [c, x] = mk(w, h);
   x.save();
   x.scale(1, h / w);
-  // Lapisan luar: sebaran bayangan lembut condong ke kanan-bawah (arah cahaya kiri-atas)
-  const g1 = x.createRadialGradient(w / 2 + 1, w / 2 + 1, 0, w / 2, w / 2, w / 2);
-  g1.addColorStop(0, 'rgba(12,24,14,.72)');
-  g1.addColorStop(.55, 'rgba(12,24,14,.38)');
-  g1.addColorStop(1, 'rgba(12,24,14,0)');
-  x.fillStyle = g1;
-  x.fillRect(0, 0, w, w);
-  // Lapisan dalam: kontak oklusi pekat tepat di tapak kaki (menghilangkan kesan melayang)
-  const g2 = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 3);
-  g2.addColorStop(0, 'rgba(8,14,8,.92)');
-  g2.addColorStop(.65, 'rgba(8,14,8,.55)');
-  g2.addColorStop(1, 'rgba(8,14,8,0)');
-  x.fillStyle = g2;
+  const g = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2);
+  g.addColorStop(0, 'rgba(12,22,16,.85)');
+  g.addColorStop(.4, 'rgba(12,22,16,.6)');
+  g.addColorStop(.75, 'rgba(12,22,16,.25)');
+  g.addColorStop(1, 'rgba(12,22,16,0)');
+  x.fillStyle = g;
   x.fillRect(0, 0, w, w);
   x.restore();
   return c;

@@ -23,6 +23,21 @@
 
 *(Entri diskusi baru akan dicatat di bawah ini oleh Story Agent)*
 
+### [2026-11-21] Pembuatan Aset Visual Baru untuk Prolog & Bab 1
+- **Status**: SELESAI DIIMPLEMENTASIKAN DI KODE
+- **File Kode**: `src/art/story_props.js`, `index.html`, `src/gfx/textures.js`, `src/world/objects.js`, `src/world/spawn/spawn_2.js`.
+- **Daftar Aset Baru**:
+  1. `mila_grave`: Makam pohon Mila dengan nisan kayu sederhana bertali pita merah dan taburan bunga liar.
+  2. `ruined_shack`: Gubuk reyot Arka di awal (atap bocor, dinding papan lapuk dan miring sebelum direnovasi).
+  3. `slaver_cage`: Kerangkeng kayu berlumpur dengan pintu rantai dan gembok kuningan kusam.
+  4. `prisoner_wagon`: Gerobak pengangkut tahanan berterali jeruji besi/kayu di atas dua roda besar.
+  5. `slaver_tent`: Tenda kanvas compang-camping markas kapten pemburu budak dengan tambalan kulit kasar.
+  6. `slaver_barricade`: Pancang kayu runcing menyilang bertali rotan untuk barikade pertahanan sarang.
+  7. `reflection_spring`: Mata air pegunungan jernih alami di lereng bebatuan tepi sungai untuk momen penamaan Arka.
+  8. `burnt_ruin`: Puing balok kayu arang hitam sisa lumbung terbakar dengan sisa bara api menyala.
+  9. `mud_tracks`, `dropped_torch`, `cloth_scrap`: Properti pelacakan jejak di hutan (alur roda gerobak amblas, obor padam jatuh, sobekan kain berdarah).
+- **Interaksi Objek**: `mila_grave`, `reflection_spring`, dan `slaver_cage` dilengkapi dialog inspeksi saat didekati pemain.
+
 ### [2026-11-20] Reset Total Seluruh Skenario & Dialog Lama (Clean Slate)
 - **Status**: SELESAI DITERAPKAN DI KODE
 - **Keputusan Pemilik**: Menghapus seluruh dialog dan skenario dalam sejarah game/proyek ini. Benar-benar mengulang dari 0 agar tidak ada logika lama yang saling tumpang tindih, tidak ada dialog penjaga/prolog yang berulang atau memblokir layar, dan pemain dapat bergerak bebas.

@@ -36,6 +36,10 @@ const ENEMY = {
   golemi: { name: 'Golem Es', tex: 'golemi', hp: 190, atk: 32, def: 16, spd: 26, exp: 80, gold: [14, 24], r: 10, ai: 'golem', drop: ['shard', .6], fx: ['chill', 3, .6] },
   kryos: { name: 'Naga Es Kryos', tex: 'snakei', hp: 980, atk: 36, def: 16, spd: 62, exp: 800, gold: [400, 400], r: 13, ai: 'dboss', scale: 2.8, side: 1, fx: ['chill', 3, .7], adds: ['wolfs', 'golemi', 'wolfs'] },
   // Buronan Monster Langka Kota Lumina (#241)
+  samurai: {
+    name: 'Ronin Siber', tex: 'esh_samurai', esh: 1, boss: 1, hp: 540, atk: 24, def: 9, spd: 72, exp: 350, gold: [180, 260], r: 12,
+    ai: 'samurai', drop: ['amethyst_gem', 0.8]
+  },
   bounty_wolf: { name: 'Taring Perak', tex: 'wolfs', hp: 320, atk: 28, def: 10, spd: 88, exp: 280, gold: [180, 220], r: 10, ai: 'lunge', side: 1, scale: 1.4, drop: ['pelt', 1], isBounty: true },
   bounty_frog: { name: 'Raja Rawa Toksin', tex: 'frog', hp: 380, atk: 26, def: 12, spd: 58, exp: 320, gold: [220, 260], r: 11, ai: 'hop', scale: 1.6, drop: ['scale', 1], fx: ['poison', 6, .7], isBounty: true },
   bounty_gargoyle: { name: 'Gargoyle Merah', tex: 'batc', hp: 360, atk: 30, def: 14, spd: 76, exp: 350, gold: [250, 300], r: 10, ai: 'fly', fly: 1, scale: 1.5, drop: ['shard', 1], fx: ['burn', 4, .6], isBounty: true },
@@ -48,7 +52,15 @@ const ENEMY = {
     name: 'Goblin Brute Elite', tex: 'ch_goblin', hp: 160, atk: 22, def: 8, spd: 54, exp: 90, gold: [25, 45], r: 14,
     ai: 'elite_brute', ch: 1, scale: 1.0, drop: ['ore', .8]
   },
+  // Pemburu Liar (penculik/perampok bersenjata besi) & Kapten Pemburu: sprite kode (esh_*), belum dipasang di peta mana pun
+  slaver: { name: 'Pemburu Liar', tex: 'esh_slaver', esh: 1, story: 1, hp: 70, atk: 18, def: 6, spd: 52,
+    exp: 34, gold: [10, 20], r: 7, ai: 'lunge', drop: ['ore', .3] },
+  slaver_captain: {   /* AI elite_brute: hantaman kapak 3x (ancang-ancang jelas + jeda pulih), terjangan; bukan boss terjadwal (tanpa bossDown) */
+    name: 'Kapten Pemburu', tex: 'esh_slaver_captain', esh: 1, story: 1, hp: 320, atk: 26, def: 10, spd: 46, exp: 160, gold: [80, 120], r: 12,
+    ai: 'elite_brute', scale: 1.0, drop: ['ore', 1]
+  },
 };
 const PROJ = { spore: { key: 'spore', spd: 72, fx: ['poison', 4, .5] }, seed: { key: 'seed', spd: 84 }, bone: { key: 'bone', spd: 96, spin: 1 }, rock: { key: 'rockshot', spd: 110, spin: 1 }, venom: { key: 'venom', spd: 96, fx: ['poison', 5, .6] }, ice: { key: 'icebolt', spd: 112, fx: ['chill', 3, .7] }, arrow: { key: 'spore', spd: 90 } };
 const BOSS_AI = ['boss', 'gboss', 'qboss', 'sboss', 'wboss', 'dboss'];
-const BEAST = Object.keys(ENEMY).filter(k => !BOSS_AI.includes(ENEMY[k].ai));
+const BEAST = Object.keys(ENEMY).filter(k => !BOSS_AI.includes(ENEMY[k].ai) && !ENEMY[k].story);
+/* story: belum di peta mana pun → jangan wajib untuk misi Ahli Monster */

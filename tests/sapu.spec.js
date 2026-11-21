@@ -1,7 +1,6 @@
 // Sapu semua objek interaktif di semua peta: setelah interaksi, layar harus bisa dipakai lagi (G.lock kembali 0) & tanpa error
 const { test } = require('@playwright/test');
-const h = require('./helpers'); const log = t => { if (process.env.SAPU_LOG) require('fs').appendFileSync(process.env.SAPU_LOG, t + '
-'); };
+const h = require('./helpers'); const log = t => { if (process.env.SAPU_LOG) require('fs').appendFileSync(process.env.SAPU_LOG, t + '\n'); };
 // Lama (±25 menit). Jalankan: npm run sapu   (atau SAPU=1 MAPS=village,kpasar npx playwright test sapu)
 test('sapu semua objek interaktif: tidak boleh membeku/error', async ({ page }) => {
   test.setTimeout(900_000);

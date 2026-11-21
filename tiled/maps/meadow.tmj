@@ -43,7 +43,7 @@
           "width": 39,
           "height": 41,
           "visible": true,
-          "gid": 118
+          "gid": 124
         },
         {
           "id": 2,
@@ -54,7 +54,7 @@
           "width": 39,
           "height": 41,
           "visible": true,
-          "gid": 118
+          "gid": 124
         },
         {
           "id": 3,
@@ -65,7 +65,7 @@
           "width": 39,
           "height": 41,
           "visible": true,
-          "gid": 118
+          "gid": 124
         },
         {
           "id": 4,
@@ -76,7 +76,7 @@
           "width": 39,
           "height": 41,
           "visible": true,
-          "gid": 118
+          "gid": 124
         },
         {
           "id": 5,
@@ -109,7 +109,7 @@
           "width": 15,
           "height": 26,
           "visible": true,
-          "gid": 127
+          "gid": 133
         },
         {
           "id": 8,
@@ -120,7 +120,7 @@
           "width": 15,
           "height": 26,
           "visible": true,
-          "gid": 127
+          "gid": 133
         },
         {
           "id": 9,
@@ -131,7 +131,7 @@
           "width": 116,
           "height": 140,
           "visible": true,
-          "gid": 168
+          "gid": 174
         },
         {
           "id": 10,
@@ -285,7 +285,7 @@
           "width": 15,
           "height": 26,
           "visible": true,
-          "gid": 127
+          "gid": 133
         },
         {
           "id": 24,
@@ -296,7 +296,7 @@
           "width": 26,
           "height": 20,
           "visible": true,
-          "gid": 115
+          "gid": 121
         },
         {
           "id": 25,
@@ -307,7 +307,7 @@
           "width": 28,
           "height": 22,
           "visible": true,
-          "gid": 133
+          "gid": 139
         },
         {
           "id": 26,
@@ -318,7 +318,7 @@
           "width": 49,
           "height": 34,
           "visible": true,
-          "gid": 124
+          "gid": 130
         },
         {
           "id": 27,
@@ -340,7 +340,7 @@
           "width": 15,
           "height": 26,
           "visible": true,
-          "gid": 127
+          "gid": 133
         },
         {
           "id": 29,
@@ -351,7 +351,7 @@
           "width": 15,
           "height": 26,
           "visible": true,
-          "gid": 127
+          "gid": 133
         },
         {
           "id": 30,
@@ -362,7 +362,7 @@
           "width": 15,
           "height": 26,
           "visible": true,
-          "gid": 127
+          "gid": 133
         },
         {
           "id": 31,
@@ -373,7 +373,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 32,
@@ -384,7 +384,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 33,
@@ -395,7 +395,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 34,
@@ -406,7 +406,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 35,
@@ -417,7 +417,7 @@
           "width": 15,
           "height": 26,
           "visible": true,
-          "gid": 127
+          "gid": 133
         },
         {
           "id": 36,
@@ -428,7 +428,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 37,
@@ -439,7 +439,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 38,
@@ -450,7 +450,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 39,
@@ -482,7 +482,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 42,
@@ -493,7 +493,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 43,
@@ -515,7 +515,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 45,
@@ -526,7 +526,7 @@
           "width": 29,
           "height": 22,
           "visible": true,
-          "gid": 120
+          "gid": 126
         },
         {
           "id": 46,
@@ -547,7 +547,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 48,
@@ -612,7 +612,7 @@
           "width": 80,
           "height": 78,
           "visible": true,
-          "gid": 137
+          "gid": 143
         },
         {
           "id": 54,
@@ -645,7 +645,7 @@
           "width": 80,
           "height": 78,
           "visible": true,
-          "gid": 139
+          "gid": 145
         },
         {
           "id": 57,
@@ -667,7 +667,7 @@
           "width": 17,
           "height": 26,
           "visible": true,
-          "gid": 163
+          "gid": 169
         },
         {
           "id": 59,
@@ -700,7 +700,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 62,
@@ -711,7 +711,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 63,
@@ -722,7 +722,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 64,
@@ -733,7 +733,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 65,
@@ -744,7 +744,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         },
         {
           "id": 66,
@@ -777,7 +777,7 @@
           "width": 22,
           "height": 14,
           "visible": true,
-          "gid": 114
+          "gid": 120
         }
       ]
     },

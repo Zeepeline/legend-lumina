@@ -35,11 +35,13 @@ const IMG_LIST = [
   "gpt_city_lamp", "gpt_city_lamp2", "gpt_city_banner", "gpt_city_banner_sm",
   "gpt_city_fence", "gpt_city_board", "gpt_city_cart", "gpt_city_flower_w", "gpt_city_flower_p",
   "gpt_city_rock_lg", "gpt_city_rock_sm", "gpt_city_cliff_s", "gpt_city_cliff_c",
-  "gpt_city_guard", "npc_guard_spear", "gpt_city_cliff_l", "gpt_city_cliff_r"
-, 'npc_elder', 'npc_smith', 'npc_merchant', 'npc_farmer', 'npc_inn', 'npc_guard', 'npc_hunter', 'npc_hermit', 'npc_nila', 'npc_joko', 'npc_girl', 'npc_child', 'npc_woman', 'npc_mom', 'npc_ratih', 'npc_wati', 'npc_darma', 'npc_bayu', 'npc_lestari', 'npc_gun', 'npc_priest', 'npc_mila', 'hero_slave', 'ani_rabbit', 'ani_squirrel', 'ani_deer', 'ani_owl', 'ani_duck'];
+  "gpt_city_guard", "npc_guard_spear", "gpt_city_cliff_l", "gpt_city_cliff_r",
+  "gpt_orc_gate", "gpt_palisade_post_banner", "gpt_palisade_barricade",
+  "gpt_palisade_pillar", "gpt_palisade_wall_long", "gpt_palisade_wall_corner"
+, 'npc_elder', 'npc_smith', 'npc_merchant', 'npc_farmer', 'npc_inn', 'npc_guard', 'npc_hunter', 'npc_hermit', 'npc_nila', 'npc_joko', 'npc_girl', 'npc_child', 'npc_woman', 'npc_mom', 'npc_ratih', 'npc_wati', 'npc_darma', 'npc_bayu', 'npc_lestari', 'npc_gun', 'npc_priest', 'npc_mila', 'mila_sheet', 'hero_slave', 'ani_rabbit', 'ani_squirrel', 'ani_deer', 'ani_owl', 'ani_duck'];
 function imgSubdir(k) {
   if (k.startsWith('hero_')) return 'hero';
-  if (k.startsWith('npc_')) return 'npc';
+  if (k.startsWith('npc_') || k === 'mila_sheet') return 'npc';
   if (k.startsWith('ani_')) return 'animals';
   if (k.startsWith('mon_') || k.startsWith('esh_')) return 'monsters';
   if (k.startsWith('vfx_')) return 'vfx';
@@ -48,7 +50,8 @@ function imgSubdir(k) {
   if (k.startsWith('goblin_')) return 'goblin';
   if (k.startsWith('gpt_v_') || k.startsWith('gpt_i_house') || k === 'gpt_i_market' || k === 'gpt_windmill' ||
     k === 'fountain' || k === 'market' || /^house[ABC]$/.test(k) ||
-    k.startsWith('gpt_gatehouse') || k === 'gpt_cwall' || k === 'gpt_ctower' || k === 'gpt_city_bridge') return 'buildings';
+    k.startsWith('gpt_gatehouse') || k === 'gpt_cwall' || k === 'gpt_ctower' || k === 'gpt_city_bridge' ||
+    k === 'gpt_orc_gate') return 'buildings';
   if (k.startsWith('gpt_city_flower')) return 'props';
   if (k.startsWith('clutter_') || k.startsWith('fclutter_') || k.startsWith('dwclutter_') ||
     k.startsWith('water_') || k.startsWith('fwater_') || k.includes('island') ||
@@ -79,6 +82,7 @@ function darkTree(img) { const [c, x] = mk(img.width, img.height); x.drawImage(i
 // Potret NPC dari aset pemilik (assets/img/npc_<ch>.png, 32×32). Frame dibuat dengan layout yang sama (down/up/side × 4).
 const NPC_W = 32, NPC_H = 32;
 function regPortrait(T, k) {
+  if (typeof regNpcRig === 'function') return regNpcRig(T, k, IMGEL['npc_' + k]); /* pose prosedural: gfx/npc_rig.js */
   const img = IMGEL['npc_' + k]; const c = document.createElement('canvas'); c.width = NPC_W * 12; c.height = NPC_H; const x = c.getContext('2d'); x.imageSmoothingEnabled = false;
   for (let i = 0; i < 12; i++) x.drawImage(img, i * NPC_W, (i % 4 === 1 || i % 4 === 2) ? -1 : 0);
   const t = T.addCanvas('ch_' + k, c); ['down', 'up', 'side'].forEach((d, di) => { for (let f = 0; f < 4; f++) t.add(d + f, 0, (di * 4 + f) * NPC_W, 0, NPC_W, NPC_H); });
@@ -95,10 +99,12 @@ function regChar(T, k) {
   }
   if (IMGEL['npc_' + k]) return regPortrait(T, k);
   const st = artChar(CHARS[k][0], CHARS[k][1]);
-  const t = T.addCanvas('ch_' + k, st.c);
+  const rg = k !== 'hero' && typeof rigAppend === 'function' ? rigAppend(st.c, CH_FW, CH_FH, k) : null;
+  const t = T.addCanvas('ch_' + k, rg ? rg.cv : st.c);
   ['down', 'up', 'side'].forEach((d, di) => {
     for (let f = 0; f < 4; f++) t.add(d + f, 0, (di * 4 + f) * CH_FW, 0, CH_FW, CH_FH);
   });
+  if (rg) for (const [n, x] of rg.ex) t.add(n, 0, x, 0, CH_FW, CH_FH);
 }
 function buildTextures(sc) {
   const T = sc.textures, one = (k, c) => { if (!T.exists(k)) T.addCanvas(k, c); };
@@ -121,6 +127,10 @@ function buildTextures(sc) {
   one('chest', artChest(false)); one('chesto', artChest(true)); one('hay', artHay()); one('windmill', artWindmill()); one('blades', artBlades());
   one('cavemouth', artCaveMouth()); one('stalag', artStalag(1)); one('cryst', artCrystals(1)); one('crystp', artCrystals(2, ['#8a3ae0', '#c88aff', '#f4e0ff'])); one('bones', artBones());
   one('anvil', artAnvil()); one('forge', artForge()); addStrip(sc, 'barrier', artBarrier());
+  one('mila_grave', artMilaGrave()); one('ruined_shack', artRuinedShack()); one('slaver_cage', artSlaverCage());
+  one('prisoner_wagon', artPrisonerWagon()); one('slaver_tent', artSlaverTent()); one('slaver_barricade', artSlaverBarricade());
+  one('reflection_spring', artReflectionSpring()); one('burnt_ruin', artBurntRuin()); one('mud_tracks', artMudTracks());
+  one('dropped_torch', artDroppedTorch()); one('cloth_scrap', artClothScrap());
   addStrip(sc, 'crystal', artCrystal(false)); addStrip(sc, 'crystal_lit', artCrystal(true));
   CHARS.smith = [{ H: '#3a2a20', C: '#7a5a4a', P: '#4a3a3a', K: '#3a2a20', S: '#e8b48a' }, { apron: 1, beard: 1 }];
   CHARS.gchief = [{ H: '#c83a2a', S: '#6ab84a', C: '#7a5a3a', P: '#4a3a2a', E: '#ff3a2a', r: '#4a983a', R: '#e8c050' }, { ears: 1, scarf: 1 }];
@@ -145,7 +155,7 @@ function buildTextures(sc) {
   one('leaf', (() => { const [c, x] = mk(5, 4); fr(x, '#85e07a', 1, 0, 3, 3); fr(x, '#44805f', 0, 2, 2, 2); return c; })());
   one('petal', (() => { const [c, x] = mk(4, 3); fr(x, '#ffc4e0', 0, 0, 3, 2); fr(x, '#ff9ac8', 1, 1, 3, 2); return c; })());
   addStrip(sc, 'fly', artButterfly()); addStrip(sc, 'fly2', (() => { const s = artButterfly(); const x = s.c.getContext('2d'); x.globalCompositeOperation = 'source-atop'; x.fillStyle = 'rgba(120,200,255,.75)'; x.fillRect(0, 0, s.c.width, s.c.height); return s; })());
-  one('shadow', artShadowSoft(16, 6)); one('shadowb', artShadowSoft(34, 11)); one('fog', artFog()); one('rain', artRain()); one('rain_bg', artRainBg()); addStrip(sc, 'ripple', artRipple()); one('sprout', artSprout(0)); one('ripe', artSprout(1));
+  one('shadow', artShadowSoft(22, 10)); one('shadowb', artShadowSoft(36, 14)); one('fog', artFog()); one('rain', artRain()); one('rain_bg', artRainBg()); addStrip(sc, 'ripple', artRipple()); one('sprout', artSprout(0)); one('ripe', artSprout(1));
   addStrip(sc, 'wolfs', artMon('wolf', { G: '#e4ecf8', D: '#9aaecb', W: '#ffffff', E: '#4ad0ff', K: '#4a5a7a' })); addStrip(sc, 'slimef', artMon('slime', { G: '#ff8a3a', D: '#c0401a', L: '#fff0a0', E: '#3a1000' }));
   addStrip(sc, 'salam', artMon('snake', { G: '#e8642a', L: '#ffd060', E: '#2a0a00', R: '#ffe83a' })); addStrip(sc, 'golemi', artMon('golem', { R: '#a8cce6', D: '#6a8eb6', L: '#e2f4ff', E: '#ffffff', M: '#f4fbff', C: '#3a506e' }));
   addStrip(sc, 'snakei', artMon('snake', { G: '#9ad4f4', L: '#f0faff', E: '#1a2a5a', R: '#4a8aff' }));
@@ -168,7 +178,7 @@ function buildTextures(sc) {
   for (const k of ['slime', 'slimeb', 'slimer', 'slimei', 'bat', 'batc', 'shroom', 'squeen', 'cat0', 'cat1', 'cat2', 'fox0', 'wolf', 'boar', 'bee', 'snake', 'plant', 'ghost', 'golem', 'wisp', 'frog', 'slimep', 'wolfs', 'slimef', 'salam', 'golemi', 'snakei', 'chick0', 'chick1', 'chick2', 'duck0', 'duck1'])
     A.create({ key: k + '_mv', frames: fr2(k, 2), frameRate: k === 'bat' || k === 'batc' || k === 'bee' ? 12 : k === 'wolf' || k === 'wolfs' ? 8 : 5, repeat: -1 });
   for (const k of ['fly', 'fly2']) A.create({ key: k, frames: fr2(k, 2), frameRate: 8, repeat: -1 });
-  for (const k in CHARS) for (const d of ['down', 'up', 'side']) A.create({ key: k + '_' + d, frames: [1, 0, 2, 0].map(f => ({ key: 'ch_' + k, frame: d + f })), frameRate: 8, repeat: -1 });
+  for (const k in CHARS) for (const d of ['down', 'up', 'side']) A.create({ key: k + '_' + d, frames: (typeof npcWalkFrames === 'function' ? npcWalkFrames(k, d) : [d + '1', d + '0', d + '2', d + '0']).map(f => ({ key: 'ch_' + k, frame: f })), frameRate: 8, repeat: -1 });
   if (typeof applyGptSwap === 'function') applyGptSwap(T, A);
   if (typeof regIntTex === 'function') regIntTex(T);
   if (typeof regVerdantTex === 'function') regVerdantTex(T);
@@ -198,6 +208,8 @@ function buildTextures(sc) {
     regA('slime_atk', 14, 20, 12, 0); regA('slime_hurt', 21, 23, 10, 0);
     regA('slime_die', 28, 34, 9, 0);
   }
+  /* loop di atas sudah memasang gambar utuh (1 frame) dengan nama sama → buang agar jadi spritesheet (kalau tidak, efek tebasan/kena = gambar utuh macet) */
+  for (const k of ['vfx_swing_combo', 'vfx_hit_impact', 'vfx_charge_spin']) if (T.exists(k) && T.get(k).frameTotal <= 1) T.remove(k);
   if (IMGEL.vfx_swing_combo && !T.exists('vfx_swing_combo')) {
     sc.textures.addSpriteSheet('vfx_swing_combo', IMGEL.vfx_swing_combo, { frameWidth: 48, frameHeight: 36 });
     for (let r = 0; r < 5; r++) {

@@ -27,6 +27,11 @@ loadImgs().then(() => {
   game.events.once('ready', () => { setTimeout(() => { SCREEN.insertBefore(game.canvas, SCREEN.firstChild); titleScreen(); }, 50); });
 });
 window.__game = { get S() { return S; }, G, MAPS, press, Input, get sc() { return G.scene; }, newState, saveGame, loadSave, ITEMS };
+window.god = window.immortal = function () {
+  G.god = !G.god; if (G.god) S.hp = 99999; updHud();
+  if (G.scene && G.scene.pl) popWorld(G.scene.pl.x, G.scene.pl.y - 30, G.god ? 'IMMORTAL ON' : 'IMMORTAL OFF', G.god ? 'gold' : 'hurt');
+  return G.god ? 'Immortal: AKTIF' : 'Immortal: MATI';
+};
 // PWA: daftarkan service worker untuk production offline; di localhost buang cache agar perubahan langsung terbaca.
 if ('serviceWorker' in navigator && /^https?:/.test(location.protocol) && !location.pathname.endsWith('/dist/game.html')) {
   if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {

@@ -63,6 +63,8 @@ MAPS.forest = {
     // T433: Properti cerita khas markas Hutan Lumina (trofi buruan tulang & kristal hijau altar)
     ['bones', 1080, 270], ['bones', 1040, 240], ['bones', 1130, 140], ['bones', 1150, 150],
     ['cryst', 1050, 260], ['cryst', 1070, 240],
+    // Kamp Pemburu Liar / Bandit Slaver (Klaster Hutan Barat)
+    ['slaver_tent', 300, 620], ['slaver_cage', 240, 630], ['slaver_barricade', 250, 655], ['slaver_barricade', 330, 655], ['prisoner_wagon', 360, 630],
   ],
   chests: [
     { id: 'c1', x: 1060, y: 300, item: 'iron' }, { id: 'c2', x: 180, y: 852, item: 'ether2' },
@@ -84,6 +86,7 @@ MAPS.forest = {
     ['goblin_shaman', 1010, 210], ['goblin_shaman', 1140, 260],
     ['goblin_elite', 1090, 190],
     ['shroom', 210, 620], ['shroom', 170, 760], ['bat', 240, 700], ['wolf', 200, 520],
+    ['slaver', 260, 645], ['slaver', 320, 645], ['slaver_captain', 290, 635],
     ['slimeb', 480, 720], ['shroom', 580, 740], ['bat', 660, 720], ['goblin', 680, 860, { ambush: true }], ['slimeb', 600, 900], ['wolf', 720, 950],
     ['snake', 960, 830], ['snake', 1060, 900], ['snake', 1000, 800], ['shroom', 1100, 830],
   ],

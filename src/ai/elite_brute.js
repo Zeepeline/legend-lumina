@@ -6,6 +6,12 @@ Object.assign(World.prototype, {
     const isElite = D.tex === 'goblin_elite';
     e.rageT = (e.rageT || 0) - dt;
     e.skillCd = (e.skillCd || 2.5) - dt;
+    if (e.type === 'slaver_captain' && !e._berserk && e.hp < e.max * 0.45 && aggro) {
+      e._berserk = true; e.st = 'roar'; e.t = 0.6; s.setVelocity(0);
+      popWorld(s.x, s.y - 28, 'AMARAH KAPTEN!', 'crit'); sfxAt('roar', s.x, s.y, this);
+      if (this.jx) this.jx('spark', s.x, s.y - 12, 14, { tint: 0xff3a3a });
+      return;
+    }
     if (e.st === 'smash' || e.st === 'sweep' || e.st === 'roar') {
       s.setVelocity(0);
       if (e.t <= 0) {
@@ -50,22 +56,25 @@ Object.assign(World.prototype, {
             this.hurtPlayer(D.atk * mul, s.x, s.y);
             popWorld(pl.x, pl.y - 20, step === 3 ? 'HANTAMAN BESAR!' : 'HANTAMAN!', 'crit');
           }
+          if (e.type === 'slaver_captain' && step === 3 && this.shockwave) {
+            this.shockwave(s.x, s.y, 65, Math.round(D.atk * 1.2));
+          }
           if (step < 3) {
-            this.time.delayedCall(300, () => doSmash(step + 1));
+            this.time.delayedCall(e._berserk ? 220 : 300, () => doSmash(step + 1));
           } else {
-            e.st = 'rec'; e.t = 0.8; s.setVelocity(0);
+            e.st = 'rec'; e.t = e._berserk ? 0.45 : 0.8; s.setVelocity(0);
           }
         };
         this.time.delayedCall(380, () => doSmash(1));
         return;
       } else if (d < 150 && Math.random() < 0.65) {
-        e.skillCd = rnd(3.5, 5.5);
+        e.skillCd = e._berserk ? rnd(2.2, 3.6) : rnd(3.5, 5.5);
         e.st = 'cwind'; e.t = isRel ? rnd(0.35, 0.55) : rnd(0.35, 0.75);
         s.setVelocity(0); s.flipX = dx < 0;
         sfxAt('roar', s.x, s.y, this);
         const ang = Math.atan2(dy, dx);
-        e.cvx = Math.cos(ang) * D.spd * 2.2;
-        e.cvy = Math.sin(ang) * D.spd * 2.2;
+        e.cvx = Math.cos(ang) * D.spd * (e._berserk ? 2.6 : 2.2);
+        e.cvy = Math.sin(ang) * D.spd * (e._berserk ? 2.6 : 2.2);
         this.time.delayedCall(380, () => {
           if (e.hp <= 0) return;
           e.st = 'charge'; e.t = 0.85;
@@ -74,8 +83,9 @@ Object.assign(World.prototype, {
         return;
       }
     }
+    const spdMult = e._berserk ? 1.28 : 1;
     if (aggro) {
-      s.setVelocity((dx / d) * D.spd, (dy / d) * D.spd);
+      s.setVelocity((dx / d) * D.spd * spdMult, (dy / d) * D.spd * spdMult);
       s.flipX = dx < 0;
     } else {
       if (e.t <= 0) {

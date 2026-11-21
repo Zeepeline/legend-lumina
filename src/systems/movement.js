@@ -99,7 +99,7 @@
     if (pl.atkT > 0 && pl.atkT <= wLock * 0.55) {
       pl.atkT = 0;
       pl.atkCd = Math.min(pl.atkCd, 0.08);
-      if (this.sword) this.sword.setVisible(false);
+      if (this.sword) { if (this.swordRest) this.swordRest(); else this.sword.setVisible(false); } /* gerak membatalkan ayunan: pedang tetap dipegang */
     }
 
     // T510: Backstep saat mengunci target & menekan Dash tanpa arah analog

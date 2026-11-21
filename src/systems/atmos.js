@@ -36,15 +36,33 @@ function godrayTex(sc) {
   x.fill();
   sc.textures.addCanvas('godray_beam', c);
 }
+// Bayangan awan pixel art kumulus sejati (☁️ kubah bulat bertumpuk + dasar datar, chunky pixel-stepping)
 function cloudShadowTex(sc) {
   if (sc.textures.exists('cloud_shadow')) return;
-  const N = 256, [c, x] = mk(N, N);
-  x.fillStyle = 'rgba(10, 20, 35, 0.45)';
-  x.beginPath();
-  x.ellipse(70, 70, 60, 38, 0.2, 0, Math.PI * 2);
-  x.ellipse(180, 160, 75, 48, -0.15, 0, Math.PI * 2);
-  x.ellipse(140, 95, 50, 32, 0.1, 0, Math.PI * 2);
-  x.fill();
+  const W = 384, H = 256, [c, ctx] = mk(W, H);
+  const [cTmp, tCtx] = mk(W, H);
+  const puff = (cx, cy, rx, ry) => {
+    tCtx.beginPath();
+    tCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+    tCtx.fill();
+  };
+  tCtx.fillStyle = '#ffffff';
+  // Awan Utama Ghibli Megah: dasar datar membentang + kubah-kubah tebal bertingkat
+  puff(190, 115, 105, 36); puff(110, 108, 36, 32); puff(145, 88, 46, 42);
+  puff(195, 70, 56, 52); puff(245, 85, 48, 44); puff(280, 105, 38, 32);
+  puff(165, 125, 42, 26); puff(225, 125, 42, 26);
+  // Anak awan kecil melayang
+  puff(65, 60, 32, 15); puff(60, 55, 20, 18); puff(74, 52, 22, 20);
+  puff(330, 200, 38, 16); puff(325, 195, 22, 20); puff(342, 192, 24, 22);
+  // Kuantisasi ke grid 2x2 retro pixel steps (staircase chunky pixel art ala Cobo)
+  const B = 2, imgData = tCtx.getImageData(0, 0, W, H).data;
+  ctx.fillStyle = 'rgba(12, 28, 55, 0.55)';
+  for (let y = 0; y < H; y += B) {
+    for (let x = 0; x < W; x += B) {
+      const idx = ((y + 1) * W + (x + 1)) * 4;
+      if (imgData[idx + 3] > 120) ctx.fillRect(x, y, B, B);
+    }
+  }
   sc.textures.addCanvas('cloud_shadow', c);
 }
 Object.assign(World.prototype, {
@@ -222,7 +240,7 @@ Object.assign(World.prototype, {
       if (this._cloudL && this._cloudL.active) this._cloudL.destroy();
       cloudShadowTex(this);
       this._cloudL = outdoor && !cave && !OPT.lite ? this.add.tileSprite(0, 0, VW, VH, 'cloud_shadow')
-        .setOrigin(0).setScrollFactor(0).setDepth(-9.2e5).setAlpha(0.08) : null;
+        .setOrigin(0).setScrollFactor(0).setDepth(9990).setAlpha(0.16) : null;
       this._canopyL = (this.M && this.M.id === 'deepwood' && this.textures.exists('canopy_overhang'))
         ? this.add.tileSprite(0, 0, VW, 52, 'canopy_overhang').setOrigin(0).setScrollFactor(0).setDepth(1.98e5).setAlpha(0.92) : null;
       this._fogL = [0, 1].map(k => this.add.tileSprite(0, 0, VW, VH, 'fogsheet').setOrigin(0).setScrollFactor(0).setDepth(1.9e5 + k).setAlpha(0)
@@ -245,11 +263,14 @@ Object.assign(World.prototype, {
       f.tilePositionY = cam.scrollY * (k ? .55 : .3) + this.t * (k ? 1.5 : .8);
       f.setTint(n > .3 ? 0x8090b8 : (isDw ? 0x88b090 : 0xffffff));
     });
-    // T571: Bayangan Awan Melintas di Tanah (Chrono Trigger, Dragon Quest XI)
+    // Bayangan Awan Pixel Art (Cobo Makes Games - Pixel Snapped & Chunky Edges)
     if (this._cloudL && this._cloudL.active) {
-      this._cloudL.setVisible(outdoor && !cave && n < 0.65);
-      this._cloudL.tilePositionX = cam.scrollX * 0.25 + this.t * 8;
-      this._cloudL.tilePositionY = cam.scrollY * 0.25 - this.t * 4;
+      const cloudA = outdoor && !cave && n < 0.65 ? Math.max(0, (1 - n / 0.65) * 0.16) : 0;
+      this._cloudL.setVisible(cloudA > 0.01).setAlpha(cloudA);
+      if (cloudA > 0.01) {
+        this._cloudL.tilePositionX = Math.round(cam.scrollX + this.t * 10);
+        this._cloudL.tilePositionY = Math.round(cam.scrollY - this.t * 3.5);
+      }
     }
     // cahaya hangat lampu kecil + lentera Arka saat malam
     const ga = outdoor ? Math.max(0, Math.min(.6, (n - .12) * 1.4)) : 0, fogBoost = 1 + this._fogA * .8;

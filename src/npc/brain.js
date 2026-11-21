@@ -11,11 +11,11 @@ const NPC_ROLE = {
 const STORY_NPC = ['elder', 'girl', 'farmer', 'merchant', 'child', 'smith', 'inn', 'hunter', 'hermit', 'nila', 'ratih', 'gun', 'rudi', 'lestari', 'wati', 'darma', 'ka4', 'ka5', 'kmerchant', 'joko', 'bayu', 'sambo', 'pancing', 'kafilah', 'gj1', 'gj2'];
 // tempat kerja per peran (jenis objek di peta) & ikon kegiatan
 const NPC_SCALES = {
-  child: 0.96, girl: 0.96, rudi: 0.96, kb1: 0.94, kb4: 0.94, ka2: 0.96,
-  guard: 1.28, smith: 1.28, hunter: 1.26, gj1: 1.28, gj2: 1.28, kp8: 1.28, sambo: 1.26,
-  elder: 1.16, hermit: 1.16, ka4: 1.16, temple_priest: 1.18,
-  inn: 1.20, farmer: 1.22, joko: 1.22, wati: 1.20, darma: 1.22, lestari: 1.20,
-  merchant: 1.22, kmerchant: 1.22, bayu: 1.22, ratih: 1.18, gun: 1.22, pancing: 1.22,
+  mila: 0.86, child: 0.88, girl: 0.94, rudi: 0.96, kb1: 0.94, kb4: 0.94, ka2: 0.96,
+  guard: 1.05, smith: 1.05, hunter: 1.26, gj1: 1.28, gj2: 1.28, kp8: 1.28, sambo: 1.26,
+  elder: 1.00, hermit: 1.16, ka4: 1.16, temple_priest: 1.00, priest: 1.00,
+  inn: 1.00, farmer: 1.00, woman: 1.00, mom: 1.00, joko: 1.22, wati: 1.20, darma: 1.22, lestari: 1.20,
+  merchant: 1.00, kmerchant: 1.22, bayu: 1.22, ratih: 1.18, gun: 1.22, pancing: 1.22,
   default: 1.20
 };
 const WORK = {

@@ -69,7 +69,7 @@ class World extends Phaser.Scene {
     pl.body.setSize(10, 6).setOffset(5, CH_FH - 7);
     if (M.indoor) pl.setCollideWorldBounds(true);
     pl.dir = data.dir || 'down'; pl.flipX = pl.dir === 'left'; pl.atkCd = 0; pl.atkT = 0; pl.inv = 0; pl.kb = 0; pl.dead = false;
-    pl.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.36);
+    pl.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.85);
     this.physics.add.collider(pl, this.walls);
     for (const n of this.npcs) this.physics.add.collider(pl, n.spr);
     for (const e of this.enemies) if (e.D.ai === 'turret') this.physics.add.collider(pl, e.spr);
@@ -78,7 +78,7 @@ class World extends Phaser.Scene {
     this.weather = M.id === 'swamp' ? 'fog' : (!M.indoor && !M.dark && !G.title && hash(S.day, M.w, Math.floor(S.time / 6)) < .25) ? 'rain' : 'clear';
     if (!P) this.makeActiveFx();
     // kamera
-    const cam = this.cameras.main, z0 = (M && M.zoom) || (typeof OPT !== 'undefined' && OPT.zoom) || 1.18;
+    const cam = this.cameras.main, z0 = (M && M.zoom) || (typeof OPT !== 'undefined' && OPT.zoom) || 1.0;
     cam.setZoom(z0).setRoundPixels(true);
     cam.setBounds(Math.min(0, Math.round((M.w - VW) / 2)), Math.min(0, Math.round((M.h - VH) / 2)), Math.max(M.w, VW), Math.max(M.h, VH));
     this.camFollow = !G.title; this.cx = clamp(pl.x - VW / 2, 0, M.w - VW); this.cy = clamp(pl.y - 12 - VH / 2, 0, M.h - VH);
@@ -101,7 +101,7 @@ class World extends Phaser.Scene {
     const M = this.M, pl = this.pl, before = new Set(this.children.list);
     if (M.dark) this.dark = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5);
     else if (!M.indoor) { this.night = this.add.renderTexture(0, 0, VW, VH).setOrigin(0).setScrollFactor(0).setDepth(2e5); this.glows = this.lights.filter(L => !L.small).map(L => this.add.image(L.x, L.y, L.big ? 'nlL' : 'nlW').setTint(0xffc870).setBlendMode(Phaser.BlendModes.ADD).setDepth(2.01e5).setAlpha(0)); }
-    if (S.pet && !M.indoor && !G.title) { this.pet = this.add.sprite(pl.x - 14, pl.y, 'cat2', 0).setOrigin(.5, 1); this.pet.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.18).setScale(.8, .7); } else this.pet = null;
+    if (S.pet && !M.indoor && !G.title) { this.pet = this.add.sprite(pl.x - 14, pl.y, 'cat2', 0).setOrigin(.5, 1); this.pet.sh = this.add.image(pl.x, pl.y, 'shadow').setAlpha(.65).setScale(.8, .7); } else this.pet = null;
     if (this.weather === 'rain' && this.spawnRainEmitters) this.spawnRainEmitters();
     if (this.weather === 'fog') this.add.particles(0, 0, 'fog', { x: { min: -60, max: VW + 60 }, y: { min: -20, max: VH + 20 }, lifespan: 9000, speedX: { min: 4, max: 12 }, scale: { start: 1.6, end: 2.4 }, alpha: { start: 0, end: .2, ease: 'Sine.inOut' }, frequency: 500 }).setScrollFactor(0).setDepth(1.95e5);
     // partikel suasana
@@ -161,7 +161,7 @@ class World extends Phaser.Scene {
     const s = this.physics.add.sprite(n.x, n.y, 'ch_' + n.ch, 'down0').setOrigin(.5, 1).setDepth(n.y);
     s.body.setSize(12, 7).setOffset((s.width - 12) / 2, s.height - 8); s.setImmovable(true); s.setCollideWorldBounds(true);
     this.physics.add.collider(s, this.walls);
-    const o = { n, spr: s, ch: n.ch, home: { x: n.x, y: n.y }, t: rnd(1, 3), dir: n.dir, sh: this.add.image(n.x, n.y, 'shadow').setAlpha(.34) };
+    const o = { n, spr: s, ch: n.ch, home: { x: n.x, y: n.y }, t: rnd(1, 3), dir: n.dir, sh: this.add.image(n.x, n.y, 'shadow').setAlpha(.8) };
     this.face(o, n.dir); this.npcs.push(o);
     this.inter.push({ npc: o, r: n.reach || 16, fn: () => this.talkNpc(o) });
     // tanda ! untuk NPC yang punya misi
@@ -171,7 +171,7 @@ class World extends Phaser.Scene {
   face(o, dir) { o.dir = dir; const s = o.spr; s.anims.stop(); s.setFrame((dir === 'left' || dir === 'right' ? 'side' : dir) + '0'); s.flipX = dir === 'left'; }
   spawnCritter([kind, x, y, v]) {
     const key = kind + v; const s = this.add.sprite(x, y, key, 0).setOrigin(.5, 1).setDepth(y);
-    const sh = this.add.image(x, y, 'shadow').setAlpha(.18).setScale(.8, .7);
+    const sh = this.add.image(x, y, 'shadow').setAlpha(.55).setScale(.8, .7);
     this.critters.push({ s, sh, key, home: { x, y }, busy: false, t: rnd(.5, 3) });
   }
   spawnFly(i) {
@@ -199,7 +199,7 @@ class World extends Phaser.Scene {
       if (this.anims.exists(D.tex + '_mv')) { s.play(D.tex + '_mv'); s.anims.setProgress(Math.random()); }
       else if (this.anims.exists(D.tex + '_idle')) { s.play(D.tex + '_idle'); }
     } else s.anims.stop();
-    const e = { D, type, spr: s, sc: D.scale || 1, hp: D.hp, max: D.hp, st: 'idle', t: rnd(.2, 1.2), home: { x, y }, ph: rnd(0, 6), shootT: rnd(1, 2.5), flash: 0, kb: 0, cd: 0, boss: BOSS_AI.includes(D.ai), sh: this.add.image(x, y, D.scale ? 'shadowb' : 'shadow').setAlpha(.32) };
+    const e = { D, type, spr: s, sc: D.scale || 1, hp: D.hp, max: D.hp, st: 'idle', t: rnd(.2, 1.2), home: { x, y }, ph: rnd(0, 6), shootT: rnd(1, 2.5), flash: 0, kb: 0, cd: 0, boss: BOSS_AI.includes(D.ai), sh: this.add.image(x, y, D.scale ? 'shadowb' : 'shadow').setAlpha(.8) };
     if (type === 'gold_slime') {
       s.setTint(0xffd700);
       e.goldSlime = true;
@@ -315,7 +315,7 @@ class World extends Phaser.Scene {
       const tx = pl.x - VW / 2, ty = pl.y - 12 - VH / 2, k = Math.exp(-this.dt * 9);
       let ox = (this.cx - tx) * k, oy = (this.cy - ty) * k;
       if (Math.abs(ox) < .5) ox = 0; if (Math.abs(oy) < .5) oy = 0;
-      const B = this.camB || { x0: 0, y0: 0, x1: M.w, y1: M.h }, z = (M && M.zoom) || (typeof OPT !== 'undefined' && OPT.zoom) || 1.18;
+      const B = this.camB || { x0: 0, y0: 0, x1: M.w, y1: M.h }, z = (M && M.zoom) || (typeof OPT !== 'undefined' && OPT.zoom) || 1.0;
       const cc = (v, a, b, V) => { const W = V / z, d = (V - W) / 2; return (b - a < W ? Math.round((a + b - W) / 2) : clamp(v + d, a, b - W)) - d; };
       const sx = cc(Math.round(pl.x) - VW / 2 + Math.round(ox), B.x0, B.x1, VW), sy = cc(Math.round(pl.y) - 12 - VH / 2 + Math.round(oy), B.y0, B.y1, VH);
       this.cx = tx + ox; this.cy = ty + oy;

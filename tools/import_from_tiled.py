@@ -34,6 +34,12 @@ IMG_TO_OBJ = {
     'gpt_v_village_well': 'village_well',
     'gpt_v_watchtower': 'watchtower',
     'gpt_v_windmill': 'v_windmill',
+    'gpt_orc_gate': 'orc_gate',
+    'gpt_palisade_post_banner': 'palisade_post_banner',
+    'gpt_palisade_barricade': 'palisade_barricade',
+    'gpt_palisade_pillar': 'palisade_pillar',
+    'gpt_palisade_wall_long': 'palisade_wall_long',
+    'gpt_palisade_wall_corner': 'palisade_wall_corner',
 }
 
 target_maps = sys.argv[1:] if len(sys.argv) > 1 else [

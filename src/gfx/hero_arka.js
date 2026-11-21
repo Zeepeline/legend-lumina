@@ -44,8 +44,9 @@ function heroFrame(sc, dt) {
   else if (pl._bow > 0) { k = sd === 'side' ? 'bow_side' : sd === 'up' ? 'cast_up' : 'bow_down'; f = Math.min(3, Math.floor((.4 - pl._bow) / .1)); }
   else if (pl._cast > 0) { k = 'cast_' + sd; f = Math.min(3, Math.floor((.4 - pl._cast) / .1)); }
   else if (pl._atk > 0) {
-    const c = pl.combo || 1, fin = c === 5; k = (fin ? 'atk3_' : c % 2 ? 'atk1_' : 'atk2_') + sd;
-    const D = fin ? .4 : .28; f = Math.min(3, Math.floor((D - Math.min(D, pl._atk)) / (D / 4)));
+    const c = pl.combo || 1, fin = c === 3 || c === 5; k = (fin ? 'atk3_' : c === 2 ? 'atk2_' : 'atk1_') + sd;
+    /* ritme tak rata: ancang singkat → ayun cepat → tahan di benturan → pulih (bukan 4 frame sama panjang) */
+    const D = fin ? .4 : .28, u = (D - Math.min(D, pl._atk)) / D; f = u < .16 ? 0 : u < .3 ? 1 : u < .62 ? 2 : 3;
   }
   else if (moving) { k = 'walk_' + sd; fps = 9 * Math.min(1.4, Math.max(.7, pl.body.velocity.length() / 70)); }
   else { k = 'idle_' + sd; fps = 4; }
@@ -71,7 +72,7 @@ function heroFrame(sc, dt) {
       if (pl) after.call(this, pl, s0); return r;
     };
   };
-  wrap('attack', function (pl, s0) { if (pl.atkCd > s0[2] && !pl._bow) pl._atk = pl.combo === 5 ? .4 : .28; });
+  wrap('attack', function (pl, s0) { if (pl.atkCd > s0[2] && !pl._bow) pl._atk = (pl.combo === 3 || pl.combo === 5) ? .4 : .28; });
   wrap('dash', function (pl) { if (pl.dashStartT === this.t) { pl._roll = .3; pl._atk = 0; } });
   wrap('hurtPlayer', function (pl, s0) { if (S.hp < s0[0]) pl._hurt = .25; });
   wrap('magic', function (pl, s0) { if (S.mp < s0[1] || pl.atkCd !== s0[2]) pl._cast = .4; });

@@ -367,6 +367,18 @@ Object.assign(OBJ_SPAWN, {
       }
     });
   },
+  mila_grave(s, x, y) {
+    this.shadow(x, y, 8, 3);
+    this.inter.push({ x, y: y + 2, r: 20, fn: async () => say('Makam sederhana di bawah pohon... Sehelai pita merah terikat di nisan kayu.') });
+  },
+  reflection_spring(s, x, y) {
+    this.shadow(x, y, 16, 5);
+    this.inter.push({ x, y: y + 2, r: 22, fn: async () => say('Mata air pegunungan yang sangat jernih. Permukaan airnya memantulkan langit.') });
+  },
+  slaver_cage(s, x, y, opt) {
+    this.shadow(x, y, 18, 5);
+    this.inter.push({ x, y: y + 2, r: 24, fn: async () => say(opt && opt.text ? opt.text : 'Kerangkeng kayu berlumpur dengan gembok rantai berkarat.') });
+  },
 });
 OBJ_SPAWN.stele = OBJ_SPAWN.sign;
 OBJ_SPAWN.bloom = OBJ_SPAWN.pot;
