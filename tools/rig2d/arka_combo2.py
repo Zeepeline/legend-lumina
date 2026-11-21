@@ -15,12 +15,16 @@ BASE = (52, 70)  # titik pinggul di kanvas saat dx=dy=0
 # ── potongan tampak samping (hadap kanan) dari sprite asli ──
 f = A.frame(4); ref = f.copy()
 HEAD = A.cut(f, 0, 47, 0, 23); ARM = A.cut(f, 18, 24, 24, 32); TORSO = A.fill_holes(f, ref)
-def leg(x0, x1):  # sepatu (baris 34–39) + 3 baris celana di atasnya disalin (menyusup ke bawah jaket → sambungan tertutup saat berputar)
-    l = A.cut(TORSO, x0, x1, 34, 39); l[31:34, x0:x1 + 1] = TORSO[31:34, x0:x1 + 1]; return l
-LEGB = leg(17, 24); LEGF = leg(25, 33)
+# kaki 2 ruas (paha + betis/sepatu) dengan sendi lutut → IK: telapak menapak tanah, lutut menekuk sendiri
+def thigh(x0, x1):  # celana di bawah jaket (baris 31–35) disalin (menyusup ke bawah jaket)
+    l = np.zeros_like(TORSO); l[31:36, x0:x1 + 1] = TORSO[31:36, x0:x1 + 1]; return l
+def shin(x0, x1): return A.cut(TORSO, x0, x1, 35, 39)
+THB, THF = thigh(17, 24), thigh(25, 33); SHB, SHF = shin(17, 24), shin(25, 33)
+TORSO[34:36, 17:34, 3] = 0  # pangkal paha milik ruas paha
+L1, L2 = 1.5, 2.0  # paha (pinggul 33→lutut 35), betis (lutut→telapak 37) sesuai sprite
 ARMB = ARM.copy(); ARMB[..., :3] = (ARMB[..., :3] * .82).astype(np.uint8)  # lengan belakang (sedikit lebih gelap), hanya saat dua tangan
 SW, SWG = A.sword_img()
-HIP, NECK, SHO, HAND, HPB, HPF = (25, 33), (25, 23), (21, 25), (21, 31), (21, 34), (28, 34)
+HIP, NECK, SHO, HAND, HPB, HPF = (25, 33), (25, 23), (21, 25), (21, 31), (21, 33), (28, 33)
 
 def rot(px, py, cx, cy, ang):  # putar titik (koordinat layar, sudut CCW layar)
     r = math.radians(ang); x, y = px - cx, py - cy
@@ -45,14 +49,36 @@ def pose_points(P):
     sho = rot(*to(SHO), hx, hy, t); hand = rot(sho[0] + HAND[0] - SHO[0], sho[1] + HAND[1] - SHO[1], *sho, P['a'] + t)
     return (hx, hy), sho, hand
 
-GROUND = BASE[1] + 6
+GROUND = BASE[1] + 4  # telapak sprite samping di baris 37 (pinggul 33)
+def ang_of(dx, dy): return math.degrees(math.atan2(dx, dy))  # sudut CCW yang memutar arah 'bawah' ke (dx, dy)
+def leg_ik(cv, TH, SH, hp, at, la, P):
+    hx, hy = at; reach = L1 + L2
+    # target pergelangan: di tanah (jarak langkah dari sudut kaki la) bila menapak; saat di udara: kaki terlipat
+    if P['dy'] > -2:
+        fx = hx - math.sin(math.radians(la)) * (reach + 1.5); fy = GROUND - .5
+    else:
+        fx = hx - math.sin(math.radians(la)) * reach * .7 + 1; fy = hy + reach * .7
+    dx, dy = fx - hx, fy - hy; d = min(math.hypot(dx, dy), reach - .01)
+    base = math.atan2(dy, dx); k = math.acos(max(-1, min(1, (L1 * L1 + d * d - L2 * L2) / (2 * L1 * d))))
+    th = base - k  # lutut menekuk ke depan (arah hadap +x)
+    kx, ky = hx + math.cos(th) * L1, hy + math.sin(th) * L1
+    a1 = ang_of(kx - hx, ky - hy); a2 = ang_of(fx - kx, fy - ky) if math.hypot(fx - kx, fy - ky) > .1 else a1
+    a1 = max(-45, min(45, a1)); a2 = max(-40, min(40, a2))  # kaki kecil: tekukan dibatasi agar tidak terpuntir
+    kx, ky = rot(hx, hy + L1, hx, hy, a1)
+    knee_src = (hp[0], hp[1] + 2)
+    blit(cv, TH, hp, a1, (hx, hy))
+    tmp = np.zeros_like(cv); blit(tmp, SH, knee_src, a2, (kx, ky)); ys = np.nonzero(tmp[..., 3] > 128)[0]
+    if len(ys) and P['dy'] > -2:  # menapak: telapak ditempel ke garis tanah (maks ±3 px)
+        sh = int(max(-3, min(3, GROUND - ys.max()))); tmp = np.roll(tmp, sh, axis=0)
+    m = tmp[..., 3] > 128; cv[m] = tmp[m]
 def fix_ground(P):
-    P = dict(P); P['dy'] = min(P['dy'], 2)  # jongkok maks 2 px → telapak tetap di tanah
+    P = dict(P); P['dy'] = min(P['dy'], 2)  # jongkok maks 2 px (lutut menekuk lewat IK, telapak tetap di tanah)
     (hx, hy), sho, hand = pose_points(P)
     for _ in range(40):
         tx, ty = tip_of(hand, P['a'] + P['t'] + P['w'])
         if ty <= GROUND + (2 if P.get('slam') else -1): break
-        P['w'] += 4 if ((P['a'] + P['t'] + P['w']) % 360) < 180 else -4  # angkat ujung ke depan
+        ang = P['a'] + P['t'] + P['w']  # putar ke arah yang membawa ujung ke DEPAN (x lebih besar), bukan ke belakang
+        P['w'] += 4 if tip_of(hand, ang + 4)[0] >= tip_of(hand, ang - 4)[0] else -4
     return P
 
 def draw(P):
@@ -65,8 +91,7 @@ def draw(P):
     raised = 60 < ((P['a'] + t) % 360) < 260  # lengan terangkat di atas bahu → digambar di belakang kepala (wajah tidak tertutup)
     if P.get('two'): blit(cv, ARMB, SHO, P['a'] + t - 6, (sho[0] - 1, sho[1]))  # tangan kedua ikut menggenggam
     if behind or raised: blit(cv, SW, SWG, sw_ang, hand)
-    blit(cv, LEGB, HPB, P['lb'], (to(HPB)[0] + max(-1, min(1, P['bdx'])), to(HPB)[1]))
-    blit(cv, LEGF, HPF, P['lf'], (to(HPF)[0] + max(-1, min(1, P['fdx'])), to(HPF)[1]))
+    for TH, SH, hp, la in ((THB, SHB, HPB, P['lb']), (THF, SHF, HPF, P['lf'])): leg_ik(cv, TH, SH, hp, to(hp), la, P)
     blit(cv, TORSO, HIP, t, (hx, hy))  # badan menutupi pangkal kedua kaki
     neck = rot(*to(NECK), hx, hy, t)
     if raised: blit(cv, ARM, SHO, P['a'] + t, sho)
@@ -101,9 +126,11 @@ MOVES = [
                          K(45, True, a=110, w=-50, t=24, dx=33, dy=7, lf=-35, lb=35, fdx=6, bdx=-5), K(150, a=125, w=-40, t=20, dx=33, dy=6, lf=-35, lb=35, fdx=6, bdx=-5)]),
     ('9 Terjangan', [K(140, a=70, w=25, t=-4, dx=30, dy=2), K(40, True, a=90, w=0, t=12, dx=44, lf=-35, fdx=8, lb=35, bdx=-5, ghost=1),
                      K(40, True, a=90, w=0, t=12, dx=56, lf=-35, fdx=8, lb=35, bdx=-5, ghost=1), K(160, a=92, w=-2, t=10, dx=58, lf=-35, fdx=8, lb=35, bdx=-5)]),
-    ('10 Hantaman Akhir', [K(170, a=185, w=25, t=-14, dx=58, dy=-3, two=1, ht=4, lf=-20, lb=20), K(120, a=195, w=35, t=-16, dx=59, dy=-9, two=1, lf=-35, lb=-15),
-                           K(45, True, a=90, w=-10, t=16, dx=61, dy=0, two=1), K(45, True, a=20, w=-50, t=22, dx=62, dy=6, two=1, lf=-35, lb=35, fdx=5, bdx=-4, slam=1),
-                           K(320, a=15, w=-55, t=22, dx=62, dy=6, two=1, lf=-35, lb=35, fdx=5, bdx=-4, slam=2), K(220, **(READY | {'dx': 62}))]),
+    ('10 Hantaman Akhir', [K(170, a=170, w=20, t=-12, dx=58, dy=-3, two=1, ht=4, lf=-15, lb=15),
+                           K(130, a=178, w=25, t=-14, dx=60, dy=-9, two=1, lf=-30, lb=-10),
+                           K(45, True, a=120, w=0, t=8, dx=64, dy=-3, two=1, lf=-25, lb=20),
+                           K(45, True, a=48, w=-6, t=18, dx=68, dy=3, two=1, lf=-35, lb=35, slam=1),
+                           K(320, a=44, w=-8, t=20, dx=68, dy=3, two=1, lf=-35, lb=35, slam=2), K(240, **(READY | {'dx': 68}))]),
 ]
 
 def lerp(p, q, u):
@@ -133,7 +160,7 @@ for name, keys in MOVES:
             layer = Image.new('RGBA', (CW, CH)); d = ImageDraw.Draw(layer)
             hx, hy = BASE[0] + P['dx'], BASE[1] + max(P['dy'], 0)
             sh = 9 - min(5, max(0, -P['dy']) * .4)
-            d.ellipse((hx - sh, BASE[1] + 6 - 2, hx + sh, BASE[1] + 6 + 2), fill=(18, 28, 14, 120))
+            d.ellipse((hx - sh, GROUND - 1, hx + sh, GROUND + 3), fill=(18, 28, 14, 120))
             for g in ghosts: layer.alpha_composite(g)
             if kp['smear'] and hand is not None and prev_tip is not None:  # coretan bilah: bidang antara pose pedang sebelumnya & sekarang
                 (ph, pa) = prev_tip; poly = []
@@ -149,9 +176,9 @@ for name, keys in MOVES:
             if P.get('slam'):
                 k = min(1, s / steps) if kp.get('slam') == 1 else 1; d2 = ImageDraw.Draw(layer)
                 tx, ty = tip_of(hand, sang); r = 8 + 18 * (u if kp.get('slam') == 2 else 0)
-                d2.ellipse((tx - r, BASE[1] + 6 - r * .32, tx + r, BASE[1] + 6 + r * .32), outline=(255, 240, 190, int(255 * (1 - u * .8))), width=2)
+                d2.ellipse((tx - r, GROUND - r * .32, tx + r, GROUND + r * .32), outline=(255, 240, 190, int(255 * (1 - u * .8))), width=2)
                 for j in range(10):
-                    a2 = j * .63 + u; d2.point((tx + math.cos(a2) * r * 1.1, BASE[1] + 5 - abs(math.sin(a2)) * 10 * (1 - u)), fill=(196, 160, 110, 255))
+                    a2 = j * .63 + u; d2.point((tx + math.cos(a2) * r * 1.1, GROUND - 1 - abs(math.sin(a2)) * 10 * (1 - u)), fill=(196, 160, 110, 255))
             if P.get('ghost'): gc = img.copy(); arr = np.array(gc); arr[..., 3] = (arr[..., 3] * .35).astype(np.uint8); arr[..., :3] = (arr[..., :3] * .5 + 120).astype(np.uint8); ghosts = (ghosts + [Image.fromarray(arr)])[-2:]
             else: ghosts = []
             frames.append((layer, kp['ms'] / steps, name, bool(P.get('slam')) and kp.get('slam') == 1 and s == steps)); CHECK.append((name, P, kp.get('spin')))
