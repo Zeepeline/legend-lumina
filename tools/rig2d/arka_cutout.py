@@ -19,7 +19,7 @@ def cut(f, x0, x1, y0, y1):
     p = np.zeros_like(f); p[y0:y1 + 1, x0:x1 + 1] = f[y0:y1 + 1, x0:x1 + 1]; f[y0:y1 + 1, x0:x1 + 1, 3] = 0; return p
 
 def fill_holes(img, ref, y0=24, y1=33):  # isi bekas lengan dengan warna jaket terbanyak (badan tidak bolong/belang)
-    band = img[y0:y1 + 1]; px = band[band[..., 3] > 0][:, :3]
+    band = img[y0:y1 + 1]; px = band[band[..., 3] > 0][:, :3]; px = px[px.astype(int).sum(1) > 170]  # abaikan garis tepi gelap
     cols, cnt = np.unique(px, axis=0, return_counts=True); jacket = cols[cnt.argmax()]
     need = (ref[..., 3] > 0) & (img[..., 3] == 0); img[need] = [*jacket, 255]
     return img
