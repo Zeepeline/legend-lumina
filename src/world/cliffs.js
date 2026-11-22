@@ -3,6 +3,7 @@
 // Sistem tebing bertingkat (Tier 1 & Tier 2) di area perbatasan luar peta.
 // Area perbatasan ditinggikan 1-2 tingkat dataran lebih tinggi dari playable zone.
 // Jalur dan pintu keluar otomatis dipasangi lereng tanjakan (verdant_cliff_slope) yang bisa dilalui.
+const CLIFFS = { on: false }; /* tebing dimatikan pemilik (22-11-2026): tidak ada gambar & tembok tebing. true = hidupkan lagi */
 (function () {
   function dist(x1, y1, x2, y2) { return Math.hypot(x2 - x1, y2 - y1); }
 
@@ -104,6 +105,7 @@
   function buildCliffData(M) {
     if (M._cliffsBuilt) return;
     M._cliffsBuilt = true;
+    if (!CLIFFS.on) { M._cliffObjs = []; M._cliffWalls = []; return; }
 
     const bSegs = getBorderSegments(M);
     const allCliffs = (M.cliffs || []).concat(bSegs);

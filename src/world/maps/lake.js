@@ -30,7 +30,6 @@ MAPS.lake = {
       text: 'Prasasti Danau Cermin:\n"Cahaya lahir di utara, tumbuh di selatan, lalu pulang di barat. Hanya cahaya yang pulang yang boleh menyeberang."'
     }],
     ['sign', 880, 200, { text: 'Jalan ke KOTA LUMINA (utara)\nPerbaikan longsor oleh Dewan Kota.', lore: 'kota_lumina' }],
-    ['verdant_cliff_corner', 1260, 100], ['verdant_cliff_straight', 1150, 100],
     ['verdant_rock_large', 1220, 190], ['verdant_bush', 1120, 180], ['verdant_tree', 1300, 160],
     ['log', 900, 130]],
   walls: [[0, 0, 780, 40], [860, 0, 540, 40], [0, 0, 40, 1000], [0, 960, 1400, 40], [1360, 0, 40, 470], [1360, 530, 40, 470]],

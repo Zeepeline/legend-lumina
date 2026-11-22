@@ -147,11 +147,11 @@ _Peta: Rawa Senja (bab 2, Morgath)_
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 
-## src/world/maps/lake.js (51 baris)
+## src/world/maps/lake.js (50 baris)
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (201 baris)
+## src/world/maps/city.js (200 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 
@@ -627,9 +627,9 @@ _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung da
 _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),_
 `ORG_SKIP` 5 · `ORG_FILL` 6 · `orgPlanned()` 7 · `orgCurve()` 9
 
-## src/world/cliffs.js (181 baris)
+## src/world/cliffs.js (183 baris)
 _T442, T445 & Elevated Border Cliffs:_
-
+`CLIFFS` 6
 
 ## src/systems/waterflow.js (155 baris)
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
