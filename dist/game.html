@@ -8837,7 +8837,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.69.0';
+const GAME_VERSION = '1.70.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
@@ -25497,6 +25497,8 @@ function waterRects(M) {
   const E = grassEdgeData(M); if (!E || !E.Wm) return null;
   const S = GRASS_EDGE.cell, br = fitBridgeRects(M), P = fitBenua(M) ? WORLD_POS[M.id] : null, out = [];
   const sd = WORLD_FIT.iceFord.includes(M.id) && M.paths && typeof makeSD === 'function' ? makeSD(M) : null;
+  const docks = (M.objs || []).filter(o => o[0] === 'dock').map(o => [o[1] - 18, o[2] - 56, 36, 56]); /* dermaga bisa dipijak */
+  br.push(...docks);
   const blocked = (c, r) => {
     if (!E.Wm[r * E.cols + c]) return false; const x = c * S + S / 2, y = r * S + S / 2;
     if (sd && sd(x, y) <= WORLD_FIT.fordR) return false;
@@ -25624,6 +25626,28 @@ function natureFoot(L) {
   return out;
 }
 const natInFoot = (F, x, y, px = 0, py = 0) => F.some(r => x > r[0] - px && x < r[2] + px && y > r[1] && y < r[3] + py);
+// titik yang harus tetap terlihat (dermaga, perahu, peti, NPC, titik pancing, papan) dari wilayah ini & tetangga: [x, y, r] lokal
+function natureKeep(M) {
+  if (M._natK) return M._natK;
+  const out = [], P = typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id], ox = P ? P[0] : 0, oy = P ? P[1] : 0;
+  const benua = P && typeof BENUA !== 'undefined' && BENUA && typeof isOutdoorRegion === 'function';
+  const ids = benua ? Object.keys(WORLD_POS).filter(isOutdoorRegion) : [M.id];
+  for (const id of ids) {
+    const N = MAPS[id], Q = P ? WORLD_POS[id] : [0, 0]; if (!N) continue;
+    if (Q[0] > ox + M.w + 200 || Q[0] + N.w < ox - 200 || Q[1] > oy + M.h + 200 || Q[1] + N.h < oy - 200) continue;
+    const add = (x, y, r) => { const X = x + Q[0] - ox, Y = y + Q[1] - oy; if (X > -r && Y > -r && X < M.w + r && Y < M.h + r) out.push([X, Y, r]); };
+    for (const o of N.objs || []) if (/^(dock|dockboat|boat|sign|campfire|well|board)$/.test(o[0])) add(o[1], o[2], o[0] === 'dock' ? 90 : 56);
+    for (const c of N.chests || []) add(c.x, c.y, 40);
+    for (const n of N.npcs || []) add(n.x, n.y, 40);
+    for (const f of N.fish || []) add(f[0], f[1], 52);
+  }
+  return (M._natK = out);
+}
+/* pohon (tajuk ±90 px di atas pangkal; raksasa ×1,5) tidak menutupi titik penting: pohon di selatan titik paling berbahaya */
+const natKeepOk = (K, x, y, t) => {
+  const g = /redwood/i.test(t) ? 1.5 : 1;
+  return !K.some(([X, Y, r]) => Math.abs(x - X) < r * g && y - Y > -r * .5 && y - Y < r * 1.6 * g);
+};
 // kotak dalam (di dalam baris pembatas)
 function natureBox(M) {
   const b = M.border;
@@ -25637,7 +25661,7 @@ function natureScatter(M, spec, base) {
   const isU = t => NATURE.underRx.test(t);
   const trees = base.filter(o => natIsTree(o[0])), under = base.filter(o => isU(o[0])), rest = base.filter(o => !natIsTree(o[0]) && !isU(o[0]));
   const tTypes = spec.types.filter(([t]) => natIsTree(t)), tSum = tTypes.reduce((a, [, p]) => a + p, 0);
-  const foot = natureFoot(M.objs || []);
+  const foot = natureFoot(M.objs || []), keep = natureKeep(M);
   const clear = (x, y, tree) => !natInFoot(foot, x, y, tree ? 30 : 0, tree ? 70 : 0) && scatterClearBase(M, () => 999, [], null, [0, 0], x, y, { min: 0 });
   const [x0, y0, x1, y1] = natureBox(M), out = [];
   // sel spasial untuk jarak antarpohon
@@ -25668,6 +25692,7 @@ function natureScatter(M, spec, base) {
       if (near(x, y, sp, NATURE.treeRx) || !clear(x, y, 1)) continue;
       let r = vnoise(x, y, NATURE.species, seed + 9) * tSum, t = tTypes[0][0]; /* jenis berpetak */
       for (const [tt, p] of tTypes) { if (r < p) { t = tt; break; } r -= p; }
+      if (!natKeepOk(keep, x, y, t)) continue;
       const snowy = M.id === 'meadow' && y > M.h - 400 && hash(Math.round(x), Math.round(y), 33) < (y - (M.h - 400)) / 400;
       if (snowy && /verdant_tree|treeA|treeB/.test(t)) t = 'pine'; /* dekat Puncak Beku → pinus */
       put([t, Math.round(x), Math.round(y)]);
@@ -25811,7 +25836,8 @@ function natureSwayTex(sc, key) {
 //   (BRIDGES.list ditambah; tembok air world_fit otomatis berlubang di jembatan);
 // - titik pancing yang tidak di air / terlalu jauh dari darat → dipindah ke petak air di tepi darat terdekat (riak tetap di air,
 //   Arka bisa menjangkaunya dari darat, jarak interaksi 26 px).
-const PLACE_FIT = { on: true, pad: 6, maxR: 8, fishMax: 12, ford: { on: true, max: 200, gap: 90, side: 24 } };
+const PLACE_FIT = { on: true, pad: 6, maxR: 8, fishMax: 12, ford: { on: true, max: 200, gap: 90, side: 24 },
+  boatRx: /^(boat|dockboat)$/, padRx: /^lotuspad$/, reedRx: /^reeds$/, waterR: 12 };
 function placeFitMap(M, L) {
   if (M._pf || !PLACE_FIT.on) return;
   const E = typeof grassEdgeData === 'function' && grassEdgeData(M); if (!E || !E.Wm) return;
@@ -25848,7 +25874,45 @@ function placeFitMap(M, L) {
     }
     if (best) { log.push('pancing ' + f[0] + ',' + f[1]); f[0] = best[0] * S + S / 2; f[1] = best[1] * S + S / 2; }
   }
+  placeWaterObjs(M, L, E, mine, log);
   if (log.length) M._pfLog = log; /* untuk pemeriksaan: MAPS[id]._pfLog */
+}
+// benda air: dermaga (pangkal di darat, menjorok ke air di utara), perahu & teratai di air, buluh di tepi air
+function placeWaterObjs(M, L, E, mine, log) {
+  const S = GRASS_EDGE.cell, C = E.cols, R = E.rows, PF = PLACE_FIT;
+  const W = (c, r) => c >= 0 && r >= 0 && c < C && r < R && !!E.Wm[r * C + c], Lnd = (c, r) => c >= 0 && r >= 0 && c < C && r < R && !E.Wm[r * C + c];
+  const near = (c0, r0, ok) => { /* sel terdekat (cincin demi cincin) yang memenuhi ok */
+    const fine = (c, r) => ok(c, r) && mine(c * S + 8, r * S + 14); /* titik akhir (r·S+14) harus di wilayah sendiri */
+    if (fine(c0, r0)) return [c0, r0];
+    for (let d = 1; d <= PF.waterR; d++) for (let j = -d; j <= d; j++) for (let i = -d; i <= d; i++) {
+      if (Math.max(Math.abs(i), Math.abs(j)) === d && fine(c0 + i, r0 + j)) return [c0 + i, r0 + j];
+    }
+    return null;
+  };
+  const move = (o, x, y, what) => { if (o[1] === x && o[2] === y) return; log.push(what + ' ' + o[1] + ',' + o[2]); o[1] = x; o[2] = y; };
+  const docks = [];
+  for (const o of L) if (o[0] === 'dock') {
+    const ok = (c, r) => Lnd(c, r) && Lnd(c - 1, r) && Lnd(c + 1, r) && W(c, r - 2) && W(c - 1, r - 2) && W(c + 1, r - 2) && W(c, r - 3);
+    const p = near(Math.floor(o[1] / S), Math.floor((o[2] - 2) / S), ok);
+    if (p) move(o, p[0] * S + S / 2, p[1] * S + 14, 'dermaga');
+    docks.push([o[1] - 24, o[2] - 60, o[1] + 24, o[2] + 4]);
+  }
+  const onDock = (x, y) => docks.some(d => x > d[0] - 22 && x < d[2] + 22 && y > d[1] && y < d[3] + 8);
+  for (const o of L) {
+    const c0 = Math.floor(o[1] / S), r0 = Math.floor((o[2] - 6) / S);
+    if (PF.boatRx.test(o[0])) {
+      const ok = (c, r) => W(c - 1, r) && W(c, r) && W(c + 1, r) && [[0, 1], [0, 2], [-2, 0], [2, 0], [0, -1]].some(([i, j]) => Lnd(c + i, r + j)) &&
+        !onDock(c * S + 8, r * S + 14);
+      const p = near(c0, r0, ok); if (p) move(o, p[0] * S + S / 2, p[1] * S + 14, 'perahu');
+    } else if (PF.padRx.test(o[0])) {
+      const ok = (c, r) => W(c, r) && W(c - 1, r) && W(c + 1, r) && W(c, r - 1) && W(c, r + 1);
+      const p = near(c0, r0, ok); if (p) move(o, p[0] * S + S / 2, p[1] * S + 12, 'teratai');
+    } else if (PF.reedRx.test(o[0])) {
+      const ok = (c, r) => Lnd(c, r) && [[1, 0], [-1, 0], [0, 1], [0, -1], [2, 0], [-2, 0], [0, 2], [0, -2]].some(([i, j]) => W(c + i, r + j));
+      const p = near(c0, r0, ok); if (p) move(o, p[0] * S + S / 2, p[1] * S + 12, 'buluh');
+    }
+  }
+  if (OBJ.dock && OBJ.dock.col) OBJ.dock.col = [0, 0, 0]; /* dermaga bisa dipijak (air di bawahnya dibuka world_fit) */
 }
 // titik tengah penyeberangan jalan lama × air gambar (lokal); yang menyusuri tepi air (bukan menyeberang) dilewati
 function pathCrossings(M, have) {
@@ -31918,6 +31982,133 @@ function applyGradeFX(sc, cam, m) {
     return r;
   };
 }
+
+'use strict';
+// PROPERTI GAYA SPROUT — peti, tong, jerami, api unggun (4 frame), dermaga, perahu, papan tanda, pagar, akar & semak duri.
+// Gambar lama (kotak/oval cokelat polos, diwarnai gelap oleh code_palette.js) diganti piksel 2× berpalet Sprout Lands
+// (kayu #90625d–#e8cfa6 seperti tunggul/batang Sprout; dermaga & perahu sewarna jembatan bridges.js). Ukuran ≈ kanvas lama,
+// jadi tabrakan & letak tidak berubah. Dipasang setelah buildTextures (dimuat paling akhir, setelah code_palette.js).
+const SPROUT_PROPS = {
+  on: true, scale: 2,
+  W: { ol: '#7a4c47', dk: '#90625d', md: '#b68962', bs: '#c49a6c', lt: '#dcb98a', hi: '#e8cfa6' },
+  B: { ol: '#5e3b2c', dk: '#8a5a3a', md: '#b0784a', bs: '#cc9a62', lt: '#e2b47a', hi: '#f4d49c' }, /* kayu jembatan */
+  S: { ol: '#545959', dk: '#6b7470', md: '#818b83', lt: '#9da89a', hi: '#c1c8b9' },
+  H: { ol: '#97703a', dk: '#b98d45', md: '#d6ad57', lt: '#e9cb72', hi: '#f6e3a0', tw: '#8a5a32' },
+  F: ['#d9472b', '#f08a32', '#ffc94a', '#fff2b0'],
+  G: { ol: '#4b6b4f', dk: '#5f7a79', md: '#6e967c', lt: '#97bb8e', hi: '#aed499', th: '#c49a6c' },
+};
+// kanvas asli w×h → 2×; d(r, p) menggambar dengan r(x, y, w, h, warna) & p(x, y, warna)
+function spProp(w, h, d) {
+  const [c, x] = mk(w, h);
+  const r = (X, Y, W, H, col) => { x.fillStyle = col; x.fillRect(X, Y, W, H); }, p = (X, Y, col) => r(X, Y, 1, 1, col);
+  d(r, p);
+  const s = SPROUT_PROPS.scale, [o, ox] = mk(w * s, h * s); ox.imageSmoothingEnabled = false; ox.drawImage(c, 0, 0, w * s, h * s);
+  return o;
+}
+const SP_PROP_ART = {
+  crate: () => spProp(9, 9, (r, p) => {
+    const W = SPROUT_PROPS.W;
+    r(0, 1, 9, 8, W.ol); r(1, 2, 7, 2, W.lt); r(1, 2, 7, 1, W.hi); r(1, 4, 7, 1, W.dk); /* tutup & tepi */
+    r(1, 5, 7, 3, W.bs); r(1, 5, 1, 3, W.lt); r(7, 5, 1, 3, W.md); r(4, 5, 1, 3, W.md); /* muka depan & sambungan papan */
+    p(2, 7, W.dk); p(3, 6, W.dk); p(5, 6, W.dk); p(6, 5, W.dk); /* palang */
+  }),
+  barrel: () => spProp(8, 9, (r, p) => {
+    const W = SPROUT_PROPS.W, S = SPROUT_PROPS.S;
+    r(1, 0, 6, 1, W.ol); r(0, 1, 8, 7, W.ol); r(1, 8, 6, 1, W.ol);
+    r(1, 1, 6, 1, W.lt); r(2, 1, 4, 1, W.md); /* tutup */
+    r(1, 2, 6, 5, W.bs); r(1, 2, 1, 5, W.lt); r(6, 2, 1, 5, W.md); r(4, 2, 1, 5, W.md); /* bilah */
+    r(1, 3, 6, 1, S.md); r(1, 6, 6, 1, S.md); p(2, 3, S.hi); p(2, 6, S.hi); /* simpai */
+    r(2, 7, 4, 1, W.dk);
+  }),
+  hay: () => spProp(13, 10, (r, p) => {
+    const H = SPROUT_PROPS.H;
+    r(1, 1, 11, 1, H.ol); r(0, 2, 13, 7, H.ol); r(1, 9, 11, 1, H.ol);
+    r(1, 2, 11, 2, H.lt); r(2, 2, 9, 1, H.hi); r(1, 4, 11, 1, H.dk); r(1, 5, 11, 4, H.md); /* atas terang, muka depan */
+    for (let i = 0; i < 14; i++) p(1 + Math.floor(hash(i, 1, 51) * 11), 5 + Math.floor(hash(i, 2, 51) * 4), i % 2 ? H.lt : H.dk); /* jerami */
+    for (const X of [4, 8]) { r(X, 2, 1, 7, H.tw); p(X, 4, H.ol); } /* tali */
+  }),
+  sign: () => spProp(11, 11, (r, p) => {
+    const W = SPROUT_PROPS.W;
+    r(4, 6, 3, 5, W.ol); r(5, 6, 1, 4, W.md); /* tiang */
+    r(0, 0, 11, 7, W.ol); r(1, 1, 9, 5, W.bs); r(1, 1, 9, 1, W.hi); r(1, 5, 9, 1, W.md);
+    r(2, 3, 6, 1, W.dk); r(3, 4, 4, 1, W.dk); p(1, 1, W.lt); p(9, 1, W.lt); /* tulisan */
+  }),
+  fence: () => spProp(9, 7, (r, p) => {
+    const W = SPROUT_PROPS.W;
+    for (const X of [0, 6]) { r(X, 0, 3, 7, W.ol); r(X + 1, 1, 1, 5, W.lt); p(X + 1, 0, W.hi); } /* tiang */
+    for (const Y of [1, 4]) { r(2, Y, 5, 2, W.ol); r(3, Y, 3, 1, W.bs); } /* palang */
+  }),
+  boat: () => spProp(22, 8, (r, p) => {
+    const B = SPROUT_PROPS.B;
+    r(3, 1, 16, 1, B.ol); r(1, 2, 20, 4, B.ol); r(3, 6, 16, 1, B.ol); p(0, 3, B.ol); p(0, 4, B.ol); p(21, 3, B.ol); p(21, 4, B.ol);
+    r(3, 2, 16, 1, B.lt); r(2, 3, 18, 2, B.md); r(3, 5, 16, 1, B.dk); /* bibir & lambung dalam */
+    r(4, 3, 14, 2, B.dk); for (const X of [7, 14]) r(X, 2, 2, 4, B.bs); /* dasar & bangku */
+    r(5, 7, 12, 1, 'rgba(40,70,90,.35)'); /* bayang air */
+  }),
+  dock: () => spProp(22, 29, (r, p) => {
+    const B = SPROUT_PROPS.B;
+    for (const X of [2, 17]) { r(X, 23, 3, 6, B.ol); r(X + 1, 23, 1, 5, B.dk); } /* tiang pancang */
+    r(0, 0, 22, 25, B.ol);
+    for (let y = 1; y < 24; y += 3) { r(1, y, 20, 2, B.bs); r(1, y, 20, 1, B.lt); r(1 + Math.floor(hash(y, 1, 61) * 14), y + 1, 4, 1, B.md); }
+    r(1, 0, 1, 25, B.dk); r(20, 0, 1, 25, B.dk); /* balok sisi */
+    r(17, 0, 3, 4, B.ol); r(18, 0, 1, 3, B.lt); p(18, 0, B.hi); r(16, 2, 5, 1, B.md); /* tonggak tambat + tali */
+  }),
+  root: () => spProp(35, 17, (r, p) => {
+    const W = SPROUT_PROPS.W;
+    const pt = (cx, cy, rx, ry, a) => { const R = a * Math.PI / 180; return [Math.round(cx - Math.cos(R) * rx), Math.round(cy - Math.sin(R) * ry)]; };
+    const arch = (cx, cy, rx, ry, t) => {
+      for (let a = 0; a <= 180; a += 2) { const [X, Y] = pt(cx, cy, rx, ry, a); r(X - 1, Y - 1, t + 2, t + 2, W.ol); } /* garis luar */
+      for (let a = 0; a <= 180; a += 2) { const [X, Y] = pt(cx, cy, rx, ry, a); r(X, Y, t, t, a < 90 ? W.md : W.dk); if (a > 30 && a < 120) p(X, Y, W.lt); }
+    };
+    arch(17, 15, 14, 12, 3); /* lengkung akar */
+    r(1, 13, 5, 3, W.ol); r(29, 13, 5, 3, W.ol); r(2, 14, 3, 1, W.md); r(30, 14, 3, 1, W.dk); /* pangkal menancap */
+  }),
+  bramble: () => spProp(11, 9, (r, p) => {
+    const G = SPROUT_PROPS.G;
+    r(1, 2, 9, 6, G.ol); r(2, 1, 7, 8, G.ol); r(2, 2, 7, 6, G.md); r(3, 2, 5, 2, G.lt); p(4, 2, G.hi); r(2, 6, 7, 1, G.dk);
+    for (const [X, Y] of [[1, 3], [9, 4], [5, 0], [0, 6], [10, 6], [7, 8]]) p(X, Y, G.th); /* duri */
+    p(6, 4, '#c0485a'); p(3, 5, '#c0485a'); /* buah beri */
+  }),
+};
+// api unggun 4 frame: batu melingkar + kayu bersilang + lidah api bergerak
+function spCampfire(f) {
+  return spProp(14, 13, (r, p) => {
+    const S = SPROUT_PROPS.S, W = SPROUT_PROPS.W, F = SPROUT_PROPS.F;
+    for (let a = 0; a < 360; a += 30) { const R = a * Math.PI / 180, X = Math.round(7 + Math.cos(R) * 5.6) - 1, Y = Math.round(10 + Math.sin(R) * 2.2) - 1;
+      r(X, Y, 3, 2, S.ol); p(X + 1, Y, a > 180 ? S.hi : S.lt); }
+    r(3, 9, 8, 2, W.ol); r(4, 9, 6, 1, W.md); r(5, 8, 4, 3, W.ol); r(6, 8, 2, 2, W.bs); /* kayu */
+    const hgt = [3, 5, 7, 6, 4, 2], cols = [4, 5, 6, 7, 8, 9];
+    cols.forEach((X, i) => {
+      const h = hgt[i] + Math.round(Math.sin(f * 1.6 + i * 1.3) * 1.2);
+      for (let k = 0; k < h; k++) { const Y = 9 - k, t = k / Math.max(1, h - 1), edge = i === 0 || i === 5;
+        p(X, Y, edge || t > .75 ? F[0] : t > .45 ? F[1] : i > 1 && i < 4 && t < .3 ? F[3] : F[2]); }
+    });
+  });
+}
+const _buildTexturesProps = buildTextures;
+buildTextures = function (sc) {
+  const res = _buildTexturesProps.apply(this, arguments);
+  if (!SPROUT_PROPS.on || !sc || !sc.textures) return res;
+  const T = sc.textures;
+  try {
+    for (const k in SP_PROP_ART) { const c = SP_PROP_ART[k](); if (T.exists(k)) T.remove(k); T.addCanvas(k, c); }
+    const fr = [0, 1, 2, 3].map(spCampfire), w = fr[0].width, h = fr[0].height, [cv, x] = mk(w * 4, h);
+    fr.forEach((c, i) => x.drawImage(c, i * w, 0));
+    if (T.exists('campfire')) T.remove('campfire');
+    const t = T.addCanvas('campfire', cv); for (let i = 0; i < 4; i++) t.add(i, 0, i * w, 0, w, h);
+    if (sc.anims.exists('campfire_burn')) sc.anims.remove('campfire_burn');
+    sc.anims.create({ key: 'campfire_burn', frames: [0, 1, 2, 3].map(i => ({ key: 'campfire', frame: i })), frameRate: 7, repeat: -1 });
+  } catch (e) { SPROUT_PROPS.on = false; console.warn('sprout_props', e); }
+  return res;
+};
+(() => {
+  if (typeof OBJ_SPAWN === 'undefined') return;
+  const c0 = OBJ_SPAWN.campfire;
+  OBJ_SPAWN.campfire = function (s, x) {
+    if (SPROUT_PROPS.on && s.anims && this.anims.exists('campfire_burn')) s.play({ key: 'campfire_burn', startFrame: Math.abs(Math.round(x)) % 4 });
+    return c0 ? c0.apply(this, arguments) : undefined;
+  };
+})();
 
 'use strict';
 // Mulai game Phaser

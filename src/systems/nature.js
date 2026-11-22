@@ -44,6 +44,28 @@ function natureFoot(L) {
   return out;
 }
 const natInFoot = (F, x, y, px = 0, py = 0) => F.some(r => x > r[0] - px && x < r[2] + px && y > r[1] && y < r[3] + py);
+// titik yang harus tetap terlihat (dermaga, perahu, peti, NPC, titik pancing, papan) dari wilayah ini & tetangga: [x, y, r] lokal
+function natureKeep(M) {
+  if (M._natK) return M._natK;
+  const out = [], P = typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id], ox = P ? P[0] : 0, oy = P ? P[1] : 0;
+  const benua = P && typeof BENUA !== 'undefined' && BENUA && typeof isOutdoorRegion === 'function';
+  const ids = benua ? Object.keys(WORLD_POS).filter(isOutdoorRegion) : [M.id];
+  for (const id of ids) {
+    const N = MAPS[id], Q = P ? WORLD_POS[id] : [0, 0]; if (!N) continue;
+    if (Q[0] > ox + M.w + 200 || Q[0] + N.w < ox - 200 || Q[1] > oy + M.h + 200 || Q[1] + N.h < oy - 200) continue;
+    const add = (x, y, r) => { const X = x + Q[0] - ox, Y = y + Q[1] - oy; if (X > -r && Y > -r && X < M.w + r && Y < M.h + r) out.push([X, Y, r]); };
+    for (const o of N.objs || []) if (/^(dock|dockboat|boat|sign|campfire|well|board)$/.test(o[0])) add(o[1], o[2], o[0] === 'dock' ? 90 : 56);
+    for (const c of N.chests || []) add(c.x, c.y, 40);
+    for (const n of N.npcs || []) add(n.x, n.y, 40);
+    for (const f of N.fish || []) add(f[0], f[1], 52);
+  }
+  return (M._natK = out);
+}
+/* pohon (tajuk ±90 px di atas pangkal; raksasa ×1,5) tidak menutupi titik penting: pohon di selatan titik paling berbahaya */
+const natKeepOk = (K, x, y, t) => {
+  const g = /redwood/i.test(t) ? 1.5 : 1;
+  return !K.some(([X, Y, r]) => Math.abs(x - X) < r * g && y - Y > -r * .5 && y - Y < r * 1.6 * g);
+};
 // kotak dalam (di dalam baris pembatas)
 function natureBox(M) {
   const b = M.border;
@@ -57,7 +79,7 @@ function natureScatter(M, spec, base) {
   const isU = t => NATURE.underRx.test(t);
   const trees = base.filter(o => natIsTree(o[0])), under = base.filter(o => isU(o[0])), rest = base.filter(o => !natIsTree(o[0]) && !isU(o[0]));
   const tTypes = spec.types.filter(([t]) => natIsTree(t)), tSum = tTypes.reduce((a, [, p]) => a + p, 0);
-  const foot = natureFoot(M.objs || []);
+  const foot = natureFoot(M.objs || []), keep = natureKeep(M);
   const clear = (x, y, tree) => !natInFoot(foot, x, y, tree ? 30 : 0, tree ? 70 : 0) && scatterClearBase(M, () => 999, [], null, [0, 0], x, y, { min: 0 });
   const [x0, y0, x1, y1] = natureBox(M), out = [];
   // sel spasial untuk jarak antarpohon
@@ -88,6 +110,7 @@ function natureScatter(M, spec, base) {
       if (near(x, y, sp, NATURE.treeRx) || !clear(x, y, 1)) continue;
       let r = vnoise(x, y, NATURE.species, seed + 9) * tSum, t = tTypes[0][0]; /* jenis berpetak */
       for (const [tt, p] of tTypes) { if (r < p) { t = tt; break; } r -= p; }
+      if (!natKeepOk(keep, x, y, t)) continue;
       const snowy = M.id === 'meadow' && y > M.h - 400 && hash(Math.round(x), Math.round(y), 33) < (y - (M.h - 400)) / 400;
       if (snowy && /verdant_tree|treeA|treeB/.test(t)) t = 'pine'; /* dekat Puncak Beku → pinus */
       put([t, Math.round(x), Math.round(y)]);

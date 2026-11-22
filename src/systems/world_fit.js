@@ -31,6 +31,8 @@ function waterRects(M) {
   const E = grassEdgeData(M); if (!E || !E.Wm) return null;
   const S = GRASS_EDGE.cell, br = fitBridgeRects(M), P = fitBenua(M) ? WORLD_POS[M.id] : null, out = [];
   const sd = WORLD_FIT.iceFord.includes(M.id) && M.paths && typeof makeSD === 'function' ? makeSD(M) : null;
+  const docks = (M.objs || []).filter(o => o[0] === 'dock').map(o => [o[1] - 18, o[2] - 56, 36, 56]); /* dermaga bisa dipijak */
+  br.push(...docks);
   const blocked = (c, r) => {
     if (!E.Wm[r * E.cols + c]) return false; const x = c * S + S / 2, y = r * S + S / 2;
     if (sd && sd(x, y) <= WORLD_FIT.fordR) return false;

@@ -6,7 +6,8 @@
 //   (BRIDGES.list ditambah; tembok air world_fit otomatis berlubang di jembatan);
 // - titik pancing yang tidak di air / terlalu jauh dari darat → dipindah ke petak air di tepi darat terdekat (riak tetap di air,
 //   Arka bisa menjangkaunya dari darat, jarak interaksi 26 px).
-const PLACE_FIT = { on: true, pad: 6, maxR: 8, fishMax: 12, ford: { on: true, max: 200, gap: 90, side: 24 } };
+const PLACE_FIT = { on: true, pad: 6, maxR: 8, fishMax: 12, ford: { on: true, max: 200, gap: 90, side: 24 },
+  boatRx: /^(boat|dockboat)$/, padRx: /^lotuspad$/, reedRx: /^reeds$/, waterR: 12 };
 function placeFitMap(M, L) {
   if (M._pf || !PLACE_FIT.on) return;
   const E = typeof grassEdgeData === 'function' && grassEdgeData(M); if (!E || !E.Wm) return;
@@ -43,7 +44,45 @@ function placeFitMap(M, L) {
     }
     if (best) { log.push('pancing ' + f[0] + ',' + f[1]); f[0] = best[0] * S + S / 2; f[1] = best[1] * S + S / 2; }
   }
+  placeWaterObjs(M, L, E, mine, log);
   if (log.length) M._pfLog = log; /* untuk pemeriksaan: MAPS[id]._pfLog */
+}
+// benda air: dermaga (pangkal di darat, menjorok ke air di utara), perahu & teratai di air, buluh di tepi air
+function placeWaterObjs(M, L, E, mine, log) {
+  const S = GRASS_EDGE.cell, C = E.cols, R = E.rows, PF = PLACE_FIT;
+  const W = (c, r) => c >= 0 && r >= 0 && c < C && r < R && !!E.Wm[r * C + c], Lnd = (c, r) => c >= 0 && r >= 0 && c < C && r < R && !E.Wm[r * C + c];
+  const near = (c0, r0, ok) => { /* sel terdekat (cincin demi cincin) yang memenuhi ok */
+    const fine = (c, r) => ok(c, r) && mine(c * S + 8, r * S + 14); /* titik akhir (r·S+14) harus di wilayah sendiri */
+    if (fine(c0, r0)) return [c0, r0];
+    for (let d = 1; d <= PF.waterR; d++) for (let j = -d; j <= d; j++) for (let i = -d; i <= d; i++) {
+      if (Math.max(Math.abs(i), Math.abs(j)) === d && fine(c0 + i, r0 + j)) return [c0 + i, r0 + j];
+    }
+    return null;
+  };
+  const move = (o, x, y, what) => { if (o[1] === x && o[2] === y) return; log.push(what + ' ' + o[1] + ',' + o[2]); o[1] = x; o[2] = y; };
+  const docks = [];
+  for (const o of L) if (o[0] === 'dock') {
+    const ok = (c, r) => Lnd(c, r) && Lnd(c - 1, r) && Lnd(c + 1, r) && W(c, r - 2) && W(c - 1, r - 2) && W(c + 1, r - 2) && W(c, r - 3);
+    const p = near(Math.floor(o[1] / S), Math.floor((o[2] - 2) / S), ok);
+    if (p) move(o, p[0] * S + S / 2, p[1] * S + 14, 'dermaga');
+    docks.push([o[1] - 24, o[2] - 60, o[1] + 24, o[2] + 4]);
+  }
+  const onDock = (x, y) => docks.some(d => x > d[0] - 22 && x < d[2] + 22 && y > d[1] && y < d[3] + 8);
+  for (const o of L) {
+    const c0 = Math.floor(o[1] / S), r0 = Math.floor((o[2] - 6) / S);
+    if (PF.boatRx.test(o[0])) {
+      const ok = (c, r) => W(c - 1, r) && W(c, r) && W(c + 1, r) && [[0, 1], [0, 2], [-2, 0], [2, 0], [0, -1]].some(([i, j]) => Lnd(c + i, r + j)) &&
+        !onDock(c * S + 8, r * S + 14);
+      const p = near(c0, r0, ok); if (p) move(o, p[0] * S + S / 2, p[1] * S + 14, 'perahu');
+    } else if (PF.padRx.test(o[0])) {
+      const ok = (c, r) => W(c, r) && W(c - 1, r) && W(c + 1, r) && W(c, r - 1) && W(c, r + 1);
+      const p = near(c0, r0, ok); if (p) move(o, p[0] * S + S / 2, p[1] * S + 12, 'teratai');
+    } else if (PF.reedRx.test(o[0])) {
+      const ok = (c, r) => Lnd(c, r) && [[1, 0], [-1, 0], [0, 1], [0, -1], [2, 0], [-2, 0], [0, 2], [0, -2]].some(([i, j]) => W(c + i, r + j));
+      const p = near(c0, r0, ok); if (p) move(o, p[0] * S + S / 2, p[1] * S + 12, 'buluh');
+    }
+  }
+  if (OBJ.dock && OBJ.dock.col) OBJ.dock.col = [0, 0, 0]; /* dermaga bisa dipijak (air di bawahnya dibuka world_fit) */
 }
 // titik tengah penyeberangan jalan lama × air gambar (lokal); yang menyusuri tepi air (bukan menyeberang) dilewati
 function pathCrossings(M, have) {

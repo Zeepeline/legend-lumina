@@ -547,17 +547,17 @@ _BAYANGAN OBJEK — elips lembut di kaki setiap objek luar ruang (semak, batu, t
 _JEMBATAN KAYU GAYA SPROUT — di titik penyeberangan lama (sungai Hutan M.river.bridge, jembatan kecil Danau)._
 `BRIDGES` 5 · `bridgeFit()` 14 · `bridgeArt()` 34 · `bridgesFor()` 59
 
-## src/systems/world_fit.js (114 baris)
+## src/systems/world_fit.js (116 baris)
 _DUNIA COCOK DENGAN GAMBAR — tabrakan & objek mengikuti tanah yang TERLIHAT (gambar peta + autotile grass_edge), bukan data lama._
-`WORLD_FIT` 7 · `regionOwner()` 9 · `fitWater` 16 · `fitOn` 17 · `fitBenua` 18 · `fitBridgeRects()` 20 · `waterRects()` 30 · `fitObjects()` 57 · `fitClipGround()` 105
+`WORLD_FIT` 7 · `regionOwner()` 9 · `fitWater` 16 · `fitOn` 17 · `fitBenua` 18 · `fitBridgeRects()` 20 · `waterRects()` 30 · `fitObjects()` 59 · `fitClipGround()` 107
 
-## src/systems/nature.js (225 baris)
+## src/systems/nature.js (248 baris)
 _ALAM — sebaran pohon mengikuti pola alami, satu baris pohon pembatas, semak & bunga bergoyang._
-`NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureFoot()` 37 · `natInFoot` 46 · `natureBox()` 48 · `natureScatter()` 52 · `natureTreesOnGrass()` 113 · `natureBorder()` 131 · `natureSwayTex()` 183
+`NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureFoot()` 37 · `natInFoot` 46 · `natureKeep()` 48 · `natKeepOk` 65 · `natureBox()` 70 · `natureScatter()` 74 · `natureTreesOnGrass()` 136 · `natureBorder()` 154 · `natureSwayTex()` 206
 
-## src/systems/place_fit.js (100 baris)
+## src/systems/place_fit.js (139 baris)
 _LETAK SESUAI TANAH — data peta lama (musuh, peti, NPC, titik pancing) dibuat untuk tanah lama; tanah sekarang = gambar peta._
-`PLACE_FIT` 9 · `placeFitMap()` 10 · `pathCrossings()` 49
+`PLACE_FIT` 9 · `placeFitMap()` 11 · `placeWaterObjs()` 51 · `pathCrossings()` 88
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
@@ -718,6 +718,10 @@ _Pedang Arka yang DIGAMBAR PER FRAME (assets/img/hero/hero_swl{0,1}.png ← tool
 ## src/systems/grade.js (125 baris)
 _Sistem Rona Wilayah & Transisi Antar Wilayah Halus (v1.52.0 - ala 36 Bioma Cobo Makes Games / Mytheria)_
 `ID_M` 8 · `BIOME_GRADE` 11 · `biomeBaseMatrix()` 24 · `lerpMatrix()` 30 · `TRANS_BAND` 37 · `calcTargetGrade()` 38 · `applyGradeFX()` 87
+
+## src/gfx/sprout_props.js (127 baris)
+_PROPERTI GAYA SPROUT — peti, tong, jerami, api unggun (4 frame), dermaga, perahu, papan tanda, pagar, akar & semak duri._
+`SPROUT_PROPS` 6 · `spProp()` 16 · `SP_PROP_ART` 23 · `spCampfire()` 89 · `_buildTexturesProps` 103
 
 ## src/main.js (44 baris)
 _Mulai game Phaser_
