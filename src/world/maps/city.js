@@ -142,14 +142,26 @@ MAPS.kpasar = {
   trees: { n: 30, min: 30, types: [['bushG1', .5], ['planter', .3], ['rock', .2]] },
 };
 
+// pagar besi Akademi: kotak x 490–910, y 150–560, gerbang lengkung di tengah bawah (menghadap alun-alun)
+function acadYard() {
+  const o = [], X0 = 490, X1 = 910, Y0 = 150, Y1 = 560;
+  for (const x of [531, 612, 693, 774, 855]) o.push(['acadfence', x, Y0]);
+  for (const x of [531, 612, 788, 869]) o.push(['acadfence', x, Y1]);
+  for (let y = Y0 + 36; y < Y1 - 10; y += 36) { o.push(['acadpost', X0 + 6, y]); o.push(['acadpost', X1 - 6, y]); }
+  o.push(['acadgate', 700, Y1 + 2]);
+  return o;
+}
 MAPS.kakademi = {
   id: 'kakademi', customGround: 'gnd_kakademi_custom', name: 'Distrik Akademi', w: 1400, h: 1000, bgm: 'town', ground: 'village', glow: [700, 500, 700], crowd: 5,
   paths: [[700, 1000, 700, 380, 30], [300, 640, 1100, 640, 16], [300, 640, 300, 420, 12], [1100, 640, 1100, 420, 12]],
   discs: [[700, 520, 150], [300, 380, 70], [1100, 380, 70], [300, 640, 50], [1100, 640, 50]],
-  objs: [['academy', 700, 380], ['shrine', 700, 600],
+  objs: [['academy', 700, 380], ['shrine', 700, 672], /* kuil di alun-alun, di depan gerbang halaman */
+    ...acadYard(), /* pagar kotak + gerbang + halaman (gambar pemilik) */
+    ['acaddummy', 515, 440], ['acaddummy', 548, 456], ['acadtarget', 588, 432], ['acadrack', 522, 410], ['acadcrates', 540, 376],
+    ['acadstatue', 860, 472], ['acadcypress', 820, 422], ['acadtopiary', 886, 422], ['acadpottree', 622, 584], ['acadpottree', 778, 584],
     ...lampRow(620, 460, 2, 160), ...lampRow(620, 720, 2, 160), ...lampRow(620, 880, 2, 160),
     ...lampRow(240, 660, 2, 120), ...lampRow(1040, 660, 2, 120),
-    ['bench', 580, 620], ['bench', 820, 620], ['bench', 580, 500], ['bench', 820, 500],
+    ['acadbench', 580, 620], ['acadbench', 820, 620], ['acadboard', 580, 506], ['acadbench', 820, 500],
     ['planter', 520, 520], ['planter', 880, 520], ['planter', 520, 700], ['planter', 880, 700],
     ['planter', 400, 610], ['planter', 1000, 610],
     ['pot', 460, 690], ['pot', 940, 690], ['pot', 650, 400], ['pot', 750, 400],
@@ -164,11 +176,12 @@ MAPS.kakademi = {
     // T407: Kedai Cendekiawan Akademi
     ['benchWood', 180, 560], ['barrel', 210, 560], ['sign', 230, 560, { text: 'Kedai Buku & Teh' }],
     ['sign', 760, 900, { text: 'AKADEMI CAHAYA\nDidirikan oleh para penyintas Aurel. Ilmu adalah lentera.' }]],
-  walls: [[0, 0, 1400, 40], [0, 0, 40, 1000], [1360, 0, 40, 1000], [0, 960, 660, 40], [740, 960, 660, 40]],
+  walls: [[0, 0, 1400, 40], [0, 0, 40, 1000], [1360, 0, 40, 1000], [0, 960, 660, 40], [740, 960, 660, 40],
+    [655, 550, 24, 12], [721, 550, 24, 12]], /* pilar gerbang Akademi */
   border: { top: 40, bottom: 960, left: 40, right: 1360, gap: [660, 740], types: ['treeA', 'treeB', 'pine'] },
   exits: [{ x: 660, y: 988, w: 80, h: 12, to: 'kpasar', tx: 800, ty: 60, dir: 'down', label: 'Distrik Pasar' }],
   doors: [[700, 380, { to: 'arsip' }], [300, 380, 'Asrama murid. "Hanya murid Akademi."'], [1100, 380, 'Rumah guru. Ada papan nama: "L." Sisanya sudah pudar.']],
-  npcs: citizens([['ka1', 'girl', 'Murid Akademi', 600, 700, 'murid'], ['ka2', 'child', 'Murid Muda', 820, 560, 'murid'], ['ka3', 'woman', 'Murid Akademi', 1000, 700, 'murid'], ['ka4', 'elder', 'Guru Tua', 400, 640, 'murid', 0], ['ka5', 'guard', 'Penjaga Akademi', 650, 470, 'penjaga', 0]]),
+  npcs: citizens([['ka1', 'girl', 'Murid Akademi', 600, 700, 'murid'], ['ka2', 'child', 'Murid Muda', 820, 480, 'murid'], ['ka3', 'woman', 'Murid Akademi', 1000, 700, 'murid'], ['ka4', 'elder', 'Guru Tua', 400, 640, 'murid', 0], ['ka5', 'guard', 'Penjaga Akademi', 650, 470, 'penjaga', 0]]),
   trees: { n: 40, min: 30, types: [['bushP', .4], ['bushG1', .3], ['treeA', .15], ['rock', .15]] },
 };
 
