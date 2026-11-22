@@ -8829,7 +8829,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.58.2';
+const GAME_VERSION = '1.58.3';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
@@ -24777,45 +24777,89 @@ function sproutTreePolish(d, w, h) {
     else if (x === cx + 1 && y % 3 === 1) add(x, y, 18); /* kilap kulit kayu */
   }
 }
-// pohon raksasa (pengganti redwood) digambar kode di piksel asli 36×74 dengan palet tajuk dari pohon Sprout besar
+// pohon raksasa (pengganti redwood) digambar kode di piksel asli 40×78 dengan palet tajuk dari pohon Sprout besar:
+// batang + akar menjalar + lumut, dahan di sela tajuk, gumpal daun berlapis (lengkung gelap & tepi terang), rumput di kaki
 function sproutGiantSrc(im) {
-  const w = 36, h = 74, [c, x] = mk(w, h), out = x.createImageData(w, h), d = out.data;
-  const [ps, px] = mk(24, 31); px.drawImage(im, 20, 1, 24, 31, 0, 0, 24, 31); const pd = px.getImageData(0, 0, 24, 31).data, gs = [];
+  const w = 40, h = 78, cx = 20, [c, x] = mk(w, h), out = x.createImageData(w, h), d = out.data;
+  const [, px] = mk(24, 31); px.drawImage(im, 20, 1, 24, 31, 0, 0, 24, 31); const pd = px.getImageData(0, 0, 24, 31).data, gs = [];
   for (let i = 0; i < pd.length; i += 4) {
     if (pd[i + 3] > 128 && pd[i + 1] > pd[i] + 4 && !gs.some(g => g[0] === pd[i] && g[1] === pd[i + 1])) gs.push([pd[i], pd[i + 1], pd[i + 2]]);
   }
   gs.sort((a, b) => (a[0] + a[1] + a[2]) - (b[0] + b[1] + b[2]));
   const gq = t => gs[Math.min(gs.length - 1, Math.max(0, Math.round(t * (gs.length - 1))))];
   const put = (X, Y, col, a = 255) => {
-    if (X < 0 || Y < 0 || X >= w || Y >= h) return; const i = (Y * w + X) * 4; d[i] = col[0]; d[i + 1] = col[1]; d[i + 2] = col[2]; d[i + 3] = a;
+    X = Math.round(X); Y = Math.round(Y); if (X < 0 || Y < 0 || X >= w || Y >= h) return;
+    const i = (Y * w + X) * 4; d[i] = col[0]; d[i + 1] = col[1]; d[i + 2] = col[2]; d[i + 3] = a;
   };
-  for (let Y = 66; Y < 74; Y++) for (let X = 4; X < 32; X++) { /* bayangan tanah */
-    const e = ((X - 18) / 14) ** 2 + ((Y - 70) / 3.6) ** 2; if (e < 1) put(X, Y, [60, 90, 50], 70);
+  const line = (x0, y0, x1, y1, col, th = 1) => {
+    const n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) * 2);
+    for (let k = 0; k <= n; k++) { const t = k / n, X = x0 + (x1 - x0) * t, Y = y0 + (y1 - y0) * t; for (let o = 0; o < th; o++) put(X + o, Y, col); }
+  };
+  const BK = { o: [74, 40, 36], d: [112, 56, 42], m: [148, 80, 56], l: [180, 104, 72] }, MOSS = [110, 140, 72], MOSS2 = [140, 170, 88];
+  for (let Y = 70; Y < 78; Y++) for (let X = 2; X < 38; X++) { /* bayangan tanah */
+    const e = ((X - cx) / 17) ** 2 + ((Y - 73.5) / 3.8) ** 2; if (e < 1) put(X, Y, [60, 90, 50], 70);
   }
-  const BK = { o: [74, 40, 36], d: [112, 56, 42], m: [148, 80, 56], l: [180, 104, 72] }; /* batang redwood */
-  for (let Y = 30; Y < 71; Y++) {
-    const half = Y > 62 ? 4 + (Y - 62) * .7 : 4; for (let X = Math.round(18 - half); X <= Math.round(17 + half); X++) {
-      const edge = X === Math.round(18 - half) || X === Math.round(17 + half) || Y === 70, rel = (X - (18 - half)) / (2 * half);
-      put(X, Y, edge ? BK.o : rel < .3 ? BK.l : rel > .72 ? BK.d : (X === 18 && Y % 4) ? BK.d : BK.m);
+  // akar menjalar (garis tepi dulu, isi di atasnya)
+  const roots = [[cx - 3, 64, cx - 12, 74], [cx + 3, 64, cx + 12, 74], [cx - 1, 67, cx - 4, 76], [cx + 2, 67, cx + 6, 75]];
+  for (const [a0, b0, a1, b1] of roots) { line(a0 - 1, b0, a1 - 1, b1, BK.o, 4); }
+  for (const [a0, b0, a1, b1] of roots) { line(a0, b0, a1, b1, BK.m, 2); line(a0, b0 - 1, a1, b1 - 1, BK.l, 1); }
+  // batang
+  for (let Y = 32; Y < 72; Y++) {
+    const half = Y > 63 ? 4.5 + (Y - 63) * .6 : 4.5;
+    for (let X = Math.round(cx - half); X <= Math.round(cx - 1 + half); X++) {
+      const edge = X === Math.round(cx - half) || X === Math.round(cx - 1 + half), rel = (X - (cx - half)) / (2 * half);
+      let col = edge ? BK.o : rel < .28 ? BK.l : rel > .72 ? BK.d : BK.m;
+      if (!edge && (X === cx - 1 || X === cx + 2) && (Y + X) % 5 < 3) col = BK.d; /* alur kulit kayu */
+      if (!edge && Y > 62 && hash(X, Y, 81) < (Y - 62) / 14 && X < cx + 1) col = hash(X, Y, 82) < .5 ? MOSS : MOSS2; /* lumut di pangkal */
+      put(X, Y, col);
     }
   }
-  const clumps = [[18, 9, 8], [11, 18, 7.5], [25, 19, 7.5], [18, 24, 8.5], [9, 31, 6.5], [27, 32, 6.5], [18, 36, 7]];
-  for (const [cx, cy, r] of clumps) for (let Y = Math.floor(cy - r); Y <= cy + r; Y++) for (let X = Math.floor(cx - r); X <= cx + r; X++) {
-    const dx = X + .5 - cx, dy = Y + .5 - cy, dd = Math.hypot(dx, dy); if (dd > r) continue;
-    const lit = (-dx - dy) / (r * 1.4); put(X, Y, dd > r - 1 ? gq(0) : gq(.45 + lit * .45 + (dd < r * .5 ? .05 : 0)));
+  // dahan (terlihat di sela gumpal daun)
+  for (const [x0, y0, x1, y1] of [[cx, 46, cx - 11, 35], [cx, 44, cx + 11, 36], [cx, 36, cx - 9, 23], [cx, 34, cx + 9, 24], [cx, 28, cx, 14]]) {
+    line(x0, y0 + 1, x1, y1 + 1, BK.o, 2); line(x0, y0, x1, y1, BK.d, 2);
+  }
+  // gumpal daun berlapis (atas dulu, bawah menimpa → lapisan)
+  const clumps = [[cx, 9, 7.5], [cx - 8, 17, 7], [cx + 8, 18, 7], [cx, 23, 7.5], [cx - 11, 31, 6.2], [cx + 11, 32, 6.2], [cx - 4, 37, 6], [cx + 5, 38, 5.6]];
+  for (const [ox, oy, r] of clumps) for (let Y = Math.floor(oy - r); Y <= oy + r; Y++) for (let X = Math.floor(ox - r); X <= ox + r; X++) {
+    const dx = X + .5 - ox, dy = Y + .5 - oy, dd = Math.hypot(dx, dy); if (dd > r) continue;
+    const lit = (-dx - dy) / (r * 1.4); let t = .45 + lit * .45 + (dd < r * .5 ? .05 : 0);
+    if (dy > 0 && Math.abs(dd - r * .58) < .6) t -= .3; /* lengkung daun berlapis (gelap) */
+    if (dy < -r * .3 && dd > r - 2.2 && dd <= r - 1 && (X + Y) % 3) t += .25; /* tepi atas kena cahaya */
+    put(X, Y, dd > r - 1 ? gq(0) : gq(t));
+  }
+  // rumput kecil di kaki pohon
+  const GR = gq(.6), GR2 = gq(.85);
+  for (let k = 0; k < 9; k++) {
+    const X = Math.round(4 + hash(k, 1, 83) * 32), Y = Math.round(72 + hash(k, 2, 83) * 4); if (Math.abs(X - cx) < 4) continue;
+    put(X, Y, GR); put(X, Y - 1, GR2); if (hash(k, 3, 83) < .5) { put(X - 1, Y, GR); put(X + 1, Y - 1, GR); }
   }
   x.putImageData(out, 0, 0); return c;
+}
+// rumput kecil di kaki pohon biasa (piksel asli, setelah dipotong dari lembar)
+function sproutTreeTufts(d, w, h, seed) {
+  const bark = (x, y) => { const i = (y * w + x) * 4; return d[i + 3] > 128 && d[i] > d[i + 1] && d[i + 1] > d[i + 2]; };
+  let ty = -1, l = w, r = 0;
+  for (let y = h - 1; y >= 0 && ty < 0; y--) for (let x = 0; x < w; x++) if (bark(x, y)) ty = y;
+  if (ty < 0) return;
+  for (let x = 0; x < w; x++) if (bark(x, ty)) { l = Math.min(l, x); r = Math.max(r, x); }
+  const put = (X, Y, c) => {
+    if (X < 0 || Y < 0 || X >= w || Y >= h) return; const i = (Y * w + X) * 4; if (d[i + 3] > 128 && !(d[i + 1] > d[i])) return;
+    d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = 255;
+  };
+  for (const [X, k] of [[l - 1, 0], [r + 1, 1], [l - 3, 2], [r + 3, 3]]) {
+    if (hash(seed, k, 84) < .3) continue; put(X, ty, [120, 162, 72]); put(X, ty - 1, [156, 196, 96]);
+  }
 }
 // tekstur strip 8 frame + anim '<key>_sway' (sekali untuk seluruh game)
 function sproutTreeTex(sc, shape, v) {
   const key = 'spTree_' + shape + (v ? '_' + v : ''), T = sc.textures;
   if (T.exists(key)) return key;
   const im = IMGEL.deco_sprout_objs; if (!im) return null;
-  const [sx, sy, sw, sh] = SPROUT_TREES.src[shape] || [0, 0, 36, 74], S = SPROUT_TREES.scale, W = sw * S, H = sh * S;
+  const [sx, sy, sw, sh] = SPROUT_TREES.src[shape] || [0, 0, 40, 78], S = SPROUT_TREES.scale, W = sw * S, H = sh * S;
   const P = SPROUT_TREES.amp + 1, F = SPROUT_TREES.frames;
   const gi = shape === 'giant', [s1, x1] = mk(sw, sh);
   x1.drawImage(gi ? sproutGiantSrc(im) : im, gi ? 0 : sx, gi ? 0 : sy, sw, sh, 0, 0, sw, sh);
-  const one = x1.getImageData(0, 0, sw, sh); sproutTreePolish(one.data, sw, sh); x1.putImageData(one, 0, 0);
+  const one = x1.getImageData(0, 0, sw, sh); sproutTreePolish(one.data, sw, sh); if (!gi) sproutTreeTufts(one.data, sw, sh, sw); x1.putImageData(one, 0, 0);
   const [b0, x0] = mk(W, H); x0.imageSmoothingEnabled = false; x0.drawImage(s1, 0, 0, W, H);
   const base = x0.getImageData(0, 0, W, H), d = base.data;
   for (let i = 0; i < d.length; i += 4) {
