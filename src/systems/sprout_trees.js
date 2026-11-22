@@ -20,6 +20,31 @@ function sproutTreeTint(v, r, g, b) {
   }
   return [r, g, b];
 }
+// sedikit polesan di piksel asli (sebelum 3×): gerombol daun terang di atas, daun gelap di bawah, garis kulit kayu & bayangan tajuk di batang
+function sproutTreePolish(d, w, h) {
+  const at = (x, y) => (y * w + x) * 4;
+  const leaf = (x, y) => {
+    if (x < 0 || y < 0 || x >= w || y >= h) return 0; const i = at(x, y); return d[i + 3] > 128 && d[i + 1] > d[i] + 4 && d[i + 1] >= d[i + 2];
+  };
+  const bark = (x, y) => { const i = at(x, y); return d[i + 3] > 128 && d[i] > d[i + 1] && d[i + 1] > d[i + 2] && d[i] - d[i + 2] > 40; };
+  const add = (x, y, k) => { const i = at(x, y); for (let j = 0; j < 3; j++) d[i + j] = Math.max(0, Math.min(255, d[i + j] + k)); };
+  let top = h, bot = 0; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (leaf(x, y)) { top = Math.min(top, y); bot = Math.max(bot, y); }
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 2; x++) {
+    if (!(leaf(x, y) && leaf(x + 1, y) && leaf(x - 1, y) && leaf(x, y - 1) && leaf(x, y + 1) && leaf(x + 1, y + 1))) continue;
+    const t = (y - top) / Math.max(1, bot - top), r = hash(x, y, 77);
+    if (t < .6 && r < .14 && x < w * .75) { add(x, y, 30); add(x + 1, y, 20); } /* gerombol daun kena cahaya (kiri-atas) */
+    else if (t > .45 && r > .86) { add(x, y, -24); add(x + 1, y + 1, -16); } /* daun dalam bayangan */
+  }
+  const cols = []; for (let x = 0; x < w; x++) for (let y = 0; y < h; y++) if (bark(x, y)) { cols.push(x); break; }
+  const cx = cols.length ? cols[Math.floor(cols.length / 2)] : -1;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    if (!bark(x, y)) continue;
+    { const i = at(x, y); d[i] *= .9; d[i + 1] *= .8; d[i + 2] *= .74; } /* batang cokelat lebih hangat & tua */
+    if (leaf(x, y - 1) || leaf(x, y - 2)) add(x, y, -34); /* bayangan tajuk di pangkal atas batang */
+    else if (x === cx - 1 && y % 3 !== 0) add(x, y, -24); /* garis kulit kayu */
+    else if (x === cx + 1 && y % 3 === 1) add(x, y, 18); /* kilap kulit kayu */
+  }
+}
 // tekstur strip 8 frame + anim '<key>_sway' (sekali untuk seluruh game)
 function sproutTreeTex(sc, shape, v) {
   const key = 'spTree_' + shape + (v ? '_' + v : ''), T = sc.textures;
@@ -27,7 +52,9 @@ function sproutTreeTex(sc, shape, v) {
   const im = IMGEL.deco_sprout_objs; if (!im) return null;
   const [sx, sy, sw, sh] = SPROUT_TREES.src[shape], S = SPROUT_TREES.scale, W = sw * S, H = sh * S;
   const P = SPROUT_TREES.amp + 1, F = SPROUT_TREES.frames;
-  const [b0, x0] = mk(W, H); x0.imageSmoothingEnabled = false; x0.drawImage(im, sx, sy, sw, sh, 0, 0, W, H);
+  const [s1, x1] = mk(sw, sh); x1.drawImage(im, sx, sy, sw, sh, 0, 0, sw, sh);
+  const one = x1.getImageData(0, 0, sw, sh); sproutTreePolish(one.data, sw, sh); x1.putImageData(one, 0, 0);
+  const [b0, x0] = mk(W, H); x0.imageSmoothingEnabled = false; x0.drawImage(s1, 0, 0, W, H);
   const base = x0.getImageData(0, 0, W, H), d = base.data;
   for (let i = 0; i < d.length; i += 4) {
     if (!d[i + 3] || !(d[i + 1] > d[i] + 4 && d[i + 1] >= d[i + 2])) continue;
