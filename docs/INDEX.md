@@ -50,6 +50,9 @@ Berkas 5 · Frame pada tekstur `ch_<ch>` 12 · API (di scene: `__game.sc.`) 16 �
 ## PROMPT_ARKA.md — Prompt ChatGPT — sprite sheet lengkap Arka (karakter utama) (83 baris, ~1300 token)
 Blok umum (sudah ikut di tiap prompt) 8 · Lembar 1 — diam & jalan 15 · Lembar 2 — serangan kombo 1 & 2 27 · Lembar 3 — pukulan penutup & serangan berat 39 · Lembar 4 — berguling, kena pukul, kalah 48 · Lembar 5 — sihir & busur 58 · Lembar 6 — kehidupan sehari-hari (opsional) 67 · Kalau hasil meleset 78
 
+## PROMPT_BANGUNAN.md — Prompt gambar bangunan (gaya referensi rumah pemilik) (35 baris, ~700 token)
+Templat (salin, ganti bagian [ ... ]) 10 · Daftar bangunan 20
+
 ## PROMPT_MUSUH.md — Prompt ChatGPT — sprite sheet musuh (143 baris, ~2500 token)
 Blok umum (tempel di awal setiap prompt) — v2 GARANG (souls-like) 10 · Urutan prioritas (paling sering muncul dulu) 18 · 1. `frog` — Katak Rawa (11 tempat, lompat) 20 · 2. `boar` — Babi Hutan (11 tempat, menyeruduk) 29 · 3. `bee` — Tawon (11 tempat, terbang) 38 · 4. `plant` — Bunga Pemakan (10 tempat, menembak diam) 47 · 5. `snake` — Ular (9 tempat, merayap) 56 · 6. `wisp` — Wisp (8 tempat, melayang) 65 · 7. `ghost` — Hantu ✅ SUDAH DIPASANG v1.44.1 (7 tempat, menembus) 74 · 8. `shroom` — Jamur Racun (6 tempat, menembak spora) 83 · 9. `bat` — Kelelawar (juga dipakai Kelelawar Gua & Gargoyle Merah lewat warna) 92 · 10. `skel` — Tengkorak (4 tempat, melempar tulang) 101 · 11. `salam` — Salamander (3 tempat, api) 110 · 12. `golem` — Golem ✅ SUDAH DIPASANG v1.44.0 (juga Golem Es & Golem Purba lewat warna) 119 · 13. `mimic` — Peti Mimic 128 · Kalau hasil meleset 137
 
