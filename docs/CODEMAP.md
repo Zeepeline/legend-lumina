@@ -531,6 +531,10 @@ _KOTA & DESA GAYA SPROUT — kastil, tembok, menara, properti kota & semua bangu
 _POHON GAYA SPROUT LANDS — pohon biasa di wilayah luar (GRASS_EDGE.maps) memakai pohon dari deco_sprout_objs.png (3×),_
 `SPROUT_TREES` 6 · `sproutTreeTint()` 15 · `sproutTreePolish()` 25 · `sproutGiantSrc()` 51 · `sproutTreeTufts()` 116 · `sproutTreeTex()` 131
 
+## src/systems/sprout_houses.js (139 baris)
+_RUMAH GAYA SPROUT — bangunan desa/kota digambar ulang lewat kode (piksel 2×, garis tepi cokelat lembut, palet hangat),_
+`SP_PAL` 6 · `SPROUT_HOUSES` 13 · `spHouse()` 28 · `spRoof()` 107 · `spStall()` 117 · `spScale()` 130 · `_buildTexturesHouses` 131
+
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
 

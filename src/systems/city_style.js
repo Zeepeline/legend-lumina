@@ -33,7 +33,7 @@ function cityPastel(img) {
 const _buildTexturesCity = buildTextures;
 buildTextures = function (sc) {
   if (CITY_STYLE.on && !buildTextures.cityDone) {
-    for (const k of CITY_STYLE.keys) if (IMGEL[k] && IMGEL[k].width > 1) IMGEL[k] = cityPastel(IMGEL[k]);
+    for (const k of CITY_STYLE.keys) if (IMGEL[k] && IMGEL[k].width > 1 && !IMGEL[k]._sprout) IMGEL[k] = cityPastel(IMGEL[k]);
     buildTextures.cityDone = 1;
   }
   return _buildTexturesCity.apply(this, arguments);
