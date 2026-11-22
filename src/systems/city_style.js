@@ -1,5 +1,5 @@
 'use strict';
-// KOTA GAYA SPROUT — kastil gerbang, tembok, menara & properti kota (gambar GPT) diwarnai ulang ke palet Sprout yang terang & lembut.
+// KOTA & DESA GAYA SPROUT — kastil, tembok, menara, properti kota & semua bangunan desa/kota (gambar GPT)
 // Bentuk gambar tidak berubah; hanya warna: batu (abu-abu) → tangga batu krem hangat CITY_STYLE.stone, warna lain diangkat & dilunakkan.
 // Dijalankan sekali pada gambar IMGEL sebelum buildTextures membuat tekstur. Matikan: CITY_STYLE.on = false.
 const CITY_STYLE = {
@@ -7,7 +7,12 @@ const CITY_STYLE = {
   stone: [[70, 62, 78], [128, 120, 124], [170, 162, 156], [202, 194, 182], [228, 222, 208], [244, 240, 228]],
   keys: ['gpt_gatehouse', 'gpt_gatehouse_top', 'gpt_cwall', 'gpt_ctower', 'gpt_city_bridge', 'gpt_city_lamp', 'gpt_city_lamp2',
     'gpt_city_banner', 'gpt_city_banner_sm', 'gpt_city_fence', 'gpt_city_board', 'gpt_city_cart', 'gpt_city_rock_lg', 'gpt_city_rock_sm',
-    'gpt_city_cliff_s', 'gpt_city_cliff_c', 'gpt_city_cliff_l', 'gpt_city_cliff_r'],
+    'gpt_city_cliff_s', 'gpt_city_cliff_c', 'gpt_city_cliff_l', 'gpt_city_cliff_r',
+    /* bangunan desa & kota */
+    'gpt_v_blacksmith_forge', 'gpt_v_barn_ranch', 'gpt_v_chapel_church', 'gpt_v_fishing_dock', 'gpt_v_guild_townhall', 'gpt_v_house_brown_cottage',
+    'gpt_v_house_brown_wing', 'gpt_v_house_red_cottage', 'gpt_v_house_red_shop', 'gpt_v_inn_2story', 'gpt_v_market_stall', 'gpt_v_tavern_brown',
+    'gpt_v_village_monument', 'gpt_v_village_well', 'gpt_v_watchtower', 'gpt_v_windmill', 'gpt_windmill', 'gpt_i_houseA', 'gpt_i_houseB',
+    'gpt_i_houseC', 'gpt_i_market', 'houseA', 'houseB', 'houseC', 'market', 'fountain'],
 };
 function cityPastel(img) {
   const [c, x] = mk(img.width, img.height); x.drawImage(img, 0, 0);

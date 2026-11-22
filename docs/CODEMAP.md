@@ -523,9 +523,9 @@ _EFEK AIR HIDUP gaya Sprout — riak melingkar, kilau matahari, buih ombak yang 
 _OMBAK PANTAI — lapisan air tipis naik ke pasir, ujungnya berbuih putih, lalu surut meninggalkan pasir basah._
 `SHORE` 5 · `shoreAtlas()` 8 · `shoreCells()` 39 · `shoreStep()` 51
 
-## src/systems/city_style.js (36 baris)
-_KOTA GAYA SPROUT — kastil gerbang, tembok, menara & properti kota (gambar GPT) diwarnai ulang ke palet Sprout yang terang & lembut._
-`CITY_STYLE` 5 · `cityPastel()` 12 · `_buildTexturesCity` 28
+## src/systems/city_style.js (41 baris)
+_KOTA & DESA GAYA SPROUT — kastil, tembok, menara, properti kota & semua bangunan desa/kota (gambar GPT)_
+`CITY_STYLE` 5 · `cityPastel()` 17 · `_buildTexturesCity` 33
 
 ## src/systems/sprout_trees.js (181 baris)
 _POHON GAYA SPROUT LANDS — pohon biasa di wilayah luar (GRASS_EDGE.maps) memakai pohon dari deco_sprout_objs.png (3×),_
