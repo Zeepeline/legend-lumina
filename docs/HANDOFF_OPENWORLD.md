@@ -156,3 +156,10 @@ PERF=1 npx playwright test tests/perf.spec.js  # cek frame (bandingkan dengan NO
 - **Kamera Sinematik Luar Ruang:** Default zoom kamera luar ruang disetel ke `1.18x` di `OPT.zoom` (`src/core/state.js`) & `camStep` (`src/scene/world.js`) untuk mencocokkan proporsi karakter terhadap pepohonan dan bentang alam sesuai gambar acuan Style Key G001.
 - **Tekstur Dasar:** Mempertahankan tekstur hybrid bawaan `gnd_*.png` yang stabil dan bersih.
 
+
+## 9. Dunia mengikuti gambar tanah (v1.67–v1.72)
+Tanah luar ruang = gambar `gnd_<peta>_custom` + autotile grass_edge; data lama peta (jalan `M.paths`, kolam `M.ponds`, sungai `M.river`) TIDAK lagi menentukan tembok/letak. Urutan pembungkus `mapObjects` (dalam → luar): ground.js → sprout_deco (hiasan) → world_fit (`fitObjects`: pemilik wilayah, objek keluar dari air) → nature (`natureTreesOnGrass`) → place_fit (`placeFitMap`, sekali per wilayah).
+- `world_fit.js`: tembok air = kisi Wm (`waterRects`), lubang di jembatan & dermaga; es Puncak Beku boleh dipijak di jalan lama (`WORLD_FIT.iceFord`); wilayah tumpang-tindih → `regionOwner`.
+- `nature.js`: sebaran pohon/semak alami, satu baris pembatas (`borderTrees`), titik penting tidak tertutup pohon (`natureKeep`), semak bergoyang.
+- `place_fit.js`: musuh/peti/NPC/titik pancing, jembatan otomatis di penyeberangan jalan lama (`pathCrossings`), dermaga/perahu/teratai/buluh (`placeWaterObjs`), batu di jalan (`placeOffPath`), papan tanda (`placeSigns`). Log per wilayah: `MAPS[id]._pfLog`.
+- Probe cepat (di luar repo, contoh): bangun benua `buildBenua()`, lalu periksa air/tembok/keterjangkauan per entitas; setelah mengubah peta, pastikan `_pfLog` tidak memindahkan hal penting terlalu jauh.
