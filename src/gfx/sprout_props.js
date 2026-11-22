@@ -180,7 +180,10 @@ buildTextures = function (sc) {
   if (!SPROUT_PROPS.on || !sc || !sc.textures) return res;
   const T = sc.textures;
   try {
-    for (const k in SP_PROP_ART) { const c = SP_PROP_ART[k](); if (T.exists(k)) T.remove(k); T.addCanvas(k, c); }
+    for (const k in SP_PROP_ART) {
+      if (typeof REF_HOUSES !== 'undefined' && REF_HOUSES.tex.includes(k) && T.exists(k)) continue; /* bangunan dari gambar referensi pemilik menang */
+      const c = SP_PROP_ART[k](); if (T.exists(k)) T.remove(k); T.addCanvas(k, c);
+    }
     for (const [k, a, b] of [['spBushW', '#f4f1e6', '#f2c85a'], ['spBushP', '#f0a0c0', '#fbe08a'], ['spBushB', '#9cc4f0', '#f4f1e6']]) {
       const c = spFlowerBush(a, b); if (!c) continue; if (T.exists(k)) T.remove(k); T.addCanvas(k, c);
     }
