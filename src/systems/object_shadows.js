@@ -72,6 +72,9 @@ function objShadowScan(sc) {
     _up0.apply(this, arguments);
     const n = this.children ? this.children.list.length : 0; /* pindai bila ada objek baru, atau tiap ±1 dtk */
     this._shdT = (this._shdT || 0) - (delta || 16);
-    if (n !== this._shdN || this._shdT <= 0) { this._shdN = n; this._shdT = 1000; try { objShadowScan(this); } catch (e) { OBJ_SHADOW.on = false; console.warn('object_shadows', e); } }
+    if (n !== this._shdN || this._shdT <= 0) {
+      this._shdN = n; this._shdT = 1000;
+      try { objShadowScan(this); } catch (e) { OBJ_SHADOW.on = false; console.warn('object_shadows', e); }
+    }
   };
 })();

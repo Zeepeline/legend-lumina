@@ -539,7 +539,7 @@ _RUMAH GAYA SPROUT — bangunan desa/kota digambar ulang lewat kode (piksel 2×,
 _RUMAH DARI REFERENSI PEMILIK — rumah A/B/C, pondok merah/cokelat & pandai besi memakai gambar hasil tools/bake_houses.py_
 `REF_HOUSES` 6 · `_buildTexturesRef` 16
 
-## src/systems/object_shadows.js (78 baris)
+## src/systems/object_shadows.js (81 baris)
 _BAYANGAN OBJEK — elips lembut di kaki setiap objek luar ruang (semak, batu, tunggul, bunga, jamur, pinus, pohon buah,_
 `OBJ_SHADOW` 6 · `objShadowTex()` 12 · `objFootW()` 28 · `objShadowAdd()` 42 · `objShadowScan()` 55
 
