@@ -9,7 +9,7 @@ const FARM_ART = {
   soil: { ol: '#6e4a36', dk: '#7f563c', md: '#946a48', lt: '#a87c56', hi: '#bd9168' },
   wet: { ol: '#4e3426', dk: '#5c3e2c', md: '#6c4a34', lt: '#7c5840', hi: '#8c6648' },
   leaf: { ol: '#3f6a3c', dk: '#55894a', md: '#6fa85a', lt: '#97c870', hi: '#bfe29a' },
-  stages: ['seed', 'seed_b', 'seed_h', 'seed_flower'],
+  stages: ['seed', 'seed_b', 'seed_h', 'seed_flower', 'seed_carrot', 'seed_wheat', 'seed_pumpkin'],
 };
 // tanah garapan: bingkai papan, alur bedengan mendatar tiap 12 px, gumpalan tanah acak
 function farmSoilTex(sc, w, h, wet) {
@@ -50,6 +50,22 @@ function farmCrop(seed, n) {
       else {
         blob(5, 6, 5, 4, L.ol, L.md, L.lt);
         for (const [X, Y] of [[3, 5], [6, 4], [5, 7], [2, 7], [7, 7]]) { p(X, Y, '#c8304c'); p(X, Y - 1, '#e8607a'); } /* buah beri */
+      }
+    } else if (seed === 'seed_carrot') { /* wortel: daun berbulu, pangkal jingga muncul saat siap */
+      const t = n === 3 ? 3 : 5;
+      for (const X of [3, 5, 7]) { r(X, t, 1, 9 - t, L.dk); p(X - 1, t + 1, L.lt); p(X + 1, t, L.md); }
+      if (n === 3) { r(3, 8, 4, 3, '#a8501e'); r(4, 8, 2, 2, '#f08a2e'); p(4, 8, '#ffc070'); }
+    } else if (seed === 'seed_wheat') { /* gandum: batang tegak, bulir emas saat siap */
+      const ripe = n === 3, st = ripe ? '#c89a3a' : L.md, t = ripe ? 1 : 4;
+      for (const X of [2, 4, 6, 8]) {
+        r(X, t + 2, 1, 10 - t - 2, ripe ? '#a8803a' : L.dk); r(X, t, 1, 3, st);
+        if (ripe) { p(X, t, '#f6d870'); p(X - 1, t + 1, '#e8c058'); }
+      }
+    } else if (seed === 'seed_pumpkin') { /* labu: sulur daun lebar, buah jingga bulat */
+      if (n === 2) { blob(4, 8, 3, 2, L.ol, L.md, L.lt); blob(7, 7, 2, 2, L.ol, L.md, L.lt); }
+      else {
+        blob(3, 5, 3, 2, L.ol, L.md, L.lt); blob(5, 8, 4, 3, '#9a4a1a', '#e8782a', '#ffb070');
+        r(5, 5, 1, 2, '#5a7a2a'); p(3, 8, '#c8601e'); p(7, 8, '#c8601e'); /* tangkai & alur labu */
       }
     } else if (seed === 'seed_h') { /* daun obat: tangkai tegak berdaun runcing */
       const t = n === 3 ? 2 : 4;

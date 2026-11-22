@@ -727,9 +727,13 @@ _Sistem Rona Wilayah & Transisi Antar Wilayah Halus (v1.52.0 - ala 36 Bioma Cobo
 _PROPERTI GAYA SPROUT — peti, tong, jerami, api unggun (4 frame), dermaga, perahu, papan tanda, pagar, lampu, pot bunga_
 `SPROUT_PROPS` 7 · `spProp()` 17 · `SP_PROP_ART` 25 · `spCampfire()` 152 · `spFlowerBush()` 167 · `_buildTexturesProps` 177
 
-## src/systems/farm_art.js (143 baris)
+## src/systems/farm_art.js (159 baris)
 _LAHAN PERTANIAN GAYA SPROUT — aset lengkap kebun:_
-`FARM_ART` 8 · `farmSoilTex()` 15 · `farmCrop()` 32 · `FARM_PROPS` 65 · `.spawnGarden()` 115 · `.updGarden()` 130
+`FARM_ART` 8 · `farmSoilTex()` 15 · `farmCrop()` 32 · `FARM_PROPS` 81 · `.spawnGarden()` 131 · `.updGarden()` 146
+
+## src/systems/tree_farm.js (154 baris)
+_MENANAM POHON — bibit dibeli di kios Bu Sari, dipakai dari tas → ditanam di rumput di depan Arka (wilayah luar ruang)._
+`TREE_FARM` 6 · `ptreeList` 35 · `ptreeSaplingTex()` 37 · `ptreeStage()` 47 · `ptreePos()` 52 · `.plantTree()` 57 · `.ptreeSync()` 74 · `.ptreeMake()` 89 · `.ptreeDrop()` 109 · `.ptreeUse()` 115
 
 ## src/main.js (44 baris)
 _Mulai game Phaser_

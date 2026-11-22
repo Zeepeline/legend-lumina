@@ -48,7 +48,7 @@ Object.assign(World.prototype, {
         foot: (i) => ['Beli perbekalan petualang.', 'Jual hasil buruan & panen.', 'Tutup toko.'][i]
       });
       if (m === 0) {
-        const items = ['potion', 'hipotion', 'antidote', 'ether', 'seed', 'seed_b', 'seed_h', 'seed_flower', 'leather_pouch', 'feed', 'rod', 'lockpick'];
+        const items = ['potion', 'hipotion', 'antidote', 'ether', 'seed', 'seed_b', 'seed_h', 'seed_flower', 'seed_carrot', 'seed_wheat', 'seed_pumpkin', 'sapling_oak', 'sapling_apple', 'leather_pouch', 'feed', 'rod', 'lockpick'];
         await buyMenu('Kios Bu Sari', items);
       } else if (m === 1) {
         await sellMenu();
