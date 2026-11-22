@@ -519,6 +519,10 @@ _SEMAK, BATU & HIASAN GAYA SPROUT LANDS — untuk peta di GRASS_EDGE.maps (world
 _EFEK AIR HIDUP gaya Sprout — riak melingkar, kilau matahari, buih ombak yang menyapu pasir._
 `WATER_FX` 5 · `waterFxTex()` 6 · `waterFxCell()` 31 · `waterFxSpawn()` 37 · `waterFxStep()` 61
 
+## src/systems/shore_waves.js (85 baris)
+_OMBAK PANTAI — lapisan air tipis naik ke pasir, ujungnya berbuih putih, lalu surut meninggalkan pasir basah._
+`SHORE` 5 · `shoreAtlas()` 8 · `shoreCells()` 39 · `shoreStep()` 51
+
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
 

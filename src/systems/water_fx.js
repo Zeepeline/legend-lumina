@@ -2,7 +2,7 @@
 // EFEK AIR HIDUP gaya Sprout — riak melingkar, kilau matahari, buih ombak yang menyapu pasir.
 // Hanya di peta ber-autotile (GRASS_EDGE.maps) dan hanya di dalam layar; maks WATER_FX.max sprite (kumpulan dipakai ulang).
 // Letak air dibaca dari kisi grassEdgeData (Wm = kotak air, dep = jarak kotak ke daratan).
-const WATER_FX = { on: true, ripple: 5, glint: 10, wave: 8, max: 50, line: '#fbfefa', glintC: '#f6fbf2' }; /* jumlah per detik */
+const WATER_FX = { on: true, ripple: 5, glint: 10, wave: 0, max: 50, line: '#fbfefa', glintC: '#f6fbf2' }; /* jumlah per detik */
 function waterFxTex(sc) {
   const T = sc.textures; if (T.exists('wfx_ring')) return;
   { /* riak: 5 frame elips makin besar & putus-putus */
