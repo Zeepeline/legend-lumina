@@ -511,6 +511,14 @@ _Pantulan Karakter di Air (T460) — referensi: RPG klasik / Sea of Stars_
 _Bayangan Daun Bergoyang & Proyeksi Miring Dinamis (T448, T552) — referensi: Cobo #18, Stardew_
 
 
+## src/systems/sprout_deco.js (95 baris)
+_SEMAK, BATU & HIASAN GAYA SPROUT LANDS — untuk peta di GRASS_EDGE.maps (world/grass_edge.js)._
+`SPROUT_DECO` 7 · `SPROUT_OBJ` 20 · `sproutArt()` 27 · `sproutDecoFor()` 36 · `_mapObjectsSprout` 68 · `sproutRegionAt()` 86
+
+## src/systems/water_fx.js (86 baris)
+_EFEK AIR HIDUP gaya Sprout — riak melingkar, kilau matahari, buih ombak yang menyapu pasir._
+`WATER_FX` 5 · `waterFxTex()` 6 · `waterFxCell()` 31 · `waterFxSpawn()` 37 · `waterFxStep()` 61
+
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
 

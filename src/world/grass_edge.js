@@ -59,7 +59,7 @@ function edgeTiles(G, cols, rows) {
 // sekali per peta: kelas piksel + 3 lapis petak (pasir/daratan, tanah, rumput) di atas air
 function grassEdgeData(M) {
   const C = grassEdgeData.c || (grassEdgeData.c = {}); if (C[M.id] !== undefined) return C[M.id];
-  const src = IMGEL[M.customGround], sheet = getTileData(GRASS_EDGE.sheet); if (!src || !sheet) return (C[M.id] = null);
+  const src = IMGEL[M.customGround], sheet = getTileData(GRASS_EDGE.sheet); if (!src || !sheet) return null; /* gambar belum dimuat: jangan disimpan */
   const S = GRASS_EDGE.cell, cols = Math.ceil(M.w / S), rows = Math.ceil(M.h / S), Wd = M.w, Hd = M.h;
   const [, x] = mk(Wd, Hd); x.drawImage(src, 0, 0, Wd, Hd); const D = x.getImageData(0, 0, Wd, Hd).data;
   const K = new Uint8Array(Wd * Hd), L = new Uint16Array(Wd * Hd);
@@ -104,7 +104,7 @@ function grassEdgeData(M) {
   const tl = { sand: edgeTiles(land, cols, rows), dirt: edgeTiles(dirt, cols, rows), grass: edgeTiles(grass, cols, rows) };
   const mB = new Uint8Array(N), mD = new Uint8Array(N); for (let k = 0; k < N; k++) { mB[k] = dep[k] >= 2 ? 1 : 0; mD[k] = dep[k] >= 4 ? 1 : 0; }
   edgeClean(mB, cols, rows, 3, 9); edgeClean(mD, cols, rows, 3, 9); tl.wb = edgeTiles(mB, cols, rows); tl.wd = edgeTiles(mD, cols, rows);
-  return (C[M.id] = { cols, rows, tl, sheet, K, L, wt: getTileData(GRASS_EDGE.water) });
+  return (C[M.id] = { cols, rows, tl, sheet, K, L, Wm, dep, grass, dirt, strip, wt: getTileData(GRASS_EDGE.water) });
 }
 // dipanggil genGround untuk gambar tanah per peta; true = tanah sudah final (grassPass dilewati)
 function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
