@@ -9,7 +9,9 @@ const REF_HOUSES = {
     houseC: 'sp_houseC', gpt_v_house_red_cottage: 'sp_house_red_cottage', gpt_v_house_brown_cottage: 'sp_house_brown_cottage',
     gpt_v_blacksmith_forge: 'sp_blacksmith_forge' },
 };
-IMG_LIST.push(...new Set(Object.values(REF_HOUSES.map)));
+// bangunan lain (tools/bake_buildings.py): tekstur kunci → gambar sp_b_<kunci>, diganti setelah buildTextures membuatnya
+REF_HOUSES.tex = ['academy', 'i_market', 'well', 'windmill', 'blades', 'shrine', 'i_fountain'];
+IMG_LIST.push(...new Set(Object.values(REF_HOUSES.map)), ...REF_HOUSES.tex.map(k => 'sp_b_' + k));
 if (REF_HOUSES.on && typeof SPROUT_HOUSES !== 'undefined' && SPROUT_HOUSES.list) for (const k in REF_HOUSES.map) delete SPROUT_HOUSES.list[k];
 const _buildTexturesRef = buildTextures;
 buildTextures = function (sc) {
@@ -17,5 +19,10 @@ buildTextures = function (sc) {
     for (const [k, v] of Object.entries(REF_HOUSES.map)) if (IMGEL[k] && IMGEL[v]) { IMGEL[k] = IMGEL[v]; IMGEL[k]._sprout = 1; }
     buildTextures.refDone = 1;
   }
-  return _buildTexturesRef.apply(this, arguments);
+  const r = _buildTexturesRef.apply(this, arguments), T = sc && sc.textures;
+  if (REF_HOUSES.on && T) for (const k of REF_HOUSES.tex) {
+    const im = IMGEL['sp_b_' + k]; if (!im || (T.exists(k) && T.get(k).getSourceImage() === im)) continue;
+    if (T.exists(k)) T.remove(k); T.addImage(k, im);
+  }
+  return r;
 };
