@@ -95,9 +95,9 @@ _Gambar properti & bangunan cerita baru (Prolog & Bab 1): Makam Mila, Gubuk Reyo
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
 `OBJ` 7 · `MAPS` 378
 
-## src/world/spawn/spawn_1.js (392 baris)
+## src/world/spawn/spawn_1.js (393 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-`OBJ_SPAWN` 3 · obj `verdant_bush` 5 · obj `verdant_bush_small` 6 · obj `bushy` 7 · obj `bushv` 8 · obj `lampPost` 10 · obj `gpt_city_lamp` 18 · obj `shrine` 26 · obj `cavemouth` 29 · obj `sign` 32 · obj `forge` 42 · obj `pebbles` 63 · obj `telescope` 71 · obj `altar` 79 · obj `fieldoven` 87 · obj `dripstone` 95 · obj `frostflower` 103 · obj `totem` 111 · obj `pigeons` 119 · obj `teatable` 152 · obj `lotuspad` 160 · obj `dockboat` 168 · obj `coffeeshrub` 223 · obj `coffeekettle` 231 · obj `orchidrock` 239 · obj `canaryperch` 247 · obj `woodlandshrine` 255 · obj `bellows` 263 · obj `ringbooth` 271 · obj `archerytarget` 279 · obj `lakelighthouse` 287 · obj `streetdrum` 295 · obj `dummy` 303 · obj `pot` 311 · obj `well` 321 · obj `apple1` 336 · obj `bench` 341 · obj `bell` 357 · obj `campfire` 365 · obj `alchemytable` 382
+`OBJ_SPAWN` 3 · obj `verdant_bush` 5 · obj `verdant_bush_small` 6 · obj `bushy` 7 · obj `bushv` 8 · obj `lampPost` 10 · obj `gpt_city_lamp` 18 · obj `shrine` 26 · obj `cavemouth` 29 · obj `sign` 32 · obj `forge` 42 · obj `pebbles` 63 · obj `telescope` 71 · obj `altar` 79 · obj `fieldoven` 87 · obj `dripstone` 95 · obj `frostflower` 103 · obj `totem` 111 · obj `pigeons` 119 · obj `teatable` 152 · obj `lotuspad` 160 · obj `dockboat` 168 · obj `coffeeshrub` 224 · obj `coffeekettle` 232 · obj `orchidrock` 240 · obj `canaryperch` 248 · obj `woodlandshrine` 256 · obj `bellows` 264 · obj `ringbooth` 272 · obj `archerytarget` 280 · obj `lakelighthouse` 288 · obj `streetdrum` 296 · obj `dummy` 304 · obj `pot` 312 · obj `well` 322 · obj `apple1` 337 · obj `bench` 342 · obj `bell` 358 · obj `campfire` 366 · obj `alchemytable` 383
 
 ## src/world/spawn/spawn_2.js (394 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
@@ -555,9 +555,9 @@ _JEMBATAN KAYU GAYA SPROUT — di titik penyeberangan lama (sungai Hutan M.river
 _DUNIA COCOK DENGAN GAMBAR — tabrakan & objek mengikuti tanah yang TERLIHAT (gambar peta + autotile grass_edge), bukan data lama._
 `WORLD_FIT` 7 · `regionOwner()` 9 · `fitWater` 16 · `fitOn` 17 · `fitBenua` 18 · `fitBridgeRects()` 20 · `waterRects()` 30 · `fitObjects()` 59 · `fitClipGround()` 107
 
-## src/systems/nature.js (281 baris)
+## src/systems/nature.js (284 baris)
 _ALAM — sebaran pohon mengikuti pola alami, satu baris pohon pembatas, semak & bunga bergoyang._
-`NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureFoot()` 37 · `natInFoot` 46 · `natureKeep()` 48 · `natKeepOk` 65 · `natureBox()` 70 · `natureScatter()` 74 · `natureTreesOnGrass()` 136 · `natureBorder()` 154 · `NATURE_TINT` 206 · `natureBiomeTint()` 207 · `NATURE_SNOW` 216 · `natureSnowTex()` 218 · `natureSwayTex()` 238
+`NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureFoot()` 37 · `natInFoot` 46 · `natureKeep()` 48 · `natKeepOk` 68 · `natureBox()` 73 · `natureScatter()` 77 · `natureTreesOnGrass()` 139 · `natureBorder()` 157 · `NATURE_TINT` 209 · `natureBiomeTint()` 210 · `NATURE_SNOW` 219 · `natureSnowTex()` 221 · `natureSwayTex()` 241
 
 ## src/systems/place_fit.js (179 baris)
 _LETAK SESUAI TANAH — data peta lama (musuh, peti, NPC, titik pancing) dibuat untuk tanah lama; tanah sekarang = gambar peta._
@@ -723,9 +723,9 @@ _Pedang Arka yang DIGAMBAR PER FRAME (assets/img/hero/hero_swl{0,1}.png ← tool
 _Sistem Rona Wilayah & Transisi Antar Wilayah Halus (v1.52.0 - ala 36 Bioma Cobo Makes Games / Mytheria)_
 `ID_M` 8 · `BIOME_GRADE` 11 · `biomeBaseMatrix()` 24 · `lerpMatrix()` 30 · `TRANS_BAND` 37 · `calcTargetGrade()` 38 · `applyGradeFX()` 87
 
-## src/gfx/sprout_props.js (158 baris)
+## src/gfx/sprout_props.js (206 baris)
 _PROPERTI GAYA SPROUT — peti, tong, jerami, api unggun (4 frame), dermaga, perahu, papan tanda, pagar, lampu, pot bunga_
-`SPROUT_PROPS` 7 · `spProp()` 17 · `SP_PROP_ART` 25 · `spCampfire()` 105 · `spFlowerBush()` 120 · `_buildTexturesProps` 130
+`SPROUT_PROPS` 7 · `spProp()` 17 · `SP_PROP_ART` 25 · `spCampfire()` 152 · `spFlowerBush()` 167 · `_buildTexturesProps` 177
 
 ## src/main.js (44 baris)
 _Mulai game Phaser_

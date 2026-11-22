@@ -94,6 +94,53 @@ const SP_PROP_ART = {
     r(1, 7, 10, 2, T.ol); r(2, 7, 8, 1, T.lt); r(2, 8, 8, 1, T.dk); /* bibir pot */
     r(2, 9, 8, 4, T.ol); r(3, 9, 6, 4, T.md); r(3, 9, 1, 4, T.lt); r(8, 9, 1, 4, T.dk); r(3, 13, 6, 1, T.ol); /* badan */
   }),
+  stalag: () => spProp(10, 14, (r, p) => {
+    const S = SPROUT_PROPS.S;
+    for (let y = 0; y < 13; y++) {
+      const hw = Math.round(1 + y * .32); r(5 - hw, y, hw * 2, 1, S.ol); if (hw > 1) r(6 - hw, y, hw * 2 - 2, 1, S.md);
+    }
+    for (let y = 2; y < 12; y++) { const hw = Math.round(1 + y * .32); p(6 - hw, y, S.lt); if (y > 4) p(4 + Math.round(hw / 2), y, S.dk); }
+    p(4, 1, S.hi); p(4, 2, S.hi); r(1, 13, 8, 1, S.ol); r(2, 12, 6, 1, S.dk); /* pucuk terang, pangkal */
+  }),
+  stele: () => spProp(9, 12, (r, p) => {
+    const S = SPROUT_PROPS.S;
+    r(2, 0, 5, 1, S.ol); r(1, 1, 7, 10, S.ol); r(0, 10, 9, 2, S.ol);
+    r(2, 1, 5, 9, S.md); r(2, 1, 1, 9, S.lt); r(3, 1, 3, 1, S.hi); r(6, 2, 1, 8, S.dk); r(1, 10, 7, 1, S.dk); /* batu */
+    r(3, 3, 3, 1, '#7fa6b8'); p(4, 4, '#7fa6b8'); r(3, 6, 3, 1, '#7fa6b8'); p(3, 7, '#9fc6d4'); /* rune pudar */
+  }),
+  bones: () => spProp(10, 5, (r, p) => {
+    const B = { ol: '#9c8a74', md: '#e6dcc4', hi: '#fbf5e6' };
+    r(0, 1, 6, 4, B.ol); r(1, 2, 4, 2, B.md); r(1, 2, 4, 1, B.hi); p(0, 1, B.md); p(5, 1, B.md); p(0, 4, B.md); p(5, 4, B.md); /* tulang */
+    r(6, 0, 4, 4, B.ol); r(7, 1, 2, 2, B.md); p(7, 1, B.hi); p(8, 2, '#5a4c40'); r(6, 4, 3, 1, B.ol); /* tengkorak kecil */
+  }),
+  dummy: () => spProp(10, 14, (r, p) => {
+    const W = SPROUT_PROPS.W, H = SPROUT_PROPS.H;
+    r(4, 9, 2, 5, W.ol); r(4, 9, 1, 4, W.md); r(2, 13, 6, 1, W.ol); /* tiang */
+    r(3, 0, 4, 4, H.ol); r(4, 1, 2, 2, H.md); p(4, 1, H.hi); /* kepala jerami */
+    r(0, 4, 10, 2, W.ol); r(1, 4, 8, 1, W.bs); /* palang lengan */
+    r(2, 4, 6, 6, H.ol); r(3, 5, 4, 4, H.md); r(3, 5, 4, 1, H.lt); r(2, 7, 6, 1, H.tw); /* badan + tali */
+    p(5, 6, '#c0485a'); /* sasaran */
+  }),
+  i_bench: () => spProp(24, 17, (r, p) => {
+    const W = SPROUT_PROPS.W;
+    for (const X of [2, 19]) { r(X, 10, 3, 7, W.ol); r(X + 1, 10, 1, 6, W.md); } /* kaki */
+    r(0, 0, 24, 5, W.ol); r(1, 1, 22, 3, W.bs); r(1, 1, 22, 1, W.hi); r(1, 3, 22, 1, W.md); /* sandaran */
+    r(0, 6, 24, 5, W.ol); r(1, 7, 22, 3, W.lt); r(1, 7, 22, 1, W.hi); r(1, 9, 22, 1, W.md); /* dudukan */
+    for (const X of [3, 20]) r(X, 4, 1, 3, W.dk);
+  }),
+  shrine: () => spProp(60, 35, (r, p) => {
+    const S = SPROUT_PROPS.S, G = ['#8fd8e8', '#bfeef4', '#e8fbff'];
+    const ell = (cx, cy, rx, ry, col) => {
+      for (let y = -ry; y <= ry; y++) { const w = Math.round(rx * Math.sqrt(1 - (y / ry) ** 2)); r(cx - w, cy + y, w * 2, 1, col); }
+    };
+    ell(30, 25, 27, 9, S.ol); ell(30, 24, 26, 8, S.dk); ell(30, 23, 25, 7, S.md); ell(30, 23, 19, 5, S.ol); /* cincin batu */
+    ell(30, 23, 18, 4, G[0]); ell(30, 22, 12, 2, G[1]); r(26, 22, 6, 1, G[2]); /* kolam cahaya */
+    for (let a = 0; a < 12; a++) { const R = a / 12 * 6.283, X = Math.round(30 + Math.cos(R) * 22), Y = Math.round(23 + Math.sin(R) * 6); p(X, Y, S.hi); }
+    for (const X of [4, 53]) { /* tiang lentera */
+      r(X, 4, 3, 21, S.ol); r(X + 1, 5, 1, 19, S.lt); r(X - 1, 22, 5, 3, S.ol);
+      r(X - 1, 0, 5, 5, S.ol); r(X, 1, 3, 3, '#ffe9a0'); p(X, 1, '#fff8d8');
+    }
+  }),
   bramble: () => spProp(11, 9, (r, p) => {
     const G = SPROUT_PROPS.G;
     r(1, 2, 9, 6, G.ol); r(2, 1, 7, 8, G.ol); r(2, 2, 7, 6, G.md); r(3, 2, 5, 2, G.lt); p(4, 2, G.hi); r(2, 6, 7, 1, G.dk);
@@ -134,10 +181,11 @@ buildTextures = function (sc) {
   const T = sc.textures;
   try {
     for (const k in SP_PROP_ART) { const c = SP_PROP_ART[k](); if (T.exists(k)) T.remove(k); T.addCanvas(k, c); }
-    for (const [k, a, b] of [['spBushW', '#f4f1e6', '#f2c85a'], ['spBushP', '#f0a0c0', '#fbe08a']]) {
+    for (const [k, a, b] of [['spBushW', '#f4f1e6', '#f2c85a'], ['spBushP', '#f0a0c0', '#fbe08a'], ['spBushB', '#9cc4f0', '#f4f1e6']]) {
       const c = spFlowerBush(a, b); if (!c) continue; if (T.exists(k)) T.remove(k); T.addCanvas(k, c);
     }
-    if (typeof SPROUT_DECO !== 'undefined') Object.assign(SPROUT_DECO.swap, { bushW: 'spBushW', bushP: 'spBushP', bushP2: 'spBushP' });
+    const sw = { bushW: 'spBushW', bushP: 'spBushP', bushP2: 'spBushP', bushv: 'spBushB', bushy: 'spBushP' };
+    if (typeof SPROUT_DECO !== 'undefined') Object.assign(SPROUT_DECO.swap, sw);
     const fr = [0, 1, 2, 3].map(spCampfire), w = fr[0].width, h = fr[0].height, [cv, x] = mk(w * 4, h);
     fr.forEach((c, i) => x.drawImage(c, i * w, 0));
     if (T.exists('campfire')) T.remove('campfire');

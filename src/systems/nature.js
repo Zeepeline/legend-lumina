@@ -54,7 +54,10 @@ function natureKeep(M) {
     const N = MAPS[id], Q = P ? WORLD_POS[id] : [0, 0]; if (!N) continue;
     if (Q[0] > ox + M.w + 200 || Q[0] + N.w < ox - 200 || Q[1] > oy + M.h + 200 || Q[1] + N.h < oy - 200) continue;
     const add = (x, y, r) => { const X = x + Q[0] - ox, Y = y + Q[1] - oy; if (X > -r && Y > -r && X < M.w + r && Y < M.h + r) out.push([X, Y, r]); };
-    for (const o of N.objs || []) if (/^(dock|dockboat|boat|sign|campfire|well|board)$/.test(o[0])) add(o[1], o[2], o[0] === 'dock' ? 90 : 56);
+    for (const o of N.objs || []) {
+      if (/^(dock|dockboat|boat|sign|campfire|well|board)$/.test(o[0])) add(o[1], o[2], o[0] === 'dock' ? 90 : 56);
+      else if (/shrine|altar|statue|fountain/.test(o[0])) add(o[1], o[2], 110); /* kuil & altar: pelataran terbuka */
+    }
     for (const c of N.chests || []) add(c.x, c.y, 40);
     for (const n of N.npcs || []) add(n.x, n.y, 40);
     for (const f of N.fish || []) add(f[0], f[1], 52);

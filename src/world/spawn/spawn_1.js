@@ -211,8 +211,9 @@ Object.assign(OBJ_SPAWN, {
             } else if (act === 1) {
               // Dayung ke pulau tengah
               sfx('swim');
-              this.pl.setPosition(560, 560);
-              popWorld(560, 540, 'Tiba di Pulau Kuil Tengah!', 'heal');
+              const P = typeof BENUA !== 'undefined' && BENUA && WORLD_POS.lake ? WORLD_POS.lake : [0, 0]; /* koordinat benua = global */
+              this.pl.setPosition(P[0] + 560, P[1] + 545);
+              popWorld(P[0] + 560, P[1] + 525, 'Tiba di Pulau Kuil Tengah!', 'heal');
               this.onBoat = false;
             }
           }
