@@ -307,7 +307,7 @@ Object.assign(World.prototype, {
     // T534: Gelombang angin miring global terkoordinasi ala Cobo
     if (this.bushes && !OPT.lite) {
       for (const b of this.bushes) {
-        if (b.active && !b._swaying && b.x > v.x - 30 && b.x < v.right + 30 && b.y > v.y - 30 && b.y < v.bottom + 30) {
+        if (b.active && !b._swaying && !b._bw && b.x > v.x - 30 && b.x < v.right + 30 && b.y > v.y - 30 && b.y < v.bottom + 30) {
           b.angle = Math.sin(this.t * 2.2 + (b.x * 0.035 + b.y * 0.025)) * 2.6;
         }
       }

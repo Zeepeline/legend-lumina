@@ -2,7 +2,7 @@
 // Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Digambar di lapisan tanah
 // bersama (scene GL, koordinat global; systems/groundlayer.js), hanya celah di dekat kamera (dibuat/dibuang tiap 0,4 s).
 // Celah dihitung sekali dari WORLD_POS (kompresi koordinat): tekstur kanopi + deretan pohon sungguhan di tepi celah.
-const WILD_MARGIN = 1600, WILD_NEAR = 900, WILD_TILE = 256;
+const WILD_MARGIN = 1600, WILD_NEAR = 900, WILD_TILE = 256, WILD_TREES = false; /* true = hutan lebat lama (berat) */
 let WILD_RECTS = null;
 function outdoorRects() {
   return Object.entries(WORLD_POS).filter(([id]) => MAPS[id] && !MAPS[id].indoor && MAPS[id].ground !== 'room')
@@ -45,11 +45,14 @@ Object.assign(GroundLayer.prototype, {
       x.fillStyle = ['#2f5a23', '#22441a', '#355f27'][i % 3]; x.fillRect(Math.floor(hash(i, 1, 71) * T), Math.floor(hash(i, 2, 71) * T), 3, 2);
     }
     if (typeof grassCanvas === 'function') grassCanvas(x, T, T, 0, 0, { ground: 'forest' }); /* lantai hutan ikut tekstur rumput */
-    const imgs = keys.map(k => this.textures.get(k).getSourceImage());
-    for (let row = 0; row < 9; row++) for (let col = 0; col < 7; col++) { // pohon rapat, dibungkus agar menyambung
-      const n = row * 7 + col, im = imgs[Math.floor(hash(n, 3, 72) * imgs.length)]; if (!im) continue;
-      const px = col * (T / 7) + (hash(n, 4, 72) - .5) * 20 + (row % 2) * 18, py = row * (T / 9) + (hash(n, 5, 72) - .5) * 10;
-      for (const dx of [-T, 0, T]) for (const dy of [-T, 0, T]) x.drawImage(im, Math.round(px + dx - im.width / 2), Math.round(py + dy - im.height + 14));
+    if (!WILD_TREES) { x.fillStyle = 'rgba(20,40,16,.28)'; x.fillRect(0, 0, T, T); } /* di luar dunia: lantai gelap saja, tanpa pohon (nature.js) */
+    else {
+      const imgs = keys.map(k => this.textures.get(k).getSourceImage());
+      for (let row = 0; row < 9; row++) for (let col = 0; col < 7; col++) { // pohon rapat, dibungkus agar menyambung
+        const n = row * 7 + col, im = imgs[Math.floor(hash(n, 3, 72) * imgs.length)]; if (!im) continue;
+        const px = col * (T / 7) + (hash(n, 4, 72) - .5) * 20 + (row % 2) * 18, py = row * (T / 9) + (hash(n, 5, 72) - .5) * 10;
+        for (const dx of [-T, 0, T]) for (const dy of [-T, 0, T]) x.drawImage(im, Math.round(px + dx - im.width / 2), Math.round(py + dy - im.height + 14));
+      }
     }
     this.textures.addCanvas('wildcanopy', c);
     return 'wildcanopy';
@@ -80,7 +83,7 @@ Object.assign(GroundLayer.prototype, {
   },
   makeWild(r) {
     const out = [], R = outdoorRects(), keys = wildTreeKeys(this);
-    if (!keys.length) return out;
+    if (!keys.length || !WILD_TREES) return out; /* baris pembatas = borderTrees tiap wilayah (satu baris) */
     // deretan pohon di tepi celah yang bersentuhan dengan wilayah
     const edge = (x0, y0, x1, y1, ox, oy) => {
       const L = Math.hypot(x1 - x0, y1 - y0), n = Math.floor(L / 26);

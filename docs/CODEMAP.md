@@ -447,7 +447,7 @@ _Dunia satu peta (langkah 1): wilayah di sekitar Arka berjalan BERSAMAAN sebagai
 _Lapisan tanah bersama (scene 'GL', selalu paling bawah): tanah SEMUA wilayah luar ruang yang dimuat + hutan pengisi celah,_
 `glOn()` 24 · `.glScene()` 26 · `.syncCams()` 32
 
-## src/systems/wilds.js (98 baris)
+## src/systems/wilds.js (101 baris)
 _Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Digambar di lapisan tanah_
 `WILD_MARGIN` 5 · `WILD_RECTS` 6 · `outdoorRects()` 7 · `inRegion()` 11 · `wildRects()` 12 · `wildTreeKeys()` 38
 
@@ -507,7 +507,7 @@ _Sistem Pohon Apel Siklus Berbuah & Tanpa Buah (8 Frame Wind Sway)_
 _Pantulan Karakter di Air (T460) — referensi: RPG klasik / Sea of Stars_
 
 
-## src/systems/tree_shadows.js (68 baris)
+## src/systems/tree_shadows.js (69 baris)
 _Bayangan Daun Bergoyang & Proyeksi Miring Dinamis (T448, T552) — referensi: Cobo #18, Stardew_
 
 
@@ -550,6 +550,10 @@ _JEMBATAN KAYU GAYA SPROUT — di titik penyeberangan lama (sungai Hutan M.river
 ## src/systems/world_fit.js (111 baris)
 _DUNIA COCOK DENGAN GAMBAR — tabrakan & objek mengikuti tanah yang TERLIHAT (gambar peta + autotile grass_edge), bukan data lama._
 `WORLD_FIT` 7 · `regionOwner()` 8 · `fitWater` 15 · `fitOn` 16 · `fitBenua` 17 · `fitBridgeRects()` 19 · `waterRects()` 29 · `fitObjects()` 54 · `fitClipGround()` 102
+
+## src/systems/nature.js (213 baris)
+_ALAM — sebaran pohon mengikuti pola alami, satu baris pohon pembatas, semak & bunga bergoyang._
+`NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureBox()` 37 · `natureScatter()` 41 · `natureTreesOnGrass()` 101 · `natureBorder()` 119 · `natureSwayTex()` 171
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_

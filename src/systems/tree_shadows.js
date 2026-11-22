@@ -44,6 +44,7 @@
         .setRotation(p.rot)
         .setAlpha(p.a)
         .setDepth(y - 0.8);
+      s.once('destroy', () => { if (sh.active) { this.tweens.killTweensOf(sh); sh.destroy(); } }); /* petak objek dibuang (benua) → bayangan ikut */
 
       // Optimasi performa: Hindari 500+ tweens aktif sekaligus yang bikin stutter.
       // Cukup beri goyangan halus jika bukan OPT.lite dan dibatasi maksimal 24 pohon.
