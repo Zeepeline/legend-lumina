@@ -155,9 +155,9 @@ _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (213 baris)
+## src/world/maps/city.js (222 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
-`houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14 · `acadYard()` 146
+`houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14 · `ACAD_BOX` 148 · `acadYard()` 149
 
 ## src/world/maps/wild.js (194 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
