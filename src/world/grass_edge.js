@@ -157,7 +157,7 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
   const E = grassEdgeData(M), T = grassTiles(); if (!E || !T) return false;
   const PL = EDGE_PAL[M.id] || {}, WS = PL.water || WATER_S, SS = PL.sand || SAND_S;
   const S = GRASS_EDGE.cell, sc = S / 16, sh = E.sheet, sw = sh.w, im = ctx.getImageData(0, 0, W, H), D = im.data;
-  const a = [0, 0, 0], q = [0, 0, 0];
+  const a = [0, 0, 0], q = [0, 0, 0], BI = typeof biomeOf === 'function' ? biomeOf(M) : null, bo = [0, 0, 0]; /* biome_ground.js */
   const cover = (tile, lx, ly) => { /* indeks piksel lembar bila (lx,ly) tertutup petak lapis itu, selain itu -1 */
     const c = (lx / S) | 0, r = (ly / S) | 0; if (lx < 0 || ly < 0 || c >= E.cols || r >= E.rows) return -1;
     const k = (r * E.cols + c) * 2; if (tile[k] < 0) return -1;
@@ -174,12 +174,17 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
       if (n < .4) { const t = grassSS(.3, .4, n); grassTex(T[2], X, Y, q); for (let j = 0; j < 3; j++) a[j] = q[j] + (a[j] - q[j]) * t; }
       else if (n > .62) { const t = grassSS(.62, .72, n); grassTex(T[1], X, Y, q); for (let j = 0; j < 3; j++) a[j] += (q[j] - a[j]) * t; }
       const o = D[i] + D[i + 1] + D[i + 2], fl = isGreen(D[i], D[i + 1], D[i + 2]) ? Math.min(1.15, Math.max(.8, o / GRASS.ref)) : 1.15;
-      D[i] = a[0] * f * fl; D[i + 1] = a[1] * f * fl; D[i + 2] = a[2] * f * fl; continue;
+      D[i] = a[0] * f * fl; D[i + 1] = a[1] * f * fl; D[i + 2] = a[2] * f * fl;
+      if (BI && biomeMask(M, BI, lx, ly, X, Y)) { /* salju / rumput rawa */
+        biomeRamp(BI, D[i], D[i + 1], D[i + 2], bo); D[i] = bo[0]; D[i + 1] = bo[1]; D[i + 2] = bo[2];
+      }
+      continue;
     }
     const j = ((ly / GRASS_EDGE.q) | 0) * E.kw + ((lx / GRASS_EDGE.q) | 0); if (!E.K[j]) continue; /* batu dll. → biarkan */
     const h = hash(X >> 1, Y >> 1, 91), v = vnoise(X, Y, 48, 92), inD = cover(TD, lx, ly) >= 0; let c;
     if (inD || cover(TS, lx, ly) >= 0) { /* tanah atau pita pasir: warna rata + kerikil + bayangan di bawah lapis di atasnya */
-      const P = inD ? DIRT_S : SS; c = h < .012 ? P.dark : h < .03 ? P.light : h < .05 ? P.mid : P.base;
+      const P = inD ? (BI && BI.dirt && biomeMask(M, BI, lx, ly, X, Y) ? BI.dirt : DIRT_S) : SS;
+      c = h < .012 ? P.dark : h < .03 ? P.light : h < .05 ? P.mid : P.base;
       if (inD && PL.road === 'cobble') { /* jalan kota: paving batu; bayangan rumput = digelapkan */
         const t = cobbleTile(), ti = ((((Y % 32) + 32) % 32) * 32 + (((X % 32) + 32) % 32)) * 3, up = (dx, dy) => cover(TG, lx + dx, ly + dy) >= 0;
         const k = up(0, -1) || up(0, -2) ? .78 : up(0, -3) || up(-1, 0) || up(1, 0) ? .9 : 1;
