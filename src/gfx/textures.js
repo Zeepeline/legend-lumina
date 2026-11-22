@@ -15,7 +15,7 @@ const ICONS = new Proxy(ICONS_CACHE, {
 const IMGEL = {};
 // Gambar dari gambar referensi ada di assets/img/<nama>.png → tekstur Phaser 'i_<nama>'
 const IMG_LIST = [
-  "gnd_village_custom", "gnd_forest_custom", "gnd_meadow_custom", "gnd_lake_custom", "gnd_road_custom", "gnd_deepwood_custom",
+  "gnd_village_custom", "gnd_forest_custom", "gnd_meadow_custom", "gnd_lake_custom", "gnd_road_custom", "gnd_deepwood_custom", "gnd_swamp_custom", "gnd_snow_custom", "gnd_river_custom",
   "apple1", "bench", "bigtree", "bushG1", "bushG2", "bushP", "bushW",
   "fountain", "houseA", "houseB", "houseC", "market", "planter", "pot",
   "treeA", "stumpWoods",

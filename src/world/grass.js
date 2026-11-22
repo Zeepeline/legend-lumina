@@ -10,7 +10,7 @@ const GRASS = {
   base: 'gnd_grass', light: 'gnd_grass_light', dark: 'gnd_grass_dark',
   patch: 70,        // ukuran bercak terang/gelap (px)
   ref: 300,         // jumlah R+G+B rumput "normal" pada gambar lama → acuan terang-gelap
-  skip: ['swamp', 'snow', 'cave', 'room'],  // tanah khas (M.ground atau M.id) yang tidak diganti
+  skip: ['cave', 'room'],  // tanah khas (M.ground atau M.id) yang tidak diganti
 };
 function grassTiles() {
   if (grassTiles.t) return grassTiles.t;
