@@ -555,9 +555,9 @@ _DUNIA COCOK DENGAN GAMBAR — tabrakan & objek mengikuti tanah yang TERLIHAT (g
 _ALAM — sebaran pohon mengikuti pola alami, satu baris pohon pembatas, semak & bunga bergoyang._
 `NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureFoot()` 37 · `natInFoot` 46 · `natureKeep()` 48 · `natKeepOk` 65 · `natureBox()` 70 · `natureScatter()` 74 · `natureTreesOnGrass()` 136 · `natureBorder()` 154 · `natureSwayTex()` 206
 
-## src/systems/place_fit.js (139 baris)
+## src/systems/place_fit.js (161 baris)
 _LETAK SESUAI TANAH — data peta lama (musuh, peti, NPC, titik pancing) dibuat untuk tanah lama; tanah sekarang = gambar peta._
-`PLACE_FIT` 9 · `placeFitMap()` 11 · `placeWaterObjs()` 51 · `pathCrossings()` 88
+`PLACE_FIT` 9 · `placeFitMap()` 13 · `placeOffPath()` 56 · `placeWaterObjs()` 73 · `pathCrossings()` 110
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
@@ -719,9 +719,9 @@ _Pedang Arka yang DIGAMBAR PER FRAME (assets/img/hero/hero_swl{0,1}.png ← tool
 _Sistem Rona Wilayah & Transisi Antar Wilayah Halus (v1.52.0 - ala 36 Bioma Cobo Makes Games / Mytheria)_
 `ID_M` 8 · `BIOME_GRADE` 11 · `biomeBaseMatrix()` 24 · `lerpMatrix()` 30 · `TRANS_BAND` 37 · `calcTargetGrade()` 38 · `applyGradeFX()` 87
 
-## src/gfx/sprout_props.js (127 baris)
-_PROPERTI GAYA SPROUT — peti, tong, jerami, api unggun (4 frame), dermaga, perahu, papan tanda, pagar, akar & semak duri._
-`SPROUT_PROPS` 6 · `spProp()` 16 · `SP_PROP_ART` 23 · `spCampfire()` 89 · `_buildTexturesProps` 103
+## src/gfx/sprout_props.js (158 baris)
+_PROPERTI GAYA SPROUT — peti, tong, jerami, api unggun (4 frame), dermaga, perahu, papan tanda, pagar, lampu, pot bunga_
+`SPROUT_PROPS` 7 · `spProp()` 17 · `SP_PROP_ART` 25 · `spCampfire()` 105 · `spFlowerBush()` 120 · `_buildTexturesProps` 130
 
 ## src/main.js (44 baris)
 _Mulai game Phaser_

@@ -1,5 +1,6 @@
 'use strict';
-// PROPERTI GAYA SPROUT — peti, tong, jerami, api unggun (4 frame), dermaga, perahu, papan tanda, pagar, akar & semak duri.
+// PROPERTI GAYA SPROUT — peti, tong, jerami, api unggun (4 frame), dermaga, perahu, papan tanda, pagar, lampu, pot bunga
+// (i_pot dulu kosong = tak terlihat tapi menghalangi), akar & semak duri.
 // Gambar lama (kotak/oval cokelat polos, diwarnai gelap oleh code_palette.js) diganti piksel 2× berpalet Sprout Lands
 // (kayu #90625d–#e8cfa6 seperti tunggul/batang Sprout; dermaga & perahu sewarna jembatan bridges.js). Ukuran ≈ kanvas lama,
 // jadi tabrakan & letak tidak berubah. Dipasang setelah buildTextures (dimuat paling akhir, setelah code_palette.js).
@@ -16,6 +17,7 @@ const SPROUT_PROPS = {
 function spProp(w, h, d) {
   const [c, x] = mk(w, h);
   const r = (X, Y, W, H, col) => { x.fillStyle = col; x.fillRect(X, Y, W, H); }, p = (X, Y, col) => r(X, Y, 1, 1, col);
+  p.ctx = x; /* untuk menempel potongan gambar */
   d(r, p);
   const s = SPROUT_PROPS.scale, [o, ox] = mk(w * s, h * s); ox.imageSmoothingEnabled = false; ox.drawImage(c, 0, 0, w * s, h * s);
   return o;
@@ -78,6 +80,20 @@ const SP_PROP_ART = {
     arch(17, 15, 14, 12, 3); /* lengkung akar */
     r(1, 13, 5, 3, W.ol); r(29, 13, 5, 3, W.ol); r(2, 14, 3, 1, W.md); r(30, 14, 3, 1, W.dk); /* pangkal menancap */
   }),
+  lamp: () => spProp(6, 15, (r, p) => {
+    const W = SPROUT_PROPS.W, M = '#5b4a52';
+    r(1, 0, 4, 1, M); r(0, 1, 6, 1, M); /* atap */
+    r(0, 2, 6, 4, M); r(1, 2, 4, 3, '#ffd77e'); r(1, 2, 2, 1, '#fff2c4'); p(4, 4, '#f0b452'); /* kaca bercahaya */
+    r(0, 5, 6, 1, M); r(1, 6, 4, 9, W.ol); r(2, 6, 1, 8, W.lt); r(3, 6, 1, 8, W.md); /* tiang kayu */
+    r(0, 13, 6, 2, W.ol); r(1, 13, 4, 1, W.dk); /* kaki */
+  }),
+  i_pot: () => spProp(12, 14, (r, p) => {
+    const T = { ol: '#8a4a3a', dk: '#b05e44', md: '#cc7650', lt: '#e09468', hi: '#f2b48a' }, G = SPROUT_PROPS.G;
+    r(3, 1, 6, 6, G.ol); r(1, 3, 10, 4, G.ol); r(4, 2, 4, 4, G.md); r(2, 4, 8, 2, G.md); r(4, 2, 2, 2, G.lt); p(4, 2, G.hi); /* daun */
+    r(7, 3, 2, 2, '#e88aa0'); p(7, 3, '#f8c0cc'); r(3, 5, 2, 1, G.lt); /* bunga */
+    r(1, 7, 10, 2, T.ol); r(2, 7, 8, 1, T.lt); r(2, 8, 8, 1, T.dk); /* bibir pot */
+    r(2, 9, 8, 4, T.ol); r(3, 9, 6, 4, T.md); r(3, 9, 1, 4, T.lt); r(8, 9, 1, 4, T.dk); r(3, 13, 6, 1, T.ol); /* badan */
+  }),
   bramble: () => spProp(11, 9, (r, p) => {
     const G = SPROUT_PROPS.G;
     r(1, 2, 9, 6, G.ol); r(2, 1, 7, 8, G.ol); r(2, 2, 7, 6, G.md); r(3, 2, 5, 2, G.lt); p(4, 2, G.hi); r(2, 6, 7, 1, G.dk);
@@ -100,6 +116,17 @@ function spCampfire(f) {
     });
   });
 }
+// semak berbunga (bushW putih, bushP merah muda) = semak Sprout + bunga kecil, dipakai lewat SPROUT_DECO.swap
+function spFlowerBush(petal, core) {
+  const im = typeof IMGEL !== 'undefined' && IMGEL.deco_sprout_objs; if (!im) return null;
+  return spProp(16, 16, (r, p) => {
+    p.ctx.drawImage(im, 16, 48, 16, 16, 0, 0, 16, 16);
+    for (const [X, Y] of [[4, 5], [10, 4], [7, 8], [3, 10], [11, 10]]) { /* bunga plus: kelopak 4 + putik */
+      for (const [i, j] of [[0, -1], [-1, 0], [1, 0], [0, 1]]) p(X + i, Y + j, petal);
+      p(X, Y, core);
+    }
+  });
+}
 const _buildTexturesProps = buildTextures;
 buildTextures = function (sc) {
   const res = _buildTexturesProps.apply(this, arguments);
@@ -107,6 +134,10 @@ buildTextures = function (sc) {
   const T = sc.textures;
   try {
     for (const k in SP_PROP_ART) { const c = SP_PROP_ART[k](); if (T.exists(k)) T.remove(k); T.addCanvas(k, c); }
+    for (const [k, a, b] of [['spBushW', '#f4f1e6', '#f2c85a'], ['spBushP', '#f0a0c0', '#fbe08a']]) {
+      const c = spFlowerBush(a, b); if (!c) continue; if (T.exists(k)) T.remove(k); T.addCanvas(k, c);
+    }
+    if (typeof SPROUT_DECO !== 'undefined') Object.assign(SPROUT_DECO.swap, { bushW: 'spBushW', bushP: 'spBushP', bushP2: 'spBushP' });
     const fr = [0, 1, 2, 3].map(spCampfire), w = fr[0].width, h = fr[0].height, [cv, x] = mk(w * 4, h);
     fr.forEach((c, i) => x.drawImage(c, i * w, 0));
     if (T.exists('campfire')) T.remove('campfire');

@@ -7,7 +7,9 @@
 // - titik pancing yang tidak di air / terlalu jauh dari darat → dipindah ke petak air di tepi darat terdekat (riak tetap di air,
 //   Arka bisa menjangkaunya dari darat, jarak interaksi 26 px).
 const PLACE_FIT = { on: true, pad: 6, maxR: 8, fishMax: 12, ford: { on: true, max: 200, gap: 90, side: 24 },
-  boatRx: /^(boat|dockboat)$/, padRx: /^lotuspad$/, reedRx: /^reeds$/, waterR: 12 };
+  boatRx: /^(boat|dockboat)$/, padRx: /^lotuspad$/, reedRx: /^reeds$/, waterR: 12,
+  /* penghalang alami yang jatuh di jalan tanah (bukan kota) → ke rumput tepi jalan */
+  offPath: /^(rock|spRock|spRockB|pebbles|stump|stumpWoods|log|deadtree|orchidrock|verdant_rock_\w+|bush\w*|spBush|spBerry|spStump|spLog)$/ };
 function placeFitMap(M, L) {
   if (M._pf || !PLACE_FIT.on) return;
   const E = typeof grassEdgeData === 'function' && grassEdgeData(M); if (!E || !E.Wm) return;
@@ -45,7 +47,27 @@ function placeFitMap(M, L) {
     if (best) { log.push('pancing ' + f[0] + ',' + f[1]); f[0] = best[0] * S + S / 2; f[1] = best[1] * S + S / 2; }
   }
   placeWaterObjs(M, L, E, mine, log);
+  const ents = [...(M.enemies || []).map(e => [e[1], e[2]]), ...(M.npcs || []).map(n => [n.x, n.y]), ...(M.chests || []).map(c => [c.x, c.y])];
+  const clearOf = (x, y) => !ents.some(([X, Y]) => Math.hypot(X - x, Y - y) < 24); /* jangan menimpa musuh/NPC/peti */
+  if (!/^k/.test(M.id)) placeOffPath(M, L, E, (x, y) => !hit(x, y) && mine(x, y) && clearOf(x, y), log);
   if (log.length) M._pfLog = log; /* untuk pemeriksaan: MAPS[id]._pfLog */
+}
+// batu/tunggul/semak di jalan tanah → rumput terdekat (≤ 3 kotak); hiasan Sprout yang tak punya tempat dibuang
+function placeOffPath(M, L, E, free, log) {
+  const S = GRASS_EDGE.cell, C = E.cols, R = E.rows, at = (c, r) => c >= 0 && r >= 0 && c < C && r < R ? r * C + c : -1;
+  const onPath = k => k >= 0 && !E.Wm[k] && !E.grass[k] && !E.strip[k];
+  const grass = k => k >= 0 && E.grass[k] && !E.Wm[k];
+  for (const o of L.slice()) {
+    if (!PLACE_FIT.offPath.test(o[0])) continue;
+    const c = Math.floor(o[1] / S), r = Math.floor((o[2] - 3) / S); if (!onPath(at(c, r))) continue;
+    let best = null;
+    for (let d = 1; d <= 3 && !best; d++) for (let j = -d; j <= d && !best; j++) for (let i = -d; i <= d; i++) {
+      const X = (c + i) * S + S / 2, Y = (r + j) * S + 12;
+      if (Math.max(Math.abs(i), Math.abs(j)) !== d || !grass(at(c + i, r + j)) || !free(X, Y)) continue; best = [X, Y]; break;
+    }
+    if (best) { log.push('jalan ' + o[0]); o[1] = best[0]; o[2] = best[1]; continue; }
+    if (/^sp|^pebbles$/.test(o[0]) && M._list) { const i = M._list.indexOf(o); if (i >= 0) { M._list.splice(i, 1); log.push('buang ' + o[0]); } }
+  }
 }
 // benda air: dermaga (pangkal di darat, menjorok ke air di utara), perahu & teratai di air, buluh di tepi air
 function placeWaterObjs(M, L, E, mine, log) {
