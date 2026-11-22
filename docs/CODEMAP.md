@@ -111,7 +111,7 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini (atau ganti file PNG-nya):_
 `GRASS` 8 · `grassTiles()` 15 · `grassSS` 21 · `grassTex()` 22 · `grassPass()` 27 · `grassCanvas()` 45
 
-## src/world/grass_edge.js (211 baris)
+## src/world/grass_edge.js (213 baris)
 _TEPI RUMPUT BERPETAK (autotile 47 bentuk) — percobaan, hanya untuk peta di GRASS_EDGE.maps._
 `GRASS_EDGE` 7 · `EDGE_PAL` 10 · `COBBLE` 19 · `cobbleTile()` 20 · `GRASS_EDGE_MAP` 38 · `DIRT_S` 48 · `SAND_S` 49 · `WATER_S` 50 · `edgeClass()` 53 · `isGreen` 62 · `edgeClean()` 64 · `edgeTiles()` 77 · `grassEdgeData()` 90 · `grassEdgeCanvas()` 154
 
@@ -555,9 +555,9 @@ _JEMBATAN KAYU GAYA SPROUT — di titik penyeberangan lama (sungai Hutan M.river
 _DUNIA COCOK DENGAN GAMBAR — tabrakan & objek mengikuti tanah yang TERLIHAT (gambar peta + autotile grass_edge), bukan data lama._
 `WORLD_FIT` 7 · `regionOwner()` 9 · `fitWater` 16 · `fitOn` 17 · `fitBenua` 18 · `fitBridgeRects()` 20 · `waterRects()` 30 · `fitObjects()` 59 · `fitClipGround()` 107
 
-## src/systems/nature.js (248 baris)
+## src/systems/nature.js (257 baris)
 _ALAM — sebaran pohon mengikuti pola alami, satu baris pohon pembatas, semak & bunga bergoyang._
-`NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureFoot()` 37 · `natInFoot` 46 · `natureKeep()` 48 · `natKeepOk` 65 · `natureBox()` 70 · `natureScatter()` 74 · `natureTreesOnGrass()` 136 · `natureBorder()` 154 · `natureSwayTex()` 206
+`NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureFoot()` 37 · `natInFoot` 46 · `natureKeep()` 48 · `natKeepOk` 65 · `natureBox()` 70 · `natureScatter()` 74 · `natureTreesOnGrass()` 136 · `natureBorder()` 154 · `NATURE_TINT` 206 · `natureBiomeTint()` 207 · `natureSwayTex()` 214
 
 ## src/systems/place_fit.js (179 baris)
 _LETAK SESUAI TANAH — data peta lama (musuh, peti, NPC, titik pancing) dibuat untuk tanah lama; tanah sekarang = gambar peta._

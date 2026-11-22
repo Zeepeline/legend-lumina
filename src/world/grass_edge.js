@@ -183,7 +183,8 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
     const j = ((ly / GRASS_EDGE.q) | 0) * E.kw + ((lx / GRASS_EDGE.q) | 0); if (!E.K[j]) continue; /* batu dll. → biarkan */
     const h = hash(X >> 1, Y >> 1, 91), v = vnoise(X, Y, 48, 92), inD = cover(TD, lx, ly) >= 0; let c;
     if (inD || cover(TS, lx, ly) >= 0) { /* tanah atau pita pasir: warna rata + kerikil + bayangan di bawah lapis di atasnya */
-      const P = inD ? (BI && BI.dirt && biomeMask(M, BI, lx, ly, X, Y) ? BI.dirt : DIRT_S) : SS;
+      const bm = !BI || biomeMask(M, BI, lx, ly, X, Y); /* 0 = peralihan ke wilayah tetangga → palet biasa */
+      const P = inD ? (BI && BI.dirt && bm ? BI.dirt : DIRT_S) : bm ? SS : SAND_S;
       c = h < .012 ? P.dark : h < .03 ? P.light : h < .05 ? P.mid : P.base;
       if (inD && PL.road === 'cobble') { /* jalan kota: paving batu; bayangan rumput = digelapkan */
         const t = cobbleTile(), ti = ((((Y % 32) + 32) % 32) * 32 + (((X % 32) + 32) % 32)) * 3, up = (dx, dy) => cover(TG, lx + dx, ly + dy) >= 0;
@@ -197,10 +198,11 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
     }
     // air gaya Sprout: rata, dangkal di kotak tepi, garis tepi tipis menempel daratan, kilau dari lembar air
     const edge = cover(TS, lx - 1, ly) >= 0 || cover(TS, lx + 1, ly) >= 0 || cover(TS, lx, ly - 1) >= 0 || cover(TS, lx, ly + 1) >= 0;
-    c = edge ? WS.line : cover(E.tl.wd, lx, ly) >= 0 ? WS.deep : cover(E.tl.wb, lx, ly) >= 0 ? WS.base : WS.shallow;
+    const wb = !BI || biomeMask(M, BI, lx, ly, X, Y), WP = wb ? WS : WATER_S; /* air beku/keruh memudar ke air biasa di perbatasan */
+    c = edge ? WP.line : !wb ? WP.base : cover(E.tl.wd, lx, ly) >= 0 ? WP.deep : cover(E.tl.wb, lx, ly) >= 0 ? WP.base : WP.shallow;
     const wt = E.wt; if (wt && !edge && hash(Math.floor(X / 16), Math.floor(Y / 16), 95) < .28) {
       const tx = Math.floor(X / 16), ty = Math.floor(Y / 16), ox = (hash(tx, ty, 93) * 16) | 0, oy = (hash(tx, ty, 94) * 16) | 0;
-      const wi = ((((Y + oy) % 16 + 16) % 16) * wt.w + (((X + ox) % 16 + 16) % 16)) * 4; if (wt[wi] > 165) c = WS.spark;
+      const wi = ((((Y + oy) % 16 + 16) % 16) * wt.w + (((X + ox) % 16 + 16) % 16)) * 4; if (wt[wi] > 165) c = WP.spark;
     }
     D[i] = c[0]; D[i + 1] = c[1]; D[i + 2] = c[2];
   }

@@ -202,6 +202,14 @@ function natureBorder(M, L) {
     return natureBorder(M, out.filter(o => !exs.some(ex => o[1] > ex.x - 56 && o[1] < ex.x + ex.w + 56 && o[2] > ex.y - 56 && o[2] < ex.y + ex.h + 64)));
   };
 })();
+// warna tumbuhan per biome (rawa: pohon, semak & bunga lebih suram/keruh), lewat setTint (gambar asli tetap)
+const NATURE_TINT = { swamp: 0xa9b896, rx: /tree|pine|round|redwood|willow|bush|fern|^sp(Bush|Berry|Flower|Sprout|Mush|Sun|Tree)|reeds|cattail/i };
+function natureBiomeTint(sc, s, o) {
+  if (!s || !s.setTint || !o || !NATURE_TINT.rx.test(o[0] + ' ' + ((s.texture && s.texture.key) || ''))) return;
+  const B = typeof BENUA !== 'undefined' && BENUA && typeof regionOwner === 'function';
+  const id = B ? regionOwner(s.x, s.y) : sc.M && sc.M.id, t = NATURE_TINT[id];
+  if (t) s.setTint(t);
+}
 // ── semak & bunga bergoyang ──
 function natureSwayTex(sc, key) {
   const k = key + '_bw', T = sc.textures; if (T.exists(k)) return k;
@@ -230,6 +238,7 @@ function natureSwayTex(sc, key) {
   const W = World.prototype, _spawn0 = W.spawnObj, _up0 = W.update;
   W.spawnObj = function (o) {
     const s = _spawn0.apply(this, arguments);
+    natureBiomeTint(this, s, o);
     const key = s && s.texture && s.texture.key;
     if (!s || !NATURE.sway.on || (typeof OPT !== 'undefined' && OPT.lite) || !key || !NATURE.sway.rx.test(key) || /_bw$/.test(key)) return s;
     const k = natureSwayTex(this, key); if (!k) return s;
