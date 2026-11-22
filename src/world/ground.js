@@ -135,7 +135,8 @@ function genGround(M, rect) {
       x.drawImage(src, RX, RY, RW, RH, 0, 0, RW, RH);
     }
     const wp = (typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id]) || [0, 0];
-    if (typeof grassCanvas === 'function') grassCanvas(x, RW, RH, wp[0] + RX, wp[1] + RY, M); /* rumput satu sumber (world/grass.js) */
+    const edged = typeof grassEdgeCanvas === 'function' && grassEdgeCanvas(x, RW, RH, RX, RY, wp[0] + RX, wp[1] + RY, M); /* tepi petak */
+    if (!edged && typeof grassCanvas === 'function') grassCanvas(x, RW, RH, wp[0] + RX, wp[1] + RY, M); /* rumput satu sumber (world/grass.js) */
     return c;
   }
   const pos = (typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id]) || [0, 0];
