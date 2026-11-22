@@ -8,7 +8,8 @@ const SPROUT_TREES = {
   src: { big: [20, 1, 24, 31], tall: [1, 0, 14, 29] }, /* potongan lembar [x, y, w, h] */
   // jenis objek → [bentuk, varian warna]
   map: { treeA: ['big', ''], treeB: ['big', ''], verdant_tree: ['big', ''], bigtree: ['big', ''], pine: ['tall', ''],
-    treeAd: ['big', 'd'], treeBd: ['big', 'd'], pined: ['tall', 'd'], treeSn: ['big', 'sn'], treeSw: ['big', 'sw'] },
+    treeAd: ['big', 'd'], treeBd: ['big', 'd'], pined: ['tall', 'd'], treeSn: ['big', 'sn'], treeSw: ['big', 'sw'],
+    treeRedwood: ['giant', 'd'], tree_redwood: ['giant', 'd'] },
 };
 // warna tajuk (piksel hijau) per varian
 function sproutTreeTint(v, r, g, b) {
@@ -45,14 +46,44 @@ function sproutTreePolish(d, w, h) {
     else if (x === cx + 1 && y % 3 === 1) add(x, y, 18); /* kilap kulit kayu */
   }
 }
+// pohon raksasa (pengganti redwood) digambar kode di piksel asli 36×74 dengan palet tajuk dari pohon Sprout besar
+function sproutGiantSrc(im) {
+  const w = 36, h = 74, [c, x] = mk(w, h), out = x.createImageData(w, h), d = out.data;
+  const [ps, px] = mk(24, 31); px.drawImage(im, 20, 1, 24, 31, 0, 0, 24, 31); const pd = px.getImageData(0, 0, 24, 31).data, gs = [];
+  for (let i = 0; i < pd.length; i += 4) {
+    if (pd[i + 3] > 128 && pd[i + 1] > pd[i] + 4 && !gs.some(g => g[0] === pd[i] && g[1] === pd[i + 1])) gs.push([pd[i], pd[i + 1], pd[i + 2]]);
+  }
+  gs.sort((a, b) => (a[0] + a[1] + a[2]) - (b[0] + b[1] + b[2]));
+  const gq = t => gs[Math.min(gs.length - 1, Math.max(0, Math.round(t * (gs.length - 1))))];
+  const put = (X, Y, col, a = 255) => {
+    if (X < 0 || Y < 0 || X >= w || Y >= h) return; const i = (Y * w + X) * 4; d[i] = col[0]; d[i + 1] = col[1]; d[i + 2] = col[2]; d[i + 3] = a;
+  };
+  for (let Y = 66; Y < 74; Y++) for (let X = 4; X < 32; X++) { /* bayangan tanah */
+    const e = ((X - 18) / 14) ** 2 + ((Y - 70) / 3.6) ** 2; if (e < 1) put(X, Y, [60, 90, 50], 70);
+  }
+  const BK = { o: [74, 40, 36], d: [112, 56, 42], m: [148, 80, 56], l: [180, 104, 72] }; /* batang redwood */
+  for (let Y = 30; Y < 71; Y++) {
+    const half = Y > 62 ? 4 + (Y - 62) * .7 : 4; for (let X = Math.round(18 - half); X <= Math.round(17 + half); X++) {
+      const edge = X === Math.round(18 - half) || X === Math.round(17 + half) || Y === 70, rel = (X - (18 - half)) / (2 * half);
+      put(X, Y, edge ? BK.o : rel < .3 ? BK.l : rel > .72 ? BK.d : (X === 18 && Y % 4) ? BK.d : BK.m);
+    }
+  }
+  const clumps = [[18, 9, 8], [11, 18, 7.5], [25, 19, 7.5], [18, 24, 8.5], [9, 31, 6.5], [27, 32, 6.5], [18, 36, 7]];
+  for (const [cx, cy, r] of clumps) for (let Y = Math.floor(cy - r); Y <= cy + r; Y++) for (let X = Math.floor(cx - r); X <= cx + r; X++) {
+    const dx = X + .5 - cx, dy = Y + .5 - cy, dd = Math.hypot(dx, dy); if (dd > r) continue;
+    const lit = (-dx - dy) / (r * 1.4); put(X, Y, dd > r - 1 ? gq(0) : gq(.45 + lit * .45 + (dd < r * .5 ? .05 : 0)));
+  }
+  x.putImageData(out, 0, 0); return c;
+}
 // tekstur strip 8 frame + anim '<key>_sway' (sekali untuk seluruh game)
 function sproutTreeTex(sc, shape, v) {
   const key = 'spTree_' + shape + (v ? '_' + v : ''), T = sc.textures;
   if (T.exists(key)) return key;
   const im = IMGEL.deco_sprout_objs; if (!im) return null;
-  const [sx, sy, sw, sh] = SPROUT_TREES.src[shape], S = SPROUT_TREES.scale, W = sw * S, H = sh * S;
+  const [sx, sy, sw, sh] = SPROUT_TREES.src[shape] || [0, 0, 36, 74], S = SPROUT_TREES.scale, W = sw * S, H = sh * S;
   const P = SPROUT_TREES.amp + 1, F = SPROUT_TREES.frames;
-  const [s1, x1] = mk(sw, sh); x1.drawImage(im, sx, sy, sw, sh, 0, 0, sw, sh);
+  const gi = shape === 'giant', [s1, x1] = mk(sw, sh);
+  x1.drawImage(gi ? sproutGiantSrc(im) : im, gi ? 0 : sx, gi ? 0 : sy, sw, sh, 0, 0, sw, sh);
   const one = x1.getImageData(0, 0, sw, sh); sproutTreePolish(one.data, sw, sh); x1.putImageData(one, 0, 0);
   const [b0, x0] = mk(W, H); x0.imageSmoothingEnabled = false; x0.drawImage(s1, 0, 0, W, H);
   const base = x0.getImageData(0, 0, W, H), d = base.data;
