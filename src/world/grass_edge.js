@@ -12,7 +12,28 @@ const EDGE_PAL = {
     sand: { base: [150, 124, 92], dark: [124, 100, 74], mid: [138, 112, 84], light: [170, 146, 110] } },
   snow: { water: { base: [168, 212, 228], deep: [148, 198, 222], shallow: [190, 226, 236], line: [242, 250, 252], spark: [222, 242, 250] },
     sand: { base: [236, 242, 246], dark: [206, 216, 228], mid: [222, 230, 240], light: [250, 252, 254] } },
+  kgate: { road: 'cobble', greyRoad: 1 }, kpasar: { road: 'cobble', greyRoad: 1 }, kakademi: { road: 'cobble', greyRoad: 1 },
+  kbawah: { road: 'cobble', greyRoad: 1 },
 };
+// paving batu kota gaya Sprout: petak 32 px berulang (batu bulat acak, nat gelap, sisi atas terang), dibuat sekali
+const COBBLE = { tile: null, stone: [[206, 198, 186], [196, 188, 178], [214, 206, 192]], grout: [150, 140, 134], hi: [230, 224, 212], lo: [178, 170, 160] };
+function cobbleTile() {
+  if (COBBLE.tile) return COBBLE.tile;
+  const T = 32, G = 4, C = T / G, seeds = [], out = new Uint8Array(T * T * 3);
+  for (let j = 0; j < G; j++) for (let i = 0; i < G; i++) {
+    seeds.push([i * C + 2 + hash(i, j, 61) * (C - 4), j * C + 2 + hash(i, j, 62) * (C - 4), (hash(i, j, 63) * 3) | 0]);
+  }
+  for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {
+    let d1 = 1e9, d2 = 1e9, best = null;
+    for (const s of seeds) for (let oy = -T; oy <= T; oy += T) for (let ox = -T; ox <= T; ox += T) {
+      const d = Math.hypot(x - s[0] - ox, (y - s[1] - oy) * 1.15); if (d < d1) { d2 = d1; d1 = d; best = [s, ox, oy]; } else if (d < d2) d2 = d;
+    }
+    const [s, , oy] = best, dy = y - s[1] - oy, e = d2 - d1;
+    const c = e < 1.3 ? COBBLE.grout : e < 2.4 && dy < 0 ? COBBLE.hi : e < 2.4 && dy > 0 ? COBBLE.lo : COBBLE.stone[s[2]];
+    out.set(c, (y * T + x) * 3);
+  }
+  return (COBBLE.tile = out);
+}
 // tanda tangan N E S W NE SE SW NW (1 = rumput menyambung ke sisi/sudut itu) → [kolom, baris] di lembar
 const GRASS_EDGE_MAP = {
   "11111111": [[0,0]], "00100000": [[0,2]], "00000000": [[1,2]], "11110100": [[6,2]], "11110010": [[7,2]], "10110000": [[8,2]], "11010000": [[9,2]],
@@ -80,7 +101,13 @@ function grassEdgeData(M) {
   const [, x] = mk(Wd, Hd); x.imageSmoothingEnabled = false; x.drawImage(src, 0, 0, M.w / Q, M.h / Q); /* kelas di 1/Q resolusi */
   const D = x.getImageData(0, 0, Wd, Hd).data;
   const K = new Uint8Array(Wd * Hd);
-  for (let j = 0, i = 0; j < K.length; j++, i += 4) K[j] = edgeClass(D[i], D[i + 1], D[i + 2]);
+  const grey = (EDGE_PAL[M.id] || {}).greyRoad;
+  for (let j = 0, i = 0; j < K.length; j++, i += 4) {
+    let k = edgeClass(D[i], D[i + 1], D[i + 2]);
+    const sp = Math.max(D[i], D[i + 1], D[i + 2]) - Math.min(D[i], D[i + 1], D[i + 2]);
+    if (!k && grey && sp < 40 && D[i] + D[i + 1] + D[i + 2] > 200) k = 2; /* paving lama → jalan */
+    K[j] = k;
+  }
   { /* air harus genangan nyata: ≥ 60% air dalam kotak 9×9, selain itu bintik rumput toska → rumput */
     const I = new Uint32Array((Wd + 1) * (Hd + 1)), R = Math.round(4 / Q);
     for (let y = 0; y < Hd; y++) {
@@ -153,6 +180,11 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
     const h = hash(X >> 1, Y >> 1, 91), v = vnoise(X, Y, 48, 92), inD = cover(TD, lx, ly) >= 0; let c;
     if (inD || cover(TS, lx, ly) >= 0) { /* tanah atau pita pasir: warna rata + kerikil + bayangan di bawah lapis di atasnya */
       const P = inD ? DIRT_S : SS; c = h < .012 ? P.dark : h < .03 ? P.light : h < .05 ? P.mid : P.base;
+      if (inD && PL.road === 'cobble') { /* jalan kota: paving batu; bayangan rumput = digelapkan */
+        const t = cobbleTile(), ti = ((((Y % 32) + 32) % 32) * 32 + (((X % 32) + 32) % 32)) * 3, up = (dx, dy) => cover(TG, lx + dx, ly + dy) >= 0;
+        const k = up(0, -1) || up(0, -2) ? .78 : up(0, -3) || up(-1, 0) || up(1, 0) ? .9 : 1;
+        D[i] = t[ti] * k; D[i + 1] = t[ti + 1] * k; D[i + 2] = t[ti + 2] * k; continue;
+      }
       const up = (dx, dy) => cover(TG, lx + dx, ly + dy) >= 0 || (!inD && cover(TD, lx + dx, ly + dy) >= 0);
       if (up(0, -1) || up(0, -2)) c = P.dark; else if (up(0, -3) || up(-1, 0) || up(1, 0)) c = P.mid;
       else if (!inD && (cover(TS, lx, ly + 1) < 0 || cover(TS, lx, ly + 2) < 0)) c = P.mid; /* pasir basah di tepi air */

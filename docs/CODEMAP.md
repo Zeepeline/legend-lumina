@@ -111,9 +111,9 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini (atau ganti file PNG-nya):_
 `GRASS` 8 · `grassTiles()` 15 · `grassSS` 21 · `grassTex()` 22 · `grassPass()` 27 · `grassCanvas()` 45
 
-## src/world/grass_edge.js (172 baris)
+## src/world/grass_edge.js (204 baris)
 _TEPI RUMPUT BERPETAK (autotile 47 bentuk) — percobaan, hanya untuk peta di GRASS_EDGE.maps._
-`GRASS_EDGE` 7 · `EDGE_PAL` 10 · `GRASS_EDGE_MAP` 17 · `DIRT_S` 27 · `SAND_S` 28 · `WATER_S` 29 · `edgeClass()` 32 · `isGreen` 41 · `edgeClean()` 43 · `edgeTiles()` 56 · `grassEdgeData()` 69 · `grassEdgeCanvas()` 127
+`GRASS_EDGE` 7 · `EDGE_PAL` 10 · `COBBLE` 19 · `cobbleTile()` 20 · `GRASS_EDGE_MAP` 38 · `DIRT_S` 48 · `SAND_S` 49 · `WATER_S` 50 · `edgeClass()` 53 · `isGreen` 62 · `edgeClean()` 64 · `edgeTiles()` 77 · `grassEdgeData()` 90 · `grassEdgeCanvas()` 154
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
@@ -522,6 +522,10 @@ _EFEK AIR HIDUP gaya Sprout — riak melingkar, kilau matahari, buih ombak yang 
 ## src/systems/shore_waves.js (85 baris)
 _OMBAK PANTAI — lapisan air tipis naik ke pasir, ujungnya berbuih putih, lalu surut meninggalkan pasir basah._
 `SHORE` 5 · `shoreAtlas()` 8 · `shoreCells()` 39 · `shoreStep()` 51
+
+## src/systems/city_style.js (36 baris)
+_KOTA GAYA SPROUT — kastil gerbang, tembok, menara & properti kota (gambar GPT) diwarnai ulang ke palet Sprout yang terang & lembut._
+`CITY_STYLE` 5 · `cityPastel()` 12 · `_buildTexturesCity` 28
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
