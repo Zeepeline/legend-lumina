@@ -348,17 +348,3 @@ function arkaDrawFist(ctx, dir, x, y, fistAngle) {
   }
 }
 
-// ==========================================================
-// FUNGSI PERAKIT: ARKA IDLE STANDBY (3 ARAH)
-// ==========================================================
-function arkaDrawIdle(ctx, dir, cx, cy) {
-  const d = dir === 'left' || dir === 'right' ? 'side' : dir;
-  const neckY = cy - 1, torsoY = cy, legsY = cy + 9, armY = cy + 1;
-  arkaDrawLegs(ctx, d, cx, legsY);
-  arkaDrawTorso(ctx, d, cx, torsoY);
-  arkaDrawHead(ctx, d, cx, neckY);
-  arkaDrawArms(ctx, d, cx + 1, armY, 0);
-  if (d === 'side') {
-    arkaDrawFist(ctx, d, cx + 2, armY + 5, 0);
-  }
-}

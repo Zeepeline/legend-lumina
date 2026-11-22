@@ -32,6 +32,14 @@ for (const k in SPROUT_OBJ) {
   const d = SPROUT_OBJ[k]; OBJ[k] = d[4] ? { key: k, col: d[4] } : { key: k };
   window['art' + k[0].toUpperCase() + k.slice(1)] = () => sproutArt(k); /* buildTextures mencari art<Kunci>() */
 }
+// tekstur verdant_* (gambar GPT-nya tidak pernah ada → dulu kanvas kosong = semak/batu tak terlihat tapi menghalangi) → gambar Sprout
+const SPROUT_ALIAS = { verdant_bush: 'spBush', verdant_bush_small: 'spBerry', verdant_stump: 'spStump', verdant_rock_large: 'spRockB',
+  verdant_rock_med: 'spRock', verdant_rock_pillar: 'spRockB', verdant_log: 'spLog' };
+for (const k in SPROUT_ALIAS) window['art' + k[0].toUpperCase() + k.slice(1)] = () => sproutArt(SPROUT_ALIAS[k]);
+/* tebing verdant_cliff_*: belum ada gambar → tetap kosong (tembok tak terlihat, sama seperti sebelumnya) sampai asetnya dibuat */
+for (const k of ['verdant_cliff_corner', 'verdant_cliff_straight', 'verdant_cliff_slope']) {
+  window['art' + k[0].toUpperCase() + k.slice(1)] = () => mk(32, 32)[0];
+}
 // hiasan tambahan untuk satu wilayah (koordinat lokal), stabil per posisi
 function sproutDecoFor(M, base) {
   const E = typeof grassEdgeData === 'function' && grassEdgeData(M); if (!E) return null;

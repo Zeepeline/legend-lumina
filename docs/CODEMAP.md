@@ -15,9 +15,9 @@ _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
 `Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 15 · `ATK_HOLD_MS` 16 · `_atkDownT` 17 · `enableTouch()` 62 · `JOY_DEAD` 65 · `UISCALE` 229 · `PAD_STATE` 231 · `pollGamepad()` 232 · `layout()` 292
 
-## src/art/base.js (75 baris)
+## src/art/base.js (74 baris)
 _Dasar gambar: kanvas, warna, aturan gaya (toneC, garis tepi berwarna), renderMap_
-`OUT` 6 · `mk()` 7 · `_rgb` 8 · `h2r()` 9 · `r2h()` 10 · `shade()` 11 · `mix()` 12 · `hash()` 13 · `vnoise()` 14 · `fr` 20 · `px` 21 · `ellF()` 22 · `rgb2hsl()` 30 · `hsl2hex()` 31 · `_tone` 32 · `hueToward()` 33 · `toneC()` 34 · `outline()` 41 · `flipC()` 54 · `mkC()` 57 · `strip()` 58 · `SHADEK` 62 · `renderMap()` 63
+`OUT` 6 · `mk()` 7 · `_rgb` 8 · `h2r()` 9 · `r2h()` 10 · `shade()` 11 · `mix()` 12 · `hash()` 13 · `vnoise()` 14 · `fr` 20 · `px` 21 · `ellF()` 22 · `rgb2hsl()` 30 · `hsl2hex()` 31 · `_tone` 32 · `hueToward()` 33 · `toneC()` 34 · `outline()` 41 · `mkC()` 56 · `strip()` 57 · `SHADEK` 61 · `renderMap()` 62
 
 ## src/art/nature/nature_1.js (389 baris)
 _Gambar alam buatan kode (1) — isi: lihat docs/CODEMAP.md_
@@ -63,9 +63,9 @@ _Gambar bangunan & properti buatan kode (5) — isi: lihat docs/CODEMAP.md_
 _Karakter manusia (peta piksel + mod + palet di CHARS)_
 `CH_BODY` 4 · `CH_LEGS` 9 · `chMods()` 14 · `chLegs()` 39 · `CH_FW` 49 · `artChar()` 50 · `CHARS` 73
 
-## src/art/arka_body_code.js (365 baris)
+## src/art/arka_body_code.js (351 baris)
 _Karakter Arka Murni Berbasis Kode (Full Code Modular Rigging)_
-`ARKA_BODY` 6 · `_drawPixelList()` 307 · `arkaDrawHead()` 320 · `arkaDrawTorso()` 326 · `arkaDrawLegs()` 332 · `arkaDrawArms()` 338 · `arkaDrawFist()` 344 · `arkaDrawIdle()` 354
+`ARKA_BODY` 6 · `_drawPixelList()` 307 · `arkaDrawHead()` 320 · `arkaDrawTorso()` 326 · `arkaDrawLegs()` 332 · `arkaDrawArms()` 338 · `arkaDrawFist()` 344
 
 ## src/art/monsters.js (63 baris)
 _Monster (peta piksel di MON)_
@@ -103,9 +103,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 220 · obj `tree_redwood` 228 · obj `goblin_torch` 231 · obj `goblin_cauldron` 234 · obj `cryst` 243 · obj `lamp` 246 · obj `viewpoint` 254 · obj `lumina_shard` 288 · obj `scenicbench` 310 · obj `mailbox` 328 · obj `gatehouse` 338 · obj `ctower` 346 · obj `city_bridge` 349 · obj `gpt_city_banner` 352 · obj `gpt_city_banner_sm` 356 · obj `gpt_city_board` 360 · obj `mila_grave` 370 · obj `reflection_spring` 374 · obj `slaver_cage` 378
 
-## src/world/ground.js (398 baris)
+## src/world/ground.js (397 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 38 · `GROUND` 39 · `blendW()` 51 · `BLEND_W` 57 · `WILD_G` 58 · `edgeSegs()` 59 · `edgeBlend()` 89 · `TILE_CACHE` 111 · `getTileData()` 112 · `genGround()` 123 · `blockRects()` 331 · `openSides()` 347 · `borderTrees()` 360 · `ringObjects()` 377 · `mapObjects()` 382 · `mapWalls()` 386
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `GROUND` 38 · `blendW()` 50 · `BLEND_W` 56 · `WILD_G` 57 · `edgeSegs()` 58 · `edgeBlend()` 88 · `TILE_CACHE` 110 · `getTileData()` 111 · `genGround()` 122 · `blockRects()` 330 · `openSides()` 346 · `borderTrees()` 359 · `ringObjects()` 376 · `mapObjects()` 381 · `mapWalls()` 385
 
 ## src/world/grass.js (50 baris)
 _RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini (atau ganti file PNG-nya):_
@@ -219,9 +219,9 @@ _Rig piksel NPC: dari 1 potret (atau lembar Mila) dibangun pose jalan/napas/berl
 _Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024)._
 `VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `MEADOW_FLOWERS` 12 · `V_TILES` 17 · `CLUTTER_PADANG` 23 · `CLUTTER_FOREST` 29 · `CLUTTER_DEEPWOOD` 36 · `ISLANDS_PADANG` 43 · `ISLANDS_FOREST` 44 · `ISLANDS_DEEPWOOD` 45 · `WATER_DECO_PADANG` 46 · `WATER_DECO_FOREST` 47 · `VT_MAP` 58 · `verdantTiles()` 59 · `vModW` 77 · `vDirtN` 79 · `vDirtT` 80 · `verdantPix()` 83 · `verdantDeco()` 94 · `VBASE` 178 · `verdantBase()` 179 · `VWC` 211 · `verdantWater()` 215 · `VBANK` 228 · `verdantBank()` 235 · `regVerdantTex()` 253 · `verdantReflect()` 262 · `verdantEdgePix()` 291 · `bridgeWoodPix()` 305
 
-## src/world/interior_sheet.js (91 baris)
-_Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._
-`INT_SIZE` 5 · `INT_FLAT` 14 · `INT_RUG` 16 · `intDims()` 17 · `rug9()` 18 · `genRoomSheet()` 30 · `_genRoom0` 80 · `sheetWalls()` 83 · `regIntTex()` 90
+## src/world/interior_sheet.js (85 baris)
+_Interior gaya lembar pemilik (assets/img/interior/int_*.png)._
+`INT_SIZE` 5 · `INT_FLAT` 14 · `INT_RUG` 16 · `intDims()` 17 · `rug9()` 18 · `genRoomSheet()` 30 · `_genRoom0` 80 · `regIntTex()` 84
 
 ## src/scene/world.js (396 baris)
 _Scene utama Phaser: membangun peta, update per frame, kamera. Metode lain ditambahkan lewat file mixin (Object.assign(World.prototype, ...))._
@@ -367,9 +367,9 @@ _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, m
 _Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed._
 `CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 62 · `.clearCrowd()` 153 · `.initCrowd()` 163 · `_initPolishCrowd` 185 · `_dropActiveFxCrowd` 192 · `_updAmbP` 225
 
-## src/systems/qol.js (255 baris)
+## src/systems/qol.js (244 baris)
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
-`.updInteractHint()` 6 · `.updEnemyBars()` 42 · `.retryBoss()` 79 · `levelUpDetail()` 85 · `.setTimeout()` 91 · `TIPS` 116 · `showTip()` 127 · `.updTips()` 146 · `.updPeaceHud()` 156 · `.updMinimap()` 161 · `.swapWeapon()` 195 · `.updStamina()` 206 · `.tryClimb()` 223 · `applyPadOpt()` 251
+`.updInteractHint()` 6 · `.updEnemyBars()` 42 · `.retryBoss()` 68 · `levelUpDetail()` 74 · `.setTimeout()` 80 · `TIPS` 105 · `showTip()` 116 · `.updTips()` 135 · `.updPeaceHud()` 145 · `.updMinimap()` 150 · `.swapWeapon()` 184 · `.updStamina()` 195 · `.tryClimb()` 212 · `applyPadOpt()` 240
 
 ## src/systems/feel.js (312 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
@@ -431,9 +431,9 @@ _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (3)
 _Gelombang A (performa): culling objek di luar layar, entitas jauh "tidur", pengecekan berkala._
 `CULL_PAD` 4 · `.initCull()` 7 · `.updCull()` 22 · `_updEnemyP` 38 · `_updFeelP` 43 · `_updNpcP` 46 · `_updCritP` 52 · `_updHintP` 55
 
-## src/systems/stream.js (89 baris)
+## src/systems/stream.js (87 baris)
 _Gelombang B: tanah per chunk (streaming). Hanya potongan di sekitar layar yang dibuat, sisanya dibuat_
-`GT` 5 · `GTC` 6 · `GOV` 7 · `gtKey()` 8 · `groundOverview()` 9 · `gLayer()` 16 · `.initGround()` 18 · `.gFillView()` 28 · `.gNeed()` 30 · `.gEnsure()` 40 · `.updGround()` 57 · `.cleanGroundCache()` 77
+`GT` 5 · `GTC` 6 · `GOV` 7 · `gtKey()` 8 · `groundOverview()` 9 · `gLayer()` 16 · `.initGround()` 18 · `.gFillView()` 28 · `.gNeed()` 30 · `.gEnsure()` 39 · `.updGround()` 55 · `.cleanGroundCache()` 75
 
 ## src/systems/openworld.js (52 baris)
 _Dunia terbuka Tahap 1: wilayah tetangga digambar menempel di tepi wilayah aktif (tanah + objek),_
@@ -491,11 +491,11 @@ _T505: Archetype Gabungan 2 Aliran Jurus (Hybrid Class Bonus ala Dimraeth)_
 _T506: Fasilitas Markas Rumah Arka (Stronghold) & T507: Ikatan Sekutu & Perbekalan Pagi_
 `STRONGHOLD_STATIONS` 22 · `STRONGHOLD_ALCHEMY` 27 · `ALLY_BONDS` 32 · `shInit()` 38 · `activeAllies()` 42 · `.openStrongholdMenu()` 83 · `.useStrongholdStation()` 120 · `.claimAllyBox()` 175
 
-## src/systems/slain.js (232 baris)
+## src/systems/slain.js (223 baris)
 _Paket A (T469, T484, T485, T486) & Paket B Gelombang 18 (T528–T531: Spell Wheel, Relik, Sekutu Tempur, Ujian Bayangan)_
-`.updLostArrow()` 163 · `.cycleSpell()` 178 · `.summonCompanion()` 188 · `.updCompanion()` 197 · `.startShadowTrial()` 218
+`.updLostArrow()` 163 · `.summonCompanion()` 179 · `.updCompanion()` 188 · `.startShadowTrial()` 209
 
-## src/systems/gelombang20.js (233 baris)
+## src/systems/gelombang20.js (184 baris)
 _Gelombang 20 (T553–T562): 10 Trik Lanjutan Suasana & Mekanik ala Cobo / Mytheria_
 
 
@@ -511,9 +511,9 @@ _Pantulan Karakter di Air (T460) — referensi: RPG klasik / Sea of Stars_
 _Bayangan Daun Bergoyang & Proyeksi Miring Dinamis (T448, T552) — referensi: Cobo #18, Stardew_
 
 
-## src/systems/sprout_deco.js (95 baris)
+## src/systems/sprout_deco.js (103 baris)
 _SEMAK, BATU & HIASAN GAYA SPROUT LANDS — untuk peta di GRASS_EDGE.maps (world/grass_edge.js)._
-`SPROUT_DECO` 7 · `SPROUT_OBJ` 20 · `sproutArt()` 27 · `sproutDecoFor()` 36 · `_mapObjectsSprout` 68 · `sproutRegionAt()` 86
+`SPROUT_DECO` 7 · `SPROUT_OBJ` 20 · `sproutArt()` 27 · `SPROUT_ALIAS` 36 · `sproutDecoFor()` 44 · `_mapObjectsSprout` 76 · `sproutRegionAt()` 94
 
 ## src/systems/water_fx.js (86 baris)
 _EFEK AIR HIDUP gaya Sprout — riak melingkar, kilau matahari, buih ombak yang menyapu pasir._
@@ -631,28 +631,28 @@ _T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_
 _T447: Bayangan awan berjalan_
 
 
-## src/gfx/gptassets.js (103 baris)
-_Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py_
-`GPT_SWAP` 4 · `GPT_LOOK` 13 · `applyGptSwap()` 26
+## src/gfx/gptassets.js (98 baris)
+_Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar ada di assets/img (gpt_<kunci>.png)_
+`GPT_SWAP` 4 · `GPT_LOOK` 8 · `applyGptSwap()` 21
 
-## src/gfx/style_unify.js (35 baris)
+## src/gfx/style_unify.js (21 baris)
 _Penyeragaman gaya: PATOKAN = pohon treeA / treeAd / treeSn (hijau alami, garis luar halus) + set Verdant yang senada._
-`styleLeafPalette()` 21 · `styleRecolor()` 27
+
 
 ## src/gfx/code_palette.js (112 baris)
 _T439: Selaraskan warna objek KODE ke palet treeA / Verdant_
 
 
 ## src/gfx/gptmonsters.js (165 baris)
-_Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame)._
+_Sprite monster dari lembar GPT pemilik (assets/img/monsters/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
-## src/gfx/hero_arka.js (82 baris)
-_Sprite sheet lengkap Arka dari ChatGPT (assets/raw/hero/arka_sheet1..6.png → tools/gen_hero.py → assets/img/hero_arka.png)._
-`HERO_FW` 5 · `HERO_ROW` 6 · `regHeroArka()` 13 · `setHeroSkin()` 25 · `heroFrame()` 29
+## src/gfx/hero_arka.js (78 baris)
+_Sprite sheet lengkap Arka dari ChatGPT (assets/img/hero/hero_arka.png)._
+`HERO_FW` 5 · `HERO_ROW` 6 · `regHeroArka()` 13 · `heroFrame()` 25
 
 ## src/gfx/enemy_sheets.js (69 baris)
-_Lembar musuh baru dari ChatGPT (assets/raw/enemy/<id>.png → tools/gen_enemy.py → assets/img/esh_<id>.png)._
+_Lembar musuh baru dari ChatGPT (assets/img/monsters/esh_<id>.png)._
 `ESH` 5 · `regEnemySheets()` 19 · `eshFrame()` 41
 
 ## src/systems/juice.js (330 baris)
@@ -682,10 +682,6 @@ _Pedang Arka yang DIGAMBAR PER FRAME (assets/img/hero/hero_swl{0,1}.png ← tool
 ## src/systems/grade.js (125 baris)
 _Sistem Rona Wilayah & Transisi Antar Wilayah Halus (v1.52.0 - ala 36 Bioma Cobo Makes Games / Mytheria)_
 `ID_M` 8 · `BIOME_GRADE` 11 · `biomeBaseMatrix()` 24 · `lerpMatrix()` 30 · `TRANS_BAND` 37 · `calcTargetGrade()` 38 · `applyGradeFX()` 87
-
-## src/systems/isoview.js (94 baris)
-_TAMPILAN ISOMETRIK untuk game utama (tahap 1). Saklar: ?iso=1 (diingat di localStorage 'lumina_iso'), matikan: ?iso=0._
-`ISO_VIEW` 11 · `ISO_ZOOM` 19 · `ISO_FLATD` 20 · `isoActive()` 21 · `isoScenes()` 22
 
 ## src/main.js (44 baris)
 _Mulai game Phaser_

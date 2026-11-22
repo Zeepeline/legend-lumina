@@ -1,5 +1,5 @@
 'use strict';
-// Lembar musuh baru dari ChatGPT (assets/raw/enemy/<id>.png → tools/gen_enemy.py → assets/img/esh_<id>.png).
+// Lembar musuh baru dari ChatGPT (assets/img/monsters/esh_<id>.png).
 // Atlas 4 frame × 6 baris: idle, move, wind (ancang-ancang), atk, hurt (0-1 kena, 2-3 terhuyung), alert (siaga). Menghadap KANAN.
 // Varian (warna/ukuran) memakai lembar yang sama lewat keepTint/scale (gfx/gptmonsters.js). Musuh biasa mati = putih memudar (combat.js).
 const ESH = {

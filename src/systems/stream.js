@@ -29,8 +29,7 @@ Object.assign(World.prototype, {
   // daftar potongan lapisan L yang dibutuhkan untuk tampilan (koordinat wilayah aktif), terdekat dulu
   gNeed(L, vx, vy, ring) {
     const lx = vx - L.ox, ly = vy - L.oy;
-    const iso = typeof isoActive === 'function' && isoActive();
-    const spanW = iso ? Math.round(VW * 1.45) : VW, spanH = iso ? Math.round(VH * 1.45) : VH;
+    const spanW = VW, spanH = VH;
     const i0 = Math.max(0, Math.floor(lx / GT) - ring), j0 = Math.max(0, Math.floor(ly / GT) - ring);
     const i1 = Math.min(L.cols - 1, Math.floor((lx + spanW) / GT) + ring), j1 = Math.min(L.rows - 1, Math.floor((ly + spanH) / GT) + ring);
     const cx = (lx + spanW / 2) / GT, cy = (ly + spanH / 2) / GT, out = [];
@@ -49,7 +48,6 @@ Object.assign(World.prototype, {
     GTC.delete(k); GTC.set(k, this.t || 0);
     if (!this.gImgs.has(k)) {
       const img = this.add.image(L.ox + i * GT, L.oy + j * GT, k).setOrigin(0).setDepth(-1e6);
-      if (typeof isoActive === 'function' && isoActive()) img.setScale(1.015); /* overlap tipis cegah celah garis antar-chunk di sudut miring */
       this.gImgs.set(k, img);
     }
     return true;

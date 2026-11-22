@@ -3,5 +3,3 @@ node_modules/
 playwright-report/
 test-results/
 __pycache__/
-assets/raw/*/rows/
-assets/raw/enemy/*_cut.png

@@ -1,5 +1,5 @@
 'use strict';
-// Sprite sheet lengkap Arka dari ChatGPT (assets/raw/hero/arka_sheet1..6.png → tools/gen_hero.py → assets/img/hero_arka.png).
+// Sprite sheet lengkap Arka dari ChatGPT (assets/img/hero/hero_arka.png).
 // Atlas: frame 48×40, kaki di baris paling bawah, tengah badan di x 24. Satu baris = satu animasi 4 frame. "side" menghadap kanan (kiri = flipX).
 // Pemutar animasi: setiap akhir update scene, frame pemain dipilih dari keadaannya (mati, berguling, kena pukul, serang, sihir, busur, jalan, diam).
 const HERO_FW = 48, HERO_FH = 40;
@@ -21,10 +21,6 @@ function regHeroArka(T) {
   for (const d of ['down', 'up', 'side']) ['idle_' + d + '0', 'walk_' + d + '0', 'walk_' + d + '2', 'atk1_' + d + '1'].forEach((f, i) => {
     const r = HERO_ROW[f.slice(0, -1)]; t.add(d + i, 0, +f.slice(-1) * HERO_FW, r * HERO_FH, HERO_FW, HERO_FH);
   });
-}
-function setHeroSkin(T, skin) {
-  if (typeof S !== 'undefined') S.skin = skin;
-  regHeroArka(T);
 }
 function heroFrame(sc, dt) {
   const pl = sc.pl; if (!pl || !pl.body || !pl.active) return;

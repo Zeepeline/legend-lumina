@@ -175,15 +175,6 @@ Object.assign(World.prototype, {
     this._lostArr.setPosition(this.pl.x + Math.cos(ang) * 24, this.pl.y - 10 + Math.sin(ang) * 24).setRotation(ang);
   },
   // T528: Ganti cepat di antara 5 mantra pada Roda Mantra (Spell Wheel)
-  cycleSpell() {
-    const spells = ['fire', 'nova', 'venom', 'heal', 'holy'].filter(k => learned(k));
-    if (!spells.length) return;
-    S.spellWheel = spells.slice(0, 5);
-    const idx = S.spellWheel.indexOf(S.spell);
-    S.spell = S.spellWheel[(idx + 1) % S.spellWheel.length];
-    sfx('cur'); updHud();
-    if (this.pl) popWorld(this.pl.x, this.pl.y - 32, '✦ ' + JURUS[S.spell].n, 'mpc');
-  },
   // T530: Panggil Sekutu Tempur selama 25 detik
   summonCompanion() {
     if (this._comp && this._comp.s && this._comp.s.active) {

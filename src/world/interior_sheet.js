@@ -1,5 +1,5 @@
 'use strict';
-// Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png).
+// Interior gaya lembar pemilik (assets/img/interior/int_*.png).
 // Ruang ber-`sheet: 1`: dinding plester + balok kayu, lantai papan, bingkai kayu tebal, tikar & tangga batu di pintu,
 // perabot `furn2: [[nama, x, y(bawah)], ...]` (x tengah, y dasar) dipanggang urut y. Dinding tabrakan dibuat otomatis.
 const INT_SIZE = { fireplace: [28, 44], bed_red: [28, 39], bed_blue: [28, 39], wardrobe: [26, 37], bookshelf: [31, 38], hutch: [24, 32], chest: [20, 27],
@@ -80,11 +80,5 @@ function genRoomSheet(M) {
 const _genRoom0 = genRoom;
 genRoom = function (M) { return M.sheet ? genRoomSheet(M) : _genRoom0(M); };
 // dinding tabrakan dari perabot (bagian bawah ±45% tinggi), dibuat sekali saat dimuat
-function sheetWalls(M) {
-  for (const [n, X, Y] of M.furn2 || []) {
-    if (INT_FLAT.test(n) || INT_WALL.test(n)) continue; const [w, h] = intDims(n), hh = Math.max(8, Math.round(h * .45));
-    M.walls.push([Math.round(X - w / 2 + 2), Math.round(Y - hh), Math.max(6, w - 4), hh - 2]);
-  }
-}
 // daftarkan sprite interior sebagai tekstur Phaser (dipakai perabot rumah Arka yang bisa dipindah)
 function regIntTex(T) { for (const k in INT_SIZE) { const n = 'int_' + k, img = IMGEL[n]; if (img && !T.exists(n)) T.addImage(n, img); } }

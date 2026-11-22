@@ -35,7 +35,6 @@ function makeSD(M, rect) {
     return d + d0 - (org ? 3.5 : 0);
   };
 }
-function pondE(P, x, y) { return Math.hypot((x - P[0]) / P[2], (y - P[1]) / P[3]); }
 const GROUND = {
   village: { g: ['#4a843e', '#5a9c48', '#6eb452', '#82c65a'], edge: '#3d7232', path: 'dirt', tuft: '#3c6e2e', tuft2: '#8ed060' },
   forest: { g: ['#3e7432', '#4b843a', '#5c9946', '#6eaf50'], edge: '#326026', path: 'dirt', tuft: '#305c24', tuft2: '#7ec050' },

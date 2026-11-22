@@ -18,17 +18,3 @@ OBJ_SPAWN.pine = OBJ_SPAWN.treeA; OBJ_SPAWN.pined = OBJ_SPAWN.treeA;
 OBJ_SPAWN.treePine = OBJ_SPAWN.treeA; OBJ_SPAWN.treeWoodsPine = OBJ_SPAWN.treeA; OBJ_SPAWN.treeWoodsRound = OBJ_SPAWN.treeA;
 OBJ_SPAWN.verdant_tree = OBJ_SPAWN.treeA;
 // warna daun: urutan kecerahan sumber dipetakan ke urutan kecerahan palet acuan (kontras & bentuk tetap)
-function styleLeafPalette(img) {
-  const [c, x] = mk(img.width, img.height); x.drawImage(img, 0, 0);
-  const d = x.getImageData(0, 0, c.width, c.height).data, out = [];
-  for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 200 && d[i + 1] > d[i] + 6) out.push([d[i], d[i + 1], d[i + 2]]);
-  return out.sort((a, b) => (a[0] + a[1] + a[2]) - (b[0] + b[1] + b[2]));
-}
-function styleRecolor(img, pal) {
-  const [c, x] = mk(img.width, img.height); x.drawImage(img, 0, 0);
-  const D = x.getImageData(0, 0, c.width, c.height), d = D.data, idx = [];
-  for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 0 && d[i + 1] > d[i] + 6) idx.push(i);
-  idx.sort((a, b) => (d[a] + d[a + 1] + d[a + 2]) - (d[b] + d[b + 1] + d[b + 2]));
-  idx.forEach((i, n) => { const p = pal[Math.floor(n / idx.length * (pal.length - 1))]; d[i] = p[0]; d[i + 1] = p[1]; d[i + 2] = p[2]; });
-  x.putImageData(D, 0, 0); return c;
-}

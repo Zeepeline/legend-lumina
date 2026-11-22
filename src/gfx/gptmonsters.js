@@ -1,5 +1,5 @@
 'use strict';
-// Sprite monster dari lembar GPT pemilik (dibersihkan oleh tools/gpt_monsters.py → assets/img/mon_<key>.png, strip 2 frame).
+// Sprite monster dari lembar GPT pemilik (assets/img/monsters/mon_<key>.png, strip 2 frame).
 // Tekstur lama (slime, wolf, …) digambar ULANG di kanvasnya sendiri (ukuran sama) agar animasi <key>_mv tetap sah.
 // Kunci baru g_<id> = musuh khusus/boss yang dulu meminjam sprite monster lain → tekstur & animasi baru, ENEMY[id].tex diganti.
 const GPT_MON = ['slime', 'slimeb', 'slimer', 'slimei', 'slimep', 'slimef', 'snake', 'boar', 'frog', 'salam',

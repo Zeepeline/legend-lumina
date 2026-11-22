@@ -15,31 +15,6 @@
   const W = World.prototype;
 
   // --- T559: Hamburan Serpihan Fisik Benda Hancur ---
-  W.spawnDebris = function(x, y, kind = 'wood', count = 5) {
-    if (OPT.lite) return;
-    this._debris = this._debris || [];
-    const colors = kind === 'wood' ? [0x8b5a2b, 0xa06d3b, 0x6e4222, 0x5a341a] :
-                   kind === 'pot' ? [0xb8653b, 0xc87d52, 0x944a24, 0x6e3215] :
-                   [0x9aa4b2, 0x768294, 0xb8c2d0, 0x545e6d];
-    for (let i = 0; i < count; i++) {
-      if (this._debris.length >= 24) {
-        const old = this._debris.shift();
-        if (old.g && old.g.active) old.g.destroy();
-      }
-      const g = this.add.graphics().setDepth(y + rnd(-4, 4));
-      const col = colors[i % colors.length];
-      const w = rnd(2, 4), h = rnd(2, 4);
-      g.fillStyle(col, 1);
-      g.fillRect(-w / 2, -h / 2, w, h);
-      g.setPosition(x + rnd(-4, 4), y - rnd(6, 14));
-      const ang = rnd(0, 6.28);
-      const spd = rnd(30, 75);
-      this._debris.push({
-        g, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd - rnd(20, 50),
-        floorY: y + rnd(-4, 6), rotSpd: rnd(-12, 12), life: rnd(1.8, 3.0)
-      });
-    }
-  };
 
   // --- T554: Boneka Latih Roh Muncul Saat Tempa Senjata ---
   W.spawnForgeDummy = function(x = 610, y = 330) {
@@ -60,21 +35,6 @@
   };
 
   // --- T557: Dinding Duri Berlubang Satu (Escape Gap) ---
-  W.spawnThornWallWithGap = function(cx, cy, r = 70, gapAngle = null) {
-    if (gapAngle == null) gapAngle = rnd(0, 6.28);
-    const n = 16;
-    for (let i = 0; i < n; i++) {
-      const a = (i / n) * 6.28;
-      const diff = Math.abs(Phaser.Math.Angle.Wrap(a - gapAngle));
-      if (diff < 0.42) continue; // Celah pelarian (Escape Gap)
-      const px = cx + Math.cos(a) * r, py = cy + Math.sin(a) * r * 0.75;
-      this.time.delayedCall(i * 35, () => {
-        if (!this.scene.isActive()) return;
-        this.spawnHazardZone(px, py, 'fire', 2.8);
-        this.jx('spark', px, py, 6, { tint: 0xff4422 });
-      });
-    }
-  };
 
   // --- T562: Api Unggun Berdenyut Pemulihan ---
   W.updCampfirePulses = function(dt) {
@@ -124,15 +84,6 @@
   };
 
   // T556: 3-Frame Snappy Attack Helper
-  W.snappyAttack3Frame = function(e, onHit) {
-    e.tWind = 0.28; // Frame 1: Windup
-    spawnGlint(this, e, e.boss || e.elite);
-    this.time.delayedCall(280, () => {
-      if (!e.spr || !e.spr.active || e.hp <= 0) return;
-      if (onHit) onHit(); // Frame 2: Snap Strike instan
-      e.atkCd = 0.45; // Frame 3: Recovery lambat
-    });
-  };
 
   // --- UPDATE GELOMBANG 20 TIAP FRAME ---
   const _updWorld0 = W.update;

@@ -1,14 +1,9 @@
 'use strict';
-// Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan oleh tools/prep_gpt_assets.py
+// Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar ada di assets/img (gpt_<kunci>.png)
 // (dibersihkan sesuai docs/VALIDATION_RULES.md, ukurannya disamakan dengan tekstur lama agar tata letak tetap benar).
-const GPT_SWAP = [
-  "i_treeA", "treeAd", "treeSn", "i_apple1",
-  "i_bushP", "i_bushW", "bush", "bushv", "rock",
-  "i_rockWoods", "log", "hay", "i_cart", "crate", "barrel", "fence", "sign", "lamp",
-  "mush", "stele", "i_houseA", "i_houseB", "i_houseC", "i_market", "windmill", "pebbles",
-  "verdant_tree", "verdant_rock_large", "verdant_rock_med", "verdant_rock_pillar",
-  "verdant_bush", "verdant_bush_small", "verdant_stump", "verdant_log",
-  "verdant_cliff_corner", "verdant_cliff_straight", "verdant_cliff_slope"
+const GPT_SWAP = [ /* hanya yang gambarnya ada di assets/img (gpt_<kunci>.png) */
+  "i_treeA", "treeAd", "treeSn", "i_bushP", "i_bushW", "bush", "bushv", "rock", "i_rockWoods", "log",
+  "mush", "i_houseA", "i_houseB", "i_houseC", "i_market", "windmill", "pebbles"
 ];
 const GPT_LOOK = {
   "domba": "g094", "ayam": "g090", "chick_master": "g023", "child": "g055", "rudi": "g074",
@@ -19,7 +14,7 @@ const GPT_LOOK = {
   "kb2": "g052", "kb3": "g012", "kb4": "g056"
 };
 IMG_LIST.push('gpt_v_village_well', 'gpt_v_house_brown_cottage', 'gpt_v_house_red_cottage');
-IMG_LIST.push(...GPT_SWAP.map(k => 'gpt_' + k), ...[...new Set(Object.values(GPT_LOOK))].map(k => 'npc_' + k));
+IMG_LIST.push(...GPT_SWAP.map(k => 'gpt_' + k), 'npc_guard_spear'); /* gNNN tidak punya gambar → wajah CHARS.child (di bawah) */
 for (const k of new Set(Object.values(GPT_LOOK))) if (!CHARS[k]) CHARS[k] = CHARS.child; // gambar asli dari npc_<k>.png (regPortrait)
 // NPC berwajah kembar mendapat karakter sendiri (berdasarkan id)
 for (const id in MAPS) for (const n of MAPS[id].npcs || []) if (GPT_LOOK[n.id] && !(n.id === 'inn')) n.ch = GPT_LOOK[n.id];

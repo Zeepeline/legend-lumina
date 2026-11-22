@@ -51,7 +51,6 @@ function outline(c, col) {
   x.globalCompositeOperation = 'destination-over'; x.drawImage(o, 0, 0); x.globalCompositeOperation = 'source-over';
   return c;
 }
-function flipC(c) { const [f, x] = mk(c.width, c.height); x.scale(-1, 1); x.drawImage(c, -c.width, 0); return f; }
 // gabungkan beberapa frame (kanvas) jadi satu strip
 // Kanvas kosong (dipakai gambar-gambar objek baru di art/nature/, art/buildings/, interior.js)
 function mkC(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); x.imageSmoothingEnabled = false; return c; }

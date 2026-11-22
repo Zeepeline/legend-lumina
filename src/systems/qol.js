@@ -42,7 +42,6 @@ Object.assign(World.prototype, {
   updEnemyBars() {
     if (!this.eBar) this.eBar = this.add.graphics().setDepth(1.97e5);
     const g = this.eBar; g.clear();
-    const isIso = typeof isoActive === 'function' && isoActive();
     for (const e of this.enemies) {
       const isSpec = !!(e.elite || e.D?.isBounty || e.type === 'goblin_elite');
       const show = OPT.hpbar && e.hp > 0 && !e.boss && e.hp < e.max && e.spr && e.spr.visible;
@@ -51,18 +50,8 @@ Object.assign(World.prototype, {
         continue;
       }
       const s = e.spr, w = isSpec ? 26 : 18, x = Math.round(s.x - w / 2), y = Math.round(s.y - s.displayHeight - 6), p = Math.max(0, e.hp / e.max);
-      if (isIso) {
-        const poly = (ox, oy, bw, bh, col, a) => {
-          const hw = bw / 2, pts = [[-hw, -bh], [hw, -bh], [hw, 0], [-hw, 0]].map(([u, v]) => ({ x: ox + .5 * u + v, y: oy + v - .5 * u }));
-          g.fillStyle(col, a).fillPoints(pts, true);
-        };
-        const pw = Math.ceil(w * p);
-        poly(s.x, y, w + 2, 4, 0x1a1420, .8);
-        poly(s.x - (w - pw) / 2, y - 1, pw, 2, p > .5 ? 0x6ad04a : p > .25 ? 0xf0c040 : 0xe84a3a, 1);
-      } else {
-        g.fillStyle(0x1a1420, .8).fillRect(x - 1, y - 1, w + 2, 4);
-        g.fillStyle(p > .5 ? 0x6ad04a : p > .25 ? 0xf0c040 : 0xe84a3a, 1).fillRect(x, y, Math.ceil(w * p), 2);
-      }
+      g.fillStyle(0x1a1420, .8).fillRect(x - 1, y - 1, w + 2, 4);
+      g.fillStyle(p > .5 ? 0x6ad04a : p > .25 ? 0xf0c040 : 0xe84a3a, 1).fillRect(x, y, Math.ceil(w * p), 2);
       if (isSpec) {
         const nm = (e.elite && !e.D?.isBounty ? '★ ' : '') + (e.D?.name || 'Elit');
         if (!e.nameTag) {
