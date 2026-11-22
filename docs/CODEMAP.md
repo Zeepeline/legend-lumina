@@ -111,7 +111,7 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini (atau ganti file PNG-nya):_
 `GRASS` 8 · `grassTiles()` 15 · `grassSS` 21 · `grassTex()` 22 · `grassPass()` 27 · `grassCanvas()` 45
 
-## src/world/grass_edge.js (204 baris)
+## src/world/grass_edge.js (206 baris)
 _TEPI RUMPUT BERPETAK (autotile 47 bentuk) — percobaan, hanya untuk peta di GRASS_EDGE.maps._
 `GRASS_EDGE` 7 · `EDGE_PAL` 10 · `COBBLE` 19 · `cobbleTile()` 20 · `GRASS_EDGE_MAP` 38 · `DIRT_S` 48 · `SAND_S` 49 · `WATER_S` 50 · `edgeClass()` 53 · `isGreen` 62 · `edgeClean()` 64 · `edgeTiles()` 77 · `grassEdgeData()` 90 · `grassEdgeCanvas()` 154
 
@@ -543,9 +543,13 @@ _RUMAH DARI REFERENSI PEMILIK — rumah A/B/C, pondok merah/cokelat & pandai bes
 _BAYANGAN OBJEK — elips lembut di kaki setiap objek luar ruang (semak, batu, tunggul, bunga, jamur, pinus, pohon buah,_
 `OBJ_SHADOW` 6 · `objShadowTex()` 12 · `objFootW()` 28 · `objShadowAdd()` 42 · `objShadowScan()` 55
 
-## src/systems/bridges.js (86 baris)
+## src/systems/bridges.js (87 baris)
 _JEMBATAN KAYU GAYA SPROUT — di titik penyeberangan lama (sungai Hutan M.river.bridge, jembatan kecil Danau)._
-`BRIDGES` 5 · `bridgeFit()` 14 · `bridgeArt()` 33 · `bridgesFor()` 58
+`BRIDGES` 5 · `bridgeFit()` 14 · `bridgeArt()` 34 · `bridgesFor()` 59
+
+## src/systems/world_fit.js (111 baris)
+_DUNIA COCOK DENGAN GAMBAR — tabrakan & objek mengikuti tanah yang TERLIHAT (gambar peta + autotile grass_edge), bukan data lama._
+`WORLD_FIT` 7 · `regionOwner()` 8 · `fitWater` 15 · `fitOn` 16 · `fitBenua` 17 · `fitBridgeRects()` 19 · `waterRects()` 29 · `fitObjects()` 54 · `fitClipGround()` 102
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_

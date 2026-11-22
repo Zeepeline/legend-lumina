@@ -7152,7 +7152,9 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
     }
     D[i] = c[0]; D[i + 1] = c[1]; D[i + 2] = c[2];
   }
-  ctx.putImageData(im, 0, 0); return true;
+  ctx.putImageData(im, 0, 0);
+  if (typeof fitClipGround === 'function') fitClipGround(ctx, W, H, X0, Y0, M); /* tumpang-tindih benua: hanya pemilik titik yang tampil */
+  return true;
 }
 
 'use strict';
@@ -8835,7 +8837,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.66.0';
+const GAME_VERSION = '1.67.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
@@ -10513,7 +10515,7 @@ class World extends Phaser.Scene {
     this.fades = []; this.inter = []; this.npcs = []; this.enemies = []; this.shots = []; this.picks = []; this.critters = []; this.lights = []; this.bushes = [];
     for (const r of mapWalls(M)) this.wall(...r);
     for (const r of blockRects(M)) this.wall(...r);
-    if (M.river) { const R = M.river; for (let x = 0; x < M.w; x += 8) { if (x + 8 > R.bridge[0] + 4 && x < R.bridge[1] - 4) continue; const ry = riverY(R, x + 4); this.wall(x, ry - R.w / 2 - 1, 8, R.w + 2); } }
+    if (M.river && !(typeof fitWater === 'function' && fitWater(M))) { const R = M.river; for (let x = 0; x < M.w; x += 8) { if (x + 8 > R.bridge[0] + 4 && x < R.bridge[1] - 4) continue; const ry = riverY(R, x + 4); this.wall(x, ry - R.w / 2 - 1, 8, R.w + 2); } }
     if (M.ring) { const R = M.ring; for (let a = 0; a < 360; a += 4) { if (Math.abs(a - 270) < R.gap - 2) continue; const t = a * Math.PI / 180; this.wall(R.cx + Math.cos(t) * R.r - 6, R.cy + Math.sin(t) * R.r * .8 - 8, 12, 10); } }
     for (const o of mapObjects(M)) this.spawnObj(o);
     for (const f of M.furn || []) { const [w, h, solid] = FURN[f[0]]; if (solid) this.wall(f[1], f[2] + h * .35, w, h * .65); }
@@ -22677,7 +22679,7 @@ function buildBenua() {
     const M = MAPS[id], [ox, oy] = WORLD_POS[id], S2 = v => shiftDeep(v, ox, oy);
     for (const o of mapObjects(M)) B.objs.push([o[0], o[1] + ox, o[2] + oy, o[3]]);
     for (const r of [...mapWalls(M), ...blockRects(M)]) B.walls.push([r[0] + ox, r[1] + oy, r[2], r[3]]);
-    if (M.river) {
+    if (M.river && !(typeof fitWater === 'function' && fitWater(M))) {
       const R = M.river;
       for (let x = 0; x < M.w; x += 8) {
         if (x + 8 > R.bridge[0] + 4 && x < R.bridge[1] - 4) continue;
@@ -25396,8 +25398,9 @@ function bridgeFit(M, x, y) {
     return [a, b];
   };
   const [va, vb] = run(0, 1), [ha, hb] = run(1, 0), v = va + vb <= ha + hb;
-  if (v) return { axis: 'v', c: cc * S + S / 2, a: (rc - va - 1) * S, b: (rc + vb + 2) * S };
-  return { axis: 'h', c: rc * S + S / 2, a: (cc - ha - 1) * S, b: (cc + hb + 2) * S };
+  /* ujung masuk 1,5 kotak ke daratan agar menempel ke tanah di kedua sisi */
+  if (v) return { axis: 'v', c: cc * S + S / 2, a: (rc - va) * S - S * 1.5, b: (rc + vb + 1) * S + S * 1.5 };
+  return { axis: 'h', c: rc * S + S / 2, a: (cc - ha) * S - S * 1.5, b: (cc + hb + 1) * S + S * 1.5 };
 }
 // gambar jembatan (piksel 2×): papan melintang, celah gelap, pagar kayu bertiang di kedua sisi
 function bridgeArt(len, axis) {
@@ -25453,6 +25456,117 @@ function bridgesFor(sc, M, ox, oy) {
     this._brDone = M;
   };
 })();
+
+'use strict';
+// DUNIA COCOK DENGAN GAMBAR — tabrakan & objek mengikuti tanah yang TERLIHAT (gambar peta + autotile grass_edge), bukan data lama.
+// 1) Pemilik titik: wilayah benua boleh bertumpuk (Danau menimpa 348 px Hutan Dalam/Hutan). Tiap titik dimiliki SATU wilayah
+//    (REGION_PRI, lalu urutan daftar): tanah wilayah lain di situ dibuat transparan, tembok & objeknya di situ dibuang.
+// 2) Tembok air = kisi air grass_edge (Wm), dikurangi jembatan → menggantikan tembok kolam lama (blockRects) & sungai rumus (M.river).
+// 3) Objek di atas air digeser ke daratan terdekat (≤ 3 kotak), selain benda air (teratai, perahu, dermaga, …).
+const WORLD_FIT = { on: true, waterOk: /lily|lotus|WRock|boat|dock|bridge|fish|reed|cattail|ripple|duck|buoy|cliff/i, pri: { lake: -1 } };
+function regionOwner(x, y) {
+  if (typeof WORLD_POS === 'undefined' || typeof isOutdoorRegion !== 'function') return null;
+  const pr = k => WORLD_FIT.pri[k] || 0;
+  const L = regionOwner.order || (regionOwner.order = Object.keys(WORLD_POS).filter(isOutdoorRegion).sort((a, b) => pr(b) - pr(a)));
+  for (const id of L) { const [ox, oy] = WORLD_POS[id], M = MAPS[id]; if (x >= ox && x < ox + M.w && y >= oy && y < oy + M.h) return id; }
+  return null;
+}
+const fitWater = M => fitOn(M); /* sungai rumus lama (M.river) tidak dipakai untuk tembok */
+const fitOn = M => WORLD_FIT.on && M && !M.indoor && M.customGround && typeof GRASS_EDGE !== 'undefined' && GRASS_EDGE.maps.includes(M.id);
+const fitBenua = M => typeof BENUA !== 'undefined' && BENUA && !!WORLD_POS[M.id];
+// rentang jembatan (lokal) per peta, dari bridges.js
+function fitBridgeRects(M) {
+  if (typeof BRIDGES === 'undefined' || !BRIDGES.list[M.id]) return [];
+  const out = [];
+  for (const [x, y] of BRIDGES.list[M.id](M)) {
+    const B = bridgeFit(M, x, y); if (!B) continue; const h = BRIDGES.width / 2;
+    out.push(B.axis === 'v' ? [B.c - h, B.a, h * 2, B.b - B.a] : [B.a, B.c - h, B.b - B.a, h * 2]);
+  }
+  return out;
+}
+// tembok air dari kisi Wm (lokal): runtut mendatar lalu digabung tegak
+function waterRects(M) {
+  const E = grassEdgeData(M); if (!E || !E.Wm) return null;
+  const S = GRASS_EDGE.cell, br = fitBridgeRects(M), P = fitBenua(M) ? WORLD_POS[M.id] : null, out = [];
+  const blocked = (c, r) => {
+    if (!E.Wm[r * E.cols + c]) return false; const x = c * S + S / 2, y = r * S + S / 2;
+    if (br.some(b => x >= b[0] && x < b[0] + b[2] && y >= b[1] && y < b[1] + b[3])) return false;
+    if (P && regionOwner(P[0] + x, P[1] + y) !== M.id) return false;
+    return true;
+  };
+  for (let r = 0; r < E.rows; r++) {
+    let run = -1;
+    for (let c = 0; c <= E.cols; c++) {
+      const b = c < E.cols && blocked(c, r);
+      if (b && run < 0) run = c; if (!b && run >= 0) { out.push([run * S + 3, r * S, (c - run) * S - 6, S]); run = -1; }
+    }
+  }
+  const open = {}, merged = [];
+  for (const q of out) {
+    const k = q[0] + ',' + q[2], o = open[k];
+    if (o && o[1] + o[3] === q[1]) o[3] += q[3]; else { const n = q.slice(); merged.push(n); open[k] = n; }
+  }
+  for (const m of merged) { m[1] += 3; m[3] -= 6; } /* sedikit menyusut: tepi buih bisa dipijak */
+  return merged;
+}
+// objek: geser dari air ke daratan terdekat, buang bila tak ada; benua: buang objek di titik milik wilayah lain
+function fitObjects(M, L) {
+  const E = grassEdgeData(M); if (!E || !E.Wm) return L;
+  const S = GRASS_EDGE.cell, W = (c, r) => c < 0 || r < 0 || c >= E.cols || r >= E.rows ? 0 : E.Wm[r * E.cols + c], P = fitBenua(M) ? WORLD_POS[M.id] : null;
+  const out = [];
+  for (const o of L) {
+    if (P && regionOwner(P[0] + o[1], P[1] + o[2]) !== M.id) continue;
+    if (WORLD_FIT.waterOk.test(o[0])) { out.push(o); continue; }
+    const c = Math.floor(o[1] / S), r = Math.floor((o[2] - 2) / S);
+    if (!W(c, r)) { out.push(o); continue; }
+    let best = null;
+    for (let d = 1; d <= 3 && !best; d++) for (let j = -d; j <= d && !best; j++) for (let i = -d; i <= d; i++) {
+      if (Math.max(Math.abs(i), Math.abs(j)) !== d || W(c + i, r + j) || W(c + i, r + j - 1)) continue; best = [i, j]; break;
+    }
+    if (best) out.push([o[0], o[1] + best[0] * S, o[2] + best[1] * S, ...o.slice(3)]);
+  }
+  return out;
+}
+(() => {
+  const _block0 = blockRects;
+  blockRects = function (M) { if (fitOn(M)) { const R = waterRects(M); if (R) return R; } return _block0.apply(this, arguments); };
+  const _walls0 = mapWalls;
+  mapWalls = function (M) {
+    const L = _walls0.apply(this, arguments);
+    if (!fitOn(M) || !fitBenua(M)) return L;
+    const [ox, oy] = WORLD_POS[M.id], out = [], E = 60, PC = 32;
+    for (const w of L) { /* tembok tepi: dipecah per 32 px, hanya bagian yang di luarnya bukan wilayah mana pun yang dipertahankan */
+      const [x, y, ww, hh] = w, nearL = x < E, nearR = x + ww > M.w - E, nearT = y < E, nearB = y + hh > M.h - E;
+      const edge = (nearL || nearR) && hh >= 100 ? 'v' : (nearT || nearB) && ww >= 100 ? 'h' : null;
+      if (!edge) { if (regionOwner(ox + x + ww / 2, oy + y + hh / 2) === M.id) out.push(w); continue; }
+      const n = Math.ceil((edge === 'v' ? hh : ww) / PC);
+      for (let k = 0; k < n; k++) {
+        const p = edge === 'v' ? [x, y + k * PC, ww, Math.min(PC, hh - k * PC)] : [x + k * PC, y, Math.min(PC, ww - k * PC), hh];
+        const cx = ox + p[0] + p[2] / 2, cy = oy + p[1] + p[3] / 2;
+        if (regionOwner(cx, cy) !== M.id) continue;
+        const outX = edge === 'v' ? (nearL ? ox - 20 : ox + M.w + 20) : cx, outY = edge === 'h' ? (nearT ? oy - 20 : oy + M.h + 20) : cy;
+        if (regionOwner(outX, outY)) continue; /* di seberang ada wilayah lain → lorong terbuka */
+        const last = out[out.length - 1]; /* gabung potongan berurutan */
+        if (last && last._e === edge && (edge === 'v' ? last[0] === p[0] && last[1] + last[3] === p[1] : last[1] === p[1] && last[0] + last[2] === p[0])) {
+          if (edge === 'v') last[3] += p[3]; else last[2] += p[2];
+        } else { p._e = edge; out.push(p); }
+      }
+    }
+    return out;
+  };
+  const _objs0 = mapObjects;
+  mapObjects = function (M) { const L = _objs0.apply(this, arguments); return fitOn(M) ? fitObjects(M, L) : L; };
+})();
+// tanah: piksel milik wilayah lain dibuat transparan (dipanggil grassEdgeCanvas)
+function fitClipGround(ctx, W, H, X0, Y0, M) {
+  if (!fitOn(M) || !fitBenua(M)) return;
+  const others = Object.keys(WORLD_POS).filter(id => id !== M.id && isOutdoorRegion(id)).map(id => [WORLD_POS[id][0], WORLD_POS[id][1], MAPS[id].w, MAPS[id].h])
+    .filter(r => r[0] < X0 + W && r[0] + r[2] > X0 && r[1] < Y0 + H && r[1] + r[3] > Y0);
+  if (!others.length) return;
+  const im = ctx.getImageData(0, 0, W, H), d = im.data; let n = 0;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { if (regionOwner(X0 + x, Y0 + y) !== M.id) { d[(y * W + x) * 4 + 3] = 0; n++; } }
+  if (n) ctx.putImageData(im, 0, 0);
+}
 
 'use strict';
 // Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)

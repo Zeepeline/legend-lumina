@@ -59,7 +59,7 @@ function buildBenua() {
     const M = MAPS[id], [ox, oy] = WORLD_POS[id], S2 = v => shiftDeep(v, ox, oy);
     for (const o of mapObjects(M)) B.objs.push([o[0], o[1] + ox, o[2] + oy, o[3]]);
     for (const r of [...mapWalls(M), ...blockRects(M)]) B.walls.push([r[0] + ox, r[1] + oy, r[2], r[3]]);
-    if (M.river) {
+    if (M.river && !(typeof fitWater === 'function' && fitWater(M))) {
       const R = M.river;
       for (let x = 0; x < M.w; x += 8) {
         if (x + 8 > R.bridge[0] + 4 && x < R.bridge[1] - 4) continue;

@@ -26,8 +26,9 @@ function bridgeFit(M, x, y) {
     return [a, b];
   };
   const [va, vb] = run(0, 1), [ha, hb] = run(1, 0), v = va + vb <= ha + hb;
-  if (v) return { axis: 'v', c: cc * S + S / 2, a: (rc - va - 1) * S, b: (rc + vb + 2) * S };
-  return { axis: 'h', c: rc * S + S / 2, a: (cc - ha - 1) * S, b: (cc + hb + 2) * S };
+  /* ujung masuk 1,5 kotak ke daratan agar menempel ke tanah di kedua sisi */
+  if (v) return { axis: 'v', c: cc * S + S / 2, a: (rc - va) * S - S * 1.5, b: (rc + vb + 1) * S + S * 1.5 };
+  return { axis: 'h', c: rc * S + S / 2, a: (cc - ha) * S - S * 1.5, b: (cc + hb + 1) * S + S * 1.5 };
 }
 // gambar jembatan (piksel 2×): papan melintang, celah gelap, pagar kayu bertiang di kedua sisi
 function bridgeArt(len, axis) {

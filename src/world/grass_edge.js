@@ -199,5 +199,7 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
     }
     D[i] = c[0]; D[i + 1] = c[1]; D[i + 2] = c[2];
   }
-  ctx.putImageData(im, 0, 0); return true;
+  ctx.putImageData(im, 0, 0);
+  if (typeof fitClipGround === 'function') fitClipGround(ctx, W, H, X0, Y0, M); /* tumpang-tindih benua: hanya pemilik titik yang tampil */
+  return true;
 }

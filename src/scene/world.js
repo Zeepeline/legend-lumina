@@ -20,7 +20,7 @@ class World extends Phaser.Scene {
     this.fades = []; this.inter = []; this.npcs = []; this.enemies = []; this.shots = []; this.picks = []; this.critters = []; this.lights = []; this.bushes = [];
     for (const r of mapWalls(M)) this.wall(...r);
     for (const r of blockRects(M)) this.wall(...r);
-    if (M.river) { const R = M.river; for (let x = 0; x < M.w; x += 8) { if (x + 8 > R.bridge[0] + 4 && x < R.bridge[1] - 4) continue; const ry = riverY(R, x + 4); this.wall(x, ry - R.w / 2 - 1, 8, R.w + 2); } }
+    if (M.river && !(typeof fitWater === 'function' && fitWater(M))) { const R = M.river; for (let x = 0; x < M.w; x += 8) { if (x + 8 > R.bridge[0] + 4 && x < R.bridge[1] - 4) continue; const ry = riverY(R, x + 4); this.wall(x, ry - R.w / 2 - 1, 8, R.w + 2); } }
     if (M.ring) { const R = M.ring; for (let a = 0; a < 360; a += 4) { if (Math.abs(a - 270) < R.gap - 2) continue; const t = a * Math.PI / 180; this.wall(R.cx + Math.cos(t) * R.r - 6, R.cy + Math.sin(t) * R.r * .8 - 8, 12, 10); } }
     for (const o of mapObjects(M)) this.spawnObj(o);
     for (const f of M.furn || []) { const [w, h, solid] = FURN[f[0]]; if (solid) this.wall(f[1], f[2] + h * .35, w, h * .65); }
