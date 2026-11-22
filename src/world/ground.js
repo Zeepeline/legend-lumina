@@ -324,6 +324,7 @@ function genGround(M, rect) {
       }
     }
   }
+  if (typeof grassEdgeCanvas === 'function') grassEdgeCanvas(x, RW, RH, RX, RY, GX + RX, GY + RY, M); /* tepi petak (kota, tanpa gambar tanah) */
   return c;
 }
 // kotak tabrakan dari grid (dinding gua, kolam)

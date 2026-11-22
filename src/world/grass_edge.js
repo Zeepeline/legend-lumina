@@ -4,7 +4,15 @@
 // Tiap kotak rumput memilih petak tepi dari lembar Sprout Lands (assets/img/ground/gnd_edge_sprout.png, 16 px)
 // sesuai 8 tetangganya. Petak hanya memberi BENTUK & bayangan tepi; warnanya tetap tekstur GRASS (world/grass.js).
 // Rumput & jalan lama di luar petak diganti tanah satu gaya (DIRT_S: rata + kerikil + bayangan di bawah tepi rumput).
-const GRASS_EDGE = { on: true, sheet: 'gnd_edge_sprout', water: 'gnd_water_sprout', cell: 16, thr: .5, sand: 1, maps: ['village', 'river', 'lake'] };
+const GRASS_EDGE = { on: true, sheet: 'gnd_edge_sprout', water: 'gnd_water_sprout', cell: 16, q: 2, thr: .5, sand: 1,
+  maps: ['village', 'river', 'lake', 'meadow', 'forest', 'deepwood', 'road', 'swamp', 'snow', 'kgate', 'kpasar', 'kakademi', 'kbawah'] };
+// palet khas per wilayah (id peta): air & pita pasir/lumpur/salju; selain ini memakai WATER_S / SAND_S
+const EDGE_PAL = {
+  swamp: { water: { base: [120, 152, 128], deep: [104, 136, 116], shallow: [136, 168, 140], line: [188, 208, 184], spark: [150, 182, 156] },
+    sand: { base: [150, 124, 92], dark: [124, 100, 74], mid: [138, 112, 84], light: [170, 146, 110] } },
+  snow: { water: { base: [168, 212, 228], deep: [148, 198, 222], shallow: [190, 226, 236], line: [242, 250, 252], spark: [222, 242, 250] },
+    sand: { base: [236, 242, 246], dark: [206, 216, 228], mid: [222, 230, 240], light: [250, 252, 254] } },
+};
 // tanda tangan N E S W NE SE SW NW (1 = rumput menyambung ke sisi/sudut itu) → [kolom, baris] di lembar
 const GRASS_EDGE_MAP = {
   "11111111": [[0,0]], "00100000": [[0,2]], "00000000": [[1,2]], "11110100": [[6,2]], "11110010": [[7,2]], "10110000": [[8,2]], "11010000": [[9,2]],
@@ -24,8 +32,9 @@ const WATER_S = { /* air Sprout Lands */
 function edgeClass(r, g, b) {
   const l = r + g + b;
   if (l >= 600 && b >= r && b >= g - 4) return 5; /* buih (putih kebiruan), bukan bunga putih */
-  if (b > r + 25 && b >= g - 10) return 4;
-  if (isGreen(r, g, b)) return 1;
+  if (b > r + 25 && b > g + 4) return 4; /* air = lebih biru daripada hijau (rumput toska rawa bukan air) */
+  if (isGreen(r, g, b) || (g >= r - 6 && g > b + 60)) return 1; /* + rumput kekuningan */
+  if (l < 120) return 2; /* garis hitam tepi jalan lama → tanah */
   if (r > b + 30 && r >= g) return g > r * .84 ? 3 : 2;
   return 0;
 }
@@ -59,13 +68,21 @@ function edgeTiles(G, cols, rows) {
 // sekali per peta: kelas piksel + 3 lapis petak (pasir/daratan, tanah, rumput) di atas air
 function grassEdgeData(M) {
   const C = grassEdgeData.c || (grassEdgeData.c = {}); if (C[M.id] !== undefined) return C[M.id];
-  const src = IMGEL[M.customGround], sheet = getTileData(GRASS_EDGE.sheet); if (!src || !sheet) return null; /* gambar belum dimuat: jangan disimpan */
-  const S = GRASS_EDGE.cell, cols = Math.ceil(M.w / S), rows = Math.ceil(M.h / S), Wd = M.w, Hd = M.h;
-  const [, x] = mk(Wd, Hd); x.drawImage(src, 0, 0, Wd, Hd); const D = x.getImageData(0, 0, Wd, Hd).data;
-  const K = new Uint8Array(Wd * Hd), L = new Uint16Array(Wd * Hd);
-  for (let j = 0, i = 0; j < K.length; j++, i += 4) { K[j] = edgeClass(D[i], D[i + 1], D[i + 2]); L[j] = D[i] + D[i + 1] + D[i + 2]; }
+  const sheet = getTileData(GRASS_EDGE.sheet); if (!sheet) return null; /* gambar belum dimuat: jangan disimpan */
+  let src = M.customGround && IMGEL[M.customGround];
+  if (!src && !M.customGround) { /* peta tanpa gambar (kota): tanah prosedural dirender utuh sekali sebagai sumber kelas */
+    if (grassEdgeData.busy) return null; grassEdgeData.busy = 1;
+    try { src = genGround(M); } finally { grassEdgeData.busy = 0; }
+  }
+  if (!src) return null;
+  const S = GRASS_EDGE.cell, cols = Math.ceil(M.w / S), rows = Math.ceil(M.h / S);
+  const Q = GRASS_EDGE.q, Wd = Math.ceil(M.w / Q), Hd = Math.ceil(M.h / Q);
+  const [, x] = mk(Wd, Hd); x.imageSmoothingEnabled = false; x.drawImage(src, 0, 0, M.w / Q, M.h / Q); /* kelas di 1/Q resolusi */
+  const D = x.getImageData(0, 0, Wd, Hd).data;
+  const K = new Uint8Array(Wd * Hd);
+  for (let j = 0, i = 0; j < K.length; j++, i += 4) K[j] = edgeClass(D[i], D[i + 1], D[i + 2]);
   { /* air harus genangan nyata: ≥ 60% air dalam kotak 9×9, selain itu bintik rumput toska → rumput */
-    const I = new Uint32Array((Wd + 1) * (Hd + 1)), R = 4;
+    const I = new Uint32Array((Wd + 1) * (Hd + 1)), R = Math.round(4 / Q);
     for (let y = 0; y < Hd; y++) {
       let run = 0; for (let xx = 0; xx < Wd; xx++) { run += K[y * Wd + xx] >= 4 ? 1 : 0; I[(y + 1) * (Wd + 1) + xx + 1] = I[y * (Wd + 1) + xx + 1] + run; }
     }
@@ -78,7 +95,7 @@ function grassEdgeData(M) {
   }
   const nG = new Float32Array(cols * rows), nW = new Float32Array(cols * rows), tot = new Float32Array(cols * rows);
   for (let y = 0; y < Hd; y++) for (let xx = 0; xx < Wd; xx++) {
-    const k = ((y / S) | 0) * cols + ((xx / S) | 0), c = K[y * Wd + xx]; tot[k]++; if (c === 1) nG[k]++; else if (c >= 4) nW[k]++;
+    const k = ((y * Q / S) | 0) * cols + ((xx * Q / S) | 0), c = K[y * Wd + xx]; tot[k]++; if (c === 1) nG[k]++; else if (c >= 4) nW[k]++;
   }
   const N = cols * rows, Wm = new Uint8Array(N), G = new Uint8Array(N);
   for (let k = 0; k < N; k++) { Wm[k] = nW[k] / tot[k] >= .5 ? 1 : 0; G[k] = nG[k] / tot[k] >= GRASS_EDGE.thr ? 1 : 0; }
@@ -104,12 +121,14 @@ function grassEdgeData(M) {
   const tl = { sand: edgeTiles(land, cols, rows), dirt: edgeTiles(dirt, cols, rows), grass: edgeTiles(grass, cols, rows) };
   const mB = new Uint8Array(N), mD = new Uint8Array(N); for (let k = 0; k < N; k++) { mB[k] = dep[k] >= 2 ? 1 : 0; mD[k] = dep[k] >= 4 ? 1 : 0; }
   edgeClean(mB, cols, rows, 3, 9); edgeClean(mD, cols, rows, 3, 9); tl.wb = edgeTiles(mB, cols, rows); tl.wd = edgeTiles(mD, cols, rows);
-  return (C[M.id] = { cols, rows, tl, sheet, K, L, Wm, dep, grass, dirt, strip, wt: getTileData(GRASS_EDGE.water) });
+  return (C[M.id] = { cols, rows, tl, sheet, K, kw: Wd, Wm, dep, grass, dirt, strip, wt: getTileData(GRASS_EDGE.water) });
 }
 // dipanggil genGround untuk gambar tanah per peta; true = tanah sudah final (grassPass dilewati)
 function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
   if (!GRASS_EDGE.on || !GRASS_EDGE.maps.includes(M.id) || typeof grassTiles !== 'function') return false;
+  if (grassEdgeData.busy) return false;
   const E = grassEdgeData(M), T = grassTiles(); if (!E || !T) return false;
+  const PL = EDGE_PAL[M.id] || {}, WS = PL.water || WATER_S, SS = PL.sand || SAND_S;
   const S = GRASS_EDGE.cell, sc = S / 16, sh = E.sheet, sw = sh.w, im = ctx.getImageData(0, 0, W, H), D = im.data;
   const a = [0, 0, 0], q = [0, 0, 0];
   const cover = (tile, lx, ly) => { /* indeks piksel lembar bila (lx,ly) tertutup petak lapis itu, selain itu -1 */
@@ -130,10 +149,10 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
       const o = D[i] + D[i + 1] + D[i + 2], fl = isGreen(D[i], D[i + 1], D[i + 2]) ? Math.min(1.15, Math.max(.8, o / GRASS.ref)) : 1.15;
       D[i] = a[0] * f * fl; D[i + 1] = a[1] * f * fl; D[i + 2] = a[2] * f * fl; continue;
     }
-    const j = ly * M.w + lx; if (!E.K[j]) continue; /* batu dll. → biarkan */
+    const j = ((ly / GRASS_EDGE.q) | 0) * E.kw + ((lx / GRASS_EDGE.q) | 0); if (!E.K[j]) continue; /* batu dll. → biarkan */
     const h = hash(X >> 1, Y >> 1, 91), v = vnoise(X, Y, 48, 92), inD = cover(TD, lx, ly) >= 0; let c;
     if (inD || cover(TS, lx, ly) >= 0) { /* tanah atau pita pasir: warna rata + kerikil + bayangan di bawah lapis di atasnya */
-      const P = inD ? DIRT_S : SAND_S; c = h < .012 ? P.dark : h < .03 ? P.light : h < .05 ? P.mid : P.base;
+      const P = inD ? DIRT_S : SS; c = h < .012 ? P.dark : h < .03 ? P.light : h < .05 ? P.mid : P.base;
       const up = (dx, dy) => cover(TG, lx + dx, ly + dy) >= 0 || (!inD && cover(TD, lx + dx, ly + dy) >= 0);
       if (up(0, -1) || up(0, -2)) c = P.dark; else if (up(0, -3) || up(-1, 0) || up(1, 0)) c = P.mid;
       else if (!inD && (cover(TS, lx, ly + 1) < 0 || cover(TS, lx, ly + 2) < 0)) c = P.mid; /* pasir basah di tepi air */
@@ -141,10 +160,10 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
     }
     // air gaya Sprout: rata, dangkal di kotak tepi, garis tepi tipis menempel daratan, kilau dari lembar air
     const edge = cover(TS, lx - 1, ly) >= 0 || cover(TS, lx + 1, ly) >= 0 || cover(TS, lx, ly - 1) >= 0 || cover(TS, lx, ly + 1) >= 0;
-    c = edge ? WATER_S.line : cover(E.tl.wd, lx, ly) >= 0 ? WATER_S.deep : cover(E.tl.wb, lx, ly) >= 0 ? WATER_S.base : WATER_S.shallow;
+    c = edge ? WS.line : cover(E.tl.wd, lx, ly) >= 0 ? WS.deep : cover(E.tl.wb, lx, ly) >= 0 ? WS.base : WS.shallow;
     const wt = E.wt; if (wt && !edge && hash(Math.floor(X / 16), Math.floor(Y / 16), 95) < .28) {
       const tx = Math.floor(X / 16), ty = Math.floor(Y / 16), ox = (hash(tx, ty, 93) * 16) | 0, oy = (hash(tx, ty, 94) * 16) | 0;
-      const wi = ((((Y + oy) % 16 + 16) % 16) * wt.w + (((X + ox) % 16 + 16) % 16)) * 4; if (wt[wi] > 165) c = WATER_S.spark;
+      const wi = ((((Y + oy) % 16 + 16) % 16) * wt.w + (((X + ox) % 16 + 16) % 16)) * 4; if (wt[wi] > 165) c = WS.spark;
     }
     D[i] = c[0]; D[i + 1] = c[1]; D[i + 2] = c[2];
   }
