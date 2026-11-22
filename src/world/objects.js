@@ -49,7 +49,7 @@ const OBJ = {
   apple2: { key: "tree_apple_bare", col: [12, 6, 2], sh: [18, 5], fade: 1 },
   tree_apple_fruit: { key: "tree_apple_fruit", col: [12, 6, 2], sh: [18, 5], fade: 1 },
   tree_apple_bare: { key: "tree_apple_bare", col: [12, 6, 2], sh: [18, 5], fade: 1 },
-  orange1: { key: "tree_apple_fruit", col: [10, 6, 2], sh: [16, 5], fade: 1 },
+  orange1: { key: "tree_orange_fruit", col: [10, 6, 2], sh: [16, 5], fade: 1 },
   fountain: { key: "i_fountain", col: [70, 30, 4], sh: [40, 8], mm: 1 },
   well: { key: "well", col: [28, 16, 2], sh: [20, 6], mm: 1 },
   woodpile: { key: "crate", col: [24, 14, 2], sh: [14, 4] },

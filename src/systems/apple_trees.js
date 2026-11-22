@@ -34,9 +34,9 @@ function setupAppleTree(scene, s, x, y, opt, d, type) {
   }
 
   const applyTreeVisual = () => {
-    const hasOrangeTex = isOrange && scene.textures.exists('orange1');
-    const texKey = hasOrangeTex ? 'orange1' : (fruiting ? 'tree_apple_fruit' : 'tree_apple_bare');
-    const animKey = hasOrangeTex ? null : (fruiting ? 'tree_apple_fruit_sway' : 'tree_apple_bare_sway');
+    const fk = isOrange ? 'tree_orange_fruit' : 'tree_apple_fruit';
+    const texKey = fruiting ? fk : 'tree_apple_bare';
+    const animKey = texKey + '_sway';
     if (scene.textures.exists(texKey)) {
       s.setTexture(texKey);
     }

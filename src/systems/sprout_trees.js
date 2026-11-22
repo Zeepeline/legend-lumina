@@ -2,17 +2,19 @@
 // POHON GAYA SPROUT LANDS — pohon biasa di wilayah luar (GRASS_EDGE.maps) memakai pohon dari deco_sprout_objs.png (3×),
 // dengan varian warna per jenis (gelap hutan, salju, rawa) & goyang angin buatan kode (8 frame: tajuk bergeser, batang diam).
 // Jenis & perilaku objek tidak berubah (tabrakan, pudar saat di belakang, bayangan) — hanya tekstur & animasinya.
-// Pohon apel (berbuah) & redwood (Hutan Dalam) tidak diganti.
+// Kunci tekstur pohon lama (i_treeA, treeAd, apel, jeruk, redwood, …) dialihkan ke pohon Sprout (SPROUT_TREE_ALIAS); gambar lama dihapus.
 const SPROUT_TREES = {
   on: true, scale: 3, frames: 8, amp: 2, fps: 5,
   src: { big: [20, 1, 24, 31], tall: [1, 0, 14, 29] }, /* potongan lembar [x, y, w, h] */
   // jenis objek → [bentuk, varian warna]
   map: { treeA: ['big', ''], treeB: ['big', ''], verdant_tree: ['big', ''], bigtree: ['big', ''], pine: ['tall', ''],
     treeAd: ['big', 'd'], treeBd: ['big', 'd'], pined: ['tall', 'd'], treeSn: ['big', 'sn'], treeSw: ['big', 'sw'],
-    treeRedwood: ['giant', 'd'], tree_redwood: ['giant', 'd'] },
+    treeRedwood: ['giant', 'd'], tree_redwood: ['giant', 'd'], treeWoodsRound: ['big', 'd'], treeWoodsPine: ['tall', 'd'],
+    treeOak: ['big', ''], treePine: ['tall', ''], meadowwillow: ['big', 'sw'] },
 };
 // warna tajuk (piksel hijau) per varian
 function sproutTreeTint(v, r, g, b) {
+  if (v === 'fa' || v === 'fb' || v === 'fo') return [r, g, b]; /* pohon buah: daun asli */
   if (v === 'd') return [r * .74, g * .8, b * .86];
   if (v === 'sw') return [r * .82, g * .8, b * .66];
   if (v === 'sn') { /* salju: gelap-terang tajuk diperkuat → biru keabu (bayangan) sampai putih (salju) */
@@ -112,6 +114,20 @@ function sproutGiantSrc(im) {
   }
   x.putImageData(out, 0, 0); return c;
 }
+// buah di tajuk (piksel asli): apel merah (fa), jeruk oranye (fo), apel belum berbuah = kuncup hijau muda (fb)
+function sproutFruit(d, w, h, v) {
+  const C = v === 'fa' ? [[214, 52, 52], [246, 120, 104]] : v === 'fo' ? [[236, 132, 34], [252, 196, 92]] : [[164, 206, 96], [196, 232, 128]];
+  const leaf = (x, y) => { if (x < 1 || y < 1 || x >= w - 1 || y >= h - 1) return 0; const i = (y * w + x) * 4; return d[i + 3] > 128 && d[i + 1] > d[i] + 4; };
+  let n = 0;
+  for (let y = 2; y < h * .72 && n < 9; y++) for (let x = 2; x < w - 2 && n < 9; x++) {
+    if (hash(x, y, 79) > (v === 'fb' ? .05 : .07)) continue;
+    if (!(leaf(x, y) && leaf(x + 1, y) && leaf(x, y + 1) && leaf(x + 1, y + 1) && leaf(x - 1, y) && leaf(x, y - 1))) continue;
+    for (const [dx, dy, k] of [[0, 0, 1], [1, 0, 0], [0, 1, 0], [1, 1, 0]]) {
+      const i = ((y + dy) * w + x + dx) * 4; d[i] = C[k][0]; d[i + 1] = C[k][1]; d[i + 2] = C[k][2];
+    }
+    n++;
+  }
+}
 // rumput kecil di kaki pohon biasa (piksel asli, setelah dipotong dari lembar)
 function sproutTreeTufts(d, w, h, seed) {
   const bark = (x, y) => { const i = (y * w + x) * 4; return d[i + 3] > 128 && d[i] > d[i + 1] && d[i + 1] > d[i + 2]; };
@@ -136,7 +152,10 @@ function sproutTreeTex(sc, shape, v) {
   const P = SPROUT_TREES.amp + 1, F = SPROUT_TREES.frames;
   const gi = shape === 'giant', [s1, x1] = mk(sw, sh);
   x1.drawImage(gi ? sproutGiantSrc(im) : im, gi ? 0 : sx, gi ? 0 : sy, sw, sh, 0, 0, sw, sh);
-  const one = x1.getImageData(0, 0, sw, sh); sproutTreePolish(one.data, sw, sh); if (!gi) sproutTreeTufts(one.data, sw, sh, sw); x1.putImageData(one, 0, 0);
+  const one = x1.getImageData(0, 0, sw, sh); sproutTreePolish(one.data, sw, sh);
+  if (v && v[0] === 'f') sproutFruit(one.data, sw, sh, v);
+  if (!gi) sproutTreeTufts(one.data, sw, sh, sw);
+  x1.putImageData(one, 0, 0);
   const [b0, x0] = mk(W, H); x0.imageSmoothingEnabled = false; x0.drawImage(s1, 0, 0, W, H);
   const base = x0.getImageData(0, 0, W, H), d = base.data;
   for (let i = 0; i < d.length; i += 4) {
@@ -161,12 +180,35 @@ function sproutTreeTex(sc, shape, v) {
   if (!sc.anims.exists(key + '_sway')) sc.anims.create({ key: key + '_sway', frames: fr, frameRate: SPROUT_TREES.fps, repeat: -1 });
   return key;
 }
+// kunci tekstur pohon lama → pohon Sprout (gambar pohon lama sudah dihapus): dipakai juga oleh kanopi hutan, apel, editor
+const SPROUT_TREE_ALIAS = { i_treeA: ['big', ''], treeAd: ['big', 'd'], treeSn: ['big', 'sn'], tree_redwood: ['giant', 'd'], i_bigtree: ['big', 'd'],
+  bigtree: ['big', 'd'], tree_apple_fruit: ['big', 'fa'], tree_apple_bare: ['big', 'fb'], tree_orange_fruit: ['big', 'fo'],
+  meadowwillow: ['big', 'sw'], owltree: ['big', 'd'], honeytree: ['big', ''], wishtree: ['big', ''], treeBd: ['big', 'd'],
+  pine: ['tall', ''], pined: ['tall', 'd'], round: ['big', 'd'], pear: ['big', 'fb'] };
+function sproutTreeAlias(sc) {
+  const T = sc.textures, A = sc.anims;
+  for (const [k, [shape, v]] of Object.entries(SPROUT_TREE_ALIAS)) {
+    const src = sproutTreeTex(sc, shape, v); if (!src || k === src) continue;
+    const s0 = T.get(src).getSourceImage(), [im, xc] = mk(s0.width, s0.height), F = SPROUT_TREES.frames, fw = im.width / F;
+    xc.drawImage(s0, 0, 0); /* salinan sendiri: tekstur lama yang dihapus tidak ikut membawa kanvas pohon Sprout */
+    if (T.exists(k)) T.remove(k);
+    const t = T.addCanvas(k, im); for (let f = 0; f < F; f++) t.add(f, 0, f * fw, 0, fw, im.height);
+    if (A.exists(k + '_sway')) A.remove(k + '_sway');
+    A.create({ key: k + '_sway', frames: [...Array(F).keys()].map(i => ({ key: k, frame: i })), frameRate: SPROUT_TREES.fps, repeat: -1 });
+  }
+}
+const _buildTexturesTrees = buildTextures;
+buildTextures = function (sc) {
+  const r = _buildTexturesTrees.apply(this, arguments);
+  if (SPROUT_TREES.on && sc && sc.textures) sproutTreeAlias(sc);
+  return r;
+};
 (() => {
   if (typeof World === 'undefined') return;
   const W = World.prototype, _spawn0 = W.spawnObj;
   W.spawnObj = function (o) {
     const s = _spawn0.apply(this, arguments), m = SPROUT_TREES.map[o[0]];
-    if (!s || !m || !SPROUT_TREES.on || typeof sproutRegionAt !== 'function' || !sproutRegionAt(this, o[1], o[2])) return s;
+    if (!s || !m || !SPROUT_TREES.on) return s;
     const key = sproutTreeTex(this, m[0], m[1]); if (!key) return s;
     const x = o[1], y = o[2];
     if (s.anims) s.anims.stop();

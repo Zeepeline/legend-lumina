@@ -207,9 +207,9 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 25 · `shadowIndex()` 26
 
-## src/gfx/textures.js (232 baris)
+## src/gfx/textures.js (231 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
-`ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 44 · `loadImgs()` 64 · `addStrip()` 78 · `darkTree()` 83 · `NPC_W` 85 · `regPortrait()` 86 · `regChar()` 92 · `buildTextures()` 111
+`ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 43 · `loadImgs()` 63 · `addStrip()` 77 · `darkTree()` 82 · `NPC_W` 84 · `regPortrait()` 85 · `regChar()` 91 · `buildTextures()` 110
 
 ## src/gfx/npc_rig.js (140 baris)
 _Rig piksel NPC: dari 1 potret (atau lembar Mila) dibangun pose jalan/napas/berlutut/jatuh lewat potong-geser-cermin kanvas (tanpa warna baru)_
@@ -527,9 +527,9 @@ _OMBAK PANTAI — lapisan air tipis naik ke pasir, ujungnya berbuih putih, lalu 
 _KOTA & DESA GAYA SPROUT — kastil, tembok, menara, properti kota & semua bangunan desa/kota (gambar GPT)_
 `CITY_STYLE` 5 · `cityPastel()` 17 · `_buildTexturesCity` 33
 
-## src/systems/sprout_trees.js (181 baris)
+## src/systems/sprout_trees.js (223 baris)
 _POHON GAYA SPROUT LANDS — pohon biasa di wilayah luar (GRASS_EDGE.maps) memakai pohon dari deco_sprout_objs.png (3×),_
-`SPROUT_TREES` 6 · `sproutTreeTint()` 15 · `sproutTreePolish()` 25 · `sproutGiantSrc()` 51 · `sproutTreeTufts()` 116 · `sproutTreeTex()` 131
+`SPROUT_TREES` 6 · `sproutTreeTint()` 16 · `sproutTreePolish()` 27 · `sproutGiantSrc()` 53 · `sproutFruit()` 118 · `sproutTreeTufts()` 132 · `sproutTreeTex()` 147 · `SPROUT_TREE_ALIAS` 184 · `sproutTreeAlias()` 188 · `_buildTexturesTrees` 200
 
 ## src/systems/sprout_houses.js (279 baris)
 _RUMAH GAYA SPROUT — bangunan desa/kota digambar ulang lewat kode (piksel 2×, garis tepi cokelat lembut, palet hangat),_
@@ -647,7 +647,7 @@ _T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_
 _T447: Bayangan awan berjalan_
 
 
-## src/gfx/gptassets.js (98 baris)
+## src/gfx/gptassets.js (76 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar ada di assets/img (gpt_<kunci>.png)_
 `GPT_SWAP` 4 · `GPT_LOOK` 8 · `applyGptSwap()` 21
 

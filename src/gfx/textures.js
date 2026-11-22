@@ -18,15 +18,14 @@ const IMG_LIST = [
   "gnd_village_custom", "gnd_forest_custom", "gnd_meadow_custom", "gnd_lake_custom", "gnd_road_custom",
   "gnd_deepwood_custom", "gnd_swamp_custom", "gnd_snow_custom", "gnd_river_custom",
   "gnd_kgate_custom", "gnd_kpasar_custom", "gnd_kakademi_custom", "gnd_kbawah_custom", "gnd_edge_sprout", "gnd_water_sprout", "gnd_hills_sprout", "deco_sprout_objs",
-  "apple1", "bench", "bigtree", "bushG1", "bushG2", "bushP", "bushW",
+  "bench", "bushG1", "bushG2", "bushP", "bushW",
   "fountain", "houseA", "houseB", "houseC", "market", "planter", "pot",
-  "treeA", "stumpWoods",
+  "stumpWoods",
   "lampPost", "crateCart", "benchWood", "hero_custom", "mon_slime_hd", "mon_wolf_hd", "mon_wolf_elite_hd", "mon_goblin_hd", "mon_goblin_archer_hd",
   "mon_goblin_shaman", "mon_goblin_elite",
   "goblin_fortress", "goblin_gate", "goblin_hut", "goblin_tower", "goblin_cage", "goblin_forge", "goblin_shrine",
   "goblin_cauldron", "goblin_totem", "goblin_torch", "goblin_wagon", "goblin_banner",
   "vfx_swing_combo", "vfx_hit_impact", "vfx_charge_spin",
-  "tree_apple_fruit", "tree_apple_bare", "tree_redwood",
   "gnd_city_cobble", "gpt_v_blacksmith_forge",
   "gpt_v_barn_ranch", "gpt_v_chapel_church", "gpt_v_fishing_dock", "gpt_v_guild_townhall",
   "gpt_v_house_brown_cottage", "gpt_v_house_brown_wing", "gpt_v_house_red_cottage",
@@ -195,7 +194,7 @@ function buildTextures(sc) {
     const want = ('art' + o.key).toLowerCase(), fn = artFns.find(n => n.toLowerCase() === want) || artFns.find(n => n.toLowerCase() === ('art' + k).toLowerCase());
     try { if (fn) { const c = window[fn](); if (c) { T.addCanvas(o.key, c.c || c); continue; } } } catch (e) { console.warn('Gagal menggambar', o.key, e); }
     const al = ALIAS[o.key]; if (al && T.exists(al)) { T.addImage(o.key, T.get(al).getSourceImage()); continue; }
-    console.warn('Objek tanpa tekstur:', k, '→', o.key);
+    if (typeof SPROUT_TREE_ALIAS === 'undefined' || !SPROUT_TREE_ALIAS[o.key]) console.warn('Objek tanpa tekstur:', k, '→', o.key); /* pohon: dibuat sesudahnya */
   }
   if (typeof applyGptMonsters === 'function') applyGptMonsters(sc); /* sprite monster GPT (gfx/gptmonsters.js) */
   if (IMGEL.mon_slime_hd) {
