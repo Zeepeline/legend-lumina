@@ -68,7 +68,8 @@ MAPS.village = {
     ['reeds', 824, 306],
     ['market', 746, 222],
     ['barrel', 816, 215],
-    ['dummy', 150, 445],
+    ['dummy', 236, 472], /* boneka latihan (dulu di dalam petak kebun) */
+    ['scarecrow', 198, 404], ['seedsack', 96, 482], ['basket', 200, 484], ['watercan', 192, 372], /* perlengkapan kebun */
     ['sign', 214, 440],
     ['lampPost', 440, 305],
     ['lampPost', 490, 465],

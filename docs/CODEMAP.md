@@ -91,9 +91,9 @@ _Lantai & perabot interior_
 _Gambar properti & bangunan cerita baru (Prolog & Bab 1): Makam Mila, Gubuk Reyot, Sarang Pemburu Liar, dll._
 `artMilaGrave()` 5 · `artRuinedShack()` 38 · `artSlaverCage()` 103 · `artPrisonerWagon()` 141 · `artSlaverTent()` 178 · `artSlaverBarricade()` 216 · `artReflectionSpring()` 242 · `artBurntRuin()` 265 · `artMudTracks()` 293 · `artDroppedTorch()` 312 · `artClothScrap()` 327
 
-## src/world/objects.js (379 baris)
+## src/world/objects.js (381 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 378
+`OBJ` 7 · `MAPS` 380
 
 ## src/world/spawn/spawn_1.js (393 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
@@ -127,7 +127,7 @@ _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai 
 _Penempatan pohon & vegetasi isometrik 2.5D: Variable-Radius Poisson-Disc, fBm Groves situasional, dan Asymmetric South Clearance._
 `SCATTER_FOREST_RX` 3 · `SCATTER_TREE_RX` 4 · `scatterGroveNoise()` 6 · `scatterClearBase()` 10 · `scatterSouthClear()` 37 · `scatterPoissonOk()` 45 · `scatter()` 70
 
-## src/world/maps/village.js (140 baris)
+## src/world/maps/village.js (141 baris)
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
 
 
@@ -726,6 +726,10 @@ _Sistem Rona Wilayah & Transisi Antar Wilayah Halus (v1.52.0 - ala 36 Bioma Cobo
 ## src/gfx/sprout_props.js (206 baris)
 _PROPERTI GAYA SPROUT — peti, tong, jerami, api unggun (4 frame), dermaga, perahu, papan tanda, pagar, lampu, pot bunga_
 `SPROUT_PROPS` 7 · `spProp()` 17 · `SP_PROP_ART` 25 · `spCampfire()` 152 · `spFlowerBush()` 167 · `_buildTexturesProps` 177
+
+## src/systems/farm_art.js (143 baris)
+_LAHAN PERTANIAN GAYA SPROUT — aset lengkap kebun:_
+`FARM_ART` 8 · `farmSoilTex()` 15 · `farmCrop()` 32 · `FARM_PROPS` 65 · `.spawnGarden()` 115 · `.updGarden()` 130
 
 ## src/main.js (44 baris)
 _Mulai game Phaser_

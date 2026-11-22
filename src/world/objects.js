@@ -98,6 +98,8 @@ const OBJ = {
   planter: { key: "i_planter", col: [28, 6, 2], sh: [15, 3] },
   bloom: { key: "bloom", col: [14, 5, 2], sh: [8, 2] },
   dummy: { key: "dummy", col: [14, 8, 2], sh: [12, 3] },
+  scarecrow: { key: "farm_scarecrow", col: [10, 6, 0], sh: [10, 3] }, seedsack: { key: "farm_seedsack", col: [14, 6, 0] }, /* farm_art.js */
+  basket: { key: "farm_basket", col: [18, 6, 0] }, watercan: { key: "farm_watercan", col: [0, 0, 0] },
   pebbles: { key: "pebbles", col: [12, 6, 2], sh: [10, 2] },
   telescope: { key: "telescope", col: [14, 8, 2], sh: [10, 3] },
   altar: { key: "altar", col: [26, 12, 0], sh: [14, 3] },
