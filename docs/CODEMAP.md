@@ -555,9 +555,9 @@ _DUNIA COCOK DENGAN GAMBAR — tabrakan & objek mengikuti tanah yang TERLIHAT (g
 _ALAM — sebaran pohon mengikuti pola alami, satu baris pohon pembatas, semak & bunga bergoyang._
 `NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureFoot()` 37 · `natInFoot` 46 · `natureKeep()` 48 · `natKeepOk` 65 · `natureBox()` 70 · `natureScatter()` 74 · `natureTreesOnGrass()` 136 · `natureBorder()` 154 · `natureSwayTex()` 206
 
-## src/systems/place_fit.js (161 baris)
+## src/systems/place_fit.js (179 baris)
 _LETAK SESUAI TANAH — data peta lama (musuh, peti, NPC, titik pancing) dibuat untuk tanah lama; tanah sekarang = gambar peta._
-`PLACE_FIT` 9 · `placeFitMap()` 13 · `placeOffPath()` 56 · `placeWaterObjs()` 73 · `pathCrossings()` 110
+`PLACE_FIT` 9 · `placeFitMap()` 13 · `placeOffPath()` 57 · `placeSigns()` 74 · `placeWaterObjs()` 91 · `pathCrossings()` 128
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
