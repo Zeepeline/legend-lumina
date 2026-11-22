@@ -138,15 +138,17 @@ def academy():
         paste_part(c, 'win', x - 2, 106, 22)
         paste_part(c, 'winw', x - 4, 133, 26)
         paste_part(c, 'win', x, 168, 18)
-    poly_tex(c, [(4, 100), (266, 100), (232, 40), (38, 40)], 'roof')                          # atap perisai
-    poly_tex(c, [(38, 40), (232, 40), (226, 34), (44, 34)], 'roof', .8)                        # bubungan
+    poly_tex(c, [(4, 100), (266, 100), (226, 30), (44, 30)], 'roof')                          # atap perisai (dalam: terlihat dari atas)
+    poly_tex(c, [(4, 100), (44, 30), (30, 30), (-2, 92)], 'roof', 1.15)                       # sisi kiri terang
+    poly_tex(c, [(266, 100), (226, 30), (240, 30), (272, 92)], 'roof', .78)                   # sisi kanan teduh
     # menara tengah + jam + menara runcing
     poly_tex(c, [(116, 70), (154, 70), (154, 18), (116, 18)], 'plaster')
     beam(c, 116, 18, 154, 18); beam(c, 116, 44, 154, 44)
     ellipse(c, 135, 31, 9, 9, (226, 218, 186, 255))
     d = ImageDraw.Draw(c)
     d.line(g(135, 31, 135, 25), fill=OL, width=6); d.line(g(135, 31, 140, 32), fill=OL, width=6)
-    poly_tex(c, [(110, 20), (160, 20), (135, -10 + 12)], 'roof')
+    poly_tex(c, [(110, 20), (135, 20), (135, 2)], 'roof', 1.15)                               # atap limas menara: sisi terang
+    poly_tex(c, [(135, 20), (160, 20), (135, 2)], 'roof', .8)                                 # sisi teduh
     poly(c, [(135, 2), (135, -4 + 6), (148, 6), (135, 9)], (70, 100, 160, 255), 5)          # panji biru
     # pintu utama, tangga, papan nama
     paste_part(c, 'door', 120, 160, 30)
@@ -158,26 +160,29 @@ def academy():
 
 
 def market():
+    """kios dilihat agak dari atas: bidang atap tenda (belakang → depan) & permukaan meja terlihat"""
     W, H = 100, 78
     c = canvas(W, H)
-    beam(c, 14, 22, 14, 74, 2.6); beam(c, 86, 22, 86, 74, 2.6)
-    # meja kayu
-    poly(c, [(8, 50), (92, 50), (92, 75), (8, 75)], WOOD[1])
-    for y in (56, 62, 68):
-        ImageDraw.Draw(c).line(g(9, y, 91, y), fill=WOOD[0], width=5)
-    poly(c, [(8, 46), (92, 46), (92, 51), (8, 51)], WOOD[2])
+    beam(c, 14, 20, 14, 74, 2.6); beam(c, 86, 20, 86, 74, 2.6)
+    beam(c, 18, 10, 18, 46, 2.0); beam(c, 82, 10, 82, 46, 2.0)                                 # tiang belakang
+    # meja: permukaan atas (miring ke belakang) + sisi depan
+    poly(c, [(10, 46), (90, 46), (96, 58), (4, 58)], WOOD[2])
+    poly(c, [(4, 58), (96, 58), (96, 75), (4, 75)], WOOD[1])
+    for y in (63, 69):
+        ImageDraw.Draw(c).line(g(5, y, 95, y), fill=WOOD[0], width=5)
     cols = [(176, 64, 56, 255), (206, 168, 72, 255), (126, 156, 76, 255), (196, 120, 60, 255)]
-    for k, x in enumerate(range(14, 88, 7)):
-        ellipse(c, x, 43, 3.6, 3.2, cols[k % 4], 5)
-    # tenda bergaris (miring ke depan) + rumbai
-    for k in range(10):
-        x0 = 4 + k * 9.2
-        poly(c, [(x0 + 3, 6), (x0 + 12.2 - 3 + 3, 6), (x0 + 9.2, 26), (x0, 26)], CLOTH[k % 2], 5)
-    for k in range(10):
-        x0 = 4 + k * 9.2
-        ImageDraw.Draw(c).pieslice(g(x0, 22, x0 + 9.2, 31), 0, 180, fill=CLOTH[k % 2], outline=OL, width=5)
-    poly(c, [(6, 3), (94, 3), (95, 7), (5, 7)], WOOD[1], 5)
-    # peti di samping
+    for row, (y, x0, x1) in enumerate([(49, 14, 86), (53.5, 10, 90)]):
+        for k, x in enumerate(range(round(x0), round(x1), 6)):
+            ellipse(c, x + (3 if row else 0), y, 3.2, 2.6, cols[(k + row) % 4], 5)
+    # atap tenda: belakang (y 2, sempit) → depan (y 26, lebar), garis kain mengikuti perspektif
+    n, bl, br, fl, fr = 10, 12.0, 88.0, 2.0, 98.0
+    for k in range(n):
+        t0, t1 = k / n, (k + 1) / n
+        poly(c, [(bl + (br - bl) * t0, 3), (bl + (br - bl) * t1, 3), (fl + (fr - fl) * t1, 26), (fl + (fr - fl) * t0, 26)], CLOTH[k % 2], 5)
+    for k in range(n):
+        x0 = fl + (fr - fl) * k / n
+        ImageDraw.Draw(c).pieslice(g(x0, 22, x0 + (fr - fl) / n, 31), 0, 180, fill=CLOTH[k % 2], outline=OL, width=5)
+    poly(c, [(11, 1), (89, 1), (89, 4), (11, 4)], WOOD[1], 5)
     poly(c, [(90, 62), (99, 62), (99, 75), (90, 75)], WOOD[2], 5)
     return finish(c, W, H)
 
@@ -202,23 +207,30 @@ def well():
     c.paste(tex, (0, 0), m)
     d = ImageDraw.Draw(c)
     d.arc(g(14, 63, 71, 77), 0, 180, fill=OL, width=7); d.line(g(14, 56, 14, 70), fill=OL, width=7); d.line(g(71, 56, 71, 70), fill=OL, width=7)
-    ellipse(c, 42.5, 56, 28.5, 7.5, STONE[2])
-    ellipse(c, 42.5, 56, 22, 5, WATER[0], 5)
+    ellipse(c, 42.5, 55, 28.5, 10, STONE[2])
+    ellipse(c, 42.5, 55, 21, 6.5, WATER[0], 5)
     d.arc(g(26, 53, 50, 58), 200, 330, fill=WATER[2], width=5)
     return finish(c, W, H)
 
 
 def windmill():
+    """kincir: menara silinder (sisi kanan lebih gelap, permukaan atas elips) + atap kerucut beralas elips"""
     W, H = 116, 140
     c = canvas(W, H)
-    poly_tex(c, [(30, 136), (86, 136), (76, 46), (40, 46)], 'plaster')                       # badan menara
-    poly_tex(c, [(30, 136), (86, 136), (84, 116), (32, 116)], 'stone')                       # kaki batu
-    beam(c, 40, 46, 33, 116); beam(c, 76, 46, 83, 116); beam(c, 36, 82, 80, 82)
-    beam(c, 38, 116, 78, 84, 1.6); beam(c, 78, 116, 38, 84, 1.6)
+    poly_tex(c, [(30, 134), (86, 134), (76, 50), (40, 50)], 'plaster')
+    poly_tex(c, [(60, 134), (86, 134), (76, 50), (60, 50)], 'plaster', .82)                   # sisi kanan teduh
+    ImageDraw.Draw(c).ellipse(g(30, 128, 86, 140), fill=STONE[1], outline=OL, width=7)        # kaki batu bawah
+    poly_tex(c, [(30, 134), (86, 134), (84, 116), (32, 116)], 'stone')
+    beam(c, 40, 50, 33, 116); beam(c, 76, 50, 83, 116); beam(c, 36, 84, 80, 84)
+    beam(c, 38, 116, 78, 86, 1.6); beam(c, 78, 116, 38, 86, 1.6)
     paste_part(c, 'door', 47, 108, 22)
-    paste_part(c, 'win', 48, 54, 20)
-    poly_tex(c, [(34, 48), (82, 48), (58, 14)], 'roof')                                       # topi kerucut
-    ellipse(c, 58, 70, 5.5, 5.5, WOOD[2])                                                    # poros baling-baling
+    paste_part(c, 'win', 48, 56, 20)
+    # atap kerucut: alas elips (terlihat dari atas) + dua sisi terang/gelap
+    ImageDraw.Draw(c).ellipse(g(32, 42, 84, 56), fill=(40, 66, 76, 255), outline=OL, width=7)
+    poly_tex(c, [(32, 49), (58, 49), (58, 10)], 'roof', 1.12)
+    poly_tex(c, [(58, 49), (84, 49), (58, 10)], 'roof', .8)
+    ImageDraw.Draw(c).arc(g(32, 42, 84, 56), 0, 180, fill=OL, width=7)
+    ellipse(c, 58, 72, 5.5, 5.5, WOOD[2])
     return finish(c, W, H)
 
 
@@ -242,14 +254,14 @@ def blades():
 def shrine():
     W, H = 120, 70
     c = canvas(W, H)
-    ellipse(c, 60, 52, 56, 16, STONE[1])
-    poly_tex(c, [(4, 52), (116, 52), (116, 58), (4, 58)], 'stone')
-    ellipse(c, 60, 48, 56, 15, STONE[2])
-    ellipse(c, 60, 48, 30, 7.5, (90, 150, 156, 255), 6)                                     # lingkaran rune
+    ellipse(c, 60, 50, 56, 19, STONE[1])
+    poly_tex(c, [(4, 50), (116, 50), (116, 56), (4, 56)], 'stone')
+    ellipse(c, 60, 46, 56, 19, STONE[2])
+    ellipse(c, 60, 46, 32, 10, (90, 150, 156, 255), 6)                                     # lingkaran rune
     d = ImageDraw.Draw(c)
     for k in range(8):
         a = k * math.pi / 4
-        d.ellipse(g(60 + math.cos(a) * 22 - 1.4, 48 + math.sin(a) * 5.2 - 1.2, 60 + math.cos(a) * 22 + 1.4, 48 + math.sin(a) * 5.2 + 1.2), fill=(200, 236, 226, 255))
+        d.ellipse(g(60 + math.cos(a) * 22 - 1.4, 46 + math.sin(a) * 7.5 - 1.2, 60 + math.cos(a) * 22 + 1.4, 46 + math.sin(a) * 7.5 + 1.2), fill=(200, 236, 226, 255))
     for px in (14, 106):                                                                     # tiang lentera batu
         poly_tex(c, [(px - 5, 50), (px + 5, 50), (px + 5, 14), (px - 5, 14)], 'stone', 1.1)
         poly(c, [(px - 4, 22), (px + 4, 22), (px + 4, 14), (px - 4, 14)], (236, 196, 110, 255), 5)
@@ -262,8 +274,8 @@ def fountain():
     c = canvas(W, H)
     ellipse(c, 41.5, 72, 39, 11, STONE[1])
     poly_tex(c, [(2.5, 66), (80.5, 66), (80.5, 73), (2.5, 73)], 'stone')
-    ellipse(c, 41.5, 64, 39, 11, STONE[2])
-    ellipse(c, 41.5, 64, 33, 8, WATER[1], 6)
+    ellipse(c, 41.5, 63, 39, 14, STONE[2])
+    ellipse(c, 41.5, 63, 33, 10.5, WATER[1], 6)
     poly_tex(c, [(36, 64), (47, 64), (45, 36), (38, 36)], 'stone', 1.1)                     # tiang tengah
     ellipse(c, 41.5, 36, 16, 5, STONE[2])
     ellipse(c, 41.5, 35, 12, 3.4, WATER[1], 5)
