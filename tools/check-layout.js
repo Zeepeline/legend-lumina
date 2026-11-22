@@ -94,6 +94,7 @@ for (const [id, M] of Object.entries(MAPS)) {
 // gambar: file ada & tidak terlalu kecil (tanda salah potong)
 const tex = fs.readFileSync(path.join(root, 'src/gfx/textures.js'), 'utf8'), list = (tex.match(/const IMG_LIST = \[([^\]]*)\]/) || [, ''])[1].match(/['"][^'"]+['"]/g).map(x => x.slice(1, -1));
 for (const k of list) { const f = findImg(k); if (!fs.existsSync(f)) issues.push(`gambar '${k}' ada di IMG_LIST tapi file assets/img/${k}.png tidak ada`); }
+// i_treeA & i_bigtree dibangun ulang oleh SPROUT_TREE_ALIAS (sprout_trees.js), bukan dari IMG_LIST
 for (const [k, o] of Object.entries(OBJ)) if (/^i_/.test(o.key) && !list.includes(o.key.slice(2)) && !/i_(cart|treePine|treeOak|rockWoods)$/.test(o.key)) issues.push(`OBJ '${k}' memakai gambar '${o.key}' yang tidak ada di IMG_LIST`);
 const all = process.argv.includes('--semua');
 for (const m of issues) console.log('MASALAH  ' + m);
