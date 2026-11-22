@@ -8829,7 +8829,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.58.3';
+const GAME_VERSION = '1.58.4';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
@@ -24814,12 +24814,20 @@ function sproutGiantSrc(im) {
       put(X, Y, col);
     }
   }
+  // lapisan daun dalam (gelap) di belakang gumpal: menutup semua rongga tajuk
+  const clumps = [[cx, 9, 7.5], [cx - 8, 17, 7], [cx + 8, 18, 7], [cx, 23, 7.5], [cx - 11, 31, 6.2], [cx + 11, 32, 6.2], [cx - 4, 37, 6], [cx + 5, 38, 5.6]];
+  const inMass = (X, Y) => clumps.some(([ox, oy, r]) => Math.hypot(X + .5 - ox, Y + .5 - oy) <= r + 1.5) ||
+    ((X + .5 - cx) / 15) ** 2 + ((Y + .5 - 24) / 17) ** 2 <= 1;
+  for (let Y = 0; Y < 46; Y++) for (let X = 0; X < w; X++) {
+    if (!inMass(X, Y)) continue;
+    const rim = !inMass(X - 1, Y) || !inMass(X + 1, Y) || !inMass(X, Y - 1) || !inMass(X, Y + 1);
+    put(X, Y, rim ? gq(0) : hash(X, Y, 85) < .12 ? gq(.28) : gq(.14));
+  }
   // dahan (terlihat di sela gumpal daun)
   for (const [x0, y0, x1, y1] of [[cx, 46, cx - 11, 35], [cx, 44, cx + 11, 36], [cx, 36, cx - 9, 23], [cx, 34, cx + 9, 24], [cx, 28, cx, 14]]) {
     line(x0, y0 + 1, x1, y1 + 1, BK.o, 2); line(x0, y0, x1, y1, BK.d, 2);
   }
   // gumpal daun berlapis (atas dulu, bawah menimpa → lapisan)
-  const clumps = [[cx, 9, 7.5], [cx - 8, 17, 7], [cx + 8, 18, 7], [cx, 23, 7.5], [cx - 11, 31, 6.2], [cx + 11, 32, 6.2], [cx - 4, 37, 6], [cx + 5, 38, 5.6]];
   for (const [ox, oy, r] of clumps) for (let Y = Math.floor(oy - r); Y <= oy + r; Y++) for (let X = Math.floor(ox - r); X <= ox + r; X++) {
     const dx = X + .5 - ox, dy = Y + .5 - oy, dd = Math.hypot(dx, dy); if (dd > r) continue;
     const lit = (-dx - dy) / (r * 1.4); let t = .45 + lit * .45 + (dd < r * .5 ? .05 : 0);

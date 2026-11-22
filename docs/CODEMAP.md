@@ -527,9 +527,9 @@ _OMBAK PANTAI — lapisan air tipis naik ke pasir, ujungnya berbuih putih, lalu 
 _KOTA GAYA SPROUT — kastil gerbang, tembok, menara & properti kota (gambar GPT) diwarnai ulang ke palet Sprout yang terang & lembut._
 `CITY_STYLE` 5 · `cityPastel()` 12 · `_buildTexturesCity` 28
 
-## src/systems/sprout_trees.js (173 baris)
+## src/systems/sprout_trees.js (181 baris)
 _POHON GAYA SPROUT LANDS — pohon biasa di wilayah luar (GRASS_EDGE.maps) memakai pohon dari deco_sprout_objs.png (3×),_
-`SPROUT_TREES` 6 · `sproutTreeTint()` 15 · `sproutTreePolish()` 25 · `sproutGiantSrc()` 51 · `sproutTreeTufts()` 108 · `sproutTreeTex()` 123
+`SPROUT_TREES` 6 · `sproutTreeTint()` 15 · `sproutTreePolish()` 25 · `sproutGiantSrc()` 51 · `sproutTreeTufts()` 116 · `sproutTreeTex()` 131
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_

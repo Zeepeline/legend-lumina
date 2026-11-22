@@ -83,12 +83,20 @@ function sproutGiantSrc(im) {
       put(X, Y, col);
     }
   }
+  // lapisan daun dalam (gelap) di belakang gumpal: menutup semua rongga tajuk
+  const clumps = [[cx, 9, 7.5], [cx - 8, 17, 7], [cx + 8, 18, 7], [cx, 23, 7.5], [cx - 11, 31, 6.2], [cx + 11, 32, 6.2], [cx - 4, 37, 6], [cx + 5, 38, 5.6]];
+  const inMass = (X, Y) => clumps.some(([ox, oy, r]) => Math.hypot(X + .5 - ox, Y + .5 - oy) <= r + 1.5) ||
+    ((X + .5 - cx) / 15) ** 2 + ((Y + .5 - 24) / 17) ** 2 <= 1;
+  for (let Y = 0; Y < 46; Y++) for (let X = 0; X < w; X++) {
+    if (!inMass(X, Y)) continue;
+    const rim = !inMass(X - 1, Y) || !inMass(X + 1, Y) || !inMass(X, Y - 1) || !inMass(X, Y + 1);
+    put(X, Y, rim ? gq(0) : hash(X, Y, 85) < .12 ? gq(.28) : gq(.14));
+  }
   // dahan (terlihat di sela gumpal daun)
   for (const [x0, y0, x1, y1] of [[cx, 46, cx - 11, 35], [cx, 44, cx + 11, 36], [cx, 36, cx - 9, 23], [cx, 34, cx + 9, 24], [cx, 28, cx, 14]]) {
     line(x0, y0 + 1, x1, y1 + 1, BK.o, 2); line(x0, y0, x1, y1, BK.d, 2);
   }
   // gumpal daun berlapis (atas dulu, bawah menimpa → lapisan)
-  const clumps = [[cx, 9, 7.5], [cx - 8, 17, 7], [cx + 8, 18, 7], [cx, 23, 7.5], [cx - 11, 31, 6.2], [cx + 11, 32, 6.2], [cx - 4, 37, 6], [cx + 5, 38, 5.6]];
   for (const [ox, oy, r] of clumps) for (let Y = Math.floor(oy - r); Y <= oy + r; Y++) for (let X = Math.floor(ox - r); X <= ox + r; X++) {
     const dx = X + .5 - ox, dy = Y + .5 - oy, dd = Math.hypot(dx, dy); if (dd > r) continue;
     const lit = (-dx - dy) / (r * 1.4); let t = .45 + lit * .45 + (dd < r * .5 ? .05 : 0);
