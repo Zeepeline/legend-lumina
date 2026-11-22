@@ -218,9 +218,31 @@ function artPond() { return null; }
 function artBarrier() { const frames = []; for (let f = 0; f < 3; f++) { const [c, x] = mk(84, 46); for (let y = 0; y < 44; y++) for (let i = 0; i < 84; i++) { const w = Math.sin(i * .25 + y * .15 + f * 2) * .5 + .5; if ((i + y + f) % 3 === 0) continue; x.fillStyle = `rgba(${150 + w * 100},${120 + w * 60},255,${.18 + w * .35 * (1 - y / 60)})`; x.fillRect(i, y, 1, 1); } for (let k = 0; k < 6; k++) { const X = (k * 15 + f * 5) % 84, Y = 6 + (k * 11 + f * 7) % 34; x.fillStyle = '#ffffff'; x.fillRect(X, Y, 1, 1); } frames.push(c); } return strip(frames); }
 function artAnvil() { const [c, x] = mk(30, 22); fr(x, '#5a5466', 6, 4, 20, 6); fr(x, '#8a8494', 6, 4, 20, 2); fr(x, '#5a5466', 2, 4, 6, 3); fr(x, '#4a4456', 11, 10, 10, 6); fr(x, '#7a5446', 4, 16, 24, 5); fr(x, '#a06a52', 4, 16, 24, 2); return outline(c); }
 function artForge() { const [c, x] = mk(34, 34); for (let y = 6; y < 32; y++) for (let i = 2; i < 32; i++) { const row = Math.floor(y / 4), m = y % 4 === 3 || (i + (row % 2) * 3) % 6 === 0; px(x, m ? '#6a5a5a' : i < 10 ? '#b8a8a0' : '#9a8a84', i, y); } fr(x, '#2a1a1a', 8, 16, 18, 12); fr(x, '#ff8a2a', 10, 20, 14, 8); fr(x, '#ffd84a', 13, 22, 8, 6); fr(x, '#ffffff', 16, 25, 2, 2); fr(x, '#6a5a5a', 12, 0, 10, 7); return outline(c); }
-function artGate() { const [c, x] = mk(58, 34); fr(x, '#4a4456', 0, 0, 58, 5); fr(x, '#8a8494', 0, 0, 58, 2); for (let i = 3; i < 58; i += 7) { fr(x, '#5a5466', i, 5, 3, 28); fr(x, '#9a94a4', i, 5, 1, 28); } fr(x, '#4a4456', 0, 18, 58, 3); return outline(c); }
-function artBoulder() { const [c, x] = mk(20, 18); ellF(x, '#6a6476', 10, 10, 8.5, 7); ellF(x, '#8a8494', 9, 9, 7, 5.5); ellF(x, '#b4aebe', 7, 6, 3, 2); px(x, '#4e4858', 13, 12); px(x, '#4e4858', 11, 14); return outline(c); }
-function artPlate() { const [c, x] = mk(20, 14); ellF(x, '#3a3644', 10, 7, 9, 6); ellF(x, '#7a7484', 10, 6.5, 8, 5); ellF(x, '#5ac8ff', 10, 6.5, 3, 2); return c; }
+function artGate() {
+  const [c, x] = mk(58, 34);
+  fr(x, '#2a2434', 0, 0, 58, 5); fr(x, '#524a5e', 0, 1, 58, 2); fr(x, '#847a94', 0, 1, 58, 1);
+  fr(x, '#2a2434', 0, 17, 58, 4); fr(x, '#524a5e', 0, 18, 58, 2);
+  for (let i = 3; i < 58; i += 7) {
+    fr(x, '#2a2434', i, 5, 3, 27); fr(x, '#524a5e', i, 5, 2, 27); fr(x, '#847a94', i, 5, 1, 27);
+    px(x, '#847a94', i + 1, 32); px(x, '#ffffff', i + 1, 31);
+    px(x, '#9e94ae', i + 1, 2); px(x, '#9e94ae', i + 1, 18);
+  }
+  return outline(c, '#181220');
+}
+function artBoulder() {
+  const [c, x] = mk(24, 22);
+  ellF(x, '#3e364a', 12, 12, 10.5, 9); ellF(x, '#584e66', 11, 11, 9, 7.5); ellF(x, '#786e88', 10, 9, 7, 5);
+  ellF(x, '#9e94ae', 8, 7, 4, 2.5); px(x, '#c4b8d4', 7, 6);
+  px(x, '#322a3c', 11, 11); px(x, '#322a3c', 12, 11); px(x, '#322a3c', 13, 12); px(x, '#322a3c', 12, 13);
+  px(x, '#5ac8ff', 12, 12);
+  return outline(c, '#1c1626');
+}
+function artPlate() {
+  const [c, x] = mk(24, 16);
+  ellF(x, '#262032', 12, 8, 11, 7); ellF(x, '#443c52', 12, 7.5, 9.5, 5.5); ellF(x, '#625872', 12, 7, 8, 4.5);
+  ellF(x, '#2a6cb8', 12, 7, 5, 3); ellF(x, '#5ac8ff', 12, 7, 3.5, 2); px(x, '#ffffff', 12, 7);
+  return c;
+}
 function artBell() {
   const [c, x] = mk(24, 28);
   // Tiang kayu gantungan lonceng
@@ -352,37 +374,17 @@ function artFieldOven() {
 
 function artDripStalactite() {
   const [c, x] = mk(24, 30);
-  // Base wet rock cluster
-  ellF(x, '#3a3444', 12, 25, 10, 4);
-  ellF(x, '#4e4858', 12, 24, 8, 3);
-
-  // Wet pool / moss patch
-  ellF(x, '#2a885a', 7, 26, 5, 2.5); // green moss
-  px(x, '#5ad888', 6, 25);
-  px(x, '#7affaa', 8, 26);
-  ellF(x, '#4ab8e8', 15, 25, 4, 2); // puddle water reflection
-  px(x, '#ffffff', 16, 25);
-
-  // Stalagmite rising
+  ellF(x, '#322c3e', 12, 25, 10, 4); ellF(x, '#4a4256', 12, 24, 8, 3);
+  ellF(x, '#286a42', 7, 26, 5, 2.5); px(x, '#4ec87a', 6, 25); px(x, '#7ae8a0', 8, 26);
+  ellF(x, '#3888c0', 15, 25, 4, 2); px(x, '#c8f0ff', 16, 25);
   for (let y = 6; y < 25; y++) {
     const hw = 1 + (y - 6) / 19 * 6;
     for (let i = Math.round(-hw); i <= Math.round(hw); i++) {
-      const u = i / hw;
-      px(x, u < -.25 ? '#8a8296' : u < .4 ? '#6a6276' : '#4e4858', 12 + i, y);
+      const u = i / hw; px(x, u < -.25 ? '#948ca4' : u < .4 ? '#6e667c' : '#4a4256', 12 + i, y);
     }
   }
-
-  // Droplet on the tip
-  ellF(x, '#7ad8ff', 12, 5, 2, 2.5);
-  px(x, '#ffffff', 12, 4);
-
-  // Emerald cave moss creeping on the side of stone
-  px(x, '#2a885a', 7, 18);
-  px(x, '#3ac87a', 8, 17);
-  px(x, '#5ad888', 8, 18);
-  px(x, '#2a885a', 16, 20);
-  px(x, '#3ac87a', 15, 21);
-
-  return outline(c, '#1e1a24');
+  ellF(x, '#60ccff', 12, 5, 2, 2.5); px(x, '#ffffff', 12, 4);
+  px(x, '#286a42', 7, 18); px(x, '#4ec87a', 8, 17); px(x, '#286a42', 16, 20); px(x, '#4ec87a', 15, 21);
+  return outline(c, '#1c1624');
 }
 

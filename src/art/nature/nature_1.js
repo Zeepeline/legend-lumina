@@ -161,14 +161,39 @@ function artLog() { const [c, x] = mk(32, 14); fr(x, '#7a4e2c', 4, 3, 24, 9); fr
 function artStump() { const [c, x] = mk(18, 14); fr(x, '#7a4e2c', 3, 5, 12, 7); fr(x, '#9a6838', 3, 5, 4, 7); ellF(x, '#c8945a', 9, 5, 6, 2.5); ellF(x, '#a8743e', 9, 5, 3, 1.2); return outline(c, '#3a2418'); }
 function artMushDeco() { const [c, x] = mk(14, 12); const m = (X, Y, s) => { fr(x, '#f0e6d0', X, Y, 2, 4); ellF(x, '#e04a3a', X + 1, Y, s, s * .6); px(x, '#ffffff', X - 1, Y - 1); px(x, '#ffffff', X + 2, Y); }; m(4, 6, 3); m(9, 7, 2.2); return outline(c, '#3a1a1a'); }
 function artHay() { const [c, x] = mk(26, 20); ellF(x, '#c8a03a', 13, 11, 11, 8); ellF(x, '#e8c85a', 12, 9, 9, 6); for (let i = 0; i < 14; i++) px(x, '#a8802a', 4 + hash(i, 1, 9) * 18, 5 + hash(i, 2, 9) * 11); fr(x, '#8a5a2a', 2, 10, 22, 1); return outline(c, '#4a3410'); }
-function artStalag(seed) { const [c, x] = mk(18, 26); for (let y = 2; y < 24; y++) { const hw = 1 + (y - 2) / 22 * 7; for (let i = Math.round(-hw); i <= Math.round(hw); i++) { const u = i / hw; px(x, u < -.3 ? '#8a8296' : u < .4 ? '#6a6276' : '#4e4858', 9 + i, y); } } ellF(x, '#4e4858', 9, 23, 8, 2); if (seed % 2) { ellF(x, '#6a6276', 14, 21, 3, 4); } return outline(c, '#1e1a24'); }
-function artCrystals(seed, col = ['#3a8ee0', '#7ad0ff', '#d8f6ff']) {
-  const [c, x] = mk(22, 22);
-  const sh = [[11, 20, 4, 14], [6, 20, 3, 9], [16, 20, 3, 10]];
-  for (const [cx, by, hw, h] of sh) for (let y = by - h; y <= by; y++) { const t = (y - (by - h)) / h, w = Math.min(hw, t * hw * 2.2); for (let i = Math.round(-w); i <= Math.round(w); i++) px(x, i < 0 ? col[1] : col[0], cx + i, y); px(x, col[2], cx - 1, y); }
-  return outline(c, '#101a30');
+function artStalag(seed) {
+  const [c, x] = mk(20, 28);
+  for (let y = 3; y < 25; y++) {
+    const hw = 1 + (y - 3) / 22 * 7.5;
+    for (let i = Math.round(-hw); i <= Math.round(hw); i++) {
+      const u = i / hw; px(x, u < -.35 ? '#948ca4' : u < .3 ? '#726a80' : u < .7 ? '#544c60' : '#3e364a', 10 + i, y);
+    }
+  }
+  ellF(x, '#4a4256', 10, 25, 8.5, 2.5); px(x, '#b8b0c8', 10, 2); px(x, '#ffffff', 9, 3);
+  if (seed % 2) { ellF(x, '#726a80', 14, 23, 3, 4); px(x, '#948ca4', 13, 22); }
+  return outline(c, '#1c1624');
 }
-function artBones() { const [c, x] = mk(20, 10); fr(x, '#e8e2d0', 2, 6, 12, 2); fr(x, '#e8e2d0', 1, 5, 2, 4); fr(x, '#e8e2d0', 13, 5, 2, 4); ellF(x, '#f0ead8', 15, 4, 4, 3.5); fr(x, '#2a2030', 13, 3, 2, 2); fr(x, '#2a2030', 16, 3, 2, 2); return outline(c, '#3a3040'); }
+function artCrystals(seed, col = ['#2870b8', '#52a8f2', '#a8e6ff']) {
+  const [c, x] = mk(24, 24); ellF(x, '#383244', 12, 21, 9, 3); ellF(x, '#564e62', 11, 20, 7, 2);
+  const sh = [[12, 20, 4, 15], [7, 20, 3, 10], [17, 20, 3, 11]];
+  for (const [cx, by, hw, h] of sh) for (let y = by - h; y <= by; y++) {
+    const t = (y - (by - h)) / h, w = Math.min(hw, t * hw * 2.2);
+    for (let i = Math.round(-w); i <= Math.round(w); i++) px(x, i < 0 ? col[1] : col[0], cx + i, y);
+    px(x, col[2], cx - 1, y); if (y === by - h) px(x, '#ffffff', cx, y);
+  }
+  return outline(c, '#141220');
+}
+function artBones() {
+  const [c, x] = mk(20, 10); fr(x, '#d8d0bc', 2, 6, 12, 2); fr(x, '#ece4d2', 1, 5, 2, 4); fr(x, '#ece4d2', 13, 5, 2, 4);
+  ellF(x, '#f4ece0', 15, 4, 4, 3.5); fr(x, '#2c2234', 13, 3, 2, 2); fr(x, '#2c2234', 16, 3, 2, 2); return outline(c, '#2c2234');
+}
+function artGeodeRock() {
+  const [c, x] = mk(26, 22); ellF(x, '#4a4256', 13, 14, 11, 7); ellF(x, '#665e74', 12, 12, 9, 5.5); ellF(x, '#867d94', 10, 10, 6, 3);
+  ellF(x, '#221632', 13, 12, 7, 4.5);
+  const cry = [[11, 10, '#af5eed', '#d694ff'], [14, 11, '#8c3ecd', '#b66eff'], [16, 12, '#6b2ba8', '#9948db'], [12, 13, '#c87eff', '#f0c8ff']];
+  for (const [cx, cy, c1, c2] of cry) { fr(x, c1, cx, cy, 2, 3); px(x, c2, cx, cy); px(x, '#ffffff', cx + 1, cy); }
+  px(x, '#e8b038', 9, 13); px(x, '#ffd870', 17, 10); px(x, '#ffd870', 11, 9); return outline(c, '#181220');
+}
 function artBramble() {
   const [c, x] = mk(24, 20);
   ellF(x, '#6a4a2a', 12, 10, 10, 7);
@@ -210,75 +235,48 @@ function artBloom() {
   return outline(c, '#2a1408');
 }
 function artCaveMouth() {
-  const W = 92, H = 70, [c, x] = mk(W, H);
+  const W = 96, H = 72, [c, x] = mk(W, H);
   for (let y = 0; y < H; y++) for (let i = 0; i < W; i++) {
-    const dx = (i - W / 2) / (W / 2), dy = (y - H) / H; const e = dx * dx + dy * dy * 1.1;
-    if (e > 1) continue;
-    const n = hash(i >> 2, y >> 2, 4);
-    let col = n > .6 ? '#8a8494' : n > .3 ? '#7a7484' : '#6a6474';
-    if (dy < -.75 + Math.abs(dx) * .1) col = shade(col, .15);
-    const inner = (dx * dx) / .3 + ((y - H) / (H * .72)) ** 2;
-    if (inner < 1) col = inner < .7 ? '#0a080e' : '#1e1a26';
+    const dx = (i - W / 2) / (W * 0.48), dy = (y - H) / (H * 0.95); if (dx * dx + dy * dy > 1.05) continue;
+    const n = hash(i >> 2, y >> 2, 7), strata = Math.sin(y * 0.4 + n * 2.5) > 0.1;
+    let col = strata ? (n > 0.5 ? '#7b738a' : '#686074') : (n > 0.5 ? '#564e62' : '#474052');
+    if (dy < -0.78 + Math.abs(dx) * 0.15) col = '#968ea6';
+    const inX = (i - W / 2) / (W * 0.28), inY = (y - H) / (H * 0.72), inn = inX * inX + inY * inY;
+    if (inn < 1) {
+      col = inn < 0.55 ? '#08060c' : inn < 0.8 ? '#181220' : '#282032';
+      if (inY < -0.65 && (i % 8 === 2 || i % 8 === 3)) col = '#5a5266';
+    }
     px(x, col, i, y);
   }
-  for (let i = 0; i < 8; i++) ellF(x, '#4f9a3a', 10 + i * 10, 6 + Math.abs(4 - i) * 3, 4, 2.4);
-  return outline(c, '#1e1a24');
+  for (let i = 8; i < W - 8; i += 7) {
+    const my = 4 + Math.round(Math.abs(Math.sin(i * 0.18)) * 4);
+    ellF(x, '#4a843e', i, my, 5, 3); ellF(x, '#6eb452', i - 1, my - 1, 3.5, 1.8); px(x, '#88ce64', i - 2, my - 2);
+    if (i % 14 === 0) for (let k = 0; k < 6; k++) px(x, k % 2 ? '#3a7232' : '#5a9c42', i, my + 3 + k);
+  }
+  ellF(x, '#564e62', 14, H - 6, 8, 5); ellF(x, '#7b738a', 13, H - 8, 6, 3);
+  ellF(x, '#564e62', W - 14, H - 6, 8, 5); ellF(x, '#7b738a', W - 15, H - 8, 6, 3);
+  return outline(c, '#1c1624');
 }
 
 function artFrostFlower() {
   const [c, x] = mk(20, 20);
-  // Snow base mound
-  ellF(x, '#d8eef8', 10, 16, 8, 3.5);
-  ellF(x, '#ffffff', 10, 15, 6, 2.5);
-
-  // Pale frozen stem and leafy base
-  fr(x, '#629cb8', 9, 10, 2, 6);
-  px(x, '#4a829e', 8, 13);
-  px(x, '#7ac0de', 11, 13);
-
-  // Crystalline ice petals
-  ellF(x, '#9adbf8', 10, 7, 6, 6);
-  ellF(x, '#c8f0ff', 10, 7, 4, 4);
-
-  // Crystal star shape
-  fr(x, '#ffffff', 9, 4, 2, 6);
-  fr(x, '#ffffff', 7, 6, 6, 2);
-  px(x, '#58b8e8', 6, 6);
-  px(x, '#58b8e8', 13, 6);
-  px(x, '#58b8e8', 9, 3);
-  px(x, '#58b8e8', 10, 10);
-
-  // Glowing pure center core (sweet nectar droplet)
-  px(x, '#eefcff', 9, 7);
-  px(x, '#eefcff', 10, 7);
-
+  ellF(x, '#d8eef8', 10, 16, 8, 3.5); ellF(x, '#ffffff', 10, 15, 6, 2.5);
+  fr(x, '#629cb8', 9, 10, 2, 6); px(x, '#4a829e', 8, 13); px(x, '#7ac0de', 11, 13);
+  ellF(x, '#9adbf8', 10, 7, 6, 6); ellF(x, '#c8f0ff', 10, 7, 4, 4);
+  fr(x, '#ffffff', 9, 4, 2, 6); fr(x, '#ffffff', 7, 6, 6, 2);
+  px(x, '#58b8e8', 6, 6); px(x, '#58b8e8', 13, 6); px(x, '#58b8e8', 9, 3); px(x, '#58b8e8', 10, 10);
+  px(x, '#eefcff', 9, 7); px(x, '#eefcff', 10, 7);
   return outline(c, '#1e384c');
 }
 
 function artPigeonsSpot() {
   const [c, x] = mk(26, 20);
-  // Paving stones and scattered grain dots
-  ellF(x, '#8a8898', 13, 15, 11, 4.5);
-  ellF(x, '#a8a6b6', 13, 14, 9, 3.5);
-
-  // Scattered grain seeds
-  px(x, '#ffd860', 10, 14);
-  px(x, '#ffd860', 14, 15);
-  px(x, '#ffd860', 8, 16);
-  px(x, '#ffd860', 17, 14);
-
-  // Pigeon 1 (pecking ground, center-left)
-  ellF(x, '#8892a0', 9, 11, 4, 3);
-  ellF(x, '#b0b8c8', 8, 10, 2.5, 2);
-  px(x, '#4a6078', 6, 12); // pecking head
-  px(x, '#f08030', 5, 13); // beak
-  px(x, '#58c080', 8, 9);  // green iridescent neck
-  px(x, '#2a2830', 12, 10); // wing tip
-
-  // Pigeon 2 (looking up, right)
-  ellF(x, '#8892a0', 17, 10, 4, 3);
-  ellF(x, '#b0b8c8', 18, 9, 2.5, 2);
-  px(x, '#4a6078', 19, 7); // head up
+  ellF(x, '#8a8898', 13, 15, 11, 4.5); ellF(x, '#a8a6b6', 13, 14, 9, 3.5);
+  px(x, '#ffd860', 10, 14); px(x, '#ffd860', 14, 15); px(x, '#ffd860', 8, 16); px(x, '#ffd860', 17, 14);
+  ellF(x, '#8892a0', 9, 11, 4, 3); ellF(x, '#b0b8c8', 8, 10, 2.5, 2);
+  px(x, '#4a6078', 6, 12); px(x, '#f08030', 5, 13); px(x, '#58c080', 8, 9); px(x, '#2a2830', 12, 10);
+  ellF(x, '#8892a0', 17, 10, 4, 3); ellF(x, '#b0b8c8', 18, 9, 2.5, 2);
+  px(x, '#4a6078', 19, 7);
   px(x, '#f08030', 20, 7); // beak
   px(x, '#d858a0', 18, 8); // purple iridescent neck
   px(x, '#2a2830', 15, 10); // wing tip

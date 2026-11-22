@@ -5,24 +5,47 @@
 // Rumah ini dikeluarkan dari pembuat rumah kode (sprout_houses.js); houseBlue & kios tetap dari sana. Matikan: REF_HOUSES.on = false.
 const REF_HOUSES = {
   on: true,
-  map: { gpt_i_houseA: 'sp_houseA', houseA: 'sp_houseA', gpt_i_houseB: 'sp_houseB', houseB: 'sp_houseB', gpt_i_houseC: 'sp_houseC',
-    houseC: 'sp_houseC', gpt_v_house_red_cottage: 'sp_house_red_cottage', gpt_v_house_brown_cottage: 'sp_house_brown_cottage',
-    gpt_v_blacksmith_forge: 'sp_blacksmith_forge' },
+  map: {
+    gpt_i_houseA: 'sp_houseA', i_houseA: 'sp_houseA', houseA: 'sp_houseA',
+    gpt_i_houseB: 'sp_houseB', i_houseB: 'sp_houseB', houseB: 'sp_houseB',
+    gpt_i_houseC: 'sp_houseC', i_houseC: 'sp_houseC', houseC: 'sp_houseC',
+    gpt_v_house_red_cottage: 'sp_house_red_cottage', house_red_cottage: 'sp_house_red_cottage', houseRed: 'sp_house_red_cottage',
+    gpt_v_house_brown_cottage: 'sp_house_brown_cottage', house_brown_cottage: 'sp_house_brown_cottage', houseBrown: 'sp_house_brown_cottage',
+    gpt_v_blacksmith_forge: 'sp_blacksmith_forge', blacksmith_forge: 'sp_blacksmith_forge', blacksmith: 'sp_blacksmith_forge',
+    gpt_v_inn_2story: 'sp_houseC', inn2: 'sp_houseC',
+    gpt_v_village_well: 'sp_b_well', village_well: 'sp_b_well', well: 'sp_b_well',
+    gpt_v_market_stall: 'sp_b_i_market', market_stall: 'sp_b_i_market', i_market: 'sp_b_i_market', market: 'sp_b_i_market',
+  },
 };
 // bangunan lain (tools/bake_buildings.py): tekstur kunci → gambar sp_b_<kunci>, diganti setelah buildTextures membuatnya
 REF_HOUSES.tex = ['academy', 'i_market', 'well', 'windmill', 'blades', 'shrine', 'i_fountain'];
 IMG_LIST.push(...new Set(Object.values(REF_HOUSES.map)), ...REF_HOUSES.tex.map(k => 'sp_b_' + k));
-if (REF_HOUSES.on && typeof SPROUT_HOUSES !== 'undefined' && SPROUT_HOUSES.list) for (const k in REF_HOUSES.map) delete SPROUT_HOUSES.list[k];
+if (REF_HOUSES.on && typeof SPROUT_HOUSES !== 'undefined' && SPROUT_HOUSES.list) {
+  for (const k in REF_HOUSES.map) delete SPROUT_HOUSES.list[k];
+  for (const k of REF_HOUSES.tex) delete SPROUT_HOUSES.list[k];
+}
 const _buildTexturesRef = buildTextures;
 buildTextures = function (sc) {
   if (REF_HOUSES.on && !buildTextures.refDone) {
-    for (const [k, v] of Object.entries(REF_HOUSES.map)) if (IMGEL[k] && IMGEL[v]) { IMGEL[k] = IMGEL[v]; IMGEL[k]._sprout = 1; }
+    for (const [k, v] of Object.entries(REF_HOUSES.map)) {
+      if (IMGEL[v]) { IMGEL[k] = IMGEL[v]; IMGEL[k]._sprout = 1; }
+    }
     buildTextures.refDone = 1;
   }
   const r = _buildTexturesRef.apply(this, arguments), T = sc && sc.textures;
-  if (REF_HOUSES.on && T) for (const k of REF_HOUSES.tex) {
-    const im = IMGEL['sp_b_' + k]; if (!im || (T.exists(k) && T.get(k).getSourceImage() === im)) continue;
-    if (T.exists(k)) T.remove(k); T.addImage(k, im);
+  if (REF_HOUSES.on && T) {
+    for (const [k, v] of Object.entries(REF_HOUSES.map)) {
+      const im = IMGEL[v];
+      if (!im || (T.exists(k) && T.get(k).getSourceImage() === im)) continue;
+      if (T.exists(k)) T.remove(k);
+      T.addImage(k, im);
+    }
+    for (const k of REF_HOUSES.tex) {
+      const im = IMGEL['sp_b_' + k];
+      if (!im || (T.exists(k) && T.get(k).getSourceImage() === im)) continue;
+      if (T.exists(k)) T.remove(k);
+      T.addImage(k, im);
+    }
   }
   return r;
 };

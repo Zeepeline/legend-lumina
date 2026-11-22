@@ -127,7 +127,8 @@ function buildTextures(sc) {
   one('board', artBoard()); one('campfire', artCampfire());
   one('rock', artRock(1)); one('log', artLog()); one('stump', artStump()); one('mush', artMushDeco()); one('shrine', artShrine());
   one('chest', artChest(false)); one('chesto', artChest(true)); one('hay', artHay()); one('windmill', artWindmill()); one('blades', artBlades());
-  one('cavemouth', artCaveMouth()); one('stalag', artStalag(1)); one('cryst', artCrystals(1)); one('crystp', artCrystals(2, ['#8a3ae0', '#c88aff', '#f4e0ff'])); one('bones', artBones());
+  one('cavemouth', artCaveMouth()); one('stalag', artStalag(1)); one('cryst', artCrystals(1));
+  one('crystp', artCrystals(2, ['#8a3ae0', '#c88aff', '#f4e0ff'])); one('bones', artBones()); one('geoderock', artGeodeRock());
   one('anvil', artAnvil()); one('forge', artForge()); addStrip(sc, 'barrier', artBarrier());
   one('mila_grave', artMilaGrave()); one('ruined_shack', artRuinedShack()); one('slaver_cage', artSlaverCage());
   one('prisoner_wagon', artPrisonerWagon()); one('slaver_tent', artSlaverTent()); one('slaver_barricade', artSlaverBarricade());

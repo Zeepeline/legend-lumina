@@ -19,9 +19,9 @@ _Input keyboard, joystick, tombol sentuh, dan layout layar_
 _Dasar gambar: kanvas, warna, aturan gaya (toneC, garis tepi berwarna), renderMap_
 `OUT` 6 · `mk()` 7 · `_rgb` 8 · `h2r()` 9 · `r2h()` 10 · `shade()` 11 · `mix()` 12 · `hash()` 13 · `vnoise()` 14 · `fr` 20 · `px` 21 · `ellF()` 22 · `rgb2hsl()` 30 · `hsl2hex()` 31 · `_tone` 32 · `hueToward()` 33 · `toneC()` 34 · `outline()` 41 · `mkC()` 56 · `strip()` 57 · `SHADEK` 61 · `renderMap()` 62
 
-## src/art/nature/nature_1.js (389 baris)
+## src/art/nature/nature_1.js (387 baris)
 _Gambar alam buatan kode (1) — isi: lihat docs/CODEMAP.md_
-`LEAF` 3 · `LEAF_F` 4 · `BARK` 5 · `foliage()` 7 · `trunk()` 38 · `root()` 49 · `artBigTree()` 60 · `artFruitTree()` 102 · `artRoundTree()` 116 · `artPine()` 124 · `artBush()` 146 · `artRock()` 159 · `artLog()` 160 · `artStump()` 161 · `artMushDeco()` 162 · `artHay()` 163 · `artStalag()` 164 · `artCrystals()` 165 · `artBones()` 171 · `artBramble()` 172 · `artPebbles()` 184 · `artBloom()` 196 · `artCaveMouth()` 212 · `artFrostFlower()` 228 · `artPigeonsSpot()` 258 · `artLotusPondSpot()` 293 · `artCoffeeShrub()` 325 · `artOrchidRock()` 358
+`LEAF` 3 · `LEAF_F` 4 · `BARK` 5 · `foliage()` 7 · `trunk()` 38 · `root()` 49 · `artBigTree()` 60 · `artFruitTree()` 102 · `artRoundTree()` 116 · `artPine()` 124 · `artBush()` 146 · `artRock()` 159 · `artLog()` 160 · `artStump()` 161 · `artMushDeco()` 162 · `artHay()` 163 · `artStalag()` 164 · `artCrystals()` 176 · `artBones()` 186 · `artGeodeRock()` 190 · `artBramble()` 197 · `artPebbles()` 209 · `artBloom()` 221 · `artCaveMouth()` 237 · `artFrostFlower()` 261 · `artPigeonsSpot()` 272 · `artLotusPondSpot()` 291 · `artCoffeeShrub()` 323 · `artOrchidRock()` 356
 
 ## src/art/nature/nature_2.js (372 baris)
 _Gambar alam buatan kode (2) — isi: lihat docs/CODEMAP.md_
@@ -39,9 +39,9 @@ _Gambar alam buatan kode (4) — isi: lihat docs/CODEMAP.md_
 _Dermaga papan berlentera & perahu kayu (gaya tepi air Verdant; referensi pemilik: kolam bertepi batu + dermaga + perahu)._
 `artDock()` 4 · `artBoat()` 18
 
-## src/art/buildings/buildings_1.js (389 baris)
+## src/art/buildings/buildings_1.js (391 baris)
 _Gambar bangunan & properti buatan kode (1) — isi: lihat docs/CODEMAP.md_
-`artHouse()` 3 · `artFountain()` 81 · `artWell()` 106 · `artStall()` 118 · `artBoard()` 134 · `artCampfire()` 147 · `artBench()` 162 · `artBarrel()` 163 · `artCrate()` 164 · `artSign()` 165 · `artFence()` 166 · `artLamp()` 167 · `artShrine()` 169 · `artCrystal()` 178 · `artChest()` 193 · `artWindmill()` 199 · `artBlades()` 207 · `artPond()` 217 · `artBarrier()` 218 · `artAnvil()` 219 · `artForge()` 220 · `artGate()` 221 · `artBoulder()` 222 · `artPlate()` 223 · `artBell()` 224 · `artDummy()` 242 · `artTelescope()` 265 · `artShrineAltar()` 289 · `artFieldOven()` 325 · `artDripStalactite()` 353
+`artHouse()` 3 · `artFountain()` 81 · `artWell()` 106 · `artStall()` 118 · `artBoard()` 134 · `artCampfire()` 147 · `artBench()` 162 · `artBarrel()` 163 · `artCrate()` 164 · `artSign()` 165 · `artFence()` 166 · `artLamp()` 167 · `artShrine()` 169 · `artCrystal()` 178 · `artChest()` 193 · `artWindmill()` 199 · `artBlades()` 207 · `artPond()` 217 · `artBarrier()` 218 · `artAnvil()` 219 · `artForge()` 220 · `artGate()` 221 · `artBoulder()` 232 · `artPlate()` 240 · `artBell()` 246 · `artDummy()` 264 · `artTelescope()` 287 · `artShrineAltar()` 311 · `artFieldOven()` 347 · `artDripStalactite()` 375
 
 ## src/art/buildings/buildings_2.js (400 baris)
 _Gambar bangunan & properti buatan kode (2) — isi: lihat docs/CODEMAP.md_
@@ -103,9 +103,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 220 · obj `tree_redwood` 228 · obj `goblin_torch` 231 · obj `goblin_cauldron` 234 · obj `cryst` 243 · obj `lamp` 246 · obj `viewpoint` 254 · obj `lumina_shard` 288 · obj `scenicbench` 310 · obj `mailbox` 328 · obj `gatehouse` 338 · obj `ctower` 346 · obj `city_bridge` 349 · obj `gpt_city_banner` 352 · obj `gpt_city_banner_sm` 356 · obj `gpt_city_board` 360 · obj `mila_grave` 370 · obj `reflection_spring` 374 · obj `slaver_cage` 378
 
-## src/world/ground.js (398 baris)
+## src/world/ground.js (400 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `GROUND` 38 · `blendW()` 50 · `BLEND_W` 56 · `WILD_G` 57 · `edgeSegs()` 58 · `edgeBlend()` 88 · `TILE_CACHE` 110 · `getTileData()` 111 · `genGround()` 122 · `blockRects()` 331 · `openSides()` 347 · `borderTrees()` 360 · `ringObjects()` 377 · `mapObjects()` 382 · `mapWalls()` 386
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `GROUND` 38 · `blendW()` 50 · `BLEND_W` 56 · `WILD_G` 57 · `edgeSegs()` 58 · `edgeBlend()` 88 · `TILE_CACHE` 110 · `getTileData()` 111 · `genGround()` 122 · `blockRects()` 333 · `openSides()` 349 · `borderTrees()` 362 · `ringObjects()` 379 · `mapObjects()` 384 · `mapWalls()` 388
 
 ## src/world/grass.js (50 baris)
 _RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini (atau ganti file PNG-nya):_
@@ -207,7 +207,7 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 25 · `shadowIndex()` 26
 
-## src/gfx/textures.js (233 baris)
+## src/gfx/textures.js (234 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 44 · `loadImgs()` 64 · `addStrip()` 78 · `darkTree()` 83 · `NPC_W` 85 · `regPortrait()` 86 · `regChar()` 92 · `buildTextures()` 111
 
@@ -247,9 +247,9 @@ _Efek visual sihir: lingkar rune, proyektil, ledakan, dan aura (T318-T322)_
 _Sistem belajar jurus: dipelajari dari guru (NPC), lalu makin mahir dengan dipakai (tingkat I–III)._
 `JURUS` 4 · `MASTERY` 13 · `tierOf` 14 · `learned` 15 · `useJurus()` 16 · `canTeach` 20 · `.learnTalk()` 23 · `.castSpell()` 38
 
-## src/systems/ambient.js (353 baris)
+## src/systems/ambient.js (391 baris)
 _Suasana alam: hewan kecil yang bereaksi ke pemain, kunang-kunang, ikan melompat, bayangan awan, berkas cahaya, kabut, suara latar, tanaman yang bisa dipungut._
-`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 38 · `.addBird()` 69 · `.addFly()` 76 · `.addCrit()` 83 · `.updAmbient()` 91 · `.ambOff()` 212 · `.ripple()` 213 · `.spawnRainEmitters()` 227 · `.rainSplash()` 243 · `.updRainFx()` 251 · `artQuestArrow()` 334 · `.updQuestGuide()` 341
+`ENV` 4 · `artCritters()` 18 · `.spawnAmbient()` 63 · `.addBird()` 107 · `.addFly()` 114 · `.addCrit()` 121 · `.updAmbient()` 129 · `.ambOff()` 250 · `.ripple()` 251 · `.spawnRainEmitters()` 265 · `.rainSplash()` 281 · `.updRainFx()` 289 · `artQuestArrow()` 372 · `.updQuestGuide()` 379
 
 ## src/systems/status.js (125 baris)
 _Efek status: racun/terbakar/dingin pada pemain, terbakar/beku pada musuh_
@@ -535,9 +535,9 @@ _POHON GAYA SPROUT LANDS — pohon biasa di wilayah luar (GRASS_EDGE.maps) memak
 _RUMAH GAYA SPROUT — bangunan desa/kota digambar ulang lewat kode (piksel 2×, garis tepi cokelat lembut, palet hangat),_
 `SP_PAL` 6 · `SPROUT_HOUSES` 17 · `spHouse()` 39 · `spBox3d()` 186 · `spStall()` 248 · `spScale()` 269 · `_buildTexturesHouses` 271
 
-## src/systems/ref_houses.js (29 baris)
+## src/systems/ref_houses.js (52 baris)
 _RUMAH DARI REFERENSI PEMILIK — rumah A/B/C, pondok merah/cokelat & pandai besi memakai gambar hasil tools/bake_houses.py_
-`REF_HOUSES` 6 · `_buildTexturesRef` 16
+`REF_HOUSES` 6 · `_buildTexturesRef` 27
 
 ## src/systems/object_shadows.js (81 baris)
 _BAYANGAN OBJEK — elips lembut di kaki setiap objek luar ruang (semak, batu, tunggul, bunga, jamur, pinus, pohon buah,_

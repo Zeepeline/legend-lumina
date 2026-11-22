@@ -41,7 +41,7 @@ const GROUND = {
   meadow: { g: ['#4e8a40', '#5ea24a', '#74bc58', '#88ce64'], edge: '#407632', path: 'dirt', tuft: '#40742e', tuft2: '#96dc68' },
   swamp: { g: ['#4a6a4a', '#567a50', '#628858', '#507048'], edge: '#3e5a3e', path: 'dirt', tuft: '#3a5a3a', tuft2: '#8ab070' },
   snow: { g: ['#e2ecf6', '#eaf2fa', '#dae6f2', '#f2f7fc'], edge: '#c4d6e8', path: 'dirt', tuft: '#b4c8de', tuft2: '#ffffff', ice: 1 },
-  cave: { g: ['#2c2834', '#332e3c', '#28242e', '#38323f'], path: 'cave' },
+  cave: { g: ['#221d2a', '#2a2434', '#322c3d', '#3b3447'], path: 'cave' },
 };
 // ---- gradasi tanah di perbatasan wilayah (dunia terbuka) ----
 // Dalam pita BLEND_W px dari tepi, piksel memakai warna tanah tetangga dengan peluang naik dari 0 ke 0,5 tepat di garis.
@@ -144,7 +144,7 @@ function genGround(M, rect) {
   const Gc = GP.g.map(h2r), glow = M.glow, cave = GP.path === 'cave';
   const blend = edgeBlend(M);
   const STONE = ['#eae2d6', '#ddd4c9', '#f1ebe1', '#d2c8bd'].map(h2r), MORT = h2r('#b5b8a2'), MORT2 = h2r('#9ea38a');
-  const CSTONE = ['#5a5466', '#524c5e', '#625c6e', '#4a4456'].map(h2r), CMORT = h2r('#2a2630');
+  const CSTONE = ['#423c4e', '#4b4558', '#383242', '#524b60'].map(h2r), CMORT = h2r('#1e1a24'), CCLAY = h2r('#2f2938');
   const DIRT = ['#c9a46e', '#ba9460', '#d8b47e', '#ad8656'].map(h2r);
   const EDGE = GP.edge ? h2r(GP.edge) : null, R = M.river, ponds = pondsAll(M), PL = pondsNear(M, RX, RY, RX + RW, RY + RH);
   const put = (i, c, f = 0) => { let r = c[0], g = c[1], b = c[2]; if (f > 0) { r += (255 - r) * f; g += (255 - g) * f; b += (255 - b) * f; } else if (f < 0) { r *= 1 + f; g *= 1 + f; b *= 1 + f; } D[i] = r; D[i + 1] = g; D[i + 2] = b; D[i + 3] = 255; };
@@ -198,10 +198,14 @@ function genGround(M, rect) {
     }
     const d = sd(x, y);
     if (cave) {
-      if (d < 0) { const v = vor(x, y, 9, 21); if (v.m < 1.2) { put(i, CMORT); continue; } put(i, CSTONE[Math.floor(hash(v.id, 3, 13) * 4)], v.v < -3 ? .14 : v.v > 3 ? -.12 : 0); continue; }
-      // dinding batu
-      const n = vnoise(x, y, 10, 5) * .6 + vnoise(x, y, 3, 6) * .4; let c = Gc[n < .35 ? 2 : n < .55 ? 0 : n < .72 ? 1 : 3];
-      if (d < 3) c = h2r('#6e6680'); else if (d < 6) c = h2r('#4a4456');
+      if (d < 0) {
+        const v = vor(x, y, 9, 21); if (v.m < 1.15) { put(i, CMORT); continue; }
+        const rk = hash(v.id, 3, 13), col = (d > -2.5 && rk > .75) ? CCLAY : CSTONE[Math.floor(rk * 4)];
+        put(i, col, v.v < -3 ? .12 : v.v > 3 ? -.10 : 0); continue;
+      }
+      const st = Math.sin(y * .45 + hash(Math.floor(y / 4), 1, 9) * 2.2) > 0, n = vnoise(x, y, 12, 6) * .55 + vnoise(x, y, 4, 8) * .45;
+      const c = d < 2.2 ? h2r(st ? '#8e869e' : '#766e84') : d < 5.5 ? h2r(st ? '#584f66' : '#473f54') :
+        d < 10 ? h2r(st ? '#3b3346' : '#2d2636') : h2r(n > .5 ? '#201a28' : '#17121e');
       put(i, c); continue;
     }
     if (VERDANT[M.ground] && GP.path === 'dirt' && d >= -7 && d <= 7 && typeof verdantEdgePix === 'function') {
@@ -261,22 +265,23 @@ function genGround(M, rect) {
         if (vp) cNeigh = vp;
       }
       const t = bl.t;
-      const mixed = [
-        Math.round(baseCol[0] + (cNeigh[0] - baseCol[0]) * t),
-        Math.round(baseCol[1] + (cNeigh[1] - baseCol[1]) * t),
-        Math.round(baseCol[2] + (cNeigh[2] - baseCol[2]) * t)
-      ];
+      const mixed = [Math.round(baseCol[0] + (cNeigh[0] - baseCol[0]) * t), Math.round(baseCol[1] + (cNeigh[1] - baseCol[1]) * t), Math.round(baseCol[2] + (cNeigh[2] - baseCol[2]) * t)];
       put(i, mixed, f);
-    } else {
-      put(i, baseCol, f);
-    }
+    } else put(i, baseCol, f);
   }
   if (typeof grassPass === 'function') grassPass(D, RW, RH, GX + RX, GY + RY, M); /* rumput satu sumber (world/grass.js) */
   const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);
   const out = (X, Y) => X < RX - 10 || X > RX + RW + 10 || Y < RY - 10 || Y > RY + RH + 10;
   const near = (X, Y) => { if (R && Math.abs(Y - riverY(R, X)) < R.w / 2 + 6) return true; return ponds.length > 0 && waterE(ponds, X, Y, GX, GY) < 1 + 14 / Math.max(waterE.r, 1); };
   if (cave) {
-    for (let n = 0; n < W * H / 260; n++) { const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); if (out(X, Y)) continue; const d = sd(X, Y); if (d > 2 && d < 60 && hash(n, 3, 22) > .6) { const col = hash(n, 4, 22) > .5 ? '#9a6aff' : '#5ac8ff'; px(x, col, X, Y); px(x, shade(col, .5), X, Y - 1); } else if (d < -4) { px(x, '#6a6476', X, Y); } }
+    for (let n = 0; n < W * H / 260; n++) {
+      const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); if (out(X, Y)) continue;
+      const d = sd(X, Y);
+      if (d > 1.8 && d < 45 && hash(n, 3, 22) > .55) {
+        const hV = hash(n, 4, 22), col = hV > .6 ? '#a87df8' : hV > .25 ? '#5ac8ff' : '#6ec89b';
+        px(x, col, X, Y); px(x, shade(col, .4), X, Y - 1);
+      } else if (d < -4 && hash(n, 5, 22) > .7) px(x, hash(n, 6, 22) > .5 ? '#6a6276' : '#384858', X, Y);
+    }
     return c;
   }
   const vOK = VERDANT[M.ground] && verdantTiles(M);
@@ -317,11 +322,8 @@ function genGround(M, rect) {
       const X = P[0] + Math.cos(a) * P[2] * r, Y = P[1] + Math.sin(a) * P[3] * r;
       if (waterE(ponds, X, Y, GX, GY) > .75) continue;
       const pad = typeof IMGEL !== 'undefined' ? (n % 2 ? IMGEL.deco_water_lotus : IMGEL.deco_water_lilypad) : null;
-      if (pad && pad.width) {
-        x.drawImage(pad, X - pad.width / 4, Y - pad.height / 4, pad.width / 2, pad.height / 2);
-      } else {
-        ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5);
-      }
+      if (pad && pad.width) x.drawImage(pad, X - pad.width / 4, Y - pad.height / 4, pad.width / 2, pad.height / 2);
+      else { ellF(x, '#3f8a34', X, Y, 4, 2.5); ellF(x, '#6cc04a', X - 1, Y - .5, 2.5, 1.5); }
     }
   }
   if (typeof grassEdgeCanvas === 'function') grassEdgeCanvas(x, RW, RH, RX, RY, GX + RX, GY + RY, M); /* tepi petak (kota, tanpa gambar tanah) */
