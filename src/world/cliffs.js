@@ -140,12 +140,13 @@
         if (dir === 'W') extra.flipX = true;
         if (isSnow) extra.tint = 0xd8eeff;
         if (tier === 2) extra.tier2 = true;
+        const vert = dir === 'E' || dir === 'W'; if (vert) extra.vert = 1; /* tebing tegak: gambar & tembok tegak */
 
         M._cliffObjs.push([type, cx, cy, extra]);
 
         if (!onSlope) {
-          const wx = cx - 45, wy = cy - 12;
-          M._cliffWalls.push([wx, wy, 90, 24]);
+          if (vert) M._cliffWalls.push([cx - 14, cy - 50, 28, 100]);
+          else M._cliffWalls.push([cx - 45, cy - 12, 90, 24]);
         }
       }
     });

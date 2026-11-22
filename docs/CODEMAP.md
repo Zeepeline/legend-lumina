@@ -511,9 +511,9 @@ _Pantulan Karakter di Air (T460) — referensi: RPG klasik / Sea of Stars_
 _Bayangan Daun Bergoyang & Proyeksi Miring Dinamis (T448, T552) — referensi: Cobo #18, Stardew_
 
 
-## src/systems/sprout_deco.js (103 baris)
+## src/systems/sprout_deco.js (120 baris)
 _SEMAK, BATU & HIASAN GAYA SPROUT LANDS — untuk peta di GRASS_EDGE.maps (world/grass_edge.js)._
-`SPROUT_DECO` 7 · `SPROUT_OBJ` 20 · `sproutArt()` 27 · `SPROUT_ALIAS` 36 · `sproutDecoFor()` 44 · `_mapObjectsSprout` 76 · `sproutRegionAt()` 94
+`SPROUT_DECO` 7 · `SPROUT_OBJ` 20 · `sproutArt()` 27 · `SPROUT_ALIAS` 36 · `sproutHills()` 41 · `CLIFF_ROW` 47 · `CLIFF_ART` 48 · `sproutDecoFor()` 58 · `_mapObjectsSprout` 90 · `sproutRegionAt()` 111
 
 ## src/systems/water_fx.js (86 baris)
 _EFEK AIR HIDUP gaya Sprout — riak melingkar, kilau matahari, buih ombak yang menyapu pasir._
@@ -627,7 +627,7 @@ _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung da
 _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),_
 `ORG_SKIP` 5 · `ORG_FILL` 6 · `orgPlanned()` 7 · `orgCurve()` 9
 
-## src/world/cliffs.js (180 baris)
+## src/world/cliffs.js (181 baris)
 _T442, T445 & Elevated Border Cliffs:_
 
 

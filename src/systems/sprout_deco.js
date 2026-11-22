@@ -36,10 +36,24 @@ for (const k in SPROUT_OBJ) {
 const SPROUT_ALIAS = { verdant_bush: 'spBush', verdant_bush_small: 'spBerry', verdant_stump: 'spStump', verdant_rock_large: 'spRockB',
   verdant_rock_med: 'spRock', verdant_rock_pillar: 'spRockB', verdant_log: 'spLog' };
 for (const k in SPROUT_ALIAS) window['art' + k[0].toUpperCase() + k.slice(1)] = () => sproutArt(SPROUT_ALIAS[k]);
-/* tebing verdant_cliff_*: belum ada gambar → tetap kosong (tembok tak terlihat, sama seperti sebelumnya) sampai asetnya dibuat */
-for (const k of ['verdant_cliff_corner', 'verdant_cliff_straight', 'verdant_cliff_slope']) {
-  window['art' + k[0].toUpperCase() + k.slice(1)] = () => mk(32, 32)[0];
+// tebing dari lembar Sprout Hills (gnd_hills_sprout.png, petak 16 px, digambar 2×):
+// mendatar = dataran rumput + muka tanah; tegak (kiri/kanan) = tepi dataran; lereng = tangga (bisa dilalui)
+function sproutHills(parts, w, h) {
+  const im = IMGEL.gnd_hills_sprout; if (!im) return mk(32, 32)[0];
+  const [c, x] = mk(w * 32, h * 32); x.imageSmoothingEnabled = false;
+  for (const [sx, sy, dx, dy] of parts) x.drawImage(im, sx * 16, sy * 16, 16, 16, dx * 32, dy * 32, 32, 32);
+  return c;
 }
+const CLIFF_ROW = [[2, 1, 0, 0], [2, 1, 1, 0], [2, 1, 2, 0], [2, 1, 3, 0], [2, 2, 0, 1], [2, 2, 1, 1], [2, 2, 2, 1], [2, 2, 3, 1]];
+const CLIFF_ART = {
+  verdant_cliff_straight: () => sproutHills(CLIFF_ROW, 4, 2),
+  verdant_cliff_corner: () => sproutHills(CLIFF_ROW, 4, 2),
+  verdant_cliff_vert: () => sproutHills([[3, 1, 0, 0], [3, 1, 0, 1], [3, 1, 0, 2], [3, 1, 0, 3]], 1, 4),
+  verdant_cliff_slope: () => sproutHills([[2, 1, 0, 0], [4, 4, 1, 0], [5, 4, 2, 0], [2, 1, 3, 0],
+    [2, 2, 0, 1], [4, 5, 1, 1], [5, 5, 2, 1], [2, 2, 3, 1]], 4, 2),
+};
+OBJ.verdant_cliff_vert = { key: 'verdant_cliff_vert', col: [0, 0, 0] };
+for (const k in CLIFF_ART) window['art' + k[0].toUpperCase() + k.slice(1)] = CLIFF_ART[k];
 // hiasan tambahan untuk satu wilayah (koordinat lokal), stabil per posisi
 function sproutDecoFor(M, base) {
   const E = typeof grassEdgeData === 'function' && grassEdgeData(M); if (!E) return null;
@@ -87,6 +101,9 @@ mapObjects = function (M) {
   W.spawnObj = function (o) {
     const s = _spawn0.apply(this, arguments), sw = SPROUT_DECO.swap[o[0]];
     if (s && sw && SPROUT_DECO.on && this.textures.exists(sw) && sproutRegionAt(this, o[1], o[2])) s.setTexture(sw, 0);
+    if (s && o[3] && o[3].vert && this.textures.exists('verdant_cliff_vert')) { /* tebing tegak */
+      s.setTexture('verdant_cliff_vert', 0).setOrigin(.5, .5);
+    }
     return s;
   };
 })();
