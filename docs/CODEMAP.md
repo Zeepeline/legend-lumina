@@ -547,13 +547,17 @@ _BAYANGAN OBJEK — elips lembut di kaki setiap objek luar ruang (semak, batu, t
 _JEMBATAN KAYU GAYA SPROUT — di titik penyeberangan lama (sungai Hutan M.river.bridge, jembatan kecil Danau)._
 `BRIDGES` 5 · `bridgeFit()` 14 · `bridgeArt()` 34 · `bridgesFor()` 59
 
-## src/systems/world_fit.js (111 baris)
+## src/systems/world_fit.js (114 baris)
 _DUNIA COCOK DENGAN GAMBAR — tabrakan & objek mengikuti tanah yang TERLIHAT (gambar peta + autotile grass_edge), bukan data lama._
-`WORLD_FIT` 7 · `regionOwner()` 8 · `fitWater` 15 · `fitOn` 16 · `fitBenua` 17 · `fitBridgeRects()` 19 · `waterRects()` 29 · `fitObjects()` 54 · `fitClipGround()` 102
+`WORLD_FIT` 7 · `regionOwner()` 9 · `fitWater` 16 · `fitOn` 17 · `fitBenua` 18 · `fitBridgeRects()` 20 · `waterRects()` 30 · `fitObjects()` 57 · `fitClipGround()` 105
 
-## src/systems/nature.js (213 baris)
+## src/systems/nature.js (225 baris)
 _ALAM — sebaran pohon mengikuti pola alami, satu baris pohon pembatas, semak & bunga bergoyang._
-`NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureBox()` 37 · `natureScatter()` 41 · `natureTreesOnGrass()` 101 · `natureBorder()` 119 · `natureSwayTex()` 171
+`NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureFoot()` 37 · `natInFoot` 46 · `natureBox()` 48 · `natureScatter()` 52 · `natureTreesOnGrass()` 113 · `natureBorder()` 131 · `natureSwayTex()` 183
+
+## src/systems/place_fit.js (100 baris)
+_LETAK SESUAI TANAH — data peta lama (musuh, peti, NPC, titik pancing) dibuat untuk tanah lama; tanah sekarang = gambar peta._
+`PLACE_FIT` 9 · `placeFitMap()` 10 · `pathCrossings()` 49
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_

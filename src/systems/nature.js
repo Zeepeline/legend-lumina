@@ -33,6 +33,17 @@ function natureFields(M) {
   };
   return (M._nat = { E, C, R, dW: bfs(i => E.Wm[i]), dN: bfs(i => !E.grass[i] || E.Wm[i]) });
 }
+// tapak benda besar (rumah, tembok, benteng, kios …) dari objek peta: [x0, y0, x1, y1] — hiasan & pohon tidak boleh menimpa
+function natureFoot(L) {
+  const out = [];
+  for (const o of L) {
+    const d = OBJ[o[0]]; if (!d || !d.col || d.col[0] < 40) continue;
+    const hw = d.col[0] / 2 + 6, H = d.fade || d.mm ? Math.max(40, Math.min(170, d.col[0] * 1.4)) : d.col[1] + d.col[2] + 24;
+    out.push([o[1] - hw, o[2] - H, o[1] + hw, o[2] + 12]);
+  }
+  return out;
+}
+const natInFoot = (F, x, y, px = 0, py = 0) => F.some(r => x > r[0] - px && x < r[2] + px && y > r[1] && y < r[3] + py);
 // kotak dalam (di dalam baris pembatas)
 function natureBox(M) {
   const b = M.border;
@@ -46,7 +57,8 @@ function natureScatter(M, spec, base) {
   const isU = t => NATURE.underRx.test(t);
   const trees = base.filter(o => natIsTree(o[0])), under = base.filter(o => isU(o[0])), rest = base.filter(o => !natIsTree(o[0]) && !isU(o[0]));
   const tTypes = spec.types.filter(([t]) => natIsTree(t)), tSum = tTypes.reduce((a, [, p]) => a + p, 0);
-  const clear = (x, y) => scatterClearBase(M, () => 999, [], null, [0, 0], x, y, { min: 0 });
+  const foot = natureFoot(M.objs || []);
+  const clear = (x, y, tree) => !natInFoot(foot, x, y, tree ? 30 : 0, tree ? 70 : 0) && scatterClearBase(M, () => 999, [], null, [0, 0], x, y, { min: 0 });
   const [x0, y0, x1, y1] = natureBox(M), out = [];
   // sel spasial untuk jarak antarpohon
   const B = new Map(), bk = (x, y) => Math.floor(x / 64) + ',' + Math.floor(y / 64);
@@ -73,7 +85,7 @@ function natureScatter(M, spec, base) {
     const sp = Math.round((spec.sp || 52) * (isForest ? .82 : .92));
     for (const [, x, y] of cand) {
       if (out.length >= trees.length) break;
-      if (near(x, y, sp, NATURE.treeRx) || !clear(x, y)) continue;
+      if (near(x, y, sp, NATURE.treeRx) || !clear(x, y, 1)) continue;
       let r = vnoise(x, y, NATURE.species, seed + 9) * tSum, t = tTypes[0][0]; /* jenis berpetak */
       for (const [tt, p] of tTypes) { if (r < p) { t = tt; break; } r -= p; }
       const snowy = M.id === 'meadow' && y > M.h - 400 && hash(Math.round(x), Math.round(y), 33) < (y - (M.h - 400)) / 400;
@@ -94,7 +106,7 @@ function natureScatter(M, spec, base) {
     }
   }
   // 3) lainnya (batu, pot, …) tetap, asal tidak di air
-  for (const o of rest) { const k = cell(o[1], o[2]); if (k >= 0 && !F.E.Wm[k] && !near(o[1], o[2], 22)) put(o); }
+  for (const o of rest) { const k = cell(o[1], o[2]); if (k >= 0 && !F.E.Wm[k] && !near(o[1], o[2], 22) && !natInFoot(foot, o[1], o[2])) put(o); }
   return out;
 }
 // pohon yang berdiri di tanah/pasir/air (data peta lama): geser ke rumput terdekat (≤ 4 kotak), buang bila di air tanpa rumput
@@ -140,9 +152,9 @@ function natureBorder(M, L) {
     const _sd0 = sproutDecoFor;
     sproutDecoFor = function (M, base) {
       const L = _sd0.apply(this, arguments); if (!L) return L;
-      const T = base.filter(o => natIsTree(o[0])), R = NATURE.decoNear;
-      return L.filter(o => !/^sp(Bush|Berry|Mush)/.test(o[0]) || T.some(t => Math.abs(t[1] - o[1]) < R && Math.abs(t[2] - o[2]) < R) ||
-        hash(o[1], o[2], 611) < NATURE.decoKeep);
+      const T = base.filter(o => natIsTree(o[0])), R = NATURE.decoNear, foot = natureFoot(base);
+      return L.filter(o => !natInFoot(foot, o[1], o[2]) && (!/^sp(Bush|Berry|Mush)/.test(o[0]) ||
+        T.some(t => Math.abs(t[1] - o[1]) < R && Math.abs(t[2] - o[2]) < R) || hash(o[1], o[2], 611) < NATURE.decoKeep));
     };
   }
   const _mo0 = mapObjects;

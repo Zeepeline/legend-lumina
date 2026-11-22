@@ -4,7 +4,8 @@
 //    (REGION_PRI, lalu urutan daftar): tanah wilayah lain di situ dibuat transparan, tembok & objeknya di situ dibuang.
 // 2) Tembok air = kisi air grass_edge (Wm), dikurangi jembatan → menggantikan tembok kolam lama (blockRects) & sungai rumus (M.river).
 // 3) Objek di atas air digeser ke daratan terdekat (≤ 3 kotak), selain benda air (teratai, perahu, dermaga, …).
-const WORLD_FIT = { on: true, waterOk: /lily|lotus|WRock|boat|dock|bridge|fish|reed|cattail|ripple|duck|buoy|cliff/i, pri: { lake: -1 } };
+const WORLD_FIT = { on: true, waterOk: /lily|lotus|WRock|boat|dock|bridge|fish|reed|cattail|ripple|duck|buoy|cliff/i, pri: { lake: -1 },
+  iceFord: ['snow'], fordR: 8 }; /* es beku Puncak Beku: jalan lama di atas es tetap bisa dilalui (seperti arungan lama) */
 function regionOwner(x, y) {
   if (typeof WORLD_POS === 'undefined' || typeof isOutdoorRegion !== 'function') return null;
   const pr = k => WORLD_FIT.pri[k] || 0;
@@ -29,8 +30,10 @@ function fitBridgeRects(M) {
 function waterRects(M) {
   const E = grassEdgeData(M); if (!E || !E.Wm) return null;
   const S = GRASS_EDGE.cell, br = fitBridgeRects(M), P = fitBenua(M) ? WORLD_POS[M.id] : null, out = [];
+  const sd = WORLD_FIT.iceFord.includes(M.id) && M.paths && typeof makeSD === 'function' ? makeSD(M) : null;
   const blocked = (c, r) => {
     if (!E.Wm[r * E.cols + c]) return false; const x = c * S + S / 2, y = r * S + S / 2;
+    if (sd && sd(x, y) <= WORLD_FIT.fordR) return false;
     if (br.some(b => x >= b[0] && x < b[0] + b[2] && y >= b[1] && y < b[1] + b[3])) return false;
     if (P && regionOwner(P[0] + x, P[1] + y) !== M.id) return false;
     return true;

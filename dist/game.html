@@ -8837,7 +8837,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.68.0';
+const GAME_VERSION = '1.69.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
@@ -25470,7 +25470,8 @@ function bridgesFor(sc, M, ox, oy) {
 //    (REGION_PRI, lalu urutan daftar): tanah wilayah lain di situ dibuat transparan, tembok & objeknya di situ dibuang.
 // 2) Tembok air = kisi air grass_edge (Wm), dikurangi jembatan → menggantikan tembok kolam lama (blockRects) & sungai rumus (M.river).
 // 3) Objek di atas air digeser ke daratan terdekat (≤ 3 kotak), selain benda air (teratai, perahu, dermaga, …).
-const WORLD_FIT = { on: true, waterOk: /lily|lotus|WRock|boat|dock|bridge|fish|reed|cattail|ripple|duck|buoy|cliff/i, pri: { lake: -1 } };
+const WORLD_FIT = { on: true, waterOk: /lily|lotus|WRock|boat|dock|bridge|fish|reed|cattail|ripple|duck|buoy|cliff/i, pri: { lake: -1 },
+  iceFord: ['snow'], fordR: 8 }; /* es beku Puncak Beku: jalan lama di atas es tetap bisa dilalui (seperti arungan lama) */
 function regionOwner(x, y) {
   if (typeof WORLD_POS === 'undefined' || typeof isOutdoorRegion !== 'function') return null;
   const pr = k => WORLD_FIT.pri[k] || 0;
@@ -25495,8 +25496,10 @@ function fitBridgeRects(M) {
 function waterRects(M) {
   const E = grassEdgeData(M); if (!E || !E.Wm) return null;
   const S = GRASS_EDGE.cell, br = fitBridgeRects(M), P = fitBenua(M) ? WORLD_POS[M.id] : null, out = [];
+  const sd = WORLD_FIT.iceFord.includes(M.id) && M.paths && typeof makeSD === 'function' ? makeSD(M) : null;
   const blocked = (c, r) => {
     if (!E.Wm[r * E.cols + c]) return false; const x = c * S + S / 2, y = r * S + S / 2;
+    if (sd && sd(x, y) <= WORLD_FIT.fordR) return false;
     if (br.some(b => x >= b[0] && x < b[0] + b[2] && y >= b[1] && y < b[1] + b[3])) return false;
     if (P && regionOwner(P[0] + x, P[1] + y) !== M.id) return false;
     return true;
@@ -25610,6 +25613,17 @@ function natureFields(M) {
   };
   return (M._nat = { E, C, R, dW: bfs(i => E.Wm[i]), dN: bfs(i => !E.grass[i] || E.Wm[i]) });
 }
+// tapak benda besar (rumah, tembok, benteng, kios …) dari objek peta: [x0, y0, x1, y1] — hiasan & pohon tidak boleh menimpa
+function natureFoot(L) {
+  const out = [];
+  for (const o of L) {
+    const d = OBJ[o[0]]; if (!d || !d.col || d.col[0] < 40) continue;
+    const hw = d.col[0] / 2 + 6, H = d.fade || d.mm ? Math.max(40, Math.min(170, d.col[0] * 1.4)) : d.col[1] + d.col[2] + 24;
+    out.push([o[1] - hw, o[2] - H, o[1] + hw, o[2] + 12]);
+  }
+  return out;
+}
+const natInFoot = (F, x, y, px = 0, py = 0) => F.some(r => x > r[0] - px && x < r[2] + px && y > r[1] && y < r[3] + py);
 // kotak dalam (di dalam baris pembatas)
 function natureBox(M) {
   const b = M.border;
@@ -25623,7 +25637,8 @@ function natureScatter(M, spec, base) {
   const isU = t => NATURE.underRx.test(t);
   const trees = base.filter(o => natIsTree(o[0])), under = base.filter(o => isU(o[0])), rest = base.filter(o => !natIsTree(o[0]) && !isU(o[0]));
   const tTypes = spec.types.filter(([t]) => natIsTree(t)), tSum = tTypes.reduce((a, [, p]) => a + p, 0);
-  const clear = (x, y) => scatterClearBase(M, () => 999, [], null, [0, 0], x, y, { min: 0 });
+  const foot = natureFoot(M.objs || []);
+  const clear = (x, y, tree) => !natInFoot(foot, x, y, tree ? 30 : 0, tree ? 70 : 0) && scatterClearBase(M, () => 999, [], null, [0, 0], x, y, { min: 0 });
   const [x0, y0, x1, y1] = natureBox(M), out = [];
   // sel spasial untuk jarak antarpohon
   const B = new Map(), bk = (x, y) => Math.floor(x / 64) + ',' + Math.floor(y / 64);
@@ -25650,7 +25665,7 @@ function natureScatter(M, spec, base) {
     const sp = Math.round((spec.sp || 52) * (isForest ? .82 : .92));
     for (const [, x, y] of cand) {
       if (out.length >= trees.length) break;
-      if (near(x, y, sp, NATURE.treeRx) || !clear(x, y)) continue;
+      if (near(x, y, sp, NATURE.treeRx) || !clear(x, y, 1)) continue;
       let r = vnoise(x, y, NATURE.species, seed + 9) * tSum, t = tTypes[0][0]; /* jenis berpetak */
       for (const [tt, p] of tTypes) { if (r < p) { t = tt; break; } r -= p; }
       const snowy = M.id === 'meadow' && y > M.h - 400 && hash(Math.round(x), Math.round(y), 33) < (y - (M.h - 400)) / 400;
@@ -25671,7 +25686,7 @@ function natureScatter(M, spec, base) {
     }
   }
   // 3) lainnya (batu, pot, …) tetap, asal tidak di air
-  for (const o of rest) { const k = cell(o[1], o[2]); if (k >= 0 && !F.E.Wm[k] && !near(o[1], o[2], 22)) put(o); }
+  for (const o of rest) { const k = cell(o[1], o[2]); if (k >= 0 && !F.E.Wm[k] && !near(o[1], o[2], 22) && !natInFoot(foot, o[1], o[2])) put(o); }
   return out;
 }
 // pohon yang berdiri di tanah/pasir/air (data peta lama): geser ke rumput terdekat (≤ 4 kotak), buang bila di air tanpa rumput
@@ -25717,9 +25732,9 @@ function natureBorder(M, L) {
     const _sd0 = sproutDecoFor;
     sproutDecoFor = function (M, base) {
       const L = _sd0.apply(this, arguments); if (!L) return L;
-      const T = base.filter(o => natIsTree(o[0])), R = NATURE.decoNear;
-      return L.filter(o => !/^sp(Bush|Berry|Mush)/.test(o[0]) || T.some(t => Math.abs(t[1] - o[1]) < R && Math.abs(t[2] - o[2]) < R) ||
-        hash(o[1], o[2], 611) < NATURE.decoKeep);
+      const T = base.filter(o => natIsTree(o[0])), R = NATURE.decoNear, foot = natureFoot(base);
+      return L.filter(o => !natInFoot(foot, o[1], o[2]) && (!/^sp(Bush|Berry|Mush)/.test(o[0]) ||
+        T.some(t => Math.abs(t[1] - o[1]) < R && Math.abs(t[2] - o[2]) < R) || hash(o[1], o[2], 611) < NATURE.decoKeep));
     };
   }
   const _mo0 = mapObjects;
@@ -25785,6 +25800,106 @@ function natureSwayTex(sc, key) {
     _up0.apply(this, arguments);
     this._bwT = (this._bwT || 0) - (delta || 16);
     if (this._bwT <= 0 && this.bushes) { this._bwT = 2000; this.bushes = this.bushes.filter(b => b.active); } /* objek petak yang dibuang */
+  };
+})();
+
+'use strict';
+// LETAK SESUAI TANAH — data peta lama (musuh, peti, NPC, titik pancing) dibuat untuk tanah lama; tanah sekarang = gambar peta.
+// Sekali per wilayah (saat mapObjects pertama, gambar sudah dimuat), data diubah di tempat:
+// - musuh/peti/NPC yang jatuh di air atau di dalam tembok/benda → digeser ke petak darat bebas terdekat (≤ PLACE_FIT.maxR kotak);
+// - jalan lama (M.paths) yang menyeberangi air di gambar (dulu "arungan" yang bisa dilalui) → jembatan kayu otomatis
+//   (BRIDGES.list ditambah; tembok air world_fit otomatis berlubang di jembatan);
+// - titik pancing yang tidak di air / terlalu jauh dari darat → dipindah ke petak air di tepi darat terdekat (riak tetap di air,
+//   Arka bisa menjangkaunya dari darat, jarak interaksi 26 px).
+const PLACE_FIT = { on: true, pad: 6, maxR: 8, fishMax: 12, ford: { on: true, max: 200, gap: 90, side: 24 } };
+function placeFitMap(M, L) {
+  if (M._pf || !PLACE_FIT.on) return;
+  const E = typeof grassEdgeData === 'function' && grassEdgeData(M); if (!E || !E.Wm) return;
+  M._pf = 1;
+  const S = GRASS_EDGE.cell, C = E.cols, R = E.rows, P = PLACE_FIT.pad, B = typeof BENUA !== 'undefined' && BENUA && WORLD_POS[M.id];
+  const rects = [...mapWalls(M), ...blockRects(M)].map(w => [w[0], w[1], w[2], w[3]]);
+  for (const o of L) { const d = OBJ[o[0]]; if (d && d.col && d.col[0]) rects.push([o[1] - d.col[0] / 2, o[2] - d.col[1] - d.col[2], d.col[0], d.col[1]]); }
+  const wetC = (c, r) => c < 0 || r < 0 || c >= C || r >= R || !!E.Wm[r * C + c];
+  const wet = (x, y) => wetC(Math.floor(x / S), Math.floor(y / S));
+  const hit = (x, y) => rects.some(w => x > w[0] - P && x < w[0] + w[2] + P && y > w[1] - P && y < w[1] + w[3] + P);
+  const mine = (x, y) => !B || (typeof regionOwner !== 'function') || regionOwner(B[0] + x, B[1] + y) === M.id;
+  const bad = (x, y) => wet(x, y) || wet(x, y - 8) || hit(x, y);
+  const free = (x, y) => { /* null = sudah baik / tak ada tempat */
+    if (!bad(x, y)) return null;
+    for (let d = 1; d <= PLACE_FIT.maxR; d++) for (let j = -d; j <= d; j++) for (let i = -d; i <= d; i++) {
+      if (Math.max(Math.abs(i), Math.abs(j)) !== d) continue;
+      const X = x + i * S, Y = y + j * S;
+      if (X > 24 && Y > 24 && X < M.w - 24 && Y < M.h - 24 && !bad(X, Y) && mine(X, Y)) return [X, Y];
+    }
+    return null;
+  };
+  const log = [];
+  for (const n of M.npcs || []) { const p = free(n.x, n.y); if (p) { log.push('npc ' + n.id); n.x = p[0]; n.y = p[1]; } }
+  for (const e of M.enemies || []) { const p = free(e[1], e[2]); if (p) { log.push('musuh ' + e[0]); e[1] = p[0]; e[2] = p[1]; } }
+  for (const c of M.chests || []) { const p = free(c.x, c.y); if (p) { log.push('peti ' + c.id); c.x = p[0]; c.y = p[1]; } }
+  // titik pancing: petak air yang bertetangga dengan darat bebas
+  const shore = (c, r) => wetC(c, r) && c >= 0 && r >= 0 && c < C && r < R &&
+    [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([i, j]) => !wetC(c + i, r + j) && !hit((c + i) * S + S / 2, (r + j) * S + S / 2));
+  for (const f of M.fish || []) {
+    const c = Math.floor(f[0] / S), r = Math.floor(f[1] / S); if (shore(c, r)) continue;
+    let best = null;
+    for (let d = 1; d <= PLACE_FIT.fishMax && !best; d++) for (let j = -d; j <= d && !best; j++) for (let i = -d; i <= d; i++) {
+      if (Math.max(Math.abs(i), Math.abs(j)) !== d || !shore(c + i, r + j) || !mine((c + i) * S + 8, (r + j) * S + 8)) continue; best = [c + i, r + j]; break;
+    }
+    if (best) { log.push('pancing ' + f[0] + ',' + f[1]); f[0] = best[0] * S + S / 2; f[1] = best[1] * S + S / 2; }
+  }
+  if (log.length) M._pfLog = log; /* untuk pemeriksaan: MAPS[id]._pfLog */
+}
+// titik tengah penyeberangan jalan lama × air gambar (lokal); yang menyusuri tepi air (bukan menyeberang) dilewati
+function pathCrossings(M, have) {
+  if (M._xing) return M._xing;
+  const E = typeof grassEdgeData === 'function' && grassEdgeData(M); if (!E || !E.Wm || !M.paths) return [];
+  const S = GRASS_EDGE.cell, F = PLACE_FIT.ford, B = typeof BENUA !== 'undefined' && BENUA && WORLD_POS[M.id], out = [];
+  const W = (x, y) => { const c = Math.floor(x / S), r = Math.floor(y / S); return c >= 0 && r >= 0 && c < E.cols && r < E.rows && !!E.Wm[r * E.cols + c]; };
+  const rect = (x, y) => { /* kotak jembatan yang akan dibuat di titik ini */
+    const b = typeof bridgeFit === 'function' && bridgeFit(M, x, y), h = BRIDGES.width / 2 + 8; if (!b) return null;
+    return b.axis === 'v' ? [b.c - h, b.a, b.c + h, b.b] : [b.a, b.c - h, b.b, b.c + h];
+  };
+  const R = have.map(p => rect(p[0], p[1])).filter(Boolean);
+  const taken = (x, y) => {
+    const q = rect(x, y); if (!q) return true;
+    if ([...have, ...out].some(p => Math.hypot(p[0] - x, p[1] - y) < F.gap)) return true;
+    if (R.some(r => q[0] < r[2] && q[2] > r[0] && q[1] < r[3] && q[3] > r[1])) return true; /* tidak bertumpuk dengan jembatan lain */
+    R.push(q); return false;
+  };
+  for (const p of M.paths) {
+    const [x1, y1, x2, y2] = p, L = Math.hypot(x2 - x1, y2 - y1); if (L < 8) continue;
+    const ux = (x2 - x1) / L, uy = (y2 - y1) / L, n = Math.ceil(L / 8); let st = -1;
+    for (let i = 0; i <= n + 1; i++) {
+      const d = Math.min(i * 8, L), w = i <= n && W(x1 + ux * d, y1 + uy * d);
+      if (w && st < 0) st = d;
+      if (w || st < 0) continue;
+      const a = st, b = Math.min((i - 1) * 8, L); st = -1;
+      if (b - a > F.max) continue; /* jalan menyusuri air, bukan menyeberang */
+      const m = (a + b) / 2, mx = x1 + ux * m, my = y1 + uy * m, q = F.side;
+      if (!W(mx - uy * q, my + ux * q) || !W(mx + uy * q, my - ux * q)) continue; /* air harus berlanjut ke kedua sisi jalan */
+      if (B && typeof regionOwner === 'function' && regionOwner(B[0] + mx, B[1] + my) !== M.id) continue;
+      if (!taken(mx, my)) out.push([Math.round(mx), Math.round(my)]);
+    }
+  }
+  return (M._xing = out);
+}
+(() => {
+  if (!PLACE_FIT.ford.on || typeof BRIDGES === 'undefined' || typeof GRASS_EDGE === 'undefined') return;
+  for (const id of GRASS_EDGE.maps) {
+    const M = MAPS[id]; if (!M || !M.paths || (typeof WORLD_FIT !== 'undefined' && WORLD_FIT.iceFord.includes(id))) continue; /* es: dilalui langsung */
+    const old = BRIDGES.list[id];
+    BRIDGES.list[id] = m => { const base = old ? old(m) : []; return [...base, ...pathCrossings(m, base)]; };
+  }
+})();
+(() => {
+  const _mo0 = mapObjects;
+  mapObjects = function (M) {
+    const L = _mo0.apply(this, arguments);
+    if (M && !M.indoor && typeof GRASS_EDGE !== 'undefined' && GRASS_EDGE.maps.includes(M.id)) {
+      try { placeFitMap(M, L); } catch (e) { PLACE_FIT.on = false; console.warn('place_fit', e); }
+    }
+    return L;
   };
 })();
 
