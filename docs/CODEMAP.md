@@ -111,9 +111,9 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini (atau ganti file PNG-nya):_
 `GRASS` 8 · `grassTiles()` 15 · `grassSS` 21 · `grassTex()` 22 · `grassPass()` 27 · `grassCanvas()` 45
 
-## src/world/grass_edge.js (136 baris)
+## src/world/grass_edge.js (153 baris)
 _TEPI RUMPUT BERPETAK (autotile 47 bentuk) — percobaan, hanya untuk peta di GRASS_EDGE.maps._
-`GRASS_EDGE` 7 · `GRASS_EDGE_MAP` 9 · `DIRT_S` 19 · `SAND_S` 20 · `WATER_S` 21 · `edgeClass()` 24 · `edgeDist()` 33 · `isGreen` 43 · `grassEdgeData()` 45 · `grassEdgeCanvas()` 93
+`GRASS_EDGE` 7 · `GRASS_EDGE_MAP` 9 · `DIRT_S` 19 · `SAND_S` 20 · `WATER_S` 21 · `edgeClass()` 24 · `isGreen` 32 · `edgeClean()` 34 · `edgeTiles()` 47 · `grassEdgeData()` 60 · `grassEdgeCanvas()` 110
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
