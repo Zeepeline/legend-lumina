@@ -111,13 +111,13 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini (atau ganti file PNG-nya):_
 `GRASS` 8 · `grassTiles()` 15 · `grassSS` 21 · `grassTex()` 22 · `grassPass()` 27 · `grassCanvas()` 45
 
-## src/world/grass_edge.js (213 baris)
+## src/world/grass_edge.js (216 baris)
 _TEPI RUMPUT BERPETAK (autotile 47 bentuk) — percobaan, hanya untuk peta di GRASS_EDGE.maps._
-`GRASS_EDGE` 7 · `EDGE_PAL` 10 · `COBBLE` 19 · `cobbleTile()` 20 · `GRASS_EDGE_MAP` 38 · `DIRT_S` 48 · `SAND_S` 49 · `WATER_S` 50 · `edgeClass()` 53 · `isGreen` 62 · `edgeClean()` 64 · `edgeTiles()` 77 · `grassEdgeData()` 90 · `grassEdgeCanvas()` 154
+`GRASS_EDGE` 7 · `EDGE_PAL` 11 · `COBBLE` 20 · `cobbleTile()` 21 · `GRASS_EDGE_MAP` 39 · `DIRT_S` 49 · `SAND_S` 50 · `WATER_S` 51 · `edgeClass()` 54 · `isGreen` 63 · `edgeClean()` 65 · `edgeTiles()` 78 · `grassEdgeData()` 91 · `grassEdgeCanvas()` 156
 
-## src/world/biome_ground.js (69 baris)
+## src/world/biome_ground.js (111 baris)
 _TANAH BIOME — rumput Sprout di wilayah khas diberi warna biomenya (dipakai grassEdgeCanvas, grass_edge.js):_
-`BIOME` 8 · `biomeSeasonId` 26 · `biomeOf()` 29 · `biomeSides()` 35 · `biomeMask()` 46 · `biomeRamp()` 57 · `biomeDot()` 64
+`BIOME` 8 · `biomeSeasonId` 30 · `biomeOf()` 33 · `biomeSides()` 39 · `biomeMask()` 50 · `biomeRamp()` 61 · `biomeDot()` 68 · `caveClassSrc()` 74 · `CAVE_ROCK` 86 · `caveFaces()` 87
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_

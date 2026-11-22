@@ -5,7 +5,8 @@
 // sesuai 8 tetangganya. Petak hanya memberi BENTUK & bayangan tepi; warnanya tetap tekstur GRASS (world/grass.js).
 // Rumput & jalan lama di luar petak diganti tanah satu gaya (DIRT_S: rata + kerikil + bayangan di bawah tepi rumput).
 const GRASS_EDGE = { on: true, sheet: 'gnd_edge_sprout', water: 'gnd_water_sprout', cell: 16, q: 2, thr: .5, sand: 1,
-  maps: ['village', 'river', 'lake', 'meadow', 'forest', 'deepwood', 'road', 'swamp', 'snow', 'kgate', 'kpasar', 'kakademi', 'kbawah'] };
+  maps: ['village', 'river', 'lake', 'meadow', 'forest', 'deepwood', 'road', 'swamp', 'snow', 'kgate', 'kpasar', 'kakademi', 'kbawah'],
+  caves: ['cave'] }; /* gua: autotile yang sama, kelas dari jalur gua (biome_ground.js BIOME.cave) */
 // palet khas per wilayah (id peta): air & pita pasir/lumpur/salju; selain ini memakai WATER_S / SAND_S
 const EDGE_PAL = {
   swamp: { water: { base: [120, 152, 128], deep: [104, 136, 116], shallow: [136, 168, 140], line: [188, 208, 184], spark: [150, 182, 156] },
@@ -91,6 +92,7 @@ function grassEdgeData(M) {
   const C = grassEdgeData.c || (grassEdgeData.c = {}); if (C[M.id] !== undefined) return C[M.id];
   const sheet = getTileData(GRASS_EDGE.sheet); if (!sheet) return null; /* gambar belum dimuat: jangan disimpan */
   let src = M.customGround && IMGEL[M.customGround];
+  if (GRASS_EDGE.caves.includes(M.id)) src = caveClassSrc(M); /* gua: dinding batu = "rumput", lantai = "tanah" */
   if (!src && !M.customGround) { /* peta tanpa gambar (kota): tanah prosedural dirender utuh sekali sebagai sumber kelas */
     if (grassEdgeData.busy) return null; grassEdgeData.busy = 1;
     try { src = genGround(M); } finally { grassEdgeData.busy = 0; }
@@ -152,7 +154,7 @@ function grassEdgeData(M) {
 }
 // dipanggil genGround untuk gambar tanah per peta; true = tanah sudah final (grassPass dilewati)
 function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
-  if (!GRASS_EDGE.on || !GRASS_EDGE.maps.includes(M.id) || typeof grassTiles !== 'function') return false;
+  if (!GRASS_EDGE.on || !(GRASS_EDGE.maps.includes(M.id) || GRASS_EDGE.caves.includes(M.id)) || typeof grassTiles !== 'function') return false;
   if (grassEdgeData.busy) return false;
   const E = grassEdgeData(M), T = grassTiles(); if (!E || !T) return false;
   const PL = EDGE_PAL[M.id] || {}, WS = PL.water || WATER_S, SS = PL.sand || SAND_S;
@@ -206,6 +208,7 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
     }
     D[i] = c[0]; D[i + 1] = c[1]; D[i + 2] = c[2];
   }
+  if (GRASS_EDGE.caves.includes(M.id) && typeof caveFaces === 'function') caveFaces(D, W, H, RX, RY, X0, E, lx => lx, (lx, ly) => cover(TG, lx, ly) >= 0);
   ctx.putImageData(im, 0, 0);
   if (typeof fitClipGround === 'function') fitClipGround(ctx, W, H, X0, Y0, M); /* tumpang-tindih benua: hanya pemilik titik yang tampil */
   return true;

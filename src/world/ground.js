@@ -273,7 +273,7 @@ function genGround(M, rect) {
   const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);
   const out = (X, Y) => X < RX - 10 || X > RX + RW + 10 || Y < RY - 10 || Y > RY + RH + 10;
   const near = (X, Y) => { if (R && Math.abs(Y - riverY(R, X)) < R.w / 2 + 6) return true; return ponds.length > 0 && waterE(ponds, X, Y, GX, GY) < 1 + 14 / Math.max(waterE.r, 1); };
-  if (cave) {
+  if (cave) { if (typeof grassEdgeCanvas === 'function') grassEdgeCanvas(x, RW, RH, RX, RY, GX + RX, GY + RY, M); /* gua: petak Sprout */
     for (let n = 0; n < W * H / 260; n++) {
       const X = Math.floor(hash(n, 1, 22) * W), Y = Math.floor(hash(n, 2, 22) * H); if (out(X, Y)) continue;
       const d = sd(X, Y);

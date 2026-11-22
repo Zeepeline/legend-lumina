@@ -15,6 +15,10 @@ const BIOME = {
     ramp: [[52, 72, 50], [76, 98, 62], [98, 120, 72], [122, 142, 86], [150, 164, 104]],
     dirt: { base: [120, 98, 72], dark: [92, 74, 56], mid: [106, 86, 64], light: [140, 118, 88] }, fade: 200,
   },
+  cave: { /* Gua Batu: "rumput" = puncak dinding batu (ungu kelabu), "tanah" = lantai gua tanah-batu */
+    ramp: [[44, 38, 58], [62, 55, 80], [80, 72, 100], [98, 90, 120], [120, 112, 142]],
+    dirt: { base: [112, 96, 88], dark: [86, 72, 68], mid: [100, 86, 78], light: [134, 118, 104] }, fade: 0,
+  },
   lum: [60, 215], /* rentang kecerahan rumput → ujung tangga */
 };
 // tanah musiman (musim dari season.js): gugur = rumput keemasan + daun gugur, dingin = bercak salju; wilayah ber-biome sendiri tetap
@@ -65,4 +69,42 @@ function biomeDot(B, X, Y, o) {
   if (!B.dots || hash(X >> 1, Y >> 1, 83) >= B.dotP) return false;
   const c = B.dots[Math.floor(hash(X >> 1, Y >> 1, 84) * B.dots.length)]; o[0] = c[0]; o[1] = c[1]; o[2] = c[2];
   return true;
+}
+// gambar kelas untuk gua (¼ resolusi): lantai = jalur & ruang gua (makeSD ≤ 5, sama dengan tembok blockRects), sisanya dinding
+function caveClassSrc(M) {
+  if (M._caveSrc) return M._caveSrc;
+  const k = 4, W = Math.ceil(M.w / k), H = Math.ceil(M.h / k), [c, x] = mk(W, H), sd = makeSD(M), im = x.createImageData(W, H), D = im.data;
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+    const o = (j * W + i) * 4, floor = sd(i * k + 2, j * k + 2) <= 5, col = floor ? [178, 140, 92] : [94, 172, 80];
+    D[o] = col[0]; D[o + 1] = col[1]; D[o + 2] = col[2]; D[o + 3] = 255;
+  }
+  x.putImageData(im, 0, 0);
+  return (M._caveSrc = c);
+}
+// gua: puncak dinding = batu berkeping (sel acak 11 px, celah gelap), tepi selatan = tebing tegak setinggi FACE px
+// (gradasi gelap, retak vertikal, bibir terang) mengikuti bentuk petak autotile
+const CAVE_ROCK = { face: 14, cell: 20, base: [84, 76, 104], dark: [62, 55, 80], hi: [108, 100, 130] };
+function caveFaces(D, W, H, RX, RY, X0, E, _, rock) {
+  const S = GRASS_EDGE.cell, C = E.cols, R = E.rows, K = CAVE_ROCK, Y0 = RY, F = K.face;
+  const wall = (c, r) => c >= 0 && r >= 0 && c < C && r < R && E.grass[r * C + c];
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const lx = RX + x, ly = RY + y; if (!rock(lx, ly)) continue;
+    const c = (lx / S) | 0, r = (ly / S) | 0, i = (y * W + x) * 4, X = X0 + x, Y = ly;
+    let k = 0;
+    if (!wall(c, r + 1) || !wall(c, r + 2)) for (k = 1; k <= F; k++) if (!rock(lx, ly + k)) break;
+    if (k > 0 && k <= F) { /* tebing */
+      const t = 1 - k / F; let v = 86 - t * 36;
+      if (hash(X >> 1, Math.floor(ly / 40), 91) < .14) v -= 14; if (k >= F - 1) v = 120; if ((k === 6 || k === 10) && hash(X >> 2, r, 92) < .5) v -= 8;
+      D[i] = v * .86; D[i + 1] = v * .78; D[i + 2] = v * 1.05; continue;
+    }
+    /* puncak batu: sel acak, warna per sel, celah antarsel gelap */
+    const g = K.cell, gx = Math.floor(X / g), gy = Math.floor(Y / g); let d1 = 1e9, d2 = 1e9, id = 0;
+    for (let j = -1; j <= 1; j++) for (let q = -1; q <= 1; q++) {
+      const px = (gx + q + hash(gx + q, gy + j, 61)) * g, py = (gy + j + hash(gx + q, gy + j, 62)) * g, d = (px - X) ** 2 + (py - Y) ** 2;
+      if (d < d1) { d2 = d1; d1 = d; id = hash(gx + q, gy + j, 63); } else if (d < d2) d2 = d;
+    }
+    const edge = Math.sqrt(d2) - Math.sqrt(d1) < 1, m = .93 + id * .14;
+    const col = edge ? K.dark : Math.sqrt(d2) - Math.sqrt(d1) < 2.2 && (Y - g * gy) < g / 2 ? K.hi : K.base; /* tepi atas keping terang */
+    D[i] = col[0] * (edge ? 1 : m); D[i + 1] = col[1] * (edge ? 1 : m); D[i + 2] = col[2] * (edge ? 1 : m);
+  }
 }
