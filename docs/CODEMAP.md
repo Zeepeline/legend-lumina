@@ -535,6 +535,10 @@ _POHON GAYA SPROUT LANDS — pohon biasa di wilayah luar (GRASS_EDGE.maps) memak
 _RUMAH GAYA SPROUT — bangunan desa/kota digambar ulang lewat kode (piksel 2×, garis tepi cokelat lembut, palet hangat),_
 `SP_PAL` 6 · `SPROUT_HOUSES` 17 · `spHouse()` 39 · `spBox3d()` 186 · `spStall()` 248 · `spScale()` 269 · `_buildTexturesHouses` 271
 
+## src/systems/ref_houses.js (22 baris)
+_RUMAH DARI REFERENSI PEMILIK — rumah A/B/C, pondok merah/cokelat & pandai besi memakai gambar hasil tools/bake_houses.py_
+`REF_HOUSES` 6 · `_buildTexturesRef` 14
+
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
 
