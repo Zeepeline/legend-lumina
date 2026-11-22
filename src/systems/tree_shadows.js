@@ -27,6 +27,7 @@
     const type = o[0], x = o[1], y = o[2];
 
     if (s && (type.startsWith('tree') || type === 'verdant_tree') && this.add) {
+      s._shd = 1; /* bayangan pohon bergerak sendiri; object_shadows.js melewati */
       if (!this.textures.exists('tree_shadow_dither')) {
         const [c, ctx] = mk(64, 32);
         ctx.fillStyle = '#000000';

@@ -207,7 +207,7 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 25 · `shadowIndex()` 26
 
-## src/gfx/textures.js (231 baris)
+## src/gfx/textures.js (232 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 43 · `loadImgs()` 63 · `addStrip()` 77 · `darkTree()` 82 · `NPC_W` 84 · `regPortrait()` 85 · `regChar()` 91 · `buildTextures()` 110
 
@@ -507,7 +507,7 @@ _Sistem Pohon Apel Siklus Berbuah & Tanpa Buah (8 Frame Wind Sway)_
 _Pantulan Karakter di Air (T460) — referensi: RPG klasik / Sea of Stars_
 
 
-## src/systems/tree_shadows.js (67 baris)
+## src/systems/tree_shadows.js (68 baris)
 _Bayangan Daun Bergoyang & Proyeksi Miring Dinamis (T448, T552) — referensi: Cobo #18, Stardew_
 
 
@@ -538,6 +538,10 @@ _RUMAH GAYA SPROUT — bangunan desa/kota digambar ulang lewat kode (piksel 2×,
 ## src/systems/ref_houses.js (29 baris)
 _RUMAH DARI REFERENSI PEMILIK — rumah A/B/C, pondok merah/cokelat & pandai besi memakai gambar hasil tools/bake_houses.py_
 `REF_HOUSES` 6 · `_buildTexturesRef` 16
+
+## src/systems/object_shadows.js (78 baris)
+_BAYANGAN OBJEK — elips lembut di kaki setiap objek luar ruang (semak, batu, tunggul, bunga, jamur, pinus, pohon buah,_
+`OBJ_SHADOW` 6 · `objShadowTex()` 12 · `objFootW()` 28 · `objShadowAdd()` 42 · `objShadowScan()` 55
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
