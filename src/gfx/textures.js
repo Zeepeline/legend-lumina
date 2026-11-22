@@ -17,7 +17,8 @@ const IMGEL = {};
 const IMG_LIST = [
   "gnd_village_custom", "gnd_forest_custom", "gnd_meadow_custom", "gnd_lake_custom", "gnd_road_custom",
   "gnd_deepwood_custom", "gnd_swamp_custom", "gnd_snow_custom", "gnd_river_custom",
-  "gnd_kgate_custom", "gnd_kpasar_custom", "gnd_kakademi_custom", "gnd_kbawah_custom", "gnd_edge_sprout", "gnd_water_sprout", "gnd_hills_sprout", "deco_sprout_objs",
+  "gnd_kgate_custom", "gnd_kpasar_custom", "gnd_kakademi_custom", "gnd_kbawah_custom",
+  "gnd_edge_sprout", "gnd_water_sprout", "gnd_hills_sprout", "deco_sprout_objs",
   "bench", "bushG1", "bushG2", "bushP", "bushW",
   "fountain", "houseA", "houseB", "houseC", "market", "planter", "pot",
   "stumpWoods",
