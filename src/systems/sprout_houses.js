@@ -6,6 +6,7 @@
 const SP_PAL = {
   o: [72, 48, 42], pl: [[246, 236, 212], [228, 212, 184], [192, 172, 146]], wd: [[188, 130, 88], [152, 98, 64], [108, 68, 48]],
   red: [[240, 126, 102], [208, 88, 72], [156, 58, 56]], brown: [[196, 138, 92], [162, 108, 72], [120, 78, 56]],
+  blue: [[126, 214, 228], [58, 152, 180], [28, 86, 118]],
   st: [[216, 212, 202], [172, 164, 156], [122, 114, 112]], gl: [[176, 218, 230], [120, 170, 200]], gl_hi: [250, 254, 255],
   door: [[172, 112, 72], [126, 78, 50]], fl: [[236, 96, 114], [252, 206, 90], [246, 158, 192]], lf: [[120, 172, 86], [84, 134, 64]],
   fire: [[255, 220, 114], [248, 144, 62], [202, 72, 52]], gold: [[255, 224, 118], [228, 178, 58]],
@@ -28,6 +29,8 @@ const SPROUT_HOUSES = {
     gpt_v_house_brown_wing: [123, 120, { roof: 'brown', wall: 'pl', chim: 1, wing: 1, hc: 112 }],
     gpt_v_house_red_shop: [128, 125, { roof: 'red', wall: 'pl', chim: 1, awning: 1, wide: 1, hc: 114 }],
     gpt_v_blacksmith_forge: [135, 125, { roof: 'red', wall: 'pl', chim: 1, smith: 1, wide: 1, hc: 114 }],
+    houseBlue: [136, 124, { roof: 'blue', wall: 'pl', chim: 1, dormer: 1, wing: 1, porch: 1, wide: 1, hc: 114 }],
+    gpt_v_house_blue: [136, 124, { roof: 'blue', wall: 'pl', chim: 1, dormer: 1, wing: 1, porch: 1, wide: 1, hc: 114 }],
     gpt_i_market: [100, 78, { stall: 1 }], market: [100, 78, { stall: 1 }],
     gpt_v_market_stall: [110, 85, { stall: 1 }],
   },
@@ -86,6 +89,12 @@ function spHouse(W, H, R) {
   put(dx + 1, dy + 3, P.o); put(dx + 2, dy + 3, P.st[2]); put(dx + 1, dy + dh - 4, P.o); put(dx + 2, dy + dh - 4, P.st[2]);
   put(dx + dw - 3, dy + Math.round(dh * .55), P.gold[0]); put(dx + dw - 3, dy + Math.round(dh * .55) + 1, P.gold[1]);
   rect(dx - 1, base + 1, dw + 2, 2, P.st[1]); rect(dx - 1, base + 1, dw + 2, 1, P.st[0]); rect(dx, base + 2, dw, 1, P.st[2]);
+  if (R.porch) {
+    const px = dx - 2, pw = dw + 4, pwy = dy - 2, pay = pwy - 4;
+    box(px, pay, pw, pwy - pay + 2, RC[0]);
+    rect(px, pwy + 2, 1, base - (pwy + 2), P.wd[1]);
+    rect(px + pw - 1, pwy + 2, 1, base - (pwy + 2), P.wd[2]);
+  }
   // lentera dinding antik menyala hangat
   const lx = dx + dw + 2, ly = dy + 3;
   put(lx - 1, ly + 1, P.o); box(lx, ly, 3, 5, P.fire[0]); rect(lx + 1, ly + 1, 1, 3, [255, 255, 235]); put(lx + 1, ly - 1, P.o);
@@ -258,6 +267,7 @@ function spStall(w, h, base, put, rect, box) {
   rect(x0 + sw - 2, base - 28, 1, 6, P.wd[2]); box(x0 + sw - 3, base - 22, 3, 4, P.fire[0]);
 }
 function spScale(c, W, H) { const [o, x] = mk(W, H); x.imageSmoothingEnabled = false; x.drawImage(c, 0, 0, W, H); o._sprout = 1; return o; }
+if (typeof window !== 'undefined') window.artHouseBlue = () => spHouse(136, 124, SPROUT_HOUSES.list.houseBlue[2]);
 const _buildTexturesHouses = buildTextures;
 buildTextures = function (sc) {
   if (SPROUT_HOUSES.on && !buildTextures.housesDone) {

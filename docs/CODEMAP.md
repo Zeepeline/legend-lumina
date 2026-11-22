@@ -91,9 +91,9 @@ _Lantai & perabot interior_
 _Gambar properti & bangunan cerita baru (Prolog & Bab 1): Makam Mila, Gubuk Reyot, Sarang Pemburu Liar, dll._
 `artMilaGrave()` 5 · `artRuinedShack()` 38 · `artSlaverCage()` 103 · `artPrisonerWagon()` 141 · `artSlaverTent()` 178 · `artSlaverBarricade()` 216 · `artReflectionSpring()` 242 · `artBurntRuin()` 265 · `artMudTracks()` 293 · `artDroppedTorch()` 312 · `artClothScrap()` 327
 
-## src/world/objects.js (371 baris)
+## src/world/objects.js (379 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 370
+`OBJ` 7 · `MAPS` 378
 
 ## src/world/spawn/spawn_1.js (392 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
@@ -531,9 +531,9 @@ _KOTA & DESA GAYA SPROUT — kastil, tembok, menara, properti kota & semua bangu
 _POHON GAYA SPROUT LANDS — pohon biasa di wilayah luar (GRASS_EDGE.maps) memakai pohon dari deco_sprout_objs.png (3×),_
 `SPROUT_TREES` 6 · `sproutTreeTint()` 15 · `sproutTreePolish()` 25 · `sproutGiantSrc()` 51 · `sproutTreeTufts()` 116 · `sproutTreeTex()` 131
 
-## src/systems/sprout_houses.js (269 baris)
+## src/systems/sprout_houses.js (279 baris)
 _RUMAH GAYA SPROUT — bangunan desa/kota digambar ulang lewat kode (piksel 2×, garis tepi cokelat lembut, palet hangat),_
-`SP_PAL` 6 · `SPROUT_HOUSES` 16 · `spHouse()` 36 · `spBox3d()` 177 · `spStall()` 239 · `spScale()` 260 · `_buildTexturesHouses` 261
+`SP_PAL` 6 · `SPROUT_HOUSES` 17 · `spHouse()` 39 · `spBox3d()` 186 · `spStall()` 248 · `spScale()` 269 · `_buildTexturesHouses` 271
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
