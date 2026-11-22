@@ -4,35 +4,27 @@
 MAPS.lake = {
   id: 'lake', name: 'Danau Cermin', w: 1400, h: 1000, scale: 1.5, bgm: 'meadow', ground: 'meadow', customGround: 'gnd_lake_custom',
   paths: [
-    [1400, 500, 940, 500, 14], [940, 500, 900, 300, 10], [900, 300, 560, 262, 10],
-    [560, 262, 240, 330, 10], [240, 330, 205, 500, 10],
-    [205, 500, 240, 670, 10], [240, 670, 560, 742, 10], [560, 742, 900, 700, 10],
-    [900, 700, 940, 500, 10], [1000, 500, 1000, 330, 11], [1000, 330, 820, 110, 11],
-    [820, 110, 820, 0, 11]
+    [1400, 500, 1000, 500, 14],
+    [1000, 500, 820, 110, 13],
+    [820, 110, 820, 0, 13]
   ],
-  discs: [[1080, 470, 70], [1120, 320, 60], [820, 110, 50]],
+  discs: [],
   ponds: [
-    [560, 500, 330, 210],
-    // Anak Sungai Cermin (T340): keluar dari danau tenggara (820, 660) -> tepi selatan (1332, 1000)
-    [820, 660, 26, 22],
-    // Celah arungan di jalan [560, 742 -> 900, 700] di x ≈ 840, y ≈ 707
-    // titik tengah ditambah agar alur menyambung (bukan genangan terpisah)
-    [880, 740, 26, 22], [910, 760, 26, 22], [940, 780, 26, 22], [970, 800, 26, 22],
-    [1000, 820, 26, 22], [1030, 840, 26, 22], [1060, 860, 26, 22], [1095, 880, 27, 23],
-    [1130, 900, 28, 24], [1165, 917, 28, 24], [1200, 935, 28, 24], [1235, 952, 28, 24],
-    [1270, 970, 28, 24], [1301, 985, 28, 24], [1332, 1000, 28, 24],
+    [560, 425, 330, 210],
+    // Anak Sungai Cermin: keluar dari danau tenggara (820, 615) -> tepi perbatasan (1332, 652) [Global 2932, 3712]
+    [820, 615, 26, 22], [930, 625, 26, 22], [1060, 638, 27, 23], [1190, 646, 28, 24], [1332, 652, 28, 24]
   ],
   objs: [
-    ['shrine', 560, 520], ['campfire', 1110, 560], ['pebbles', 890, 500],
-    ['pebbles', 230, 480], ['dockboat', 980, 520], ['dockboat', 250, 560],
+    ['shrine', 560, 445], ['campfire', 1110, 560], ['pebbles', 890, 500],
+    ['pebbles', 230, 480], ['dockboat', 980, 520], ['dockboat', 250, 485],
     ['lakelighthouse', 1140, 430],
-    ['rock', 470, 470, { ok: 'cincin batu pulau kuil di tengah danau' }],
-    ['rock', 650, 470, { ok: 'cincin batu pulau kuil di tengah danau' }],
-    ['rock', 520, 560, { ok: 'cincin batu pulau kuil di tengah danau' }],
-    ['rock', 610, 565, { ok: 'cincin batu pulau kuil di tengah danau' }],
+    ['rock', 470, 395, { ok: 'cincin batu pulau kuil di tengah danau' }],
+    ['rock', 650, 395, { ok: 'cincin batu pulau kuil di tengah danau' }],
+    ['rock', 520, 485, { ok: 'cincin batu pulau kuil di tengah danau' }],
+    ['rock', 610, 490, { ok: 'cincin batu pulau kuil di tengah danau' }],
     // Batu loncatan arungan anak sungai cermin (T340) & hiasan tepi air (T345)
-    ['pebbles', 840, 705], ['pebbles', 850, 715],
-    ['dock', 560, 724], ['boat', 610, 700], ['lotuspad', 750, 600], ['lotuspad', 450, 420], ['pebbles', 990, 850], ['bushG1', 1092, 936],
+    ['pebbles', 840, 630], ['pebbles', 850, 640],
+    ['dock', 560, 649], ['boat', 610, 625], ['lotuspad', 750, 525], ['lotuspad', 450, 345], ['pebbles', 990, 850], ['bushG1', 1092, 936],
     ['houseC', 1120, 300], ['barrel', 1180, 300], ['crate', 1060, 300], ['fence', 1150, 340], ['fence', 1168, 340],
     ['stele', 1010, 452, {
       text: 'Prasasti Danau Cermin:\n"Cahaya lahir di utara, tumbuh di selatan, lalu pulang di barat. Hanya cahaya yang pulang yang boleh menyeberang."'
@@ -49,10 +41,10 @@ MAPS.lake = {
     { id: 'gun', ch: 'gun', name: 'Pak Gun', x: 930, y: 170, dir: 'left' },
     { id: 'ratih', ch: 'ratih', name: 'Nenek Ratih', x: 1040, y: 560, dir: 'left' }
   ],
-  lanterns: [[560, 266], [560, 744], [206, 500]],
-  fish: [[890, 520], [1060, 890]],
-  boat: [902, 512],
-  feedSpots: [[890, 520]],
+  lanterns: [[560, 191], [560, 669], [206, 425]],
+  fish: [[890, 445], [1060, 815]],
+  boat: [902, 437],
+  feedSpots: [[890, 445]],
   enemies: [['frog', 300, 260], ['frog', 820, 760], ['wisp', 240, 800], ['wisp', 900, 220], ['slimep', 1200, 760], ['frog', 1180, 840], ['wisp', 360, 840]],
   trees: { n: 760, min: 30, types: [['verdant_tree', .35], ['treeA', .25], ['verdant_bush', .15], ['verdant_rock_large', .1], ['rock', .15]] },
 };

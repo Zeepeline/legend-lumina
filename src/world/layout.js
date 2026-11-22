@@ -8,27 +8,11 @@ const OPP = { W: 'E', E: 'W', N: 'S', S: 'N' };
 // Wilayah alam diberi jarak; celahnya diisi medan peralihan (MAPS 'pl_*') yang dibuat otomatis.
 // Kelompok kota & Jalan Raya Lama tetap menempel (sudah pas). Koordinat global = posisi kiri-atas wilayah.
 const WORLD_POS = {
-  village: [3000, 3000], lake: [1600, 3090], road: [1970, 1090], kgate: [1820, 190], kpasar: [1620, -1010], kakademi: [1720, -2010], kbawah: [420, -890],
-  meadow: [4424, 2600], snow: [4500, 1000], forest: [2872, 4112], deepwood: [72, 4112], river: [4552, 4112], swamp: [7552, 4112],
+  village: [3000, 3000], lake: [1600, 3060], road: [1970, 1060], kgate: [1820, 190], kpasar: [1620, -1010], kakademi: [1720, -2010], kbawah: [420, -890],
+  meadow: [4024, 2920], snow: [3984, 1720], forest: [2872, 3712], deepwood: [472, 3712], river: [4152, 3960], swamp: [6752, 3960],
 };
-// [wilayah A, wilayah B, jenis tanah, nama] — dihubungkan lewat medan peralihan
-const PERALIHAN = [
-  ['village', 'meadow', 'meadow', 'Jalan Desa–Padang'], ['village', 'forest', 'forest', 'Tepi Hutan Lumina'],
-  ['meadow', 'snow', 'meadow', 'Lereng Puncak Beku', [
-    [736, 0, 28, 28], [734, 40, 28, 28], [732, 80, 30, 30], [730, 120, 30, 30], [728, 160, 32, 32],
-    [728, 240, 32, 32], [726, 280, 34, 34], [726, 320, 34, 34], [726, 360, 34, 34], [726, 400, 34, 34],
-  ]], ['meadow', 'swamp', 'meadow', 'Dataran Senja', [
-    [1176, 0, 42, 38], [1174, 50, 44, 40], [1172, 100, 44, 40], [1170, 150, 44, 40], [1170, 190, 40, 36],
-    [1172, 290, 40, 36], [1174, 330, 44, 40], [1176, 380, 44, 40], [1176, 430, 44, 40], [1176, 472, 44, 40],
-  ]],
-  ['forest', 'deepwood', 'forest', 'Rimba Peralihan'], ['forest', 'river', 'forest', 'Hulu Sungai Senja', [
-    [0, 586, 32, 18], [40, 588, 34, 20], [80, 590, 34, 22], [120, 592, 34, 22], [160, 594, 34, 22],
-    [200, 596, 34, 22], [240, 598, 34, 22], [280, 600, 34, 22], [320, 600, 34, 22], [360, 600, 34, 20], [400, 600, 32, 18],
-  ]], ['river', 'swamp', 'swamp', 'Muara Rawa', [
-    [0, 600, 36, 24], [50, 600, 36, 24], [100, 600, 36, 24], [150, 600, 36, 24], [200, 600, 36, 24],
-    [250, 600, 36, 24], [300, 600, 36, 24], [350, 600, 36, 24], [400, 600, 36, 24],
-  ]],
-];
+// Wilayah alam kini saling menempel rapat langsung di pintu keluar tanpa medan peralihan
+const PERALIHAN = [];
 const SIDE_OF = (M, e) => e.x < 20 ? 'W' : e.x + e.w > M.w - 20 ? 'E' : e.y < 20 ? 'N' : e.y + e.h > M.h - 20 ? 'S' : null;
 // monster peralihan: jenis dari kedua wilayah yang diapit, ditaruh di samping jalan (tidak di jalan, tidak di pintu)
 function plEnemies(A, B, paths) {
@@ -76,9 +60,12 @@ function plEnemies(A, B, paths) {
     let TT = { meadow: [['treeA', .2], ['treeB', .15], ['bushG2', .2], ['bushG1', .15], ['rock', .2], ['apple1', .05], ['stump', .05]], forest: [['treeAd', .3], ['treeBd', .25], ['pined', .2], ['bushG2', .1], ['stump', .05], ['rock', .1]], swamp: [['bushG1', .35], ['rock', .25], ['stump', .2], ['treeBd', .2]] }[ground];
     if (id === 'pl_meadow_snow') TT = [['treeA', .15], ['treeSn', .25], ['rock', .25], ['bushW', .15], ['bushG2', .1], ['stump', .1]];
     if (id === 'pl_meadow_swamp') TT = [['treeA', .15], ['treeSw', .2], ['treeBd', .2], ['bushG2', .2], ['rock', .15], ['stump', .1]];
-    MAPS[id] = { id, name, w: Math.round(W), h: Math.round(H), ground, bgm: A.bgm, scale: Math.max(A.scale || 1, B.scale || 1), peralihan: [a, b],
+    MAPS[id] = {
+      id, name, w: Math.round(W), h: Math.round(H), ground, customGround: 'gnd_' + id + '_custom',
+      bgm: A.bgm, scale: Math.max(A.scale || 1, B.scale || 1), peralihan: [a, b],
       paths, discs: [], objs: [], ponds, npcs: [], enemies: plEnemies(A, B, paths), exits, border,
-      trees: { n: Math.round(W * H / (ground === 'forest' ? 2600 : 4600)), min: 30, types: TT } };
+      trees: { n: Math.round(W * H / (ground === 'forest' ? 2600 : 4600)), min: 30, types: TT }
+    };
     WORLD_POS[id] = [Math.round(X), Math.round(Y)];
     // pintu lama A→B dan B→A sekarang menuju medan peralihan
     Object.assign(ea, { to: id, tx: la[0] + (sideA === 'N' ? 0 : sideA === 'S' ? 0 : sideA === 'W' ? 34 : -34), ty: la[1] + (sideA === 'N' ? 34 : sideA === 'S' ? -34 : 0), label: name });

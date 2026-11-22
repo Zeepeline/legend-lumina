@@ -103,9 +103,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 220 · obj `tree_redwood` 228 · obj `goblin_torch` 231 · obj `goblin_cauldron` 234 · obj `cryst` 243 · obj `lamp` 246 · obj `viewpoint` 254 · obj `lumina_shard` 288 · obj `scenicbench` 310 · obj `mailbox` 328 · obj `gatehouse` 338 · obj `ctower` 346 · obj `city_bridge` 349 · obj `gpt_city_banner` 352 · obj `gpt_city_banner_sm` 356 · obj `gpt_city_board` 360 · obj `mila_grave` 370 · obj `reflection_spring` 374 · obj `slaver_cage` 378
 
-## src/world/ground.js (387 baris)
+## src/world/ground.js (394 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 101 · `getTileData()` 102 · `genGround()` 113 · `blockRects()` 320 · `openSides()` 336 · `borderTrees()` 349 · `ringObjects()` 366 · `mapObjects()` 371 · `mapWalls()` 375
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 38 · `GROUND` 39 · `blendW()` 51 · `BLEND_W` 57 · `WILD_G` 58 · `edgeSegs()` 59 · `edgeBlend()` 89 · `TILE_CACHE` 111 · `getTileData()` 112 · `genGround()` 123 · `blockRects()` 327 · `openSides()` 343 · `borderTrees()` 356 · `ringObjects()` 373 · `mapObjects()` 378 · `mapWalls()` 382
 
 ## src/world/grass.js (50 baris)
 _RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini (atau ganti file PNG-nya):_
@@ -119,11 +119,11 @@ _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai 
 _Penempatan pohon & vegetasi isometrik 2.5D: Variable-Radius Poisson-Disc, fBm Groves situasional, dan Asymmetric South Clearance._
 `SCATTER_FOREST_RX` 3 · `SCATTER_TREE_RX` 4 · `scatterGroveNoise()` 6 · `scatterClearBase()` 10 · `scatterSouthClear()` 37 · `scatterPoissonOk()` 45 · `scatter()` 70
 
-## src/world/maps/village.js (136 baris)
+## src/world/maps/village.js (140 baris)
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
 
 
-## src/world/maps/forest.js (112 baris)
+## src/world/maps/forest.js (107 baris)
 _Peta: Hutan Lumina (3 mini-boss, kuil, Raja Goblin)_
 
 
@@ -135,15 +135,15 @@ _Peta: Padang Angin_
 _Peta: Gua Batu (gelap, teka-teki batu, Golem Purba)_
 
 
-## src/world/maps/swamp.js (196 baris)
+## src/world/maps/swamp.js (188 baris)
 _Peta: Rawa Senja (bab 2, Morgath)_
 
 
-## src/world/maps/snow.js (57 baris)
+## src/world/maps/snow.js (59 baris)
 _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 
 
-## src/world/maps/lake.js (59 baris)
+## src/world/maps/lake.js (51 baris)
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
@@ -151,9 +151,9 @@ _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan k
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14
 
-## src/world/maps/wild.js (189 baris)
+## src/world/maps/wild.js (194 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
-`ruinRing` 5 · `deepwoodPaths` 15 · `deepwoodPonds` 21 · `snailSwarm` 22
+`ruinRing` 5 · `deepwoodPaths` 15 · `deepwoodPonds` 27 · `snailSwarm` 28
 
 ## src/world/maps/interiors.js (71 baris)
 _Interior: penginapan, rumah pohon, rumah Lina_
@@ -587,9 +587,9 @@ _Layar judul_
 _Visual Map Editor (In-Game WYSIWYG) untuk menata pohon, bangunan, dan objek secara visual langsung di browser._
 `MAP_EDITOR_CATEGORIES` 5 · `mapEditor` 339
 
-## src/world/layout.js (133 baris)
+## src/world/layout.js (120 baris)
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
-`exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 32 · `plEnemies()` 34 · `NEIGH` 88
+`exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 16 · `plEnemies()` 18 · `NEIGH` 75
 
 ## src/world/organic.js (51 baris)
 _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),_
@@ -603,9 +603,9 @@ _T442, T445 & Elevated Border Cliffs:_
 _Animasi air mengalir: garis riak terang tipis bergerak searah aliran sungai (hulu → hilir = urutan elips `ponds`,_
 `FLOW_MAX` 4 · `waterFlowAt()` 6 · `flowTex()` 28 · `foamTex()` 35 · `isShorelineAt()` 42 · `.updFlow()` 53 · `_updFlow0` 147
 
-## src/systems/atmos.js (316 baris)
+## src/systems/atmos.js (364 baris)
 _Suasana cahaya & kabut (wilayah aktif saja):_
-`ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `godrayTex()` 25 · `cloudShadowTex()` 40 · `.updAmbientMotes()` 86 · `.updCritters()` 135 · `.updWindGust()` 176 · `.updGodRays()` 204 · `.updBanners()` 231 · `.updAtmos()` 244
+`ATMOS_POOL` 7 · `fogSheetTex()` 8 · `moteTex()` 19 · `godrayTex()` 25 · `cloudShadowTex()` 40 · `biomeMoteProfile()` 95 · `.updAmbientMotes()` 118 · `.updCritters()` 181 · `.updWindGust()` 222 · `.updGodRays()` 250 · `.updBanners()` 277 · `.updAtmos()` 290
 
 ## src/systems/sunbeams.js (38 baris)
 _T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_
@@ -663,9 +663,9 @@ _Ayunan pedang Arka: ancang-ancang (tarik ke belakang) → ayun cepat melewati s
 _Pedang Arka yang DIGAMBAR PER FRAME (assets/img/hero/hero_swl{0,1}.png ← tools/gen_sword_layer.py). Pedang + kepalan sudah menempel di tangan_
 `SWL_FW` 6 · `SWL_ROWS` 7 · `SWL_HAND` 9 · `regSwordLayer()` 11 · `_bakeStd` 22 · `.bakeOn()` 24 · `.bakeSheath()` 26 · `.swordBake()` 34 · `.swordToHand()` 58
 
-## src/systems/grade.js (54 baris)
-_Rona warna "sore keemasan" ala screenshot Dimraeth pemilik (v1.47.0): seluruh layar luar-ruang digeser ke kuning-zaitun hangat,_
-`GRADE_OFF` 6 · `GRADE_M` 7 · `isGoldenHour()` 8 · `gradeOn()` 12 · `gradeCam()` 16
+## src/systems/grade.js (125 baris)
+_Sistem Rona Wilayah & Transisi Antar Wilayah Halus (v1.52.0 - ala 36 Bioma Cobo Makes Games / Mytheria)_
+`ID_M` 8 · `BIOME_GRADE` 11 · `biomeBaseMatrix()` 24 · `lerpMatrix()` 30 · `TRANS_BAND` 37 · `calcTargetGrade()` 38 · `applyGradeFX()` 87
 
 ## src/systems/isoview.js (94 baris)
 _TAMPILAN ISOMETRIK untuk game utama (tahap 1). Saklar: ?iso=1 (diingat di localStorage 'lumina_iso'), matikan: ?iso=0._

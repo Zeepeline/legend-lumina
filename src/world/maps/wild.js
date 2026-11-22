@@ -13,10 +13,16 @@ const ruinRing = (cx, cy, r, n) => { const w = r, h = r * .6, P = 4 * (w + h), o
 // Tepi luar rapat (kanopi redwood menutupi matahari), lengkungan meliuk membimbing pemain,
 // pusat spiral kosong lapang untuk area pertempuran bebas tabrakan (combat clearing).
 const deepwoodPaths = [
-  [2400, 730, 1900, 730, 13], [1900, 730, 1500, 980, 12], [1500, 980, 1100, 900, 12], [1100, 900, 700, 560, 12], [700, 560, 520, 420, 12],
-  [1500, 980, 1600, 1400, 10], [1600, 1400, 1200, 1580, 10], [1100, 900, 900, 1300, 10],
-  [900, 1300, 720, 1500, 10], [720, 1500, 600, 1710, 10], [600, 1710, 440, 1710, 10],
-  [1900, 730, 2000, 360, 10]
+  [2400, 730, 1900, 730, 14],
+  [1900, 730, 2000, 360, 14],
+  [1900, 730, 1500, 980, 14],
+  [1500, 980, 1100, 900, 14],
+  [1100, 900, 700, 560, 14],
+  [700, 560, 520, 420, 14],
+  [1500, 980, 1550, 1420, 13],
+  [1100, 900, 900, 1250, 14],
+  [900, 1250, 650, 1450, 14],
+  [650, 1450, 380, 1540, 14]
 ];
 const deepwoodPonds = [[1250, 470, 150, 70], [1420, 560, 90, 50], [330, 1250, 160, 90], [1900, 1500, 140, 70]];
 const snailSwarm = (paths, ponds, cx, cy, rMin, rMax, turns, n, startA = 0, types = ['treeRedwood']) => {
@@ -66,12 +72,7 @@ MAPS.deepwood = {
     // Lereng batu tanjakan otomatis terpasang di x=1990 tempat jalan menuju Pohon Tua!
     [1720, 500, 2280, 500, 'S']
   ],
-  discs: [
-    [520, 400, 180], [420, 470, 110], [630, 330, 120], [560, 520, 85], // Arena 1: Reruntuhan Aurel
-    [380, 1540, 175], [260, 1460, 110], [480, 1600, 110], // Arena 2: Markas Suku Goblin Akar Gelap
-    [1400, 860, 170], [1750, 1050, 150], [1050, 1100, 140], [1550, 1420, 120], // Arena 3: Padang Terbuka Tengah & Kemah
-    [2000, 330, 105], [900, 1320, 85], [1960, 760, 80]
-  ],
+  discs: [],
   ponds: deepwoodPonds,
   objs: [
     // Reruntuhan Aurel (barat laut): cincin batu, kuil runtuh, prasasti
@@ -87,7 +88,7 @@ MAPS.deepwood = {
     // kemah pemburu gelap
     ['campfire', 1530, 1470],
     ['bramble', 1720, 1450],
-    ['hay', 1560, 1400], ['crate', 1640, 1390], ['barrel', 1660, 1400], ['log', 1600, 1460], ['sign', 1680, 1450, { text: 'DILARANG MASUK\nPerburuan lumut lumen. — Kelompok Sambo' }],
+    ['hay', 1590, 1380], ['crate', 1640, 1390], ['barrel', 1660, 1400], ['log', 1600, 1460], ['sign', 1680, 1450, { text: 'DILARANG MASUK\nPerburuan lumut lumen. — Kelompok Sambo' }],
     // jamur & lumut bercahaya
     ...[[885, 1300], [940, 1330], [870, 1340], [1200, 1100], [1230, 1130], [700, 1500], [1800, 1100], [1830, 1120], [400, 700], [2200, 1200]].map(([x, y]) => ['mush', x, y]),
     // Markas Suku Goblin Akar Gelap (barat daya Hutan Dalam)
@@ -106,7 +107,7 @@ MAPS.deepwood = {
     ['goblin_banner', 410, 1680], ['goblin_banner', 300, 1450],
     // T433: Properti cerita khas markas Hutan Dalam (tulang ritual & akar membelit reruntuhan)
     ['bones', 430, 1590], ['bones', 390, 1550], ['bones', 250, 1480],
-    ['root', 360, 1440], ['root', 440, 1530], ['root', 290, 1540],
+    ['root', 360, 1440], ['root', 460, 1490], ['root', 290, 1540],
     ['sign', 570, 1660, { text: 'WILAYAH SUKU AKAR GELAP\nPendatang akan dijadikan tumbal kristal!' }],
     ['sign', 2300, 690, { text: 'HUTAN DALAM\nJangan tinggalkan jalan setapak. Lumut bercahaya menunjukkan arah pulang.' }],
     // Gugusan Pohon Snail Swarm Theory: Kurva Spiral Keong Membungkus Arena
@@ -127,9 +128,13 @@ MAPS.deepwood = {
   trees: { n: 440, min: 58, types: [['treeRedwood', .42], ['pined', .26], ['bushG2', .16], ['rock', .10], ['mush', .06]] },
 };
 MAPS.river = {
-  id: 'river', name: 'Jalur Sungai Senja', w: 2600, h: 1000, bgm: 'field', ground: 'meadow', scale: 1.8,
-  paths: [[0, 530, 400, 530, 12], [400, 530, 700, 760, 11], [700, 760, 1200, 700, 11], [1200, 700, 1500, 300, 11], [1500, 300, 2100, 260, 11], [2100, 260, 2400, 480, 11], [2400, 480, 2600, 480, 12], [1200, 700, 1700, 820, 9], [1700, 820, 2200, 760, 9]],
-  discs: [[1300, 840, 70], [1800, 180, 70], [600, 300, 80]],
+  id: 'river', name: 'Jalur Sungai Senja', w: 2600, h: 1000, bgm: 'field', ground: 'meadow', customGround: 'gnd_river_custom', scale: 1.8,
+  paths: [
+    [0, 530, 400, 530, 17], [400, 530, 700, 760, 17], [700, 760, 1200, 700, 17],
+    [1200, 700, 1500, 300, 17], [1500, 300, 2100, 260, 17], [2100, 260, 2400, 480, 17],
+    [2400, 480, 2600, 480, 17], [1200, 700, 1700, 820, 15], [1700, 820, 2200, 760, 15]
+  ],
+  discs: [],
   // Alur utama Sungai Senja (T338) & anak sungai dari barat (T339)
   ponds: [
     // Alur utama dari utara (1048, 0) ke selatan (1048, 600)

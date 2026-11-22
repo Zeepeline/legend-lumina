@@ -17,11 +17,21 @@ function makeSD(M, rect) {
   return (x, y) => {
     let d = org ? (vnoise(x, y, 22, 77) - .5) * 8 + (vnoise(x, y, 7, 78) - .5) * 3 : 0; const d0 = d; d = 1e9;
     for (const [x1, y1, x2, y2, r] of caps) {
-      const dx = x2 - x1, dy = y2 - y1, L = dx * dx + dy * dy; let t = L ? ((x - x1) * dx + (y - y1) * dy) / L : 0; t = t < 0 ? 0 : t > 1 ? 1 : t;
-      const ex = x - (x1 + dx * t), ey = y - (y1 + dy * t); const v = Math.sqrt(ex * ex + ey * ey) - r; if (v < d) d = v;
+      const dx = x2 - x1, dy = y2 - y1, L = dx * dx + dy * dy; if (!L) continue;
+      const invL = 1 / Math.sqrt(L), t = ((x - x1) * dx + (y - y1) * dy) / L;
+      const perp = Math.abs((x - x1) * (-dy) + (y - y1) * dx) * invL;
+      const v = t < 0 ? Math.max(perp - r, -t / invL) : t > 1 ? Math.max(perp - r, (t - 1) / invL) : perp - r;
+      if (v < d) d = v;
     }
-    for (const [cx, cy, r] of discs) { const v = Math.hypot(x - cx, y - cy) - r; if (v < d) d = v; }
-    for (const [cx, cy, rx, ry, w] of rings) { const e = Math.hypot((x - cx) / rx, (y - cy) / ry); const v = Math.abs(e - 1) * (rx + ry) / 2 - w / 2; if (v < d) d = v; }
+    for (const [cx, cy, r] of discs) {
+      const ax = Math.abs(x - cx), ay = Math.abs(y - cy), v = (Math.max(ax, ay) * .62 + (ax + ay) * .44) - r;
+      if (v < d) d = v;
+    }
+    for (const [cx, cy, rx, ry, w] of rings) {
+      const ax = Math.abs(x - cx) / rx, ay = Math.abs(y - cy) / ry;
+      const e = Math.max(ax, ay) * .62 + (ax + ay) * .44, v = Math.abs(e - 1) * (rx + ry) / 2 - w / 2;
+      if (v < d) d = v;
+    }
     return d + d0 - (org ? 3.5 : 0);
   };
 }

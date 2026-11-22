@@ -36,45 +36,55 @@ function godrayTex(sc) {
   x.fill();
   sc.textures.addCanvas('godray_beam', c);
 }
-// Generator bayangan awan fraktal berlekuk & bergerigi (FBM Fractal Jagged Pixel Cloud ala referensi pemilik)
+// Generator bayangan awan cumulus pixel-art berlekuk & berkubah alami (Horizontal Cumulus Clusters)
 function cloudShadowTex(sc) {
   if (sc.textures.exists('cloud_shadow')) return;
-  const W = 512, H = 384, GRID = 4, [c, ctx] = mk(W, H);
+  const W = 1024, H = 640, GRID = 4, [c, ctx] = mk(W, H);
   ctx.fillStyle = 'rgba(12, 28, 55, 0.55)';
-  const cols = Math.floor(W / GRID), rows = Math.floor(H / GRID);
-  const grid = new Uint8Array(cols * rows);
-  const hash2d = (x, y, s) => {
-    const n = Math.sin(x * 12.9898 + y * 78.233 + s * 43.123) * 43758.5453;
-    return (n - Math.floor(n)) * 2 - 1;
-  };
-  const vnoise = (x, y, s) => {
-    const X = Math.floor(x), Y = Math.floor(y), fx = x - X, fy = y - Y;
-    const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
-    const n00 = hash2d(X, Y, s), n10 = hash2d(X + 1, Y, s);
-    const n01 = hash2d(X, Y + 1, s), n11 = hash2d(X + 1, Y + 1, s);
-    return (n00 * (1 - sx) + n10 * sx) * (1 - sy) + (n01 * (1 - sx) + n11 * sy) * sy;
-  };
-  const fbm = (cx, cy, s) => {
-    return vnoise(cx * 0.04, cy * 0.04, s) * 1.0 +
-           vnoise(cx * 0.09, cy * 0.09, s + 1) * 0.55 +
-           vnoise(cx * 0.20, cy * 0.20, s + 2) * 0.35 +
-           vnoise(cx * 0.40, cy * 0.40, s + 3) * 0.18;
-  };
-  const makeCloud = (cx, cy, rx, ry, s) => {
-    for (let r = 0; r < rows; r++) {
-      for (let c0 = 0; c0 < cols; c0++) {
-        let dc = Math.abs(c0 - cx); if (dc > cols / 2) dc = cols - dc;
-        let dr = Math.abs(r - cy); if (dr > rows / 2) dr = rows - dr;
-        const dist = Math.hypot(dc / rx, dr / ry);
-        const n = fbm(c0, r, s);
-        if (dist - n * 0.45 < 0.85) grid[r * cols + c0] = 1;
+  const cols = W / GRID, rows = H / GRID, grid = new Uint8Array(cols * rows);
+
+  function makeCumulus(cx, cy, rx, ry, seed, nLobes) {
+    const lobes = [], step = (rx * 1.56) / (nLobes - 1);
+    for (let i = 0; i < nLobes; i++) {
+      const bx = -rx * 0.78 + i * step, nx = bx / rx;
+      const hFact = Math.max(0.2, 1.0 - (nx * 1.1) * (nx * 1.1));
+      const r_x = ry * (0.85 + 0.45 * hFact) * (0.95 + ((seed * (i + 1) * 17) % 30) / 100);
+      const r_y = ry * (0.70 + 0.55 * hFact) * (0.90 + ((seed * (i + 3) * 23) % 25) / 100);
+      const py = cy - hFact * ry * (0.35 + ((seed * (i + 5) * 31) % 30) / 100);
+      const px = cx + bx + (((seed * (i + 7) * 41) % 20) - 10) * 0.5;
+      lobes.push([px, py, r_x, r_y]);
+    }
+    lobes.push([cx - rx * 0.95, cy + ry * 0.15, ry * 0.55, ry * 0.40]);
+    lobes.push([cx + rx * 0.95, cy + ry * 0.10, ry * 0.58, ry * 0.42]);
+    const notches = [[cx - rx * 0.35, cy - ry * 0.35, ry * 0.32], [cx + rx * 0.30, cy - ry * 0.40, ry * 0.30]];
+    const minC = Math.max(0, Math.floor((cx - rx * 1.15) / GRID)), maxC = Math.min(cols - 1, Math.ceil((cx + rx * 1.15) / GRID));
+    const minR = Math.max(0, Math.floor((cy - ry * 1.35) / GRID)), maxR = Math.min(rows - 1, Math.ceil((cy + ry * 1.10) / GRID));
+
+    for (let r = minR; r <= maxR; r++) {
+      const y = r * GRID;
+      for (let c0 = minC; c0 <= maxC; c0++) {
+        const x = c0 * GRID;
+        let minD = 999;
+        for (let i = 0; i < lobes.length; i++) {
+          const l = lobes[i], d = Math.hypot((x - l[0]) / l[2], (y - l[1]) / l[3]);
+          if (d < minD) minD = d;
+        }
+        if (y > cy + ry * 0.45) minD += ((y - (cy + ry * 0.45)) / (ry * 0.55)) * 0.70;
+        for (let j = 0; j < notches.length; j++) {
+          const nt = notches[j], nd = Math.hypot(x - nt[0], y - nt[1]) / nt[2];
+          if (nd < 1.0) minD += (1.0 - nd) * 0.45;
+        }
+        const noise = (Math.sin(x * 0.16 + seed) * Math.cos(y * 0.16 + seed * 2.1) * 0.14 + Math.sin(x * 0.32 - y * 0.24) * 0.08);
+        if (minD + noise < 0.98) grid[r * cols + c0] = 1;
       }
     }
-  };
-  // Formasi awan organik berlekuk ke dalam dan bergerigi tajam
-  makeCloud(45, 42, 30, 24, 1337);
-  makeCloud(105, 75, 26, 20, 555);
-  makeCloud(95, 22, 16, 12, 999);
+  }
+
+  // 3 formasi awan unik berbeda ukuran & bentuk (rasio horizontal ~3.2:1)
+  makeCumulus(240, 150, 170, 52, 77, 7); // Awan Utama Besar
+  makeCumulus(740, 270, 130, 42, 88, 6); // Awan Sedang Berlekuk
+  makeCumulus(460, 500, 85, 28, 99, 5);  // Awan Wisp Pendamping
+
   for (let r = 0; r < rows; r++) {
     for (let c0 = 0; c0 < cols; c0++) {
       if (grid[r * cols + c0]) ctx.fillRect(c0 * GRID, r * GRID, GRID, GRID);
@@ -82,6 +92,28 @@ function cloudShadowTex(sc) {
   }
   sc.textures.addCanvas('cloud_shadow', c);
 }
+function biomeMoteProfile(mid, ground, h, n) {
+  const isNight = n > 0.45 || h >= 19.5 || h < 4.5, isDusk = h >= 15.5 && h < 19.5;
+  if (mid === 'swamp' || mid === 'deepwood' || ground === 'swamp') {
+    return { tint: isNight ? 0x70ffdc : 0x50f4a8, type: 'upward', spd: 14, scale: 0.95 }; // Spora bercahaya
+  }
+  if (mid === 'snow' || ground === 'snow') {
+    return { tint: 0xe8f8ff, type: 'snow', spd: 22, scale: 0.85 }; // Serpihan salju/es
+  }
+  if (mid === 'cave' || ground === 'cave') {
+    return { tint: (Math.round(h) % 2 === 0) ? 0x7cd8ff : 0xb878ff, type: 'hover', spd: 6, scale: 0.8 }; // Kilau kristal gua
+  }
+  if (mid === 'meadow' || ground === 'meadow') {
+    return { tint: isNight ? 0xb8ff78 : (isDusk ? 0xffcb50 : 0xfffae8), type: 'drift', spd: 16, scale: 0.9 }; // Serbuk sari padang
+  }
+  if (mid === 'forest' || ground === 'forest') {
+    return { tint: isNight ? 0x88ffaa : (isDusk ? 0xf49438 : 0xd8ea50), type: 'forest', spd: 15, scale: 1.0 }; // Daun/motes kanopi
+  }
+  if (isNight) return { tint: 0xff6820, type: 'upward', spd: 16, scale: 0.9 }; // Bara api malam desa
+  if (isDusk) return { tint: 0xffcb50, type: 'drift', spd: 14, scale: 0.9 }; // Debu emas sore
+  return { tint: 0xfffae8, type: 'drift', spd: 12, scale: 0.85 }; // Debu mentari siang
+}
+
 Object.assign(World.prototype, {
   updAmbientMotes(dt, outdoor, cave, n) {
     if (OPT.lite || (!outdoor && !cave)) {
@@ -89,44 +121,58 @@ Object.assign(World.prototype, {
       return;
     }
     moteTex(this);
+    const vw = typeof VW !== 'undefined' ? VW : 480, vh = typeof VH !== 'undefined' ? VH : 270;
     if (!this._moteP) {
       this._moteP = [];
-      const vw = typeof VW !== 'undefined' ? VW : 480, vh = typeof VH !== 'undefined' ? VH : 270;
       for (let i = 0; i < MOTE_POOL; i++) {
         const img = this.add.image(rnd(0, vw), rnd(0, vh), 'mote_dot')
           .setScrollFactor(0).setDepth(1.92e5).setBlendMode(Phaser.BlendModes.ADD);
-        this._moteP.push({
-          img, x: rnd(0, vw), y: rnd(0, vh),
-          speed: rnd(12, 28), ph: rnd(0, 6.28), bA: rnd(0.25, 0.6)
-        });
+        this._moteP.push({ img, x: rnd(0, vw), y: rnd(0, vh), speed: rnd(10, 24), ph: rnd(0, 6.28), bA: rnd(0.3, 0.65) });
       }
     }
-    const vw = typeof VW !== 'undefined' ? VW : 480, vh = typeof VH !== 'undefined' ? VH : 270;
     const h = (typeof S !== 'undefined' && S.time != null) ? S.time : 12;
-    const isEmber = outdoor && (n > 0.45 || h >= 19.5 || h < 4.5);
-    const isDusk = outdoor && h >= 15.5 && h < 19.5;
-    const isMorning = outdoor && h >= 5.0 && h < 11.5;
-    const isDeepwood = this.M && this.M.id === 'deepwood';
-    let tint = 0xfffae8; // siang: sinar matahari netral lembut
-    if (isDeepwood) tint = 0x8aff9a; // Hutan Dalam: spora fosfor lumut hijau mistis
-    else if (cave) tint = 0x88c8ff; // gua: kristal pendar biru
-    else if (isEmber) tint = 0xff7028; // malam: bara api hangat
-    else if (isDusk) tint = 0xffcb50; // sore: debu senja keemasan
-    else if (isMorning) tint = 0xf0f8ff; // pagi: embun putih segar
-    for (const m of this._moteP) {
-      m.img.setVisible(true);
-      m.img.setTint(tint);
-      if (isEmber) { // bara api melayang ke atas
-        m.y -= (m.speed * 0.9 + 8) * dt;
-        m.x += (Math.sin(this.t * 2 + m.ph) * 14 + 6) * dt;
+    const mid = this.M ? this.M.id : 'village', gnd = this.M ? this.M.ground : 'village';
+    const profA = biomeMoteProfile(mid, gnd, h, n);
+    let profB = profA, blendRatio = 0;
+    // Cross-fade partikel di dekat perbatasan wilayah tetangga
+    if (this.pl && this.owN && this.owN.length) {
+      const pl = this.pl, Mw = this.M.w, Mh = this.M.h, band = 240;
+      for (const ne of this.owN) {
+        if (!ne || !ne.to || !MAPS[ne.to]) continue;
+        let d = 1e9;
+        if (ne.side === 'S') d = Mh - pl.y;
+        else if (ne.side === 'N') d = pl.y;
+        else if (ne.side === 'E') d = Mw - pl.x;
+        else if (ne.side === 'W') d = pl.x;
+        if (d >= 0 && d < band) {
+          const r = Math.max(0, Math.min(0.5, (1 - d / band) * 0.5));
+          if (r > blendRatio) { blendRatio = r; profB = biomeMoteProfile(ne.to, MAPS[ne.to].ground, h, n); }
+        }
+      }
+    }
+    const splitIdx = Math.floor(MOTE_POOL * (1 - blendRatio * 2));
+    for (let i = 0; i < this._moteP.length; i++) {
+      const m = this._moteP[i], prof = (i >= splitIdx && blendRatio > 0.05) ? profB : profA;
+      m.img.setVisible(true).setTint(prof.tint).setScale(prof.scale);
+      if (prof.type === 'upward') { // Spora magis rawa / bara api malam: melayang ke atas & berayun
+        m.y -= (m.speed * 0.8 + prof.spd * 0.6) * dt;
+        m.x += (Math.sin(this.t * 2.2 + m.ph) * 14 + 3) * dt;
         if (m.y < -8) { m.y = vh + 8; m.x = rnd(0, vw); }
-      } else { // debu emas melayang santai ke kanan-bawah
-        m.x += (m.speed + Math.cos(this.t * 1.2 + m.ph) * 8) * dt;
-        m.y += (m.speed * 0.35 + Math.sin(this.t * 1.5 + m.ph) * 10) * dt;
+      } else if (prof.type === 'snow') { // Kristal es salju: melayang miring ke bawah ditiup angin
+        m.x += (m.speed * 1.1 + prof.spd * 0.8) * dt;
+        m.y += (m.speed * 1.3 + prof.spd * 0.9) * dt;
+        if (m.x > vw + 8) { m.x = -8; m.y = rnd(0, vh); }
+        if (m.y > vh + 8) { m.y = -8; m.x = rnd(0, vw); }
+      } else if (prof.type === 'hover') { // Kilau kristal gua: berdenyut di tempat
+        m.x += Math.sin(this.t * 1.4 + m.ph) * 4 * dt;
+        m.y += Math.cos(this.t * 1.2 + m.ph) * 4 * dt;
+      } else { // Serbuk sari padang & daun kanopi hutan: melayang lembut ke kanan-bawah
+        m.x += (m.speed + Math.cos(this.t * 1.2 + m.ph) * 7) * dt;
+        m.y += (m.speed * 0.4 + Math.sin(this.t * 1.5 + m.ph) * 8) * dt;
         if (m.x > vw + 8) { m.x = -8; m.y = rnd(0, vh); }
         if (m.y > vh + 8) { m.y = -8; m.x = rnd(0, vw); }
       }
-      const alphaPulse = m.bA * (0.7 + Math.sin(this.t * 2.5 + m.ph) * 0.3);
+      const alphaPulse = m.bA * (0.65 + Math.sin(this.t * 2.6 + m.ph) * 0.35);
       m.img.setPosition(m.x, m.y).setAlpha(alphaPulse);
     }
   },
@@ -243,7 +289,9 @@ Object.assign(World.prototype, {
 
   updAtmos(dt) {
     if (G.title || !this.M) return;
-    if (this.M.indoor && this._bgM !== this.M) { this._bgM = this.M; this.cameras.main.setBackgroundColor('#0e0907'); } /* luar ruangan sempit: gelap, bukan hijau */
+    if (this.M.indoor && this._bgM !== this.M) {
+      this._bgM = this.M; this.cameras.main.setBackgroundColor('#0e0907');
+    }
     const outdoor = !this.M.indoor && !this.M.dark, cave = this.M && this.M.ground === 'cave';
     const n = typeof nightAmt === 'function' ? nightAmt() : 0;
     this.updAmbientMotes(dt, outdoor, cave, n);
