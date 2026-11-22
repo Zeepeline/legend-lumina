@@ -164,14 +164,17 @@ Object.assign(World.prototype, {
     }
     c.style.display = '';
     this.miniT = (this.miniT || 0) - dt; if (this.miniT > 0) return; this.miniT = .25;
+    if (M.benua && typeof miniBenua === 'function' && miniBenua(this, c)) return; /* benua: radar dari tanah sekarang */
     const W = 96, k = W / Math.max(M.w, M.h), ox = (W - M.w * k) / 2, oy = (W - M.h * k) / 2, x = c.getContext('2d');
     if (this.miniFor !== M.id) { // lapisan diam: tanah, jalan, air, tembok, pintu keluar
       this.miniFor = M.id; const b = document.createElement('canvas'); b.width = b.height = W; const y = b.getContext('2d');
       y.fillStyle = M.ground === 'snow' ? '#dfe8f0' : M.ground === 'cave' ? '#4a4458' : M.ground === 'swamp' ? '#4e6a48' : '#6a9a4e'; y.fillRect(ox, oy, M.w * k, M.h * k);
+      const now = typeof worldOverview === 'function' && typeof GRASS_EDGE !== 'undefined' && GRASS_EDGE.maps.includes(M.id);
+      if (now) { y.imageSmoothingEnabled = true; y.drawImage(worldOverview(M), ox, oy, M.w * k, M.h * k); } /* tanah sekarang */
       y.strokeStyle = M.ground === 'village' ? '#d8cdb8' : '#c8a870'; y.lineCap = 'round';
-      for (const [x1, y1, x2, y2, w] of M.paths || []) { y.lineWidth = Math.max(1.5, (w || 12) * k * 1.4); y.beginPath(); y.moveTo(ox + x1 * k, oy + y1 * k); y.lineTo(ox + x2 * k, oy + y2 * k); y.stroke(); }
-      y.fillStyle = '#4aa6e0'; for (const [px, py, rx, ry] of M.ponds || []) { y.beginPath(); y.ellipse(ox + px * k, oy + py * k, rx * k, ry * k, 0, 0, 7); y.fill(); }
-      y.fillStyle = 'rgba(30,24,40,.55)'; for (const [wx, wy, ww, wh] of M.walls || []) y.fillRect(ox + wx * k, oy + wy * k, Math.max(1, ww * k), Math.max(1, wh * k));
+      if (!now) for (const [x1, y1, x2, y2, w] of M.paths || []) { y.lineWidth = Math.max(1.5, (w || 12) * k * 1.4); y.beginPath(); y.moveTo(ox + x1 * k, oy + y1 * k); y.lineTo(ox + x2 * k, oy + y2 * k); y.stroke(); }
+      y.fillStyle = '#4aa6e0'; if (!now) for (const [px, py, rx, ry] of M.ponds || []) { y.beginPath(); y.ellipse(ox + px * k, oy + py * k, rx * k, ry * k, 0, 0, 7); y.fill(); }
+      y.fillStyle = 'rgba(30,24,40,.55)'; if (!now) for (const [wx, wy, ww, wh] of M.walls || []) y.fillRect(ox + wx * k, oy + wy * k, Math.max(1, ww * k), Math.max(1, wh * k));
       y.fillStyle = '#ffd84a'; for (const e of M.exits || []) y.fillRect(ox + e.x * k - 1, oy + e.y * k - 1, Math.max(3, e.w * k), Math.max(3, e.h * k));
       drawFog(y, M, k, ox, oy); this.miniBase = b;
     }
@@ -241,3 +244,37 @@ function applyPadOpt() { const r = document.documentElement.style; r.setProperty
 applyPadOpt();
 // simpan saat halaman ditutup/dimuat ulang (#910)
 window.addEventListener('pagehide', () => { const g = window.__game && window.__game.sc; if (g && !G.title && g.pl && !g.pl.dead) saveGame(g); });
+
+// PETA MINI BENUA — radar ±MINI_SPAN/2 px di sekitar Arka, dari gambar ringkas Peta Benua (worldmap_art.js: tanah, air,
+// jembatan, pohon & bangunan sama dengan yang tampil di game) + kabut jelajah + titik NPC/musuh/tujuan.
+const MINI_SPAN = 1500;
+function miniBenua(sc, c) {
+  if (typeof worldOverview !== 'function') return false;
+  const M = sc.M, W = c.width, K = WOV_K;
+  try {
+    if (!miniBenua.c || miniBenua.for !== M) {
+      const [cv, y] = mk(Math.ceil(M.w / K), Math.ceil(M.h / K)); y.fillStyle = '#1e3a4a'; y.fillRect(0, 0, cv.width, cv.height);
+      for (const id of M.regions) {
+        const R = MAPS[id], P = WORLD_POS[id];
+        if (R && !R.indoor) y.drawImage(worldOverview(R), (P[0] - M.x0) / K, (P[1] - M.y0) / K);
+      }
+      miniBenua.c = cv; miniBenua.for = M;
+    }
+  } catch (e) { console.warn('miniBenua', e); return false; }
+  const x = c.getContext('2d'), k = W / MINI_SPAN, px = sc.pl.x, py = sc.pl.y, ox = W / 2 - px * k, oy = W / 2 - py * k;
+  x.fillStyle = '#1e3a4a'; x.fillRect(0, 0, W, W); x.imageSmoothingEnabled = true;
+  const sx = (px - MINI_SPAN / 2 - M.x0) / K, sy = (py - MINI_SPAN / 2 - M.y0) / K;
+  x.drawImage(miniBenua.c, sx, sy, MINI_SPAN / K, MINI_SPAN / K, 0, 0, W, W);
+  if (typeof drawFog === 'function') drawFog(x, M, k, ox, oy);
+  const dot = (X, Y, col, r = 1) => {
+    const a = ox + X * k, b = oy + Y * k; if (a > 0 && b > 0 && a < W && b < W) { x.fillStyle = col; x.fillRect(a - r, b - r, r * 2, r * 2); }
+  };
+  for (const n of sc.npcs) if (n.spr.visible) dot(n.spr.x, n.spr.y, '#fff3c0');
+  for (const e of sc.enemies) if (e.hp > 0 && Math.hypot(e.spr.x - px, e.spr.y - py) < 360) dot(e.spr.x, e.spr.y, '#e84a3a');
+  const q = sc.qGoal; if (q) { /* tujuan: di tepi radar bila jauh */
+    const a = Math.max(5, Math.min(W - 5, ox + q.x * k)), b = Math.max(6, Math.min(W - 2, oy + q.y * k));
+    x.fillStyle = '#ffd84a'; x.font = '9px sans-serif'; x.fillText('★', a - 4, b + 3);
+  }
+  x.fillStyle = '#ffffff'; x.strokeStyle = '#2a1c14'; x.lineWidth = 1.5; x.beginPath(); x.arc(W / 2, W / 2, 2.6, 0, 7); x.fill(); x.stroke();
+  return true;
+}

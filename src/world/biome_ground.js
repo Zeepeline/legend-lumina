@@ -17,7 +17,20 @@ const BIOME = {
   },
   lum: [60, 215], /* rentang kecerahan rumput → ujung tangga */
 };
-function biomeOf(M) { return BIOME.on && M ? BIOME[M.id] || BIOME[M.ground] || null : null; }
+// tanah musiman (musim dari season.js): gugur = rumput keemasan + daun gugur, dingin = bercak salju; wilayah ber-biome sendiri tetap
+BIOME.season = {
+  gugur: { ramp: [[86, 92, 40], [128, 124, 50], [170, 148, 60], [204, 170, 78], [228, 198, 108]], patch: .3, fade: 0,
+    dots: [[214, 104, 44], [190, 70, 40], [232, 160, 60]], dotP: .03 },
+  dingin: { ramp: [[150, 168, 196], [190, 206, 224], [222, 232, 242], [240, 245, 250], [252, 253, 255]], patch: .46, fade: 0 },
+};
+const biomeSeasonId = () => {
+  try { return typeof seasonIdx === 'function' && typeof S !== 'undefined' && S ? SEASONS[seasonIdx()].id : ''; } catch (e) { return ''; }
+};
+function biomeOf(M) {
+  if (!BIOME.on || !M) return null;
+  const own = BIOME[M.id] || BIOME[M.ground]; if (own) return own;
+  return M.indoor ? null : BIOME.season[biomeSeasonId()] || null;
+}
 // sisi peta yang bersambung ke wilayah lain, per potongan 32 px → jarak ke tepi itu menentukan pudar
 function biomeSides(M) {
   if (M._bioS) return M._bioS;
@@ -31,6 +44,7 @@ function biomeSides(M) {
 }
 // 1 = biome penuh, 0 = rumput biasa (bercak berderau di dekat tepi yang bersambung)
 function biomeMask(M, B, lx, ly, X, Y) {
+  if (B.patch) return vnoise(X, Y, 130, 81) * .7 + vnoise(X, Y, 28, 82) * .3 > B.patch ? 1 : 0; /* musim: bercak */
   const S = biomeSides(M), f = B.fade;
   let d = f;
   if (S.t[(lx / 32) | 0]) d = Math.min(d, ly);
@@ -45,4 +59,10 @@ function biomeRamp(B, r, g, b, o) {
   const k = t | 0, u = t - k, A = R[k], C = R[k + 1];
   o[0] = A[0] + (C[0] - A[0]) * u; o[1] = A[1] + (C[1] - A[1]) * u; o[2] = A[2] + (C[2] - A[2]) * u;
   return o;
+}
+// daun gugur di atas rumput (titik 2×2 piksel)
+function biomeDot(B, X, Y, o) {
+  if (!B.dots || hash(X >> 1, Y >> 1, 83) >= B.dotP) return false;
+  const c = B.dots[Math.floor(hash(X >> 1, Y >> 1, 84) * B.dots.length)]; o[0] = c[0]; o[1] = c[1]; o[2] = c[2];
+  return true;
 }

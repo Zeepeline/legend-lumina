@@ -205,10 +205,34 @@ function natureBorder(M, L) {
 // warna tumbuhan per biome (rawa: pohon, semak & bunga lebih suram/keruh), lewat setTint (gambar asli tetap)
 const NATURE_TINT = { swamp: 0xa9b896, rx: /tree|pine|round|redwood|willow|bush|fern|^sp(Bush|Berry|Flower|Sprout|Mush|Sun|Tree)|reeds|cattail/i };
 function natureBiomeTint(sc, s, o) {
-  if (!s || !s.setTint || !o || !NATURE_TINT.rx.test(o[0] + ' ' + ((s.texture && s.texture.key) || ''))) return;
+  if (!s || !s.setTint || !o) return;
   const B = typeof BENUA !== 'undefined' && BENUA && typeof regionOwner === 'function';
-  const id = B ? regionOwner(s.x, s.y) : sc.M && sc.M.id, t = NATURE_TINT[id];
-  if (t) s.setTint(t);
+  const id = B ? regionOwner(s.x, s.y) : sc.M && sc.M.id, key = (s.texture && s.texture.key) || '';
+  if (id === 'snow' && NATURE_SNOW.rx.test(key)) { const k = natureSnowTex(sc, key); if (k) s.setTexture(k); return; }
+  if (!NATURE_TINT.rx.test(o[0] + ' ' + key)) return;
+  const t = NATURE_TINT[id]; if (t) s.setTint(t);
+}
+// Puncak Beku: batu, semak, tunggul, batang & properti diberi tudung salju (salinan tekstur '<kunci>_snow')
+const NATURE_SNOW = { rx: /^(sp(Rock|Stump|Log|Bush|Berry)\w*|pebbles|rock\w*|bramble|crate|barrel|hay|fence|sign|i_pot|stele)$/,
+  white: [244, 248, 252], shade: [212, 224, 238] };
+function natureSnowTex(sc, key) {
+  const k = key + '_snow', T = sc.textures; if (T.exists(k)) return k;
+  if (!T.exists(key)) return null;
+  const tex = T.get(key); if (tex.frameTotal > 2) return null; /* strip beranimasi: lewati */
+  const f = tex.get(), w = f.cutWidth, h = f.cutHeight, [c, x] = mk(w, h);
+  x.drawImage(tex.getSourceImage(), f.cutX, f.cutY, w, h, 0, 0, w, h);
+  const im = x.getImageData(0, 0, w, h), D = im.data, cap = Math.max(4, Math.round(h * .2 / 2) * 2), N = NATURE_SNOW;
+  for (let X = 0; X < w; X++) {
+    let y0 = -1; for (let y = 0; y < h; y++) if (D[(y * w + X) * 4 + 3] > 120) { y0 = y; break; }
+    if (y0 < 0 || y0 > h * .7) continue;
+    const dep = cap + (hash(X >> 1, 3, 71) < .35 ? 2 : 0) - (hash(X >> 1, 4, 71) < .25 ? 2 : 0);
+    for (let y = y0; y < Math.min(h, y0 + dep); y++) {
+      const i = (y * w + X) * 4; if (D[i + 3] < 120) continue;
+      const c2 = y >= y0 + dep - 2 ? N.shade : N.white; D[i] = c2[0]; D[i + 1] = c2[1]; D[i + 2] = c2[2];
+    }
+  }
+  x.putImageData(im, 0, 0); T.addCanvas(k, c);
+  return k;
 }
 // ── semak & bunga bergoyang ──
 function natureSwayTex(sc, key) {

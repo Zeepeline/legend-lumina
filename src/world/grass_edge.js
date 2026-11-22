@@ -176,7 +176,7 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
       const o = D[i] + D[i + 1] + D[i + 2], fl = isGreen(D[i], D[i + 1], D[i + 2]) ? Math.min(1.15, Math.max(.8, o / GRASS.ref)) : 1.15;
       D[i] = a[0] * f * fl; D[i + 1] = a[1] * f * fl; D[i + 2] = a[2] * f * fl;
       if (BI && biomeMask(M, BI, lx, ly, X, Y)) { /* salju / rumput rawa */
-        biomeRamp(BI, D[i], D[i + 1], D[i + 2], bo); D[i] = bo[0]; D[i + 1] = bo[1]; D[i + 2] = bo[2];
+        biomeRamp(BI, D[i], D[i + 1], D[i + 2], bo); biomeDot(BI, X, Y, bo); D[i] = bo[0]; D[i + 1] = bo[1]; D[i + 2] = bo[2];
       }
       continue;
     }

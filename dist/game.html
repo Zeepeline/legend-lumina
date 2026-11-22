@@ -7131,7 +7131,7 @@ function grassEdgeCanvas(ctx, W, H, RX, RY, X0, Y0, M) {
       const o = D[i] + D[i + 1] + D[i + 2], fl = isGreen(D[i], D[i + 1], D[i + 2]) ? Math.min(1.15, Math.max(.8, o / GRASS.ref)) : 1.15;
       D[i] = a[0] * f * fl; D[i + 1] = a[1] * f * fl; D[i + 2] = a[2] * f * fl;
       if (BI && biomeMask(M, BI, lx, ly, X, Y)) { /* salju / rumput rawa */
-        biomeRamp(BI, D[i], D[i + 1], D[i + 2], bo); D[i] = bo[0]; D[i + 1] = bo[1]; D[i + 2] = bo[2];
+        biomeRamp(BI, D[i], D[i + 1], D[i + 2], bo); biomeDot(BI, X, Y, bo); D[i] = bo[0]; D[i + 1] = bo[1]; D[i + 2] = bo[2];
       }
       continue;
     }
@@ -7185,7 +7185,20 @@ const BIOME = {
   },
   lum: [60, 215], /* rentang kecerahan rumput → ujung tangga */
 };
-function biomeOf(M) { return BIOME.on && M ? BIOME[M.id] || BIOME[M.ground] || null : null; }
+// tanah musiman (musim dari season.js): gugur = rumput keemasan + daun gugur, dingin = bercak salju; wilayah ber-biome sendiri tetap
+BIOME.season = {
+  gugur: { ramp: [[86, 92, 40], [128, 124, 50], [170, 148, 60], [204, 170, 78], [228, 198, 108]], patch: .3, fade: 0,
+    dots: [[214, 104, 44], [190, 70, 40], [232, 160, 60]], dotP: .03 },
+  dingin: { ramp: [[150, 168, 196], [190, 206, 224], [222, 232, 242], [240, 245, 250], [252, 253, 255]], patch: .46, fade: 0 },
+};
+const biomeSeasonId = () => {
+  try { return typeof seasonIdx === 'function' && typeof S !== 'undefined' && S ? SEASONS[seasonIdx()].id : ''; } catch (e) { return ''; }
+};
+function biomeOf(M) {
+  if (!BIOME.on || !M) return null;
+  const own = BIOME[M.id] || BIOME[M.ground]; if (own) return own;
+  return M.indoor ? null : BIOME.season[biomeSeasonId()] || null;
+}
 // sisi peta yang bersambung ke wilayah lain, per potongan 32 px → jarak ke tepi itu menentukan pudar
 function biomeSides(M) {
   if (M._bioS) return M._bioS;
@@ -7199,6 +7212,7 @@ function biomeSides(M) {
 }
 // 1 = biome penuh, 0 = rumput biasa (bercak berderau di dekat tepi yang bersambung)
 function biomeMask(M, B, lx, ly, X, Y) {
+  if (B.patch) return vnoise(X, Y, 130, 81) * .7 + vnoise(X, Y, 28, 82) * .3 > B.patch ? 1 : 0; /* musim: bercak */
   const S = biomeSides(M), f = B.fade;
   let d = f;
   if (S.t[(lx / 32) | 0]) d = Math.min(d, ly);
@@ -7213,6 +7227,12 @@ function biomeRamp(B, r, g, b, o) {
   const k = t | 0, u = t - k, A = R[k], C = R[k + 1];
   o[0] = A[0] + (C[0] - A[0]) * u; o[1] = A[1] + (C[1] - A[1]) * u; o[2] = A[2] + (C[2] - A[2]) * u;
   return o;
+}
+// daun gugur di atas rumput (titik 2×2 piksel)
+function biomeDot(B, X, Y, o) {
+  if (!B.dots || hash(X >> 1, Y >> 1, 83) >= B.dotP) return false;
+  const c = B.dots[Math.floor(hash(X >> 1, Y >> 1, 84) * B.dots.length)]; o[0] = c[0]; o[1] = c[1]; o[2] = c[2];
+  return true;
 }
 
 'use strict';
@@ -8895,7 +8915,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.75.0';
+const GAME_VERSION = '1.76.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
@@ -19293,14 +19313,17 @@ Object.assign(World.prototype, {
     }
     c.style.display = '';
     this.miniT = (this.miniT || 0) - dt; if (this.miniT > 0) return; this.miniT = .25;
+    if (M.benua && typeof miniBenua === 'function' && miniBenua(this, c)) return; /* benua: radar dari tanah sekarang */
     const W = 96, k = W / Math.max(M.w, M.h), ox = (W - M.w * k) / 2, oy = (W - M.h * k) / 2, x = c.getContext('2d');
     if (this.miniFor !== M.id) { // lapisan diam: tanah, jalan, air, tembok, pintu keluar
       this.miniFor = M.id; const b = document.createElement('canvas'); b.width = b.height = W; const y = b.getContext('2d');
       y.fillStyle = M.ground === 'snow' ? '#dfe8f0' : M.ground === 'cave' ? '#4a4458' : M.ground === 'swamp' ? '#4e6a48' : '#6a9a4e'; y.fillRect(ox, oy, M.w * k, M.h * k);
+      const now = typeof worldOverview === 'function' && typeof GRASS_EDGE !== 'undefined' && GRASS_EDGE.maps.includes(M.id);
+      if (now) { y.imageSmoothingEnabled = true; y.drawImage(worldOverview(M), ox, oy, M.w * k, M.h * k); } /* tanah sekarang */
       y.strokeStyle = M.ground === 'village' ? '#d8cdb8' : '#c8a870'; y.lineCap = 'round';
-      for (const [x1, y1, x2, y2, w] of M.paths || []) { y.lineWidth = Math.max(1.5, (w || 12) * k * 1.4); y.beginPath(); y.moveTo(ox + x1 * k, oy + y1 * k); y.lineTo(ox + x2 * k, oy + y2 * k); y.stroke(); }
-      y.fillStyle = '#4aa6e0'; for (const [px, py, rx, ry] of M.ponds || []) { y.beginPath(); y.ellipse(ox + px * k, oy + py * k, rx * k, ry * k, 0, 0, 7); y.fill(); }
-      y.fillStyle = 'rgba(30,24,40,.55)'; for (const [wx, wy, ww, wh] of M.walls || []) y.fillRect(ox + wx * k, oy + wy * k, Math.max(1, ww * k), Math.max(1, wh * k));
+      if (!now) for (const [x1, y1, x2, y2, w] of M.paths || []) { y.lineWidth = Math.max(1.5, (w || 12) * k * 1.4); y.beginPath(); y.moveTo(ox + x1 * k, oy + y1 * k); y.lineTo(ox + x2 * k, oy + y2 * k); y.stroke(); }
+      y.fillStyle = '#4aa6e0'; if (!now) for (const [px, py, rx, ry] of M.ponds || []) { y.beginPath(); y.ellipse(ox + px * k, oy + py * k, rx * k, ry * k, 0, 0, 7); y.fill(); }
+      y.fillStyle = 'rgba(30,24,40,.55)'; if (!now) for (const [wx, wy, ww, wh] of M.walls || []) y.fillRect(ox + wx * k, oy + wy * k, Math.max(1, ww * k), Math.max(1, wh * k));
       y.fillStyle = '#ffd84a'; for (const e of M.exits || []) y.fillRect(ox + e.x * k - 1, oy + e.y * k - 1, Math.max(3, e.w * k), Math.max(3, e.h * k));
       drawFog(y, M, k, ox, oy); this.miniBase = b;
     }
@@ -19370,6 +19393,40 @@ function applyPadOpt() { const r = document.documentElement.style; r.setProperty
 applyPadOpt();
 // simpan saat halaman ditutup/dimuat ulang (#910)
 window.addEventListener('pagehide', () => { const g = window.__game && window.__game.sc; if (g && !G.title && g.pl && !g.pl.dead) saveGame(g); });
+
+// PETA MINI BENUA — radar ±MINI_SPAN/2 px di sekitar Arka, dari gambar ringkas Peta Benua (worldmap_art.js: tanah, air,
+// jembatan, pohon & bangunan sama dengan yang tampil di game) + kabut jelajah + titik NPC/musuh/tujuan.
+const MINI_SPAN = 1500;
+function miniBenua(sc, c) {
+  if (typeof worldOverview !== 'function') return false;
+  const M = sc.M, W = c.width, K = WOV_K;
+  try {
+    if (!miniBenua.c || miniBenua.for !== M) {
+      const [cv, y] = mk(Math.ceil(M.w / K), Math.ceil(M.h / K)); y.fillStyle = '#1e3a4a'; y.fillRect(0, 0, cv.width, cv.height);
+      for (const id of M.regions) {
+        const R = MAPS[id], P = WORLD_POS[id];
+        if (R && !R.indoor) y.drawImage(worldOverview(R), (P[0] - M.x0) / K, (P[1] - M.y0) / K);
+      }
+      miniBenua.c = cv; miniBenua.for = M;
+    }
+  } catch (e) { console.warn('miniBenua', e); return false; }
+  const x = c.getContext('2d'), k = W / MINI_SPAN, px = sc.pl.x, py = sc.pl.y, ox = W / 2 - px * k, oy = W / 2 - py * k;
+  x.fillStyle = '#1e3a4a'; x.fillRect(0, 0, W, W); x.imageSmoothingEnabled = true;
+  const sx = (px - MINI_SPAN / 2 - M.x0) / K, sy = (py - MINI_SPAN / 2 - M.y0) / K;
+  x.drawImage(miniBenua.c, sx, sy, MINI_SPAN / K, MINI_SPAN / K, 0, 0, W, W);
+  if (typeof drawFog === 'function') drawFog(x, M, k, ox, oy);
+  const dot = (X, Y, col, r = 1) => {
+    const a = ox + X * k, b = oy + Y * k; if (a > 0 && b > 0 && a < W && b < W) { x.fillStyle = col; x.fillRect(a - r, b - r, r * 2, r * 2); }
+  };
+  for (const n of sc.npcs) if (n.spr.visible) dot(n.spr.x, n.spr.y, '#fff3c0');
+  for (const e of sc.enemies) if (e.hp > 0 && Math.hypot(e.spr.x - px, e.spr.y - py) < 360) dot(e.spr.x, e.spr.y, '#e84a3a');
+  const q = sc.qGoal; if (q) { /* tujuan: di tepi radar bila jauh */
+    const a = Math.max(5, Math.min(W - 5, ox + q.x * k)), b = Math.max(6, Math.min(W - 2, oy + q.y * k));
+    x.fillStyle = '#ffd84a'; x.font = '9px sans-serif'; x.fillText('★', a - 4, b + 3);
+  }
+  x.fillStyle = '#ffffff'; x.strokeStyle = '#2a1c14'; x.lineWidth = 1.5; x.beginPath(); x.arc(W / 2, W / 2, 2.6, 0, 7); x.fill(); x.stroke();
+  return true;
+}
 
 'use strict';
 // Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),
@@ -22338,7 +22395,7 @@ World.prototype.updInteractHint = function () { this.hintT = (this.hintT || 0) -
 const GT = 64, GT_MAX = 220, GT_BUDGET = 3, GT_MARGIN = 2; // ukuran potongan, maks potongan di memori, ms/frame, cincin potongan di luar layar
 const GTC = new Map(); // kunci tekstur → waktu terakhir dipakai (LRU, lintas peta)
 const GOV = {};        // ringkasan ¼ ukuran per peta untuk peta besar & peta mini
-function gtKey(M, i, j) { return 'gt:' + M.id + ':' + i + ':' + j; }
+function gtKey(M, i, j) { return 'gt:' + M.id + ':' + (typeof biomeSeasonId === 'function' ? biomeSeasonId() : '') + ':' + i + ':' + j; } /* + musim */
 function groundOverview(M) {
   let o = GOV[M.id]; if (o) return o;
   const c = document.createElement('canvas'); c.width = Math.ceil(M.w / 4); c.height = Math.ceil(M.h / 4);
@@ -22386,7 +22443,12 @@ Object.assign(World.prototype, {
     return true;
   },
   updGround() {
-    if (!this.gStream) return; this.gSpent = 0; const v = this.cameras.main.worldView, want = new Set();
+    if (!this.gStream) return;
+    const sea = typeof biomeSeasonId === 'function' ? biomeSeasonId() : ''; /* musim berganti → tanah dibuat ulang */
+    if (this._gSea !== sea) {
+      if (this._gSea != null) { for (const [, img] of this.gImgs) img.destroy(); this.gImgs.clear(); }
+      this._gSea = sea;
+    } this.gSpent = 0; const v = this.cameras.main.worldView, want = new Set();
     for (const L of this.gL) {
       if (v.right < L.ox - GT * GT_MARGIN || v.x > L.ox + L.M.w + GT * GT_MARGIN || v.bottom < L.oy - GT * GT_MARGIN || v.y > L.oy + L.M.h + GT * GT_MARGIN) continue;
       for (const [i, j] of this.gNeed(L, v.x, v.y, GT_MARGIN)) {
@@ -25907,10 +25969,34 @@ function natureBorder(M, L) {
 // warna tumbuhan per biome (rawa: pohon, semak & bunga lebih suram/keruh), lewat setTint (gambar asli tetap)
 const NATURE_TINT = { swamp: 0xa9b896, rx: /tree|pine|round|redwood|willow|bush|fern|^sp(Bush|Berry|Flower|Sprout|Mush|Sun|Tree)|reeds|cattail/i };
 function natureBiomeTint(sc, s, o) {
-  if (!s || !s.setTint || !o || !NATURE_TINT.rx.test(o[0] + ' ' + ((s.texture && s.texture.key) || ''))) return;
+  if (!s || !s.setTint || !o) return;
   const B = typeof BENUA !== 'undefined' && BENUA && typeof regionOwner === 'function';
-  const id = B ? regionOwner(s.x, s.y) : sc.M && sc.M.id, t = NATURE_TINT[id];
-  if (t) s.setTint(t);
+  const id = B ? regionOwner(s.x, s.y) : sc.M && sc.M.id, key = (s.texture && s.texture.key) || '';
+  if (id === 'snow' && NATURE_SNOW.rx.test(key)) { const k = natureSnowTex(sc, key); if (k) s.setTexture(k); return; }
+  if (!NATURE_TINT.rx.test(o[0] + ' ' + key)) return;
+  const t = NATURE_TINT[id]; if (t) s.setTint(t);
+}
+// Puncak Beku: batu, semak, tunggul, batang & properti diberi tudung salju (salinan tekstur '<kunci>_snow')
+const NATURE_SNOW = { rx: /^(sp(Rock|Stump|Log|Bush|Berry)\w*|pebbles|rock\w*|bramble|crate|barrel|hay|fence|sign|i_pot|stele)$/,
+  white: [244, 248, 252], shade: [212, 224, 238] };
+function natureSnowTex(sc, key) {
+  const k = key + '_snow', T = sc.textures; if (T.exists(k)) return k;
+  if (!T.exists(key)) return null;
+  const tex = T.get(key); if (tex.frameTotal > 2) return null; /* strip beranimasi: lewati */
+  const f = tex.get(), w = f.cutWidth, h = f.cutHeight, [c, x] = mk(w, h);
+  x.drawImage(tex.getSourceImage(), f.cutX, f.cutY, w, h, 0, 0, w, h);
+  const im = x.getImageData(0, 0, w, h), D = im.data, cap = Math.max(4, Math.round(h * .2 / 2) * 2), N = NATURE_SNOW;
+  for (let X = 0; X < w; X++) {
+    let y0 = -1; for (let y = 0; y < h; y++) if (D[(y * w + X) * 4 + 3] > 120) { y0 = y; break; }
+    if (y0 < 0 || y0 > h * .7) continue;
+    const dep = cap + (hash(X >> 1, 3, 71) < .35 ? 2 : 0) - (hash(X >> 1, 4, 71) < .25 ? 2 : 0);
+    for (let y = y0; y < Math.min(h, y0 + dep); y++) {
+      const i = (y * w + X) * 4; if (D[i + 3] < 120) continue;
+      const c2 = y >= y0 + dep - 2 ? N.shade : N.white; D[i] = c2[0]; D[i + 1] = c2[1]; D[i + 2] = c2[2];
+    }
+  }
+  x.putImageData(im, 0, 0); T.addCanvas(k, c);
+  return k;
 }
 // ── semak & bunga bergoyang ──
 function natureSwayTex(sc, key) {
@@ -27268,6 +27354,7 @@ function worldOverview(M) {
     D[o] = col[0]; D[o + 1] = col[1]; D[o + 2] = col[2]; D[o + 3] = 255;
   }
   x.putImageData(img, 0, 0);
+  wovGroundNow(M, x, W, H); /* tanah sesuai gambar peta sekarang (grass_edge, biome, jembatan) */
   const k = 1 / WOV_K;
   for (const [gx, gy, gw, gh] of (M.gardens || [])) { x.fillStyle = '#7a5230'; x.fillRect(gx * k, gy * k, gw * k, gh * k); }
   const objs = (typeof mapObjects === 'function' ? mapObjects(M) : M.objs || []).slice().sort((a, b) => a[2] - b[2]);
@@ -27300,6 +27387,36 @@ function worldOverview(M) {
     '.wmb.r{background:linear-gradient(#c8604a,#9a3e2e)}';
   document.head.appendChild(s);
 })();
+// tanah peta = tanah yang tampil di game: kisi grass_edge (air/pasir/tanah/rumput) + palet biome + jembatan & dermaga;
+// di Benua, titik milik wilayah lain dibiarkan transparan (sama seperti fitClipGround)
+function wovGroundNow(M, x, W, H) {
+  const E = typeof GRASS_EDGE !== 'undefined' && GRASS_EDGE.maps.includes(M.id) && typeof grassEdgeData === 'function' && grassEdgeData(M);
+  if (!E || !E.Wm) return;
+  const PL = (typeof EDGE_PAL !== 'undefined' && EDGE_PAL[M.id]) || {}, BI = typeof biomeOf === 'function' ? biomeOf(M) : null;
+  const P = typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id], own = P && typeof BENUA !== 'undefined' && BENUA && typeof regionOwner === 'function';
+  const br = typeof fitBridgeRects === 'function' ? fitBridgeRects(M) : [], docks = (M.objs || []).filter(o => o[0] === 'dock');
+  const S = GRASS_EDGE.cell, img = x.getImageData(0, 0, W, H), D = img.data, o3 = [0, 0, 0];
+  const GR = [[118, 176, 72], [132, 190, 80], [150, 202, 92]];
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+    const px = i * WOV_K + 4, py = j * WOV_K + 4, o = (j * W + i) * 4, c = Math.floor(px / S), r = Math.floor(py / S);
+    if (own && regionOwner(P[0] + px, P[1] + py) !== M.id) { D[o + 3] = 0; continue; }
+    if (c >= E.cols || r >= E.rows) continue;
+    const k = r * E.cols + c, bm = !BI || biomeMask(M, BI, px, py, px + (P ? P[0] : 0), py + (P ? P[1] : 0)); let col;
+    const onBr = br.some(b => px > b[0] && px < b[0] + b[2] && py > b[1] && py < b[1] + b[3]);
+    if (onBr || docks.some(d => Math.abs(px - d[1]) < 20 && py < d[2] && py > d[2] - 56)) col = [168, 112, 62]; /* jembatan & dermaga */
+    else if (E.Wm[k]) { const w = bm && PL.water ? PL.water : WATER_S; col = E.dep && E.dep[k] > 2 ? w.deep : w.base; }
+    else if (E.strip[k]) col = (bm && PL.sand) || SAND_S.base;
+    else if (!E.grass[k]) col = PL.road === 'cobble' ? [196, 188, 178] : bm && BI && BI.dirt ? BI.dirt.base : DIRT_S.base;
+    else {
+      const v = vnoise(px, py, 56, 11);
+      col = GR[v < .4 ? 0 : v < .62 ? 1 : 2];
+      if (BI && bm) col = biomeRamp(BI, col[0], col[1], col[2], o3);
+    }
+    if (col.base) col = col.base;
+    D[o] = col[0]; D[o + 1] = col[1]; D[o + 2] = col[2]; D[o + 3] = 255;
+  }
+  x.putImageData(img, 0, 0);
+}
 
 'use strict';
 // Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)

@@ -115,9 +115,9 @@ _RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini 
 _TEPI RUMPUT BERPETAK (autotile 47 bentuk) — percobaan, hanya untuk peta di GRASS_EDGE.maps._
 `GRASS_EDGE` 7 · `EDGE_PAL` 10 · `COBBLE` 19 · `cobbleTile()` 20 · `GRASS_EDGE_MAP` 38 · `DIRT_S` 48 · `SAND_S` 49 · `WATER_S` 50 · `edgeClass()` 53 · `isGreen` 62 · `edgeClean()` 64 · `edgeTiles()` 77 · `grassEdgeData()` 90 · `grassEdgeCanvas()` 154
 
-## src/world/biome_ground.js (49 baris)
+## src/world/biome_ground.js (69 baris)
 _TANAH BIOME — rumput Sprout di wilayah khas diberi warna biomenya (dipakai grassEdgeCanvas, grass_edge.js):_
-`BIOME` 8 · `biomeOf()` 20 · `biomeSides()` 22 · `biomeMask()` 33 · `biomeRamp()` 43
+`BIOME` 8 · `biomeSeasonId` 26 · `biomeOf()` 29 · `biomeSides()` 35 · `biomeMask()` 46 · `biomeRamp()` 57 · `biomeDot()` 64
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
@@ -371,9 +371,9 @@ _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, m
 _Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed._
 `CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 62 · `.clearCrowd()` 153 · `.initCrowd()` 163 · `_initPolishCrowd` 185 · `_dropActiveFxCrowd` 192 · `_updAmbP` 225
 
-## src/systems/qol.js (244 baris)
+## src/systems/qol.js (281 baris)
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
-`.updInteractHint()` 6 · `.updEnemyBars()` 42 · `.retryBoss()` 68 · `levelUpDetail()` 74 · `.setTimeout()` 80 · `TIPS` 105 · `showTip()` 116 · `.updTips()` 135 · `.updPeaceHud()` 145 · `.updMinimap()` 150 · `.swapWeapon()` 184 · `.updStamina()` 195 · `.tryClimb()` 212 · `applyPadOpt()` 240
+`.updInteractHint()` 6 · `.updEnemyBars()` 42 · `.retryBoss()` 68 · `levelUpDetail()` 74 · `.setTimeout()` 80 · `TIPS` 105 · `showTip()` 116 · `.updTips()` 135 · `.updPeaceHud()` 145 · `.updMinimap()` 150 · `.swapWeapon()` 187 · `.updStamina()` 198 · `.tryClimb()` 215 · `applyPadOpt()` 243 · `MINI_SPAN` 250 · `miniBenua()` 251
 
 ## src/systems/feel.js (312 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
@@ -435,9 +435,9 @@ _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (3)
 _Gelombang A (performa): culling objek di luar layar, entitas jauh "tidur", pengecekan berkala._
 `CULL_PAD` 4 · `.initCull()` 7 · `.updCull()` 22 · `_updEnemyP` 38 · `_updFeelP` 43 · `_updNpcP` 46 · `_updCritP` 52 · `_updHintP` 55
 
-## src/systems/stream.js (87 baris)
+## src/systems/stream.js (92 baris)
 _Gelombang B: tanah per chunk (streaming). Hanya potongan di sekitar layar yang dibuat, sisanya dibuat_
-`GT` 5 · `GTC` 6 · `GOV` 7 · `gtKey()` 8 · `groundOverview()` 9 · `gLayer()` 16 · `.initGround()` 18 · `.gFillView()` 28 · `.gNeed()` 30 · `.gEnsure()` 39 · `.updGround()` 55 · `.cleanGroundCache()` 75
+`GT` 5 · `GTC` 6 · `GOV` 7 · `gtKey()` 8 · `groundOverview()` 9 · `gLayer()` 16 · `.initGround()` 18 · `.gFillView()` 28 · `.gNeed()` 30 · `.gEnsure()` 39 · `.updGround()` 55 · `.cleanGroundCache()` 80
 
 ## src/systems/openworld.js (52 baris)
 _Dunia terbuka Tahap 1: wilayah tetangga digambar menempel di tepi wilayah aktif (tanah + objek),_
@@ -555,9 +555,9 @@ _JEMBATAN KAYU GAYA SPROUT — di titik penyeberangan lama (sungai Hutan M.river
 _DUNIA COCOK DENGAN GAMBAR — tabrakan & objek mengikuti tanah yang TERLIHAT (gambar peta + autotile grass_edge), bukan data lama._
 `WORLD_FIT` 7 · `regionOwner()` 9 · `fitWater` 16 · `fitOn` 17 · `fitBenua` 18 · `fitBridgeRects()` 20 · `waterRects()` 30 · `fitObjects()` 59 · `fitClipGround()` 107
 
-## src/systems/nature.js (257 baris)
+## src/systems/nature.js (281 baris)
 _ALAM — sebaran pohon mengikuti pola alami, satu baris pohon pembatas, semak & bunga bergoyang._
-`NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureFoot()` 37 · `natInFoot` 46 · `natureKeep()` 48 · `natKeepOk` 65 · `natureBox()` 70 · `natureScatter()` 74 · `natureTreesOnGrass()` 136 · `natureBorder()` 154 · `NATURE_TINT` 206 · `natureBiomeTint()` 207 · `natureSwayTex()` 214
+`NATURE` 10 · `natIsTree` 16 · `natureFields()` 18 · `natureFoot()` 37 · `natInFoot` 46 · `natureKeep()` 48 · `natKeepOk` 65 · `natureBox()` 70 · `natureScatter()` 74 · `natureTreesOnGrass()` 136 · `natureBorder()` 154 · `NATURE_TINT` 206 · `natureBiomeTint()` 207 · `NATURE_SNOW` 216 · `natureSnowTex()` 218 · `natureSwayTex()` 238
 
 ## src/systems/place_fit.js (179 baris)
 _LETAK SESUAI TANAH — data peta lama (musuh, peti, NPC, titik pancing) dibuat untuk tanah lama; tanah sekarang = gambar peta._
@@ -579,9 +579,9 @@ _Gelombang 16 (T508–T517): Gerakan & Posisi (Movement & Positioning) ala Dimra
 _Gelombang 17 (T518–T527): Koreografi Musuh, Bos & Taktik Pertemuan ala Dimraeth_
 
 
-## src/ui/worldmap_art.js (67 baris)
+## src/ui/worldmap_art.js (98 baris)
 _Gambar ringkas berwarna tiap wilayah untuk Peta Benua (1 piksel = WOV_K piksel dunia):_
-`WOV_K` 4 · `WOV_TREE` 5 · `WOV_BUSH` 6 · `WOV_ROCK` 7 · `WOV_BLD` 8 · `wovRGB()` 9 · `worldOverview()` 10
+`WOV_K` 4 · `WOV_TREE` 5 · `WOV_BUSH` 6 · `WOV_ROCK` 7 · `WOV_BLD` 8 · `wovRGB()` 9 · `worldOverview()` 10 · `wovGroundNow()` 70
 
 ## src/ui/worldmap.js (318 baris)
 _Peta benua Lumina (overlay utuh semua wilayah dengan drag & zoom)_

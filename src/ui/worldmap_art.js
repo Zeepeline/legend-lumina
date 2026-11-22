@@ -32,6 +32,7 @@ function worldOverview(M) {
     D[o] = col[0]; D[o + 1] = col[1]; D[o + 2] = col[2]; D[o + 3] = 255;
   }
   x.putImageData(img, 0, 0);
+  wovGroundNow(M, x, W, H); /* tanah sesuai gambar peta sekarang (grass_edge, biome, jembatan) */
   const k = 1 / WOV_K;
   for (const [gx, gy, gw, gh] of (M.gardens || [])) { x.fillStyle = '#7a5230'; x.fillRect(gx * k, gy * k, gw * k, gh * k); }
   const objs = (typeof mapObjects === 'function' ? mapObjects(M) : M.objs || []).slice().sort((a, b) => a[2] - b[2]);
@@ -64,3 +65,33 @@ function worldOverview(M) {
     '.wmb.r{background:linear-gradient(#c8604a,#9a3e2e)}';
   document.head.appendChild(s);
 })();
+// tanah peta = tanah yang tampil di game: kisi grass_edge (air/pasir/tanah/rumput) + palet biome + jembatan & dermaga;
+// di Benua, titik milik wilayah lain dibiarkan transparan (sama seperti fitClipGround)
+function wovGroundNow(M, x, W, H) {
+  const E = typeof GRASS_EDGE !== 'undefined' && GRASS_EDGE.maps.includes(M.id) && typeof grassEdgeData === 'function' && grassEdgeData(M);
+  if (!E || !E.Wm) return;
+  const PL = (typeof EDGE_PAL !== 'undefined' && EDGE_PAL[M.id]) || {}, BI = typeof biomeOf === 'function' ? biomeOf(M) : null;
+  const P = typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id], own = P && typeof BENUA !== 'undefined' && BENUA && typeof regionOwner === 'function';
+  const br = typeof fitBridgeRects === 'function' ? fitBridgeRects(M) : [], docks = (M.objs || []).filter(o => o[0] === 'dock');
+  const S = GRASS_EDGE.cell, img = x.getImageData(0, 0, W, H), D = img.data, o3 = [0, 0, 0];
+  const GR = [[118, 176, 72], [132, 190, 80], [150, 202, 92]];
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+    const px = i * WOV_K + 4, py = j * WOV_K + 4, o = (j * W + i) * 4, c = Math.floor(px / S), r = Math.floor(py / S);
+    if (own && regionOwner(P[0] + px, P[1] + py) !== M.id) { D[o + 3] = 0; continue; }
+    if (c >= E.cols || r >= E.rows) continue;
+    const k = r * E.cols + c, bm = !BI || biomeMask(M, BI, px, py, px + (P ? P[0] : 0), py + (P ? P[1] : 0)); let col;
+    const onBr = br.some(b => px > b[0] && px < b[0] + b[2] && py > b[1] && py < b[1] + b[3]);
+    if (onBr || docks.some(d => Math.abs(px - d[1]) < 20 && py < d[2] && py > d[2] - 56)) col = [168, 112, 62]; /* jembatan & dermaga */
+    else if (E.Wm[k]) { const w = bm && PL.water ? PL.water : WATER_S; col = E.dep && E.dep[k] > 2 ? w.deep : w.base; }
+    else if (E.strip[k]) col = (bm && PL.sand) || SAND_S.base;
+    else if (!E.grass[k]) col = PL.road === 'cobble' ? [196, 188, 178] : bm && BI && BI.dirt ? BI.dirt.base : DIRT_S.base;
+    else {
+      const v = vnoise(px, py, 56, 11);
+      col = GR[v < .4 ? 0 : v < .62 ? 1 : 2];
+      if (BI && bm) col = biomeRamp(BI, col[0], col[1], col[2], o3);
+    }
+    if (col.base) col = col.base;
+    D[o] = col[0]; D[o + 1] = col[1]; D[o + 2] = col[2]; D[o + 3] = 255;
+  }
+  x.putImageData(img, 0, 0);
+}

@@ -5,7 +5,7 @@
 const GT = 64, GT_MAX = 220, GT_BUDGET = 3, GT_MARGIN = 2; // ukuran potongan, maks potongan di memori, ms/frame, cincin potongan di luar layar
 const GTC = new Map(); // kunci tekstur → waktu terakhir dipakai (LRU, lintas peta)
 const GOV = {};        // ringkasan ¼ ukuran per peta untuk peta besar & peta mini
-function gtKey(M, i, j) { return 'gt:' + M.id + ':' + i + ':' + j; }
+function gtKey(M, i, j) { return 'gt:' + M.id + ':' + (typeof biomeSeasonId === 'function' ? biomeSeasonId() : '') + ':' + i + ':' + j; } /* + musim */
 function groundOverview(M) {
   let o = GOV[M.id]; if (o) return o;
   const c = document.createElement('canvas'); c.width = Math.ceil(M.w / 4); c.height = Math.ceil(M.h / 4);
@@ -53,7 +53,12 @@ Object.assign(World.prototype, {
     return true;
   },
   updGround() {
-    if (!this.gStream) return; this.gSpent = 0; const v = this.cameras.main.worldView, want = new Set();
+    if (!this.gStream) return;
+    const sea = typeof biomeSeasonId === 'function' ? biomeSeasonId() : ''; /* musim berganti → tanah dibuat ulang */
+    if (this._gSea !== sea) {
+      if (this._gSea != null) { for (const [, img] of this.gImgs) img.destroy(); this.gImgs.clear(); }
+      this._gSea = sea;
+    } this.gSpent = 0; const v = this.cameras.main.worldView, want = new Set();
     for (const L of this.gL) {
       if (v.right < L.ox - GT * GT_MARGIN || v.x > L.ox + L.M.w + GT * GT_MARGIN || v.bottom < L.oy - GT * GT_MARGIN || v.y > L.oy + L.M.h + GT * GT_MARGIN) continue;
       for (const [i, j] of this.gNeed(L, v.x, v.y, GT_MARGIN)) {
