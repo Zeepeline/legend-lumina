@@ -62,11 +62,12 @@ function verdantTiles(M) {
   let bk = 'gnd_meadow_base', pk = 'gnd_meadow_path';
   if (gKey === 'deepwood') { bk = 'gnd_deepwood_base'; pk = 'gnd_deepwood_path'; }
   else if (gKey === 'forest') { bk = 'gnd_forest_base'; pk = 'gnd_forest_path'; }
-  const b = getTileData(bk) || getTileData('gnd_grass');
+  /* rumput satu sumber (world/grass.js) */
+  const b = (typeof GRASS !== 'undefined' && GRASS.on && getTileData(GRASS.base)) || getTileData(bk) || getTileData('gnd_grass');
   const p = getTileData(pk) || getTileData('gnd_dirt');
   if (b && p) {
-    const l = getTileData('gnd_grass_light') || b;
-    const d = getTileData('gnd_grass_dark') || b;
+    const l = getTileData(typeof GRASS !== 'undefined' ? GRASS.light : 'gnd_grass_light') || b;
+    const d = getTileData(typeof GRASS !== 'undefined' ? GRASS.dark : 'gnd_grass_dark') || b;
     VT_MAP[gKey] = [b, l, d, p];
     return VT_MAP[gKey];
   }

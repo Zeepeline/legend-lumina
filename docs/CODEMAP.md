@@ -103,9 +103,13 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 220 · obj `tree_redwood` 228 · obj `goblin_torch` 231 · obj `goblin_cauldron` 234 · obj `cryst` 243 · obj `lamp` 246 · obj `viewpoint` 254 · obj `lumina_shard` 288 · obj `scenicbench` 310 · obj `mailbox` 328 · obj `gatehouse` 338 · obj `ctower` 346 · obj `city_bridge` 349 · obj `gpt_city_banner` 352 · obj `gpt_city_banner_sm` 356 · obj `gpt_city_board` 360 · obj `mila_grave` 370 · obj `reflection_spring` 374 · obj `slaver_cage` 378
 
-## src/world/ground.js (384 baris)
+## src/world/ground.js (387 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 101 · `getTileData()` 102 · `genGround()` 113 · `blockRects()` 317 · `openSides()` 333 · `borderTrees()` 346 · `ringObjects()` 363 · `mapObjects()` 368 · `mapWalls()` 372
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 28 · `GROUND` 29 · `blendW()` 41 · `BLEND_W` 47 · `WILD_G` 48 · `edgeSegs()` 49 · `edgeBlend()` 79 · `TILE_CACHE` 101 · `getTileData()` 102 · `genGround()` 113 · `blockRects()` 320 · `openSides()` 336 · `borderTrees()` 349 · `ringObjects()` 366 · `mapObjects()` 371 · `mapWalls()` 375
+
+## src/world/grass.js (50 baris)
+_RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini (atau ganti file PNG-nya):_
+`GRASS` 8 · `grassTiles()` 15 · `grassSS` 21 · `grassTex()` 22 · `grassPass()` 27 · `grassCanvas()` 45
 
 ## src/world/water.js (89 baris)
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
@@ -207,9 +211,9 @@ _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 _Rig piksel NPC: dari 1 potret (atau lembar Mila) dibangun pose jalan/napas/berlutut/jatuh lewat potong-geser-cermin kanvas (tanpa warna baru)_
 `NPC_FR` 4 · `NPC_RIG_DIRS` 5 · `rigCv()` 6 · `rigCrop()` 7 · `rigBands()` 9 · `rigCompose()` 33 · `rigLie()` 48 · `rigPoses()` 59 · `rigPerDir()` 69 · `rigFrames()` 71 · `npcWalkFrames()` 83 · `regNpcRig()` 85 · `rigAppend()` 132
 
-## src/world/ground_verdant.js (324 baris)
+## src/world/ground_verdant.js (325 baris)
 _Tanah Verdant (Padang, Hutan, Hutan Dalam, Desa) gaya Senja Emas (G001 - G024)._
-`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `MEADOW_FLOWERS` 12 · `V_TILES` 17 · `CLUTTER_PADANG` 23 · `CLUTTER_FOREST` 29 · `CLUTTER_DEEPWOOD` 36 · `ISLANDS_PADANG` 43 · `ISLANDS_FOREST` 44 · `ISLANDS_DEEPWOOD` 45 · `WATER_DECO_PADANG` 46 · `WATER_DECO_FOREST` 47 · `VT_MAP` 58 · `verdantTiles()` 59 · `vModW` 76 · `vDirtN` 78 · `vDirtT` 79 · `verdantPix()` 82 · `verdantDeco()` 93 · `VBASE` 177 · `verdantBase()` 178 · `VWC` 210 · `verdantWater()` 214 · `VBANK` 227 · `verdantBank()` 234 · `regVerdantTex()` 252 · `verdantReflect()` 261 · `verdantEdgePix()` 290 · `bridgeWoodPix()` 304
+`VERDANT` 4 · `VBAY` 5 · `VDECO` 6 · `MEADOW_FLOWERS` 12 · `V_TILES` 17 · `CLUTTER_PADANG` 23 · `CLUTTER_FOREST` 29 · `CLUTTER_DEEPWOOD` 36 · `ISLANDS_PADANG` 43 · `ISLANDS_FOREST` 44 · `ISLANDS_DEEPWOOD` 45 · `WATER_DECO_PADANG` 46 · `WATER_DECO_FOREST` 47 · `VT_MAP` 58 · `verdantTiles()` 59 · `vModW` 77 · `vDirtN` 79 · `vDirtT` 80 · `verdantPix()` 83 · `verdantDeco()` 94 · `VBASE` 178 · `verdantBase()` 179 · `VWC` 211 · `verdantWater()` 215 · `VBANK` 228 · `verdantBank()` 235 · `regVerdantTex()` 253 · `verdantReflect()` 262 · `verdantEdgePix()` 291 · `bridgeWoodPix()` 305
 
 ## src/world/interior_sheet.js (91 baris)
 _Interior gaya lembar pemilik (assets/raw/interior/sheet_interior.png → tools/gen_interior.py → assets/img/int_*.png)._
@@ -439,7 +443,7 @@ _Dunia satu peta (langkah 1): wilayah di sekitar Arka berjalan BERSAMAAN sebagai
 _Lapisan tanah bersama (scene 'GL', selalu paling bawah): tanah SEMUA wilayah luar ruang yang dimuat + hutan pengisi celah,_
 `glOn()` 24 · `.glScene()` 26 · `.syncCams()` 32
 
-## src/systems/wilds.js (97 baris)
+## src/systems/wilds.js (98 baris)
 _Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Digambar di lapisan tanah_
 `WILD_MARGIN` 5 · `WILD_RECTS` 6 · `outdoorRects()` 7 · `inRegion()` 11 · `wildRects()` 12 · `wildTreeKeys()` 38
 
@@ -619,7 +623,7 @@ _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar disiapkan ole
 _Penyeragaman gaya: PATOKAN = pohon treeA / treeAd / treeSn (hijau alami, garis luar halus) + set Verdant yang senada._
 `styleLeafPalette()` 21 · `styleRecolor()` 27
 
-## src/gfx/code_palette.js (111 baris)
+## src/gfx/code_palette.js (112 baris)
 _T439: Selaraskan warna objek KODE ke palet treeA / Verdant_
 
 

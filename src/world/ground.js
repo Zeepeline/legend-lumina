@@ -124,6 +124,8 @@ function genGround(M, rect) {
     } else {
       x.drawImage(src, RX, RY, RW, RH, 0, 0, RW, RH);
     }
+    const wp = (typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id]) || [0, 0];
+    if (typeof grassCanvas === 'function') grassCanvas(x, RW, RH, wp[0] + RX, wp[1] + RY, M); /* rumput satu sumber (world/grass.js) */
     return c;
   }
   const pos = (typeof WORLD_POS !== 'undefined' && WORLD_POS[M.id]) || [0, 0];
@@ -259,6 +261,7 @@ function genGround(M, rect) {
       put(i, baseCol, f);
     }
   }
+  if (typeof grassPass === 'function') grassPass(D, RW, RH, GX + RX, GY + RY, M); /* rumput satu sumber (world/grass.js) */
   const [c, x] = mk(RW, RH); x.putImageData(img, 0, 0); x.translate(-RX, -RY);
   const out = (X, Y) => X < RX - 10 || X > RX + RW + 10 || Y < RY - 10 || Y > RY + RH + 10;
   const near = (X, Y) => { if (R && Math.abs(Y - riverY(R, X)) < R.w / 2 + 6) return true; return ponds.length > 0 && waterE(ponds, X, Y, GX, GY) < 1 + 14 / Math.max(waterE.r, 1); };

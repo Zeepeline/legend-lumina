@@ -102,7 +102,8 @@
         if (src && src.getContext) {
           toVerdant(src);
           applyVerdantOutline(src);
-          T.get(key).update();
+          const tx = T.get(key); /* tekstur gambar biasa tidak punya update() */
+          if (tx.update) tx.update(); else if (tx.source && tx.source[0] && tx.source[0].update) tx.source[0].update();
         }
       });
     };

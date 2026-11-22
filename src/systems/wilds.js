@@ -44,6 +44,7 @@ Object.assign(GroundLayer.prototype, {
     for (let i = 0; i < 260; i++) { // bintik lantai hutan
       x.fillStyle = ['#2f5a23', '#22441a', '#355f27'][i % 3]; x.fillRect(Math.floor(hash(i, 1, 71) * T), Math.floor(hash(i, 2, 71) * T), 3, 2);
     }
+    if (typeof grassCanvas === 'function') grassCanvas(x, T, T, 0, 0, { ground: 'forest' }); /* lantai hutan ikut tekstur rumput */
     const imgs = keys.map(k => this.textures.get(k).getSourceImage());
     for (let row = 0; row < 9; row++) for (let col = 0; col < 7; col++) { // pohon rapat, dibungkus agar menyambung
       const n = row * 7 + col, im = imgs[Math.floor(hash(n, 3, 72) * imgs.length)]; if (!im) continue;
