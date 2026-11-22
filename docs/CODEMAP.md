@@ -207,9 +207,9 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 25 · `shadowIndex()` 26
 
-## src/gfx/textures.js (232 baris)
+## src/gfx/textures.js (233 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
-`ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 43 · `loadImgs()` 63 · `addStrip()` 77 · `darkTree()` 82 · `NPC_W` 84 · `regPortrait()` 85 · `regChar()` 91 · `buildTextures()` 110
+`ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 44 · `loadImgs()` 64 · `addStrip()` 78 · `darkTree()` 83 · `NPC_W` 85 · `regPortrait()` 86 · `regChar()` 92 · `buildTextures()` 111
 
 ## src/gfx/npc_rig.js (140 baris)
 _Rig piksel NPC: dari 1 potret (atau lembar Mila) dibangun pose jalan/napas/berlutut/jatuh lewat potong-geser-cermin kanvas (tanpa warna baru)_
@@ -542,6 +542,10 @@ _RUMAH DARI REFERENSI PEMILIK — rumah A/B/C, pondok merah/cokelat & pandai bes
 ## src/systems/object_shadows.js (78 baris)
 _BAYANGAN OBJEK — elips lembut di kaki setiap objek luar ruang (semak, batu, tunggul, bunga, jamur, pinus, pohon buah,_
 `OBJ_SHADOW` 6 · `objShadowTex()` 12 · `objFootW()` 28 · `objShadowAdd()` 42 · `objShadowScan()` 55
+
+## src/systems/bridges.js (86 baris)
+_JEMBATAN KAYU GAYA SPROUT — di titik penyeberangan lama (sungai Hutan M.river.bridge, jembatan kecil Danau)._
+`BRIDGES` 5 · `bridgeFit()` 14 · `bridgeArt()` 33 · `bridgesFor()` 58
 
 ## src/systems/aimassist.js (48 baris)
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
