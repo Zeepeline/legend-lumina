@@ -103,9 +103,9 @@ _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, 
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 220 · obj `tree_redwood` 228 · obj `goblin_torch` 231 · obj `goblin_cauldron` 234 · obj `cryst` 243 · obj `lamp` 246 · obj `viewpoint` 254 · obj `lumina_shard` 288 · obj `scenicbench` 310 · obj `mailbox` 328 · obj `gatehouse` 338 · obj `ctower` 346 · obj `city_bridge` 349 · obj `gpt_city_banner` 352 · obj `gpt_city_banner_sm` 356 · obj `gpt_city_board` 360 · obj `mila_grave` 370 · obj `reflection_spring` 374 · obj `slaver_cage` 378
 
-## src/world/ground.js (394 baris)
+## src/world/ground.js (397 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
-`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 38 · `GROUND` 39 · `blendW()` 51 · `BLEND_W` 57 · `WILD_G` 58 · `edgeSegs()` 59 · `edgeBlend()` 89 · `TILE_CACHE` 111 · `getTileData()` 112 · `genGround()` 123 · `blockRects()` 327 · `openSides()` 343 · `borderTrees()` 356 · `ringObjects()` 373 · `mapObjects()` 378 · `mapWalls()` 382
+`riverY()` 4 · `SD_PAD` 7 · `makeSD()` 8 · `pondE()` 38 · `GROUND` 39 · `blendW()` 51 · `BLEND_W` 57 · `WILD_G` 58 · `edgeSegs()` 59 · `edgeBlend()` 89 · `TILE_CACHE` 111 · `getTileData()` 112 · `genGround()` 123 · `blockRects()` 330 · `openSides()` 346 · `borderTrees()` 359 · `ringObjects()` 376 · `mapObjects()` 381 · `mapWalls()` 385
 
 ## src/world/grass.js (50 baris)
 _RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini (atau ganti file PNG-nya):_
