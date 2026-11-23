@@ -162,7 +162,7 @@ MAPS.kakademi = {
   /* paving dirancang (gambar tanah dibuat dari bentuk ini: jalan utama, teras, jalan melintang, lapangan, taman, alun-alun) */
   paths: [[700, 1000, 700, 384, 28], [284, 464, 1116, 464, 16], [300, 384, 300, 480, 10], [1100, 384, 1100, 480, 10],
     [1040, 480, 1040, 524, 10], [176, 760, 512, 760, 16], [1100, 582, 1214, 582, 10]],
-  discs: [[700, 416, 90], [348, 560, 140], [1040, 572, 60], [700, 776, 150]],
+  discs: [[700, 382, 140], [1212, 558, 60], [348, 560, 140], [1040, 572, 60], [700, 776, 150]],
   objs: [['academy', 700, 380], ...acadYard(),
     // halaman depan: lampu sepanjang jalan, teleskop, papan pengumuman dekat gerbang
     ...lampRow(620, 460, 2, 160), ['acadlamp', 620, 572], ['acadlamp', 780, 572],
