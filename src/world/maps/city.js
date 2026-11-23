@@ -51,7 +51,7 @@ MAPS.road = {
   walls: [[0, 0, 410, 40], [490, 0, 410, 40], [0, 0, 40, 2000], [860, 0, 40, 2000], [0, 1960, 410, 40], [490, 1960, 410, 40]],
   border: { top: 40, bottom: 1960, left: 40, right: 860, gap: [410, 490], gapT: [410, 490], types: ['treeA', 'treeB', 'pine'] },
   exits: [{ x: 410, y: 1988, w: 80, h: 12, to: 'lake', tx: 820, ty: 70, dir: 'down', label: 'Danau Cermin' },
-    { x: 410, y: 0, w: 80, h: 12, to: 'kgate', tx: 600, ty: 860, dir: 'up', label: 'Kota Lumina' }],
+    { x: 410, y: 0, w: 80, h: 12, to: 'kgate', tx: 1300, ty: 860, dir: 'up', label: 'Kota Lumina' }],
   npcs: [{ id: 'kafilah', ch: 'darma', name: 'Kusir Kafilah', x: 410, y: 1250, dir: 'down' }],
   enemies: [['wolf', 300, 1700], ['wolf', 600, 1620], ['boar', 560, 1420], ['boar', 280, 1050], ['wolf', 640, 960], ['bee', 300, 760], ['bee', 640, 600], ['boar', 360, 420], ['wolf', 560, 300],
     ['goblin_elite', 700, 1060], ['goblin_shaman', 775, 1120],
@@ -61,48 +61,74 @@ MAPS.road = {
 };
 
 MAPS.kgate = {
-  id: 'kgate', customGround: 'gnd_kgate_custom', name: 'Gerbang Kota Lumina', w: 1200, h: 900, bgm: 'town', ground: 'village', pathType: 'paving', glow: [600, 360, 600], crowd: 6,
-  paths: [[600, 900, 600, 0, 48], [600, 640, 300, 640, 12], [600, 640, 900, 640, 12]], /* jalan utama menembus gapura sampai Distrik Pasar */
-  discs: [[600, 460, 80], [300, 640, 50], [900, 640, 50]],
-  ponds: [[210, 790, 140, 60], [990, 790, 140, 60]], /* kolam utuh di dalam peta (dulu terpotong tepi peta) */
+  // Peta dilebarkan 700 px ke barat (v1.88.0) untuk GARNISUN KOTA; isi lama digeser +700 sehingga gapura tetap di titik benua yang sama.
+  id: 'kgate', customGround: 'gnd_kgate_custom', name: 'Gerbang Kota Lumina', w: 1900, h: 900, bgm: 'town', ground: 'village', pathType: 'paving', glow: [1300, 360, 600], crowd: 6,
+  paths: [[1300, 900, 1300, 0, 48], [1300, 640, 1000, 640, 12], [1300, 640, 1600, 640, 12], /* jalan utama menembus gapura sampai Distrik Pasar */
+    [1000, 640, 514, 636, 14], /* Pos Sayap Barat → gerbang Garnisun */
+    // GARNISUN: jalan lingkar (segi delapan, pusat 380,500, jari-jari 190) + jalan ke pintu tiap bangunan
+    [570, 500, 514, 634, 18], [514, 634, 380, 690, 18], [380, 690, 246, 634, 18], [246, 634, 190, 500, 18],
+    [190, 500, 246, 366, 18], [246, 366, 380, 310, 18], [380, 310, 514, 366, 18], [514, 366, 570, 500, 18],
+    [380, 226, 380, 310, 22], [160, 348, 246, 366, 16], [645, 348, 514, 366, 16], 
+    [566, 206, 500, 206, 18], [500, 206, 500, 352, 16]], /* ubin dari pintu Kandang Kuda (kanan atas, pintu di sisi kiri) ke jalan lingkar */
+  discs: [[1300, 460, 80], [1000, 640, 50], [1600, 640, 50], [380, 312, 30], /* + lantai ubin di bawah Kandang Kuda */
+    [548, 186, 26], [592, 180, 34], [640, 176, 36], [686, 182, 26], [608, 140, 34], [656, 136, 40], [650, 100, 30], /* + lantai ubin di bawah Markas, Barak & Barak Prajurit */
+    [296, 212, 24], [330, 212, 24], [363, 212, 24], [397, 212, 24], [430, 212, 24], [464, 212, 24],
+    [300, 190, 26], [340, 190, 26], [380, 190, 26], [420, 190, 26], [460, 190, 26],
+    [70, 332, 24], [102, 332, 24], [134, 332, 24], [166, 332, 24], [198, 332, 24], [230, 332, 24],
+    [76, 310, 26], [113, 310, 26], [150, 310, 26], [187, 310, 26], [224, 310, 26],
+    [530, 332, 24], [563, 332, 24], [596, 332, 24], [628, 332, 24], [661, 332, 24], [694, 332, 24],
+    [536, 310, 26], [574, 310, 26], [612, 310, 26], [650, 310, 26], [688, 310, 26]],
+  calm: [[380, 500, 330], [612, 150, 120]], /* lapangan & lingkar Garnisun bebas pohon/batu acak */
+  ponds: [[910, 790, 140, 60], [1690, 790, 140, 60]], /* kolam utuh di dalam peta (dulu terpotong tepi peta) */
   objs: [
-    ['gatehouse', 600, 442], /* gapura menjorok ke depan garis tembok */
-    ['citywallL', 265, 424], ['citywallR', 934, 424], /* tembok kota (gambar pemilik): x 21–509 & 691–1177, ujungnya masuk 8 px di belakang sayap gapura */
-    ['gpt_city_lamp', 530, 486], ['gpt_city_lamp', 670, 486],
-    ['gpt_city_banner_sm', 500, 486], ['gpt_city_banner_sm', 700, 486],
-    ['gpt_city_banner', 566, 340], ['gpt_city_banner', 634, 340],
-    ['gpt_city_fence', 510, 840], ['gpt_city_fence', 710, 840],
-    ['gpt_city_rock_lg', 770, 600], ['gpt_city_rock_sm', 800, 615],
-    ['gpt_city_flower_w', 555, 660], ['gpt_city_flower_p', 645, 660],
-    ['sign', 550, 660, { text: 'PERSIMPANGAN GERBANG\n↑ Distrik Pasar · ↓ Jalan Raya Lama · ← Pos Sayap Barat · → Sayap Timur' }],
-    ['sign', 670, 840, { text: 'SELAMAT DATANG DI KOTA LUMINA\nKota Seribu Lentera\n↑ Masuk gerbang utama menuju Distrik Pasar' }],
-    ['sign', 680, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\n↑ Masuk lewat gerbang di utara → Distrik Pasar.' }],
-    ['bounty_board', 720, 600],
-    ['barakBayaran', 300, 628], ['sign', 372, 640, { text: 'BARAK TENTARA BAYARAN\nPasukan sewaan Kota Lumina. Siap dikontrak.' }],
-    ['crate', 410, 656], ['crate', 432, 652], ['barrel', 460, 662], ['crate', 880, 620], ['barrel', 930, 626],
-    ['planter', 470, 490], ['planter', 730, 490],
-    ['pigeons', 680, 520], ['pigeons', 420, 680],
-    ['archerytarget', 340, 720]
+    ['gatehouse', 1300, 442], /* gapura menjorok ke depan garis tembok */
+    ['citywallL', 965, 424], ['citywallR', 1634, 424], /* tembok kota (gambar pemilik): x 721–1209 & 1391–1877, ujungnya masuk 8 px di belakang sayap gapura */
+    ['gpt_city_lamp', 1230, 486], ['gpt_city_lamp', 1370, 486],
+    ['gpt_city_banner_sm', 1200, 486], ['gpt_city_banner_sm', 1400, 486],
+    ['gpt_city_banner', 1266, 340], ['gpt_city_banner', 1334, 340],
+    ['gpt_city_fence', 1210, 840], ['gpt_city_fence', 1410, 840],
+    ['gpt_city_rock_lg', 1470, 600], ['gpt_city_rock_sm', 1500, 615],
+    ['gpt_city_flower_w', 1255, 660], ['gpt_city_flower_p', 1345, 660],
+    ['sign', 1250, 660, { text: 'PERSIMPANGAN GERBANG\n↑ Distrik Pasar · ↓ Jalan Raya Lama · ← Garnisun Kota · → Sayap Timur' }],
+    ['sign', 1370, 840, { text: 'SELAMAT DATANG DI KOTA LUMINA\nKota Seribu Lentera\n↑ Masuk gerbang utama menuju Distrik Pasar' }],
+    ['sign', 1380, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\n↑ Masuk lewat gerbang di utara → Distrik Pasar.' }],
+    ['bounty_board', 1420, 600],
+    ['crate', 1580, 620], ['barrel', 1630, 626],
+    ['barakBayaran', 1000, 628], ['sign', 1072, 640, { text: 'BARAK TENTARA BAYARAN\nPasukan sewaan Kota Lumina. Siap dikontrak.' }],
+    ['crate', 1110, 656], ['crate', 1132, 652], ['barrel', 1160, 662],
+    ['planter', 1170, 490], ['planter', 1430, 490],
+    ['pigeons', 1380, 520], ['pigeons', 1120, 680],
+    // GARNISUN KOTA (gambar pemilik) — di barat gapura, sebelah ujung tembok kota. Bangunan MELINGKARI lapangan latihan:
+    // Markas Pengawal (utara), Kandang Kuda (pojok kanan atas, pintu menghadap ke dalam), Barak (barat laut), Barak Prajurit (timur laut); pintu masuk di tenggara.
+    ['garhall', 380, 222], ['garbarracks', 150, 342], ['garbarracks2', 612, 342], ['garstable', 612, 190],
+    ['garpen', 380, 540], ['gardummy', 285, 470], ['gardummy', 475, 470], ['garbag', 272, 590], ['garshields', 488, 592],
+    ['gartarget', 320, 650], ['gartarget2', 380, 650], ['gartarget3', 440, 650],
+    ['garsupply', 150, 180], ['garrack', 640, 700], ['garhayrack', 170, 810], ['garbarricade', 610, 812], ['garrack', 90, 480],
+    ['gpt_city_lamp', 236, 316], ['gpt_city_lamp', 524, 316], ['gpt_city_lamp', 236, 700], ['gpt_city_lamp', 600, 610],
+    ['sign', 650, 610, { text: 'GARNISUN KOTA LUMINA\nMarkas Pengawal · Barak · Lapangan Latihan · Kandang Kuda' }]
   ],
   walls: [
-    [0, 0, 540, 40], [660, 0, 540, 40],
-    [0, 0, 40, 900], [1160, 0, 40, 900],
-    [0, 860, 560, 40], [640, 860, 560, 40],
-    [0, 380, 560, 44], [640, 380, 560, 44]
+    [0, 0, 1240, 40], [1360, 0, 540, 40],
+    [0, 0, 40, 900], [1860, 0, 40, 900],
+    [0, 860, 1260, 40], [1340, 860, 560, 40],
+    [700, 380, 560, 44], [1340, 380, 560, 44]
   ],
-  border: { top: 40, bottom: 860, left: 40, right: 1160, gap: [560, 640], gapT: [540, 660], types: ['treeA', 'treeB'] },
-  doors: [[300, 628, 'Barak Tentara Bayaran. Pintunya dijaga: "Kontrak hanya untuk pemegang izin Dewan."']],
+  border: { top: 40, bottom: 860, left: 40, right: 1860, gap: [1260, 1340], gapT: [1240, 1360], types: ['treeA', 'treeB'] },
+  doors: [[1000, 628, 'Barak Tentara Bayaran. Pintunya dijaga: "Kontrak hanya untuk pemegang izin Dewan."']],
   exits: [
-    { x: 560, y: 888, w: 80, h: 12, to: 'road', tx: 450, ty: 60, dir: 'down', label: 'Jalan Raya Lama' },
-    { x: 560, y: 388, w: 80, h: 20, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' }
+    { x: 1260, y: 888, w: 80, h: 12, to: 'road', tx: 450, ty: 60, dir: 'down', label: 'Jalan Raya Lama' },
+    { x: 1240, y: 0, w: 120, h: 12, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' } /* lewat jalan di balik gapura */
   ],
   npcs: citizens([
-    ['gj1', 'guard_spear', 'Penjaga Gerbang', 556, 492, 'gerbang', 0],
-    ['gj2', 'guard_spear', 'Penjaga Gerbang', 644, 492, 'gerbang', 0],
-    ['merc1', 'guard_spear', 'Perekrut Tentara Bayaran', 330, 668, 'bayaran', 0],
-    ['courier', 'boy', 'Budi Kurir Kilat', 380, 720, 'warga', 0],
-    ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'],
-    ['gw2', 'farmer', 'Petani', 900, 700, 'warga']
+    ['gj1', 'guard_spear', 'Penjaga Gerbang', 1256, 492, 'gerbang', 0],
+    ['gj2', 'guard_spear', 'Penjaga Gerbang', 1344, 492, 'gerbang', 0],
+    ['merc1', 'guard_spear', 'Perekrut Tentara Bayaran', 1030, 668, 'bayaran', 0],
+    ['courier', 'boy', 'Budi Kurir Kilat', 1080, 720, 'warga', 0],
+    ['gw1', 'woman', 'Pelancong', 1000, 700, 'warga'],
+    ['gw2', 'farmer', 'Petani', 1600, 700, 'warga'],
+    ['gk1', 'guard_spear', 'Kapten Garnisun', 410, 262, 'gerbang', 0], ['gk2', 'guard_spear', 'Prajurit Latihan', 330, 500, 'gerbang'],
+    ['gk3', 'guard_spear', 'Pemanah Garnisun', 380, 590, 'gerbang', 0], ['gk4', 'farmer', 'Tukang Kuda', 536, 226, 'warga', 0],
+    ['gk5', 'guard_spear', 'Penjaga Barak', 680, 380, 'gerbang', 0]
   ]),
   trees: { n: 40, min: 30, types: [['treeA', .3], ['bushG1', .4], ['rock', .3]] },
 };
@@ -132,7 +158,7 @@ MAPS.kpasar = {
   walls: [[0, 0, 760, 40], [840, 0, 760, 40], [0, 0, 40, 590], [0, 650, 40, 550], [1560, 0, 40, 590], [1560, 650, 40, 550], [0, 1160, 760, 40],
     [840, 1160, 760, 40]],
   border: { top: 40, bottom: 1160, left: 40, right: 1560, gap: [760, 840], gapT: [760, 840], gapL: [590, 650], gapR: [590, 650], types: ['treeAd', 'treeBd'] },
-  exits: [{ x: 760, y: 1188, w: 80, h: 12, to: 'kgate', tx: 600, ty: 440, dir: 'down', label: 'Gerbang Kota' },
+  exits: [{ x: 760, y: 1188, w: 80, h: 12, to: 'kgate', tx: 1300, ty: 60, dir: 'down', label: 'Gerbang Kota' },
     { x: 760, y: 0, w: 80, h: 12, to: 'kakademi', tx: 700, ty: 960, dir: 'up', label: 'Distrik Akademi' },
     { x: 0, y: 590, w: 12, h: 60, to: 'kbawah', tx: 1150, ty: 500, dir: 'left', label: 'Kota Bawah' },
     { x: 1588, y: 590, w: 12, h: 60, to: 'kpermukiman', tx: 60, ty: 500, dir: 'right', label: 'Distrik Permukiman' }],

@@ -8,7 +8,7 @@ const OPP = { W: 'E', E: 'W', N: 'S', S: 'N' };
 // Wilayah alam diberi jarak; celahnya diisi medan peralihan (MAPS 'pl_*') yang dibuat otomatis.
 // Kelompok kota & Jalan Raya Lama tetap menempel (sudah pas). Koordinat global = posisi kiri-atas wilayah.
 const WORLD_POS = {
-  village: [3000, 3000], lake: [1600, 3060], road: [1970, 1060], kgate: [1820, 190], kpasar: [1620, -1010], kakademi: [1720, -2010], kbawah: [420, -890],
+  village: [3000, 3000], lake: [1600, 3060], road: [1970, 1060], kgate: [1120, 190], kpasar: [1620, -1010], kakademi: [1720, -2010], kbawah: [420, -890],
   kpermukiman: [3220, -890],
   meadow: [4024, 2920], snow: [3984, 1720], forest: [2872, 3712], deepwood: [472, 3712], river: [4152, 3960], swamp: [6752, 3960],
 };

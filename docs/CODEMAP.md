@@ -95,6 +95,10 @@ _Gambar properti & bangunan cerita baru (Prolog & Bab 1): Makam Mila, Gubuk Reyo
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
 `OBJ` 7 · `MAPS` 399
 
+## src/world/objects_garrison.js (20 baris)
+_Objek GARNISUN KOTA (gambar pemilik, tekstur dari systems/garrison.js). Dipisah dari world/objects.js (batas 400 baris)._
+
+
 ## src/world/spawn/spawn_1.js (393 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 `OBJ_SPAWN` 3 · obj `verdant_bush` 5 · obj `verdant_bush_small` 6 · obj `bushy` 7 · obj `bushv` 8 · obj `lampPost` 10 · obj `gpt_city_lamp` 18 · obj `shrine` 26 · obj `cavemouth` 29 · obj `sign` 32 · obj `forge` 42 · obj `pebbles` 63 · obj `telescope` 71 · obj `altar` 79 · obj `fieldoven` 87 · obj `dripstone` 95 · obj `frostflower` 103 · obj `totem` 111 · obj `pigeons` 119 · obj `teatable` 152 · obj `lotuspad` 160 · obj `dockboat` 168 · obj `coffeeshrub` 224 · obj `coffeekettle` 232 · obj `orchidrock` 240 · obj `canaryperch` 248 · obj `woodlandshrine` 256 · obj `bellows` 264 · obj `ringbooth` 272 · obj `archerytarget` 280 · obj `lakelighthouse` 288 · obj `streetdrum` 296 · obj `dummy` 304 · obj `pot` 312 · obj `well` 322 · obj `apple1` 337 · obj `bench` 342 · obj `bell` 358 · obj `campfire` 366 · obj `alchemytable` 383
@@ -123,9 +127,9 @@ _TANAH BIOME — rumput Sprout di wilayah khas diberi warna biomenya (dipakai gr
 _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai menyambung,_
 `WATER_WIDEN` 6 · `pondsBase()` 7 · `WGLOB` 25 · `waterGlobal()` 26 · `pondsAll()` 40 · `pondsNear()` 49 · `waterE()` 52 · `mapDoors()` 69 · `waterGXY()` 70 · `WATER_MOVABLE` 73 · `waterRelocate()` 74
 
-## src/world/scatter_iso.js (103 baris)
+## src/world/scatter_iso.js (104 baris)
 _Penempatan pohon & vegetasi isometrik 2.5D: Variable-Radius Poisson-Disc, fBm Groves situasional, dan Asymmetric South Clearance._
-`SCATTER_FOREST_RX` 3 · `SCATTER_TREE_RX` 4 · `scatterGroveNoise()` 6 · `scatterClearBase()` 10 · `scatterSouthClear()` 37 · `scatterPoissonOk()` 45 · `scatter()` 70
+`SCATTER_FOREST_RX` 3 · `SCATTER_TREE_RX` 4 · `scatterGroveNoise()` 6 · `scatterClearBase()` 10 · `scatterSouthClear()` 38 · `scatterPoissonOk()` 46 · `scatter()` 71
 
 ## src/world/maps/village.js (141 baris)
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
@@ -155,9 +159,9 @@ _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (271 baris)
+## src/world/maps/city.js (297 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
-`houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 15 · `permRow` 158 · `PERM_N` 159 · `ACAD_BOX` 192 · `acadYard()` 193
+`houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 15 · `permRow` 184 · `PERM_N` 185 · `ACAD_BOX` 218 · `acadYard()` 219
 
 ## src/world/maps/wild.js (194 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
@@ -554,6 +558,10 @@ _HALAMAN AKADEMI — aset dari lembar gambar pemilik (latar ungu dibersihkan, di
 ## src/systems/market_stalls.js (38 baris)
 _PASAR RAYA (Distrik Pasar) — 5 kios tenda dari gambar pemilik (assets/img/buildings/sp_b_stall_<jenis>.png):_
 `STALLS` 4 · `.stallShop()` 25
+
+## src/systems/garrison.js (10 baris)
+_GARNISUN KOTA — aset dari gambar pemilik (latar kotak-kotak palsu dibersihkan: kantong latar yang memperlihatkan_
+`GAR_ART` 6
 
 ## src/systems/object_shadows.js (81 baris)
 _BAYANGAN OBJEK — elips lembut di kaki setiap objek luar ruang (semak, batu, tunggul, bunga, jamur, pinus, pohon buah,_

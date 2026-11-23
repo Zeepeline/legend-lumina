@@ -15,6 +15,7 @@ function scatterClearBase(M, sd, ponds, R, gxy, x, y, spec) {
   if (ponds.length && waterE(ponds, x, y, gxy[0], gxy[1]) < 1.25) return false;
   for (const o of M.objs) if (Math.hypot(o[1] - x, o[2] - y) < (OBJ[o[0]].mm ? 70 : 26)) return false;
   for (const c of M.chests || []) if (Math.hypot(c.x - x, c.y - y) < 30) return false;
+  for (const c of M.calm || []) if (Math.hypot(c[0] - x, c[1] - y) < c[2]) return false; /* area bebas hiasan acak (mis. lapangan Garnisun) */
   for (const f of M.fish || []) if (Math.hypot(f[0] - x, f[1] - y) < 34) return false;
   if (M.gate) {
     const g = M.gate;
