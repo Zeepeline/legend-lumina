@@ -160,18 +160,18 @@ function acadYard() {
 MAPS.kakademi = {
   id: 'kakademi', customGround: 'gnd_kakademi_custom', name: 'Distrik Akademi', w: 1400, h: 1000, bgm: 'town', ground: 'village', glow: [700, 500, 700], crowd: 5,
   /* paving dirancang (gambar tanah dibuat dari bentuk ini: jalan utama, teras, jalan melintang, lapangan, taman, alun-alun) */
-  paths: [[700, 1000, 700, 384, 28], [284, 464, 1116, 464, 16], [243, 384, 243, 480, 10], [303, 384, 303, 480, 10], [1100, 384, 1100, 480, 10],
+  paths: [[700, 1000, 700, 384, 28], [284, 464, 1116, 464, 16], [243, 384, 243, 480, 10], [303, 384, 303, 480, 10], [1097, 384, 1097, 480, 10], [1157, 384, 1157, 480, 10],
     [1040, 480, 1040, 524, 10], [176, 760, 512, 760, 16], [1100, 582, 1214, 582, 10]],
-  discs: [[700, 382, 140], [1212, 558, 60], [300, 350, 90], [348, 560, 140], [1040, 572, 60], [700, 776, 150]],
+  discs: [[700, 382, 140], [1212, 558, 60], [300, 350, 90], [1100, 350, 90], [348, 560, 140], [1040, 572, 60], [700, 776, 150]],
   objs: [['academy', 700, 380], ...acadYard(),
     // halaman depan: lampu sepanjang jalan, teleskop, papan pengumuman dekat gerbang
     ...lampRow(620, 460, 2, 160), ['acadlamp', 620, 572], ['acadlamp', 780, 572],
     ['telescope', 630, 500], ['telescope', 770, 500], ['pot', 650, 400], ['pot', 750, 400], ['acadboard', 592, 628],
     ['planter', 548, 504], ['planter', 852, 504],
     // gedung belakang: asrama & aula
-    ['acaddorm', 300, 380], ['houseC', 1100, 380], /* asrama murid (gambar pemilik) */
+    ['acaddorm', 300, 380], ['acaddorm', 1100, 380, { flip: 1 }], /* asrama barat & timur (gambar pemilik, timur dicerminkan) */
     ['acadcypress', 190, 210], ['acadtopiary', 300, 200], ['acadcypress', 410, 210],
-    ['houseC', 980, 240], ['houseA', 1100, 240], ['houseB', 1220, 240],
+    ['acadcypress', 990, 210], ['acadtopiary', 1100, 200], ['acadcypress', 1210, 210],
     // Lapangan Latihan (kiri bawah)
     ['acaddummy', 220, 520], ['acaddummy', 270, 540], ['acaddummy', 320, 520], ['acadtarget', 430, 500], ['acadtarget', 480, 500],
     ['acadrack', 400, 600], ['acadcrates', 500, 606], ['acadcrates2', 180, 610], ['clockworktower', 160, 470],
@@ -191,7 +191,7 @@ MAPS.kakademi = {
     [655, 630, 24, 12], [721, 630, 24, 12]], /* pilar gerbang Akademi */
   border: { top: 40, bottom: 960, left: 40, right: 1360, gap: [660, 740], types: ['treeA', 'treeB', 'pine'] },
   exits: [{ x: 660, y: 988, w: 80, h: 12, to: 'kpasar', tx: 800, ty: 60, dir: 'down', label: 'Distrik Pasar' }],
-  doors: [[700, 380, { to: 'arsip' }], [1214, 562, 'Rumah kaca Akademi. Bibit langka & tanaman obat tumbuh hangat di balik kaca.'], [243, 380, 'Asrama murid. "Hanya murid Akademi."'], [303, 380, 'Asrama murid, sayap timur. Terdengar murid berlatih membaca mantra.'], [1100, 380, 'Rumah guru. Ada papan nama: "L." Sisanya sudah pudar.']],
+  doors: [[700, 380, { to: 'arsip' }], [1214, 562, 'Rumah kaca Akademi. Bibit langka & tanaman obat tumbuh hangat di balik kaca.'], [243, 380, 'Asrama murid. "Hanya murid Akademi."'], [303, 380, 'Asrama murid, sayap timur. Terdengar murid berlatih membaca mantra.'], [1097, 380, 'Asrama murid, sayap timur. Bau roti panggang dari dapur bersama.'], [1157, 380, 'Asrama guru. Pintu kamar paling ujung. Ada papan nama: "L." Sisanya sudah pudar.']],
   npcs: citizens([['ka1', 'girl', 'Murid Akademi', 600, 700, 'murid'], ['ka2', 'child', 'Murid Muda', 1000, 540, 'murid'], ['ka3', 'woman', 'Murid Akademi', 1000, 700, 'murid'], ['ka4', 'elder', 'Guru Tua', 360, 580, 'murid', 0], ['ka5', 'guard', 'Penjaga Akademi', 640, 700, 'penjaga', 0]]),
   trees: { n: 40, min: 30, types: [['bushP', .4], ['bushG1', .3], ['treeA', .15], ['rock', .15]] },
 };
