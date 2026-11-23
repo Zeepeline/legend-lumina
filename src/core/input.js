@@ -330,5 +330,21 @@ if (LAYOUT_FULL && IS_TOUCH) addEventListener('pointerdown', function goFull() {
   removeEventListener('pointerdown', goFull);
   try { const el = document.documentElement, rq = el.requestFullscreen || el.webkitRequestFullscreen;
     const p = rq && !document.fullscreenElement ? rq.call(el, { navigationUI: 'hide' }) : null;
-    Promise.resolve(p).then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape')).catch(() => { }); } catch (_) { }
+    Promise.resolve(p).then(() => LAYOUT_PREF === 'mendatar' && screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape'))
+      .catch(() => { }); } catch (_) { }
 }, { once: false });
+// mode otomatis: HP diputar (tegak ↔ mendatar) → simpan progres lalu muat ulang dengan tata letak yang cocok
+if (LAYOUT_PREF === 'auto' && IS_TOUCH) {
+  let tO = 0;
+  const chk = () => {
+    clearTimeout(tO);
+    tO = setTimeout(function again() {
+      if (document.hidden || innerWidth < 100 || innerHeight < 100) return;
+      const wantFull = innerWidth > innerHeight; if (wantFull === LAYOUT_FULL) return;
+      if (typeof G !== 'undefined' && G.lock) { tO = setTimeout(again, 500); return; } /* tunggu dialog/cutscene selesai */
+      try { if (typeof G !== 'undefined' && !G.title && G.scene && typeof saveGame === 'function') saveGame(G.scene); } catch (_) { }
+      location.reload();
+    }, 700);
+  };
+  addEventListener('resize', chk); addEventListener('orientationchange', chk);
+}

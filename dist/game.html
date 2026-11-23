@@ -348,7 +348,7 @@ body.full #mini{transform:scale(var(--hud-s));transform-origin:0 0;top:calc(4px 
 <body>
 <div id="app">
  <div id="screen"><div id="light"></div><div id="dark"></div><div id="ui"></div><div id="fade"></div></div>
-<div id="rotate"><i>📱</i>Putar HP-mu ke posisi mendatar<small style="font-size:11px;opacity:.7">Tata letak bisa diubah ke tegak di Menu → Pengaturan</small></div>
+<div id="rotate"><i>📱</i>Putar HP-mu ke posisi mendatar<small style="font-size:11px;opacity:.7">Atau pilih tata letak Otomatis/Tegak di Menu → Pengaturan</small></div>
  <div id="pad">
   <div id="joy"><div id="knob"></div></div>
   <div class="btn" id="bA" data-k="a">⚔<small>SERANG</small></div>
@@ -373,7 +373,9 @@ window.IMG_INLINE = {"ani_deer": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA
 // =====================================================================
 // Tata letak: 'mendatar' (bawaan, layar penuh landscape + kontrol transparan di atas gambar, gaya Genshin/MLBB) atau 'tegak' (lama)
 const IS_TOUCH = matchMedia('(pointer:coarse)').matches || ('ontouchstart' in window && navigator.maxTouchPoints > 0);
-const LAYOUT_FULL = (() => { try { return localStorage.getItem('lumina_layout') !== 'tegak'; } catch (_) { return true; } })();
+// pilihan 'lumina_layout': 'auto' (bawaan: HP tegak → tata letak tegak, HP mendatar → mendatar penuh), 'mendatar', 'tegak'
+const LAYOUT_PREF = (() => { try { return localStorage.getItem('lumina_layout') || 'auto'; } catch (_) { return 'auto'; } })();
+const LAYOUT_FULL = LAYOUT_PREF === 'tegak' ? false : LAYOUT_PREF === 'mendatar' ? true : !(IS_TOUCH && innerHeight > innerWidth);
 // lebar dunia yang terlihat mengikuti rasio layar (16:9 s.d. ±21:9), tinggi tetap 216 → gambar mengisi layar tanpa pita hitam
 const VW = (() => {
   if (!LAYOUT_FULL) return 384;
@@ -382,7 +384,7 @@ const VW = (() => {
 })();
 const VH = (() => {
   if (LAYOUT_FULL || !IS_TOUCH || innerWidth > innerHeight) return 216;
-  return Math.max(216, Math.min(320, Math.round(VW * (innerHeight - 236) / (innerWidth - 10))));
+  return Math.max(216, Math.min(460, Math.round(VW * (innerHeight - 236) / (innerWidth - 10)))); /* tegak: dunia lebih tinggi */
 })();
 const rnd = (a, b) => a + Math.random() * (b - a);
 const ri = (a, b) => Math.floor(rnd(a, b + 1));
@@ -995,8 +997,24 @@ if (LAYOUT_FULL && IS_TOUCH) addEventListener('pointerdown', function goFull() {
   removeEventListener('pointerdown', goFull);
   try { const el = document.documentElement, rq = el.requestFullscreen || el.webkitRequestFullscreen;
     const p = rq && !document.fullscreenElement ? rq.call(el, { navigationUI: 'hide' }) : null;
-    Promise.resolve(p).then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape')).catch(() => { }); } catch (_) { }
+    Promise.resolve(p).then(() => LAYOUT_PREF === 'mendatar' && screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape'))
+      .catch(() => { }); } catch (_) { }
 }, { once: false });
+// mode otomatis: HP diputar (tegak ↔ mendatar) → simpan progres lalu muat ulang dengan tata letak yang cocok
+if (LAYOUT_PREF === 'auto' && IS_TOUCH) {
+  let tO = 0;
+  const chk = () => {
+    clearTimeout(tO);
+    tO = setTimeout(function again() {
+      if (document.hidden || innerWidth < 100 || innerHeight < 100) return;
+      const wantFull = innerWidth > innerHeight; if (wantFull === LAYOUT_FULL) return;
+      if (typeof G !== 'undefined' && G.lock) { tO = setTimeout(again, 500); return; } /* tunggu dialog/cutscene selesai */
+      try { if (typeof G !== 'undefined' && !G.title && G.scene && typeof saveGame === 'function') saveGame(G.scene); } catch (_) { }
+      location.reload();
+    }, 700);
+  };
+  addEventListener('resize', chk); addEventListener('orientationchange', chk);
+}
 
 'use strict';
 // Dasar gambar: kanvas, warna, aturan gaya (toneC, garis tepi berwarna), renderMap
@@ -9000,7 +9018,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.83.2';
+const GAME_VERSION = '1.84.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
@@ -29337,8 +29355,11 @@ async function openSettings() {
     ['Ukuran tombol', () => ['Kecil', 'Normal', 'Besar', 'Sangat besar'][OPT.btnSize], () => { OPT.btnSize = (OPT.btnSize + 1) % 4; applyPadOpt(); }, 'Ukuran tombol layar sentuh'],
     ['Skala Tombol', () => ['80%', '100%', '120%', '140%'][OPT.btnScale || 1], () => { OPT.btnScale = ((OPT.btnScale || 1) + 1) % 4; if (typeof layout === 'function') layout(); }, 'Skala rasio ukuran tombol sentuh'],
     ['Margin Sudut', () => ['Rapat (8px)', 'Normal (16px)', 'Lebar (28px)'][OPT.btnPad || 1], () => { OPT.btnPad = ((OPT.btnPad || 1) + 1) % 3; if (typeof layout === 'function') layout(); }, 'Jarak tombol sentuh dari sudut layar'],
-    ['Tata letak layar', () => LAYOUT_FULL ? 'Mendatar penuh' : 'Tegak', () => { try { localStorage.setItem('lumina_layout', LAYOUT_FULL ? 'tegak' : 'mendatar'); } catch (_) { }
-      if (!G.title && G.scene) saveGame(G.scene); location.reload(); }, 'Mendatar penuh = gaya Genshin/MLBB. Game dimuat ulang (progres disimpan dulu).'],
+    ['Tata letak layar', () => ({ auto: 'Otomatis', mendatar: 'Mendatar penuh', tegak: 'Tegak' })[LAYOUT_PREF] || 'Otomatis', () => {
+      const nx = { auto: 'mendatar', mendatar: 'tegak', tegak: 'auto' }[LAYOUT_PREF] || 'mendatar';
+      try { localStorage.setItem('lumina_layout', nx); } catch (_) { }
+      if (!G.title && G.scene) saveGame(G.scene); location.reload();
+    }, 'Otomatis = ikuti posisi HP (tegak/mendatar). Game dimuat ulang (progres disimpan dulu).'],
     ['Transparansi tombol', () => ['Penuh', 'Sedikit', 'Banyak'][OPT.btnAlpha], () => { OPT.btnAlpha = (OPT.btnAlpha + 1) % 3; applyPadOpt(); }, 'Supaya tombol tidak menutupi layar'],
     ['Bantuan Bidik', () => onoff(OPT.assist !== false), () => { OPT.assist = !(OPT.assist !== false); }, 'Arahkan serangan ke musuh terdekat (layar sentuh)'],
     ['Bilah HP musuh', () => onoff(OPT.hpbar), () => { OPT.hpbar = !OPT.hpbar; }, 'Bilah HP kecil di atas musuh'],

@@ -5,7 +5,9 @@
 // =====================================================================
 // Tata letak: 'mendatar' (bawaan, layar penuh landscape + kontrol transparan di atas gambar, gaya Genshin/MLBB) atau 'tegak' (lama)
 const IS_TOUCH = matchMedia('(pointer:coarse)').matches || ('ontouchstart' in window && navigator.maxTouchPoints > 0);
-const LAYOUT_FULL = (() => { try { return localStorage.getItem('lumina_layout') !== 'tegak'; } catch (_) { return true; } })();
+// pilihan 'lumina_layout': 'auto' (bawaan: HP tegak → tata letak tegak, HP mendatar → mendatar penuh), 'mendatar', 'tegak'
+const LAYOUT_PREF = (() => { try { return localStorage.getItem('lumina_layout') || 'auto'; } catch (_) { return 'auto'; } })();
+const LAYOUT_FULL = LAYOUT_PREF === 'tegak' ? false : LAYOUT_PREF === 'mendatar' ? true : !(IS_TOUCH && innerHeight > innerWidth);
 // lebar dunia yang terlihat mengikuti rasio layar (16:9 s.d. ±21:9), tinggi tetap 216 → gambar mengisi layar tanpa pita hitam
 const VW = (() => {
   if (!LAYOUT_FULL) return 384;
@@ -14,7 +16,7 @@ const VW = (() => {
 })();
 const VH = (() => {
   if (LAYOUT_FULL || !IS_TOUCH || innerWidth > innerHeight) return 216;
-  return Math.max(216, Math.min(320, Math.round(VW * (innerHeight - 236) / (innerWidth - 10))));
+  return Math.max(216, Math.min(460, Math.round(VW * (innerHeight - 236) / (innerWidth - 10)))); /* tegak: dunia lebih tinggi */
 })();
 const rnd = (a, b) => a + Math.random() * (b - a);
 const ri = (a, b) => Math.floor(rnd(a, b + 1));

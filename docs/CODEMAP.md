@@ -3,15 +3,15 @@
 Cari nama di sini (`grep -n "namaFungsi" docs/CODEMAP.md`), lalu buka file:baris itu saja.
 Format: `nama` baris. Urutan file = urutan muat di index.html.
 
-## src/core/util.js (26 baris)
+## src/core/util.js (28 baris)
 _Konstanta layar & util kecil_
-`IS_TOUCH` 7 · `LAYOUT_FULL` 8 · `VW` 10 · `VH` 15 · `rnd` 19 · `ri` 20 · `pick` 21 · `clamp` 22 · `sleep` 23 · `$` 24 · `SCREEN` 25
+`IS_TOUCH` 7 · `LAYOUT_PREF` 9 · `LAYOUT_FULL` 10 · `VW` 12 · `VH` 17 · `rnd` 21 · `ri` 22 · `pick` 23 · `clamp` 24 · `sleep` 25 · `$` 26 · `SCREEN` 27
 
 ## src/core/audio.js (271 baris)
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
 `AU_FILES` 4 · `AU` 18 · `NI` 19 · `nf()` 20 · `parseSeq()` 21 · `bossBass` 22 · `TRACKS` 23 · `auInit()` 45 · `tone()` 58 · `sweep()` 59 · `noise()` 60 · `_AUDIO_POOL` 61 · `BGM_BASE_VOL` 63 · `_bgmDuck` 64 · `routeTag()` 66 · `tagVolFor()` 70 · `tagSetVol()` 74 · `tagGetVol()` 75 · `setWeatherDuck()` 76 · `_rain` 78 · `rainSound()` 79 · `setBgmDuck()` 94 · `stopAudioTag()` 98 · `playBGM()` 105 · `SFX_FILES` 165 · `_SFX_BUFFERS` 176 · `loadSfxBuffers()` 178 · `playBufferSfx()` 190 · `_lastSfx` 208 · `sfx()` 209
 
-## src/core/input.js (335 baris)
+## src/core/input.js (351 baris)
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
 `Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 15 · `ATK_HOLD_MS` 16 · `_atkDownT` 17 · `enableTouch()` 62 · `JOY_DEAD` 65 · `UISCALE` 229 · `PAD_STATE` 231 · `pollGamepad()` 232 · `layout()` 292
 
@@ -631,9 +631,9 @@ _Tas (inventaris) & buku misi_
 _Layar peta & navigasi tujuan misi_
 `MINI` 4 · `WORLD` 5 · `buildMini()` 6 · `routeNext()` 23 · `questTarget()` 28 · `openMap()` 35
 
-## src/ui/menus.js (395 baris)
+## src/ui/menus.js (398 baris)
 _Menu utama, jurus, bestiari, pencapaian_
-`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 96 · `enemyThumb()` 108 · `openBestiary()` 109 · `openFishLog()` 117 · `openAch()` 118 · `openDlgLog()` 124 · `chooseSlot()` 131 · `openDebugMenu()` 155 · `openPhotoMode()` 213 · `TALENT_DEFS` 281 · `getTalentPoints()` 308 · `openTalentTree()` 318
+`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 99 · `enemyThumb()` 111 · `openBestiary()` 112 · `openFishLog()` 120 · `openAch()` 121 · `openDlgLog()` 127 · `chooseSlot()` 134 · `openDebugMenu()` 158 · `openPhotoMode()` 216 · `TALENT_DEFS` 284 · `getTalentPoints()` 311 · `openTalentTree()` 321
 
 ## src/ui/savecode.js (49 baris)
 _Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)_

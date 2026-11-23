@@ -77,8 +77,11 @@ async function openSettings() {
     ['Ukuran tombol', () => ['Kecil', 'Normal', 'Besar', 'Sangat besar'][OPT.btnSize], () => { OPT.btnSize = (OPT.btnSize + 1) % 4; applyPadOpt(); }, 'Ukuran tombol layar sentuh'],
     ['Skala Tombol', () => ['80%', '100%', '120%', '140%'][OPT.btnScale || 1], () => { OPT.btnScale = ((OPT.btnScale || 1) + 1) % 4; if (typeof layout === 'function') layout(); }, 'Skala rasio ukuran tombol sentuh'],
     ['Margin Sudut', () => ['Rapat (8px)', 'Normal (16px)', 'Lebar (28px)'][OPT.btnPad || 1], () => { OPT.btnPad = ((OPT.btnPad || 1) + 1) % 3; if (typeof layout === 'function') layout(); }, 'Jarak tombol sentuh dari sudut layar'],
-    ['Tata letak layar', () => LAYOUT_FULL ? 'Mendatar penuh' : 'Tegak', () => { try { localStorage.setItem('lumina_layout', LAYOUT_FULL ? 'tegak' : 'mendatar'); } catch (_) { }
-      if (!G.title && G.scene) saveGame(G.scene); location.reload(); }, 'Mendatar penuh = gaya Genshin/MLBB. Game dimuat ulang (progres disimpan dulu).'],
+    ['Tata letak layar', () => ({ auto: 'Otomatis', mendatar: 'Mendatar penuh', tegak: 'Tegak' })[LAYOUT_PREF] || 'Otomatis', () => {
+      const nx = { auto: 'mendatar', mendatar: 'tegak', tegak: 'auto' }[LAYOUT_PREF] || 'mendatar';
+      try { localStorage.setItem('lumina_layout', nx); } catch (_) { }
+      if (!G.title && G.scene) saveGame(G.scene); location.reload();
+    }, 'Otomatis = ikuti posisi HP (tegak/mendatar). Game dimuat ulang (progres disimpan dulu).'],
     ['Transparansi tombol', () => ['Penuh', 'Sedikit', 'Banyak'][OPT.btnAlpha], () => { OPT.btnAlpha = (OPT.btnAlpha + 1) % 3; applyPadOpt(); }, 'Supaya tombol tidak menutupi layar'],
     ['Bantuan Bidik', () => onoff(OPT.assist !== false), () => { OPT.assist = !(OPT.assist !== false); }, 'Arahkan serangan ke musuh terdekat (layar sentuh)'],
     ['Bilah HP musuh', () => onoff(OPT.hpbar), () => { OPT.hpbar = !OPT.hpbar; }, 'Bilah HP kecil di atas musuh'],
