@@ -61,7 +61,7 @@ MAPS.road = {
 
 MAPS.kgate = {
   id: 'kgate', customGround: 'gnd_kgate_custom', name: 'Gerbang Kota Lumina', w: 1200, h: 900, bgm: 'town', ground: 'village', pathType: 'paving', glow: [600, 360, 600], crowd: 6,
-  paths: [[600, 900, 600, 380, 48], [600, 640, 300, 640, 12], [600, 640, 900, 640, 12]],
+  paths: [[600, 900, 600, 0, 48], [600, 640, 300, 640, 12], [600, 640, 900, 640, 12]], /* jalan utama menembus gapura sampai Distrik Pasar */
   discs: [[600, 460, 80], [300, 640, 50], [900, 640, 50]],
   ponds: [[150, 840, 160, 70], [1050, 840, 160, 70]],
   objs: [

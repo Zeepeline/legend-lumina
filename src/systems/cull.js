@@ -52,7 +52,8 @@
       if (!s || !s.active) continue; // Hapus objek yang sudah dihancurkan
       list[writeIdx++] = s;
 
-      const inView = s.x >= minX && s.x <= maxX && s.y >= minY && s.y <= maxY;
+      const hw = (s.displayWidth || 0) / 2; /* benda lebar (tembok kota, pagar panjang): pakai tepi gambar, bukan titik jangkar */
+      const inView = s.x + hw >= minX && s.x - hw <= maxX && s.y >= minY && s.y - (s.displayHeight || 0) <= maxY + CULL_MARGIN_TOP;
       if (s.visible !== inView) {
         s.setVisible(inView);
       }

@@ -471,7 +471,7 @@ _Warna Langit/Cahaya Ikut Bioma (T457)_
 _Mode benua: buang petak objek yang jauh dari Arka (memori). Mencatat semua yang dibuat spawnObj per petak lalu menghancurkannya._
 `UNLOAD_FAR` 3 · `.unloadFar()` 20
 
-## src/systems/cull.js (63 baris)
+## src/systems/cull.js (64 baris)
 _Optimalisasi Kamera Culling (T487)_
 
 
