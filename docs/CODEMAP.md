@@ -91,9 +91,9 @@ _Lantai & perabot interior_
 _Gambar properti & bangunan cerita baru (Prolog & Bab 1): Makam Mila, Gubuk Reyot, Sarang Pemburu Liar, dll._
 `artMilaGrave()` 5 · `artRuinedShack()` 38 · `artSlaverCage()` 103 · `artPrisonerWagon()` 141 · `artSlaverTent()` 178 · `artSlaverBarricade()` 216 · `artReflectionSpring()` 242 · `artBurntRuin()` 265 · `artMudTracks()` 293 · `artDroppedTorch()` 312 · `artClothScrap()` 327
 
-## src/world/objects.js (391 baris)
+## src/world/objects.js (392 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 390
+`OBJ` 7 · `MAPS` 391
 
 ## src/world/spawn/spawn_1.js (393 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
@@ -155,7 +155,7 @@ _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (222 baris)
+## src/world/maps/city.js (224 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
 `houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14 · `ACAD_BOX` 148 · `acadYard()` 149
 

@@ -273,6 +273,7 @@ const OBJ = {
   acadpottree: { key: 'acad_pottree', col: [10, 5, 0] }, acadtopiary: { key: 'acad_topiary', col: [10, 5, 0] },
   acadcypress: { key: 'acad_cypress', col: [10, 5, 0] },
   acadwall: { key: 'acad_wall', col: [78, 10, 0] },
+  acadgreenhouse: { key: 'acad_greenhouse', col: [100, 16, 0], sh: [56, 8], fade: 1, mm: 1 },
   root: { key: "root", col: [40, 10, 0], sh: [30, 6] },
   stele: { key: "stele", col: [12, 5, 0], sh: [9, 3] },
   sign: { key: "sign", col: [8, 4, 0], sh: [6, 2] },
