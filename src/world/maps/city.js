@@ -68,9 +68,9 @@ MAPS.kgate = {
     [570, 500, 514, 634, 18], [514, 634, 380, 690, 18], [380, 690, 246, 634, 18], [246, 634, 190, 500, 18],
     [190, 500, 246, 366, 18], [246, 366, 380, 310, 18], [380, 310, 514, 366, 18], [514, 366, 570, 500, 18],
     [380, 226, 380, 310, 22], [160, 348, 246, 366, 16], [645, 348, 514, 366, 16], 
-    [96, 206, 258, 206, 18], [258, 206, 258, 330, 16]], /* ubin dari pintu Kandang Kuda (kiri atas) ke jalan lingkar */
+    [566, 206, 500, 206, 18], [500, 206, 500, 352, 16]], /* ubin dari pintu Kandang Kuda (kanan atas, pintu di sisi kiri) ke jalan lingkar */
   discs: [[1300, 460, 80], [1000, 640, 50], [1600, 640, 50], [380, 312, 30]],
-  calm: [[380, 500, 330], [150, 150, 120]], /* lapangan & lingkar Garnisun bebas pohon/batu acak */
+  calm: [[380, 500, 330], [612, 150, 120]], /* lapangan & lingkar Garnisun bebas pohon/batu acak */
   ponds: [[910, 790, 140, 60], [1690, 790, 140, 60]], /* kolam utuh di dalam peta (dulu terpotong tepi peta) */
   objs: [
     ['gatehouse', 1300, 442], /* gapura menjorok ke depan garis tembok */
@@ -89,11 +89,11 @@ MAPS.kgate = {
     ['planter', 1170, 490], ['planter', 1430, 490],
     ['pigeons', 1380, 520], ['pigeons', 1120, 680],
     // GARNISUN KOTA (gambar pemilik) — di barat gapura, sebelah ujung tembok kota. Bangunan MELINGKARI lapangan latihan:
-    // Markas Pengawal (utara), Kandang Kuda (pojok kiri atas), Barak (barat laut), Barak Prajurit (timur laut); pintu masuk di tenggara.
-    ['garhall', 380, 222], ['garbarracks', 150, 342], ['garbarracks2', 612, 342], ['garstable', 150, 190],
+    // Markas Pengawal (utara), Kandang Kuda (pojok kanan atas, pintu menghadap ke dalam), Barak (barat laut), Barak Prajurit (timur laut); pintu masuk di tenggara.
+    ['garhall', 380, 222], ['garbarracks', 150, 342], ['garbarracks2', 612, 342], ['garstable', 612, 190],
     ['garpen', 380, 540], ['gardummy', 285, 470], ['gardummy', 475, 470], ['garbag', 272, 590], ['garshields', 488, 592],
     ['gartarget', 320, 650], ['gartarget2', 380, 650], ['gartarget3', 440, 650],
-    ['garsupply', 150, 790], ['garrack', 640, 700], ['garhayrack', 330, 830], ['garbarricade', 610, 812], ['garrack', 90, 480],
+    ['garsupply', 150, 180], ['garrack', 640, 700], ['garhayrack', 170, 810], ['garbarricade', 610, 812], ['garrack', 90, 480],
     ['gpt_city_lamp', 236, 316], ['gpt_city_lamp', 524, 316], ['gpt_city_lamp', 236, 700], ['gpt_city_lamp', 600, 610],
     ['sign', 650, 610, { text: 'GARNISUN KOTA LUMINA\nMarkas Pengawal · Barak · Lapangan Latihan · Kandang Kuda' }]
   ],
@@ -115,7 +115,7 @@ MAPS.kgate = {
     ['gw1', 'woman', 'Pelancong', 1000, 700, 'warga'],
     ['gw2', 'farmer', 'Petani', 1600, 700, 'warga'],
     ['gk1', 'guard_spear', 'Kapten Garnisun', 410, 262, 'gerbang', 0], ['gk2', 'guard_spear', 'Prajurit Latihan', 330, 500, 'gerbang'],
-    ['gk3', 'guard_spear', 'Pemanah Garnisun', 380, 590, 'gerbang', 0], ['gk4', 'farmer', 'Tukang Kuda', 70, 222, 'warga', 0],
+    ['gk3', 'guard_spear', 'Pemanah Garnisun', 380, 590, 'gerbang', 0], ['gk4', 'farmer', 'Tukang Kuda', 536, 226, 'warga', 0],
     ['gk5', 'guard_spear', 'Penjaga Barak', 680, 380, 'gerbang', 0]
   ]),
   trees: { n: 40, min: 30, types: [['treeA', .3], ['bushG1', .4], ['rock', .3]] },
