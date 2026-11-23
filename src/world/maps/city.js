@@ -66,7 +66,7 @@ MAPS.kgate = {
   ponds: [[150, 840, 160, 70], [1050, 840, 160, 70]],
   objs: [
     ['gatehouse', 600, 424],
-    ['citywallL', 260, 424], ['citywallR', 922, 424], /* tembok kota (gambar pemilik): x 20–500 & 667–1177 */
+    ['citywallL', 261, 424], ['citywallR', 938, 424], /* tembok kota (gambar pemilik): x 21–501 & 699–1177, rapat ke sayap gapura */
     ['gpt_city_lamp', 554, 474], ['gpt_city_lamp', 646, 474],
     ['gpt_city_banner_sm', 526, 474], ['gpt_city_banner_sm', 674, 474],
     ['gpt_city_banner', 566, 340], ['gpt_city_banner', 634, 340],
