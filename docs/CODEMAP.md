@@ -171,6 +171,10 @@ _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina
 _Interior: penginapan, rumah pohon, rumah Lina_
 `makeRoom()` 4
 
+## src/world/maps/cast.js (90 baris)
+_PEMERAN KOTA & DESA — NPC tambahan yang mengisi bangunan & ruang publik (kios, sumur, kuil, balai, akademi, garnisun, penginapan)._
+`CAST_TALK` 6 · `CAST` 30 · `CAST_ROLE` 77
+
 ## src/ui/widgets.js (261 baris)
 _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
 `UIH` 6 · `G` 7 · `win()` 8 · `fadeTo()` 9 · `shake()` 10 · `DLG_LOG` 15 · `say()` 16 · `talk()` 51 · `choose()` 55 · `ask()` 91 · `BANNER_QUEUE` 100 · `BANNER_BUSY` 101 · `processBannerQueue()` 102 · `banner()` 115 · `POPS` 124 · `popWorld()` 125 · `updPops()` 133 · `HUD` 136 · `buildHud()` 137 · `updHud()` 151 · `hudPeaceT` 223 · `updHudFade()` 224 · `showHud()` 239 · `bossBar()` 244 · `autoSaveIcon()` 260
@@ -630,6 +634,22 @@ _Mesin animasi NPC: npcAct/npcActEnd, napas saat diam, kait ke otak NPC (brain.j
 ## src/npc/npc_demo.js (29 baris)
 _Pembantu uji visual animasi NPC (konsol): __game.sc.npcDemo() menaruh barisan NPC di dekat pemain, tiap NPC memainkan satu aksi; npcDemoClear() menghapus._
 `NPC_DEMO_ACTS` 3 · `NPC_DEMO_CH` 4 · `.npcDemo()` 7 · `.npcDemoClear()` 20
+
+## src/npc/life_roles.js (164 baris)
+_KEHIDUPAN KOTA — peran kerja tambahan untuk NPC (prajurit, pemanah, pedagang kios, pembeli, pemusik, juru warta, imam,_
+`LIFE_ROLES` 7 · `LIFE_SHOUT` 35 · `lifeHour` 50 · `lifeInHours` 51 · `lifeFace()` 52 · `lifeNear` 56 · `lifeShout()` 57 · `lifeSfx()` 62 · `lifeLunge()` 64 · `lifeBob()` 68 · `lifePose()` 70 · `lifeObjSpr()` 76 · `lifeWobble()` 80 · `lifeArrow()` 84 · `LIFE_ICON` 89 · `LIFE_ACTS` 96 · `lifeSimple()` 119
+
+## src/npc/life_plan.js (72 baris)
+_Rencana tujuan NPC berperan LIFE_ROLES (life_roles.js): jam kerja, tempat kerja (objek peta di dekat pos), patroli malam,_
+`lifeWorkList()` 4 · `lifePathPt()` 10 · `lifePatrol` 16 · `lifeStay()` 17 · `LIFE_PLANS` 20 · `lifePlan()` 41
+
+## src/npc/life_duos.js (169 baris)
+_INTERAKSI ANTAR-NPC — sutradara kecil: tiap ±2 dtk mencari pasangan NPC di dekat pemain lalu memainkan adegan pendek:_
+`LIFE_DUO` 6 · `LIFE_GOSSIP` 7 · `LIFE_HAGGLE` 17 · `LIFE_LISTEN` 22 · `lifeIs` 23 · `LIFE_EMO_ANIM` 25 · `LIFE_DUO_KINDS` 26 · `lifeDuoSteps()` 37 · `lifeFree()` 71 · `.lifeDuoStart()` 77 · `.lifeDuoEnd()` 85 · `.lifeGo()` 94 · `.lifeDuoTick()` 99 · `.lifeDirector()` 138 · `.lifeDuoUpd()` 151
+
+## src/npc/life_sheet.js (66 baris)
+_SPRITE SHEET NPC — tempat memasang lembar sprite hasil gambar (agent pemilik) tanpa mengubah kode lain._
+`NPC_SHEETS` 10 · `NPC_SHEET_FW` 13 · `NPC_SHEET_FPS` 14 · `regNpcSheet()` 20 · `LIFE_ANIM_FACE` 56
 
 ## src/ui/shop.js (383 baris)
 _Menu beli, jual, tempa_

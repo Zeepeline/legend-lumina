@@ -126,9 +126,9 @@ MAPS.kgate = {
     ['courier', 'boy', 'Budi Kurir Kilat', 1080, 720, 'warga', 0],
     ['gw1', 'woman', 'Pelancong', 1000, 700, 'warga'],
     ['gw2', 'farmer', 'Petani', 1600, 700, 'warga'],
-    ['gk1', 'guard_spear', 'Kapten Garnisun', 410, 262, 'gerbang', 0], ['gk2', 'guard_spear', 'Prajurit Latihan', 330, 500, 'gerbang'],
-    ['gk3', 'guard_spear', 'Pemanah Garnisun', 380, 590, 'gerbang', 0], ['gk4', 'farmer', 'Tukang Kuda', 536, 226, 'warga', 0],
-    ['gk5', 'guard_spear', 'Penjaga Barak', 680, 380, 'gerbang', 0]
+    ['gk1', 'guard_spear', 'Kapten Bratasena', 410, 262, 'gerbang', 0], ['gk2', 'guard_spear', 'Prajurit Anggara', 330, 500, 'gerbang'],
+    ['gk3', 'guard_spear', 'Pemanah Raka', 380, 590, 'gerbang', 0], ['gk4', 'farmer', 'Pak Sardi si Tukang Kuda', 536, 226, 'warga', 0],
+    ['gk5', 'guard_spear', 'Prajurit Tegar', 680, 380, 'gerbang', 0]
   ]),
   trees: { n: 40, min: 30, types: [['treeA', .3], ['bushG1', .4], ['rock', .3]] },
 };

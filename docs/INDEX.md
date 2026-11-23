@@ -41,8 +41,11 @@ Visi 12 · Prinsip Storytelling 27 · Pacing 45 · Tujuan Pemain 65 · Immediate
 ## NPC_ANIM.md — NPC_ANIM — animasi NPC (jalan, napas, aksi cerita) (43 baris, ~800 token)
 Berkas 5 · Frame pada tekstur `ch_<ch>` 12 · API (di scene: `__game.sc.`) 16 · Perilaku otomatis 27 · Contoh konsol 33 · Batas 41
 
-## NPC_RULES.md — Aturan NPC & Kehidupan Dunia (WAJIB untuk semua agent) (56 baris, ~800 token)
-1. Setiap NPC punya peran 7 · 2. Tempat kerja harus ada di peta 26 · 3. NPC cerita tetap terjangkau 30 · 4. Siklus siang-malam 34 · 5. Bereaksi pada pemain 39 · 6. Larangan 45 · 7. Dialog & UI (agar layar tidak membeku) 51
+## NPC_ROSTER.md — NPC_ROSTER — Daftar NPC Kota & Desa + Spesifikasi Sprite Sheet (700 baris, ~9600 token)
+0. Cara kerja singkat (wajib dibaca agent) 19 · Aturan gambar (agar senada dengan aset pemilik) 27 · 1. Format lembar 41 · 2. Baris tetap (semua NPC) 54 · Baris 0 — `walk_down` (4 frame, 8 fps) 56 · Baris 1 — `walk_up` (4 frame, 8 fps) 63 · Baris 2 — `walk_side` (4 frame, 8 fps, menghadap kanan) 66 · Baris 3 — `idle` (6 frame; game memakai kolom 0/1, 2/3, 4/5 sesuai arah) 72 · Baris 4 — `talk` (4 frame, 6 fps, menghadap bawah) 80 · 3. Pustaka animasi kegiatan (baris 5+) 90 · Militer 99 · Kandang & bayaran 143 · Pasar 160 · Hiburan & keramaian 200 · Ibadah, balai & akademi 250 · Kerja kota & desa 291 · 4. Daftar NPC 355 · 4.1 Gerbang Kota — Garnisun (`kgate`, barat gapura) 367 · 4.2 Distrik Pasar (`kpasar`) — Pasar Raya 417 · 4.3 Distrik Permukiman (`kpermukiman`) 493 · 4.4 Distrik Akademi (`kakademi`) 523 · 4.5 Kota Bawah (`kbawah`) 569 · 4.6 Desa & alam 583 · 4.7 Dalam ruangan 617 · 5. Interaksi antar-NPC (adegan) 645 · 6. Jadwal harian per peran (jam game) 664 · 7. Daftar periksa sebelum menyerahkan lembar 691
+
+## NPC_RULES.md — Aturan NPC & Kehidupan Dunia (WAJIB untuk semua agent) (64 baris, ~1200 token)
+1. Setiap NPC punya peran 7 · 2. Tempat kerja harus ada di peta 26 · 3. NPC cerita tetap terjangkau 30 · 4. Siklus siang-malam 34 · 5. Bereaksi pada pemain 39 · 6. Larangan 45 · 7. Dialog & UI (agar layar tidak membeku) 51 · 8. Kehidupan kota: peran kerja, jadwal & interaksi (v1.89.0) 57
 
 ## PLACEMENT_RULES.md — Aturan Penempatan Objek & Aset (WAJIB untuk semua agent) (73 baris, ~1100 token)
 1. Setiap objek harus punya alasan berada di situ 16 · 2. Jangan menghalangi 26 · 3. Kepadatan & ritme 38 · 4. Pengecualian yang disengaja 44 · 5. Aset gambar 54 · 6. Setelah menaruh objek 63 · Area berpagar (kandang, kebun) 70

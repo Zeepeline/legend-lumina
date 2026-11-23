@@ -53,3 +53,11 @@ NPC yang dibutuhkan misi (`STORY_NPC`) hanya beraktivitas dalam radius kecil (±
 - Format yang benar: `await say('teks', 'Nama')`, `await talk('Nama', ['baris1', 'baris2'])`, `await choose({ head: 'Judul', items: [{ t: 'Opsi' }] })`, `await ask('Pertanyaan?')`.
 - Format lama `say('Nama', [..])` dan `choose('Judul', ['..'])` masih diterima, tapi **jangan dipakai di kode baru**.
 - Setiap `G.lock++` wajib punya `G.lock--` di `finally`. Jangan `return` di antara keduanya tanpa `try/finally`. Itu penyebab layar membeku.
+
+## 8. Kehidupan kota: peran kerja, jadwal & interaksi (v1.89.0)
+
+- **Peran kerja tambahan** (`src/npc/life_roles.js`, `LIFE_ROLES`): prajurit, pemanah, kapten, tukang kuda, tentara bayaran, pedagang kios, pembeli, pemusik, penabuh, juru warta, imam, penimba air, juru tulis, guru, murid, tukang kebun, ahli bintang, penyapu, tukang lampu, pelanggan penginapan, pustakawan, penggiling, penjaga mercusuar, musafir, pemancing. Tiap peran punya jam kerja (`hours`), objek tempat kerja (`work`, regex jenis objek peta), titik berdiri (`spot`), aksi (`act`), dan perilaku malam (`night`: `patrol`/`stay`/pulang).
+- **Rencana tujuan** (`life_plan.js`) membungkus `npcPickGoal`/`npcActStart`/`npcActTick`; peran yang tidak ada di `LIFE_ROLES` tetap memakai otak lama.
+- **Interaksi antar-NPC** (`life_duos.js`): tawar-menawar, tanding, hormat, kejar-kejaran, gosip, menonton, bersulang, antar paket. Selama adegan, `o.duo` diisi dan otak NPC dilewati. NPC cerita tidak pernah dipindahkan oleh adegan.
+- **Pemeran** (`src/world/maps/cast.js`): `CAST[peta]` menambah NPC, `CAST_ROLE[peta]` memberi peran ke NPC lama. Menambah NPC pekerja: pastikan objek tempat kerjanya ada di dekatnya (aturan bag. 2).
+- **Sprite sheet** per NPC (`life_sheet.js`, `NPC_SHEETS`): format & daftar lengkap di `docs/NPC_ROSTER.md`. Tanpa lembar, gerak kerja memakai pengganti kode.
