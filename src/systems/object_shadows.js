@@ -5,7 +5,7 @@
 // Ukuran dari tekstur 'objsh' (frame per lebar); gambar diam → ikut di-cull perf.js di luar layar.
 const OBJ_SHADOW = {
   on: true, alpha: .34, alphaDark: .5, minW: 14, maxW: 84, step: 4,
-  skip: new RegExp(['house|inn|shop|smith|forge|chapel|church|guild|hall|barn|tower|windmill|gatehouse|gate|cwall|ctower|academy',
+  skip: new RegExp(['house|inn|shop|smith|forge|chapel|church|guild|hall|barn|tower|windmill|gatehouse|gate|cwall|citywall|ctower|academy',
     'fortress|castle|palace|temple|stall|market|dock|bridge|cavemouth|shrine|cliff|rug|carpet|path|portal|spLily|ripple',
     'clutter|island|puddle|water|well|fountain|wall'].join('|'), 'i'),
 };

@@ -234,6 +234,7 @@ const OBJ = {
   gatehouse: { key: "gatehouse", col: [0, 0, 0], sh: [120, 8], mm: 1 },
   ctower: { key: "ctower", col: [64, 40, 0], sh: [34, 8], fade: 1, mm: 1 },
   cwall: { key: "cwall", col: [68, 26, 0], sh: [34, 6] },
+  citywallL: { key: "citywall_l", col: [480, 24, 0], mm: 1 }, citywallR: { key: "citywall_r", col: [510, 24, 0], mm: 1 }, /* tembok Gerbang Kota */
   city_bridge: { key: "gpt_city_bridge", col: [0, 0, 0] },
   gpt_city_cart: { key: "gpt_city_cart", col: [36, 16, 2], sh: [20, 5], mm: 1 },
   gpt_city_board: { key: "gpt_city_board", col: [32, 10, 0], sh: [16, 4] },

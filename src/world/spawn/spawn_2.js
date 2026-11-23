@@ -336,6 +336,7 @@ Object.assign(OBJ_SPAWN, {
   },
   // T580: Gapura Batu Megah, Lorong Bayangan & Atap Parapet Berlapis
   gatehouse(s, x, y, opt, d, type) {
+    if (IMGEL.sp_b_gatehouse) { this.wall(x - 98, y - 26, 70, 26); this.wall(x + 28, y - 26, 70, 26); return; } /* gerbang gambar pemilik */
     this.wall(x - 86, y - 28, 44, 28);
     this.wall(x + 42, y - 28, 44, 28);
     this.add.ellipse(x, y - 22, 76, 30, 0x06050a, 0.45).setDepth(y - 20);

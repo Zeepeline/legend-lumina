@@ -91,17 +91,17 @@ _Lantai & perabot interior_
 _Gambar properti & bangunan cerita baru (Prolog & Bab 1): Makam Mila, Gubuk Reyot, Sarang Pemburu Liar, dll._
 `artMilaGrave()` 5 · `artRuinedShack()` 38 · `artSlaverCage()` 103 · `artPrisonerWagon()` 141 · `artSlaverTent()` 178 · `artSlaverBarricade()` 216 · `artReflectionSpring()` 242 · `artBurntRuin()` 265 · `artMudTracks()` 293 · `artDroppedTorch()` 312 · `artClothScrap()` 327
 
-## src/world/objects.js (393 baris)
+## src/world/objects.js (394 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 392
+`OBJ` 7 · `MAPS` 393
 
 ## src/world/spawn/spawn_1.js (393 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
 `OBJ_SPAWN` 3 · obj `verdant_bush` 5 · obj `verdant_bush_small` 6 · obj `bushy` 7 · obj `bushv` 8 · obj `lampPost` 10 · obj `gpt_city_lamp` 18 · obj `shrine` 26 · obj `cavemouth` 29 · obj `sign` 32 · obj `forge` 42 · obj `pebbles` 63 · obj `telescope` 71 · obj `altar` 79 · obj `fieldoven` 87 · obj `dripstone` 95 · obj `frostflower` 103 · obj `totem` 111 · obj `pigeons` 119 · obj `teatable` 152 · obj `lotuspad` 160 · obj `dockboat` 168 · obj `coffeeshrub` 224 · obj `coffeekettle` 232 · obj `orchidrock` 240 · obj `canaryperch` 248 · obj `woodlandshrine` 256 · obj `bellows` 264 · obj `ringbooth` 272 · obj `archerytarget` 280 · obj `lakelighthouse` 288 · obj `streetdrum` 296 · obj `dummy` 304 · obj `pot` 312 · obj `well` 322 · obj `apple1` 337 · obj `bench` 342 · obj `bell` 358 · obj `campfire` 366 · obj `alchemytable` 383
 
-## src/world/spawn/spawn_2.js (394 baris)
+## src/world/spawn/spawn_2.js (395 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
-obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 220 · obj `tree_redwood` 228 · obj `goblin_torch` 231 · obj `goblin_cauldron` 234 · obj `cryst` 243 · obj `lamp` 246 · obj `viewpoint` 254 · obj `lumina_shard` 288 · obj `scenicbench` 310 · obj `mailbox` 328 · obj `gatehouse` 338 · obj `ctower` 346 · obj `city_bridge` 349 · obj `gpt_city_banner` 352 · obj `gpt_city_banner_sm` 356 · obj `gpt_city_board` 360 · obj `mila_grave` 370 · obj `reflection_spring` 374 · obj `slaver_cage` 378
+obj `brokenbridge` 4 · obj `board` 42 · obj `bombbarrel` 51 · obj `bramble` 81 · obj `minestone` 84 · obj `village_vault` 114 · obj `mirror_memory` 124 · obj `fame_board` 134 · obj `bounty_board` 143 · obj `deadtree` 152 · obj `rune_pillar` 180 · obj `fountain` 192 · obj `windmill` 204 · obj `treeA` 211 · obj `treeRedwood` 220 · obj `tree_redwood` 228 · obj `goblin_torch` 231 · obj `goblin_cauldron` 234 · obj `cryst` 243 · obj `lamp` 246 · obj `viewpoint` 254 · obj `lumina_shard` 288 · obj `scenicbench` 310 · obj `mailbox` 328 · obj `gatehouse` 338 · obj `ctower` 347 · obj `city_bridge` 350 · obj `gpt_city_banner` 353 · obj `gpt_city_banner_sm` 357 · obj `gpt_city_board` 361 · obj `mila_grave` 371 · obj `reflection_spring` 375 · obj `slaver_cage` 379
 
 ## src/world/ground.js (400 baris)
 _Generator tanah, tabrakan grid, penyebar pohon_
@@ -543,7 +543,7 @@ _RUMAH GAYA SPROUT — bangunan desa/kota digambar ulang lewat kode (piksel 2×,
 _RUMAH DARI REFERENSI PEMILIK — rumah A/B/C, pondok merah/cokelat & pandai besi memakai gambar hasil tools/bake_houses.py_
 `REF_HOUSES` 6 · `_buildTexturesRef` 27
 
-## src/systems/academy_grounds.js (10 baris)
+## src/systems/academy_grounds.js (13 baris)
 _HALAMAN AKADEMI — aset dari lembar gambar pemilik (latar ungu dibersihkan, diperkecil sama dengan gambar Akademi):_
 `ACAD_ART` 6
 

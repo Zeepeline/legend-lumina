@@ -7,3 +7,6 @@ const ACAD_ART = ['fence', 'post', 'gate', 'lamp', 'bench', 'board', 'statue', '
   'crates', 'crates2', 'pottree', 'topiary', 'cypress', 'wall', 'greenhouse', 'dorm'].map(n => 'acad_' + n);
 REF_HOUSES.tex.push(...ACAD_ART);
 IMG_LIST.push(...ACAD_ART.map(k => 'sp_b_' + k));
+// Gerbang Kota (gambar pemilik): gapura dua menara + tembok kota panjang kiri/kanan (dirangkai dari gambar tembok)
+REF_HOUSES.tex.push('gatehouse', 'citywall_l', 'citywall_r');
+IMG_LIST.push('sp_b_gatehouse', 'sp_b_citywall_l', 'sp_b_citywall_r');
