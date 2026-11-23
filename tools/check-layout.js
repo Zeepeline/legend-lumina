@@ -64,7 +64,7 @@ for (const [id, M] of Object.entries(MAPS)) {
     // menghalangi pintu keluar
     for (const e of M.exits || []) { const ex = { x1: e.x - 24, x2: e.x + e.w + 24, y1: e.y - 34, y2: e.y + e.h + 34 }; if (o.b && hit(o.b, ex)) issues.push(`${tag(o)} menghalangi pintu keluar ke ${e.to}`); }
     // menghalangi pintu rumah (depan pintu harus kosong)
-    for (const d of M.doors || []) { const front = { x1: d[0] - 14, x2: d[0] + 14, y1: d[1], y2: d[1] + 34 }; if (o.b && !/^house|academy|inn|shop/.test(o.t) && hit(o.b, front)) issues.push(`${tag(o)} menghalangi pintu (${d[0]}, ${d[1]})`); }
+    for (const d of M.doors || []) { const front = { x1: d[0] - 14, x2: d[0] + 14, y1: d[1], y2: d[1] + 34 }; if (o.b && !/^house|academy|inn|shop|acaddorm|acadgreenhouse/.test(o.t) && hit(o.b, front)) issues.push(`${tag(o)} menghalangi pintu (${d[0]}, ${d[1]})`); }
     // menimpa NPC
     for (const n of M.npcs || []) if (o.b && hit(o.b, { x1: n.x - 7, x2: n.x + 7, y1: n.y - 6, y2: n.y + 2 })) issues.push(`${tag(o)} menimpa posisi NPC ${n.id}`);
   }

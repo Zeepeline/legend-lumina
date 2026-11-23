@@ -4,6 +4,6 @@
 // sasaran panah, rak senjata, peti/tong, pot tanaman, tembok batu berlumut, rumah kaca (Taman Akademi). File: assets/img/buildings/sp_b_acad_<nama>.png,
 // tekstur 'acad_<nama>' dipasang lewat REF_HOUSES.tex (ref_houses.js). Objek OBJ: acad<nama> (world/objects.js).
 const ACAD_ART = ['fence', 'post', 'gate', 'lamp', 'bench', 'board', 'statue', 'fountain', 'dummy', 'target', 'rack',
-  'crates', 'crates2', 'pottree', 'topiary', 'cypress', 'wall', 'greenhouse'].map(n => 'acad_' + n);
+  'crates', 'crates2', 'pottree', 'topiary', 'cypress', 'wall', 'greenhouse', 'dorm'].map(n => 'acad_' + n);
 REF_HOUSES.tex.push(...ACAD_ART);
 IMG_LIST.push(...ACAD_ART.map(k => 'sp_b_' + k));
