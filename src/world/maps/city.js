@@ -65,10 +65,10 @@ MAPS.kgate = {
   discs: [[600, 460, 80], [300, 640, 50], [900, 640, 50]],
   ponds: [[150, 840, 160, 70], [1050, 840, 160, 70]],
   objs: [
-    ['gatehouse', 600, 424],
+    ['gatehouse', 600, 442], /* gapura menjorok ke depan garis tembok */
     ['citywallL', 265, 424], ['citywallR', 934, 424], /* tembok kota (gambar pemilik): x 21–509 & 691–1177, ujungnya masuk 8 px di belakang sayap gapura */
-    ['gpt_city_lamp', 554, 474], ['gpt_city_lamp', 646, 474],
-    ['gpt_city_banner_sm', 526, 474], ['gpt_city_banner_sm', 674, 474],
+    ['gpt_city_lamp', 530, 486], ['gpt_city_lamp', 670, 486],
+    ['gpt_city_banner_sm', 500, 486], ['gpt_city_banner_sm', 700, 486],
     ['gpt_city_banner', 566, 340], ['gpt_city_banner', 634, 340],
     ['gpt_city_cliff_l', 160, 840, { ok: 'tebing sungai kiri bawah sesuai referensi' }],
     ['gpt_city_cliff_r', 1040, 840, { ok: 'tebing sungai kanan bawah sesuai referensi' }],
@@ -96,8 +96,8 @@ MAPS.kgate = {
     { x: 560, y: 388, w: 80, h: 20, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' }
   ],
   npcs: citizens([
-    ['gj1', 'guard_spear', 'Penjaga Gerbang', 562, 456, 'gerbang', 0],
-    ['gj2', 'guard_spear', 'Penjaga Gerbang', 638, 456, 'gerbang', 0],
+    ['gj1', 'guard_spear', 'Penjaga Gerbang', 556, 492, 'gerbang', 0],
+    ['gj2', 'guard_spear', 'Penjaga Gerbang', 644, 492, 'gerbang', 0],
     ['courier', 'boy', 'Budi Kurir Kilat', 380, 720, 'warga', 0],
     ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'],
     ['gw2', 'farmer', 'Petani', 900, 700, 'warga']

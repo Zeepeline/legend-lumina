@@ -8251,10 +8251,10 @@ MAPS.kgate = {
   discs: [[600, 460, 80], [300, 640, 50], [900, 640, 50]],
   ponds: [[150, 840, 160, 70], [1050, 840, 160, 70]],
   objs: [
-    ['gatehouse', 600, 424],
+    ['gatehouse', 600, 442], /* gapura menjorok ke depan garis tembok */
     ['citywallL', 265, 424], ['citywallR', 934, 424], /* tembok kota (gambar pemilik): x 21–509 & 691–1177, ujungnya masuk 8 px di belakang sayap gapura */
-    ['gpt_city_lamp', 554, 474], ['gpt_city_lamp', 646, 474],
-    ['gpt_city_banner_sm', 526, 474], ['gpt_city_banner_sm', 674, 474],
+    ['gpt_city_lamp', 530, 486], ['gpt_city_lamp', 670, 486],
+    ['gpt_city_banner_sm', 500, 486], ['gpt_city_banner_sm', 700, 486],
     ['gpt_city_banner', 566, 340], ['gpt_city_banner', 634, 340],
     ['gpt_city_cliff_l', 160, 840, { ok: 'tebing sungai kiri bawah sesuai referensi' }],
     ['gpt_city_cliff_r', 1040, 840, { ok: 'tebing sungai kanan bawah sesuai referensi' }],
@@ -8282,8 +8282,8 @@ MAPS.kgate = {
     { x: 560, y: 388, w: 80, h: 20, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' }
   ],
   npcs: citizens([
-    ['gj1', 'guard_spear', 'Penjaga Gerbang', 562, 456, 'gerbang', 0],
-    ['gj2', 'guard_spear', 'Penjaga Gerbang', 638, 456, 'gerbang', 0],
+    ['gj1', 'guard_spear', 'Penjaga Gerbang', 556, 492, 'gerbang', 0],
+    ['gj2', 'guard_spear', 'Penjaga Gerbang', 644, 492, 'gerbang', 0],
     ['courier', 'boy', 'Budi Kurir Kilat', 380, 720, 'warga', 0],
     ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'],
     ['gw2', 'farmer', 'Petani', 900, 700, 'warga']
@@ -9022,7 +9022,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.85.2';
+const GAME_VERSION = '1.85.3';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
