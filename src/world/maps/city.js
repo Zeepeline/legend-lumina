@@ -105,21 +105,20 @@ MAPS.kgate = {
 
 MAPS.kpasar = {
   id: 'kpasar', customGround: 'gnd_kpasar_custom', name: 'Distrik Pasar', w: 1600, h: 1200, bgm: 'town', ground: 'village', glow: [800, 600, 900], crowd: 12,
-  paths: [[800, 1200, 800, 0, 34], [0, 620, 1600, 620, 30], [400, 360, 1200, 360, 18], [400, 900, 1200, 900, 18], [400, 360, 400, 900, 18], [1200, 360, 1200, 900, 18]],
-  discs: [[800, 620, 170], [400, 900, 40], [1200, 360, 40], [640, 500, 60], [960, 500, 60], [640, 790, 60], [960, 790, 60]],
+  paths: [[800, 1200, 800, 0, 34], [0, 620, 1600, 620, 30], [400, 360, 1200, 360, 18], [400, 900, 1200, 900, 30], [410, 566, 1190, 566, 26], /* selasar Pasar Raya */ [400, 360, 400, 900, 18], [1200, 360, 1200, 900, 18]],
+  discs: [[800, 620, 170], [400, 900, 40], [1200, 360, 40], /* + lantai ubin di bawah kios Pasar Raya */
+    ...[470, 530, 590, 1010, 1070, 1130].flatMap(x => [[x, 505, 62], [x, 835, 62]])],
   objs: [['fountain', 800, 640, { ok: 'air mancur di tengah alun-alun pasar' }],
-    ...[[640, 500], [960, 500], [640, 790], [960, 790], [640, 420], [960, 420], [640, 860], [960, 860], [510, 430], [1090, 430], [510, 850], [1090, 850], [668, 250], [932, 250], [668, 1020], [932, 1020]].map(([x, y]) => ['market', x, y]),
+    // PASAR RAYA: deretan kios tenda (gambar pemilik) menghadap selasar pasar; kios lama 'market' tetap di ujung utara/selatan
+    ...[[470, 'potion'], [590, 'food'], [1010, 'weapon'], [1130, 'potion']].map(([x, k]) => ['stall_' + k, x, 540]),
+    ...[[470, 'weapon'], [590, 'food'], [1010, 'food'], [1130, 'weapon']].map(([x, k]) => ['stall_' + k, x, 870]),
+    ...[[668, 250], [932, 250], [668, 1020], [932, 1020]].map(([x, y]) => ['market', x, y]),
     ...houseRow(180, 170, 2), ...houseRow(1300, 170, 2), ...houseRow(180, 440, 2), ...houseRow(1300, 440, 2),
     ...houseRow(180, 780, 2), ...houseRow(1300, 780, 2),
     ...houseRow(180, 300, 2), ...houseRow(1300, 300, 2), ...houseRow(180, 1100, 2), ...houseRow(1300, 1100, 2), ['houseC', 560, 300], ['houseA', 1040, 300], ['houseB', 560, 1100], ['houseC', 1040, 1100],
-    ['crateCart', 530, 500], ['crateCart', 1070, 790],
-    ['crate', 560, 504], ['crate', 560, 488], ['barrel', 576, 500], ['barrelNew', 576, 486],
-    ['crate', 1030, 498], ['barrel', 1045, 504], ['crate', 1030, 484],
-    ['crate', 560, 792], ['barrel', 576, 792], ['hay', 560, 808],
-    ['crate', 1030, 792], ['barrel', 1045, 788], ['hay', 1030, 806],
-    ...lampRow(480, 560, 2, 640), ...lampRow(480, 700, 2, 640), ...lampRow(700, 430, 3, 100), ...lampRow(700, 850, 3, 100), ...lampRow(200, 580, 3, 120), ...lampRow(1160, 580, 3, 120),
-    ['bench', 720, 720], ['bench', 880, 720], ['planter', 690, 560], ['planter', 910, 560], ['barrel', 430, 840], ['crate', 1170, 840],
-    ['ringbooth', 720, 480],
+    ...lampRow(530, 596, 2, 540), ...lampRow(480, 700, 2, 640), ...lampRow(700, 430, 3, 100), ...lampRow(700, 850, 3, 100), ...lampRow(200, 580, 3, 120), ...lampRow(1160, 580, 3, 120),
+    ['bench', 720, 720], ['bench', 880, 720],
+    ['ringbooth', 620, 720],
     // T406 & T407: Kuil/Shrine & Kedai Pasar
     ['shrine', 800, 470], // Kuil menghadap alun-alun pasar (utara air mancur)
     ['benchWood', 510, 310], ['barrel', 490, 314], ['sign', 530, 320, { text: 'Kedai Seribu Lentera' }],
@@ -131,11 +130,11 @@ MAPS.kpasar = {
     { x: 760, y: 0, w: 80, h: 12, to: 'kakademi', tx: 700, ty: 960, dir: 'up', label: 'Distrik Akademi' },
     { x: 0, y: 590, w: 12, h: 60, to: 'kbawah', tx: 1150, ty: 500, dir: 'left', label: 'Kota Bawah' }],
   doors: [[560, 300, { to: 'kinn' }], [180, 300, 'Rumah penjahit. Pintunya terkunci.'], [1300, 300, 'Kantor Serikat Dagang cabang Kota Lumina. Penjaganya menatapmu tajam.'], [1040, 300, 'Toko buku. "Tutup sampai ujian Akademi selesai."']],
-  npcs: [{ id: 'kmerchant', ch: 'merchant', name: 'Pedagang Pasar', x: 640, y: 530, dir: 'down' },
+  npcs: [{ id: 'kmerchant', ch: 'merchant', name: 'Pedagang Pasar', x: 700, y: 590, dir: 'down' },
     { id: 'auctioneer', ch: 'elder', name: 'Juru Lelang Bastian', x: 740, y: 380, dir: 'down' },
     { id: 'rudi', ch: 'child', name: 'Rudi', x: 980, y: 700, dir: 'left', wander: 20 },
-    ...citizens([['kp1', 'woman', 'Warga', 700, 760, 'warga'], ['kp2', 'farmer', 'Warga', 900, 470, 'warga'], ['kp3', 'merchant', 'Pedagang', 960, 530, 'pedagang', 0], ['kp4', 'girl', 'Gadis Kota', 520, 660, 'warga'],
-      ['kp5', 'smith', 'Kuli Angkut', 1100, 880, 'pedagang'], ['kp6', 'joko', 'Pedagang Rempah', 640, 820, 'pedagang', 0], ['kp7', 'woman', 'Warga', 300, 640, 'warga'], ['kp8', 'guard', 'Penjaga Kota', 1480, 640, 'penjaga', 0]])],
+    ...citizens([['kp1', 'woman', 'Warga', 700, 760, 'warga'], ['kp2', 'farmer', 'Warga', 900, 470, 'warga'], ['kp3', 'merchant', 'Pedagang', 940, 590, 'pedagang', 0], ['kp4', 'girl', 'Gadis Kota', 520, 660, 'warga'],
+      ['kp5', 'smith', 'Kuli Angkut', 1100, 880, 'pedagang'], ['kp6', 'joko', 'Pedagang Rempah', 660, 910, 'pedagang', 0], ['kp7', 'woman', 'Warga', 300, 640, 'warga'], ['kp8', 'guard', 'Penjaga Kota', 1480, 640, 'penjaga', 0]])],
   animals: [['cat', 760, 760, 0], ['cat', 1150, 520, 1]],
   trees: { n: 30, min: 30, types: [['bushG1', .5], ['planter', .3], ['rock', .2]] },
 };

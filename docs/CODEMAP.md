@@ -91,9 +91,9 @@ _Lantai & perabot interior_
 _Gambar properti & bangunan cerita baru (Prolog & Bab 1): Makam Mila, Gubuk Reyot, Sarang Pemburu Liar, dll._
 `artMilaGrave()` 5 · `artRuinedShack()` 38 · `artSlaverCage()` 103 · `artPrisonerWagon()` 141 · `artSlaverTent()` 178 · `artSlaverBarricade()` 216 · `artReflectionSpring()` 242 · `artBurntRuin()` 265 · `artMudTracks()` 293 · `artDroppedTorch()` 312 · `artClothScrap()` 327
 
-## src/world/objects.js (394 baris)
+## src/world/objects.js (396 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 393
+`OBJ` 7 · `MAPS` 395
 
 ## src/world/spawn/spawn_1.js (393 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
@@ -155,9 +155,9 @@ _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (225 baris)
+## src/world/maps/city.js (224 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
-`houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14 · `ACAD_BOX` 146 · `acadYard()` 147
+`houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14 · `ACAD_BOX` 145 · `acadYard()` 146
 
 ## src/world/maps/wild.js (194 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
@@ -546,6 +546,10 @@ _RUMAH DARI REFERENSI PEMILIK — rumah A/B/C, pondok merah/cokelat & pandai bes
 ## src/systems/academy_grounds.js (13 baris)
 _HALAMAN AKADEMI — aset dari lembar gambar pemilik (latar ungu dibersihkan, diperkecil sama dengan gambar Akademi):_
 `ACAD_ART` 6
+
+## src/systems/market_stalls.js (32 baris)
+_PASAR RAYA (Distrik Pasar) — 3 kios tenda dari gambar pemilik (assets/img/buildings/sp_b_stall_<jenis>.png):_
+`STALLS` 4 · `.stallShop()` 19
 
 ## src/systems/object_shadows.js (81 baris)
 _BAYANGAN OBJEK — elips lembut di kaki setiap objek luar ruang (semak, batu, tunggul, bunga, jamur, pinus, pohon buah,_

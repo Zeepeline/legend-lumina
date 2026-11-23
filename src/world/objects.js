@@ -89,6 +89,8 @@ const OBJ = {
   treePine: { key: "i_treePine", col: [12, 6, 2], sh: [18, 5], fade: 1 },
   treeOak: { key: "i_treeA", col: [10, 6, 2], sh: [18, 5], fade: 1 },
   market: { key: "i_market", col: [104, 22, 2], sh: [56, 6], mm: 1 },
+  stall_potion: { key: 'stall_potion', col: [100, 22, 0], sh: [58, 6], mm: 1 }, stall_weapon: { key: 'stall_weapon', col: [100, 22, 0], sh: [58, 6], mm: 1 },
+  stall_food: { key: 'stall_food', col: [100, 22, 0], sh: [58, 6], mm: 1 }, /* kios Pasar Raya (systems/market_stalls.js) */
   bench: { key: "i_bench", col: [42, 8, 2], sh: [22, 3] },
   bushW: { key: "i_bushW", col: [22, 6, 2], sh: [13, 3] },
   bushP: { key: "i_bushP", col: [20, 6, 2], sh: [12, 3] },
