@@ -1,0 +1,37 @@
+{
+ "frame": [
+  48,
+  48
+ ],
+ "dirs": [
+  "Down",
+  "Up",
+  "Side"
+ ],
+ "anims": {
+  "Idle": 4,
+  "Walk": 4,
+  "Run": 6,
+  "Interact": 4,
+  "Attack": 6,
+  "Talk": 4
+ },
+ "rows": [
+  "Idle_Down",
+  "Idle_Up",
+  "Idle_Side",
+  "Walk_Down",
+  "Walk_Up",
+  "Walk_Side",
+  "Run_Down",
+  "Run_Up",
+  "Run_Side",
+  "Interact_Down",
+  "Interact_Up",
+  "Interact_Side",
+  "Attack_Down",
+  "Attack_Up",
+  "Attack_Side",
+  "Talk_Down"
+ ]
+}
