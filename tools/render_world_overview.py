@@ -28,6 +28,7 @@ WORLD_POS = {
     'kpasar': (1620, -1040, 1600, 1200, 'Distrik Pasar Kota Lumina'),
     'kakademi': (1720, -2040, 1400, 1000, 'Distrik Akademi & Kastil'),
     'kbawah': (420, -920, 1200, 1000, 'Kota Bawah & Kanal'),
+    'kpermukiman': (3220, -920, 1400, 1000, 'Distrik Permukiman'),
 }
 
 def render_overview():
@@ -50,7 +51,7 @@ def render_overview():
     # Lake ditempel dipotong di y <= 652 (garis Y_global = 3712), sehingga Danau Cermin utuh 100%
     # dan anak sungai keluar di (1332, 652) [Global 2932, 3712],
     # lalu Forest ditempel di Y_global = 3712 menyambung anak sungai persis dari (60, 0) [Global 2932, 3712]!
-    order = ['road', 'snow', 'meadow', 'river', 'swamp', 'village', 'lake', 'deepwood', 'forest', 'kgate', 'kpasar', 'kakademi', 'kbawah']
+    order = ['road', 'snow', 'meadow', 'river', 'swamp', 'village', 'lake', 'deepwood', 'forest', 'kgate', 'kpasar', 'kakademi', 'kbawah', 'kpermukiman']
     for map_id in order:
         if map_id not in WORLD_POS:
             continue

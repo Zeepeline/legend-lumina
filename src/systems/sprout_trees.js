@@ -115,15 +115,18 @@ function sproutGiantSrc(im) {
   x.putImageData(out, 0, 0); return c;
 }
 // buah di tajuk (piksel asli): apel merah (fa), jeruk oranye (fo), apel belum berbuah = kuncup hijau muda (fb)
-function sproutFruit(d, w, h, v) {
+function sproutFruit(d, w, h, v, s = 1) { /* w,h = ukuran piksel; s = skala (3 bila dipanggil setelah dibesarkan) */
   const C = v === 'fa' ? [[214, 52, 52], [246, 120, 104]] : v === 'fo' ? [[236, 132, 34], [252, 196, 92]] : [[164, 206, 96], [196, 232, 128]];
-  const leaf = (x, y) => { if (x < 1 || y < 1 || x >= w - 1 || y >= h - 1) return 0; const i = (y * w + x) * 4; return d[i + 3] > 128 && d[i + 1] > d[i] + 4; };
+  const leaf = (x, y) => {
+    x = x * s + (s >> 1); y = y * s + (s >> 1); if (x < 1 || y < 1 || x >= w - 1 || y >= h - 1) return 0;
+    const i = (y * w + x) * 4; return d[i + 3] > 128 && d[i + 1] > d[i] + 4;
+  };
   let n = 0;
-  for (let y = 2; y < h * .72 && n < 9; y++) for (let x = 2; x < w - 2 && n < 9; x++) {
+  for (let y = 2; y < h / s * .72 && n < 9; y++) for (let x = 2; x < w / s - 2 && n < 9; x++) {
     if (hash(x, y, 79) > (v === 'fb' ? .05 : .07)) continue;
     if (!(leaf(x, y) && leaf(x + 1, y) && leaf(x, y + 1) && leaf(x + 1, y + 1) && leaf(x - 1, y) && leaf(x, y - 1))) continue;
-    for (const [dx, dy, k] of [[0, 0, 1], [1, 0, 0], [0, 1, 0], [1, 1, 0]]) {
-      const i = ((y + dy) * w + x + dx) * 4; d[i] = C[k][0]; d[i + 1] = C[k][1]; d[i + 2] = C[k][2];
+    for (const [dx, dy, k] of [[0, 0, 1], [1, 0, 0], [0, 1, 0], [1, 1, 0]]) for (let oy = 0; oy < s; oy++) for (let ox = 0; ox < s; ox++) {
+      const i = (((y + dy) * s + oy) * w + (x + dx) * s + ox) * 4; d[i] = C[k][0]; d[i + 1] = C[k][1]; d[i + 2] = C[k][2];
     }
     n++;
   }
@@ -153,11 +156,12 @@ function sproutTreeTex(sc, shape, v) {
   const gi = shape === 'giant', [s1, x1] = mk(sw, sh);
   x1.drawImage(gi ? sproutGiantSrc(im) : im, gi ? 0 : sx, gi ? 0 : sy, sw, sh, 0, 0, sw, sh);
   const one = x1.getImageData(0, 0, sw, sh); sproutTreePolish(one.data, sw, sh);
-  if (v && v[0] === 'f') sproutFruit(one.data, sw, sh, v);
+  if (v && v[0] === 'f' && shape !== 'big') sproutFruit(one.data, sw, sh, v);
   if (!gi) sproutTreeTufts(one.data, sw, sh, sw);
   x1.putImageData(one, 0, 0);
   const [b0, x0] = mk(W, H); x0.imageSmoothingEnabled = false; x0.drawImage(s1, 0, 0, W, H);
   const base = x0.getImageData(0, 0, W, H), d = base.data;
+  if (shape === 'big') { sproutCanopyDetail(d, W, H); if (v && v[0] === 'f') sproutFruit(d, W, H, v, S); } /* tajuk berdetail (sprout_canopy.js), lalu buah */
   for (let i = 0; i < d.length; i += 4) {
     if (!d[i + 3] || !(d[i + 1] > d[i] + 4 && d[i + 1] >= d[i + 2])) continue;
     const c = sproutTreeTint(v, d[i], d[i + 1], d[i + 2]); d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2];

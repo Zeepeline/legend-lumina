@@ -1,5 +1,5 @@
 // Render tanah prosedural (genGround) satu peta menjadi gambar utuh assets/img/ground/gnd_<id>_custom.png.
-// Dipakai untuk peta kota (kgate, kpasar, kakademi, kbawah): tepi petak (world/grass_edge.js) butuh gambar sumber,
+// Dipakai untuk peta kota (kgate, kpasar, kakademi, kbawah, kpermukiman): tepi petak (world/grass_edge.js) butuh gambar sumber,
 // dan menghitung tanah prosedural utuh di HP terlalu lambat. Jalankan ulang bila jalan/kolam peta itu diubah:
 //   python3 -m http.server 8000 &   lalu   node tools/bake_ground.js kgate kpasar kakademi kbawah
 //   (opsional: PORT=8010, CHROME=/usr/bin/google-chrome bila browser Playwright belum terpasang)

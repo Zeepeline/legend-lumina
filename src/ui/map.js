@@ -2,7 +2,7 @@
 // Layar peta & navigasi tujuan misi
 // ---------------- PETA ----------------
 const MINI = {};
-const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja'], ['snow', 'Puncak Beku'], ['lake', 'Danau Cermin'], ['road', 'Jalan Raya Lama'], ['deepwood', 'Hutan Dalam'], ['river', 'Jalur Sungai Senja'], ['kgate', 'Gerbang Kota Lumina'], ['kpasar', 'Distrik Pasar'], ['kakademi', 'Distrik Akademi'], ['kbawah', 'Kota Bawah']];
+const WORLD = [['forest', 'Hutan Lumina'], ['village', 'Desa Lumina'], ['meadow', 'Padang Angin'], ['cave', 'Gua Batu'], ['swamp', 'Rawa Senja'], ['snow', 'Puncak Beku'], ['lake', 'Danau Cermin'], ['road', 'Jalan Raya Lama'], ['deepwood', 'Hutan Dalam'], ['river', 'Jalur Sungai Senja'], ['kgate', 'Gerbang Kota Lumina'], ['kpasar', 'Distrik Pasar'], ['kakademi', 'Distrik Akademi'], ['kbawah', 'Kota Bawah'], ['kpermukiman', 'Distrik Permukiman']];
 function buildMini(sc, M, s) {
   const ov = !M.indoor && typeof groundOverview === 'function' ? groundOverview(M) : null;
   const key = M.id + '_' + s.toFixed(4) + '_' + (ov ? ov.v : 0); if (MINI[key]) return MINI[key];

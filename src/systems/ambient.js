@@ -12,7 +12,7 @@ const ENV = {
   swamp:    { bird: 2, birdTint: 0x4a4a5a, crit: ['duck'], ncrit: 2, firefly: 22, fireTint: 0xa0ffa0, fog: 1, herb: 3, snd: ['frog', 'creak'] },
   snow:     { cloud: 1, snd: ['wind'] },
   cave:     { snd: ['drip'] },
-  kgate: { bird: 3, birdTint: 0xb8b8c8, cloud: 1 }, kpasar: { bird: 4, birdTint: 0xb8b8c8, cloud: 1 }, kakademi: { bird: 3, birdTint: 0xb8b8c8, fly: 2, cloud: 1 }, kbawah: { bird: 2, birdTint: 0xb8b8c8 },
+  kgate: { bird: 3, birdTint: 0xb8b8c8, cloud: 1 }, kpasar: { bird: 4, birdTint: 0xb8b8c8, cloud: 1 }, kakademi: { bird: 3, birdTint: 0xb8b8c8, fly: 2, cloud: 1 }, kbawah: { bird: 2, birdTint: 0xb8b8c8 }, kpermukiman: { bird: 3, birdTint: 0xb8b8c8, cloud: 1 },
 };
 // ---- tekstur kecil (piksel) ----
 function artCritters(T) {

@@ -5,7 +5,7 @@
 // sesuai 8 tetangganya. Petak hanya memberi BENTUK & bayangan tepi; warnanya tetap tekstur GRASS (world/grass.js).
 // Rumput & jalan lama di luar petak diganti tanah satu gaya (DIRT_S: rata + kerikil + bayangan di bawah tepi rumput).
 const GRASS_EDGE = { on: true, sheet: 'gnd_edge_sprout', water: 'gnd_water_sprout', cell: 16, q: 2, thr: .5, sand: 1,
-  maps: ['village', 'river', 'lake', 'meadow', 'forest', 'deepwood', 'road', 'swamp', 'snow', 'kgate', 'kpasar', 'kakademi', 'kbawah'],
+  maps: ['village', 'river', 'lake', 'meadow', 'forest', 'deepwood', 'road', 'swamp', 'snow', 'kgate', 'kpasar', 'kakademi', 'kbawah', 'kpermukiman'],
   caves: ['cave'] }; /* gua: autotile yang sama, kelas dari jalur gua (biome_ground.js BIOME.cave) */
 // palet khas per wilayah (id peta): air & pita pasir/lumpur/salju; selain ini memakai WATER_S / SAND_S
 const EDGE_PAL = {
@@ -14,7 +14,7 @@ const EDGE_PAL = {
   snow: { water: { base: [168, 212, 228], deep: [148, 198, 222], shallow: [190, 226, 236], line: [242, 250, 252], spark: [222, 242, 250] },
     sand: { base: [236, 242, 246], dark: [206, 216, 228], mid: [222, 230, 240], light: [250, 252, 254] } },
   kgate: { road: 'cobble', greyRoad: 1 }, kpasar: { road: 'cobble', greyRoad: 1 }, kakademi: { road: 'cobble', greyRoad: 1 },
-  kbawah: { road: 'cobble', greyRoad: 1 },
+  kbawah: { road: 'cobble', greyRoad: 1 }, kpermukiman: { road: 'cobble', greyRoad: 1 },
 };
 // paving batu kota gaya Sprout: petak 32 px berulang (batu bulat acak, nat gelap, sisi atas terang), dibuat sekali
 const COBBLE = { tile: null, stone: [[206, 198, 186], [196, 188, 178], [214, 206, 192]], grout: [150, 140, 134], hi: [230, 224, 212], lo: [178, 170, 160] };

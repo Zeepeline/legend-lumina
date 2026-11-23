@@ -394,4 +394,6 @@ const OBJ = {
   dropped_torch: { key: "dropped_torch", col: [0, 0, 0] },
   cloth_scrap: { key: "cloth_scrap", col: [0, 0, 0] },
 };
+/* rumah perkotaan pemilik (city_house_N.png → sp_b_cityHouseN.png, tools/import_city_houses.py) */
+for (let n = 1; n <= 5; n++) OBJ['cityHouse' + n] = { key: 'cityHouse' + n, col: [84, 42, 2], sh: [46, 6], fade: 1, mm: 1 };
 const MAPS = {};

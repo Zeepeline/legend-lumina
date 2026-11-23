@@ -171,6 +171,7 @@ async function openDebugMenu() {
       { t: '🚀 Teleport: Danau Cermin', map: 'lake', x: 1000, y: 500 },
       { t: '🚀 Teleport: Gerbang Kota Lumina', map: 'kgate', x: 600, y: 750 },
       { t: '🚀 Teleport: Kota Lumina (Pasar)', map: 'kpasar', x: 560, y: 320 },
+      { t: '🚀 Teleport: Kota Lumina (Permukiman)', map: 'kpermukiman', x: 200, y: 520 },
       { t: '🎁 Beri Semua Kunci & Alat' },
       { t: 'Tutup' }
     ];

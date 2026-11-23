@@ -16,7 +16,7 @@ for (const f of files) if (/world\/(objects|ground|maps\/|layout)/.test(f)) { tr
 const { MAPS, OBJ } = vm.runInContext('({ MAPS, OBJ })', ctx);
 
 // ---- aturan ----
-const SETTLEMENT = ['village', 'kgate', 'kpasar', 'kakademi', 'kbawah'];               // permukiman
+const SETTLEMENT = ['village', 'kgate', 'kpasar', 'kakademi', 'kbawah', 'kpermukiman'];               // permukiman
 const WILD_ONLY = ['campfire', 'bones', 'dripstone', 'stalag', 'mush', 'bramble', 'totem', 'root', 'icehole', 'icechasm', 'skewercamp'];
 const ON_WATER = ['lotuspad', 'dockboat', 'shrine', 'pebbles', 'canalpier', 'templekoipond', 'icehole', 'boat'];
 const PATH_OK = ['sign', 'lamp', 'lampPost', 'stele', 'pebbles', 'flowers', 'grass'];   // boleh di tepi jalan (tetap tak boleh di tengah)

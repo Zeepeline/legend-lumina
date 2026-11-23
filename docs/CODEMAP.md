@@ -91,9 +91,9 @@ _Lantai & perabot interior_
 _Gambar properti & bangunan cerita baru (Prolog & Bab 1): Makam Mila, Gubuk Reyot, Sarang Pemburu Liar, dll._
 `artMilaGrave()` 5 · `artRuinedShack()` 38 · `artSlaverCage()` 103 · `artPrisonerWagon()` 141 · `artSlaverTent()` 178 · `artSlaverBarricade()` 216 · `artReflectionSpring()` 242 · `artBurntRuin()` 265 · `artMudTracks()` 293 · `artDroppedTorch()` 312 · `artClothScrap()` 327
 
-## src/world/objects.js (398 baris)
+## src/world/objects.js (400 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 397
+`OBJ` 7 · `MAPS` 399
 
 ## src/world/spawn/spawn_1.js (393 baris)
 _Perilaku khusus saat objek dunia dibuat (OBJ_SPAWN[tipe]); dipanggil spawnObj, this = scene World_
@@ -155,9 +155,9 @@ _Peta: Puncak Beku (bab 3, obor kuno & Naga Es Kryos)_
 _Peta: Danau Cermin (bab 4, lentera kuno, perahu ke Kuil Penjaga Cahaya, jalan ke Kota Lumina tertutup longsor)_
 
 
-## src/world/maps/city.js (224 baris)
+## src/world/maps/city.js (265 baris)
 _Peta: Jalan Raya Lama + Kota Lumina "Kota Seribu Lentera" (gerbang, pasar, akademi, kota bawah). Desain: docs/BENUA_LUMINA.md_
-`houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14 · `ACAD_BOX` 145 · `acadYard()` 146
+`houseRow` 4 · `lampRow` 5 · `cityLines` 6 · `citizens` 14 · `permRow` 154 · `PERM_N` 155 · `ACAD_BOX` 186 · `acadYard()` 187
 
 ## src/world/maps/wild.js (194 baris)
 _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina, Jalur Sungai dari Hutan Lumina ke Rawa Senja_
@@ -531,17 +531,21 @@ _OMBAK PANTAI — lapisan air tipis naik ke pasir, ujungnya berbuih putih, lalu 
 _KOTA & DESA GAYA SPROUT — kastil, tembok, menara, properti kota & semua bangunan desa/kota (gambar GPT)_
 `CITY_STYLE` 5 · `cityPastel()` 17 · `_buildTexturesCity` 33
 
-## src/systems/sprout_trees.js (223 baris)
+## src/systems/sprout_canopy.js (92 baris)
+_DETAIL TAJUK POHON LEBAR — tajuk Sprout (24×31, dibesarkan 3×) berupa gumpalan bundar halus. Di sini dipecah jadi gerombol daun berlapis_
+`CANOPY` 7 · `sproutCanopyDetail()` 8
+
+## src/systems/sprout_trees.js (227 baris)
 _POHON GAYA SPROUT LANDS — pohon biasa di wilayah luar (GRASS_EDGE.maps) memakai pohon dari deco_sprout_objs.png (3×),_
-`SPROUT_TREES` 6 · `sproutTreeTint()` 16 · `sproutTreePolish()` 27 · `sproutGiantSrc()` 53 · `sproutFruit()` 118 · `sproutTreeTufts()` 132 · `sproutTreeTex()` 147 · `SPROUT_TREE_ALIAS` 184 · `sproutTreeAlias()` 188 · `_buildTexturesTrees` 200
+`SPROUT_TREES` 6 · `sproutTreeTint()` 16 · `sproutTreePolish()` 27 · `sproutGiantSrc()` 53 · `sproutFruit()` 118 · `sproutTreeTufts()` 135 · `sproutTreeTex()` 150 · `SPROUT_TREE_ALIAS` 188 · `sproutTreeAlias()` 192 · `_buildTexturesTrees` 204
 
 ## src/systems/sprout_houses.js (279 baris)
 _RUMAH GAYA SPROUT — bangunan desa/kota digambar ulang lewat kode (piksel 2×, garis tepi cokelat lembut, palet hangat),_
 `SP_PAL` 6 · `SPROUT_HOUSES` 17 · `spHouse()` 39 · `spBox3d()` 186 · `spStall()` 248 · `spScale()` 269 · `_buildTexturesHouses` 271
 
-## src/systems/ref_houses.js (52 baris)
+## src/systems/ref_houses.js (59 baris)
 _RUMAH DARI REFERENSI PEMILIK — rumah A/B/C, pondok merah/cokelat & pandai besi memakai gambar hasil tools/bake_houses.py_
-`REF_HOUSES` 6 · `_buildTexturesRef` 27
+`REF_HOUSES` 6 · `_buildTexturesRef` 34
 
 ## src/systems/academy_grounds.js (13 baris)
 _HALAMAN AKADEMI — aset dari lembar gambar pemilik (latar ungu dibersihkan, diperkecil sama dengan gambar Akademi):_
@@ -635,9 +639,9 @@ _Tas (inventaris) & buku misi_
 _Layar peta & navigasi tujuan misi_
 `MINI` 4 · `WORLD` 5 · `buildMini()` 6 · `routeNext()` 23 · `questTarget()` 28 · `openMap()` 35
 
-## src/ui/menus.js (398 baris)
+## src/ui/menus.js (399 baris)
 _Menu utama, jurus, bestiari, pencapaian_
-`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 99 · `enemyThumb()` 111 · `openBestiary()` 112 · `openFishLog()` 120 · `openAch()` 121 · `openDlgLog()` 127 · `chooseSlot()` 134 · `openDebugMenu()` 158 · `openPhotoMode()` 216 · `TALENT_DEFS` 284 · `getTalentPoints()` 311 · `openTalentTree()` 321
+`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 99 · `enemyThumb()` 111 · `openBestiary()` 112 · `openFishLog()` 120 · `openAch()` 121 · `openDlgLog()` 127 · `chooseSlot()` 134 · `openDebugMenu()` 158 · `openPhotoMode()` 217 · `TALENT_DEFS` 285 · `getTalentPoints()` 312 · `openTalentTree()` 322
 
 ## src/ui/savecode.js (49 baris)
 _Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)_
@@ -651,9 +655,9 @@ _Layar judul_
 _Visual Map Editor (In-Game WYSIWYG) untuk menata pohon, bangunan, dan objek secara visual langsung di browser._
 `MAP_EDITOR_CATEGORIES` 5 · `mapEditor` 339
 
-## src/world/layout.js (120 baris)
+## src/world/layout.js (121 baris)
 _Tata letak dunia terbuka (Tahap 1): posisi relatif wilayah tetangga dihitung dari pasangan pintu keluar_
-`exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 15 · `SIDE_OF` 16 · `plEnemies()` 18 · `NEIGH` 75
+`exitSide()` 5 · `OPP` 6 · `WORLD_POS` 10 · `PERALIHAN` 16 · `SIDE_OF` 17 · `plEnemies()` 19 · `NEIGH` 76
 
 ## src/world/organic.js (51 baris)
 _Refactor desain dunia (docs/WORLD_REFACTOR.md) tahap A, B, F-otomatis: jalan TANAH dibelokkan (ujung tetap),_
