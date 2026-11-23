@@ -110,8 +110,8 @@ MAPS.kpasar = {
     ...[470, 530, 590, 1010, 1070, 1130].flatMap(x => [[x, 505, 62], [x, 835, 62]])],
   objs: [['fountain', 800, 640, { ok: 'air mancur di tengah alun-alun pasar' }],
     // PASAR RAYA: deretan kios tenda (gambar pemilik) menghadap selasar pasar; kios lama 'market' tetap di ujung utara/selatan
-    ...[[470, 'potion'], [590, 'food'], [1010, 'weapon'], [1130, 'potion']].map(([x, k]) => ['stall_' + k, x, 540]),
-    ...[[470, 'weapon'], [590, 'food'], [1010, 'food'], [1130, 'weapon']].map(([x, k]) => ['stall_' + k, x, 870]),
+    ...[[470, 'potion'], [590, 'butcher'], [1010, 'weapon'], [1130, 'scroll']].map(([x, k]) => ['stall_' + k, x, 540]),
+    ...[[470, 'food'], [590, 'scroll'], [1010, 'potion'], [1130, 'weapon']].map(([x, k]) => ['stall_' + k, x, 870]),
     ...[[668, 250], [932, 250], [668, 1020], [932, 1020]].map(([x, y]) => ['market', x, y]),
     ...houseRow(180, 170, 2), ...houseRow(1300, 170, 2), ...houseRow(180, 440, 2), ...houseRow(1300, 440, 2),
     ...houseRow(180, 780, 2), ...houseRow(1300, 780, 2),
