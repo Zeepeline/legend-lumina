@@ -196,8 +196,11 @@ MAPS.kakademi = {
 
 MAPS.kbawah = {
   id: 'kbawah', customGround: 'gnd_kbawah_custom', name: 'Kota Bawah', w: 1200, h: 1000, bgm: 'town', ground: 'village', crowd: 8,
-  paths: [[1200, 500, 200, 500, 14], [400, 500, 400, 345, 10], [700, 500, 700, 880, 10], [950, 500, 950, 160, 10], [200, 500, 200, 860, 10], [530, 500, 530, 710, 10], [530, 710, 700, 710, 10]],
-  discs: [[560, 640, 80], [700, 700, 50], [950, 260, 40], [200, 760, 40]],
+  /* jalan utama + jalan setapak berubin ke pintu tiap rumah (deret atas turun ke jalan utama, deret bawah lewat selasar depan) */
+  paths: [[1200, 500, 200, 500, 14], [700, 500, 700, 880, 10], [950, 500, 950, 160, 10], [200, 500, 200, 830, 10],
+    [530, 500, 530, 710, 10], [530, 710, 700, 710, 10],
+    ...[160, 278, 396, 560, 678, 796].map(x => [x, 336, x, 506, 13]), [200, 812, 1066, 812, 12]], /* selasar menempel kaki rumah deret bawah */
+  discs: [[560, 640, 80], [700, 700, 50]],
   objs: [...houseRow(160, 330, 3, 118, ['houseB', 'houseC']), ...houseRow(560, 330, 3, 118, ['houseC', 'houseB']), ...houseRow(300, 800, 3, 118, ['houseC', 'houseB']), ...houseRow(820, 800, 3, 118, ['houseB', 'houseC']),
     ['pot', 580, 640], ['barrel', 500, 610], ['barrel', 600, 612], ['crate', 490, 680], ['bench', 620, 660], ['lamp', 480, 560], ['lamp', 1080, 560],
     ['crate', 1060, 440], ['barrel', 1100, 446], ['barrelNew', 1080, 470],
