@@ -45,7 +45,7 @@ Object.assign(GroundLayer.prototype, {
       x.fillStyle = ['#2f5a23', '#22441a', '#355f27'][i % 3]; x.fillRect(Math.floor(hash(i, 1, 71) * T), Math.floor(hash(i, 2, 71) * T), 3, 2);
     }
     if (typeof grassCanvas === 'function') grassCanvas(x, T, T, 0, 0, { ground: 'forest' }); /* lantai hutan ikut tekstur rumput */
-    if (!WILD_TREES) { x.fillStyle = 'rgba(20,40,16,.28)'; x.fillRect(0, 0, T, T); } /* di luar dunia: lantai gelap saja, tanpa pohon (nature.js) */
+    if (!WILD_TREES) { x.fillStyle = 'rgba(20,40,16,.1)'; x.fillRect(0, 0, T, T); } /* di luar dunia: lantai gelap saja, tanpa pohon (nature.js) */
     else {
       const imgs = keys.map(k => this.textures.get(k).getSourceImage());
       for (let row = 0; row < 9; row++) for (let col = 0; col < 7; col++) { // pohon rapat, dibungkus agar menyambung

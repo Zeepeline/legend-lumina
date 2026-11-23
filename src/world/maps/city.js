@@ -63,15 +63,13 @@ MAPS.kgate = {
   id: 'kgate', customGround: 'gnd_kgate_custom', name: 'Gerbang Kota Lumina', w: 1200, h: 900, bgm: 'town', ground: 'village', pathType: 'paving', glow: [600, 360, 600], crowd: 6,
   paths: [[600, 900, 600, 0, 48], [600, 640, 300, 640, 12], [600, 640, 900, 640, 12]], /* jalan utama menembus gapura sampai Distrik Pasar */
   discs: [[600, 460, 80], [300, 640, 50], [900, 640, 50]],
-  ponds: [[150, 840, 160, 70], [1050, 840, 160, 70]],
+  ponds: [[210, 790, 140, 60], [990, 790, 140, 60]], /* kolam utuh di dalam peta (dulu terpotong tepi peta) */
   objs: [
     ['gatehouse', 600, 442], /* gapura menjorok ke depan garis tembok */
     ['citywallL', 265, 424], ['citywallR', 934, 424], /* tembok kota (gambar pemilik): x 21–509 & 691–1177, ujungnya masuk 8 px di belakang sayap gapura */
     ['gpt_city_lamp', 530, 486], ['gpt_city_lamp', 670, 486],
     ['gpt_city_banner_sm', 500, 486], ['gpt_city_banner_sm', 700, 486],
     ['gpt_city_banner', 566, 340], ['gpt_city_banner', 634, 340],
-    ['gpt_city_cliff_l', 160, 840, { ok: 'tebing sungai kiri bawah sesuai referensi' }],
-    ['gpt_city_cliff_r', 1040, 840, { ok: 'tebing sungai kanan bawah sesuai referensi' }],
     ['gpt_city_fence', 510, 840], ['gpt_city_fence', 710, 840],
     ['gpt_city_rock_lg', 770, 600], ['gpt_city_rock_sm', 800, 615],
     ['gpt_city_flower_w', 555, 660], ['gpt_city_flower_p', 645, 660],
