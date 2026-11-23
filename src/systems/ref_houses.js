@@ -15,7 +15,7 @@ const REF_HOUSES = {
     i_fountain: 'fountain', /* sp_b_i_fountain dihapus pemilik → buildings/fountain.png (83×85, kanvas sama) */
     gpt_v_blacksmith_forge: 'sp_blacksmith_forge', blacksmith_forge: 'sp_blacksmith_forge', blacksmith: 'sp_blacksmith_forge',
     gpt_v_inn_2story: 'sp_houseC', inn2: 'sp_houseC',
-    cityHouse1: 'sp_b_cityHouse1',
+    cityHouse1: 'sp_b_cityHouse1', balaiDewan: 'sp_b_balaiDewan', barakBayaran: 'sp_b_barakBayaran',
     cityHouse2: 'sp_b_cityHouse2',
     cityHouse3: 'sp_b_cityHouse3',
     cityHouse4: 'sp_b_cityHouse4',

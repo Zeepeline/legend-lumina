@@ -15,6 +15,9 @@ test('Pasar & Permukiman terpisah, rumah perkotaan terpakai', async ({ page }) =
       inBounds: perm.objs.every(o => inside(perm, o)) && pasar.objs.every(o => inside(pasar, o)),
       east: pasar.exits.find(e => e.to === 'kpermukiman'), back: perm.exits.find(e => e.to === 'kpasar'),
       texOk: [1, 2, 3, 4, 5].every(n => OBJ['cityHouse' + n] && OBJ['cityHouse' + n].key === 'cityHouse' + n),
+      hall: perm.objs.filter(o => o[0] === 'balaiDewan').length, hallDoor: perm.doors.some(r => /Balai Dewan/.test(r[2])),
+      barak: MAPS.kgate.objs.filter(o => o[0] === 'barakBayaran').length, barakDoor: MAPS.kgate.doors.some(r => /Tentara Bayaran/.test(r[2])),
+      recruiter: MAPS.kgate.npcs.some(n => n.id === 'merc1'), civicObj: ['balaiDewan', 'barakBayaran'].every(k => OBJ[k] && OBJ[k].key === k),
     };
   });
   expect(d.pasarOld, 'pasar tak lagi berisi rumah lama').toBe(0);
@@ -23,6 +26,9 @@ test('Pasar & Permukiman terpisah, rumah perkotaan terpakai', async ({ page }) =
   expect(d.permCity).toBeGreaterThanOrEqual(10);
   expect(d.doorsOk && d.pasarDoorsOk, 'tiap rumah punya pintu/teks').toBe(true);
   expect(d.inBounds).toBe(true); expect(d.texOk).toBe(true);
+  // gedung publik: Balai Dewan (pemerintahan) di permukiman, Barak Tentara Bayaran di gerbang, dua-duanya punya pintu
+  expect(d.hall).toBe(1); expect(d.hallDoor).toBe(true); expect(d.barak).toBe(1); expect(d.barakDoor).toBe(true);
+  expect(d.recruiter).toBe(true); expect(d.civicObj).toBe(true);
   // pintu timur pasar ⇄ barat permukiman saling menunjuk & mendarat di dalam peta tujuan
   expect(d.east && d.back).toBeTruthy();
   expect(d.east.tx).toBeLessThan(200); expect(d.back.tx).toBeGreaterThan(1300);

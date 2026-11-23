@@ -8,6 +8,7 @@ const cityLines = {
   pedagang: ['Kain dari Teluk Karang! Rempah dari Simpang Rantau! Lihat-lihat dulu!', 'Serikat menaikkan sewa lapak. Kalau begini terus, aku pulang ke desa saja.', 'Serpihan kristal? Ssst... jangan keras-keras. Yang punya izin cuma orang Serikat.'],
   murid: ['Ujian sihir cahaya minggu depan. Aku belum hafal satu pun mantra.', 'Arsip lantai bawah? Hanya guru yang boleh masuk.', 'Konon dulu Akademi melatih para Penjaga Cahaya. Sekarang tinggal cerita.'],
   bawah: ['Dapur umum Guru Lestari satu-satunya alasan anak-anak di sini masih bisa makan.', 'Orang atas tak pernah turun ke sini. Kecuali penagih sewa.', 'Aku dulu penambang di Lembah Besi. Lembahnya makin dingin, jadi aku pindah ke kota.'],
+  bayaran: ['Pedang disewa per hari, per musim, atau per perang.', 'Dewan bayar tepat waktu. Serikat Dagang... kadang.', 'Mau kerja? Tunjukkan dulu cara kau memegang pedang.'],
   gerbang: ['Selamat datang di Kota Lumina! Lewat saja di bawah lengkungan gerbang, lurus ke utara menuju Distrik Pasar.', 'Gerbang terbuka untuk pendatang. Pasar ada di balik tembok ini, ikuti jalan batu ke utara.'],
   penjaga: ['Gerbang dibuka dari fajar sampai tengah malam. Jangan bikin onar.', 'Sejak jalan longsor dibuka, pendatang dari timur makin banyak.'],
 };
@@ -77,7 +78,8 @@ MAPS.kgate = {
     ['sign', 670, 840, { text: 'SELAMAT DATANG DI KOTA LUMINA\nKota Seribu Lentera\n↑ Masuk gerbang utama menuju Distrik Pasar' }],
     ['sign', 680, 600, { text: 'KOTA LUMINA — Kota Seribu Lentera\n↑ Masuk lewat gerbang di utara → Distrik Pasar.' }],
     ['bounty_board', 720, 600],
-    ['crate', 260, 620], ['crate', 282, 616], ['barrel', 330, 630], ['crate', 880, 620], ['barrel', 930, 626],
+    ['barakBayaran', 300, 628], ['sign', 372, 640, { text: 'BARAK TENTARA BAYARAN\nPasukan sewaan Kota Lumina. Siap dikontrak.' }],
+    ['crate', 410, 656], ['crate', 432, 652], ['barrel', 460, 662], ['crate', 880, 620], ['barrel', 930, 626],
     ['planter', 470, 490], ['planter', 730, 490],
     ['pigeons', 680, 520], ['pigeons', 420, 680],
     ['archerytarget', 340, 720]
@@ -89,6 +91,7 @@ MAPS.kgate = {
     [0, 380, 560, 44], [640, 380, 560, 44]
   ],
   border: { top: 40, bottom: 860, left: 40, right: 1160, gap: [560, 640], gapT: [540, 660], types: ['treeA', 'treeB'] },
+  doors: [[300, 628, 'Barak Tentara Bayaran. Pintunya dijaga: "Kontrak hanya untuk pemegang izin Dewan."']],
   exits: [
     { x: 560, y: 888, w: 80, h: 12, to: 'road', tx: 450, ty: 60, dir: 'down', label: 'Jalan Raya Lama' },
     { x: 560, y: 388, w: 80, h: 20, to: 'kpasar', tx: 800, ty: 1150, dir: 'up', label: 'Distrik Pasar' }
@@ -96,6 +99,7 @@ MAPS.kgate = {
   npcs: citizens([
     ['gj1', 'guard_spear', 'Penjaga Gerbang', 556, 492, 'gerbang', 0],
     ['gj2', 'guard_spear', 'Penjaga Gerbang', 644, 492, 'gerbang', 0],
+    ['merc1', 'guard_spear', 'Perekrut Tentara Bayaran', 330, 668, 'bayaran', 0],
     ['courier', 'boy', 'Budi Kurir Kilat', 380, 720, 'warga', 0],
     ['gw1', 'woman', 'Pelancong', 300, 700, 'warga'],
     ['gw2', 'farmer', 'Petani', 900, 700, 'warga']
@@ -156,21 +160,23 @@ const PERM_N = [220, 360, 500, 900, 1040, 1180], PERM_S = [220, 360, 500, 640, 7
 MAPS.kpermukiman = {
   id: 'kpermukiman', customGround: 'gnd_kpermukiman_custom', name: 'Distrik Permukiman', w: 1400, h: 1000, bgm: 'town', ground: 'village',
     glow: [700, 500, 700], crowd: 8,
-  paths: [[40, 500, 1300, 500, 26], [140, 500, 140, 856, 14], [1300, 500, 1300, 856, 14], [140, 856, 1300, 856, 18],
+  paths: [[40, 500, 1300, 500, 26], [140, 500, 140, 856, 14], [1300, 500, 1300, 856, 14], [140, 856, 1300, 856, 18], [700, 376, 700, 440, 20],
     ...PERM_N.map(x => [x, 396, x, 506, 12]), ...PERM_S.map(x => [x, 776, x, 862, 12])],
   discs: [[700, 500, 110]],
   objs: [...permRow(PERM_N, 390, [1, 3, 2, 4, 5, 3]), ...permRow(PERM_S, 770, [4, 2, 5, 1, 3, 4, 2, 5]),
-    ['well', 700, 520, { ok: 'sumur warga di tengah alun-alun permukiman' }], ['shrine', 700, 360], ['bench', 620, 560], ['bench', 780, 560],
+    ['well', 700, 520, { ok: 'sumur warga di tengah alun-alun permukiman' }], ['balaiDewan', 700, 372], ['shrine', 700, 632],
+    ['sign', 636, 384, { text: 'BALAI DEWAN KOTA\nKantor pemerintahan Kota Lumina.\nPenerimaan warga: hari pasar.' }], ['bench', 620, 560], ['bench', 780, 560],
     ['benchWood', 880, 580], ['barrel', 905, 584], ['sign', 930, 580, { text: 'Kedai Warga' }],
     ...lampRow(240, 470, 6, 190), ...lampRow(240, 890, 6, 190),
     ['planter', 300, 540], ['planter', 560, 540], ['planter', 840, 540], ['planter', 1100, 540], ['pot', 430, 560], ['pot', 1000, 560],
-    ['bushP', 660, 640], ['bushG1', 740, 650], ['bushP', 300, 640], ['bushG1', 1120, 650],
+    ['bushP', 560, 650], ['bushG1', 840, 660], ['bushP', 300, 640], ['bushG1', 1120, 650],
     ['sign', 90, 450, { text: 'DISTRIK PERMUKIMAN\nRumah warga Kota Lumina\n← Distrik Pasar' }],
     ['sign', 1320, 540, { text: 'Jalan buntu. Tembok kota di timur sedang diperbaiki.' }]],
   walls: [[0, 0, 1400, 40], [0, 0, 40, 470], [0, 530, 40, 470], [1360, 0, 40, 1000], [0, 960, 1400, 40]],
   border: { top: 40, bottom: 960, left: 40, right: 1360, gapL: [470, 530], types: ['treeAd', 'treeBd'] },
   exits: [{ x: 0, y: 470, w: 12, h: 60, to: 'kpasar', tx: 1500, ty: 620, dir: 'left', label: 'Distrik Pasar' }],
-  doors: [...PERM_N.map(x => [x, 390, 'Rumah warga. Terdengar orang bercakap di dalam.']),
+  doors: [[700, 372, 'Balai Dewan Kota. "Urusan izin dan pajak dilayani pada hari pasar. Silakan datang kembali."'],
+    ...PERM_N.map(x => [x, 390, 'Rumah warga. Terdengar orang bercakap di dalam.']),
     ...PERM_S.map(x => [x, 770, 'Rumah warga. Tirai jendelanya tertutup rapat.'])],
   npcs: citizens([['kr1', 'woman', 'Warga', 420, 540, 'warga'], ['kr2', 'child', 'Anak Kota', 760, 600, 'warga'],
     ['kr3', 'farmer', 'Warga', 1000, 540, 'warga'],
