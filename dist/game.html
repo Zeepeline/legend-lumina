@@ -956,6 +956,11 @@ function pollGamepad() {
     PAD_STATE.btns[bIdx] = isDown;
   }
 }
+// dulu pollGamepad tidak pernah dipanggil → gamepad tidak berfungsi sama sekali. Polling tiap bingkai setelah gamepad terhubung.
+addEventListener('gamepadconnected', function padLoopStart() {
+  if (PAD_STATE.loop) return; PAD_STATE.loop = true;
+  (function loop() { try { pollGamepad(); } catch (_) { } requestAnimationFrame(loop); })();
+});
 function layout() {
   const vw = innerWidth, vh = innerHeight, touch = document.body.classList.contains('touch'), land = vw > vh;
   let aw = vw - 10, ah = vh - 10;
@@ -4688,6 +4693,9 @@ const ICONS_DEF = {
   ssword: ['sword', { L: '#6a7a9a', W: '#c8e0ff', G: '#5a8ad8', K: '#3a3050' }],
   csword: ['sword', { L: '#3aa8e0', W: '#d8f8ff', G: '#c88aff', K: '#4a2a6a' }],
   cloth: ['shirt', { C: '#d8c8a0', L: '#f4ead0', D: '#a8986a' }],
+  cloth_torn: ['shirt', { C: '#9a8a6a', L: '#b8a888', D: '#6a5a40' }], /* tunik goni robek */
+  branch: ['sword', { L: '#8a5a32', W: '#a8784a', G: '#5e8a3a', K: '#5a3a20' }], /* dahan kayu */
+  bread_mila: ['bread', { C: '#e0a85a', L: '#ffd88a', D: '#9a5e2a', W: '#5a2a0a' }],
   leather: ['shirt', { C: '#9a6440', L: '#c8905e', D: '#6a4228' }],
   chain: ['shirt', { C: '#a0a8b8', L: '#e0e6f0', D: '#6a7080' }],
   cshield: ['shield', { C: '#5ad0ff', L: '#c8f4ff', W: '#ffffff', D: '#2a7ac0' }],
@@ -9020,7 +9028,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.85.5';
+const GAME_VERSION = '1.85.6';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
@@ -10091,7 +10099,8 @@ function buildTextures(sc) {
     const want = ('art' + o.key).toLowerCase(), fn = artFns.find(n => n.toLowerCase() === want) || artFns.find(n => n.toLowerCase() === ('art' + k).toLowerCase());
     try { if (fn) { const c = window[fn](); if (c) { T.addCanvas(o.key, c.c || c); continue; } } } catch (e) { console.warn('Gagal menggambar', o.key, e); }
     const al = ALIAS[o.key]; if (al && T.exists(al)) { T.addImage(o.key, T.get(al).getSourceImage()); continue; }
-    const later = typeof SPROUT_TREE_ALIAS !== 'undefined' && SPROUT_TREE_ALIAS[o.key]; /* pohon: dibuat sesudahnya */
+    const later = (typeof SPROUT_TREE_ALIAS !== 'undefined' && SPROUT_TREE_ALIAS[o.key]) || /^farm_/.test(o.key) || /* dibuat sesudahnya */
+      (typeof REF_HOUSES !== 'undefined' && REF_HOUSES.tex.includes(o.key));
     if (!later) console.warn('Objek tanpa tekstur:', k, '→', o.key);
   }
   if (typeof applyGptMonsters === 'function') applyGptMonsters(sc); /* sprite monster GPT (gfx/gptmonsters.js) */
@@ -18490,6 +18499,7 @@ Object.assign(World.prototype, {
   spawnCh4() {},
   spawnCh5() {},
   spawnIceGate() {},
+  spawnTorches() {}, /* obor Bab 3 lama (cerita di-reset) — dulu memunculkan galat di Puncak Beku */
   updDragon() {},
   ch5Enter() {},
   async readLore(id) {
@@ -18702,10 +18712,18 @@ function updBarks(cam, dt) {
       BARK_NODES.splice(i, 1);
       continue;
     }
-    b.el.style.left = Math.round(b.npc.spr.x - cam.scrollX) + 'px';
-    b.el.style.top = Math.round(b.npc.spr.y - cam.scrollY - 30) + 'px';
+    const wv = cam.worldView, z = cam.zoom || 1; /* posisi layar = (dunia − tepi pandang) × zoom */
+    b.el.style.left = Math.round((b.npc.spr.x - wv.x) * z) + 'px';
+    b.el.style.top = Math.round((b.npc.spr.y - wv.y - 30) * z) + 'px';
   }
 }
+(() => { /* dulu updBarks tak pernah dipanggil: gelembung sapaan menumpuk di pojok kiri atas tertutup HUD & tidak hilang */
+  const _u = World.prototype.update;
+  World.prototype.update = function (t, dms) {
+    _u.apply(this, arguments);
+    if (BARK_NODES.length && (!G.scene || G.scene === this) && this.cameras) updBarks(this.cameras.main, (dms || 16) / 1000);
+  };
+})();
 
 Object.assign(World.prototype, {
   updNpc(o, dt, locked) {

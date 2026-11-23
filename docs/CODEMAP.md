@@ -11,9 +11,9 @@ _Konstanta layar & util kecil_
 _Audio chiptune WebAudio: musik (TRACKS) & efek suara (sfx)_
 `AU_FILES` 4 · `AU` 18 · `NI` 19 · `nf()` 20 · `parseSeq()` 21 · `bossBass` 22 · `TRACKS` 23 · `auInit()` 45 · `tone()` 58 · `sweep()` 59 · `noise()` 60 · `_AUDIO_POOL` 61 · `BGM_BASE_VOL` 63 · `_bgmDuck` 64 · `routeTag()` 66 · `tagVolFor()` 70 · `tagSetVol()` 74 · `tagGetVol()` 75 · `setWeatherDuck()` 76 · `_rain` 78 · `rainSound()` 79 · `setBgmDuck()` 94 · `stopAudioTag()` 98 · `playBGM()` 105 · `SFX_FILES` 165 · `_SFX_BUFFERS` 176 · `loadSfxBuffers()` 178 · `playBufferSfx()` 190 · `_lastSfx` 208 · `sfx()` 209
 
-## src/core/input.js (351 baris)
+## src/core/input.js (356 baris)
 _Input keyboard, joystick, tombol sentuh, dan layout layar_
-`Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 15 · `ATK_HOLD_MS` 16 · `_atkDownT` 17 · `enableTouch()` 62 · `JOY_DEAD` 65 · `UISCALE` 229 · `PAD_STATE` 231 · `pollGamepad()` 232 · `layout()` 292
+`Input` 5 · `press()` 6 · `KEYMAP` 7 · `ISDIR` 15 · `ATK_HOLD_MS` 16 · `_atkDownT` 17 · `enableTouch()` 62 · `JOY_DEAD` 65 · `UISCALE` 229 · `PAD_STATE` 231 · `pollGamepad()` 232 · `layout()` 297
 
 ## src/art/base.js (74 baris)
 _Dasar gambar: kanvas, warna, aturan gaya (toneC, garis tepi berwarna), renderMap_
@@ -75,9 +75,9 @@ _Monster (peta piksel di MON)_
 _Monster versi garang: bentuk baru (mata menyala, taring, tanduk, duri) + pencahayaan otomatis. Menimpa MON lama, kunci palet tetap sama agar varian warna jalan._
 `mixHex()` 40 · `shadeMon()` 41 · `monFrame2()` 57
 
-## src/art/items.js (223 baris)
+## src/art/items.js (226 baris)
 _Ikon item & senjata_
-`SWORD` 3 · `artSword()` 4 · `artSpear()` 9 · `artAxe()` 10 · `artBow()` 11 · `artArrow()` 12 · `artCoin()` 13 · `artPotion()` 18 · `artHeart()` 19 · `artShard()` 20 · `ICON_MAP` 22 · `ICONS_DEF` 49 · `iconFallback()` 109 · `artIcon()` 115
+`SWORD` 3 · `artSword()` 4 · `artSpear()` 9 · `artAxe()` 10 · `artBow()` 11 · `artArrow()` 12 · `artCoin()` 13 · `artPotion()` 18 · `artHeart()` 19 · `artShard()` 20 · `ICON_MAP` 22 · `ICONS_DEF` 49 · `iconFallback()` 112 · `artIcon()` 118
 
 ## src/art/fx.js (141 baris)
 _Efek: tebasan, api, proyektil, cahaya, bayangan_
@@ -211,7 +211,7 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 25 · `shadowIndex()` 26
 
-## src/gfx/textures.js (234 baris)
+## src/gfx/textures.js (235 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
 `ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 44 · `loadImgs()` 64 · `addStrip()` 78 · `darkTree()` 83 · `NPC_W` 85 · `regPortrait()` 86 · `regChar()` 92 · `buildTextures()` 111
 
@@ -355,13 +355,13 @@ _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 `.playArcheryChallenge()` 4
 
-## src/systems/story.js (140 baris)
+## src/systems/story.js (141 baris)
 _Sistem cerita baru & transisi (skenario cerita lama di-reset dari 0)_
-`.spawnCh4()` 4 · `.spawnCh5()` 5 · `.spawnIceGate()` 6 · `.updDragon()` 7 · `.ch5Enter()` 8 · `.readLore()` 9 · `.touchBarrier()` 14 · `.takeMochi()` 17 · `.useCrystal()` 21 · `.openChest()` 28 · `interactRunePillar()` 87
+`.spawnCh4()` 4 · `.spawnCh5()` 5 · `.spawnIceGate()` 6 · `.spawnTorches()` 7 · `.updDragon()` 8 · `.ch5Enter()` 9 · `.readLore()` 10 · `.touchBarrier()` 15 · `.takeMochi()` 18 · `.useCrystal()` 22 · `.openChest()` 29 · `interactRunePillar()` 88
 
-## src/npc/npcs.js (199 baris)
+## src/npc/npcs.js (207 baris)
 _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_
-`NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 85 · `.updCritter()` 175
+`NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 93 · `.updCritter()` 183
 
 ## src/npc/brain.js (197 baris)
 _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, mengobrol, duduk, berpatroli), pulang saat malam._

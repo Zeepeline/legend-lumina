@@ -4,6 +4,7 @@ Object.assign(World.prototype, {
   spawnCh4() {},
   spawnCh5() {},
   spawnIceGate() {},
+  spawnTorches() {}, /* obor Bab 3 lama (cerita di-reset) — dulu memunculkan galat di Puncak Beku */
   updDragon() {},
   ch5Enter() {},
   async readLore(id) {

@@ -94,6 +94,9 @@ const ICONS_DEF = {
   ssword: ['sword', { L: '#6a7a9a', W: '#c8e0ff', G: '#5a8ad8', K: '#3a3050' }],
   csword: ['sword', { L: '#3aa8e0', W: '#d8f8ff', G: '#c88aff', K: '#4a2a6a' }],
   cloth: ['shirt', { C: '#d8c8a0', L: '#f4ead0', D: '#a8986a' }],
+  cloth_torn: ['shirt', { C: '#9a8a6a', L: '#b8a888', D: '#6a5a40' }], /* tunik goni robek */
+  branch: ['sword', { L: '#8a5a32', W: '#a8784a', G: '#5e8a3a', K: '#5a3a20' }], /* dahan kayu */
+  bread_mila: ['bread', { C: '#e0a85a', L: '#ffd88a', D: '#9a5e2a', W: '#5a2a0a' }],
   leather: ['shirt', { C: '#9a6440', L: '#c8905e', D: '#6a4228' }],
   chain: ['shirt', { C: '#a0a8b8', L: '#e0e6f0', D: '#6a7080' }],
   cshield: ['shield', { C: '#5ad0ff', L: '#c8f4ff', W: '#ffffff', D: '#2a7ac0' }],

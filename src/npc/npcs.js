@@ -76,10 +76,18 @@ function updBarks(cam, dt) {
       BARK_NODES.splice(i, 1);
       continue;
     }
-    b.el.style.left = Math.round(b.npc.spr.x - cam.scrollX) + 'px';
-    b.el.style.top = Math.round(b.npc.spr.y - cam.scrollY - 30) + 'px';
+    const wv = cam.worldView, z = cam.zoom || 1; /* posisi layar = (dunia − tepi pandang) × zoom */
+    b.el.style.left = Math.round((b.npc.spr.x - wv.x) * z) + 'px';
+    b.el.style.top = Math.round((b.npc.spr.y - wv.y - 30) * z) + 'px';
   }
 }
+(() => { /* dulu updBarks tak pernah dipanggil: gelembung sapaan menumpuk di pojok kiri atas tertutup HUD & tidak hilang */
+  const _u = World.prototype.update;
+  World.prototype.update = function (t, dms) {
+    _u.apply(this, arguments);
+    if (BARK_NODES.length && (!G.scene || G.scene === this) && this.cameras) updBarks(this.cameras.main, (dms || 16) / 1000);
+  };
+})();
 
 Object.assign(World.prototype, {
   updNpc(o, dt, locked) {

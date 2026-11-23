@@ -196,7 +196,8 @@ function buildTextures(sc) {
     const want = ('art' + o.key).toLowerCase(), fn = artFns.find(n => n.toLowerCase() === want) || artFns.find(n => n.toLowerCase() === ('art' + k).toLowerCase());
     try { if (fn) { const c = window[fn](); if (c) { T.addCanvas(o.key, c.c || c); continue; } } } catch (e) { console.warn('Gagal menggambar', o.key, e); }
     const al = ALIAS[o.key]; if (al && T.exists(al)) { T.addImage(o.key, T.get(al).getSourceImage()); continue; }
-    const later = typeof SPROUT_TREE_ALIAS !== 'undefined' && SPROUT_TREE_ALIAS[o.key]; /* pohon: dibuat sesudahnya */
+    const later = (typeof SPROUT_TREE_ALIAS !== 'undefined' && SPROUT_TREE_ALIAS[o.key]) || /^farm_/.test(o.key) || /* dibuat sesudahnya */
+      (typeof REF_HOUSES !== 'undefined' && REF_HOUSES.tex.includes(o.key));
     if (!later) console.warn('Objek tanpa tekstur:', k, '→', o.key);
   }
   if (typeof applyGptMonsters === 'function') applyGptMonsters(sc); /* sprite monster GPT (gfx/gptmonsters.js) */

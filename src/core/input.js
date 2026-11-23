@@ -289,6 +289,11 @@ function pollGamepad() {
     PAD_STATE.btns[bIdx] = isDown;
   }
 }
+// dulu pollGamepad tidak pernah dipanggil → gamepad tidak berfungsi sama sekali. Polling tiap bingkai setelah gamepad terhubung.
+addEventListener('gamepadconnected', function padLoopStart() {
+  if (PAD_STATE.loop) return; PAD_STATE.loop = true;
+  (function loop() { try { pollGamepad(); } catch (_) { } requestAnimationFrame(loop); })();
+});
 function layout() {
   const vw = innerWidth, vh = innerHeight, touch = document.body.classList.contains('touch'), land = vw > vh;
   let aw = vw - 10, ah = vh - 10;
