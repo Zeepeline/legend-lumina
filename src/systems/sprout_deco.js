@@ -63,7 +63,7 @@ function sproutDecoFor(M, base) {
   const doors = typeof mapDoors === 'function' ? mapDoors(M) : [];
   const busy = (x, y) => doors.some(ex => x > ex.x - 64 && x < ex.x + ex.w + 64 && y > ex.y - 64 && y < ex.y + ex.h + 72) ||
     (M.npcs || []).some(n => Math.hypot(n.x - x, n.y - y) < 30) || (M.enemies || []).some(e => Math.hypot(e[1] - x, e[2] - y) < 24) ||
-    (M.chests || []).some(c => Math.hypot(c.x - x, c.y - y) < 30);
+    (M.chests || []).some(c => Math.hypot(c.x - x, c.y - y) < 30) || (M.calm || []).some(c => Math.hypot(c[0] - x, c[1] - y) < c[2]);
   const all = (m, c, r) => {
     for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
       const cc = c + i, rr = r + j; if (cc < 0 || rr < 0 || cc >= C || rr >= R || !m[rr * C + cc]) return 0;
