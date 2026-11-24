@@ -41,6 +41,10 @@ def preview(ids, out, docs):
     cv.save(out); print('pratinjau ->', out, cv.size)
 
 
+# lembar dari GAMBAR (pemilik/AI, dirapikan & disusun tangan): tidak ditimpa generator, tetap didaftarkan di NPC_SHEETS
+HAND = {'gk4'}  # gk4 Pak Sardi: gaya chibi petani bertopi jerami (v1.89.4)
+
+
 def write_registry(docs, ids):
     src = open(LS).read(); body = '\n'.join(f"  {i}: [{', '.join(repr(a) for a in docs[i])}]," for i in ids)
     blk = f"const NPC_SHEETS = {{ // {{{{GEN}}}} dibuat tools/gen_npc_sheets.py dari docs/NPC_ROSTER.md (urutan = baris 5+ di lembar)\n{body}\n}}; // {{{{/GEN}}}}"
@@ -59,9 +63,10 @@ def main(argv):
     if unknown: print('animasi belum ada:', unknown); sys.exit(1)
     if prev: return preview(ids, out or '/tmp/npc_preview.png', docs)
     for i in ids:
+        if i in HAND: continue
         sheet(i, docs[i]).save(os.path.join(OUT, f'npc_sheet_{i}.png'))
     print(f'{len(ids)} lembar ditulis ->', OUT, '| tanpa gaya:', missing or '-')
-    if allrun: write_registry(docs, ids); print('NPC_SHEETS diperbarui di', os.path.relpath(LS, ROOT))
+    if allrun: write_registry(docs, ids + [i for i in docs if i in HAND and i not in ids]); print('NPC_SHEETS diperbarui di', os.path.relpath(LS, ROOT))
 
 
 if __name__ == '__main__':
