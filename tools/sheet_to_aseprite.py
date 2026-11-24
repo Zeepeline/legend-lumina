@@ -45,6 +45,27 @@ def cel(img):
     return chunk(0x2005, head + struct.pack('<HH', c.width, c.height) + zlib.compress(c.tobytes(), 9))
 
 
+def write_aseprite(frames, tags, out, layer='sprite', size=(F, F)):
+    """frames = [(Image RGBA ukuran `size`, durasi ms)], tags = [(dari, sampai, nama)] → berkas .aseprite (1 layer, palet = semua warna)."""
+    cols = set()
+    for im, _ in frames: cols |= {c[:3] for _, c in im.getcolors(1 << 24) if c[3] > 0}
+    pal = [(0, 0, 0, 0)] + [(r, g, b, 255) for r, g, b in sorted(cols)[:255]]
+    first = [
+        chunk(0x2007, struct.pack('<HHi8x', 1, 0, 0)),                                   # profil warna sRGB
+        chunk(0x2019, struct.pack('<III8x', len(pal), 0, len(pal) - 1) + b''.join(struct.pack('<H4B', 0, *c) for c in pal)),
+        chunk(0x2004, struct.pack('<HHHHHHB3x', 3, 0, 0, 0, 0, 0, 255) + string(layer)),
+        chunk(0x2018, struct.pack('<H8x', len(tags)) + b''.join(
+            struct.pack('<HHBH6x3Bx', a, b, 0, 0, *TAG_RGB[i % len(TAG_RGB)]) + string(n) for i, (a, b, n) in enumerate(tags))),
+    ]
+    body = b''.join(frame_bytes((first if i == 0 else []) + [cel(im)], ms) for i, (im, ms) in enumerate(frames))
+    w, h = size
+    head = struct.pack('<IHHHHHIH8xB3xHBBhhHH84x', 128 + len(body), 0xA5E0, len(frames), w, h, 32, 1, 100, 0, len(pal), 1, 1, 0, 0, 16, 16)
+    os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
+    open(out, 'wb').write(head + body)
+    print(f'{out}: {len(frames)} frame {w}x{h}, tag', ', '.join(f'{n}({b - a + 1})' for a, b, n in tags), f'| {len(pal) - 1} warna')
+    return out
+
+
 def build(npc_id, out=None):
     acts, fps = sheet_spec(npc_id)
     sheet = Image.open(os.path.join(ROOT, f'assets/img/npc/npc_sheet_{npc_id}.png')).convert('RGBA')
@@ -58,23 +79,8 @@ def build(npc_id, out=None):
         ms = 400 if rate is None else round(1000 / fps.get(rate, fps.get('default', 8)))
         tags.append((len(frames), len(frames) + len(cells) - 1, name))
         frames += [(im, ms) for im in cells]
-    # palet = semua warna lembar (maks 256)
-    cols = sorted({c[:3] for _, c in sheet.getcolors(1 << 24) if c[3] > 0})[:255]
-    pal = [(0, 0, 0, 0)] + [(r, g, b, 255) for r, g, b in cols]
-    first = [
-        chunk(0x2007, struct.pack('<HHi8x', 1, 0, 0)),                                   # profil warna sRGB
-        chunk(0x2019, struct.pack('<III8x', len(pal), 0, len(pal) - 1) + b''.join(struct.pack('<H4B', 0, *c) for c in pal)),
-        chunk(0x2004, struct.pack('<HHHHHHB3x', 3, 0, 0, 0, 0, 0, 255) + string(f'npc_{npc_id}')),
-        chunk(0x2018, struct.pack('<H8x', len(tags)) + b''.join(
-            struct.pack('<HHBH6x3Bx', a, b, 0, 0, *TAG_RGB[i % len(TAG_RGB)]) + string(n) for i, (a, b, n) in enumerate(tags))),
-    ]
-    body = b''.join(frame_bytes((first if i == 0 else []) + [cel(im)], ms) for i, (im, ms) in enumerate(frames))
-    head = struct.pack('<IHHHHHIH8xB3xHBBhhHH84x', 128 + len(body), 0xA5E0, len(frames), F, F, 32, 1, 100, 0, len(pal), 1, 1, 0, 0, 16, 16)
     out = out or os.path.join(ROOT, 'assets/templates/npc', f'npc_{npc_id}.aseprite')
-    os.makedirs(os.path.dirname(out), exist_ok=True)
-    open(out, 'wb').write(head + body)
-    print(f'{out}: {len(frames)} frame, tag', ', '.join(f'{n}({b - a + 1})' for a, b, n in tags), f'| {len(pal) - 1} warna')
-    return out
+    return write_aseprite(frames, tags, out, f'npc_{npc_id}')
 
 
 if __name__ == '__main__':
