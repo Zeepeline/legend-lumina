@@ -53,6 +53,9 @@ Berkas 5 · Frame pada tekstur `ch_<ch>` 12 · API (di scene: `__game.sc.`) 16 �
 ## PROMPT_ARKA.md — Prompt ChatGPT — sprite sheet lengkap Arka (karakter utama) (83 baris, ~1300 token)
 Blok umum (sudah ikut di tiap prompt) 8 · Lembar 1 — diam & jalan 15 · Lembar 2 — serangan kombo 1 & 2 27 · Lembar 3 — pukulan penutup & serangan berat 39 · Lembar 4 — berguling, kena pukul, kalah 48 · Lembar 5 — sihir & busur 58 · Lembar 6 — kehidupan sehari-hari (opsional) 67 · Kalau hasil meleset 78
 
+## PROMPT_ARKA_V2.md — Prompt — Remodel Arka (gaya "Nusantara Senja Emas") (51 baris, ~1400 token)
+Rancangan Arka baru 6 · Gaya bersama (untuk Arka & semua NPC) 24 · Langkah 0 — lembar desain (buat dulu, setujui, lalu jadikan referensi) 29 · Blok umum lembar 1–6 (ganti blok umum di `PROMPT_ARKA.md` dengan ini) 38 · Setelah lembar masuk (tugas Claude/agen) 46
+
 ## PROMPT_BANGUNAN.md — Prompt gambar bangunan (gaya referensi rumah pemilik) (35 baris, ~700 token)
 Templat (salin, ganti bagian [ ... ]) 10 · Daftar bangunan 20
 

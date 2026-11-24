@@ -103,6 +103,7 @@ function regNpcSheet(sc, id, anims) {
   });
   const walk = { down: ['down0', 'down1', 'down2', 'down3'], up: ['up0', 'up1', 'up2', 'up3'], side: ['side0', 'side1', 'side2', 'side3'] };
   NPC_FR[key] = { walk, top: 0, poses: true };
+  NPC_SCALES[key] = 1; /* lembar 48×48 sudah berukuran asli: jangan diperbesar 1,2× seperti potret 32 px */
   for (const d of ['down', 'up', 'side']) {
     A.create({ key: key + '_' + d, frames: walk[d].map(f => ({ key: 'ch_' + key, frame: f })), frameRate: NPC_SHEET_FPS.walk, repeat: -1 });
   }

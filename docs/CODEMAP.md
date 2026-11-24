@@ -647,9 +647,9 @@ _Rencana tujuan NPC berperan LIFE_ROLES (life_roles.js): jam kerja, tempat kerja
 _INTERAKSI ANTAR-NPC — sutradara kecil: tiap ±2 dtk mencari pasangan NPC di dekat pemain lalu memainkan adegan pendek:_
 `LIFE_DUO` 6 · `LIFE_GOSSIP` 7 · `LIFE_HAGGLE` 17 · `LIFE_LISTEN` 22 · `lifeIs` 23 · `LIFE_EMO_ANIM` 25 · `LIFE_DUO_KINDS` 26 · `lifeDuoSteps()` 37 · `lifeFree()` 71 · `.lifeDuoStart()` 77 · `.lifeDuoEnd()` 85 · `.lifeGo()` 94 · `.lifeDuoTick()` 99 · `.lifeDirector()` 138 · `.lifeDuoUpd()` 151
 
-## src/npc/life_sheet.js (130 baris)
+## src/npc/life_sheet.js (131 baris)
 _SPRITE SHEET NPC — tempat memasang lembar sprite hasil gambar (agent pemilik) tanpa mengubah kode lain._
-`NPC_SHEETS` 10 · `NPC_SHEET_FW` 77 · `NPC_SHEET_FPS` 78 · `regNpcSheet()` 84 · `LIFE_ANIM_FACE` 120
+`NPC_SHEETS` 10 · `NPC_SHEET_FW` 77 · `NPC_SHEET_FPS` 78 · `regNpcSheet()` 84 · `LIFE_ANIM_FACE` 121
 
 ## src/ui/shop.js (383 baris)
 _Menu beli, jual, tempa_
