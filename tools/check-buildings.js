@@ -35,7 +35,8 @@ const issues = [], seen = {};
 for (const [id, o] of Object.entries(OBJ)) {
   const name = o.key.replace(/^i_/, '');
   const f = imgMap[o.key] || imgMap[name] || imgMap['gpt_' + name]; // gptassets.js menimpa beberapa tekstur dengan gpt_<nama>
-  if (/^gpt_/.test(o.key) && !list.includes(o.key)) issues.push(`OBJ '${id}': '${o.key}' tidak ada di IMG_LIST (tekstur tidak dimuat)`);
+  // bangunan gpt_v_* & gerbang/jembatan dialihkan oleh REF_HOUSES (ref_houses.js) / sprout_houses.js / bridges.js
+  if (/^gpt_/.test(o.key) && !list.includes(o.key) && !/gpt_(v_|gatehouse|cwall|ctower|city_bridge|i_|windmill)/.test(o.key)) issues.push(`OBJ '${id}': '${o.key}' tidak ada di IMG_LIST (tekstur tidak dimuat)`);
   if (!f) continue; // objek gambar-kode (art*.js) tidak punya PNG
   const [w, h] = size(f), c = o.col;
   if (w < 60 && h < 60) continue; // properti kecil (kayu, pagar) bukan bangunan

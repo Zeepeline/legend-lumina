@@ -83,19 +83,36 @@ function levelUpDetail(oldLv) {
     setTimeout(() => { w.remove(); if (mini && OPT.mini) mini.style.display = ''; }, 600);
   }, 2600);
 }
-// jeda otomatis saat aplikasi/tab disembunyikan (#877)
+// jeda otomatis saat aplikasi/tab disembunyikan (#877, hemat baterai & daya)
 document.addEventListener('visibilitychange', () => {
   try {
+    const g = window.__game && window.__game.game;
     if (document.hidden) {
       if (typeof Input !== 'undefined' && Input.held) { Input.held.length = 0; Input.keys = {}; }
       if (AU.tag && !AU.tag.paused) {
         AU.tag._bgPaused = true;
         try { AU.tag.pause(); } catch (_) { }
       }
+      if (AU.ctx && AU.ctx.state === 'running') {
+        AU._ctxBgPaused = true;
+        try { AU.ctx.suspend().catch(() => {}); } catch (_) { }
+      }
+      if (g && !g.isPaused) {
+        g._bgPaused = true;
+        try { g.pause(); } catch (_) { }
+      }
     } else {
       if (AU.tag && AU.tag._bgPaused) {
         AU.tag._bgPaused = false;
         try { AU.tag.play().catch(() => {}); } catch (_) { }
+      }
+      if (AU.ctx && AU._ctxBgPaused) {
+        AU._ctxBgPaused = false;
+        try { AU.ctx.resume().catch(() => {}); } catch (_) { }
+      }
+      if (g && g._bgPaused) {
+        g._bgPaused = false;
+        try { g.resume(); } catch (_) { }
       }
     }
   } catch (_) { }

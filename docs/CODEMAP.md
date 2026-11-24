@@ -219,9 +219,9 @@ _Cek pencapaian & kabar progres 50% / 90% (T265)_
 _Panggang bayangan objek ke tekstur tanah_
 `SHC` 3 · `bakeGround()` 4 · `SHB` 25 · `shadowIndex()` 26
 
-## src/gfx/textures.js (235 baris)
+## src/gfx/textures.js (232 baris)
 _Muat gambar & daftarkan semua tekstur/animasi ke Phaser_
-`ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 44 · `loadImgs()` 64 · `addStrip()` 78 · `darkTree()` 83 · `NPC_W` 85 · `regPortrait()` 86 · `regChar()` 92 · `buildTextures()` 111
+`ICONS_CACHE` 4 · `ICONS` 5 · `IMGEL` 15 · `IMG_LIST` 17 · `imgSubdir()` 41 · `loadImgs()` 61 · `addStrip()` 75 · `darkTree()` 80 · `NPC_W` 82 · `regPortrait()` 83 · `regChar()` 89 · `buildTextures()` 108
 
 ## src/gfx/npc_rig.js (140 baris)
 _Rig piksel NPC: dari 1 potret (atau lembar Mila) dibangun pose jalan/napas/berlutut/jatuh lewat potong-geser-cermin kanvas (tanpa warna baru)_
@@ -379,9 +379,9 @@ _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, m
 _Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed._
 `CROWD_POOL` 5 · `.spawnCrowd()` 8 · `.updCrowd()` 62 · `.clearCrowd()` 153 · `.initCrowd()` 163 · `_initPolishCrowd` 185 · `_dropActiveFxCrowd` 192 · `_updAmbP` 225
 
-## src/systems/qol.js (281 baris)
+## src/systems/qol.js (298 baris)
 _Kenyamanan (gelombang 1 docs/arsip/PROGRES_FITUR.md): ikon interaksi (#851–852), jeda otomatis (#877), bilah HP musuh (#904),_
-`.updInteractHint()` 6 · `.updEnemyBars()` 42 · `.retryBoss()` 68 · `levelUpDetail()` 74 · `.setTimeout()` 80 · `TIPS` 105 · `showTip()` 116 · `.updTips()` 135 · `.updPeaceHud()` 145 · `.updMinimap()` 150 · `.swapWeapon()` 187 · `.updStamina()` 198 · `.tryClimb()` 215 · `applyPadOpt()` 243 · `MINI_SPAN` 250 · `miniBenua()` 251
+`.updInteractHint()` 6 · `.updEnemyBars()` 42 · `.retryBoss()` 68 · `levelUpDetail()` 74 · `.setTimeout()` 80 · `TIPS` 122 · `showTip()` 133 · `.updTips()` 152 · `.updPeaceHud()` 162 · `.updMinimap()` 167 · `.swapWeapon()` 204 · `.updStamina()` 215 · `.tryClimb()` 232 · `applyPadOpt()` 260 · `MINI_SPAN` 267 · `miniBenua()` 268
 
 ## src/systems/feel.js (312 baris)
 _Rasa bertarung (gelombang 3): ancang-ancang (#1), kombo (#2), musuh elit (#4),_
@@ -423,9 +423,9 @@ _Gelombang 9: mancing tarik-ulur (#51, #571), ikan per jam (#572) & cuaca (#573)
 _Gelombang 10: kalender (#701), nama hari (#702), libur toko (#703), jam toko (#704),_
 `DAYS` 4 · `SEASONS` 5 · `SEASON_DAYS` 11 · `dayName` 12 · `seasonIdx` 13 · `season` 14 · `dateTxt` 15 · `_updClock` 17 · `_plotHours` 20 · `_logFish` 23 · `shopShut()` 26 · `wrapShops()` 32 · `sleepToMorning()` 38 · `.spawnSeason()` 40 · `.updSeason()` 55
 
-## src/systems/polish.js (237 baris)
+## src/systems/polish.js (262 baris)
 _Gelombang 11: hemat baterai (#99), tangkis (#3), kelemahan elemen (#5), kunci target (#6),_
-`ELEM` 5 · `WEAK` 6 · `ELEM_COL` 7 · `_hitEnemy` 8 · `_updShots` 46 · `_eShoot` 49 · `_nova` 66 · `_useTool` 68 · `PARRY_WIN` 71 · `_attack` 72 · `_hurtPlayer` 74 · `.initLock()` 117 · `.setLock()` 122 · `.cycleLock()` 123 · `.updLock()` 124 · `_aim` 131 · `RARE_N` 134 · `rarity()` 135 · `TOAST` 137 · `toastItem()` 138 · `_addItem` 145 · `applyFont()` 148 · `applyLite()` 149 · `applyScreenFilter()` 152 · `RARITY_BEAM_COL` 184 · `_drop0` 185 · `_updPicks0` 221 · `.initPolish()` 235
+`ELEM` 5 · `WEAK` 6 · `ELEM_COL` 7 · `_hitEnemy` 8 · `_updShots` 46 · `_eShoot` 49 · `_nova` 66 · `_useTool` 68 · `PARRY_WIN` 71 · `_attack` 72 · `_hurtPlayer` 74 · `.initLock()` 117 · `.setLock()` 122 · `.cycleLock()` 123 · `.updLock()` 124 · `_aim` 131 · `RARE_N` 134 · `rarity()` 135 · `TOAST` 137 · `toastItem()` 138 · `_addItem` 145 · `applyFont()` 148 · `applyLite()` 149 · `checkBatterySaver()` 154 · `applyScreenFilter()` 177 · `RARITY_BEAM_COL` 209 · `_drop0` 210 · `_updPicks0` 246 · `.initPolish()` 260
 
 ## src/systems/economy/economy_1.js (399 baris)
 _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (1) — isi: lihat docs/CODEMAP.md_
@@ -439,9 +439,9 @@ _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (2)
 _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (3) — isi: lihat docs/CODEMAP.md_
 `startRematchBattle()` 3 · `BARTER_DEALS` 56 · `CITY_BOUNTIES` 99 · `openCityBounties()` 114
 
-## src/systems/perf.js (57 baris)
+## src/systems/perf.js (61 baris)
 _Gelombang A (performa): culling objek di luar layar, entitas jauh "tidur", pengecekan berkala._
-`CULL_PAD` 4 · `.initCull()` 7 · `.updCull()` 22 · `_updEnemyP` 38 · `_updFeelP` 43 · `_updNpcP` 46 · `_updCritP` 52 · `_updHintP` 55
+`CULL_PAD` 4 · `.initCull()` 7 · `.updCull()` 22 · `_updEnemyP` 42 · `_updFeelP` 47 · `_updNpcP` 50 · `_updCritP` 56 · `_updHintP` 59
 
 ## src/systems/stream.js (92 baris)
 _Gelombang B: tanah per chunk (streaming). Hanya potongan di sekitar layar yang dibuat, sisanya dibuat_
@@ -759,7 +759,7 @@ _Ayunan pedang Arka: ancang-ancang (tarik ke belakang) → ayun cepat melewati s
 _Pedang Arka yang DIGAMBAR PER FRAME (assets/img/hero/hero_swl{0,1}.png ← tools/gen_sword_layer.py). Pedang + kepalan sudah menempel di tangan_
 `SWL_FW` 6 · `SWL_ROWS` 7 · `SWL_HAND` 9 · `regSwordLayer()` 11 · `_bakeStd` 22 · `.bakeOn()` 24 · `.bakeSheath()` 26 · `.swordBake()` 34 · `.swordToHand()` 58
 
-## src/systems/grade.js (125 baris)
+## src/systems/grade.js (129 baris)
 _Sistem Rona Wilayah & Transisi Antar Wilayah Halus (v1.52.0 - ala 36 Bioma Cobo Makes Games / Mytheria)_
 `ID_M` 8 · `BIOME_GRADE` 11 · `biomeBaseMatrix()` 24 · `lerpMatrix()` 30 · `TRANS_BAND` 37 · `calcTargetGrade()` 38 · `applyGradeFX()` 87
 
@@ -775,6 +775,6 @@ _LAHAN PERTANIAN GAYA SPROUT — aset lengkap kebun:_
 _MENANAM POHON — bibit dibeli di kios Bu Sari, dipakai dari tas → ditanam di rumput di depan Arka (wilayah luar ruang)._
 `TREE_FARM` 6 · `ptreeList` 35 · `ptreeSaplingTex()` 37 · `ptreeStage()` 47 · `ptreePos()` 52 · `.plantTree()` 57 · `.ptreeSync()` 74 · `.ptreeMake()` 89 · `.ptreeDrop()` 109 · `.ptreeUse()` 115
 
-## src/main.js (44 baris)
+## src/main.js (48 baris)
 _Mulai game Phaser_
 `game` 20

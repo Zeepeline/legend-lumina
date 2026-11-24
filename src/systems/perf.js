@@ -30,6 +30,10 @@ Object.assign(World.prototype, {
       if (o.x !== c.x || o.y !== c.y) { o.cameraFilter = 0; L.splice(i, 1); continue; } // ternyata bergerak: jangan di-cull
       const out = c.x < v.x - c.r || c.x > v.right + c.r || c.y < v.y - c.r || c.y > v.bottom + c.r;
       o.cameraFilter = out ? id : 0; if (out) hidden++;
+      if (o.anims) {
+        if (out) { if (o.anims.isPlaying) { o._cullPaused = 1; o.anims.pause(); } }
+        else if (o._cullPaused) { o._cullPaused = 0; o.anims.resume(); }
+      }
     }
     this.cullHidden = hidden;
   },

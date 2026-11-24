@@ -86,6 +86,10 @@ function calcTargetGrade(sc, out) {
 
 function applyGradeFX(sc, cam, m) {
   if (sc.game.renderer.type !== Phaser.WEBGL || !cam.postFX) return false;
+  if (OPT.lite || !OPT.grade) {
+    if (cam._gradeFX) { try { cam.postFX.remove(cam._gradeFX); } catch (_) {} cam._gradeFX = null; }
+    return false;
+  }
   let fx = cam._gradeFX;
   if (!fx) fx = cam._gradeFX = cam.postFX.addColorMatrix();
   fx.set(m);

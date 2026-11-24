@@ -146,7 +146,32 @@ const _addItem = addItem;
 addItem = function (id, n = 1) { _addItem(id, n); if (n > 0) { (S.got = S.got || {})[id] = Date.now(); if (OPT.toast !== false) toastItem(id, n); } };
 // ---- ukuran huruf & hemat baterai ----
 function applyFont() { document.documentElement.style.setProperty('--fz', [.9, 1, 1.15, 1.3][OPT.font != null ? OPT.font : 1]); }
-function applyLite() { const g = window.__game && window.__game.game; const L = g && g.loop; if (L) { L.fpsLimit = OPT.lite ? 30 : 0; L._limitRate = OPT.lite ? 1000 / 30 : 0; } }
+function applyLite() {
+  const g = window.__game && window.__game.game; const L = g && g.loop;
+  if (L) { L.fpsLimit = OPT.lite ? 30 : 60; L._limitRate = OPT.lite ? 1000 / 30 : 1000 / 60; }
+}
+
+function checkBatterySaver() {
+  if (typeof navigator !== 'undefined' && navigator.getBattery) {
+    navigator.getBattery().then(bat => {
+      const upd = () => {
+        if (!bat.charging && bat.level <= 0.20 && !OPT._batAuto) {
+          OPT._batAuto = 1;
+          if (!OPT.lite) {
+            OPT.lite = true; saveOpt();
+            if (typeof popWorld === 'function' && G.scene && G.scene.pl) {
+              popWorld(G.scene.pl.x, G.scene.pl.y - 30, 'HEMAT BATERAI (30 FPS)', 'gold');
+            }
+          }
+        }
+      };
+      upd();
+      bat.addEventListener('levelchange', upd);
+      bat.addEventListener('chargingchange', upd);
+    }).catch(() => {});
+  }
+}
+checkBatterySaver();
 
 // Filter Efek Layar Opsional (#93): [0: Standar, 1: Hangat Nostalgia, 2: Vinyet Bioskop, 3: Retro CRT]
 function applyScreenFilter() {
