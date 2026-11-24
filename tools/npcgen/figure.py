@@ -8,7 +8,7 @@ from . import props
 
 SKINS = {'light': (240, 200, 168), 'pale': (248, 224, 200), 'tan': (214, 160, 118), 'dark': (160, 108, 76), 'ruddy': (238, 176, 152)}
 EYE = (58, 38, 44); BLUSH = (238, 150, 140); WHITE = (255, 255, 255)
-SPANS = [6, 10, 12, 14, 16, 16, 16, 16, 16, 16, 16, 14, 12, 8]
+SPANS = [6, 10, 12, 14, 16, 16, 16, 16, 16, 16, 14, 12, 10, 6]  # kepala membulat: pipi & dagu menyempit
 GOLD = (236, 190, 70)
 
 
@@ -17,7 +17,7 @@ def in_hair(kind, d, r, c):  # r = baris kepala 0..13, c = kolom 0..15 (dari tep
     if d == 'Down':
         if r <= (3 if kind == 'cepak' else 4): return True
         if kind == 'cepak': return r <= 5 and (c <= 2 or c >= 13)
-        if r == 5: return c <= 4 or c >= 11
+        if r == 5: return c <= 3 or c >= 12 or c in (6, 9)  # poni bergerigi, dahi terlihat
         if kind in ('long', 'braid2'): return r <= 13 and (c <= 2 or c >= 13)
         return r <= (9 if kind == 'curly' else 8) and (c <= 1 or c >= 14)
     if d == 'Up':
@@ -151,6 +151,7 @@ def draw(d, P, st):
     # ---- kepala ----
     hx = cx; hc = st.get('hair', (80, 52, 40))
     sp.part(5, 'Body', rows(hy, SPANS, hx), SK)
+    sp.part(5.05, 'Body', face_shadow(d, hx, hy), mix(SK, (150, 80, 80), .28), outline=False, shade=False)
     face(sp, d, st, hx, hy, P, SK)
     hk = st.get('hairstyle', 'short')
     if hk != 'bald' or st.get('hat'): pass
@@ -160,6 +161,16 @@ def draw(d, P, st):
     for x, y, c in P.get('fx', []): sp.dot(6, 'Gear', CX + x, GROUND + y, c)
     flat, _ = sp.render()
     return flat, hands
+
+
+def face_shadow(d, cx, hy):
+    """Bayangan lembut di wajah (cahaya dari kiri-atas): tepi kanan pipi & baris dagu."""
+    M = set()
+    for r in range(6, len(SPANS)):
+        w = SPANS[r]; l = cx - w // 2; R = l + w - 1
+        if d != 'Side': M.add((R, hy + r))
+        if r >= len(SPANS) - 2: M |= {(x, hy + r) for x in range(l + 2, R + 1)} if d != 'Up' else set()
+    return M
 
 
 def face(sp, d, st, cx, hy, P, SK):
@@ -172,23 +183,23 @@ def face(sp, d, st, cx, hy, P, SK):
             for dy in range(h): sp.dot(5.1, 'Body', ex + dx, hy + 7 + dy - (1 if eyes == 'wide' else 0), EYE)
         sp.dot(5.2, 'Body', ex, hy + 7 - (1 if eyes == 'wide' else 0), WHITE)
     if d == 'Down':
-        eye(cx - 5); eye(cx + 3)
-        for x in (cx - 7, cx - 6, cx + 5, cx + 6): sp.dot(5.1, 'Body', x, hy + 10, BLUSH)
+        eye(cx - 4); eye(cx + 2)
+        for x in (cx - 6, cx - 5, cx + 4, cx + 5): sp.dot(5.1, 'Body', x, hy + 10, BLUSH)
         for dx in (-1, 0):
             sp.dot(5.1, 'Body', cx + dx, hy + 11, mouth)
             if mo: sp.dot(5.1, 'Body', cx + dx, hy + 12, mix(mouth, (60, 20, 30), .5))
             if mo == 2: sp.dot(5.1, 'Body', cx + dx + (-1 if dx < 0 else 1), hy + 12, mix(mouth, (60, 20, 30), .5))
-        if st.get('brow'): [sp.dot(5.2, 'Body', cx + o + i, hy + 6, hair) for o in (-5, 3) for i in (0, 1)]
+        if st.get('brow'): [sp.dot(5.2, 'Body', cx + o + i, hy + 6, hair) for o in (-4, 2) for i in (0, 1)]
         if st.get('stache'): sp.part(5.3, 'Hair', rect(cx - 4, hy + 10, cx + 3, hy + 10) if st['stache'] == 'thin' else rect(cx - 5, hy + 10, cx + 4, hy + 11) - {(cx - 1, hy + 11), (cx, hy + 11)}, bc, outline=False)
         if st.get('scar'): sp.dot(5.3, 'Body', cx - 6, hy + 9, (200, 90, 90)); sp.dot(5.3, 'Body', cx - 5, hy + 10, (200, 90, 90)); sp.dot(5.3, 'Body', cx - 6, hy + 8, (200, 90, 90))
         if st.get('glasses'):
             gc = st.get('glassc', (70, 60, 70))
-            for ex in (cx - 6, cx + 2): sp.part(5.4, 'Gear', rect(ex, hy + 6, ex + 3, hy + 9) - rect(ex + 1, hy + 7, ex + 2, hy + 8), gc, outline=False, shade=False)
-            sp.dot(5.4, 'Gear', cx - 2, hy + 7, gc); sp.dot(5.4, 'Gear', cx - 1, hy + 7, gc)
+            for ex in (cx - 5, cx + 1): sp.part(5.4, 'Gear', rect(ex, hy + 6, ex + 3, hy + 10) - rect(ex + 1, hy + 7, ex + 2, hy + 9), gc, outline=False, shade=False)
+            sp.dot(5.4, 'Gear', cx - 1, hy + 7, gc); sp.dot(5.4, 'Gear', cx, hy + 7, gc)
     elif d == 'Side':
-        ex = cx + 4; eye(ex)
+        ex = cx + 3; eye(ex)
         sp.dot(5.1, 'Body', ex - 3, hy + 10, BLUSH); sp.dot(5.1, 'Body', ex - 2, hy + 10, BLUSH)
-        sp.dot(5.1, 'Body', cx + 8, hy + 9, SK); sp.dot(5.1, 'Body', cx + 8, hy + 10, SK)
+        sp.dot(5.1, 'Body', cx + 8, hy + 9, SK)
         for dx in (0, 1): sp.dot(5.1, 'Body', cx + 5 + dx, hy + 11, mouth)
         if mo: sp.dot(5.1, 'Body', cx + 5, hy + 12, mix(mouth, (60, 20, 30), .5)); sp.dot(5.1, 'Body', cx + 6, hy + 12, mix(mouth, (60, 20, 30), .5))
         if st.get('stache'): sp.part(5.3, 'Hair', rect(cx + 5, hy + 10, cx + 8, hy + 10), bc, outline=False)
