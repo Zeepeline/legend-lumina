@@ -16,8 +16,10 @@ def cell(im, dx=0, dy=0, rot=0):
 from backwalk import backwalk
 S=frames(Image.open('tools/mc2/native12.png')); U0=frames(Image.open('tools/mc2/up12.png'))[0]; U=backwalk()
 from front import front_base, front_walk
-D0=Image.fromarray(front_base()); D0=D0.crop(D0.getbbox()); Dw=front_walk()
-FIX={id(f):12.5 for f in U+Dw}; FIX[id(U0)]=12.5; FIX[id(D0)]=12.5
+from front_img import front_imgs2
+FI=front_imgs2(); D0=FI[0]; Dw=[FI[i] for i in (1,1,2,2,3,3,2,2)]
+FIX={id(f):12.5 for f in U}; FIX[id(U0)]=12.5
+for f in FI: m=np.asarray(f)[:f.height*2//5,:,3]>0; FIX[id(f)]=float((m.sum(0)*np.arange(f.width)).sum()/m.sum())
 D=None  # belum ada gambar depan: pakai samping
 def pose(d):
     src=U if d=='up' else Dw if d=='down' else S; idle=U0 if d=='up' else D0 if d=='down' else src[2]
