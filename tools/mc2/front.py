@@ -80,3 +80,34 @@ if __name__=='__main__':
     b=Image.fromarray(front_base()); F=frames(Image.open('tools/mc2/dn_raw.png'))[0]
     s=Image.new('RGBA',(56,54),(90,140,90,255)); s.alpha_composite(b,(1,54-48)); s.alpha_composite(F,(29,54-F.height))
     s.resize((1120,1080),Image.NEAREST).save('tools/mc2/cmp.png')
+
+# ---- jalan ke bawah 8 frame: pose kaki & ayun tangan mengikuti gambar pemilik (baris 3 lembar arah) ----
+LEGS=((0,12),(13,25))  # kolom kaki kiri & kanan (gambar), baris 37..47
+ARMS=((0,5),(20,25))   # kolom tangan kiri & kanan, baris 26..30
+def _leg(a,cols,n):
+    """n>0: kaki diangkat ke belakang (memendek n baris kulit); n<0: kaki melangkah maju (1 baris kulit tambahan)."""
+    x0,x1=cols; p=a[:,x0:x1].copy(); H=a.shape[0]
+    if n>0: keep=list(range(0,40))+list(range(40+n,H))
+    elif n<0: keep=list(range(0,40))+[40]*(-n)+list(range(40,H))
+    else: return
+    new=np.zeros_like(p); k=p[keep][:H]; new[:len(k)]=k; a[:,x0:x1]=np.where(np.arange(H)[:,None,None]>=37,new,p)
+def _arm(a,cols,dy):
+    if not dy: return
+    x0,x1=cols; p=a[:,x0:x1].copy(); seg=p[26:31].copy()
+    a[26:31,x0:x1]=np.where(seg[...,3:]>0,0,a[26:31,x0:x1]) if False else a[26:31,x0:x1]
+    blank=p[26:31].copy(); blank[...]=0
+    if x0==0: blank[:,4:]=p[26:31,4:]   # sisi badan tetap
+    else: blank[:,:1]=p[26:31,:1]
+    a[26:31,x0:x1]=blank
+    dst=a[26+dy:31+dy,x0:x1]; a[26+dy:31+dy,x0:x1]=np.where(seg[...,3:]>0,seg,dst)
+    if dy>0:  # lengan baju memanjang menutup celah
+        for x in range(x0,x1):
+            if p[26,x-x0,3] and p[25,x-x0,3]: a[26,x]=p[25,x-x0]
+def front_walk():
+    b=front_base(); out=[]
+    # (kaki kiri, kaki kanan, tangan kiri, tangan kanan): kaki −1 maju, >0 terangkat; tangan +1 maju (turun), −1 ke belakang
+    for l,r,al,ar in [(-1,2,-1,1),(0,3,-1,1),(0,1,0,0),(0,0,0,0),(2,-1,1,-1),(3,0,1,-1),(1,0,0,0),(0,0,0,0)]:
+        a=np.vstack([b,np.zeros((1,)+b.shape[1:],np.uint8)])
+        _leg(a,LEGS[0],l); _leg(a,LEGS[1],r); _arm(a,ARMS[0],al); _arm(a,ARMS[1],ar)
+        img=Image.fromarray(a); bb=img.getbbox(); out.append(img.crop((0,0,a.shape[1],bb[3])))
+    return out
