@@ -72,7 +72,8 @@ function heroFrame(sc, dt) {
     fps = (k.startsWith('walk8') ? 12 : 9) * Math.min(1.4, Math.max(.7, pl.body.velocity.length() / 70)); } /* 8 frame → 12 fps */
   else { k = 'idle_' + sd; fps = HERO_BLINK ? 2.5 : 4; } /* diam: bernapas pelan */
   if (A.k !== k) { A.k = k; A.t = 0; } else A.t += dt;
-  if (f == null) { const n = Math.floor(A.t * fps); f = once ? Math.min(3, n) : n % (k.startsWith('walk8') ? 8 : 4); }
+  const N = k === 'walk8s_' ? 7 : k.startsWith('walk8') ? 8 : 4; /* jalan samping 7 frame (gambar 1 = pose diam) */
+  if (f == null) { const n = Math.floor(A.t * fps); f = once ? Math.min(3, n) : n % N; }
   if (pl.anims.isPlaying) pl.anims.stop();
   let name = k + f;
   if (HERO_BLINK && k.startsWith('idle_') && sd !== 'up' && (performance.now() / 1000) % 3.7 > 3.58) name = 'blink_' + sd + f; /* kedip sesekali */

@@ -38,7 +38,7 @@ def hairc(im):
 def feetc(im):
     a=np.asarray(im)[...,3]>0; xs=np.nonzero(a[-4:].any(0))[0]; return (xs.min()+xs.max())/2
 SL=[clean(f,keep={(216,222,223),(173,180,191)}) for f in frames(Image.open('tools/mc2/slash_side.png'))]   # tebasan samping (pedang digambar)
-_o=hairc(S[2])-feetc(S[2])
+_o=hairc(S[0])-feetc(S[0])   # frame 1 gambar samping = pose DIAM (bukan langkah)
 for f in SL: FIX[id(f)]=hairc(f)-_o
 KEEP={(216,222,223),(173,180,191)}
 SLD=[clean(f,keep=KEEP) for f in frames(Image.open('tools/mc2/slash_down.png'))]   # tebasan bawah (gambar pemilik, diperkecil ke tinggi normal)
@@ -66,7 +66,7 @@ def crouch(im, n):
 def def_heavy(fs):   # isi tenaga (jongkok 1 & 2 px, ancang-ancang) → tebas (smear) → lanjutan
     return [cell(crouch(fs[0],1)),cell(crouch(fs[0],2)),cell(fs[1]),cell(fs[2])]
 def pose(d):
-    src=U if d=='up' else Dw if d=='down' else S; idle=U0 if d=='up' else D0 if d=='down' else src[2]
+    src=U if d=='up' else Dw if d=='down' else S; idle=U0 if d=='up' else D0 if d=='down' else src[0]
     walk=[cell(src[i]) for i in (0,2,4,6)]
     if d in ('up','down'):
         sg=-1 if d=='up' else 1
@@ -78,7 +78,7 @@ def pose(d):
         heavy=def_heavy(SL)
     return dict(idle=idlecells(idle), walk=walk, atk=atk, heavy=heavy, roll=[cell(idle,rot=r) for r in (0,-90,-180,-270)], still=[cell(idle)]*4)
 P={d:pose(d) for d in ('down','up','side')}
-I=S[2]
+I=S[0]
 hurt=[cell(I,dx=-1),cell(I,dx=-3),cell(I,dx=-3),cell(I,dx=-1)]
 die=[cell(I),cell(I,rot=-30),cell(I,rot=-60),cell(I,rot=-90)]; rise=list(reversed(die)); sleep=[cell(I,rot=-90)]*4
 ROWS=['idle_down','walk_down','idle_up','walk_up','idle_side','walk_side_a','walk_side','atk1_down','atk2_down','atk1_up','atk2_up','atk1_side','atk2_side',
@@ -95,9 +95,9 @@ def rowimgs(k):
 sheet=Image.new('RGBA',(4*FW,47*FH),(0,0,0,0))
 for r,k in enumerate(ROWS):
     for i,c in enumerate(rowimgs(k)): sheet.alpha_composite(c,(i*FW,r*FH))
-for i in range(8): sheet.alpha_composite(cell(S[i]),((i%4)*FW,(39+i//4)*FH))   # 39–40 jalan 8 frame samping
+for i in range(7): sheet.alpha_composite(cell(S[i+1]),((i%4)*FW,(39+i//4)*FH))   # 39–40 jalan samping 7 frame (gambar 2–8)
 for i in range(8): sheet.alpha_composite(cell(U[i]),((i%4)*FW,(41+i//4)*FH))   # 41–42 jalan 8 frame atas
 for i in range(8): sheet.alpha_composite(cell(Dw[i]),((i%4)*FW,(43+i//4)*FH))   # 43–44 jalan 8 frame bawah
 for i,c in enumerate(idlecells(D0,True)): sheet.alpha_composite(c,(i*FW,45*FH))     # 45 kedip, diam bawah
-for i,c in enumerate(idlecells(S[2],True)): sheet.alpha_composite(c,(i*FW,46*FH))   # 46 kedip, diam samping
+for i,c in enumerate(idlecells(S[0],True)): sheet.alpha_composite(c,(i*FW,46*FH))   # 46 kedip, diam samping
 sheet.save('assets/img/hero/hero_mc2.png'); print(sheet.size)
