@@ -727,7 +727,7 @@ _T439: Selaraskan warna objek KODE ke palet treeA / Verdant_
 _Sprite monster dari lembar GPT pemilik (assets/img/monsters/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
-## src/gfx/hero_arka.js (94 baris)
+## src/gfx/hero_arka.js (96 baris)
 _Sprite sheet lengkap Arka dari ChatGPT (assets/img/hero/hero_arka.png)._
 `HERO_FW` 5 · `HERO_ROW` 6 · `HERO_SKIN` 15 · `HERO_W8` 16 · `HERO_G` 18 · `heroSkinToggle()` 19 · `regHeroArka()` 23 · `heroFrame()` 41
 

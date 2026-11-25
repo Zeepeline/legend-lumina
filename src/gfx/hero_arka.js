@@ -60,7 +60,9 @@ function heroFrame(sc, dt) {
     /* ritme tak rata: ancang singkat → ayun cepat → tahan di benturan → pulih (bukan 4 frame sama panjang) */
     const D = fin ? .4 : .28, u = (D - Math.min(D, pl._atk)) / D; f = u < .16 ? 0 : u < .3 ? 1 : u < .62 ? 2 : 3;
   }
-  else if (moving) { k = HERO_W8 ? (sd === 'up' && HERO_W8U ? 'walk8u_' : sd === 'up' ? 'walk_up' : 'walk8s_') : 'walk_' + sd; fps = 9 * Math.min(1.4, Math.max(.7, pl.body.velocity.length() / 70)); }
+  else if (moving) {
+    k = HERO_W8 ? (sd === 'up' && HERO_W8U ? 'walk8u_' : sd === 'up' ? 'walk_up' : 'walk8s_') : 'walk_' + sd;
+    fps = 9 * Math.min(1.4, Math.max(.7, pl.body.velocity.length() / 70)); }
   else { k = 'idle_' + sd; fps = 4; }
   if (A.k !== k) { A.k = k; A.t = 0; } else A.t += dt;
   if (f == null) { const n = Math.floor(A.t * fps); f = once ? Math.min(3, n) : n % (k.startsWith('walk8') ? 8 : 4); }
