@@ -105,7 +105,7 @@ def rowimgs(k):
 sheet=Image.new('RGBA',(4*FW,47*FH),(0,0,0,0))
 for r,k in enumerate(ROWS):
     for i,c in enumerate(rowimgs(k)): sheet.alpha_composite(c,(i*FW,r*FH))
-for i in range(7): sheet.alpha_composite(cell(S[i+1]),((i%4)*FW,(39+i//4)*FH))   # 39–40 jalan samping 7 frame (gambar 2–8)
+for i,j in enumerate((1,2,3,4,5,6)): sheet.alpha_composite(cell(S[j]),((i%4)*FW,(39+i//4)*FH))   # 39–40 jalan samping 6 frame (gambar 2–7; gambar 8 ≈ gambar 2 → bikin langkah kedua tersendat)
 for i in range(8): sheet.alpha_composite(cell(U[i]),((i%4)*FW,(41+i//4)*FH))   # 41–42 jalan 8 frame atas
 for i in range(8): sheet.alpha_composite(cell(Dw[i]),((i%4)*FW,(43+i//4)*FH))   # 43–44 jalan 8 frame bawah
 for i,c in enumerate(idlecells(D0,True)): sheet.alpha_composite(c,(i*FW,45*FH))     # 45 kedip, diam bawah
