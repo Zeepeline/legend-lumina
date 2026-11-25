@@ -591,9 +591,13 @@ _LETAK SESUAI TANAH — data peta lama (musuh, peti, NPC, titik pancing) dibuat 
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
 
 
-## src/systems/combat_fx.js (394 baris)
+## src/systems/combat_fx.js (395 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
-`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 80 · `.hitFx()` 90 · `.updChargeFx()` 135 · `.clearChargeFx()` 151 · `.spinFx()` 157 · `.enemyWindFx()` 179 · `.enemySlashFx()` 186 · `.enemySmashFx()` 196 · `.enemyRingFx()` 210 · `.rollFx()` 215 · `.updLowHp()` 236
+`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 81 · `.hitFx()` 91 · `.updChargeFx()` 136 · `.clearChargeFx()` 152 · `.spinFx()` 158 · `.enemyWindFx()` 180 · `.enemySlashFx()` 187 · `.enemySmashFx()` 197 · `.enemyRingFx()` 211 · `.rollFx()` 216 · `.updLowHp()` 237
+
+## src/systems/hit_star.js (25 baris)
+_Kilatan bintang putih 4 sudut di titik kena (ala Dimraeth): muncul sekejap saat pukulan pemain mengenai musuh._
+
 
 ## src/systems/movement.js (346 baris)
 _Gelombang 16 (T508–T517): Gerakan & Posisi (Movement & Positioning) ala Dimraeth_
@@ -727,7 +731,7 @@ _T439: Selaraskan warna objek KODE ke palet treeA / Verdant_
 _Sprite monster dari lembar GPT pemilik (assets/img/monsters/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
-## src/gfx/hero_arka.js (103 baris)
+## src/gfx/hero_arka.js (105 baris)
 _Sprite sheet lengkap Arka dari ChatGPT (assets/img/hero/hero_arka.png)._
 `HERO_FW` 5 · `HERO_ROW` 6 · `HERO_SKIN` 15 · `HERO_W8` 16 · `HERO_SWD` 17 · `HERO_G` 19 · `heroSkinToggle()` 20 · `regHeroArka()` 24 · `heroFrame()` 45
 

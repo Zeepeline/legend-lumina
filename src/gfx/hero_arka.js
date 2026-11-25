@@ -63,6 +63,8 @@ function heroFrame(sc, dt) {
     const c = pl.combo || 1, fin = c === 3 || c === 5; k = (fin ? 'atk3_' : c === 2 ? 'atk2_' : 'atk1_') + sd;
     /* ritme tak rata: ancang singkat → ayun cepat → tahan di benturan → pulih (bukan 4 frame sama panjang) */
     const D = fin ? .4 : .28, u = (D - Math.min(D, pl._atk)) / D; f = u < .16 ? 0 : u < .3 ? 1 : u < .62 ? 2 : 3;
+    /* tokoh baru: pose serang hanya sekejap (ala Dimraeth), sisa waktu kembali ke pose siap */
+    if (HERO_SWD) { f = u < .1 ? 0 : u < .3 ? 1 : u < .5 ? 2 : u < .68 ? 3 : -1; if (f < 0) { k = 'idle_' + sd; f = 0; } }
   }
   else if (moving) {
     const w8 = sd === 'up' ? (HERO_W8U ? 'walk8u_' : 'walk_up') : sd === 'down' && HERO_W8D ? 'walk8d_' : 'walk8s_';

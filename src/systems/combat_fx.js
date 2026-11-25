@@ -44,17 +44,18 @@ Object.assign(World.prototype, {
     this.swingSword(wt, cIdx, fin, ang, dx, dy, hx, hy);
 
     // Jejak sapuan fisik bilah pedang (vfx_swing_combo): hanya jejak udara yang dibelah pedang, tanpa ledakan semu di ruang kosong
-    const drawnArc = typeof HERO_SWD !== 'undefined' && HERO_SWD && wt === 'sword'; /* smear sudah ada di sprite (samping/atas/bawah) */
-    if (drawnArc) { /* tanpa jejak tambahan */ } else if (this.textures.exists('vfx_swing_combo')) {
+    /* tokoh baru berpedang: busur besar & cepat menimpa smear sprite (ala Dimraeth — efek menutupi pose sekejap) */
+    const bigArc = typeof HERO_SWD !== 'undefined' && HERO_SWD && wt === 'sword';
+    if (this.textures.exists('vfx_swing_combo')) {
       const sRow = wt === 'spear' ? 3 : (fin ? 4 : cIdx);
       /* jejak baru muncul saat bilah mulai mengayun (setelah ancang-ancang), bukan saat pedang baru terangkat */
       this.time.delayedCall(45 * (fin ? 1.45 : 1) * (wt === 'axe' ? 1.6 : 1), () => {
         if (!this.pl || this.pl.dead) return;
         const vfx = this.add.sprite(hx, hy, 'vfx_swing_combo', sRow * 4 + 1)
           .setOrigin(14 / 48, 18 / 36).setRotation(ang).setFlipY(dx < 0)
-          .setScale(wt === 'axe' ? 1.2 : 1).setDepth(depth + 1);
+          .setScale((wt === 'axe' ? 1.2 : 1) * (bigArc ? 1.6 : 1)).setDepth(depth + 1);
         if (ARC_TINT[S.eq.wpn]) vfx.setTint(ARC_TINT[S.eq.wpn]);
-        vfx.play('vfx_swing_' + sRow);
+        vfx.play('vfx_swing_' + sRow); if (bigArc) vfx.anims.timeScale = 1.6;
         vfx.once('animationcomplete', () => vfx.destroy());
       });
     } else {

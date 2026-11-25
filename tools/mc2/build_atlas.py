@@ -46,6 +46,16 @@ SLU=[clean(f,keep=KEEP) for f in frames(Image.open('tools/mc2/slash_up.png'))]  
 for fs,idl in ((SLD,D0),(SLU,U0)):
     o=hairc(idl)-FIX.get(id(idl),feetc(idl))
     for f in fs: FIX[id(f)]=hairc(f)-o
+from idle import hair as _hair
+def sway(fs, dxs):
+    """Jumbai rambut ikut terayun saat menebas (gerakan ikutan ala Dimraeth): frame i digeser dxs[i] px."""
+    out=[]
+    for f,dx in zip(fs,dxs):
+        g=Image.fromarray(_hair(np.array(f),4,dx)) if dx else f
+        if id(f) in FIX: FIX[id(g)]=FIX[id(f)]
+        out.append(g)
+    return out
+SL=sway(SL,[0,-1,-1,0]); SLD=sway(SLD,[0,1,-1,0]); SLU=sway(SLU,[0,-1,1,0])
 def pose(d):
     src=U if d=='up' else Dw if d=='down' else S; idle=U0 if d=='up' else D0 if d=='down' else src[2]
     walk=[cell(src[i]) for i in (0,2,4,6)]
