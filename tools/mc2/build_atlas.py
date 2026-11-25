@@ -22,6 +22,12 @@ FI=[clean(f) for f in front_imgs2()]; D0=FI[0]; Dw=front_walk8(FI)
 FIX={id(f):12.5 for f in U}; FIX[id(U0)]=12.5
 for f in FI: m=np.asarray(f)[:f.height*2//5,:,3]>0; FIX[id(f)]=float((m.sum(0)*np.arange(f.width)).sum()/m.sum())
 D=None  # belum ada gambar depan: pakai samping
+from idle import idle4, blink4
+def idlecells(im, blink=False):
+    fs=(blink4 if blink else idle4)(im, im.height-10)
+    for f in fs:
+        if id(im) in FIX: FIX[id(f)]=FIX[id(im)]
+    return [cell(f) for f in fs]
 def pose(d):
     src=U if d=='up' else Dw if d=='down' else S; idle=U0 if d=='up' else D0 if d=='down' else src[2]
     walk=[cell(src[i]) for i in (0,2,4,6)]
@@ -32,7 +38,7 @@ def pose(d):
     else:
         atk=[cell(idle,dx=-1),cell(src[3],dx=2),cell(src[4],dx=4),cell(idle)]
         heavy=[cell(idle,dx=-3),cell(src[3],dx=3),cell(src[4],dx=6),cell(idle,dx=1)]
-    return dict(idle=[cell(idle)]*4, walk=walk, atk=atk, heavy=heavy, roll=[cell(idle,rot=r) for r in (0,-90,-180,-270)], still=[cell(idle)]*4)
+    return dict(idle=idlecells(idle), walk=walk, atk=atk, heavy=heavy, roll=[cell(idle,rot=r) for r in (0,-90,-180,-270)], still=[cell(idle)]*4)
 P={d:pose(d) for d in ('down','up','side')}
 I=S[2]
 hurt=[cell(I,dx=-1),cell(I,dx=-3),cell(I,dx=-3),cell(I,dx=-1)]
@@ -48,10 +54,12 @@ def rowimgs(k):
         kind=k.split('_')[0]; kind={'atk1':'atk','atk2':'atk','atk3':'atk','cast':'still','bow':'still'}.get(kind,kind)
         return P[d][kind]
     return {'hurt':hurt,'die':die,'rise':rise,'sleep':sleep}.get(k,P['side']['still'])
-sheet=Image.new('RGBA',(4*FW,45*FH),(0,0,0,0))
+sheet=Image.new('RGBA',(4*FW,47*FH),(0,0,0,0))
 for r,k in enumerate(ROWS):
     for i,c in enumerate(rowimgs(k)): sheet.alpha_composite(c,(i*FW,r*FH))
 for i in range(8): sheet.alpha_composite(cell(S[i]),((i%4)*FW,(39+i//4)*FH))   # 39–40 jalan 8 frame samping
 for i in range(8): sheet.alpha_composite(cell(U[i]),((i%4)*FW,(41+i//4)*FH))   # 41–42 jalan 8 frame atas
 for i in range(8): sheet.alpha_composite(cell(Dw[i]),((i%4)*FW,(43+i//4)*FH))   # 43–44 jalan 8 frame bawah
+for i,c in enumerate(idlecells(D0,True)): sheet.alpha_composite(c,(i*FW,45*FH))     # 45 kedip, diam bawah
+for i,c in enumerate(idlecells(S[2],True)): sheet.alpha_composite(c,(i*FW,46*FH))   # 46 kedip, diam samping
 sheet.save('assets/img/hero/hero_mc2.png'); print(sheet.size)

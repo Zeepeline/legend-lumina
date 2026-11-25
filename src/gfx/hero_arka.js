@@ -13,7 +13,7 @@ IMG_LIST.push('hero_arka', 'hero_mc2');
 // Tokoh utama: 'mc2' = tokoh baru (rambut hijau, tunik merah; hero_mc2.png, atlas sama + baris 39–40 = jalan 8 frame) · 'arka' = Arka lama.
 // Pilihan di Pengaturan › Tokoh utama (localStorage 'lumina_mc'). Aset Arka lama tidak dihapus.
 const HERO_SKIN = (() => { try { return localStorage.getItem('lumina_mc') || 'mc2'; } catch (_) { return 'mc2'; } })();
-let HERO_W8 = false, HERO_W8U = false, HERO_W8D = false; /* jalan 8 frame: samping (baris 39–40), atas (41–42), bawah (43–44) */
+let HERO_W8 = false, HERO_W8U = false, HERO_W8D = false, HERO_BLINK = false; /* jalan 8 frame: samping (baris 39–40), atas (41–42), bawah (43–44) */
 // geometri frame skin aktif: ukuran sel, titik tengah-kaki, skala tinggi tubuh terhadap Arka (dipakai sword_hand.js)
 let HERO_G = { fw: HERO_FW, fh: HERO_FH, cx: 24, fy: 40, k: 1 };
 function heroSkinToggle() { /* Pengaturan › Tokoh utama */
@@ -31,8 +31,10 @@ function regHeroArka(T) {
   const t = T.addImage('ch_hero', img);
   for (const k in HERO_ROW) for (let i = 0; i < 4; i++) t.add(k + i, 0, i * FW, HERO_ROW[k] * FH, FW, FH);
   HERO_W8 = !!mc2; HERO_W8U = !!mc2 && img.height >= FH * 43; HERO_W8D = !!mc2 && img.height >= FH * 45;
+  HERO_BLINK = !!mc2 && img.height >= FH * 47; /* baris 45–46: diam bawah/samping mata terpejam */
   if (HERO_W8) for (let i = 0; i < 8; i++) t.add('walk8s_' + i, 0, (i % 4) * FW, (39 + (i >> 2)) * FH, FW, FH);
   if (HERO_W8U) for (let i = 0; i < 8; i++) t.add('walk8u_' + i, 0, (i % 4) * FW, (41 + (i >> 2)) * FH, FW, FH);
+  if (HERO_BLINK) for (let i = 0; i < 8; i++) t.add('blink_' + (i < 4 ? 'down' : 'side') + (i % 4), 0, (i % 4) * FW, (45 + (i >> 2)) * FH, FW, FH);
   if (HERO_W8D) for (let i = 0; i < 8; i++) t.add('walk8d_' + i, 0, (i % 4) * FW, (43 + (i >> 2)) * FH, FW, FH);
   // nama frame lama (dipakai kode lama sebelum pemutar menimpa): down0..3 / up0..3 / side0..3
   for (const d of ['down', 'up', 'side']) ['idle_' + d + '0', 'walk_' + d + '0', 'walk_' + d + '2', 'atk1_' + d + '1'].forEach((f, i) => {
@@ -65,11 +67,13 @@ function heroFrame(sc, dt) {
     const w8 = sd === 'up' ? (HERO_W8U ? 'walk8u_' : 'walk_up') : sd === 'down' && HERO_W8D ? 'walk8d_' : 'walk8s_';
     k = HERO_W8 ? w8 : 'walk_' + sd;
     fps = (k.startsWith('walk8') ? 12 : 9) * Math.min(1.4, Math.max(.7, pl.body.velocity.length() / 70)); } /* 8 frame → 12 fps */
-  else { k = 'idle_' + sd; fps = 4; }
+  else { k = 'idle_' + sd; fps = HERO_BLINK ? 2.5 : 4; } /* diam: bernapas pelan */
   if (A.k !== k) { A.k = k; A.t = 0; } else A.t += dt;
   if (f == null) { const n = Math.floor(A.t * fps); f = once ? Math.min(3, n) : n % (k.startsWith('walk8') ? 8 : 4); }
   if (pl.anims.isPlaying) pl.anims.stop();
-  const name = k + f; if (pl.frame.name !== name) pl.setFrame(name);
+  let name = k + f;
+  if (HERO_BLINK && k.startsWith('idle_') && sd !== 'up' && (performance.now() / 1000) % 3.7 > 3.58) name = 'blink_' + sd + f; /* kedip sesekali */
+  if (pl.frame.name !== name) pl.setFrame(name);
   pl.flipX = sd === 'side' && pl.dir === 'left'; /* gambar depan/belakang tidak dicerminkan */
 }
 { const W = World.prototype, _cr = W.create;
