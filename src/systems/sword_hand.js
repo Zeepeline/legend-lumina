@@ -33,6 +33,8 @@ function handAnchor(pl, tx, ty) {
   } catch (e) { /* pakai perkiraan tabel */ }
   return c;
 }
+/* tokoh baru + senjata jenis pedang → pedang tempelan (tangan, siaga, punggung) disembunyikan */
+function heroNoSword() { return HERO_SWD && ((ITEMS[S.eq.wpn] || {}).wt || 'sword') === 'sword'; }
 Object.assign(World.prototype, {
   /* koordinat dunia telapak tangan pada frame serangan f (0-3) menurut arah pl.dir (perkiraan tabel) */
   heroHand(pl, f) {
@@ -51,7 +53,8 @@ Object.assign(World.prototype, {
   /* pedang di punggung saat tidak dipegang (tidak menebas, tidak siaga) */
   sheathSword() {
     const pl = this.pl, sw = this.sword, wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword';
-    const show = pl && pl.active && !pl.dead && !G.title && wt !== 'bow' && !(sw && sw.visible) && !pl._emote && !this.fishing && pl.visible && !this._swlOn;
+    const show = pl && pl.active && !pl.dead && !G.title && wt !== 'bow' && !heroNoSword()
+      && !(sw && sw.visible) && !pl._emote && !this.fishing && pl.visible && !this._swlOn;
     let sh = this._sheath; if (sh && !sh.active) sh = this._sheath = null;
     if (!show) { if (sh) sh.setVisible(false); return; }
     const tier = { wsword: 0 }[S.eq.wpn] ?? 1, tex = wt === 'spear' ? 'wspear' : wt === 'axe' ? 'waxe' : 'sword' + tier;
@@ -81,9 +84,9 @@ Object.assign(World.prototype, {
     if (!sw.visible) { sw._off = null; sw._hold = 0; sw._shT = 0; this.gripFist(sw, false); return; } /* disembunyikan jalur lain → buang sisa keadaan */
     if (!pl || pl.dead) { sw._hold = 0; sw._shT = 0; if (pl) sw.setVisible(false); this.gripFist(sw, false); return; }
     sw.setOrigin(swordOriginX(sw.texture.key), .5);
-    /* tokoh baru: frame tebasan samping pedang biasa sudah memuat bilah (+ smear) → pedang tempelan & kepalan disembunyikan, juga saat siaga */
-    const fn = pl.frame && pl.frame.name || '', drawn = HERO_SWD && /^(?:atk\d|heavy)_side\d$/.test(fn) && ((ITEMS[S.eq.wpn] || {}).wt || 'sword') === 'sword';
-    sw.setAlpha(drawn ? 0 : 1); if (drawn) { if (!sw._off && (sw._hold || sw._shT)) this.swordCarry(pl, sw, this.time.now); this.gripFist(sw, false); return; }
+    /* tokoh baru (HERO_SWD): pedang tempelan lama TIDAK dipakai untuk senjata pedang — bilah ada di gambar tebasan pemilik */
+    if (heroNoSword()) { sw.setAlpha(0); this.gripFist(sw, false); return; }
+    sw.setAlpha(1);
     if (!sw._off) { if (sw._hold || sw._shT) this.swordCarry(pl, sw, this.time.now); else this.gripFist(sw, false); return; }
     const m = /^(?:atk\d|heavy)_(down|up|side)(\d)$/.exec(pl.frame && pl.frame.name || '');
     if (!m) { this.gripFist(sw, false); return; }

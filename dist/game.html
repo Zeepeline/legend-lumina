@@ -9220,7 +9220,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.92.0';
+const GAME_VERSION = '1.92.1';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
@@ -26995,8 +26995,7 @@ Object.assign(World.prototype, {
     const s = e.spr; if (!s || !s.active) return;
     if (s.anims) { s.anims.stop(); s.setFrame(27); }
     const dir = s.flipX ? -1 : 1, ix = s.x + dir * 16, iy = s.y + 1;
-    const drawnArc = typeof HERO_SWD !== 'undefined' && HERO_SWD && sd === 'side' && wt === 'sword'; /* smear sudah ada di sprite */
-    if (drawnArc) { /* tanpa jejak tambahan */ } else if (this.textures.exists('vfx_swing_combo')) {
+    if (this.textures.exists('vfx_swing_combo')) {
       const sm = this.add.sprite(s.x + dir * 4, s.y - 16, 'vfx_swing_combo', 4 * 4 + 1)
         .setOrigin(14 / 48, 18 / 36).setFlipX(dir < 0).setScale(step === 3 ? 1.45 : 1.25).setTint(0xffe0a8).setDepth(s.y + 4);
       sm.play('vfx_swing_4'); sm.once('animationcomplete', () => sm.destroy());
@@ -33049,6 +33048,8 @@ function handAnchor(pl, tx, ty) {
   } catch (e) { /* pakai perkiraan tabel */ }
   return c;
 }
+/* tokoh baru + senjata jenis pedang → pedang tempelan (tangan, siaga, punggung) disembunyikan */
+function heroNoSword() { return HERO_SWD && ((ITEMS[S.eq.wpn] || {}).wt || 'sword') === 'sword'; }
 Object.assign(World.prototype, {
   /* koordinat dunia telapak tangan pada frame serangan f (0-3) menurut arah pl.dir (perkiraan tabel) */
   heroHand(pl, f) {
@@ -33067,7 +33068,8 @@ Object.assign(World.prototype, {
   /* pedang di punggung saat tidak dipegang (tidak menebas, tidak siaga) */
   sheathSword() {
     const pl = this.pl, sw = this.sword, wt = (ITEMS[S.eq.wpn] || {}).wt || 'sword';
-    const show = pl && pl.active && !pl.dead && !G.title && wt !== 'bow' && !(sw && sw.visible) && !pl._emote && !this.fishing && pl.visible && !this._swlOn;
+    const show = pl && pl.active && !pl.dead && !G.title && wt !== 'bow' && !heroNoSword()
+      && !(sw && sw.visible) && !pl._emote && !this.fishing && pl.visible && !this._swlOn;
     let sh = this._sheath; if (sh && !sh.active) sh = this._sheath = null;
     if (!show) { if (sh) sh.setVisible(false); return; }
     const tier = { wsword: 0 }[S.eq.wpn] ?? 1, tex = wt === 'spear' ? 'wspear' : wt === 'axe' ? 'waxe' : 'sword' + tier;
@@ -33097,9 +33099,9 @@ Object.assign(World.prototype, {
     if (!sw.visible) { sw._off = null; sw._hold = 0; sw._shT = 0; this.gripFist(sw, false); return; } /* disembunyikan jalur lain → buang sisa keadaan */
     if (!pl || pl.dead) { sw._hold = 0; sw._shT = 0; if (pl) sw.setVisible(false); this.gripFist(sw, false); return; }
     sw.setOrigin(swordOriginX(sw.texture.key), .5);
-    /* tokoh baru: frame tebasan samping pedang biasa sudah memuat bilah (+ smear) → pedang tempelan & kepalan disembunyikan, juga saat siaga */
-    const fn = pl.frame && pl.frame.name || '', drawn = HERO_SWD && /^(?:atk\d|heavy)_side\d$/.test(fn) && ((ITEMS[S.eq.wpn] || {}).wt || 'sword') === 'sword';
-    sw.setAlpha(drawn ? 0 : 1); if (drawn) { if (!sw._off && (sw._hold || sw._shT)) this.swordCarry(pl, sw, this.time.now); this.gripFist(sw, false); return; }
+    /* tokoh baru (HERO_SWD): pedang tempelan lama TIDAK dipakai untuk senjata pedang — bilah ada di gambar tebasan pemilik */
+    if (heroNoSword()) { sw.setAlpha(0); this.gripFist(sw, false); return; }
+    sw.setAlpha(1);
     if (!sw._off) { if (sw._hold || sw._shT) this.swordCarry(pl, sw, this.time.now); else this.gripFist(sw, false); return; }
     const m = /^(?:atk\d|heavy)_(down|up|side)(\d)$/.exec(pl.frame && pl.frame.name || '');
     if (!m) { this.gripFist(sw, false); return; }

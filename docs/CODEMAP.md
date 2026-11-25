@@ -591,9 +591,9 @@ _LETAK SESUAI TANAH — data peta lama (musuh, peti, NPC, titik pancing) dibuat 
 _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
 
 
-## src/systems/combat_fx.js (395 baris)
+## src/systems/combat_fx.js (394 baris)
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
-`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 80 · `.hitFx()` 90 · `.updChargeFx()` 135 · `.clearChargeFx()` 151 · `.spinFx()` 157 · `.enemyWindFx()` 179 · `.enemySlashFx()` 186 · `.enemySmashFx()` 196 · `.enemyRingFx()` 211 · `.rollFx()` 216 · `.updLowHp()` 237
+`CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 80 · `.hitFx()` 90 · `.updChargeFx()` 135 · `.clearChargeFx()` 151 · `.spinFx()` 157 · `.enemyWindFx()` 179 · `.enemySlashFx()` 186 · `.enemySmashFx()` 196 · `.enemyRingFx()` 210 · `.rollFx()` 215 · `.updLowHp()` 236
 
 ## src/systems/movement.js (346 baris)
 _Gelombang 16 (T508–T517): Gerakan & Posisi (Movement & Positioning) ala Dimraeth_
@@ -747,9 +747,9 @@ _Memakai pl._emote (dibaca heroFrame, gfx/hero_arka.js). Selalu berbatas waktu `
 _Aset genggaman pedang Arka (dibuat kode, palet sama dengan senjata lama): pedang beresolusi lebih halus + kepalan menggenggam._
 `SWORD_HD_MAP` 5 · `SWORD_HD_PAL` 11 · `SWORD_PIVOT` 15 · `swordOriginX()` 16 · `artSwordHD()` 17 · `artFistGrip()` 18 · `regSwordArt()` 22
 
-## src/systems/sword_hand.js (124 baris)
+## src/systems/sword_hand.js (127 baris)
 _Pedang terkunci & DIGENGGAM di tangan Arka. Sprite serangan Arka (hero_arka.png, frame 48×40, kaki di (24,39)) digambar TANPA pedang;_
-`HERO_HAND` 9 · `SWORD_CARRY` 15 · `CARRY_HAND` 16 · `HC_R` 17 · `handAnchor()` 19 · `.heroHand()` 38 · `.sheathPose()` 44 · `.sheathSword()` 52 · `.swordRest()` 65 · `.gripFist()` 71 · `.swordToHand()` 78 · `.swordToHand0()` 79 · `.swordCarry()` 96
+`HERO_HAND` 9 · `SWORD_CARRY` 15 · `CARRY_HAND` 16 · `HC_R` 17 · `handAnchor()` 19 · `heroNoSword()` 37 · `.heroHand()` 40 · `.sheathPose()` 46 · `.sheathSword()` 54 · `.swordRest()` 68 · `.gripFist()` 74 · `.swordToHand()` 81 · `.swordToHand0()` 82 · `.swordCarry()` 99
 
 ## src/systems/sword_swing.js (46 baris)
 _Ayunan pedang Arka: ancang-ancang (tarik ke belakang) → ayun cepat melewati sasaran → pantulan → pulih, tetap di tangan sampai selesai._

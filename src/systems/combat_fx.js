@@ -197,8 +197,7 @@ Object.assign(World.prototype, {
     const s = e.spr; if (!s || !s.active) return;
     if (s.anims) { s.anims.stop(); s.setFrame(27); }
     const dir = s.flipX ? -1 : 1, ix = s.x + dir * 16, iy = s.y + 1;
-    const drawnArc = typeof HERO_SWD !== 'undefined' && HERO_SWD && sd === 'side' && wt === 'sword'; /* smear sudah ada di sprite */
-    if (drawnArc) { /* tanpa jejak tambahan */ } else if (this.textures.exists('vfx_swing_combo')) {
+    if (this.textures.exists('vfx_swing_combo')) {
       const sm = this.add.sprite(s.x + dir * 4, s.y - 16, 'vfx_swing_combo', 4 * 4 + 1)
         .setOrigin(14 / 48, 18 / 36).setFlipX(dir < 0).setScale(step === 3 ? 1.45 : 1.25).setTint(0xffe0a8).setDepth(s.y + 4);
       sm.play('vfx_swing_4'); sm.once('animationcomplete', () => sm.destroy());
