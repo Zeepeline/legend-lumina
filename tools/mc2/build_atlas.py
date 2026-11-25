@@ -18,7 +18,8 @@ from cleanup import clean
 S=[clean(f) for f in frames(Image.open('tools/mc2/native12.png'))]; U0=clean(frames(Image.open('tools/mc2/up12.png'))[0]); U=[clean(f) for f in backwalk()]
 from front import front_base, front_walk
 from front_img import front_imgs2, front_walk8
-FI=[clean(f) for f in front_imgs2()]; D0=FI[0]; Dw=front_walk8(FI)
+from legs_front import walk8 as fwalk8, compose as fcompose, STAND
+FI=[clean(f) for f in front_imgs2()]; D0=fcompose(FI[0],STAND,STAND); Dw=fwalk8(FI[0],FI[2]); FI=FI+[D0]+Dw
 FIX={id(f):12.5 for f in U}; FIX[id(U0)]=12.5
 for f in FI: m=np.asarray(f)[:f.height*2//5,:,3]>0; FIX[id(f)]=float((m.sum(0)*np.arange(f.width)).sum()/m.sum())
 D=None  # belum ada gambar depan: pakai samping
