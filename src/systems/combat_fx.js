@@ -44,7 +44,7 @@ Object.assign(World.prototype, {
     this.swingSword(wt, cIdx, fin, ang, dx, dy, hx, hy);
 
     // Jejak sapuan fisik bilah pedang (vfx_swing_combo): hanya jejak udara yang dibelah pedang, tanpa ledakan semu di ruang kosong
-    const drawnArc = typeof HERO_SWD !== 'undefined' && HERO_SWD && sd === 'side' && wt === 'sword'; /* smear sudah ada di sprite */
+    const drawnArc = typeof HERO_SWD !== 'undefined' && HERO_SWD && wt === 'sword'; /* smear sudah ada di sprite (samping/atas/bawah) */
     if (drawnArc) { /* tanpa jejak tambahan */ } else if (this.textures.exists('vfx_swing_combo')) {
       const sRow = wt === 'spear' ? 3 : (fin ? 4 : cIdx);
       /* jejak baru muncul saat bilah mulai mengayun (setelah ancang-ancang), bukan saat pedang baru terangkat */

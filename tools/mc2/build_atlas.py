@@ -12,7 +12,8 @@ def cell(im, dx=0, dy=0, rot=0):
         big=Image.new('RGBA',(FW*2,FH*2),(0,0,0,0)); big.alpha_composite(im,(round(FW-fx),FH*2-im.height-2))
         big=big.rotate(rot,resample=Image.NEAREST,center=(FW,FH*2-4)); part=big.crop(big.getbbox())
         c.alpha_composite(part,(max(0,(FW-part.width)//2+dx),max(0,FH-part.height+dy))); return c
-    c.alpha_composite(im,(round(FW/2-fx)+dx, FH-im.height+dy)); return c
+    xx=min(max(round(FW/2-fx)+dx,0),FW-im.width)   # bilah/smear yang melewati tepi sel: geser seperlunya (maks 1–2 px)
+    c.alpha_composite(im,(xx, FH-im.height+dy)); return c
 from backwalk import backwalk, back_stand
 from cleanup import clean
 S=[clean(f) for f in frames(Image.open('tools/mc2/native12.png'))]; U0=clean(back_stand()); U=[clean(f) for f in backwalk()]
@@ -39,13 +40,20 @@ def feetc(im):
 SL=[clean(f,keep={(216,222,223),(173,180,191)}) for f in frames(Image.open('tools/mc2/slash_side.png'))]   # tebasan samping (pedang digambar)
 _o=hairc(S[2])-feetc(S[2])
 for f in SL: FIX[id(f)]=hairc(f)-_o
+KEEP={(216,222,223),(173,180,191)}
+SLD=[clean(f,keep=KEEP) for f in frames(Image.open('tools/mc2/slash_down.png'))]   # tebasan bawah (gambar pemilik, diperkecil ke tinggi normal)
+SLU=[clean(f,keep=KEEP) for f in frames(Image.open('tools/mc2/slash_up.png'))]     # tebasan atas
+for fs,idl in ((SLD,D0),(SLU,U0)):
+    o=hairc(idl)-FIX.get(id(idl),feetc(idl))
+    for f in fs: FIX[id(f)]=hairc(f)-o
 def pose(d):
     src=U if d=='up' else Dw if d=='down' else S; idle=U0 if d=='up' else D0 if d=='down' else src[2]
     walk=[cell(src[i]) for i in (0,2,4,6)]
     if d in ('up','down'):
         sg=-1 if d=='up' else 1
-        atk=[cell(idle,dy=-sg),cell(src[2],dy=sg),cell(src[6],dy=3*sg),cell(idle)]
-        heavy=[cell(idle,dy=-2*sg),cell(src[2],dy=2*sg),cell(src[6],dy=4*sg),cell(idle)]
+        SLx=SLU if d=='up' else SLD
+        atk=[cell(f) for f in SLx]
+        heavy=[cell(f) for f in SLx]
     else:
         atk=[cell(f,dx=-1) for f in SL]   # sel 64 px: pedang/smear muat persis
         heavy=[cell(SL[0],dx=-3),cell(SL[1],dx=-1),cell(SL[2],dx=-1),cell(SL[3],dx=-1)]
