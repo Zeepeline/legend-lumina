@@ -21,7 +21,9 @@ def despeckle(a):
         for x in range(1,W-1):
             if a[y,x,3]==0: continue
             n=[tuple(a[y-1,x]),tuple(a[y+1,x]),tuple(a[y,x-1]),tuple(a[y,x+1])]
-            if n[0][3] and len(set(n))==1 and n[0]!=tuple(a[y,x]): b[y,x]=a[y-1,x]
+            lum=lambda c:.3*int(c[0])+.59*int(c[1])+.11*int(c[2])
+            # piksel gelap kecil (mata, kancing, garis) dipertahankan — hanya bintik TERANG/sedang yang diratakan
+            if n[0][3] and len(set(n))==1 and n[0]!=tuple(a[y,x]) and lum(a[y,x])>=lum(n[0]): b[y,x]=a[y-1,x]
     return b
 
 def clean_any(im, dark_lum=75, max_colors=16):
