@@ -64,7 +64,7 @@ function heroFrame(sc, dt) {
   else if (moving) {
     const w8 = sd === 'up' ? (HERO_W8U ? 'walk8u_' : 'walk_up') : sd === 'down' && HERO_W8D ? 'walk8d_' : 'walk8s_';
     k = HERO_W8 ? w8 : 'walk_' + sd;
-    fps = 9 * Math.min(1.4, Math.max(.7, pl.body.velocity.length() / 70)); }
+    fps = (k.startsWith('walk8') ? 12 : 9) * Math.min(1.4, Math.max(.7, pl.body.velocity.length() / 70)); } /* 8 frame → 12 fps */
   else { k = 'idle_' + sd; fps = 4; }
   if (A.k !== k) { A.k = k; A.t = 0; } else A.t += dt;
   if (f == null) { const n = Math.floor(A.t * fps); f = once ? Math.min(3, n) : n % (k.startsWith('walk8') ? 8 : 4); }

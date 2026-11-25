@@ -10,14 +10,12 @@ def backwalk(b=None):
         if n<=0: return
         x0,x1=cols; part=a[:,x0:x1].copy(); keep=list(range(TOP,40))+list(range(40+n,H))
         new=np.zeros_like(part[TOP:]); new[:len(keep)]=part[keep]; a[TOP:,x0:x1]=new
+    from inbetween import leg, arm, pad, crop
     out=[]
-    # (angkat kiri, angkat kanan, tubuh turun)
-    for l,r,bob in [(0,0,1),(2,0,0),(3,0,0),(1,0,0),(0,0,1),(0,2,0),(0,3,0),(0,1,0)]:
-        a=b.copy(); lift(a,L,l+bob); lift(a,R,r+bob)
-        if bob:  # tubuh turun 1 px: geser bagian atas ke bawah, kaki sudah dipendekkan 1
-            up=a[:TOP].copy(); a[:TOP]=0; a[1:TOP+1]=np.where(up[...,3:]>0,up,a[1:TOP+1])
-            # baris paling bawah dipendekkan → tambahkan 1 baris kosong agar kaki tetap di tanah
-        img=Image.fromarray(a); bb=img.getbbox(); out.append(img.crop((0,0,W,bb[3])))
+    # (kiri, kanan, tangan kiri, tangan kanan): kaki −angkat/+panjang (badan naik); tangan ±1 px berayun berlawanan
+    for l,r,al,ar in [(-1,-1,0,0),(-2,0,1,-1),(-3,1,1,-1),(-1,0,1,-1),(-1,-1,0,0),(0,-2,-1,1),(1,-3,-1,1),(0,-1,-1,1)]:
+        a=pad(Image.fromarray(b)); a=leg(a,0,12,l,40 if l<0 else 39); a=leg(a,12,W,r,40 if r<0 else 39)
+        a=arm(a,0,4,26,35,al); a=arm(a,W-4,W,26,35,ar); out.append(crop(a))
     return out
 if __name__=='__main__':
     F=backwalk(); s=Image.new('RGBA',(8*32,56),(90,140,90,255))
