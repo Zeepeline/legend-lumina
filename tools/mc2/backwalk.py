@@ -10,14 +10,26 @@ def backwalk(b=None):
         if n<=0: return
         x0,x1=cols; part=a[:,x0:x1].copy(); keep=list(range(TOP,40))+list(range(40+n,H))
         new=np.zeros_like(part[TOP:]); new[:len(keep)]=part[keep]; a[TOP:,x0:x1]=new
-    from inbetween import leg, arm, pad, crop
+    from inbetween import arm
+    from legs_front import compose, leg_parts, STAND, SWING, HIGH, DOWN, PLANT
+    from front_img import front_imgs2
+    f0=np.array(front_imgs2()[0].convert('RGBA')); _,sk,bt=leg_parts(f0)   # potongan kaki (kulit/sepatu) yang sama dari gambar depan
+    c=W//2; P=([(c-6,c-2),(c+1,c+5)],sk,bt)
+    AWAY=(3,3,0,0); NEAR=(5,4,1,0)   # menjauh = lebih tinggi/pendek; kaki dekat kamera = lebih panjang
+    seq=[(AWAY,NEAR,0,0),(PLANT,SWING,1,-1),(PLANT,HIGH,1,-1),(STAND,DOWN,1,-1),(NEAR,AWAY,0,0),(SWING,PLANT,-1,1),(HIGH,PLANT,-1,1),(DOWN,STAND,-1,1)]
     out=[]
-    # (kiri, kanan, tangan kiri, tangan kanan): kaki −angkat/+panjang (badan naik); tangan ±1 px berayun berlawanan
-    for l,r,al,ar in [(-1,-1,0,0),(-2,0,1,-1),(-3,1,1,-1),(-1,0,1,-1),(-1,-1,0,0),(0,-2,-1,1),(1,-3,-1,1),(0,-1,-1,1)]:
-        a=pad(Image.fromarray(b)); a=leg(a,0,12,l,40 if l<0 else 39); a=leg(a,12,W,r,40 if r<0 else 39)
-        a=arm(a,0,4,26,35,al); a=arm(a,W-4,W,26,35,ar); out.append(crop(a))
+    for l,r,al,ar in seq:
+        a=b.copy(); a=arm(a,0,4,26,35,al); a=arm(a,W-4,W,26,35,ar); out.append(compose(a,l,r,P))
     return out
 if __name__=='__main__':
     F=backwalk(); s=Image.new('RGBA',(8*32,56),(90,140,90,255))
     for i,f in enumerate(F): s.alpha_composite(f,(i*32+3,56-f.height))
     s.resize((s.width*4,s.height*4),Image.NEAREST).save('tools/mc2/bw.png')
+
+def back_stand():
+    """Diam tampak belakang dengan kaki yang sama seperti jalan (kulit/sepatu dari gambar depan)."""
+    from legs_front import compose, leg_parts, STAND
+    from front_img import front_imgs2
+    b=np.array(frames(Image.open('tools/mc2/up12.png'))[0]); W=b.shape[1]; c=W//2
+    _,sk,bt=leg_parts(np.array(front_imgs2()[0].convert('RGBA')))
+    return compose(b,STAND,STAND,([(c-6,c-2),(c+1,c+5)],sk,bt))

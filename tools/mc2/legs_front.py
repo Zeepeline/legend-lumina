@@ -26,10 +26,11 @@ def draw(a, x0, skin, boot, n_skin, n_boot, flare, dx, inward):
         y+=1
     lo,hi=(x0+s,x0+s+w) if not flare else (x0+s,x0+s+w)   # sol (garis bawah)
     a[y,lo:hi]=F
-def compose(im, L, R):
-    """L/R = (kulit, sepatu, melebar, tekuk) untuk kaki kiri & kanan."""
-    a=np.array(im.convert('RGBA')); a=np.concatenate([a,np.zeros((4,)+a.shape[1:],a.dtype)])
-    r,skin,boot=leg_parts(a); a[TOP:]=0
+def compose(im, L, R, parts=None):
+    """L/R = (kulit, sepatu, melebar, tekuk) untuk kaki kiri & kanan. parts = (posisi, kulit, sepatu) dari gambar lain."""
+    a=np.array(im.convert('RGBA')) if not isinstance(im,np.ndarray) else im.copy()
+    a=np.concatenate([a,np.zeros((4,)+a.shape[1:],a.dtype)])
+    r,skin,boot=parts or leg_parts(a); a[TOP:]=0
     for (x0,_),sk,bt,spec,inw in zip(r,skin,boot,(L,R),(1,-1)): draw(a,x0,sk,bt,*spec,inw)
     im=Image.fromarray(a); bb=im.getbbox(); return im.crop((0,0,a.shape[1],bb[3]))
 STAND=(4,4,1,0); FWD=(5,4,2,0); BACK=(3,3,0,0); SWING=(2,3,0,1); HIGH=(1,3,0,1); DOWN=(3,4,1,0); PLANT=(5,4,1,0)

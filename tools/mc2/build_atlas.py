@@ -13,9 +13,9 @@ def cell(im, dx=0, dy=0, rot=0):
         big=big.rotate(rot,resample=Image.NEAREST,center=(FW,FH*2-4)); part=big.crop(big.getbbox())
         c.alpha_composite(part,(max(0,(FW-part.width)//2+dx),max(0,FH-part.height+dy))); return c
     c.alpha_composite(im,(round(FW/2-fx)+dx, FH-im.height+dy)); return c
-from backwalk import backwalk
+from backwalk import backwalk, back_stand
 from cleanup import clean
-S=[clean(f) for f in frames(Image.open('tools/mc2/native12.png'))]; U0=clean(frames(Image.open('tools/mc2/up12.png'))[0]); U=[clean(f) for f in backwalk()]
+S=[clean(f) for f in frames(Image.open('tools/mc2/native12.png'))]; U0=clean(back_stand()); U=[clean(f) for f in backwalk()]
 from front import front_base, front_walk
 from front_img import front_imgs2, front_walk8
 from legs_front import walk8 as fwalk8, compose as fcompose, STAND
