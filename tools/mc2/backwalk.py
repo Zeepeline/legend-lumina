@@ -1,7 +1,9 @@
 import sys; sys.path.insert(0,'tools/mc2')
 from pipe import frames; from PIL import Image; import numpy as np
 def backwalk(b=None):
-    if b is None: b=np.array(frames(Image.open('tools/mc2/up12.png'))[0])
+    if b is None:
+        b=np.array(frames(Image.open('tools/mc2/up12.png'))[0])
+        g=(b[37:,:,:3]==(120,139,79)).all(-1); b[37:][g]=(233,185,110,255)   # bintik hijau di lutut (sisa AI) → kulit
     H,W=b.shape[:2]
     TOP=36; L=(0,12); R=(12,W)   # kaki mulai baris 36; kiri x<12, kanan x>=12
     def lift(a,cols,n):
