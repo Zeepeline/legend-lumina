@@ -29,6 +29,16 @@ def idlecells(im, blink=False):
     for f in fs:
         if id(im) in FIX: FIX[id(f)]=FIX[id(im)]
     return [cell(f) for f in fs]
+HAIR=[(166,171,64),(120,139,79)]
+def hairc(im):
+    a=np.asarray(im); m=np.zeros(a.shape[:2],bool)
+    for c in HAIR: m|=(a[...,:3]==c).all(-1)&(a[...,3]>0)
+    return float((m.sum(0)*np.arange(a.shape[1])).sum()/m.sum())
+def feetc(im):
+    a=np.asarray(im)[...,3]>0; xs=np.nonzero(a[-4:].any(0))[0]; return (xs.min()+xs.max())/2
+SL=[clean(f,keep={(216,222,223),(173,180,191)}) for f in frames(Image.open('tools/mc2/slash_side.png'))]   # tebasan samping (pedang digambar)
+_o=hairc(S[2])-feetc(S[2])
+for f in SL: FIX[id(f)]=hairc(f)-_o
 def pose(d):
     src=U if d=='up' else Dw if d=='down' else S; idle=U0 if d=='up' else D0 if d=='down' else src[2]
     walk=[cell(src[i]) for i in (0,2,4,6)]
@@ -37,8 +47,8 @@ def pose(d):
         atk=[cell(idle,dy=-sg),cell(src[2],dy=sg),cell(src[6],dy=3*sg),cell(idle)]
         heavy=[cell(idle,dy=-2*sg),cell(src[2],dy=2*sg),cell(src[6],dy=4*sg),cell(idle)]
     else:
-        atk=[cell(idle,dx=-1),cell(src[3],dx=2),cell(src[4],dx=4),cell(idle)]
-        heavy=[cell(idle,dx=-3),cell(src[3],dx=3),cell(src[4],dx=6),cell(idle,dx=1)]
+        atk=[cell(f,dx=-1) for f in SL]   # sel 64 px: pedang/smear muat persis
+        heavy=[cell(SL[0],dx=-3),cell(SL[1],dx=-1),cell(SL[2],dx=-1),cell(SL[3],dx=-1)]
     return dict(idle=idlecells(idle), walk=walk, atk=atk, heavy=heavy, roll=[cell(idle,rot=r) for r in (0,-90,-180,-270)], still=[cell(idle)]*4)
 P={d:pose(d) for d in ('down','up','side')}
 I=S[2]

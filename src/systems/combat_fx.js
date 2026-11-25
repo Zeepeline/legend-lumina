@@ -44,7 +44,8 @@ Object.assign(World.prototype, {
     this.swingSword(wt, cIdx, fin, ang, dx, dy, hx, hy);
 
     // Jejak sapuan fisik bilah pedang (vfx_swing_combo): hanya jejak udara yang dibelah pedang, tanpa ledakan semu di ruang kosong
-    if (this.textures.exists('vfx_swing_combo')) {
+    const drawnArc = typeof HERO_SWD !== 'undefined' && HERO_SWD && sd === 'side' && wt === 'sword'; /* smear sudah ada di sprite */
+    if (drawnArc) { /* tanpa jejak tambahan */ } else if (this.textures.exists('vfx_swing_combo')) {
       const sRow = wt === 'spear' ? 3 : (fin ? 4 : cIdx);
       /* jejak baru muncul saat bilah mulai mengayun (setelah ancang-ancang), bukan saat pedang baru terangkat */
       this.time.delayedCall(45 * (fin ? 1.45 : 1) * (wt === 'axe' ? 1.6 : 1), () => {
@@ -196,7 +197,8 @@ Object.assign(World.prototype, {
     const s = e.spr; if (!s || !s.active) return;
     if (s.anims) { s.anims.stop(); s.setFrame(27); }
     const dir = s.flipX ? -1 : 1, ix = s.x + dir * 16, iy = s.y + 1;
-    if (this.textures.exists('vfx_swing_combo')) {
+    const drawnArc = typeof HERO_SWD !== 'undefined' && HERO_SWD && sd === 'side' && wt === 'sword'; /* smear sudah ada di sprite */
+    if (drawnArc) { /* tanpa jejak tambahan */ } else if (this.textures.exists('vfx_swing_combo')) {
       const sm = this.add.sprite(s.x + dir * 4, s.y - 16, 'vfx_swing_combo', 4 * 4 + 1)
         .setOrigin(14 / 48, 18 / 36).setFlipX(dir < 0).setScale(step === 3 ? 1.45 : 1.25).setTint(0xffe0a8).setDepth(s.y + 4);
       sm.play('vfx_swing_4'); sm.once('animationcomplete', () => sm.destroy());

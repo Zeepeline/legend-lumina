@@ -14,6 +14,7 @@ IMG_LIST.push('hero_arka', 'hero_mc2');
 // Pilihan di Pengaturan › Tokoh utama (localStorage 'lumina_mc'). Aset Arka lama tidak dihapus.
 const HERO_SKIN = (() => { try { return localStorage.getItem('lumina_mc') || 'mc2'; } catch (_) { return 'mc2'; } })();
 let HERO_W8 = false, HERO_W8U = false, HERO_W8D = false, HERO_BLINK = false; /* jalan 8 frame: samping (baris 39–40), atas (41–42), bawah (43–44) */
+let HERO_SWD = false; /* tebasan samping berpedang digambar di sprite (tokoh baru) */
 // geometri frame skin aktif: ukuran sel, titik tengah-kaki, skala tinggi tubuh terhadap Arka (dipakai sword_hand.js)
 let HERO_G = { fw: HERO_FW, fh: HERO_FH, cx: 24, fy: 40, k: 1 };
 function heroSkinToggle() { /* Pengaturan › Tokoh utama */
@@ -31,7 +32,7 @@ function regHeroArka(T) {
   const t = T.addImage('ch_hero', img);
   for (const k in HERO_ROW) for (let i = 0; i < 4; i++) t.add(k + i, 0, i * FW, HERO_ROW[k] * FH, FW, FH);
   HERO_W8 = !!mc2; HERO_W8U = !!mc2 && img.height >= FH * 43; HERO_W8D = !!mc2 && img.height >= FH * 45;
-  HERO_BLINK = !!mc2 && img.height >= FH * 47; /* baris 45–46: diam bawah/samping mata terpejam */
+  HERO_BLINK = !!mc2 && img.height >= FH * 47; HERO_SWD = !!mc2; /* baris 45–46: diam bawah/samping mata terpejam */
   if (HERO_W8) for (let i = 0; i < 8; i++) t.add('walk8s_' + i, 0, (i % 4) * FW, (39 + (i >> 2)) * FH, FW, FH);
   if (HERO_W8U) for (let i = 0; i < 8; i++) t.add('walk8u_' + i, 0, (i % 4) * FW, (41 + (i >> 2)) * FH, FW, FH);
   if (HERO_BLINK) for (let i = 0; i < 8; i++) t.add('blink_' + (i < 4 ? 'down' : 'side') + (i % 4), 0, (i % 4) * FW, (45 + (i >> 2)) * FH, FW, FH);

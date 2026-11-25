@@ -81,6 +81,9 @@ Object.assign(World.prototype, {
     if (!sw.visible) { sw._off = null; sw._hold = 0; sw._shT = 0; this.gripFist(sw, false); return; } /* disembunyikan jalur lain → buang sisa keadaan */
     if (!pl || pl.dead) { sw._hold = 0; sw._shT = 0; if (pl) sw.setVisible(false); this.gripFist(sw, false); return; }
     sw.setOrigin(swordOriginX(sw.texture.key), .5);
+    /* tokoh baru: frame tebasan samping pedang biasa sudah memuat bilah (+ smear) → pedang tempelan & kepalan disembunyikan, juga saat siaga */
+    const fn = pl.frame && pl.frame.name || '', drawn = HERO_SWD && /^(?:atk\d|heavy)_side\d$/.test(fn) && ((ITEMS[S.eq.wpn] || {}).wt || 'sword') === 'sword';
+    sw.setAlpha(drawn ? 0 : 1); if (drawn) { if (!sw._off && (sw._hold || sw._shT)) this.swordCarry(pl, sw, this.time.now); this.gripFist(sw, false); return; }
     if (!sw._off) { if (sw._hold || sw._shT) this.swordCarry(pl, sw, this.time.now); else this.gripFist(sw, false); return; }
     const m = /^(?:atk\d|heavy)_(down|up|side)(\d)$/.exec(pl.frame && pl.frame.name || '');
     if (!m) { this.gripFist(sw, false); return; }
