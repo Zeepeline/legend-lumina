@@ -84,8 +84,13 @@ def pose(d):
     return dict(idle=idlecells(idle), walk=walk, atk=atk, heavy=heavy, roll=roll_for(d,idle), still=[cell(idle)]*4)
 P={d:pose(d) for d in ('down','up','side')}
 I=S[0]
-hurt=[cell(I,dx=-1),cell(I,dx=-3),cell(I,dx=-3),cell(I,dx=-1)]
-die=[cell(I),cell(I,rot=-30),cell(I,rot=-60),cell(I,rot=-90)]; rise=list(reversed(die)); sleep=[cell(I,rot=-90)]*4
+HU=[clean(Image.open(f'tools/mc2/hurt_{i}.png')) for i in range(2)]   # kena pukul (gambar pemilik)
+DI=[clean(Image.open(f'tools/mc2/die_{i}.png')) for i in range(4)]    # kalah: goyah → berlutut → bertumpu tangan → rebah
+for f in HU: FIX[id(f)]=hairc(f)-_o
+_k=feetc(I)-np.nonzero(np.asarray(DI[0])[...,3].any(0))[0][0]
+for f in DI: FIX[id(f)]=np.nonzero(np.asarray(f)[...,3].any(0))[0][0]+_k   # ujung kaki belakang tetap di tempat
+hurt=[cell(HU[0]),cell(HU[1]),cell(HU[0]),cell(HU[1])]
+die=[cell(f) for f in DI]; rise=list(reversed(die)); sleep=[cell(DI[3])]*4
 ROWS=['idle_down','walk_down','idle_up','walk_up','idle_side','walk_side_a','walk_side','atk1_down','atk2_down','atk1_up','atk2_up','atk1_side','atk2_side',
  'atk3_down','atk3_up','atk3_side','heavy_down','heavy_up','heavy_side','roll_down','roll_up','roll_side','hurt','die','rise','cast_down','cast_up','cast_side',
  'bow_down','bow_side_a','bow_side','bow_up','fish_cast','fish_pull','pick','hoe','cheer','cheer_b','sleep']
