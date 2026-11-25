@@ -37,5 +37,10 @@ rows=[
 sheet=np.zeros((F*len(rows),F*8,4),np.uint8)
 for r,row in enumerate(rows):
     for c,im in enumerate(row): sheet[r*F:(r+1)*F,c*F:(c+1)*F]=im
+from cleanup import clean_any
+for r in range(len(rows)):   # bersih-bersih per sel: mixel/bintik, yatim, garis tepi, ≤16 warna
+    for c in range(8):
+        cel=sheet[r*F:(r+1)*F,c*F:(c+1)*F]
+        if cel[...,3].any(): sheet[r*F:(r+1)*F,c*F:(c+1)*F]=np.array(clean_any(Image.fromarray(cel)))
 for nid in ('gk2','gk5','gk6','gk7'): Image.fromarray(sheet).save(f'assets/img/npc/npc_sheet_{nid}.png')
 print('warna',len({tuple(p) for p in sheet[sheet[...,3]>0][:,:3]}), sheet.shape)
