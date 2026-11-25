@@ -36,3 +36,30 @@ def walk(cells, ref, swing=None):
             b[yy,:tl]=a[yy,:tl]; b[yy,tr+1:]=a[yy,tr+1:]
         out.append(Image.fromarray(b))
     return out
+
+APRON=(236,206,172); TUNIC=(163,41,28); SKIN=(233,185,110)
+def skirt_cx(a, h):
+    al=a[h-5:h+1,:,3]>0; xs=np.nonzero(al.any(0))[0]; return (xs.min()+xs.max())/2
+def apron_box(a, h):
+    m=(a[...,:3]==APRON).all(-1)&(a[...,3]>0); m[:h-16]=False; m[h+1:]=False
+    ys,xs=np.nonzero(m); return ys.min()-1, ys.max()+1, xs.min()-1, xs.max()+1
+def walk2(cells, ref):
+    """Badan & tangan tetap dari tiap frame (tangan berayun asli); hanya CELEMEK diseragamkan dari frame acuan
+    (ditempel sejajar keliman & tengah rok tiap frame, tangan/kulit frame tetap di atasnya)."""
+    A=[np.array(c.convert('RGBA')) for c in cells]; R=A[ref]; rh=hem(R); y0,y1,x0,x1=apron_box(R,rh)
+    patch=R[y0:y1+1,x0:x1+1].copy(); pm=(patch[...,3]>0); rcx=skirt_cx(R,rh)
+    out=[]
+    for a in A:
+        b=a.copy(); h=hem(a)
+        ap=(b[...,:3]==APRON).all(-1)&(b[...,3]>0); ap[:h-16]=False; ap[h+1:]=False
+        b[ap,:3]=TUNIC                                   # celemek lama → tunik
+        dy=h-rh; dx=int(round(skirt_cx(a,h)-rcx))
+        for yy in range(patch.shape[0]):
+            for xx in range(patch.shape[1]):
+                Y=y0+yy+dy; X=x0+xx+dx
+                if not pm[yy,xx] or not (0<=Y<b.shape[0] and 0<=X<b.shape[1]): continue
+                if b[Y,X,3]==0: continue                  # jangan keluar siluet
+                if tuple(int(v) for v in b[Y,X,:3])==SKIN: continue   # tangan di depan celemek
+                b[Y,X]=patch[yy,xx]
+        out.append(Image.fromarray(b))
+    return out
