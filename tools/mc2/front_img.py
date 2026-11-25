@@ -1,45 +1,19 @@
 import sys; sys.path.insert(0,'tools/mc2')
 from pipe import frames; from PIL import Image; import numpy as np
-from front import PAL
-P=np.array(list(PAL.values()),float)
-def to_pal(im):
-    a=np.array(im.convert('RGBA')).astype(float); rgb=a[...,:3]
-    d=((rgb[...,None,:]-P[None,None])**2).sum(-1); idx=d.argmin(-1)
-    out=np.zeros(a.shape,np.uint8); out[...,:3]=P[idx]; out[...,3]=np.where(a[...,3]>0,255,0); return out
-def front_imgs(H=48):
-    e=Image.open('tools/mc2/r3raw.png'); F=frames(e.crop((0,5,e.width,e.height)))
-    k=H/max(F[i].height for i in (0,1,2,4)); out=[]
-    for i in (0,1,2,4):
-        f=F[i]; w,h=round(f.width*k),round(f.height*k)
-        out.append(Image.fromarray(to_pal(f.resize((w,h),Image.NEAREST))))
-    return out
-if __name__=='__main__':
-    F=front_imgs(); s=Image.new('RGBA',(4*36,52),(90,140,90,255))
-    for i,f in enumerate(F): s.alpha_composite(f,(i*36+2,52-f.height))
-    s.resize((s.width*6,s.height*6),Image.NEAREST).save('tools/mc2/fi.png')
-
-def scale2x(a):
-    H,W=a.shape[:2]; o=np.zeros((H*2,W*2,4),a.dtype); p=np.pad(a,((1,1),(1,1),(0,0)),mode='edge')
-    eq=lambda u,v:(u==v).all()
-    for y in range(H):
-        for x in range(W):
-            P=p[y+1,x+1]; A=p[y,x+1]; B=p[y+1,x+2]; C=p[y+1,x]; D=p[y+2,x+1]
-            e=[P,P,P,P]
-            if not eq(C,B) and not eq(A,D):
-                if eq(C,A): e[0]=A
-                if eq(A,B): e[1]=B
-                if eq(D,C): e[2]=C
-                if eq(B,D): e[3]=D
-            o[2*y,2*x],o[2*y,2*x+1],o[2*y+1,2*x],o[2*y+1,2*x+1]=e
-    return o
+# Tampak depan = gambar pemilik (3 frame ±48 px: diam, langkah kaki kanan, diam tangan lain), warna sudah dipetakan ke 12 warna kita.
+def _lift_left(im, n=2):
+    a=np.array(im); H,W=a.shape[:2]; cx=W//2; p=a[:, :cx].copy()
+    keep=list(range(0,41))+list(range(41+n,H)); new=np.zeros_like(p); new[:len(keep)]=p[keep]
+    ys=[y for y in range(H) if new[y,:,3].any()]; yb=ys[-1]
+    for x in range(cx):
+        if new[yb,x,3]: new[yb,x]=(6,1,5,255)   # sol sepatu
+    a[:, :cx]=new; return Image.fromarray(a)
 def front_imgs2(H=48):
-    e=Image.open('tools/mc2/r3raw.png'); F=frames(e.crop((0,5,e.width,e.height)))
-    k=H/(2*max(F[i].height for i in (0,1,2,4))); out=[]
-    for i in (0,1,2,4):
-        a=to_pal(F[i]); b=Image.fromarray(scale2x(a)); w,h=round(b.width*k),round(b.height*k)
-        c=to_pal(b.resize((w,h),Image.NEAREST))
-        for y in range(h-3,h):  # bayangan biru di bawah sepatu dibuang
-            for x in range(w):
-                if tuple(c[y,x,:3]) in (PAL['B'],PAL['D']): c[y,x]=0
-        out.append(Image.fromarray(c).crop(Image.fromarray(c).getbbox()))
-    return out
+    F=frames(Image.open('tools/mc2/front48.png')); L=_lift_left(F[2])
+    return [F[0],F[1],F[2],L]
+def front_walk8(FI):
+    return [FI[i] for i in (0,1,1,0,2,3,3,2)]
+if __name__=='__main__':
+    FI=front_imgs2(); s=Image.new('RGBA',(4*30,50),(90,140,90,255))
+    for i,f in enumerate(FI): s.alpha_composite(f,(i*30+2,50-f.height))
+    s.resize((s.width*6,s.height*6),Image.NEAREST).save('tools/mc2/fi.png')
