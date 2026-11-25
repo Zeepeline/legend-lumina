@@ -9220,7 +9220,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.92.4';
+const GAME_VERSION = '1.92.5';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
@@ -27200,9 +27200,10 @@ Object.assign(World.prototype, {
     if (this.textures.exists('vfx_star4')) return 'vfx_star4';
     const g = this.make.graphics({ add: false }), c = 16;
     g.fillStyle(0xffffff, 1);
-    g.fillTriangle(c, 0, c - 2.2, c, c + 2.2, c); g.fillTriangle(c, 32, c - 2.2, c, c + 2.2, c);   /* sinar tegak */
-    g.fillTriangle(0, c, c, c - 2.2, c, c + 2.2); g.fillTriangle(32, c, c, c - 2.2, c, c + 2.2);   /* sinar mendatar */
-    g.fillCircle(c, c, 3.2); g.generateTexture('vfx_star4', 32, 32); g.destroy(); return 'vfx_star4';
+    /* sinar pendek & gemuk (sinar panjang-tipis terbaca seperti bilah pedang kedua) */
+    g.fillTriangle(c, 5, c - 3, c, c + 3, c); g.fillTriangle(c, 27, c - 3, c, c + 3, c);
+    g.fillTriangle(5, c, c, c - 3, c, c + 3); g.fillTriangle(27, c, c, c - 3, c, c + 3);
+    g.fillCircle(c, c, 4.5); g.generateTexture('vfx_star4', 32, 32); g.destroy(); return 'vfx_star4';
   };
   W.hitFx = function (e, crit) {
     _hit.call(this, e, crit);
@@ -27226,7 +27227,7 @@ Object.assign(World.prototype, {
         if (!this.pl || this.pl.dead) return;
         const st = this.add.image(pl.x + dx * 18, pl.y - 16 + dy * 12, this.hitStarTex()).setDepth(pl.y + 50)
           .setBlendMode(Phaser.BlendModes.ADD).setScale(.6).setTint(0xfff6c8);
-        this.tweens.add({ targets: st, scale: 2.6, alpha: 0, duration: 200, ease: 'Cubic.easeOut', onComplete: () => st.destroy() });
+        this.tweens.add({ targets: st, scale: 1.8, alpha: 0, duration: 200, ease: 'Cubic.easeOut', onComplete: () => st.destroy() });
         this.cameras.main.shake(90, .004);
       });
     }

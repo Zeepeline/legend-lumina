@@ -7,9 +7,10 @@
     if (this.textures.exists('vfx_star4')) return 'vfx_star4';
     const g = this.make.graphics({ add: false }), c = 16;
     g.fillStyle(0xffffff, 1);
-    g.fillTriangle(c, 0, c - 2.2, c, c + 2.2, c); g.fillTriangle(c, 32, c - 2.2, c, c + 2.2, c);   /* sinar tegak */
-    g.fillTriangle(0, c, c, c - 2.2, c, c + 2.2); g.fillTriangle(32, c, c, c - 2.2, c, c + 2.2);   /* sinar mendatar */
-    g.fillCircle(c, c, 3.2); g.generateTexture('vfx_star4', 32, 32); g.destroy(); return 'vfx_star4';
+    /* sinar pendek & gemuk (sinar panjang-tipis terbaca seperti bilah pedang kedua) */
+    g.fillTriangle(c, 5, c - 3, c, c + 3, c); g.fillTriangle(c, 27, c - 3, c, c + 3, c);
+    g.fillTriangle(5, c, c, c - 3, c, c + 3); g.fillTriangle(27, c, c, c - 3, c, c + 3);
+    g.fillCircle(c, c, 4.5); g.generateTexture('vfx_star4', 32, 32); g.destroy(); return 'vfx_star4';
   };
   W.hitFx = function (e, crit) {
     _hit.call(this, e, crit);
@@ -33,7 +34,7 @@
         if (!this.pl || this.pl.dead) return;
         const st = this.add.image(pl.x + dx * 18, pl.y - 16 + dy * 12, this.hitStarTex()).setDepth(pl.y + 50)
           .setBlendMode(Phaser.BlendModes.ADD).setScale(.6).setTint(0xfff6c8);
-        this.tweens.add({ targets: st, scale: 2.6, alpha: 0, duration: 200, ease: 'Cubic.easeOut', onComplete: () => st.destroy() });
+        this.tweens.add({ targets: st, scale: 1.8, alpha: 0, duration: 200, ease: 'Cubic.easeOut', onComplete: () => st.destroy() });
         this.cameras.main.shake(90, .004);
       });
     }

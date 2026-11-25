@@ -595,7 +595,7 @@ _Sistem Aim Assist untuk Layar Sentuh / Mobile (T481)_
 _Rasa tempur ala Dimraeth: bidik bantu, langkah maju saat menebas, busur tebasan, kilat & percikan saat kena, debu berguling._
 `CFX` 4 · `ARC_TINT` 5 · `arcTint()` 6 · `.arcTex()` 11 · `.slashFx()` 28 · `.nearFoe()` 81 · `.hitFx()` 91 · `.updChargeFx()` 136 · `.clearChargeFx()` 152 · `.spinFx()` 158 · `.enemyWindFx()` 180 · `.enemySlashFx()` 187 · `.enemySmashFx()` 197 · `.enemyRingFx()` 211 · `.rollFx()` 216 · `.updLowHp()` 237
 
-## src/systems/hit_star.js (43 baris)
+## src/systems/hit_star.js (44 baris)
 _Kilatan bintang putih 4 sudut di titik kena (ala Dimraeth): muncul sekejap saat pukulan pemain mengenai musuh._
 
 
