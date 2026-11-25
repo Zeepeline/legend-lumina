@@ -56,6 +56,15 @@ def sway(fs, dxs):
         out.append(g)
     return out
 SL=sway(SL,[0,-1,-1,0]); SLD=sway(SLD,[0,1,-1,0]); SLU=sway(SLU,[0,-1,1,0])
+def crouch(im, n):
+    """Jongkok: n baris betis dibuang (badan turun n px, kaki tetap di tanah) — untuk pose mengisi tenaga."""
+    a=np.array(im); H=a.shape[0]; y=H-9
+    b=np.concatenate([np.zeros((n,)+a.shape[1:],a.dtype),a[:y],a[y+n:]])
+    g=Image.fromarray(b)
+    if id(im) in FIX: FIX[id(g)]=FIX[id(im)]
+    return g
+def def_heavy(fs):   # isi tenaga (jongkok 1 & 2 px, ancang-ancang) → tebas (smear) → lanjutan
+    return [cell(crouch(fs[0],1)),cell(crouch(fs[0],2)),cell(fs[1]),cell(fs[2])]
 def pose(d):
     src=U if d=='up' else Dw if d=='down' else S; idle=U0 if d=='up' else D0 if d=='down' else src[2]
     walk=[cell(src[i]) for i in (0,2,4,6)]
@@ -63,10 +72,10 @@ def pose(d):
         sg=-1 if d=='up' else 1
         SLx=SLU if d=='up' else SLD
         atk=[cell(f) for f in SLx]
-        heavy=[cell(f) for f in SLx]
+        heavy=def_heavy(SLx)
     else:
         atk=[cell(f,dx=-1) for f in SL]   # sel 64 px: pedang/smear muat persis
-        heavy=[cell(SL[0],dx=-3),cell(SL[1],dx=-1),cell(SL[2],dx=-1),cell(SL[3],dx=-1)]
+        heavy=def_heavy(SL)
     return dict(idle=idlecells(idle), walk=walk, atk=atk, heavy=heavy, roll=[cell(idle,rot=r) for r in (0,-90,-180,-270)], still=[cell(idle)]*4)
 P={d:pose(d) for d in ('down','up','side')}
 I=S[2]

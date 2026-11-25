@@ -22,3 +22,21 @@
     this.tweens.add({ targets: st, scale: k * (crit ? 1.9 : 1.4), alpha: 0, duration: 150, ease: 'Cubic.easeOut', onComplete: () => st.destroy() });
   };
 }
+// Tebasan berat tokoh baru (lepas tenaga): kilatan bintang besar di depan tubuh + getar layar singkat (Heavy Strike Dimraeth).
+{
+  const W = World.prototype, _spin = W.spin;
+  if (_spin) W.spin = function (holdDur) {
+    const r = _spin.call(this, holdDur), pl = this.pl;
+    if (typeof HERO_SWD !== 'undefined' && HERO_SWD && pl && !OPT.lite) {
+      const [dx, dy] = DIRV[pl.dir] || [1, 0];
+      this.time.delayedCall(70, () => {
+        if (!this.pl || this.pl.dead) return;
+        const st = this.add.image(pl.x + dx * 18, pl.y - 16 + dy * 12, this.hitStarTex()).setDepth(pl.y + 50)
+          .setBlendMode(Phaser.BlendModes.ADD).setScale(.6).setTint(0xfff6c8);
+        this.tweens.add({ targets: st, scale: 2.6, alpha: 0, duration: 200, ease: 'Cubic.easeOut', onComplete: () => st.destroy() });
+        this.cameras.main.shake(90, .004);
+      });
+    }
+    return r;
+  };
+}

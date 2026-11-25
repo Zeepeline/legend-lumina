@@ -7,9 +7,17 @@ def breathe(a, waist):
     up=a[:waist].copy(); b=a.copy(); b[:waist]=0
     b[1:waist+1]=np.where(up[...,3:]>0,up,b[1:waist+1]); return b
 def hair(a, rows=4, dx=1):
-    """Jumbai paling atas (rows baris teratas sprite) bergeser dx."""
-    b=a.copy(); ys=np.nonzero(a[...,3].any(1))[0]; y0=ys[0]
-    top=a[y0:y0+rows].copy(); b[y0:y0+rows]=0; b[y0:y0+rows]=np.roll(top,dx,axis=1); return b
+    """Jumbai paling atas (rows baris teratas KEPALA) bergeser dx — hanya kolom sekitar rambut, tanpa membungkus tepi (pedang tak ikut)."""
+    b=a.copy(); HC=[(166,171,64),(120,139,79)]
+    m=np.zeros(a.shape[:2],bool)
+    for c in HC: m|=(a[...,:3]==c).all(-1)&(a[...,3]>0)
+    ys,xs=np.nonzero(m)
+    if not len(ys): return b
+    y0=ys.min(); x0=max(0,xs.min()-1); x1=min(a.shape[1],xs.max()+2)
+    top=a[y0:y0+rows,x0:x1].copy(); b[y0:y0+rows,x0:x1]=0
+    if dx>0: b[y0:y0+rows,x0+dx:x1]=top[:,:x1-x0-dx]
+    else: b[y0:y0+rows,x0:x1+dx]=top[:,-dx:]
+    return b
 def eyes(a):
     """Mata = gumpalan piksel hitam kecil di wajah yang diapit kulit."""
     H,W=a.shape[:2]; sk=(a[...,:3]==SKIN).all(-1); bk=(a[...,:3]==OUT).all(-1)&(a[...,3]>0)
