@@ -82,6 +82,7 @@ async function openSettings() {
       try { localStorage.setItem('lumina_layout', nx); } catch (_) { }
       if (!G.title && G.scene) saveGame(G.scene); location.reload();
     }, 'Otomatis = ikuti posisi HP (tegak/mendatar). Game dimuat ulang (progres disimpan dulu).'],
+    ['Tokoh utama', () => (HERO_SKIN === 'arka' ? 'Arka (lama)' : 'Baru'), () => { heroSkinToggle(); }, 'Tampilan tokoh utama (game dimuat ulang, progres disimpan)'],
     ['Transparansi tombol', () => ['Penuh', 'Sedikit', 'Banyak'][OPT.btnAlpha], () => { OPT.btnAlpha = (OPT.btnAlpha + 1) % 3; applyPadOpt(); }, 'Supaya tombol tidak menutupi layar'],
     ['Bantuan Bidik', () => onoff(OPT.assist !== false), () => { OPT.assist = !(OPT.assist !== false); }, 'Arahkan serangan ke musuh terdekat (layar sentuh)'],
     ['Bilah HP musuh', () => onoff(OPT.hpbar), () => { OPT.hpbar = !OPT.hpbar; }, 'Bilah HP kecil di atas musuh'],

@@ -9,14 +9,24 @@ const HERO_ROW = {
   roll_down: 19, roll_up: 20, roll_side: 21, hurt: 22, die: 23, rise: 24, cast_down: 25, cast_up: 26, cast_side: 27, bow_down: 28,
   bow_side_a: 29, bow_side: 30, bow_up: 31, fish_cast: 32, fish_pull: 33, pick: 34, hoe: 35, cheer: 36, cheer_b: 37, sleep: 38
 };
-IMG_LIST.push('hero_arka');
+IMG_LIST.push('hero_arka', 'hero_mc2');
+// Tokoh utama: 'mc2' = tokoh baru (rambut hijau, tunik merah; hero_mc2.png, atlas sama + baris 39–40 = jalan 8 frame) · 'arka' = Arka lama.
+// Pilihan di Pengaturan › Tokoh utama (localStorage 'lumina_mc'). Aset Arka lama tidak dihapus.
+const HERO_SKIN = (() => { try { return localStorage.getItem('lumina_mc') || 'mc2'; } catch (_) { return 'mc2'; } })();
+let HERO_W8 = false;
+function heroSkinToggle() { /* Pengaturan › Tokoh utama */
+  try { localStorage.setItem('lumina_mc', HERO_SKIN === 'arka' ? 'mc2' : 'arka'); } catch (_) { }
+  if (!G.title && G.scene) saveGame(G.scene); location.reload();
+}
 function regHeroArka(T) {
   const isSlave = (typeof S !== 'undefined' && (S.skin === 'slave' || S.outfit === 'slave')) ||
     (typeof location !== 'undefined' && /[?&]skin=slave\b/.test(location.search));
-  const img = (isSlave && IMGEL.hero_slave) ? IMGEL.hero_slave : (IMGEL.hero_arka || IMGEL.hero_slave);
+  const mc2 = HERO_SKIN === 'mc2' && IMGEL.hero_mc2 && IMGEL.hero_mc2.height >= HERO_FH * 41; /* tokoh baru belum punya versi tawanan */
+  const img = mc2 ? IMGEL.hero_mc2 : (isSlave && IMGEL.hero_slave) ? IMGEL.hero_slave : (IMGEL.hero_arka || IMGEL.hero_slave);
   if (T.exists('ch_hero')) T.remove('ch_hero');
   const t = T.addImage('ch_hero', img);
   for (const k in HERO_ROW) for (let i = 0; i < 4; i++) t.add(k + i, 0, i * HERO_FW, HERO_ROW[k] * HERO_FH, HERO_FW, HERO_FH);
+  HERO_W8 = !!mc2; if (mc2) for (let i = 0; i < 8; i++) t.add('walk8_' + i, 0, (i % 4) * HERO_FW, (39 + (i >> 2)) * HERO_FH, HERO_FW, HERO_FH);
   // nama frame lama (dipakai kode lama sebelum pemutar menimpa): down0..3 / up0..3 / side0..3
   for (const d of ['down', 'up', 'side']) ['idle_' + d + '0', 'walk_' + d + '0', 'walk_' + d + '2', 'atk1_' + d + '1'].forEach((f, i) => {
     const r = HERO_ROW[f.slice(0, -1)]; t.add(d + i, 0, +f.slice(-1) * HERO_FW, r * HERO_FH, HERO_FW, HERO_FH);
@@ -44,10 +54,10 @@ function heroFrame(sc, dt) {
     /* ritme tak rata: ancang singkat → ayun cepat → tahan di benturan → pulih (bukan 4 frame sama panjang) */
     const D = fin ? .4 : .28, u = (D - Math.min(D, pl._atk)) / D; f = u < .16 ? 0 : u < .3 ? 1 : u < .62 ? 2 : 3;
   }
-  else if (moving) { k = 'walk_' + sd; fps = 9 * Math.min(1.4, Math.max(.7, pl.body.velocity.length() / 70)); }
+  else if (moving) { k = HERO_W8 ? 'walk8_' : 'walk_' + sd; fps = 9 * Math.min(1.4, Math.max(.7, pl.body.velocity.length() / 70)); }
   else { k = 'idle_' + sd; fps = 4; }
   if (A.k !== k) { A.k = k; A.t = 0; } else A.t += dt;
-  if (f == null) { const n = Math.floor(A.t * fps); f = once ? Math.min(3, n) : n % 4; }
+  if (f == null) { const n = Math.floor(A.t * fps); f = once ? Math.min(3, n) : n % (k === 'walk8_' ? 8 : 4); }
   if (pl.anims.isPlaying) pl.anims.stop();
   const name = k + f; if (pl.frame.name !== name) pl.setFrame(name);
   if (sd === 'side') pl.flipX = pl.dir === 'left';

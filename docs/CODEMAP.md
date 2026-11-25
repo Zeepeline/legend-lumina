@@ -667,9 +667,9 @@ _Tas (inventaris) & buku misi_
 _Layar peta & navigasi tujuan misi_
 `MINI` 4 · `WORLD` 5 · `buildMini()` 6 · `routeNext()` 23 · `questTarget()` 28 · `openMap()` 35
 
-## src/ui/menus.js (399 baris)
+## src/ui/menus.js (400 baris)
 _Menu utama, jurus, bestiari, pencapaian_
-`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 99 · `enemyThumb()` 111 · `openBestiary()` 112 · `openFishLog()` 120 · `openAch()` 121 · `openDlgLog()` 127 · `chooseSlot()` 134 · `openDebugMenu()` 158 · `openPhotoMode()` 217 · `TALENT_DEFS` 285 · `getTalentPoints()` 312 · `openTalentTree()` 322
+`subMenu()` 4 · `mainMenu()` 11 · `openSettings()` 56 · `openSkills()` 100 · `enemyThumb()` 112 · `openBestiary()` 113 · `openFishLog()` 121 · `openAch()` 122 · `openDlgLog()` 128 · `chooseSlot()` 135 · `openDebugMenu()` 159 · `openPhotoMode()` 218 · `TALENT_DEFS` 286 · `getTalentPoints()` 313 · `openTalentTree()` 323
 
 ## src/ui/savecode.js (49 baris)
 _Kode save: ekspor/impor progres sebagai teks (pindah perangkat / cadangan)_
@@ -727,9 +727,9 @@ _T439: Selaraskan warna objek KODE ke palet treeA / Verdant_
 _Sprite monster dari lembar GPT pemilik (assets/img/monsters/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
-## src/gfx/hero_arka.js (78 baris)
+## src/gfx/hero_arka.js (88 baris)
 _Sprite sheet lengkap Arka dari ChatGPT (assets/img/hero/hero_arka.png)._
-`HERO_FW` 5 · `HERO_ROW` 6 · `regHeroArka()` 13 · `heroFrame()` 25
+`HERO_FW` 5 · `HERO_ROW` 6 · `HERO_SKIN` 15 · `HERO_W8` 16 · `heroSkinToggle()` 17 · `regHeroArka()` 21 · `heroFrame()` 35
 
 ## src/gfx/enemy_sheets.js (69 baris)
 _Lembar musuh baru dari ChatGPT (assets/img/monsters/esh_<id>.png)._
