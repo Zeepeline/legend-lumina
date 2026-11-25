@@ -21,7 +21,7 @@ function regSwordLayer(T) {
 }
 const _bakeStd = World.prototype.swordToHand;
 Object.assign(World.prototype, {
-  bakeOn(wt) { return wt === 'sword' && this.textures.exists('swl1'); },
+  bakeOn(wt) { return wt === 'sword' && this.textures.exists('swl1') && HERO_G.k === 1; }, /* lapisan pedang digambar untuk frame Arka saja */
   /* hentikan lapisan dan lepas pedang tempelan terbang ke punggung dari posisi tangan */
   bakeSheath(pl) {
     const sw = this.sword, d = pl.dir, side = d === 'left' || d === 'right', mir = d === 'left' ? -1 : 1, H = SWL_HAND[side ? 'side' : d];

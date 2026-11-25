@@ -14,6 +14,8 @@ IMG_LIST.push('hero_arka', 'hero_mc2');
 // Pilihan di Pengaturan › Tokoh utama (localStorage 'lumina_mc'). Aset Arka lama tidak dihapus.
 const HERO_SKIN = (() => { try { return localStorage.getItem('lumina_mc') || 'mc2'; } catch (_) { return 'mc2'; } })();
 let HERO_W8 = false;
+// geometri frame skin aktif: ukuran sel, titik tengah-kaki, skala tinggi tubuh terhadap Arka (dipakai sword_hand.js)
+let HERO_G = { fw: HERO_FW, fh: HERO_FH, cx: 24, fy: 40, k: 1 };
 function heroSkinToggle() { /* Pengaturan › Tokoh utama */
   try { localStorage.setItem('lumina_mc', HERO_SKIN === 'arka' ? 'mc2' : 'arka'); } catch (_) { }
   if (!G.title && G.scene) saveGame(G.scene); location.reload();
@@ -21,15 +23,17 @@ function heroSkinToggle() { /* Pengaturan › Tokoh utama */
 function regHeroArka(T) {
   const isSlave = (typeof S !== 'undefined' && (S.skin === 'slave' || S.outfit === 'slave')) ||
     (typeof location !== 'undefined' && /[?&]skin=slave\b/.test(location.search));
-  const mc2 = HERO_SKIN === 'mc2' && IMGEL.hero_mc2 && IMGEL.hero_mc2.height >= HERO_FH * 41; /* tokoh baru belum punya versi tawanan */
+  const mc2 = HERO_SKIN === 'mc2' && IMGEL.hero_mc2 && IMGEL.hero_mc2.height >= 56 * 41; /* tokoh baru (sel 64×56, ±50 px) belum punya versi tawanan */
+  HERO_G = mc2 ? { fw: 64, fh: 56, cx: 32, fy: 56, k: 1.38 } : { fw: HERO_FW, fh: HERO_FH, cx: 24, fy: 40, k: 1 };
+  const FW = HERO_G.fw, FH = HERO_G.fh;
   const img = mc2 ? IMGEL.hero_mc2 : (isSlave && IMGEL.hero_slave) ? IMGEL.hero_slave : (IMGEL.hero_arka || IMGEL.hero_slave);
   if (T.exists('ch_hero')) T.remove('ch_hero');
   const t = T.addImage('ch_hero', img);
-  for (const k in HERO_ROW) for (let i = 0; i < 4; i++) t.add(k + i, 0, i * HERO_FW, HERO_ROW[k] * HERO_FH, HERO_FW, HERO_FH);
-  HERO_W8 = !!mc2; if (mc2) for (let i = 0; i < 8; i++) t.add('walk8_' + i, 0, (i % 4) * HERO_FW, (39 + (i >> 2)) * HERO_FH, HERO_FW, HERO_FH);
+  for (const k in HERO_ROW) for (let i = 0; i < 4; i++) t.add(k + i, 0, i * FW, HERO_ROW[k] * FH, FW, FH);
+  HERO_W8 = !!mc2; if (mc2) for (let i = 0; i < 8; i++) t.add('walk8_' + i, 0, (i % 4) * FW, (39 + (i >> 2)) * FH, FW, FH);
   // nama frame lama (dipakai kode lama sebelum pemutar menimpa): down0..3 / up0..3 / side0..3
   for (const d of ['down', 'up', 'side']) ['idle_' + d + '0', 'walk_' + d + '0', 'walk_' + d + '2', 'atk1_' + d + '1'].forEach((f, i) => {
-    const r = HERO_ROW[f.slice(0, -1)]; t.add(d + i, 0, +f.slice(-1) * HERO_FW, r * HERO_FH, HERO_FW, HERO_FH);
+    const r = HERO_ROW[f.slice(0, -1)]; t.add(d + i, 0, +f.slice(-1) * FW, r * FH, FW, FH);
   });
 }
 function heroFrame(sc, dt) {
@@ -66,7 +70,7 @@ function heroFrame(sc, dt) {
   W.create = function (data) {
     const r = _cr.apply(this, arguments);
     if (this.pl && IMGEL.hero_arka) {
-      this.pl.body.setSize(10, 6).setOffset((HERO_FW - 10) / 2, HERO_FH - 7);
+      this.pl.body.setSize(10, 6).setOffset((HERO_G.fw - 10) / 2, HERO_G.fh - 7);
       if (!this._heroHook) { this._heroHook = 1; this.events.on('postupdate', (t, d) => heroFrame(this, Math.min(.1, d / 1000))); }
     }
     return r;

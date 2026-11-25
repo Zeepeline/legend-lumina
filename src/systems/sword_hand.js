@@ -37,14 +37,14 @@ Object.assign(World.prototype, {
   /* koordinat dunia telapak tangan pada frame serangan f (0-3) menurut arah pl.dir (perkiraan tabel) */
   heroHand(pl, f) {
     const left = pl.dir === 'left', sd = pl.dir === 'left' || pl.dir === 'right' ? 'side' : pl.dir;
-    const h = HERO_HAND[sd][Math.max(0, Math.min(3, f | 0))];
-    return { x: pl.x + (h[0] - 24) * (left && sd === 'side' ? -1 : 1), y: pl.y - (40 - h[1]) };
+    const h = HERO_HAND[sd][Math.max(0, Math.min(3, f | 0))], k = HERO_G.k;
+    return { x: pl.x + (h[0] - 24) * k * (left && sd === 'side' ? -1 : 1), y: pl.y - (40 - h[1]) * k };
   },
   /* pose pedang di punggung: gagang menyembul di atas bahu (samping/depan: di belakang badan; belakang: melintang di punggung) */
   sheathPose(pl) {
     const d = pl.dir, side = d === 'left' || d === 'right', L = d === 'left';
     return {
-      x: pl.x + (side ? (L ? 6 : -6) : (d === 'up' ? 4 : 7)), y: pl.y - 16, /* tinggi bahu (kepala chibi besar: ±-18 ke atas = wajah) */
+      x: pl.x + (side ? (L ? 6 : -6) : (d === 'up' ? 4 : 7)) * HERO_G.k, y: pl.y - 16 * HERO_G.k, /* tinggi bahu (kepala chibi besar: ±-18 ke atas = wajah) */
       rot: side ? (L ? Math.PI - .95 : .95) : 2.35, depth: pl.y + (d === 'up' ? .6 : -.6)
     };
   },
@@ -84,8 +84,9 @@ Object.assign(World.prototype, {
     if (!sw._off) { if (sw._hold || sw._shT) this.swordCarry(pl, sw, this.time.now); else this.gripFist(sw, false); return; }
     const m = /^(?:atk\d|heavy)_(down|up|side)(\d)$/.exec(pl.frame && pl.frame.name || '');
     if (!m) { this.gripFist(sw, false); return; }
-    const sd = m[1], h = HERO_HAND[sd][+m[2]], c = handAnchor(pl, h[0], h[1]), mir = sd === 'side' && pl.dir === 'left' ? -1 : 1;
-    sw.setPosition(pl.x + (c.ax - 24) * mir + sw._off.x, pl.y - (40 - c.ay) + sw._off.y);
+    const G = HERO_G, sd = m[1], h = HERO_HAND[sd][+m[2]], c = handAnchor(pl, G.cx + (h[0] - 24) * G.k, G.fy - (40 - h[1]) * G.k);
+    const mir = sd === 'side' && pl.dir === 'left' ? -1 : 1;
+    sw.setPosition(pl.x + (c.ax - G.cx) * mir + sw._off.x, pl.y - (G.fy - c.ay) + sw._off.y);
     this.gripFist(sw, true);
   },
   /* siaga: pedang terkulai di tangan sisi badan (ujung ke bawah-depan), mengikuti gerak halus; habis waktu → melayang ke punggung */
@@ -100,9 +101,10 @@ Object.assign(World.prototype, {
       return;
     }
     const C = SWORD_CARRY[side ? 'side' : d];
-    let tx = pl.x + C[0] * (side ? mir : 1), ty = pl.y + C[1];
+    let tx = pl.x + C[0] * HERO_G.k * (side ? mir : 1), ty = pl.y + C[1] * HERO_G.k;
     if (side && pl.frame) { /* tangan sprite yang sebenarnya (frame diam/jalan): ±(28,31) di frame; mirror untuk kiri */
-      const c = handAnchor(pl, CARRY_HAND[0], CARRY_HAND[1]); tx = pl.x + (c.ax - 24) * mir; ty = pl.y - (40 - c.ay);
+      const G = HERO_G, c = handAnchor(pl, G.cx + (CARRY_HAND[0] - 24) * G.k, G.fy - (40 - CARRY_HAND[1]) * G.k);
+      tx = pl.x + (c.ax - G.cx) * mir; ty = pl.y - (G.fy - c.ay);
     }
     const tr = side ? (mir < 0 ? Math.PI - 1.15 : 1.15) : C[2], k = .45;
     sw.setPosition(sw.x + (tx - sw.x) * k, sw.y + (ty - sw.y) * k).setRotation(sw.rotation + A.Wrap(tr - sw.rotation) * k);

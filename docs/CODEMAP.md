@@ -727,9 +727,9 @@ _T439: Selaraskan warna objek KODE ke palet treeA / Verdant_
 _Sprite monster dari lembar GPT pemilik (assets/img/monsters/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
-## src/gfx/hero_arka.js (88 baris)
+## src/gfx/hero_arka.js (92 baris)
 _Sprite sheet lengkap Arka dari ChatGPT (assets/img/hero/hero_arka.png)._
-`HERO_FW` 5 · `HERO_ROW` 6 · `HERO_SKIN` 15 · `HERO_W8` 16 · `heroSkinToggle()` 17 · `regHeroArka()` 21 · `heroFrame()` 35
+`HERO_FW` 5 · `HERO_ROW` 6 · `HERO_SKIN` 15 · `HERO_W8` 16 · `HERO_G` 18 · `heroSkinToggle()` 19 · `regHeroArka()` 23 · `heroFrame()` 39
 
 ## src/gfx/enemy_sheets.js (69 baris)
 _Lembar musuh baru dari ChatGPT (assets/img/monsters/esh_<id>.png)._
@@ -747,9 +747,9 @@ _Memakai pl._emote (dibaca heroFrame, gfx/hero_arka.js). Selalu berbatas waktu `
 _Aset genggaman pedang Arka (dibuat kode, palet sama dengan senjata lama): pedang beresolusi lebih halus + kepalan menggenggam._
 `SWORD_HD_MAP` 5 · `SWORD_HD_PAL` 11 · `SWORD_PIVOT` 15 · `swordOriginX()` 16 · `artSwordHD()` 17 · `artFistGrip()` 18 · `regSwordArt()` 22
 
-## src/systems/sword_hand.js (119 baris)
+## src/systems/sword_hand.js (121 baris)
 _Pedang terkunci & DIGENGGAM di tangan Arka. Sprite serangan Arka (hero_arka.png, frame 48×40, kaki di (24,39)) digambar TANPA pedang;_
-`HERO_HAND` 9 · `SWORD_CARRY` 15 · `CARRY_HAND` 16 · `HC_R` 17 · `handAnchor()` 19 · `.heroHand()` 38 · `.sheathPose()` 44 · `.sheathSword()` 52 · `.swordRest()` 65 · `.gripFist()` 71 · `.swordToHand()` 78 · `.swordToHand0()` 79 · `.swordCarry()` 92
+`HERO_HAND` 9 · `SWORD_CARRY` 15 · `CARRY_HAND` 16 · `HC_R` 17 · `handAnchor()` 19 · `.heroHand()` 38 · `.sheathPose()` 44 · `.sheathSword()` 52 · `.swordRest()` 65 · `.gripFist()` 71 · `.swordToHand()` 78 · `.swordToHand0()` 79 · `.swordCarry()` 93
 
 ## src/systems/sword_swing.js (46 baris)
 _Ayunan pedang Arka: ancang-ancang (tarik ke belakang) → ayun cepat melewati sasaran → pantulan → pulih, tetap di tangan sampai selesai._
