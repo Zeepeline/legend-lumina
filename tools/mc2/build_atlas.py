@@ -65,6 +65,11 @@ def crouch(im, n):
     return g
 def def_heavy(fs):   # isi tenaga (jongkok 1 & 2 px, ancang-ancang) → tebas (smear) → lanjutan
     return [cell(crouch(fs[0],1)),cell(crouch(fs[0],2)),cell(fs[1]),cell(fs[2])]
+RL=[clean(Image.open(f'tools/mc2/roll_{i}.png')) for i in range(4)]   # guling samping (gambar pemilik, menghadap kanan)
+for f in RL: FIX[id(f)]=f.width/2
+def roll_for(d, idle):
+    if d=='side': return [cell(f) for f in RL]
+    return [cell(crouch(idle,4)),cell(RL[1]),cell(RL[2]),cell(crouch(idle,2))]   # atas/bawah: jongkok arah itu → bola guling → bangun
 def pose(d):
     src=U if d=='up' else Dw if d=='down' else S; idle=U0 if d=='up' else D0 if d=='down' else src[0]
     walk=[cell(src[i]) for i in (0,2,4,6)]
@@ -76,7 +81,7 @@ def pose(d):
     else:
         atk=[cell(f,dx=-1) for f in SL]   # sel 64 px: pedang/smear muat persis
         heavy=def_heavy(SL)
-    return dict(idle=idlecells(idle), walk=walk, atk=atk, heavy=heavy, roll=[cell(idle,rot=r) for r in (0,-90,-180,-270)], still=[cell(idle)]*4)
+    return dict(idle=idlecells(idle), walk=walk, atk=atk, heavy=heavy, roll=roll_for(d,idle), still=[cell(idle)]*4)
 P={d:pose(d) for d in ('down','up','side')}
 I=S[0]
 hurt=[cell(I,dx=-1),cell(I,dx=-3),cell(I,dx=-3),cell(I,dx=-1)]
