@@ -14,7 +14,11 @@ IMG_LIST.push('hero_arka', 'hero_mc2');
 // Pilihan di Pengaturan › Tokoh utama (localStorage 'lumina_mc'). Aset Arka lama tidak dihapus.
 const HERO_SKIN = (() => { try { return localStorage.getItem('lumina_mc') || 'mc2'; } catch (_) { return 'mc2'; } })();
 let HERO_W8 = false, HERO_W8U = false, HERO_W8D = false, HERO_BLINK = false; /* jalan 8 frame: samping (baris 39–40), atas (41–42), bawah (43–44) */
-let HERO_SWD = false; /* tebasan samping berpedang digambar di sprite (tokoh baru) */
+let HERO_SWD = false;
+const WALK_SIDE_W = [.6, 1.2, 1.2, .6, 1.2, 1.2]; /* jalan samping: bobot lama tiap frame (jumlah 6 = putaran sama) */
+function walkSideF(u) {
+  let r = u % 6; for (let i = 0; i < 6; i++) { if (r < WALK_SIDE_W[i]) return i; r -= WALK_SIDE_W[i]; } return 5;
+} /* tebasan samping berpedang digambar di sprite (tokoh baru) */
 // geometri frame skin aktif: ukuran sel, titik tengah-kaki, skala tinggi tubuh terhadap Arka (dipakai sword_hand.js)
 let HERO_G = { fw: HERO_FW, fh: HERO_FH, cx: 24, fy: 40, k: 1 };
 function heroSkinToggle() { /* Pengaturan › Tokoh utama */
@@ -73,6 +77,7 @@ function heroFrame(sc, dt) {
   else { k = 'idle_' + sd; fps = HERO_BLINK ? 2.5 : 4; } /* diam: bernapas pelan */
   if (A.k !== k) { A.k = k; A.t = 0; } else A.t += dt;
   const N = k === 'walk8s_' ? 6 : k.startsWith('walk8') ? 8 : 4; /* jalan samping 6 frame, 2 langkah × 3 */
+  if (f == null && k === 'walk8s_') f = walkSideF(A.t * fps); /* durasi tak rata: frame yang hampir kembar ditampilkan singkat */
   if (f == null) { const n = Math.floor(A.t * fps); f = once ? Math.min(3, n) : n % N; }
   if (pl.anims.isPlaying) pl.anims.stop();
   let name = k + f;
