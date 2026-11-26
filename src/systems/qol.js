@@ -14,7 +14,8 @@ Object.assign(World.prototype, {
     const f = this.front(11); let best = null, bd = 1e9;
     if (!G.lock && !this.pl.dead) for (const it of this.inter) {
       if (it.rect) { const [rx, ry, rw, rh] = it.rect; if (f.x > rx && f.x < rx + rw && f.y > ry && f.y < ry + rh) { best = it; bd = 0; } continue; }
-      const x = it.npc ? it.npc.spr.x : it.x, y = it.npc ? it.npc.spr.y - 3 : it.y, d = Math.hypot(x - f.x, y - f.y); if (d < it.r + 6 && d < bd) { bd = d; best = it; }
+      const x = it.npc ? it.npc.spr.x : it.x, y = it.npc ? it.npc.spr.y - 3 : it.y;
+      const d = Math.hypot(x - f.x, y - f.y); if (d < it.r && d < bd) { bd = d; best = it; }
     }
     const btn = document.getElementById('bA');
     if (!best) {
@@ -38,20 +39,40 @@ Object.assign(World.prototype, {
     this.iHint.setText(txt).setPosition(x, y + Math.sin(this.t * 5) * 1.5).setVisible(true).setScale(1 / (this.M.zoom || 1));
     if (btn && btn.dataset.ctx !== kind) { btn.dataset.ctx = kind; btn.innerHTML = icon + '<small>' + kind.toUpperCase() + '</small>'; }
   },
-  // bilah HP kecil di atas musuh yang sudah terluka (bukan boss; boss punya bilah sendiri)
+  // bilah HP kecil di atas musuh yang sudah terluka + delayed drain & penanda kunci target
   updEnemyBars() {
     if (!this.eBar) this.eBar = this.add.graphics().setDepth(1.97e5);
     const g = this.eBar; g.clear();
+    const dt = Math.max(0, Math.min(0.1, this.t - (this._ebT || this.t)));
+    this._ebT = this.t;
     for (const e of this.enemies) {
       const isSpec = !!(e.elite || e.D?.isBounty || e.type === 'goblin_elite');
+      const isLock = this.lockE === e && e.hp > 0 && !e.boss && e.spr && e.spr.visible;
       const show = OPT.hpbar && e.hp > 0 && !e.boss && e.hp < e.max && e.spr && e.spr.visible;
       if (!show) {
         if (e.nameTag) { e.nameTag.destroy(); e.nameTag = null; }
+        if (e.stTag) { e.stTag.destroy(); e.stTag = null; }
+        if (isLock) {
+          const s = e.spr, dy = Math.round(s.y - s.displayHeight - 8 + Math.sin(this.t * 7) * 1.2);
+          g.lineStyle(1, 0x1a1420, 1).fillStyle(0xffe66b, 1).fillPoints([
+            { x: s.x, y: dy - 4 }, { x: s.x + 3.5, y: dy }, { x: s.x, y: dy + 4 }, { x: s.x - 3.5, y: dy }
+          ], true).strokePoints([
+            { x: s.x, y: dy - 4 }, { x: s.x + 3.5, y: dy }, { x: s.x, y: dy + 4 }, { x: s.x - 3.5, y: dy }
+          ], true);
+        }
         continue;
       }
       const s = e.spr, w = isSpec ? 26 : 18, x = Math.round(s.x - w / 2), y = Math.round(s.y - s.displayHeight - 6), p = Math.max(0, e.hp / e.max);
-      g.fillStyle(0x1a1420, .8).fillRect(x - 1, y - 1, w + 2, 4);
-      g.fillStyle(p > .5 ? 0x6ad04a : p > .25 ? 0xf0c040 : 0xe84a3a, 1).fillRect(x, y, Math.ceil(w * p), 2);
+      if (e._hpG == null) e._hpG = p;
+      if (p < (e._hpPrev != null ? e._hpPrev : p)) e._hpGT = 0.22;
+      e._hpPrev = p;
+      if (p > e._hpG) e._hpG = p;
+      else if (e._hpGT > 0) e._hpGT -= dt;
+      else if (e._hpG > p) e._hpG = Math.max(p, e._hpG - dt * 1.45);
+      g.fillStyle(0x16101a, .85).fillRect(x - 1, y - 1, w + 2, 4);
+      if (isSpec) g.lineStyle(1, 0xd4a94e, .85).strokeRect(x - 1, y - 1, w + 2, 4);
+      if (e._hpG > p) g.fillStyle(0xffe066, 1).fillRect(x, y, Math.ceil(w * e._hpG), 2);
+      g.fillStyle(p > .5 ? 0x6ad04a : p > .25 ? 0xf0c040 : 0xe0483a, 1).fillRect(x, y, Math.ceil(w * p), 2);
       if (isSpec) {
         const nm = (e.elite && !e.D?.isBounty ? '★ ' : '') + (e.D?.name || 'Elit');
         if (!e.nameTag) {
@@ -62,6 +83,36 @@ Object.assign(World.prototype, {
           e.nameTag.setText(nm).setPosition(s.x, y - 2).setVisible(true);
         }
       } else if (e.nameTag) { e.nameTag.destroy(); e.nameTag = null; }
+      if (isLock) {
+        const dy = Math.round((isSpec ? y - 15 : y - 5) + Math.sin(this.t * 7) * 1.2);
+        const pts = [{ x: s.x, y: dy - 4 }, { x: s.x + 3.5, y: dy }, { x: s.x, y: dy + 4 }, { x: s.x - 3.5, y: dy }];
+        g.fillStyle(0xffe66b, 1).fillPoints(pts, true);
+        g.lineStyle(1, 0x1a1420, 1).strokePoints(pts, true);
+      }
+      const stList = [];
+      if (e.bleed > 0) stList.push([0xff4252, e.bleedStk || 1]);
+      if (e.poison > 0) stList.push([0xc97aff, e.poiStk || 1]);
+      if (e.burn > 0) stList.push([0xff8a3a, e.burnStk || 1]);
+      if (e.frz > 0) stList.push([0x7ee0ff, 1]);
+      if (stList.length) {
+        let sx = x + w + 3, mxStk = 0;
+        for (const [col, stk] of stList) {
+          g.fillStyle(0x16101a, .9).fillRect(sx - 1, y - 1, 5, 5);
+          g.fillStyle(col, 1).fillRect(sx, y, 3, 3);
+          if (stk > mxStk) mxStk = stk;
+          sx += 5;
+        }
+        if (mxStk >= 2) {
+          const tx = x + w + 3 + stList.length * 5, ty = y + 1;
+          if (!e.stTag) {
+            e.stTag = this.add.text(tx, ty, '' + mxStk, {
+              fontFamily: 'sans-serif', fontSize: '8px', stroke: '#16101a', strokeThickness: 2.5, color: '#fff4d0'
+            }).setOrigin(0, 0.5).setDepth(1.98e5);
+          } else {
+            e.stTag.setText('' + mxStk).setPosition(tx, ty).setVisible(true);
+          }
+        } else if (e.stTag) { e.stTag.destroy(); e.stTag = null; }
+      } else if (e.stTag) { e.stTag.destroy(); e.stTag = null; }
     }
   },
   // coba lagi tepat sebelum boss (#180): dipanggil dari defeat() bila kalah saat melawan boss

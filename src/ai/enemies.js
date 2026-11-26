@@ -15,19 +15,15 @@ Object.assign(World.prototype, {
     const hx = e.home.x - s.x, hy = e.home.y - s.y, hd = Math.hypot(hx, hy) || 1;
     if (!e.boss && (hd > 280 || (e.leash && hd > 18) || (d > 320 && hd > 60))) {
       e.leash = true; if (this.atkTok) this.atkTok.delete(e);
-      s.setVelocity((hx / hd) * D.spd * 1.2, (hy / hd) * D.spd * 1.2); s.flipX = hx > 0;
-      if (D.ch) this.charAnim(e);
+      s.setVelocity((hx / hd) * D.spd * 1.2, (hy / hd) * D.spd * 1.2);
+      setEnemyFlipX(this, e, hx);
       return;
     }
     if (e.leash) { e.leash = false; e.hp = e.max; popWorld(s.x, s.y - 14, 'pulih!', 'heal'); }
-    const aggro = !pl.dead && (d < (e.boss ? 420 : DIFF[OPT.diff].sight) || e.packAggro);
+    const aggR = typeof enemyAggroR === 'function' ? enemyAggroR(this, e) : DIFF[OPT.diff].sight;
+    const aggro = !pl.dead && !e.sleeping && (e.boss ? d < 420 : (e.alert === 2 || e.packAggro || e.hp < e.max || d < aggR));
     if (aggro && !e.wasAggro && !e.boss) {
-      e.wasAggro = true;
-      for (const o of this.enemies) {
-        if (o !== e && o.hp > 0 && o.type === e.type && Math.hypot(o.spr.x - s.x, o.spr.y - s.y) < 90 && !o.packAggro) {
-          this.time.delayedCall(300, () => { if (o.hp > 0) { o.packAggro = true; markOver(this, o, '!', '#ff5a3a'); } });
-        }
-      }
+      if (typeof alertFaction === 'function') alertFaction(this, e); else e.wasAggro = true;
     }
     e.t -= dt; e.cd -= dt;
     const rel = (typeof OPT !== 'undefined' && OPT.diff === 0), hard = (typeof OPT !== 'undefined' && OPT.diff === 2);
@@ -41,29 +37,22 @@ Object.assign(World.prototype, {
     if (e.fleeing > 0) {
       e.fleeing -= dt; if (this.atkTok) this.atkTok.delete(e);
       const fx = s.x - pl.x, fy = s.y - pl.y, fl = Math.hypot(fx, fy) || 1;
-      s.setVelocity((fx / fl) * D.spd * 1.2, (fy / fl) * D.spd * 1.2); s.flipX = fx < 0;
-      if (D.ch) this.charAnim(e);
+      s.setVelocity((fx / fl) * D.spd * 1.2, (fy / fl) * D.spd * 1.2);
+      setEnemyFlipX(this, e, fx);
       return;
     }
     // Panggilan Bala Bantuan Musuh Terdesak (#9)
     if (!e.calledBackup && !e.boss && (e.type === 'goblin' || e.type === 'wolf' || e.type === 'boar') && e.hp < e.max * 0.35 && aggro) {
       e.calledBackup = true; e.st = 'calling'; s.setVelocity(0);
       if ((D.tex === 'wolf_hd' || D.tex === 'wolf_elite_hd') && s.anims) s.play(D.tex + '_howl', true);
-      popWorld(s.x, s.y - 20, 'BAHAYA! MENGGELAR BANTUAN!', 'crit'); sfxAt('crit', s.x, s.y, this);
-      this.time.delayedCall(650, () => {
-        if (e.hp > 0 && this.enemies.length < 12) {
-          const spawnX = clamp(s.x + rnd(-80, 80), 40, this.M.w - 40), spawnY = clamp(s.y + rnd(-80, 80), 40, this.M.h - 40);
-          this.puff(spawnX, spawnY); this.spawnEnemy(e.type, spawnX, spawnY); popWorld(spawnX, spawnY - 14, '+Bala Bantuan!', 'crit');
-        }
-        e.st = 'idle';
-      });
+      if (typeof callEnemyBackup === 'function') callEnemyBackup(this, e);
       return;
     }
     if (e.st === 'calling') { s.setVelocity(0); return; }
     // Musuh teralihkan oleh Petasan Pengalih (#410)
     if (e.distracted > 0) {
       e.distracted -= dt; const dtx = (e.distractTx || s.x) - s.x, dty = (e.distractTy || s.y) - s.y, dtl = Math.hypot(dtx, dty) || 1;
-      s.flipX = dtx > 0; s.setVelocity(dtl > 18 ? (dtx / dtl) * D.spd * 0.7 : 0, dtl > 18 ? (dty / dtl) * D.spd * 0.7 : 0);
+      setEnemyFlipX(this, e, dtx); s.setVelocity(dtl > 18 ? (dtx / dtl) * D.spd * 0.7 : 0, dtl > 18 ? (dty / dtl) * D.spd * 0.7 : 0);
       return;
     }
 
@@ -81,7 +70,7 @@ Object.assign(World.prototype, {
         break;
       }
       case 'hop':
-        if (D.tex === 'slime_hd' && aggro && d < 65 && (e.cd || 0) <= 0 && e.st !== 'atk') {
+        if (D.tex && D.tex.startsWith('slime_hd') && aggro && d < 65 && (e.cd || 0) <= 0 && e.st !== 'atk') {
           if (!this.atkTok) this.atkTok = new Set();
           if (this.atkTok.size < DIFF[OPT.diff].tok) {
             this.atkTok.add(e); e.tokT = 0; e.st = 'atk'; e.t = 0.68 * wMul; e.cd = rnd(2.2, 3.8) * cdMul;
@@ -90,7 +79,7 @@ Object.assign(World.prototype, {
             this.time.delayedCall(180 * wMul, () => {
               if (!s.active || e.hp <= 0 || e.st !== 'atk') return;
               s.setVelocity(lx * D.spd * 2.5, ly * D.spd * 2.5);
-              if (s.anims) s.play({ key: 'slime_hd_atk', startFrame: 2 }, true);
+              if (s.anims) s.play({ key: D.tex + '_atk', startFrame: 2 }, true);
             });
             this.time.delayedCall(440 * wMul, () => {
               if (!s.active || e.hp <= 0 || e.st !== 'atk') return;
@@ -102,25 +91,29 @@ Object.assign(World.prototype, {
         if (e.st === 'atk') {
           if (e.t <= 0) {
             if (this.atkTok) this.atkTok.delete(e);
-            e.st = 'idle'; e.t = rnd(.5, 1); s.setVelocity(0); s.play('slime_hd_idle', true); this.puff(s.x, s.y);
+            e.st = 'idle'; e.t = rnd(.5, 1); s.setVelocity(0);
+            if (D.tex && D.tex.startsWith('slime_hd') && s.anims) s.play(D.tex + '_idle', true);
+            this.puff(s.x, s.y);
           }
           break;
         }
         if (e.t <= 0) {
           if (e.st === 'hop') {
             e.st = 'idle'; e.t = rnd(.45, 1); s.setVelocity(0);
-            if (D.tex === 'slime_hd' && s.anims) s.play('slime_hd_idle', true);
+            if (D.tex && D.tex.startsWith('slime_hd') && s.anims) s.play(D.tex + '_idle', true);
             else this.tweens.add({ targets: s, scaleX: sc * 1.25, scaleY: sc * .78, duration: 70, yoyo: true });
           } else {
             e.st = 'hop'; e.t = .36; const a = aggro ? Math.atan2(dy, dx) + rnd(-.35, .35) : (hd > 60 ? Math.atan2(hy, hx) : rnd(0, 6.28));
             s.setVelocity(Math.cos(a) * D.spd * 1.7, Math.sin(a) * D.spd * 1.7);
-            if (D.tex === 'slime_hd') {
-              if (s.anims) s.play('slime_hd_hop', true);
+            if (D.tex && D.tex.startsWith('slime_hd')) {
+              if (s.anims) s.play(D.tex + '_hop', true);
               if (s.body.velocity.x < -3) s.flipX = true; else if (s.body.velocity.x > 3) s.flipX = false;
             } else this.tweens.add({ targets: s, scaleX: sc * .85, scaleY: sc * 1.2, duration: 120, yoyo: true });
           }
         }
-        if (D.tex === 'slime_hd' && !s.anims.isPlaying && e.st !== 'atk') s.play(e.st === 'hop' ? 'slime_hd_hop' : 'slime_hd_idle', true);
+        if (D.tex && D.tex.startsWith('slime_hd') && !s.anims.isPlaying && e.st !== 'atk') {
+          s.play(D.tex + (e.st === 'hop' ? '_hop' : '_idle'), true);
+        }
         s.anims.timeScale = e.st === 'hop' ? 2 : .8; break;
       case 'fly': {
         // Serangan Menukik Musuh Terbang (#7)

@@ -15,7 +15,7 @@ test('gelombang 9: ikan per jam/cuaca, tarik-ulur, rekor, akuarium', async ({ pa
   const rec = await h.G(page, () => { S.fishLog = { fish: { count: 2, firstHour: 3 }, gfish: 1 }; logFish('fish', 30); const a = logFish('fish', 35); logFish('gfish', 20); return [a, S.fishLog.fish.count, S.fishLog.gfish.count]; });
   expect(rec).toEqual([true, 4, 2]);
   // akuarium
-  await h.G(page, () => { S.home = { owned: 1, lv: 0, box: {}, items: [{ t: 'tank', x: 64, y: 140, v: 0, fish: ['trout', 'gfish'] }] }; });
+  await h.G(page, () => { S.home = { owned: 1, lay3: 1, lv: 0, box: {}, items: [{ t: 'tank', x: 24, y: 50, v: 0, fish: ['trout', 'gfish'] }] }; });
   await h.goto(page, 'home', 160, 226, 'up'); await page.waitForTimeout(500);
   expect(await h.G(page, () => window.__game.sc.hf[0].swim.length)).toBe(2);
   h.noErrors(errors);

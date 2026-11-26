@@ -6,7 +6,7 @@ test('beli di toko & tempa di bengkel', async ({ page }) => {
   const errors = await h.boot(page); await h.newGame(page);
   await h.G(page, () => { const S = window.__game.S; S.gold = 500; S.inv.pelt = 3; });
   await h.faceNpc(page, 'merchant'); await h.press(page, 'a', 1, 400); await h.flush(page);
-  await h.press(page, 'a', 1, 300); await h.press(page, 'a', 1, 300); // Beli → Ramuan
+  await h.press(page, 'a', 1, 300); await h.press(page, 'a', 1, 300); await h.press(page, 'a', 1, 300); // Beli → Ramuan → ×1
   await h.press(page, 'b', 1, 200); await h.press(page, 'b', 1, 200); await h.flush(page);
   expect((await h.S(page)).inv.potion).toBe(4);
   await h.G(page, () => { const sc = window.__game.sc, n = sc.npcs.find(n => n.n.id === 'smith'); sc.pl.setPosition(n.spr.x + 14, n.spr.y); sc.pl.dir = 'left'; });
@@ -68,7 +68,7 @@ test('tas, peta, menu bisa dibuka & ditutup', async ({ page }) => {
   const errors = await h.boot(page); await h.newGame(page);
   for (const k of ['bag', 'map']) {
     await h.press(page, k, 1, 400);
-    expect(await h.G(page, () => !!document.querySelector('#bagw, #mapw'))).toBe(true);
+    expect(await h.G(page, () => !!document.querySelector('#bagw, #mapw, #wmap'))).toBe(true);
     await h.press(page, 'b', 1, 300);
     expect(await h.G(page, () => window.__game.G.lock)).toBe(0);
   }

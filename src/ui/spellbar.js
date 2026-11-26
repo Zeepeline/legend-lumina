@@ -24,17 +24,24 @@ function updSpellbar() {
     const J = JURUS[id];
     const isAct = (S.spell === id);
     const noMp = (J.kind === 'spell' && S.mp < (J.mp || 0));
-    let cdPct = 0;
-    if (id === 'dash' && sc?.dashCd > 0) cdPct = Math.max(0, Math.min(1, sc.dashCd / 0.85));
-    else if (id === 'spin' && sc?.holdA > 0) cdPct = Math.max(0, Math.min(1, sc.holdA / 0.45));
-    else if (J.kind === 'spell' && pl?.atkCd > 0) cdPct = Math.max(0, Math.min(1, pl.atkCd / 0.5));
+    let cdPct = 0, cdSec = 0;
+    if (id === 'dash' && sc?.dashCd > 0) {
+      cdSec = sc.dashCd;
+      cdPct = Math.max(0, Math.min(1, cdSec / 0.85));
+    } else if (id === 'spin' && sc?.holdA > 0) {
+      cdPct = Math.max(0, Math.min(1, sc.holdA / 0.45));
+    } else if (J.kind === 'spell' && pl?.atkCd > 0) {
+      cdSec = pl.atkCd;
+      cdPct = Math.max(0, Math.min(1, cdSec / 0.5));
+    }
 
     const cls = ['s-slot', isAct ? 'act' : '', noMp ? 'nomp' : ''].filter(Boolean).join(' ');
     const icon = { fire: '🔥', dash: '»', spin: '⚔', venom: '☣', nova: '❄', heal: '💚', holy: '✨' }[id] || '✦';
-    html += `<div class="${cls}" data-id="${id}">
+    html += `<div class="${cls}" data-id="${id}"${cdPct > 0 ? ' data-cd="1"' : ''}>
       <span class="s-ic">${icon}</span>
       ${J.mp ? `<span class="s-mp">${J.mp}</span>` : ''}
       ${cdPct > 0 ? `<div class="s-cd" style="--cd:${Math.round(cdPct * 360)}deg"></div>` : ''}
+      ${cdPct > 0 && cdSec >= 0.1 ? `<span class="s-cdt">${cdSec.toFixed(1)}</span>` : ''}
     </div>`;
   }
   SPELLBAR.innerHTML = html;
@@ -42,6 +49,10 @@ function updSpellbar() {
     el.onpointerdown = e => {
       e.stopPropagation();
       const id = el.dataset.id;
+      if (el.dataset.cd === '1' && pl && !pl.dead) {
+        popWorld(pl.x, pl.y - 6, 'Cooldown!', 'cd');
+        sfx('buzz');
+      }
       if (JURUS[id]?.kind === 'spell') {
         S.spell = id;
         sfx('ok');

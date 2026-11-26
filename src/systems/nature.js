@@ -192,17 +192,21 @@ function natureBorder(M, L) {
   borderTrees = function (M) {
     if (!M.border || !(typeof BENUA !== 'undefined' && BENUA) || typeof WORLD_POS === 'undefined' || !WORLD_POS[M.id]) return _bt0.apply(this, arguments);
     const b = M.border, T = b.types || ['pined', 'pine', 'round'], tp = (k, s2) => T[Math.floor(hash(k, 9, s2) * T.length)], out = [];
-    const inGap = (g, v) => g && v > g[0] - 22 && v < g[1] + 22; let n = 0;
-    for (let x = 24; x < M.w - 20; x += 64) {
-      if (!inGap(b.gapT, x)) { n++; out.push([tp(n, 41), x + Math.round((hash(n, 2, 41) - .5) * 12), Math.max(16, b.top - 12)]); }
+    const inGap = (g, v) => g && v > g[0] - 24 && v < g[1] + 24, j = (k, s, a) => Math.round((hash(k, s, 47) - .5) * a); let n = 0;
+    for (let x = 28; x < M.w - 20; x += 56) {
+      if (!inGap(b.gapT, x)) { n++; out.push([tp(n, 41), x + j(n, 1, 24), Math.max(16, b.top - 10 + j(n, 2, 16))]); }
     }
-    for (let y = b.top + 32; y < b.bottom - 16; y += 64) {
-      if (!inGap(b.gapL, y)) { n++; out.push([tp(n, 42), Math.max(16, b.left - 16), y]); }
-      if (!inGap(b.gapR, y)) { n++; out.push([tp(n, 42), Math.min(M.w - 16, b.right + 16), y]); }
+    for (let y = b.top + 28; y < b.bottom - 16; y += 56) {
+      if (!inGap(b.gapL, y)) { n++; out.push([tp(n, 42), Math.max(16, b.left - 14 + j(n, 3, 14)), y + j(n, 4, 24)]); }
+      if (!inGap(b.gapR, y)) { n++; out.push([tp(n, 42), Math.min(M.w - 16, b.right + 14 + j(n, 5, 14)), y + j(n, 6, 24)]); }
     }
-    for (let x = 32; x < M.w - 30; x += 64) if (!inGap(b.gap, x)) { n++; out.push([tp(n, 43), x + Math.round((hash(n, 2, 43) - .5) * 12), b.bottom + 24]); }
-    const exs = mapDoors(M);
-    return natureBorder(M, out.filter(o => !exs.some(ex => o[1] > ex.x - 56 && o[1] < ex.x + ex.w + 56 && o[2] > ex.y - 56 && o[2] < ex.y + ex.h + 64)));
+    for (let x = 32; x < M.w - 28; x += 56) {
+      if (!inGap(b.gap, x)) { n++; out.push([tp(n, 43), x + j(n, 7, 24), Math.min(M.h - 12, b.bottom + 20 + j(n, 8, 16))]); }
+    }
+    const exs = mapDoors(M), foot = natureFoot(M.objs || []), drs = M.doors || [];
+    return natureBorder(M, out.filter(o => !natInFoot(foot, o[1], o[2], 10, 14) &&
+      !drs.some(d => Math.hypot(o[1] - d[0], o[2] - d[1]) < 48) &&
+      !exs.some(ex => o[1] > ex.x - 56 && o[1] < ex.x + ex.w + 56 && o[2] > ex.y - 56 && o[2] < ex.y + ex.h + 64)));
   };
 })();
 // warna tumbuhan per biome (rawa: pohon, semak & bunga lebih suram/keruh), lewat setTint (gambar asli tetap)

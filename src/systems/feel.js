@@ -39,6 +39,10 @@ Object.assign(World.prototype, {
     const auraCol = e.affix === 'fire' ? 0xff4a20 : e.affix === 'fast' ? 0x4ae8ff : e.affix === 'tough' ? 0xa0a0a0 : 0x88e040;
     e.aura = this.add.ellipse(e.spr.x, e.spr.y, 26 * e.sc, 10 * e.sc, auraCol, .35).setDepth(e.spr.y - 1);
     this.tweens.add({ targets: e.aura, alpha: .1, scaleX: 1.3, scaleY: 1.3, duration: 600, yoyo: true, repeat: -1 });
+    if (!OPT.lite && e.spr && e.spr.preFX && this.renderer?.type === Phaser.WEBGL) {
+      const gCol = { fire: 0xff6b20, fast: 0x55d8ff, tough: 0xc078ff, swarm: 0x90f048 }[e.affix] || 0xc078ff;
+      try { e.spr.preFX.addGlow(gCol, 3, 0, false, 0.12, 8); } catch (_) {}
+    }
   },
   // dipanggil tiap frame sesudah updEnemy
   updFeel(e, dt, locked) {
@@ -62,10 +66,11 @@ Object.assign(World.prototype, {
     // status elite mengamuk saat temannya tumbang (T310)
     if (e.elite && (e.enrageT || 0) > 0) {
       e.enrageT -= dt;
-      e.spdM = (e.spdM || 1) * 1.25;
+      e.spdM = 1.25;
+      if (e.st === 'chase' && s.body) s.body.velocity.scale(1.25);
       if (e.cd > 0) e.cd -= dt * 0.25;
       if (e.flash <= 0) s.setTint(Math.sin(this.t * 12) > 0 ? 0xff5555 : 0xffa07a);
-      if (e.enrageT <= 0) s.clearTint();
+      if (e.enrageT <= 0) { e.spdM = 1; s.clearTint(); }
     }
     // penetapan peran kelompok bila >= 3 musuh mengejar Arka (T298)
     this.roleT = (this.roleT || 0) - dt;
@@ -89,15 +94,19 @@ Object.assign(World.prototype, {
       const flankSide = (idx % 2 === 0 ? 1 : -1) * 1.35;
       const baseAng = Math.atan2(pl.y - s.y, pl.x - s.x) + flankSide;
       s.setVelocity(Math.cos(baseAng) * e.D.spd * 0.9, Math.sin(baseAng) * e.D.spd * 0.9);
-      if (s.body?.velocity.x) s.flipX = s.body.velocity.x > 0;
+      if (typeof setEnemyFlipX === 'function') setEnemyFlipX(this, e, s.body?.velocity.x || 0);
     }
-    // meteran waspada: ? saat curiga, ! saat mengejar (abaikan pemain bila musuh masih tenang/calmT T467)
+    // meteran waspada tersinkron dengan enemyAggroR/enemyWarnR & ekologi tidur
+    const aggR0 = typeof enemyAggroR === 'function' ? enemyAggroR(this, e) : 120;
+    const aggR = e.sleeping ? Math.min(aggR0, 32) : aggR0;
+    const warnR = typeof enemyWarnR === 'function' ? enemyWarnR(this, e) : 165;
     if (e.calmT > 0) {
       e.calmT -= dt;
       e.alert = 0;
-    } else if (!e.alert && d < 165 && d >= 120) { e.alert = 1; markOver(this, e, '?', '#fff3c0'); }
-    else if (e.alert !== 2 && d < 120 && !pl.dead) { e.alert = 2; markOver(this, e, '!', '#ff5a3a'); sfx('jump'); }
-    else if (e.alert && d > 230) e.alert = 0;
+    } else if (!e.alert && !e.sleeping && d < warnR && d >= aggR) { e.alert = 1; markOver(this, e, '?', '#fff3c0'); }
+    else if (e.alert !== 2 && d < aggR && !pl.dead) { e.sleeping = false; e.alert = 2; markOver(this, e, '!', '#ff5a3a'); sfx('jump'); }
+    else if (e.alert && d > warnR + 65) e.alert = 0;
+    if (e.sleeping) return;
     // ancang-ancang: tanda ! + kedip setiap kali musuh mulai bersiap menyerang
     const wind = ['wind', 'swind', 'cwind', 'throw'].includes(e.st);
     if (wind && (!e.wasWind || !e.mk)) {

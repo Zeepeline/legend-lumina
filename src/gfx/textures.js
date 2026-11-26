@@ -36,7 +36,7 @@ const IMG_LIST = [
   "gpt_city_rock_lg", "gpt_city_rock_sm", "gpt_city_cliff_s", "gpt_city_cliff_c",
   "gpt_city_guard", "npc_guard_spear", "gpt_city_cliff_l", "gpt_city_cliff_r",
   "gpt_orc_gate", "gpt_palisade_post_banner", "gpt_palisade_barricade",
-  "gpt_palisade_pillar", "gpt_palisade_wall_long", "gpt_palisade_wall_corner"
+  "gpt_palisade_pillar", "gpt_palisade_wall_long", "gpt_palisade_wall_corner", "sp_house_proto"
 , 'npc_elder', 'npc_smith', 'npc_merchant', 'npc_farmer', 'npc_inn', 'npc_guard', 'npc_hunter', 'npc_hermit', 'npc_nila', 'npc_joko', 'npc_girl', 'npc_child', 'npc_woman', 'npc_mom', 'npc_ratih', 'npc_wati', 'npc_darma', 'npc_bayu', 'npc_lestari', 'npc_gun', 'npc_priest', 'npc_mila', 'mila_sheet', 'hero_slave', 'ani_rabbit', 'ani_squirrel', 'ani_deer', 'ani_owl', 'ani_duck'];
 function imgSubdir(k) {
   if (k.startsWith('hero_')) return 'hero';

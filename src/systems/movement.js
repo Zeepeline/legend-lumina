@@ -150,7 +150,7 @@
     if (!pl || pl.dead) return _attack0.apply(this, arguments);
 
     // T509: Cek apakah menekan Serang di ujung berguling atau sesaat setelah selesai berguling/backstep
-    const inRollWindow = (pl.dashT > 0 && pl.dashT < 0.11) || (pl._rollEndT && this.t - pl._rollEndT < 0.16);
+    const inRollWindow = pl._rollKind !== 'lunge' && ((pl.dashT > 0 && pl.dashT < 0.11) || (pl._rollEndT && this.t - pl._rollEndT < 0.16));
     if (inRollWindow && pl.atkCd <= 0.08 && !isHeavy) {
       pl.dashT = 0;
       pl._rollEndT = 0;

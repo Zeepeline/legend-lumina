@@ -126,7 +126,7 @@ function openWorldMap(sc) {
   }
 
   // Pointer drag & gestures
-  let isDragging = false;
+  let isDragging = false, dragDist = 0;
   let dragStartX = 0, dragStartY = 0;
   const activePointers = new Map();
   let initialPinchDist = 0;
@@ -135,7 +135,7 @@ function openWorldMap(sc) {
     canvas.setPointerCapture(e.pointerId);
     activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (activePointers.size === 1) {
-      isDragging = true;
+      isDragging = true; dragDist = 0;
       dragStartX = e.clientX - panX;
       dragStartY = e.clientY - panY;
       canvas.style.cursor = 'grabbing';
@@ -150,6 +150,7 @@ function openWorldMap(sc) {
     activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
     if (activePointers.size === 2) {
+      dragDist = 99;
       const [p1, p2] = Array.from(activePointers.values());
       const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
       if (initialPinchDist > 0 && Math.abs(dist - initialPinchDist) > 5) {
@@ -160,18 +161,24 @@ function openWorldMap(sc) {
         initialPinchDist = dist;
       }
     } else if (isDragging) {
-      panX = e.clientX - dragStartX;
-      panY = e.clientY - dragStartY;
+      const nx = e.clientX - dragStartX, ny = e.clientY - dragStartY;
+      dragDist += Math.hypot(nx - panX, ny - panY);
+      panX = nx; panY = ny;
       drawMap(blinkState);
     }
   });
 
   const endDrag = e => {
+    const wasTap = isDragging && dragDist < 7 && activePointers.size === 1;
     activePointers.delete(e.pointerId);
     try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
     if (activePointers.size === 0) {
       isDragging = false;
       canvas.style.cursor = 'grab';
+      if (wasTap && typeof clickWorldMapPin === 'function') {
+        const rect = canvas.getBoundingClientRect();
+        clickWorldMapPin(e.clientX - rect.left, e.clientY - rect.top, { panX, panY, s: baseScale * zoom, minX, minY, sc, closeMap, overlay });
+      }
     } else if (activePointers.size === 1) {
       const p = Array.from(activePointers.values())[0];
       dragStartX = p.x - panX;
@@ -277,7 +284,12 @@ function openWorldMap(sc) {
         }
       } catch (_) {}
     }
+    if (typeof drawWorldMapOverlays === 'function') {
+      drawWorldMapOverlays(ctx, { panX, panY, s, minX, minY, zoom, blink, sc, w: canvas.width, h: canvas.height });
+    }
   };
+
+  if (typeof mountWorldMapHud === 'function') mountWorldMapHud(overlay, hint, () => drawMap(blinkState), closeMap);
 
   function wmPump() {
     if (wmBusy || !wmQueue.size) return; wmBusy = true;

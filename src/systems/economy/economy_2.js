@@ -288,25 +288,9 @@ async function openVillageVault(sc) {
 
     if (r < 0 || r === 6) break;
 
-    if (r === 0) { // Setor 50 G
-      S.gold -= 50; S.bank.gold += 50; sfx('coin');
-      popWorld(S.x || 512, (S.y || 380) - 20, '-50 G Simpan', 'gold');
-    } else if (r === 1) { // Setor 100 G
-      S.gold -= 100; S.bank.gold += 100; sfx('coin');
-      popWorld(S.x || 512, (S.y || 380) - 20, '-100 G Simpan', 'gold');
-    } else if (r === 2) { // Setor Semua
-      const all = S.gold; S.gold = 0; S.bank.gold += all; sfx('coin');
-      popWorld(S.x || 512, (S.y || 380) - 20, `-${all} G Simpan`, 'gold');
-    } else if (r === 3) { // Tarik 50 G
-      S.bank.gold -= 50; S.gold += 50; sfx('coin');
-      popWorld(S.x || 512, (S.y || 380) - 20, '+50 G Tarik', 'heal');
-    } else if (r === 4) { // Tarik 100 G
-      S.bank.gold -= 100; S.gold += 100; sfx('coin');
-      popWorld(S.x || 512, (S.y || 380) - 20, '+100 G Tarik', 'heal');
-    } else if (r === 5) { // Tarik Semua
-      const all = S.bank.gold; S.bank.gold = 0; S.gold += all; sfx('coin');
-      popWorld(S.x || 512, (S.y || 380) - 20, `+${all} G Tarik`, 'heal');
-    }
+    const wd = r >= 3, amt = r % 3 === 0 ? 50 : r % 3 === 1 ? 100 : (wd ? S.bank.gold : S.gold);
+    S.gold += wd ? amt : -amt; S.bank.gold += wd ? -amt : amt; sfx('coin');
+    popWorld(S.x || 512, (S.y || 380) - 20, `${wd ? '+' : '-'}${amt} G ${wd ? 'Tarik' : 'Simpan'}`, wd ? 'heal' : 'gold');
     updHud();
   }
   G.lock--;

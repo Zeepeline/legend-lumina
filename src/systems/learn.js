@@ -48,6 +48,7 @@ Object.assign(World.prototype, {
     sfx(id === 'venom' ? 'hurt' : 'ice'); if (id === 'holy') this.cameras.main.flash(160, 255, 250, 210);
     const g = this.add.graphics().setDepth(pl.y + 2), o = { r: 6 };
     this.tweens.add({ targets: o, r: R, duration: 300, onUpdate: () => { g.clear(); g.fillStyle(col, .22 * (1 - o.r / R / 1.4)).fillEllipse(pl.x, pl.y - 6, o.r * 2, o.r * 1.3); g.lineStyle(2, col, 1 - o.r / R).strokeEllipse(pl.x, pl.y - 6, o.r * 2, o.r * 1.3); }, onComplete: () => g.destroy() });
+    if (id === 'venom' && this.spawnMiasma) this.spawnMiasma(pl.x, pl.y, R, st.mag, t);
     for (const e of this.enemies) {
       if (e.hp <= 0) continue; const dx = e.spr.x - pl.x, dy = e.spr.y - pl.y, d = Math.hypot(dx, dy) || 1;
       if (d > R + e.D.r * e.sc) continue;
@@ -61,7 +62,7 @@ Object.assign(World.prototype, {
           this.puff(e.spr.x, e.spr.y);
         }
         this.hitEnemy(e, st.mag * .5, false, dx / d * .3, dy / d * .3);
-        this.burnEnemy(e, st.mag * (.18 + .07 * t), 3 + t);
+        this.poisonEnemy(e, st.mag * (.22 + .07 * t), 4 + t, 2);
         e.slow = 2;
       }
       else { const spirit = /ghost|wisp/.test(e.D.tex); this.hitEnemy(e, st.mag * (1.1 + .25 * t) * (spirit ? 2.5 : 1), spirit, dx / d, dy / d); }

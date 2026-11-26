@@ -26,7 +26,10 @@ class World extends Phaser.Scene {
     for (const f of M.furn || []) { const [w, h, solid] = FURN[f[0]]; if (solid) this.wall(f[1], f[2] + h * .35, w, h * .65); }
     this.doors = [];
     for (const d of M.doors || []) { if (typeof d[2] === 'object') { const to = d[2].to; this.doors.push({ x: d[0], y: d[1], to }); this.inter.push({ x: d[0], y: d[1] + 4, r: 14, fn: () => this.enterRoom(to, d) }); } else this.inter.push({ x: d[0], y: d[1] + 4, r: 14, fn: () => talk(null, [d[2]]) }); }
-    for (const f of M.fish || []) { this.add.sprite(f[0], f[1], 'ripple').play('ripple').setDepth(-8e5).setAlpha(.9); this.lights.push({ x: f[0], y: f[1], small: 1 }); this.inter.push({ x: f[0], y: f[1], r: 26, fn: () => this.fish(f) }); }
+    for (const f of M.fish || []) {
+      this.add.sprite(f[0], f[1], 'ripple').play('ripple').setDepth(-8e5).setAlpha(.9);
+      this.lights.push({ x: f[0], y: f[1], small: 1 }); this.inter.push({ x: f[0], y: f[1], r: 34, fn: () => this.fish(f) });
+    }
     for (const p of M.feedSpots || []) {
       this.inter.push({
         x: p[0], y: p[1], r: 26,

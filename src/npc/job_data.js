@@ -10,11 +10,11 @@ const JOBS = {
       { x: 200, y: 474, do: 'harvest', tx: 146, ty: 470, dur: 6, take: 'basket' },
       { x: 720, y: 246, do: 'put', drop: 'basket', dur: 3, say: 'Sayur segar, Bu Sari!' }, { x: 340, y: 244, do: 'rest', dur: 8 } ] },
     smith: { hours: [7, 19], steps: [
-      { x: 700, y: 436, do: 'take', take: 'iron' }, { x: 636, y: 458, do: 'stoke', tx: 636, ty: 430, dur: 6 },
-      { x: 766, y: 468, at: [753, 467], do: 'hammer', tx: 742, ty: 466, dur: 12, say: 'Besi panas siap ditempa!' },
-      { x: 636, y: 458, do: 'stoke', tx: 636, ty: 430, dur: 4 },
-      { x: 766, y: 468, at: [753, 467], do: 'hammer', tx: 742, ty: 466, dur: 8 },
-      { x: 700, y: 436, do: 'put', drop: 'iron', dur: 2 }, { x: 690, y: 466, do: 'rest', dur: 8 } ] },
+      { x: 916, y: 548, do: 'take', take: 'iron' }, { x: 904, y: 576, do: 'stoke', tx: 904, ty: 550, dur: 6 },
+      { x: 856, y: 576, at: [843, 575], do: 'hammer', tx: 832, ty: 574, dur: 12, say: 'Besi panas siap ditempa!' },
+      { x: 904, y: 576, do: 'stoke', tx: 904, ty: 550, dur: 4 },
+      { x: 856, y: 576, at: [843, 575], do: 'hammer', tx: 832, ty: 574, dur: 8 },
+      { x: 916, y: 548, do: 'put', drop: 'iron', dur: 2 }, { x: 868, y: 556, do: 'rest', dur: 8 } ] },
     merchant: { hours: [7, 19], steps: [
       { x: 726, y: 248, do: 'sweep', dur: 6 }, { x: 470, y: 236, do: 'take', take: 'crate', tx: 442, ty: 220, dur: 3 },
       { x: 780, y: 246, do: 'put', drop: 'crate', tx: 746, ty: 222, dur: 3 },
@@ -24,7 +24,7 @@ const JOBS = {
       { x: 276, y: 452, do: 'put', drop: 'bucket', dur: 3 }, { x: 250, y: 462, do: 'wash', dur: 10, say: 'Cucian hari ini banyak sekali.' } ] },
     vl1: { hours: [6, 18], steps: [
       { x: 526, y: 390, do: 'draw', tx: 506, ty: 370, take: 'bucket', dur: 5 }, { x: 606, y: 214, do: 'put', drop: 'bucket', tx: 590, ty: 200, dur: 3 },
-      { x: 526, y: 390, do: 'draw', tx: 506, ty: 370, take: 'bucket', dur: 5 }, { x: 560, y: 582, do: 'put', drop: 'bucket', tx: 545, ty: 565, dur: 3 } ] },
+      { x: 526, y: 390, do: 'draw', tx: 506, ty: 370, take: 'bucket', dur: 5 }, { x: 560, y: 582, do: 'put', drop: 'bucket', tx: 550, ty: 566, dur: 3 } ] },
     vl2: { hours: [6, 16], steps: [ /* 16–21: menyalakan lentera (LIFE_ROLES.lamplighter) */
       { x: 424, y: 316, do: 'wipe', tx: 424, ty: 280, dur: 5 }, { x: 490, y: 478, do: 'wipe', tx: 490, ty: 440, dur: 5 },
       { x: 376, y: 412, do: 'wipe', tx: 376, ty: 380, dur: 5 }, { x: 628, y: 412, do: 'wipe', tx: 644, ty: 390, dur: 5 } ] },

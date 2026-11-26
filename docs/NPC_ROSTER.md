@@ -582,12 +582,12 @@ Pedagang kios berdiri di depan kios masing-masing (y 562 deret utara, y 892 dere
 
 ### 4.6 Desa & alam
 
-**vl1 · Mbak Sari** — `water` (sumur desa) · `village` 470,400 · sementara `lestari`
-- **Penampilan:** gadis desa ±20 tahun, rambut dikepang dua, baju hijau pupus, kendi tanah liat.
+**vl1 · Mbak Sari** — `water` (sumur desa) · `village` 470,400 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** gadis desa ±20 tahun, rambut hitam dikepang dua, baju hijau pupus, rok cokelat berikat krem.
 - **Baris kegiatan:** `draw`
 
-**vl2 · Pak Obor** — `lamplighter` · `village` 600,300 · sementara `darma`
-- **Penampilan:** pria ±40 tahun, sarung kotak-kotak, baju koko krem, obor bambu panjang.
+**vl2 · Pak Obor** — `lamplighter` · `village` 600,300 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** pria ±40 tahun berikat kepala cokelat tua, baju koko krem lengan digulung, sarung gelap bermotif.
 - **Baris kegiatan:** `light`
 
 **vl3 · Mas Tarno** — `citizen` (warga desa biasa) · `village` 560,440 · lembar dari gambar pemilik (HAND, `tools/npc_desa/build.py`, 8 arah)
@@ -626,12 +626,52 @@ Pedagang kios berdiri di depan kios masing-masing (y 562 deret utara, y 892 dere
 - **Penampilan:** gadis penyihir, topi runcing ungu bergesper emas, rambut ungu panjang, mantel marun bertepi emas, gaun krem.
 - **Baris kegiatan:** `read`, `cast`
 
-**md1 · Pak Giling** — `miller` (kincir angin) · `meadow` 260,232 · sementara `farmer`
-- **Penampilan:** pria ±50 tahun, berbadan besar, wajah dan baju berdebu tepung putih, topi kain, karung gandum.
+**girl · Lina** — penyulam muda & pemilik Mochi (`citizen`) · `village` 380,235 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** gadis muda ceria berambut cokelat kastanye dikepang samping dengan pita hijau muda, blus krem lengan pendek, gaun pinafore hijau lumut bercelemek krem, sepatu bot cokelat tua.
+- **Baris kegiatan:** `laugh`, `clap`
+
+**merchant · Bu Sari** — pedagang kios & apoteker desa (`JOBS.village.merchant`) · `village` 730,245 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** wanita ramah berambut cokelat tua disanggul dengan ikat kepala terakota, blus krem lengan digulung, rompi dan rok panjang hijau zaitun bercelemek krem serta kantong herba di sabuk kulit.
+- **Baris kegiatan:** `sweep`, `arrange`, `give`
+
+**elder · Tetua Bram** — tetua desa (`JOBS.village.elder`) · `village` 486,95 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** pria sepuh berambut dan berjanggut putih-abu rapi, jubah panjang biru-abu gelap berlis emas, selendang bahu cokelat hangat, kemeja dalam krem.
+- **Baris kegiatan:** `sweep`, `read`
+
+**woman · Bu Lastri** — ibu warga desa (`JOBS.village.woman`) · `village` 250,445 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** wanita ramah berambut gelap disanggul rendah, blus krem, gaun merah-bata bercelemek masak krem-putih bersih.
+- **Baris kegiatan:** `sweep`, `draw`
+
+**child · Dodi** — anak desa (`citizen`) · `village` 540,410 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah, proporsi anak)
+- **Penampilan:** anak lelaki berambut cokelat pendek agak acak, kemeja krem berrompi biru lembut, celana selutut dan bot cokelat tua.
+- **Baris kegiatan:** `laugh`, `clap`
+
+**chick_master · Kiki Penggembala** — penggembala ayam (`JOBS.village.chick_master`) · `village` 820,330 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah, proporsi anak)
+- **Penampilan:** anak lincah bertopi jerami berpita merah-oranye, tunik kuning-okre berkantong pakan di pinggang, celana dan bot cokelat tua.
+- **Baris kegiatan:** `sweep`, `laugh`
+
+**joko · Pak Joko** — petani & penggiling (`JOBS.meadow.joko`) · `meadow` 340,290 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** pria petani berikat kepala kain krem-cokelat, kemeja biru-abu lengan digulung, celemek goni cokelat muda, celana dan bot cokelat tua.
+- **Baris kegiatan:** `harvest`, `mill`
+
+**wati · Wati** — pekebun Desa Kincir (`JOBS.meadow.wati`) · `meadow` 180,290 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** wanita pekebun berambut cokelat disanggul berpita kuning-krem, blus krem, gaun biru-hijau debu bercelemek kebun cokelat-krem.
+- **Baris kegiatan:** `hoe`, `harvest`
+
+**darma · Darma** — tukang kayu (`JOBS.meadow.darma`) · `meadow` 520,290 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** pria berambut cokelat pendek dan berkumis tipis, kemeja krem lengan digulung, rompi kulit bersabuk perkakas, celana biru-abu gelap, bot cokelat.
+- **Baris kegiatan:** `hammer`
+
+**bayu · Pedagang Bayu** — pedagang hasil bumi (`JOBS.meadow.bayu`) · `meadow` 248,372 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** pria pedagang berambut cokelat bergelombang, kemeja krem bersyal biru tua dan rompi marun hangat, kantong koin di sabuk.
+- **Baris kegiatan:** `arrange`, `sweep`
+
+**md1 · Pak Giling** — `miller` (kincir angin) · `meadow` 260,232 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** pria ±50 tahun berbadan agak berisi, topi kain abu-krem, kumis abu-abu, kemeja krem berdebu tepung dan celemek goni pucat.
 - **Baris kegiatan:** `mill`
 
-**md2 · Tole Pemancing** — `fisher` (dermaga) · `meadow` 660,780 · sementara `gun`
-- **Penampilan:** remaja ±15 tahun, topi caping, kaus biru, celana digulung, joran bambu, ember ikan.
+**md2 · Tole Pemancing** — `fisher` (dermaga) · `meadow` 660,780 · lembar bergaya MC (`HAND`, `tools/npc_desa/build_mc_npc.py`, 8 arah)
+- **Penampilan:** remaja ±15 tahun bertopi caping bambu, kaus biru sedang, celana selutut digulung, sandal cokelat.
 - **Baris kegiatan:** `fish`
 
 **lk1 · Penjaga Mercusuar Tirta** — `lightkeeper` · `lake` 1100,470 · sementara `hermit`

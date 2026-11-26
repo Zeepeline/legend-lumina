@@ -63,9 +63,10 @@ Object.assign(World.prototype, {
       e.burn -= dt; e.burnT = (e.burnT || 0) - dt;
       if (e.burnT <= 0) {
         e.burnT = .5;
-        const d = Math.max(1, Math.round(e.burnDmg - e.D.def * .3));
+        const mul = 1 + ((e.burnStk || 1) - 1) * .15;
+        const d = Math.max(1, Math.round(e.burnDmg * mul - e.D.def * .3));
         e.hp -= d;
-        popWorld(s.x + rnd(-5, 5), s.y - s.displayHeight - 4, '' + d, 'crit');
+        popWorld(s.x + rnd(-5, 5), s.y - s.displayHeight - 4, '' + d, 'dot-burn');
         if (e.boss) bossBar(e.D.name, e.hp / e.max);
         if (e.hp <= 0) { this.killEnemy(e); return true; }
       }
@@ -74,21 +75,36 @@ Object.assign(World.prototype, {
         if (Math.random() < 0.5) this.sparkle(s.x + rnd(-4, 4), s.y - s.displayHeight - rnd(2, 8), 'spark', 1);
       }
       if (e.flash <= 0 && !(e.frz > 0)) s.setTint(0xffb080);
-      if (e.burn <= 0 && e.flash <= 0) s.clearTint();
+      if (e.burn <= 0) { e.burnStk = 0; if (e.flash <= 0) s.clearTint(); }
     }
     if (e.poison > 0) {
       e.poison -= dt; e.poiT = (e.poiT || 0) - dt;
       if (e.poiT <= 0) {
         e.poiT = .8;
-        const d = Math.max(1, Math.round((e.poiDmg || 2) - e.D.def * .2));
+        const mul = 1 + ((e.poiStk || 1) - 1) * .15;
+        const d = Math.max(1, Math.round((e.poiDmg || 2) * mul - e.D.def * .2));
         e.hp -= d;
-        popWorld(s.x + rnd(-5, 5), s.y - s.displayHeight - 4, '' + d, 'hurt');
+        popWorld(s.x + rnd(-5, 5), s.y - s.displayHeight - 4, '' + d, 'dot-poi');
         if (e.boss) bossBar(e.D.name, e.hp / e.max);
         if (e.hp <= 0) { this.killEnemy(e); return true; }
       }
       if (Math.random() < dt * 6) this.sparkle(s.x + rnd(-4, 4), s.y - s.displayHeight - rnd(2, 6), 'dotg', 1);
       if (e.flash <= 0 && !(e.frz > 0) && !(e.burn > 0)) s.setTint(0xa0f080);
-      if (e.poison <= 0 && e.flash <= 0) s.clearTint();
+      if (e.poison <= 0) { e.poiStk = 0; if (e.flash <= 0) s.clearTint(); }
+    }
+    if (e.bleed > 0) {
+      e.bleed -= dt; e.bleedT = (e.bleedT || 0) - dt;
+      if (e.bleedT <= 0) {
+        e.bleedT = .65;
+        const mul = 1 + ((e.bleedStk || 1) - 1) * .18;
+        const d = Math.max(1, Math.round((e.bleedDmg || 2) * mul));
+        e.hp -= d;
+        popWorld(s.x + rnd(-5, 5), s.y - s.displayHeight - 4, '' + d, 'dot-bleed');
+        if (e.boss) bossBar(e.D.name, e.hp / e.max);
+        if (e.hp <= 0) { this.killEnemy(e); return true; }
+      }
+      if (Math.random() < dt * 5 && this.jx) this.jx('chip', s.x + rnd(-4, 4), s.y - 6, 1, { tint: 0xd82838 });
+      if (e.bleed <= 0) e.bleedStk = 0;
     }
     if (e.frz > 0) {
       e.frz -= dt; s.setVelocity(0); s.anims.pause(); if (e.flash <= 0) s.setTint(0x9ad8ff);
@@ -98,8 +114,24 @@ Object.assign(World.prototype, {
     }
     return false;
   },
-  poisonEnemy(e, dmg, sec = 3) { if (e.hp <= 0) return; e.poison = Math.max(e.poison || 0, sec); e.poiDmg = dmg; },
-  burnEnemy(e, dmg, sec = 2) { if (e.hp <= 0) return; e.burn = Math.max(e.burn || 0, sec); e.burnDmg = dmg; },
+  poisonEnemy(e, dmg, sec = 3, addStk = 1) {
+    if (e.hp <= 0) return;
+    e.poison = Math.max(e.poison || 0, sec);
+    e.poiDmg = Math.max(e.poiDmg || 0, dmg);
+    e.poiStk = Math.min(10, (e.poiStk || 0) + addStk);
+  },
+  burnEnemy(e, dmg, sec = 2, addStk = 1) {
+    if (e.hp <= 0) return;
+    e.burn = Math.max(e.burn || 0, sec);
+    e.burnDmg = Math.max(e.burnDmg || 0, dmg);
+    e.burnStk = Math.min(10, (e.burnStk || 0) + addStk);
+  },
+  bleedEnemy(e, dmg, sec = 4, addStk = 1) {
+    if (e.hp <= 0) return;
+    e.bleed = Math.max(e.bleed || 0, sec);
+    e.bleedDmg = Math.max(e.bleedDmg || 0, dmg);
+    e.bleedStk = Math.min(10, (e.bleedStk || 0) + addStk);
+  },
   freezeEnemy(e, sec) {
     if (e.hp <= 0) return;
     if (!(e.frz > 0)) popWorld(e.spr.x, e.spr.y - e.spr.displayHeight - 10, 'beku!', 'mpc');

@@ -23,12 +23,8 @@ Object.assign(World.prototype, {
       for (let i = 0; i < 6; i++) {
         const sp = this.add.circle(this.p.x + rnd(-12, 12), this.p.y - rnd(6, 20), rnd(2, 3), 0x81c784, 0.9).setDepth(this.p.depth + 1);
         this.tweens.add({
-          targets: sp,
-          x: sp.x + rnd(10, 24),
-          y: sp.y - rnd(10, 20),
-          alpha: 0,
-          duration: rnd(600, 1000),
-          onComplete: () => sp.destroy()
+          targets: sp, x: sp.x + rnd(10, 24), y: sp.y - rnd(10, 20),
+          alpha: 0, duration: rnd(600, 1000), onComplete: () => sp.destroy()
         });
       }
 
@@ -348,13 +344,8 @@ Object.assign(World.prototype, {
     
     // Animasi goyang lonceng perunggu
     this.tweens.add({
-      targets: s,
-      angle: 12,
-      duration: 100,
-      yoyo: true,
-      repeat: 5,
-      ease: 'Quad.easeInOut',
-      onComplete: () => { s.angle = 0; }
+      targets: s, angle: 12, duration: 100, yoyo: true,
+      repeat: 5, ease: 'Quad.easeInOut', onComplete: () => { s.angle = 0; }
     });
 
     popWorld(bx, by - 24, '🔔 DDOOONNGG!', 'gold');

@@ -9,10 +9,10 @@ const HERO_ROW = {
   roll_down: 19, roll_up: 20, roll_side: 21, hurt: 22, die: 23, rise: 24, cast_down: 25, cast_up: 26, cast_side: 27, bow_down: 28,
   bow_side_a: 29, bow_side: 30, bow_up: 31, fish_cast: 32, fish_pull: 33, pick: 34, hoe: 35, cheer: 36, cheer_b: 37, sleep: 38
 };
-IMG_LIST.push('hero_arka', 'hero_mc2');
-// Tokoh utama: 'mc2' = tokoh baru (rambut hijau, tunik merah; hero_mc2.png, atlas sama + baris 39–40 = jalan 8 frame) · 'arka' = Arka lama.
-// Pilihan di Pengaturan › Tokoh utama (localStorage 'lumina_mc'). Aset Arka lama tidak dihapus.
-const HERO_SKIN = (() => { try { return localStorage.getItem('lumina_mc') || 'mc2'; } catch (_) { return 'mc2'; } })();
+IMG_LIST.push('hero_arka', 'hero_mc2', 'hero_mc2_slave');
+// Tokoh utama: 'mc2_slave' = budak laki-laki (bawaan) · 'mc2' = perempuan · 'arka' = Arka lama.
+// Pilihan di Pengaturan › Tokoh utama (localStorage 'lumina_mc'). Aset lama tidak dihapus.
+const HERO_SKIN = (() => { try { return localStorage.getItem('lumina_mc') || 'mc2_slave'; } catch (_) { return 'mc2_slave'; } })();
 let HERO_W8 = false, HERO_W8U = false, HERO_W8D = false, HERO_BLINK = false; /* jalan 8 frame: samping (39–40), atas (41–42), bawah (43–44) */
 let HERO_W8DS = false, HERO_W8US = false, HERO_SWD = false; /* diagonal depan (47–48) & belakang (49–50); tebasan samping di sprite */
 const WALK_SIDE_W = [.6, 1.2, 1.2, .6, 1.2, 1.2]; /* jalan samping: bobot lama tiap frame (jumlah 6 = putaran sama) */
@@ -22,22 +22,26 @@ function walkSideF(u) {
 // geometri frame skin aktif: ukuran sel, titik tengah-kaki, skala tinggi tubuh terhadap Arka (dipakai sword_hand.js)
 let HERO_G = { fw: HERO_FW, fh: HERO_FH, cx: 24, fy: 40, k: 1 };
 function heroSkinToggle() { /* Pengaturan › Tokoh utama */
-  try { localStorage.setItem('lumina_mc', HERO_SKIN === 'arka' ? 'mc2' : 'arka'); } catch (_) { }
+  const next = { mc2_slave: 'mc2', mc2: 'arka', arka: 'mc2_slave' }[HERO_SKIN] || 'mc2_slave';
+  try { localStorage.setItem('lumina_mc', next); } catch (_) { }
   if (!G.title && G.scene) saveGame(G.scene); location.reload();
 }
 function regHeroArka(T) {
   const isSlave = (typeof S !== 'undefined' && (S.skin === 'slave' || S.outfit === 'slave')) ||
     (typeof location !== 'undefined' && /[?&]skin=slave\b/.test(location.search));
-  const mc2 = HERO_SKIN === 'mc2' && IMGEL.hero_mc2 && IMGEL.hero_mc2.height >= 56 * 41; /* tokoh baru (sel 64×56, ±50 px) belum punya versi tawanan */
-  HERO_G = mc2 ? { fw: 64, fh: 56, cx: 32, fy: 56, k: 1.38 } : { fw: HERO_FW, fh: HERO_FH, cx: 24, fy: 40, k: 1 };
+  const mc2Slave = HERO_SKIN === 'mc2_slave' && IMGEL.hero_mc2_slave && IMGEL.hero_mc2_slave.height >= 56 * 41;
+  const mc2 = HERO_SKIN === 'mc2' && IMGEL.hero_mc2 && IMGEL.hero_mc2.height >= 56 * 41;
+  const use64 = mc2Slave || mc2;
+  HERO_G = use64 ? { fw: 64, fh: 56, cx: 32, fy: 56, k: 1.38 } : { fw: HERO_FW, fh: HERO_FH, cx: 24, fy: 40, k: 1 };
   const FW = HERO_G.fw, FH = HERO_G.fh;
-  const img = mc2 ? IMGEL.hero_mc2 : (isSlave && IMGEL.hero_slave) ? IMGEL.hero_slave : (IMGEL.hero_arka || IMGEL.hero_slave);
+  const fallback = (isSlave && IMGEL.hero_slave) ? IMGEL.hero_slave : (IMGEL.hero_arka || IMGEL.hero_slave);
+  const img = mc2Slave ? IMGEL.hero_mc2_slave : mc2 ? IMGEL.hero_mc2 : fallback;
   if (T.exists('ch_hero')) T.remove('ch_hero');
   const t = T.addImage('ch_hero', img);
   for (const k in HERO_ROW) for (let i = 0; i < 4; i++) t.add(k + i, 0, i * FW, HERO_ROW[k] * FH, FW, FH);
-  HERO_W8 = !!mc2; HERO_W8U = !!mc2 && img.height >= FH * 43; HERO_W8D = !!mc2 && img.height >= FH * 45;
-  HERO_BLINK = !!mc2 && img.height >= FH * 47; HERO_SWD = !!mc2; /* baris 45–46: diam bawah/samping mata terpejam */
-  HERO_W8DS = !!mc2 && img.height >= FH * 49; HERO_W8US = !!mc2 && img.height >= FH * 51;
+  HERO_W8 = !!use64; HERO_W8U = !!use64 && img.height >= FH * 43; HERO_W8D = !!use64 && img.height >= FH * 45;
+  HERO_BLINK = !!use64 && img.height >= FH * 47; HERO_SWD = !!use64; /* baris 45–46: diam bawah/samping mata terpejam */
+  HERO_W8DS = !!use64 && img.height >= FH * 49; HERO_W8US = !!use64 && img.height >= FH * 51;
   if (HERO_W8) for (let i = 0; i < 8; i++) t.add('walk8s_' + i, 0, (i % 4) * FW, (39 + (i >> 2)) * FH, FW, FH);
   if (HERO_W8U) for (let i = 0; i < 8; i++) t.add('walk8u_' + i, 0, (i % 4) * FW, (41 + (i >> 2)) * FH, FW, FH);
   if (HERO_BLINK) for (let i = 0; i < 8; i++) t.add('blink_' + (i < 4 ? 'down' : 'side') + (i % 4), 0, (i % 4) * FW, (45 + (i >> 2)) * FH, FW, FH);

@@ -113,9 +113,11 @@ Object.assign(World.prototype, {
       if (o.walking && o.dir && ((dir === 'left' && o.dir === 'right') || (dir === 'right' && o.dir === 'left') || (dir === 'up' && o.dir === 'down') || (dir === 'down' && o.dir === 'up'))) {
         o.turnDelay = 0.12;
       }
-      const sf = o.walking && o.spr.anims.isPlaying && o.spr.anims.currentFrame ? Math.max(0, o.spr.anims.currentFrame.index - 1) : 0;
+      const k = o.ch + '_' + animDir, an = this.anims.get(k), len = an ? an.frames.length : 0;
+      const sf0 = o.walking && o.spr.anims.isPlaying && o.spr.anims.currentFrame ? Math.max(0, o.spr.anims.currentFrame.index - 1) : 0;
+      const sf = len ? sf0 % len : 0;
       o.dir = dir; o.animDir = animDir; o.spr.flipX = flip;
-      o.spr.play({ key: o.ch + '_' + animDir, startFrame: sf }, true);
+      if (len) o.spr.play({ key: k, startFrame: sf }, true);
     }
     o.walking = true;
   },

@@ -14,6 +14,15 @@ const ESH = {
   mimic: { fw: 64, fh: 44, use: { mimic: { r: 8 } } },
   samurai: { fw: 96, fh: 80, use: { samurai: { r: 12 } } },
   golem: { fw: 64, fh: 63, use: { golem: { r: 13 }, golemi: { keepTint: 0xbfe2ff, r: 13 }, golemk: { keepTint: 0xe6d2a8, scale: 1.5, r: 18 } } },
+  frog: { fw: 40, fh: 33, use: { frog: { r: 8 }, bounty_frog: { scale: 1.55, keepTint: 0x9cff82, r: 12 } } },
+  boar: { fw: 42, fh: 35, use: { boar: { r: 9 } } },
+  bee: { fw: 30, fh: 29, use: { bee: { r: 6 } } },
+  plant: { fw: 44, fh: 42, use: { plant: { r: 8 } } },
+  snake: { fw: 38, fh: 33, use: { snake: { r: 7 }, gsnake: { scale: 1.85, r: 11 }, kryos: { scale: 2.3, keepTint: 0xb8eeff, r: 14 } } },
+  wisp: { fw: 34, fh: 31, use: { wisp: { r: 6 } }, near: 36 },
+  shroom: { fw: 40, fh: 37, use: { shroom: { r: 8 }, squeen: { scale: 1.75, keepTint: 0xf0b8ff, r: 12 } } },
+  bat: { fw: 32, fh: 31, use: { bat: { r: 7 }, batc: { keepTint: 0x98c8ff, r: 7 }, bounty_gargoyle: { scale: 1.45, keepTint: 0xff7a6a, r: 11 } } },
+  salam: { fw: 40, fh: 30, use: { salam: { r: 7 } } },
 };
 IMG_LIST.push(...Object.keys(ESH).map(k => 'esh_' + k));
 function regEnemySheets(sc) {
@@ -43,19 +52,31 @@ function eshFrame(sc, dt) {
   for (const e of sc.enemies) {
     const s = e.spr, D = e.D; if (!D || !D.esh || e.hp <= 0 || !s.active) continue;
     const key = D.tex, X = e._esh || (e._esh = { a: '', al: 0 });
-    if (pl) s.flipX = pl.x < s.x;
+    const vx = s.body ? s.body.velocity.x : 0, vy = s.body ? s.body.velocity.y : 0, spd = Math.hypot(vx, vy);
     if (e.alert === 2 && !X.al) { X.al = 1; e._alertT = .55; } else if (e.alert !== 2) X.al = 0;
     if (e._alertT > 0) e._alertT -= dt; if (e._hurtT > 0) e._hurtT -= dt;
     let a; if (e.st !== 'smash') X.sm = 0;
+    const isWind = ['wind', 'swind', 'cwind', 'throw', 'cast', 'ring', 'spit', 'calling', 'frog_wind', 'walk_wind'].includes(e.st)
+      || (D.eshShoot && e.st === 'shoot') || e.swoopPrep > 0 || e._preShoot > 0;
+    const isAtk = ['atk', 'lunge', 'run', 'shoot', 'charge', 'slam', 'leap', 'swoop', 'frog_atk', 'walk_atk'].includes(e.st)
+      || (e.st === 'rec' && e.t > .55) || e._postShoot > 0;
+    if (!e.fleeing && !e.leash && (e.alert >= 2 || isWind || isAtk || (pl && Math.hypot(pl.x - s.x, pl.y - s.y) < 120))) {
+      if (pl) s.flipX = pl.x < s.x;
+    } else if (Math.abs(vx) > 6) {
+      s.flipX = vx < -6;
+    }
     if (e._hurtT > 0) { s.anims.stop(); s.setFrame(16 + (e._hurtT < .15 ? 1 : 0)); X.a = 'hurt'; continue; }
-    if (e.staggerT > 0 || e.frozen > 0) { s.anims.stop(); s.setFrame(18 + (Math.floor(sc.t * 4) % 2)); X.a = 'stag'; continue; }
-    if (e.st === 'smash') { X.sm = X.sm || sc.time.now; a = sc.time.now - X.sm < 380 ? 'wind' : 'atk'; } /* elite_brute: ancang-ancang kapak lalu hantaman */
-    else if (['wind', 'swind', 'cwind', 'throw', 'cast', 'ring', 'spit', 'calling'].includes(e.st) || (D.eshShoot && e.st === 'shoot')) a = 'wind';
-    else if (['atk', 'lunge', 'run', 'shoot', 'charge', 'slam', 'leap'].includes(e.st) || (e.st === 'rec' && e.t > .55)) a = 'atk';
+    if (e.st === 'stun' || e.staggerT > 0 || e.frozen > 0) {
+      s.anims.stop(); s.setFrame(18 + (Math.floor(sc.t * 4) % 2)); X.a = 'stag'; continue;
+    }
+    if (e.st === 'smash') { X.sm = X.sm || sc.time.now; a = sc.time.now - X.sm < 380 ? 'wind' : 'atk'; }
+    else if (isWind) a = 'wind';
+    else if (isAtk) a = 'atk';
     else if (D.eshNear && pl && Math.hypot(pl.x - s.x, pl.y - s.y) < D.eshNear && !e.faded) a = 'atk';
     else if (e._alertT > 0 || e.st === 'roar') a = 'alert';
-    else a = s.body && s.body.velocity.length() > 6 ? 'mv' : 'idle';
+    else a = spd > 6 ? 'mv' : 'idle';
     if (X.a !== a) { X.a = a; s.play(key + '_' + a, true); }
+    if (s.anims) s.anims.timeScale = a === 'mv' ? clamp(spd / Math.max(20, D.spd || 40), .75, 1.5) : 1;
   }
 }
 { const W = World.prototype, _cr = W.create, _hit = W.hitEnemy;

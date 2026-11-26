@@ -105,10 +105,34 @@ Object.assign(World.prototype, {
     }
   },
   // ── ala Dimraeth: zona bahaya di tanah, aura status, kawah hantaman, nisan Jejak Cahaya ──
-  jxTele(e) { // telegraf serangan progresif di tanah (Cobo #11): terisi proporsional terhadap durasi ancang-ancang
-    const s = e.spr, pl = this.pl, a = Math.atan2(pl.y - s.y, pl.x - s.x), r0 = (e.D.r || 8) * (e.sc || 1), R = r0 + 12;
-    const cx = s.x + Math.cos(a) * (r0 + 8), cy = s.y - 2 + Math.sin(a) * (r0 + 8) * .8, g = this.add.graphics().setDepth(1.5), T0 = Math.max(.2, e.t || .4);
+  jxTele(e) { // telegraf serangan progresif di tanah (Cobo #11): pita merah serbu atau lingkaran area
+    const s = e.spr, pl = this.pl, r0 = (e.D.r || 8) * (e.sc || 1), R = r0 + 12;
+    const isRush = e.st === 'cwind' || e.D.ai === 'charge' || e.D.ai === 'lunge' || e.D.ai === 'elite_brute';
+    const g = this.add.graphics().setDepth(1.5), T0 = Math.max(.2, e.t || .4);
     const o = { p: 0 }, done = () => { if (g.active) this.tweens.add({ targets: g, alpha: 0, duration: 140, onComplete: () => g.destroy() }); };
+    if (isRush) {
+      let dx = e.lx, dy = e.ly;
+      if (dx == null || dy == null) { dx = pl.x - s.x; dy = pl.y - s.y; }
+      const dl = Math.hypot(dx, dy) || 1, nx = dx / dl, ny = dy / dl, px = -ny, py = nx;
+      const sx = s.x, sy = s.y - 2, len = (e.D.ai === 'charge' || e.st === 'cwind') ? 115 : 78, hw = Math.max(8, r0 + 3);
+      const pts = L => [
+        { x: sx + px * hw, y: sy + py * hw }, { x: sx - px * hw, y: sy - py * hw },
+        { x: sx + nx * L - px * hw, y: sy + ny * L - py * hw }, { x: sx + nx * L + px * hw, y: sy + ny * L + py * hw }
+      ];
+      this.tweens.add({ targets: o, p: 1, duration: T0 * 1000, onComplete: done, onUpdate: () => {
+        if (!g.active) return; g.clear(); if (e.hp <= 0 || !s.active) { g.destroy(); return; }
+        const L = len * Math.max(0.02, o.p);
+        g.lineStyle(1, 0xff7a6a, .55).strokePoints(pts(len), true);
+        g.fillStyle(0xff3828, .18 + .24 * o.p).fillPoints(pts(L), true);
+        if (o.p > .85) {
+          g.lineStyle(1.8, 0xffe8b0, .9)
+            .lineBetween(sx + nx * L + px * hw, sy + ny * L + py * hw, sx + nx * L - px * hw, sy + ny * L - py * hw);
+        }
+      } });
+      return;
+    }
+    const a = Math.atan2(pl.y - s.y, pl.x - s.x);
+    const cx = s.x + Math.cos(a) * (r0 + 8), cy = s.y - 2 + Math.sin(a) * (r0 + 8) * .8;
     this.tweens.add({ targets: o, p: 1, duration: T0 * 1000, onComplete: done, onUpdate: () => {
       if (!g.active) return; g.clear(); if (e.hp <= 0 || !s.active) { g.destroy(); return; }
       const pr = Math.max(0.01, o.p), k = 1.35 - .35 * o.p;
@@ -220,7 +244,7 @@ Object.assign(World.prototype, {
         e._jxSw = (e._jxSw || 0) - dt; if (e._jxSw <= 0) { e._jxSw = .11; this.jxSwoosh(e.spr.x, e.spr.y, bv.x, bv.y, (e.D.r || 8) >= 10); }
       }
       else e._jxSw = 0;
-      if (w && !e._jxW) { this.jxWind(e); if (!e.boss && e.D.ai !== 'golem') this.jxTele(e); } e._jxW = w;
+      if (w && !e._jxW) { this.jxWind(e); if ((!e.boss && e.D.ai !== 'golem') || e.st === 'cwind') this.jxTele(e); } e._jxW = w;
       if (e.hp > 0 && (e.D.r || 0) >= 12 && this.puff && e.spr.body && e.spr.body.velocity.length() > 8) {
         e._jxStep = (e._jxStep || 0) - dt; if (e._jxStep <= 0) { e._jxStep = .38; this.puff(e.spr.x + rnd(-6, 6), e.spr.y); }
       }

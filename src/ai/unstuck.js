@@ -1,60 +1,66 @@
 'use strict';
-// Aturan Lepas-Sangkut Musuh Saat Mengejar (T468) — referensi: Hades
-// Kalau musuh sedang mengejar (aggro) dan bergerak < 2 px selama 0.6 detik,
-// belok tegak lurus arah ke pemain selama 0.5 detik (pilih sisi yang tidak menabrak).
-
+// Aturan Lepas-Sangkut Musuh Saat Mengejar (T468) — membandingkan posisi nyata lintas frame
 (() => {
+  const SKIP_ST = new Set(['wind', 'swind', 'cwind', 'cast', 'rec', 'stun', 'calling', 'atk', 'frog_wind', 'walk_wind']);
   const _origUpdEnemy = World.prototype.updEnemy;
-  World.prototype.updEnemy = function (e, dt) {
+  World.prototype.updEnemy = function (e, dt, locked) {
     if (!e || e.hp <= 0 || !e.spr || !e.spr.active) {
       return _origUpdEnemy.apply(this, arguments);
     }
 
-    const s = e.spr;
-    const pl = this.pl;
-
-    // Hitung posisi sebelum update AI
-    const prevX = s.x, prevY = s.y;
-
     _origUpdEnemy.apply(this, arguments);
 
-    // Jangan proses jika musuh mati, boss, sedang stun/terkena hitstop, atau pemain mati
-    if (!s.active || e.hp <= 0 || e.boss || e.staggerT > 0 || (pl && pl.dead)) return;
-
-    const dx = pl.x - s.x, dy = pl.y - s.y;
-    const d = Math.hypot(dx, dy);
-
-    // Hanya aktif saat mengejar Arka (jarak pandang wajar 50..220 px)
-    const isChasing = d >= 40 && d <= 260 && !e.calmT;
-    if (!isChasing) {
+    const s = e.spr, pl = this.pl;
+    if (!s.active || !s.body || e.hp <= 0 || locked || dt <= 0) {
       e._stuckT = 0;
-      e._unstuckT = 0;
+      if (s && s.active) { e._lastX = s.x; e._lastY = s.y; }
       return;
     }
 
-    // Jika sedang dalam status un-stuck (belok tegak lurus)
+    const cantMove = e.boss || e.sleeping || e.ambushing || e.staggerT > 0 ||
+      (e.hurtT || 0) > 0 || (e.kb || 0) > 0 || (e.calmT || 0) > 0 || SKIP_ST.has(e.st);
+    const dx = pl ? pl.x - s.x : 0, dy = pl ? pl.y - s.y : 0, d = Math.hypot(dx, dy) || 1;
+    const isChasing = !cantMove && pl && !pl.dead && d >= 36 && d <= 260;
+
+    if (!isChasing) {
+      e._stuckT = 0; e._unstuckT = 0;
+      e._lastX = s.x; e._lastY = s.y;
+      return;
+    }
+
     if (e._unstuckT > 0) {
       e._unstuckT -= dt;
-      const spd = e.D?.spd || 45;
-      const perpX = -dy / d * (e._unstuckSide || 1);
-      const perpY = dx / d * (e._unstuckSide || 1);
+      const spd = (e.D && e.D.spd) || 45, side = e._unstuckSide || 1;
+      const perpX = (-dy / d) * side, perpY = (dx / d) * side;
       s.setVelocity(perpX * spd * 0.9, perpY * spd * 0.9);
-      if (Math.abs(s.body.velocity.x) > 2) s.flipX = s.body.velocity.x > 0;
+      if (typeof setEnemyFlipX === 'function') setEnemyFlipX(this, e, s.body.velocity.x);
+      e._lastX = s.x; e._lastY = s.y;
       return;
     }
 
-    // Cek apakah posisi berpindah < 2 px selama 0.6 detik
-    const moved = Math.hypot(s.x - prevX, s.y - prevY);
-    if (moved < 2 * dt * 60) {
+    const vMag = Math.hypot(s.body.velocity.x, s.body.velocity.y);
+    const moved = e._lastX != null ? Math.hypot(s.x - e._lastX, s.y - e._lastY) : 999;
+    e._lastX = s.x; e._lastY = s.y;
+
+    if (vMag <= 12) {
+      e._stuckT = 0;
+      return;
+    }
+
+    if (moved < Math.max(0.4, vMag * dt * 0.18)) {
       e._stuckT = (e._stuckT || 0) + dt;
-      if (e._stuckT >= 0.6) {
+      if (e._stuckT >= 0.45) {
         e._stuckT = 0;
-        e._unstuckT = 0.5; // belok selama 0.5 detik
-        // Tentukan sisi (kiri atau kanan relatif terhadap arah pemain)
-        e._unstuckSide = (e._unstuckSide === 1) ? -1 : 1;
+        e._unstuckT = 0.45;
+        const pLx = -dy / d, pLy = dx / d;
+        const losR = !this.hasLineOfSight || this.hasLineOfSight(s.x, s.y, s.x + pLx * 36, s.y + pLy * 36);
+        const losL = !this.hasLineOfSight || this.hasLineOfSight(s.x, s.y, s.x - pLx * 36, s.y - pLy * 36);
+        if (losR && !losL) e._unstuckSide = 1;
+        else if (losL && !losR) e._unstuckSide = -1;
+        else e._unstuckSide = e._unstuckSide === 1 ? -1 : 1;
       }
     } else {
-      e._stuckT = Math.max(0, (e._stuckT || 0) - dt * 0.5);
+      e._stuckT = Math.max(0, (e._stuckT || 0) - dt * 0.6);
     }
   };
 })();

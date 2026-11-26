@@ -103,7 +103,8 @@ function processBannerQueue() {
   if (BANNER_BUSY || !BANNER_QUEUE.length) return;
   BANNER_BUSY = true;
   const item = BANNER_QUEUE.shift();
-  const b = win('banner' + (item.big ? ' big' : ''), (item.sub ? `<small>${item.sub}</small>` : '') + item.text);
+  const bCls = typeof item.big === 'string' ? ' ' + item.big : (item.big ? ' big' : '');
+  const b = win('banner' + bCls, (item.sub ? `<small>${item.sub}</small>` : '') + item.text);
   if (item.onCreated) item.onCreated(b);
   setTimeout(() => b.classList.add('out'), item.ms);
   setTimeout(() => {

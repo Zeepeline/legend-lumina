@@ -24,16 +24,53 @@ function applyGptMonsters(sc) {
   }
   const hd = IMGEL.mon_slime_hd;
   if (hd) {
-    if (!T.exists('slime_hd')) sc.textures.addSpriteSheet('slime_hd', hd, { frameWidth: 100, frameHeight: 100 });
-    const regA = (k, st, ed, fps, r) => {
-      if (!A.exists(k)) A.create({ key: k, frames: A.generateFrameNumbers('slime_hd', { start: st, end: ed }), frameRate: fps, repeat: r });
+    const regSlimeSet = (key, srcImg) => {
+      if (!T.exists(key)) sc.textures.addSpriteSheet(key, srcImg, { frameWidth: 100, frameHeight: 100 });
+      const regA = (k, st, ed, fps, r) => {
+        if (!A.exists(k)) A.create({ key: k, frames: A.generateFrameNumbers(key, { start: st, end: ed }), frameRate: fps, repeat: r });
+      };
+      regA(key + '_idle', 0, 5, 7, -1);
+      regA(key + '_hop', 7, 13, 11, -1);
+      regA(key + '_atk', 14, 20, 11, 0);
+      regA(key + '_hurt', 21, 23, 10, 0);
+      regA(key + '_die', 28, 34, 9, 0);
+      regA(key + '_mv', 7, 13, 11, -1);
     };
-    regA('slime_hd_idle', 0, 5, 7, -1);
-    regA('slime_hd_hop', 7, 13, 11, -1);
-    regA('slime_hd_atk', 14, 20, 11, 0);
-    regA('slime_hd_hurt', 21, 23, 10, 0);
-    regA('slime_hd_die', 28, 34, 9, 0);
-    regA('slime_hd_mv', 7, 13, 11, -1);
+    const recolorSlime = (fn) => {
+      const cv = document.createElement('canvas'); cv.width = hd.width; cv.height = hd.height;
+      const ctx = cv.getContext('2d'); ctx.drawImage(hd, 0, 0);
+      const idata = ctx.getImageData(0, 0, cv.width, cv.height), d = idata.data;
+      for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 0) fn(d, i);
+      ctx.putImageData(idata, 0, 0); return cv;
+    };
+    regSlimeSet('slime_hd', hd);
+    const c = (r, g, b) => [Math.min(255, r), Math.min(255, g), Math.min(255, b)];
+    const variants = [
+      ['slime_hd_red', 'slimer', 0.48, (d, i) => {
+        const [r, g, b] = [d[i], d[i + 1], d[i + 2]];
+        [d[i], d[i + 1], d[i + 2]] = c(Math.round(b * .96), Math.round(r * .5 + g * .22), Math.round(r * .55 + g * .28));
+      }],
+      ['slime_hd_ice', 'slimei', 0.50, (d, i) => {
+        const [r, g, b] = [d[i], d[i + 1], d[i + 2]];
+        [d[i], d[i + 1], d[i + 2]] = c(Math.round(b * .55 + r * .45), Math.round(b * .92 + g * .12), b + 15);
+      }],
+      ['slime_hd_poison', 'slimep', 0.52, (d, i) => {
+        const [r, g, b] = [d[i], d[i + 1], d[i + 2]];
+        [d[i], d[i + 1], d[i + 2]] = c(Math.round(g * .55 + r * .35), Math.round(b * .95), Math.round(r * .45 + g * .3));
+      }],
+      ['slime_hd_fire', 'slimef', 0.52, (d, i) => {
+        const [r, g, b] = [d[i], d[i + 1], d[i + 2]];
+        [d[i], d[i + 1], d[i + 2]] = c(b + 10, Math.round(b * .52 + g * .35), Math.round(r * .55));
+      }],
+      ['slime_hd_gold', 'gold_slime', 0.48, (d, i) => {
+        const [r, g, b] = [d[i], d[i + 1], d[i + 2]];
+        [d[i], d[i + 1], d[i + 2]] = c(b + 12, Math.round(b * .84 + g * .14), Math.round(r * .65 + g * .15));
+      }]
+    ];
+    for (const [k, ename, scVal, fn] of variants) {
+      regSlimeSet(k, recolorSlime(fn));
+      if (ENEMY[ename]) { ENEMY[ename].tex = k; ENEMY[ename].scale = scVal; delete ENEMY[ename].keepTint; }
+    }
     if (ENEMY.slime) { ENEMY.slime.tex = 'slime_hd'; ENEMY.slime.scale = 0.46; }
     if (ENEMY.slimeb) { ENEMY.slimeb.tex = 'slime_hd'; ENEMY.slimeb.scale = 0.52; }
     if (ENEMY.king_slime) { ENEMY.king_slime.tex = 'slime_hd'; ENEMY.king_slime.scale = 0.95; }
@@ -154,11 +191,18 @@ function applyGptMonsters(sc) {
   }
 }
 
-// warna tetap (keepTint): clearTint setelah kilatan kena pukul kembali ke warna ini, bukan ke warna asli
-{ const _se = World.prototype.spawnEnemy;
+// warna tetap (keepTint) & animasi hurt varian slime_hd_* saat kena pukul
+{ const _se = World.prototype.spawnEnemy, _he = World.prototype.hitEnemy;
   World.prototype.spawnEnemy = function () {
     const e = _se.apply(this, arguments), K = e && e.D && e.D.keepTint;
     if (K) { const s = e.spr, clr = s.clearTint; s.clearTint = function () { clr.call(this); return this.setTint(K); }; s.setTint(K); }
     return e;
+  };
+  World.prototype.hitEnemy = function (e) {
+    const kb0 = e && e.kb, r = _he.apply(this, arguments);
+    if (e && e.hp > 0 && e.kb > (kb0 || 0) && e.D?.tex?.startsWith('slime_hd_') && e.spr?.anims) {
+      e.hurtT = 0.32; e.spr.play(e.D.tex + '_hurt', true);
+    }
+    return r;
   };
 }

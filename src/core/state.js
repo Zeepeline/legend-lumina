@@ -32,7 +32,7 @@ const OPT_KEY = 'legenda_lumina_opt';
 // sight = jarak musuh mulai mengejar, spd = kecepatan, cd = pengali jeda serang, tok = maks musuh menyerang bersamaan (v1.39: Normal & Sulit dinaikkan)
 const DIFF = [{ n: 'Santai', dmg: .55, hp: .75, sight: 110, spd: .95, cd: 1.2, tok: 2 }, { n: 'Normal', dmg: 1.15, hp: 1.35, sight: 150, spd: 1.1, cd: .9, tok: 2 },
   { n: 'Sulit', dmg: 1.45, hp: 1.8, sight: 175, spd: 1.2, cd: .75, tok: 3 }];
-const GAME_VERSION = '1.93.6';
+const GAME_VERSION = '1.94.0';
 const OPT = Object.assign({ mus: 3, sfx: 3, vib: true, shake: true, fps: false, diff: 1, txt: 1, hpbar: true, tips: true, mini: true, btnSize: 1, btnAlpha: 0, btnScale: 1, btnPad: 1, steps: true, dynMus: true, font: 1, lite: false, toast: true, colorblind: false, filter: 0, zoom: 1.0 }, (() => { try { return JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch (_) { return {}; } })());
 if (OPT.zoom === 1.18) OPT.zoom = 1.0;
 function saveOpt() { try { localStorage.setItem(OPT_KEY, JSON.stringify(OPT)); } catch (_) { } applyOpt(); }
@@ -57,8 +57,9 @@ function newState() {
     spent: { village: 0, city: 0 }, alchemyRecipes: {}, viewpoints: {}, shards: {}, shardsSpent: 0, flaskUp: 0, flaskPot: 0, spellbooks: {},
     stronghold: { alchemy: 0, anvil: 0, mapTable: 0, sharpenDay: 0 }, allyBoxDay: 0, allyRecipes: {}, rel: {}, bank: { gold: 0, day: 1 }, records: {},
     outfit: 'slave', skin: 'slave', heroName: 'Arka', runePillars: { step: 0, lit: {}, solved: false }, homeStyle: { floor: 'wood', wall: 'wood' },
-    arenaRank: 0, talents: { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0] }, bento: [], courierTimer: null, auctionWon: {},
-    flask: { n: 3, max: 3 }, lost: null, apple_trees: {}
+    arenaRank: 0, talents: { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0], grd: [0, 0, 0] }, bento: [], courierTimer: null, auctionWon: {},
+    flask: { n: 3, max: 3 }, lost: null, apple_trees: {},
+    origin: { cls: 'pendekar', race: 'manusia' }, recipes: {}, familiar: { unlocked: false, active: false, kind: 'crow' }
   };
 }
 function eqv(k) {
@@ -162,6 +163,11 @@ function loadSave() {
       S.alchemyRecipes = S.alchemyRecipes || {};
       S.viewpoints = S.viewpoints || {};
       S.shards = S.shards || {};
+      S.talents = S.talents || { war: [0, 0, 0], mag: [0, 0, 0], exp: [0, 0, 0], grd: [0, 0, 0] };
+      if (!Array.isArray(S.talents.grd)) S.talents.grd = [0, 0, 0];
+      S.origin = Object.assign({ cls: 'pendekar', race: 'manusia' }, S.origin || {});
+      S.recipes = S.recipes || {};
+      S.familiar = Object.assign({ unlocked: false, active: false, kind: 'crow' }, S.familiar || {});
       if (!S.eq.altWpn) S.eq.altWpn = null;
       if (!MAPS[S.map]) S.map = 'village';
       if (!s.tipsDone && (S.stage > 1 || S.lv > 2)) S.tipsDone = { all: 1 };

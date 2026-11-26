@@ -6,7 +6,9 @@ const TOWN_LIGHTS = {
   near: 3, maxR: 14, gap: 64, glass: [255, 176, 56], pool: 24,
 };
 const TOWN_WIN = {
-  houseA: [[45, 100, 15, 17]], houseC: [[17, 54, 11, 11], [55, 54, 11, 11], [47, 104, 14, 13]], houseRed: [[62, 88, 13, 14]],
+  houseA: [[68, 72, 12, 12], [92, 114, 14, 16]], houseB: [[60, 72, 16, 18], [86, 120, 16, 16]],
+  houseC: [[36, 86, 14, 12], [90, 86, 16, 12]], houseRed: [[94, 112, 16, 16]],
+  houseProto: [[90, 120, 18, 16]], blacksmith: [[80, 106, 16, 18]],
   cityHouse1: [[29, 73, 10, 11], [62, 70, 14, 15], [45, 107, 11, 10]], cityHouse2: [[25, 70, 14, 14], [63, 70, 6, 14], [60, 107, 13, 10]],
   cityHouse3: [[47, 44, 6, 13], [47, 68, 14, 14], [38, 106, 10, 8]],
   cityHouse4: [[33, 30, 6, 11], [33, 49, 6, 11], [29, 69, 15, 14], [67, 73, 8, 10], [23, 106, 9, 8]],
@@ -18,7 +20,7 @@ const TOWN_WIN = {
   garbarracks: [[46, 108, 7, 9], [145, 108, 7, 9], [164, 108, 7, 9]],
   garbarracks2: [[122, 44, 16, 16], [29, 100, 10, 8], [55, 100, 10, 8], [79, 100, 10, 8], [109, 100, 9, 8], [143, 100, 7, 8]],
 };
-TOWN_WIN.houseB = TOWN_WIN.cityHouse1; TOWN_WIN.houseBrown = TOWN_WIN.houseRed; /* gambar yang sama (ref_houses.js) */
+TOWN_WIN.houseBrown = TOWN_WIN.houseRed; /* gambar yang sama (ref_houses.js) */
 /* tekstur kaca menyala untuk satu jenis bangunan (hanya piksel kaca) */
 function townWinTex(sc, type, s) {
   const key = 'litwin_' + type; if (sc.textures.exists(key)) return key;

@@ -82,9 +82,19 @@ const NPC_SHEETS = { // {{GEN}} dibuat tools/gen_npc_sheets.py dari docs/NPC_ROS
   guard: ['slash', 'sit'],
   farmer: ['hoe', 'water', 'harvest', 'sit'],
   hunter: ['bow', 'sit'],
+  girl: ['laugh', 'clap'],
+  merchant: ['sweep', 'arrange', 'give'],
+  elder: ['sweep', 'read'],
+  woman: ['sweep', 'draw'],
+  child: ['laugh', 'clap'],
+  chick_master: ['sweep', 'laugh'],
+  joko: ['harvest', 'mill'],
+  wati: ['hoe', 'harvest'],
+  darma: ['hammer'],
+  bayu: ['arrange', 'sweep'],
 }; // {{/GEN}}
 const NPC_SHEET_FW = 48; // kecepatan frame per animasi (sama dengan docs/NPC_ROSTER.md)
-const NPC_SHEET_DIM = { kn1: [80, 56] }; // sel khusus (lebar, tinggi) untuk tokoh bersenjata besar; lainnya 48×48
+const NPC_SHEET_DIM = {}; // semua lembar kini memakai ukuran standar 48×48 serasi chibi tokoh utama
 const NPC_SHEET_FPS = {
   walk: 8, default: 8, train: 10, spar_attack: 12, spar_block: 8, shoot: 8, salute: 6, inspect: 6, groom: 6, sharpen: 8, arrange: 6, call: 6,
   give: 6, pay: 6, refuse: 6, browse: 4, clap: 8, laugh: 8, play: 6, announce: 6, pray: 4, draw: 6, stamp: 8, lecture: 6, study: 4, prune: 6,
@@ -101,8 +111,22 @@ const NPC_SHEET_SEQ = {
 function regNpcSheet(sc, id, anims) {
   const T = sc.textures, A = sc.anims, img = IMGEL['npc_sheet_' + id], [F, FH] = NPC_SHEET_DIM[id] || [NPC_SHEET_FW, NPC_SHEET_FW], key = 's_' + id;
   if (!img || img.width < F * 4 || T.exists('ch_' + key)) return; // file belum ada (kanvas kosong 32×32)
-  const t = T.addImage('ch_' + key, img), at = (name, c, r) => t.add(name, 0, c * F, r * FH, F, FH);
-  const cols = Math.min(8, Math.floor(img.width / F)), cv = document.createElement('canvas');
+  const cols = Math.min(8, Math.floor(img.width / F)), rows = Math.floor(img.height / FH);
+  const rigKeys = ['crouch', 'stretch', 'kneel', 'kneel2', 'pray', 'lean0', 'lean1', 'hurt', 'stagger', 'lie'];
+  const hasRig = typeof rigPoses === 'function' && rows >= 4;
+  const extraRows = hasRig ? Math.ceil(rigKeys.length / cols) : 0;
+  let texSrc = img;
+  if (hasRig) {
+    const fc = rigCv(cols * F, img.height + extraRows * FH), fg = fc.getContext('2d');
+    fg.drawImage(img, 0, 0);
+    const base = rigCrop(img, 0, 3 * FH, F, FH), P = rigPoses(base, rigBands(base));
+    rigKeys.forEach((n, i) => fg.drawImage(P[n], (i % cols) * F, (rows + Math.floor(i / cols)) * FH));
+    texSrc = fc;
+  }
+  const t = texSrc === img ? T.addImage('ch_' + key, img) : T.addCanvas('ch_' + key, texSrc);
+  const at = (name, c, r) => t.add(name, 0, c * F, r * FH, F, FH);
+  if (hasRig) rigKeys.forEach((n, i) => at(n, i % cols, rows + Math.floor(i / cols)));
+  const cv = document.createElement('canvas');
   cv.width = F * cols; cv.height = FH; const g = cv.getContext('2d');
   const rowLen = (r, min) => {
     g.clearRect(0, 0, cv.width, FH); g.drawImage(img, 0, r * FH, cv.width, FH, 0, 0, cv.width, FH);
@@ -118,7 +142,6 @@ function regNpcSheet(sc, id, anims) {
   for (let c = 0; c < 4; c++) at('talk' + c, c, 4);
   A.create({ key: key + '__talk', frames: [0, 1, 2, 3].map(c => ({ key: 'ch_' + key, frame: 'talk' + c })), frameRate: 6, repeat: 1 });
   at('noddown', 1, 4); at('nodside', 1, 4); at('nodup', 1, 4);
-  const rows = Math.floor(img.height / FH);
   anims.forEach((name, i) => {
     const r = 5 + i; if (r >= rows) return;
     const fr = []; for (let c = 0; c < 8; c++) { at(name + c, c, r); fr.push(name + c); }

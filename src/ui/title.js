@@ -50,7 +50,7 @@ async function titleScreen() {
   else {
     S = newState(); G.title = false;
     S.flags.prolog_done = 1; S.flags.prolog_village = 1; S.flags.prolog_named = 1;
-    S.heroName = S.heroName || 'Arka'; S.stage = 0; addItem('isword', 1); addItem('potion', 3);
+    S.heroName = S.heroName || 'Arka'; S.stage = 0;
     S.eq.wpn = 'isword'; updHud();
     G.scene.scene.restart({ map: 'village', x: 512, y: 556, dir: 'down', quiet: false });
   }

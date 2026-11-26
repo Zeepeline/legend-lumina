@@ -75,20 +75,31 @@ const _hurtPlayer = World.prototype.hurtPlayer;
 World.prototype.hurtPlayer = function (atk, sx, sy, fx) {
   const pl = this.pl, now = this.t || 0;
   if (pl.swingT != null && now - pl.swingT < PARRY_WIN && pl.inv <= 0 && !pl.dead && !G.lock) {
-    const e = this.enemies.filter(o => !o.boss).sort((a, b) => Math.hypot(a.spr.x - sx, a.spr.y - sy) - Math.hypot(b.spr.x - sx, b.spr.y - sy))[0];
-    if ((e && Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 64) || (sx != null && Math.hypot(sx - pl.x, sy - pl.y) < 64)) {
+    const hasSrc = sx != null && sy != null;
+    const nearSrc = hasSrc && Math.hypot(sx - pl.x, sy - pl.y) < 72;
+    const rx = hasSrc ? sx : pl.x, ry = hasSrc ? sy : pl.y;
+    const e = this.enemies
+      .filter(o => o.hp > 0 && o.spr && o.spr.active && !o.boss)
+      .sort((a, b) => Math.hypot(a.spr.x - rx, a.spr.y - ry) - Math.hypot(b.spr.x - rx, b.spr.y - ry))[0];
+    const eMatch = !!(e && (!hasSrc
+      ? Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) < 64
+      : Math.hypot(e.spr.x - sx, e.spr.y - sy) < 48));
+    if (nearSrc || (!hasSrc && eMatch)) {
+      const target = eMatch ? e : null;
       pl.swingT = null; pl.inv = .4; pl.parryCrit = 1.5; pl.riposteUntil = now + 1.5; S.parries = (S.parries || 0) + 1;
-      if (e && e.hp > 0) {
-        e.staggerT = 0.6; e.st = 'rec'; e.t = 0.6; e.spr.setVelocity(0);
-        e.kb = .2; const n = Math.hypot(e.spr.x - pl.x, e.spr.y - pl.y) || 1; e.kbx = (e.spr.x - pl.x) / n * 200; e.kby = (e.spr.y - pl.y) / n * 200;
-        if (e.D && e.D.ai === 'fly') {
-          this.freezeEnemy(e, 2);
-          popWorld(e.spr.x, e.spr.y - 20, 'JATUH TERSUNGKUR!', 'crit');
+      if (target && target.hp > 0) {
+        target.staggerT = 0.6; target.st = 'rec'; target.t = 0.6; target.spr.setVelocity(0);
+        target.kb = .2;
+        const n = Math.hypot(target.spr.x - pl.x, target.spr.y - pl.y) || 1;
+        target.kbx = (target.spr.x - pl.x) / n * 200; target.kby = (target.spr.y - pl.y) / n * 200;
+        if (target.D && target.D.ai === 'fly') {
+          this.freezeEnemy(target, 2);
+          popWorld(target.spr.x, target.spr.y - 20, 'JATUH TERSUNGKUR!', 'crit');
         }
       }
       // T532: Gelombang kejut tangkisan mendorong musuh sekitar 36 px
       for (const o of this.enemies || []) {
-        if (o !== e && o.hp > 0 && Math.hypot(o.spr.x - pl.x, o.spr.y - pl.y) < 36) {
+        if (o !== target && o.hp > 0 && Math.hypot(o.spr.x - pl.x, o.spr.y - pl.y) < 36) {
           o.kb = .14; const dn = Math.hypot(o.spr.x - pl.x, o.spr.y - pl.y) || 1;
           o.kbx = (o.spr.x - pl.x) / dn * 150; o.kby = (o.spr.y - pl.y) / dn * 150;
           if (o.poise != null) o.poise = Math.max(0, o.poise - 1);
@@ -103,7 +114,9 @@ World.prototype.hurtPlayer = function (atk, sx, sy, fx) {
         onUpdate: () => { pRing.clear(); pRing.lineStyle(2.5, 0xffffff, 1 - ro.r / 42).strokeCircle(pl.x, pl.y - 10, ro.r); },
         onComplete: () => pRing.destroy()
       });
-      sfx('crit'); this.hitStop(.12, 30); this.sparkle((pl.x + e.spr.x) / 2, (pl.y + e.spr.y) / 2 - 10, 'doto', 10);
+      const spX = target ? (pl.x + target.spr.x) / 2 : (hasSrc ? (pl.x + sx) / 2 : pl.x);
+      const spY = target ? (pl.y + target.spr.y) / 2 - 10 : (hasSrc ? (pl.y + sy) / 2 - 10 : pl.y - 10);
+      sfx('crit'); this.hitStop(.12, 30); this.sparkle(spX, spY, 'doto', 10);
       popWorld(pl.x, pl.y - 34, 'TANGKIS!', 'crit');
       this.time.timeScale = 0.25; this.physics.world.timeScale = 0.25;
       setTimeout(() => { if (this.time) { this.time.timeScale = 1; this.physics.world.timeScale = 1; } }, 150);
