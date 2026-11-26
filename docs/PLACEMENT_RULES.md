@@ -70,3 +70,8 @@ Tanda `ok` tanpa alasan, atau dengan alasan terlalu pendek, akan ditolak pemerik
 ## Area berpagar (kandang, kebun)
 
 Area seperti `ranch` di data peta diperiksa `check-layout.js`: pagarnya tidak boleh menumpuk **gambar** objek (tinggi dibaca dari PNG asli), menutup jalan, atau berisi NPC/hewan. Contoh kesalahan nyata: kandang pertama menumpuk atap rumah dan pohon jeruk karena hanya kotak tabrakan yang dicek.
+
+## Lampu jalan & cahaya malam
+
+- Lampu jalan (`lamp`, `lampPost`, `gpt_city_lamp*`) berdiri di **tepi** jalan; yang jatuh di jalan digeser otomatis ke rumput tepi jalan (`townLampFit`, `src/systems/town_lights.js`, catatan: `MAPS[id]._lampLog`).
+- Bangunan baru yang berjendela: tambahkan kotak jendelanya ke `TOWN_WIN` agar kacanya menyala saat malam. Tes: `tests/town_lights.spec.js`.

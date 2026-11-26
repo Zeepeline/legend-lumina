@@ -5,13 +5,13 @@
 const CITY_STYLE = {
   on: true, soft: .85, lift: .22,
   stone: [[70, 62, 78], [128, 120, 124], [170, 162, 156], [202, 194, 182], [228, 222, 208], [244, 240, 228]],
-  keys: ['gpt_gatehouse', 'gpt_gatehouse_top', 'gpt_cwall', 'gpt_ctower', 'gpt_city_bridge', 'gpt_city_lamp', 'gpt_city_lamp2',
+  keys: ['gpt_gatehouse', 'gpt_gatehouse_top', 'gpt_cwall', 'gpt_city_lamp', 'gpt_city_lamp2',
     'gpt_city_banner', 'gpt_city_banner_sm', 'gpt_city_fence', 'gpt_city_board', 'gpt_city_cart', 'gpt_city_rock_lg', 'gpt_city_rock_sm',
     'gpt_city_cliff_s', 'gpt_city_cliff_c', 'gpt_city_cliff_l', 'gpt_city_cliff_r',
     /* bangunan desa & kota */
-    'gpt_v_blacksmith_forge', 'gpt_v_barn_ranch', 'gpt_v_chapel_church', 'gpt_v_fishing_dock', 'gpt_v_guild_townhall', 'gpt_v_house_brown_cottage',
-    'gpt_v_house_brown_wing', 'gpt_v_house_red_cottage', 'gpt_v_house_red_shop', 'gpt_v_inn_2story', 'gpt_v_market_stall', 'gpt_v_tavern_brown',
-    'gpt_v_village_monument', 'gpt_v_village_well', 'gpt_v_watchtower', 'gpt_v_windmill', 'gpt_windmill', 'gpt_i_houseA', 'gpt_i_houseB',
+    'gpt_v_blacksmith_forge', 'gpt_v_house_brown_cottage',
+    'gpt_v_house_red_cottage', 'gpt_v_inn_2story', 'gpt_v_market_stall',
+    'gpt_v_village_well', 'gpt_i_houseA', 'gpt_i_houseB',
     'gpt_i_houseC', 'gpt_i_market', 'houseA', 'houseB', 'houseC', 'market', 'fountain'],
 };
 function cityPastel(img) {

@@ -42,7 +42,7 @@ def preview(ids, out, docs):
 
 
 # lembar dari GAMBAR (pemilik/AI, dirapikan & disusun tangan): tidak ditimpa generator, tetap didaftarkan di NPC_SHEETS
-HAND = {'gk4', 'gk2', 'gk5', 'gk6', 'gk7'}  # gk4 Pak Sardi (v1.89.4); gk2/5/6/7 prajurit Garnisun dari gambar pemilik (tools/npc_soldier)
+HAND = {'kn1', 'vl3', 'vl4', 'vl5', 'gk4', 'gk2', 'gk5', 'gk6', 'gk7', 'mira', 'smith', 'guard', 'farmer', 'hunter'}  # gk4 Pak Sardi; gk2/5/6/7 prajurit Garnisun; mira/smith/guard/farmer/hunter
 
 
 def write_registry(docs, ids):

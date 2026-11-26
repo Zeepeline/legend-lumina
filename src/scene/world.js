@@ -114,7 +114,7 @@ class World extends Phaser.Scene {
   wall(x, y, w, h) { const z = new Phaser.GameObjects.Zone(this, x + w / 2, y + h / 2, w, h); this.physics.add.existing(z, true); this.walls.add(z); return z; } // tidak masuk daftar tampilan (hemat pengurutan)
   shadow(x, y, rx, ry) { this.add.image(x + 1, y, 'shadowb').setDisplaySize(rx * 2.4, ry * 2.6).setAlpha(this.M.dark ? .5 : .32).setDepth(-9e5); }
   spawnObj(o) {
-    const [type, x, y, opt] = o; const d = OBJ[type];
+    const [type, x, y, opt] = o; const d = OBJ[type]; if (!d) { console.warn('spawnObj: OBJ tidak dikenal:', type); return null; }
     const bs = (!d.col || !d.col[0]) && !d.fade ? -1.5 : 0; const s = this.add.sprite(x, y, d.key, 0).setOrigin(.5, 1).setDepth(y + bs);
     if (type.startsWith('bush') || type === 'flower' || type === 'mush') {
       this.bushes = this.bushes || [];
@@ -291,7 +291,7 @@ class World extends Phaser.Scene {
     // Efek rumput/semak bergoyang (#91) & hamburan daun rontok Cobo (T533)
     if (!locked && !pl.dead && this.bushes && this.bushes.length) {
       for (const b of this.bushes) {
-        if (!b.active || b._swaying || Math.hypot(pl.x - b.x, pl.y - b.y) >= 18) continue;
+        if (!b.active || b._swaying || Math.abs(pl.x - b.x) >= 18 || Math.abs(pl.y - b.y) >= 18) continue;
         b._swaying = true;
           if (this.jx) this.jx('pop', b.x, b.y - 6, 2, { tint: 0x6ec048 });
           if (typeof sfx === 'function') sfx('bush');

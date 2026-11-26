@@ -19,7 +19,7 @@ const NPC_SCALES = {
   default: 1.20
 };
 const WORK = {
-  smith: { objs: ['anvil', 'forge', 'bellows'], icon: ['🔨', '🔥', '⚒'], fx: 'spark', dur: [4, 8] },
+  smith: { objs: ['anvil', 'anvilBesi', 'forge', 'bellows'], icon: ['🔨', '🔥', '⚒'], fx: 'spark', dur: [4, 8] },
   farmer: { objs: ['hay', 'fence', 'fieldoven', 'windmill', 'cheesebarrel'], icon: ['🌱', '💧', '🌾'], fx: 'dust', dur: [4, 9] },
   vendor: { objs: ['market', 'crate', 'barrel', 'crateCart'], icon: ['🧺', '📦', '💰', '📢'], dur: [4, 8] },
   inn: { objs: ['counter', 'table', 'bed'], icon: ['🧹', '🍲', '🛏'], dur: [3, 6] },
@@ -44,7 +44,7 @@ Object.assign(World.prototype, {
     o.leash = o.n.leash || (o.story ? (M.indoor ? 50 : 90) : M.indoor ? 60 : 380);
     o.st = 'think'; o.t = rnd(.3, 2); o.goal = null; o.stuck = 0; o.lx = s.x; o.ly = s.y;
     // Standardisasi proporsi rasio sebanding Arka (T576)
-    const sc = NPC_SCALES[id] || NPC_SCALES[o.ch] || NPC_SCALES[o.role] || NPC_SCALES.default;
+    const sc = (NPC_SHEETS[id] && NPC_SCALES[o.ch]) || NPC_SCALES[id] || NPC_SCALES[o.ch] || NPC_SCALES[o.role] || NPC_SCALES.default;
     o.baseSc = sc; s.setScale(sc);
     if (o.sh) o.sh.setScale(sc * 1.05, sc * 0.9);
     if (s.body) s.body.setSize(Math.round(11 * sc), Math.round(6 * sc)).setOffset(Math.round((s.width - 11 * sc) / 2), Math.round(s.height - 7 * sc));
@@ -52,7 +52,9 @@ Object.assign(World.prototype, {
     // tempat kerja terdekat dari pos asal
     const W = WORK[o.role]; o.work = [];
     if (W) for (const [t, x, y] of M.objs || []) if (W.objs.includes(t) && Math.hypot(x - o.home.x, y - o.home.y) < o.leash + 60) o.work.push([x, y + 14]);
-    if (o.role === 'farmer' && M.garden) for (const g of [].concat(M.garden)) if (g && g.x) o.work.push([g.x, g.y + 16]);
+    if (o.role === 'farmer') for (const [gx, gy, gw, gh] of M.gardens || []) { /* tepi bawah petak kebun */
+      if (Math.hypot(gx - o.home.x, gy - o.home.y) < o.leash + 60) o.work.push([gx + gw / 2, gy + gh + 12]);
+    }
     o.emo = this.add.text(0, 0, '', { fontFamily: 'sans-serif', fontSize: '11px' }).setOrigin(.5, 1).setDepth(1.95e5).setVisible(false);
   },
   npcEmote(o, txt, sec = 1.8) { if (!o.emo) return; o.emo.setText(txt).setVisible(true); o.emoT = sec; },
@@ -100,12 +102,20 @@ Object.assign(World.prototype, {
   },
   npcWalkAnim(o, dx, dy) {
     const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
-    if (dir !== o.dir || !o.walking) {
+    let animDir = dir === 'left' || dir === 'right' ? 'side' : dir, flip = dir === 'left';
+    if (NPC_FR[o.ch]?.dir8 && Math.hypot(dx, dy) > 1) {
+      const sec = (Math.round(Math.atan2(dy, dx) / (Math.PI / 4)) + 8) % 8;
+      animDir = ['side', 'down_side', 'down', 'down_side', 'side', 'up_side', 'up', 'up_side'][sec];
+      flip = sec === 3 || sec === 4 || sec === 5;
+      if (flip && sec !== 4 && NPC_FR[o.ch].left) { animDir += '_l'; flip = false; } /* diagonal kiri bergambar sendiri: senjata tidak pindah tangan */
+    }
+    if (dir !== o.dir || animDir !== o.animDir || flip !== o.spr.flipX || !o.walking) {
       if (o.walking && o.dir && ((dir === 'left' && o.dir === 'right') || (dir === 'right' && o.dir === 'left') || (dir === 'up' && o.dir === 'down') || (dir === 'down' && o.dir === 'up'))) {
         o.turnDelay = 0.12;
       }
-      o.dir = dir; o.spr.flipX = dir === 'left';
-      o.spr.play(o.ch + '_' + (dir === 'left' || dir === 'right' ? 'side' : dir), true);
+      const sf = o.walking && o.spr.anims.isPlaying && o.spr.anims.currentFrame ? Math.max(0, o.spr.anims.currentFrame.index - 1) : 0;
+      o.dir = dir; o.animDir = animDir; o.spr.flipX = flip;
+      o.spr.play({ key: o.ch + '_' + animDir, startFrame: sf }, true);
     }
     o.walking = true;
   },
@@ -131,33 +141,52 @@ Object.assign(World.prototype, {
     }
     if (o.st === 'greet') { o.t -= dt; if (o.t <= 0) o.st = 'think'; return; }
     o.t -= dt;
-    if (o.st === 'think') { if (o.t > 0) return; o.goal = this.npcPickGoal(o); o.st = 'walk'; o.t = 12; o.stuck = 0; o.lx = s.x; o.ly = s.y; return; }
+    if (o.st === 'think') { if (o.t > 0) return; o.goal = this.npcPickGoal(o); this.npcRoute(o, dPl); return; }
     if (o.st === 'walk') {
       if (o.turnDelay > 0) { o.turnDelay -= dt; s.setVelocity(0); return; }
-      const g = o.goal, dx = g.x - s.x, dy = g.y - s.y, d = Math.hypot(dx, dy);
-      if (d < 5 || o.t <= 0) {
-        s.body.velocity.x *= Math.max(0, 1 - dt * 12);
-        s.body.velocity.y *= Math.max(0, 1 - dt * 12);
-        if (Math.hypot(s.body.velocity.x, s.body.velocity.y) < 2) {
-          s.setVelocity(0); o.walking = false; s.anims.stop();
-          if (g.act === 'home') { o.away = true; s.setVisible(false); s.body.enable = false; o.sh.setVisible(false); if (o.emo) o.emo.setVisible(false); return; }
-          o.st = 'act'; o.t = g.dur || 3; o.actT = 0; this.npcActStart(o, g); return;
+      const g = o.goal, P = g.path;
+      while (P && P.length > 1 && Math.hypot(P[0][0] - s.x, P[0][1] - s.y) < 6) P.shift();
+      const end = !P || P.length < 2, [wx, wy] = P && P.length ? P[0] : [g.x, g.y];
+      const dx = wx - s.x, dy = wy - s.y, d = Math.hypot(dx, dy);
+      if (end && d < 5) { /* tiba: berhenti penuh (dulu digas lagi sehingga berputar di titik tujuan) */
+        s.setVelocity(0); o.walking = false; s.anims.stop();
+        if (g.act === 'home') {
+          o.away = true; s.setVisible(false); s.body.enable = false; o.sh.setVisible(false); if (o.emo) o.emo.setVisible(false); return;
         }
+        g.here = true; o.st = 'act'; o.t = g.dur || 3; o.actT = 0; this.npcActStart(o, g); return;
       }
+      if (o.t <= 0) { this.npcGiveUp(o); return; }
       // Target speed dengan deselerasi lembut di ujung rute & akselerasi lerp (T575)
       let sp = g.spd || (g.run ? 48 : o.role === 'elder' ? 22 : o.role === 'guard' ? 26 : o.role === 'child' ? 36 : 29);
       if (this.weather === 'rain' && !this.M.indoor) sp *= 1.25;
-      if (d < 20) sp *= Math.max(0.3, d / 20);
+      if (end && d < 20) sp *= Math.max(0.3, d / 20);
       const targetVx = (dx / (d || 1)) * sp, targetVy = (dy / (d || 1)) * sp;
       const curVx = s.body.velocity.x, curVy = s.body.velocity.y;
       const accel = Math.min(1, dt * 8.5);
       s.setVelocity(curVx + (targetVx - curVx) * accel, curVy + (targetVy - curVy) * accel);
       this.npcWalkAnim(o, dx, dy);
       // macet (menabrak tembok/objek): geser ke samping, lalu menyerah & pilih tujuan lain
-      o.stuck += dt; if (o.stuck > .7) { const moved = Math.hypot(s.x - o.lx, s.y - o.ly); o.stuck = 0; o.lx = s.x; o.ly = s.y; if (moved < 4) { o.goal = { x: s.x + rnd(-40, 40), y: s.y + rnd(-30, 30), act: 'look', dur: .5 }; if (++o.fails > 2) { o.fails = 0; o.st = 'think'; o.t = rnd(.5, 1.5); s.setVelocity(0); } } else o.fails = 0; }
+      o.stuck += dt;
+      if (o.stuck > .7) {
+        const moved = Math.hypot(s.x - o.lx, s.y - o.ly); o.stuck = 0; o.lx = s.x; o.ly = s.y;
+        if (moved >= 4) o.fails = 0;
+        else if ((o.fails = (o.fails || 0) + 1) > 3) this.npcGiveUp(o);
+        else if (o.fails === 2) g.path = npcFindPath(this, s.x, s.y, g.x, g.y);
+      }
       return;
     }
-    if (o.st === 'act') { o.actT -= dt; if (o.actT <= 0) this.npcActTick(o, o.goal); if (o.t <= 0) { o.st = 'think'; o.t = rnd(.4, 1.6); } }
+    if (o.st === 'act') { o.actT -= dt; if (o.actT <= 0) this.npcActTick(o, o.goal); if (o.t <= 0) { if (o.goal && o.goal.done && o.goal.here) o.goal.done(); o.st = 'think'; o.t = rnd(.4, 1.6); } }
+  },
+  /* mulai berjalan: dekat pemain → cari jalan mengitari tembok; tujuan buntu → menyerah & pilih lain */
+  npcRoute(o, dPl) {
+    const s = o.spr, g = o.goal; o.st = 'walk'; o.stuck = 0; o.fails = 0; o.lx = s.x; o.ly = s.y;
+    o.t = 8 + Math.hypot(g.x - s.x, g.y - s.y) / 14;
+    if (dPl > 900) return;
+    g.path = npcFindPath(this, s.x, s.y, g.x, g.y); if (!g.path) this.npcGiveUp(o);
+  },
+  npcGiveUp(o) {
+    if (o.goal && o.goal.fail) o.goal.fail();
+    o.spr.setVelocity(0); o.walking = false; o.spr.anims.stop(); o.fails = 0; o.st = 'think'; o.t = rnd(.5, 1.5);
   },
   npcActStart(o, g) {
     if (g.act === 'chat' && g.with && g.with.spr.visible) { const w = g.with; this.face(o, w.spr.x > o.spr.x ? 'right' : 'left'); if (w.st !== 'walk') { this.face(w, w.spr.x > o.spr.x ? 'left' : 'right'); w.st = 'act'; w.t = Math.max(w.t, g.dur); w.goal = { act: 'chat' }; w.actT = 1; } }

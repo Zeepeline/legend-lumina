@@ -590,6 +590,42 @@ Pedagang kios berdiri di depan kios masing-masing (y 562 deret utara, y 892 dere
 - **Penampilan:** pria ±40 tahun, sarung kotak-kotak, baju koko krem, obor bambu panjang.
 - **Baris kegiatan:** `light`
 
+**vl3 · Mas Tarno** — `citizen` (warga desa biasa) · `village` 560,440 · lembar dari gambar pemilik (HAND, `tools/npc_desa/build.py`, 8 arah)
+- **Penampilan:** pria muda berambut cokelat, tunik biru, sabuk kulit, celana gelap, sepatu cokelat.
+- **Baris kegiatan:** `laugh`
+
+**vl4 · Nenek Sumi** — `citizen` (warga desa biasa) · `village` 440,470 · lembar dari gambar pemilik (HAND, `tools/npc_desa/build.py`, 8 arah)
+- **Penampilan:** nenek berambut abu disanggul, baju marun, celemek cokelat, sepatu cokelat.
+- **Baris kegiatan:** `laugh`
+
+**vl5 · Mbak Ningsih** — `citizen` (warga desa biasa) · `village` 660,370 · lembar dari gambar pemilik (HAND, `tools/npc_desa/build.py`, 8 arah)
+- **Penampilan:** perempuan berambut cokelat disanggul rendah, rompi jingga, gaun hijau zaitun, sepatu cokelat.
+- **Baris kegiatan:** `laugh`
+
+**kn1 · Kesatria Arvan** — `guard` (berpatroli di desa) · `village` 520,500 · lembar dari gambar pemilik (HAND, `tools/npc_desa/build.py`, 8 arah; sel 80×56; pedang, lambang & warna desain sendiri — gambar acuan tidak disalin)
+- **Penampilan:** kesatria muda berambut cokelat tua, zirah perak, jubah toska tua berlambang bintang emas, mata toska, pedang panjang bergagang emas dipanggul di bahu.
+- **Baris kegiatan:** `laugh`
+
+**hunter · Pemburu Raka** — pemburu (`JOBS.forest.hunter`) · `forest` 600,90 · lembar dari gambar GPT pemilik (HAND)
+- **Penampilan:** pemburu muda berambut hijau, syal marun, mantel cokelat-merah, celemek krem bertanda hijau, tabung anak panah, busur kayu.
+- **Baris kegiatan:** `bow`, `sit`
+
+**farmer · Pak Darto** — petani (`JOBS.village.farmer`) · `village` 330,235 · lembar dari gambar GPT pemilik (HAND)
+- **Penampilan:** petani bertopi jerami lebar, kemeja krem, syal merah, celana kodok biru, sarung tangan kulit.
+- **Baris kegiatan:** `hoe`, `water`, `harvest`, `sit`
+
+**guard · Penjaga** — penjaga desa (`JOBS.village.guard`) · `village` 470,652 · lembar dari gambar GPT pemilik (HAND)
+- **Penampilan:** kesatria muda berhelm baja jambul merah, jubah merah, zirah, perisai biru bersalib emas, pedang pendek.
+- **Baris kegiatan:** `slash`, `sit`
+
+**smith · Pak Besi** — pandai besi (`JOBS.village.smith`, `src/npc/job_smith.js`) · `village` 720,435 · lembar dari gambar GPT pemilik (HAND); baris 4 kolom 7 = landasan peta
+- **Penampilan:** pria kekar berambut & berjanggut lebat, kemeja krem digulung, celemek dan sarung tangan kulit.
+- **Baris kegiatan:** `hammer`, `sit`
+
+**mira · Mira** — penyihir desa (`JOBS.village.mira`) · `village` 600,350 · lembar asli dari gambar GPT pemilik (HAND, tidak ditimpa generator)
+- **Penampilan:** gadis penyihir, topi runcing ungu bergesper emas, rambut ungu panjang, mantel marun bertepi emas, gaun krem.
+- **Baris kegiatan:** `read`, `cast`
+
 **md1 · Pak Giling** — `miller` (kincir angin) · `meadow` 260,232 · sementara `farmer`
 - **Penampilan:** pria ±50 tahun, berbadan besar, wajah dan baju berdebu tepung putih, topi kain, karung gandum.
 - **Baris kegiatan:** `mill`

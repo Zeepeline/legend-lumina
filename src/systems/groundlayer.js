@@ -12,7 +12,11 @@ class GroundLayer extends Phaser.Scene {
   update(time, dl) {
     const dt = Math.min(dl, 100) / 1000, A = G.scene; this.t += dt;
     const on = !!(A && A.sys && A.M && glOn(A.M));
-    this.cameras.main.setVisible(on); if (!on) return;
+    this.cameras.main.setVisible(on);
+    if (!on) { // ruang dalam/gua: lepas gambar, supaya tidak tertinggal memakai tekstur yang nanti dibuang LRU peta lain
+      for (const [, img] of this.gImgs) img.destroy();
+      this.gImgs.clear(); this._gAt = null; return;
+    }
     const ids = [A.M.id, ...REG.keys()].filter(id => MAPS[id] && WORLD_POS[id]);
     if (ids.join() !== this.gIds) { this.gIds = ids.join(); this.gL = ids.map(id => gLayer(MAPS[id], WORLD_POS[id][0], WORLD_POS[id][1])); }
     this.updGround();
@@ -47,4 +51,13 @@ Object.assign(World.prototype, {
 { // camStep (scene/world.js) dibungkus: sinkron kamera setelah kamera aktif bergerak
   const camStep0 = World.prototype.camStep;
   World.prototype.camStep = function () { camStep0.apply(this, arguments); this.syncCams(); };
+}
+{ // pembersih cache tanah hanya kenal gImgs milik World: potongan yang sedang ditampilkan lapisan GL jangan ikut dihapus (render crash)
+  const clean0 = World.prototype.cleanGroundCache;
+  World.prototype.cleanGroundCache = function (all) {
+    const gl = this.scene.get('GL'), held = gl && gl.gImgs ? [...gl.gImgs.keys()].filter(k => GTC.has(k)) : [];
+    for (const k of held) GTC.delete(k);
+    clean0.call(this, all);
+    for (const k of held) GTC.set(k, gl.t || 0);
+  };
 }

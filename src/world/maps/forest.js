@@ -27,7 +27,7 @@ MAPS.forest = {
     ['sign', 350, 410, { text: 'Papan arah: ↑ Desa Lumina · ↙ Hutan Dalam' }], 
     ['shrine', 640, 1094], ['sign', 676, 120, { text: 'Kuil Kristal: ikuti jalan ke selatan.\nTimur: perkemahan goblin.\nTenggara: sarang ular.' }],
     ['sign', 440, 280, { text: 'SIMPANG TIGA HUTAN\n← Barat: Hutan Dalam (Berbahaya)\n→ Timur: Jalur Sungai Senja\n↑ Utara: Desa Lumina' }],
-    ['campfire', 650, 180],
+    ['campfire', 650, 180], ['archerytarget', 530, 106], /* sasaran Pemburu Raka */
     ['woodlandshrine', 500, 350],
     ['pebbles', 128, 170], ['pebbles', 30, 410], ['mush', 132, 290], ['bushG1', 132, 470],
     ['treeWoodsRound', 250, 480], ['treeWoodsPine', 520, 160],

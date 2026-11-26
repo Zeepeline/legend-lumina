@@ -61,6 +61,10 @@ const NPC_SHEETS = { // {{GEN}} dibuat tools/gen_npc_sheets.py dari docs/NPC_ROS
   bw3: ['sweep'],
   vl1: ['draw'],
   vl2: ['light'],
+  vl3: ['laugh'],
+  vl4: ['laugh'],
+  vl5: ['laugh'],
+  kn1: ['laugh'],
   md1: ['mill'],
   md2: ['fish'],
   lk1: ['tendlight'],
@@ -73,39 +77,72 @@ const NPC_SHEETS = { // {{GEN}} dibuat tools/gen_npc_sheets.py dari docs/NPC_ROS
   tp1: ['pray'],
   ar1: ['read'],
   ar2: ['read'],
+  mira: ['read', 'cast'],
+  smith: ['hammer', 'sit'],
+  guard: ['slash', 'sit'],
+  farmer: ['hoe', 'water', 'harvest', 'sit'],
+  hunter: ['bow', 'sit'],
 }; // {{/GEN}}
 const NPC_SHEET_FW = 48; // kecepatan frame per animasi (sama dengan docs/NPC_ROSTER.md)
+const NPC_SHEET_DIM = { kn1: [80, 56] }; // sel khusus (lebar, tinggi) untuk tokoh bersenjata besar; lainnya 48×48
 const NPC_SHEET_FPS = {
   walk: 8, default: 8, train: 10, spar_attack: 12, spar_block: 8, shoot: 8, salute: 6, inspect: 6, groom: 6, sharpen: 8, arrange: 6, call: 6,
   give: 6, pay: 6, refuse: 6, browse: 4, clap: 8, laugh: 8, play: 6, announce: 6, pray: 4, draw: 6, stamp: 8, lecture: 6, study: 4, prune: 6,
-  stargaze: 3, sweep: 8, light: 6, drink: 4, cheers: 6, fish: 6, read: 3, drum: 10, mill: 6, tendlight: 5, warm: 4,
+  stargaze: 3, sweep: 8, light: 6, drink: 4, cheers: 6, fish: 6, read: 3, drum: 10, mill: 6, tendlight: 5, warm: 4, cast: 6,
+  hammer: 16, slash: 16, hoe: 12, bow: 10, water: 8, harvest: 4, sit: 1,
 };
 IMG_LIST.push(...Object.keys(NPC_SHEETS).map(id => 'npc_sheet_' + id));
+// urutan frame (frame diulang = ditahan): ancang-ancang lama, ayun cepat, hantam, pulih
+const NPC_SHEET_SEQ = {
+  bow: [0, 0, 1, 2, 2, 2, 2, 2, 3, 3, 0, 0],
+  hoe: [0, 1, 1, 1, 1, 2, 2, 3, 3, 0], harvest: [0, 1, 0, 1, 2, 3, 2, 2],
+  hammer: [0, 0, 0, 0, 1, 2, 2, 2, 3, 3], slash: [0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 4, 4],
+};
 function regNpcSheet(sc, id, anims) {
-  const T = sc.textures, A = sc.anims, img = IMGEL['npc_sheet_' + id], F = NPC_SHEET_FW, key = 's_' + id;
+  const T = sc.textures, A = sc.anims, img = IMGEL['npc_sheet_' + id], [F, FH] = NPC_SHEET_DIM[id] || [NPC_SHEET_FW, NPC_SHEET_FW], key = 's_' + id;
   if (!img || img.width < F * 4 || T.exists('ch_' + key)) return; // file belum ada (kanvas kosong 32×32)
-  const t = T.addImage('ch_' + key, img), at = (name, c, r) => t.add(name, 0, c * F, r * F, F, F);
-  ['down', 'up', 'side'].forEach((d, r) => { for (let c = 0; c < 4; c++) at(d + c, c, r); });
+  const t = T.addImage('ch_' + key, img), at = (name, c, r) => t.add(name, 0, c * F, r * FH, F, FH);
+  const cols = Math.min(8, Math.floor(img.width / F)), cv = document.createElement('canvas');
+  cv.width = F * cols; cv.height = FH; const g = cv.getContext('2d');
+  const rowLen = (r, min) => {
+    g.clearRect(0, 0, cv.width, FH); g.drawImage(img, 0, r * FH, cv.width, FH, 0, 0, cv.width, FH);
+    let n = cols; while (n > min && !g.getImageData((n - 1) * F, 0, F, FH).data.some((v, j) => j % 4 === 3 && v > 0)) n--;
+    return n;
+  };
+  const walk = {}, dirs = ['down', 'up', 'side'];
+  dirs.forEach((d, r) => {
+    const n = rowLen(r, 4); walk[d] = [];
+    for (let c = 0; c < n; c++) { at(d + c, c, r); walk[d].push(d + c); }
+  });
   at('brdown', 1, 3); at('brside', 3, 3); at('brup', 5, 3);
   for (let c = 0; c < 4; c++) at('talk' + c, c, 4);
   A.create({ key: key + '__talk', frames: [0, 1, 2, 3].map(c => ({ key: 'ch_' + key, frame: 'talk' + c })), frameRate: 6, repeat: 1 });
   at('noddown', 1, 4); at('nodside', 1, 4); at('nodup', 1, 4);
-  const rows = Math.floor(img.height / F);
+  const rows = Math.floor(img.height / FH);
   anims.forEach((name, i) => {
     const r = 5 + i; if (r >= rows) return;
     const fr = []; for (let c = 0; c < 8; c++) { at(name + c, c, r); fr.push(name + c); }
     // frame kosong di ujung baris tidak diputar
-    const cv = document.createElement('canvas'); cv.width = F * 8; cv.height = F; const g = cv.getContext('2d');
-    g.drawImage(img, 0, r * F, F * 8, F, 0, 0, F * 8, F);
-    let n = 8; while (n > 1 && !g.getImageData((n - 1) * F, 0, F, F).data.some((v, j) => j % 4 === 3 && v > 0)) n--;
-    const frames = fr.slice(0, n).map(f => ({ key: 'ch_' + key, frame: f }));
+    const n = rowLen(r, 1);
+    const seq = NPC_SHEET_SEQ[name], frames = (seq && n > Math.max(...seq) ? seq.map(j => fr[j]) : fr.slice(0, n)).map(f => ({ key: 'ch_' + key, frame: f }));
     A.create({ key: key + '__' + name, frames, frameRate: NPC_SHEET_FPS[name] || NPC_SHEET_FPS.default, repeat: 0 });
   });
-  const walk = { down: ['down0', 'down1', 'down2', 'down3'], up: ['up0', 'up1', 'up2', 'up3'], side: ['side0', 'side1', 'side2', 'side3'] };
-  NPC_FR[key] = { walk, top: 0, poses: true };
+  if (rows >= 5 + anims.length + 2) {
+    [['down_side', 5 + anims.length], ['up_side', 5 + anims.length + 1]].forEach(([d, r]) => {
+      const n = rowLen(r, 4); walk[d] = []; dirs.push(d);
+      for (let c = 0; c < n; c++) { at(d + c, c, r); walk[d].push(d + c); }
+    });
+  }
+  const left = rows >= 5 + anims.length + 4; // 2 baris tambahan: diagonal kiri depan & belakang (tanpa cermin)
+  if (left) [['down_side_l', 7], ['up_side_l', 8]].forEach(([d, k]) => {
+    const r = k + anims.length, n = rowLen(r, 4); walk[d] = []; dirs.push(d);
+    for (let c = 0; c < n; c++) { at(d + c, c, r); walk[d].push(d + c); }
+  });
+  NPC_FR[key] = { left, walk, top: FH - NPC_SHEET_FW, poses: true, dir8: !!(walk.down_side && walk.up_side) };
   NPC_SCALES[key] = 1; /* lembar 48×48 sudah berukuran asli: jangan diperbesar 1,2× seperti potret 32 px */
-  for (const d of ['down', 'up', 'side']) {
-    A.create({ key: key + '_' + d, frames: walk[d].map(f => ({ key: 'ch_' + key, frame: f })), frameRate: NPC_SHEET_FPS.walk, repeat: -1 });
+  for (const d of dirs) {
+    const fr = walk[d];
+    A.create({ key: key + '_' + d, frames: fr.map(f => ({ key: 'ch_' + key, frame: f })), frameRate: fr.length > 4 ? 10 : NPC_SHEET_FPS.walk, repeat: -1 });
   }
 }
 {
@@ -121,6 +158,7 @@ function regNpcSheet(sc, id, anims) {
 const LIFE_ANIM_FACE = {
   shoot: 'up', browse: 'up', pray: 'up', draw: 'up', stamp: 'up', study: 'up', stargaze: 'up', light: 'up', tendlight: 'up', warm: 'up',
   arrange: 'down', call: 'down', play: 'down', announce: 'down', lecture: 'down', drink: 'down', read: 'down', drum: 'down', talk: 'down', cheers: 'down',
+  cast: 'down', hammer: 'down', sit: 'down',
 };
 /* putar animasi kegiatan dari lembar (bila ada); false = pakai gerak pengganti */
 World.prototype.lifeAnim = function (o, name) {

@@ -47,9 +47,9 @@ function imgSubdir(k) {
   if (k.startsWith('gnd_') || k.startsWith('deco_')) return 'ground';
   if (k.startsWith('int_')) return 'interior';
   if (k.startsWith('goblin_')) return 'goblin';
-  if (k.startsWith('gpt_v_') || k.startsWith('gpt_i_house') || k === 'gpt_i_market' || k === 'gpt_windmill' ||
+  if (k.startsWith('gpt_v_') || k.startsWith('gpt_i_house') ||
     k === 'fountain' || k === 'market' || /^house[ABC]$/.test(k) ||
-    k.startsWith('gpt_gatehouse') || k === 'gpt_cwall' || k === 'gpt_ctower' || k === 'gpt_city_bridge' ||
+    k.startsWith('gpt_gatehouse') || k === 'gpt_cwall' ||
     k === 'gpt_orc_gate' || k.startsWith('sp_house') || k === 'sp_blacksmith_forge' || k.startsWith('sp_b_')) return 'buildings';
   if (k.startsWith('gpt_city_flower')) return 'props';
   if (k.startsWith('clutter_') || k.startsWith('fclutter_') || k.startsWith('dwclutter_') ||

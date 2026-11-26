@@ -91,9 +91,9 @@ _Lantai & perabot interior_
 _Gambar properti & bangunan cerita baru (Prolog & Bab 1): Makam Mila, Gubuk Reyot, Sarang Pemburu Liar, dll._
 `artMilaGrave()` 5 · `artRuinedShack()` 38 · `artSlaverCage()` 103 · `artPrisonerWagon()` 141 · `artSlaverTent()` 178 · `artSlaverBarricade()` 216 · `artReflectionSpring()` 242 · `artBurntRuin()` 265 · `artMudTracks()` 293 · `artDroppedTorch()` 312 · `artClothScrap()` 327
 
-## src/world/objects.js (400 baris)
+## src/world/objects.js (389 baris)
 _Definisi objek dunia (tekstur, tabrakan, bayangan) & wadah MAPS_
-`OBJ` 7 · `MAPS` 399
+`OBJ` 7 · `MAPS` 388
 
 ## src/world/objects_garrison.js (20 baris)
 _Objek GARNISUN KOTA (gambar pemilik, tekstur dari systems/garrison.js). Dipisah dari world/objects.js (batas 400 baris)._
@@ -131,7 +131,7 @@ _Bentuk air alami: elips `ponds` digabung halus (smooth union) jadi alur sungai 
 _Penempatan pohon & vegetasi isometrik 2.5D: Variable-Radius Poisson-Disc, fBm Groves situasional, dan Asymmetric South Clearance._
 `SCATTER_FOREST_RX` 3 · `SCATTER_TREE_RX` 4 · `scatterGroveNoise()` 6 · `scatterClearBase()` 10 · `scatterSouthClear()` 38 · `scatterPoissonOk()` 46 · `scatter()` 71
 
-## src/world/maps/village.js (141 baris)
+## src/world/maps/village.js (143 baris)
 _Peta: Desa Lumina (Tata Letak Presisi Meniru Referensi Asli)_
 
 
@@ -171,9 +171,9 @@ _Peta: zona alam luas — Hutan Dalam (+ Reruntuhan Aurel) di barat Hutan Lumina
 _Interior: penginapan, rumah pohon, rumah Lina_
 `makeRoom()` 4
 
-## src/world/maps/cast.js (90 baris)
+## src/world/maps/cast.js (102 baris)
 _PEMERAN KOTA & DESA — NPC tambahan yang mengisi bangunan & ruang publik (kios, sumur, kuil, balai, akademi, garnisun, penginapan)._
-`CAST_TALK` 6 · `CAST` 30 · `CAST_ROLE` 77
+`CAST_TALK` 6 · `CAST` 30 · `CAST_ROLE` 89
 
 ## src/ui/widgets.js (261 baris)
 _UI DOM: dialog (say/talk), menu (choose/ask), banner, angka melayang, HUD_
@@ -367,13 +367,17 @@ _Objek interaktif dunia: minigame — isi: lihat docs/CODEMAP.md_
 _Sistem cerita baru & transisi (skenario cerita lama di-reset dari 0)_
 `.spawnCh4()` 4 · `.spawnCh5()` 5 · `.spawnIceGate()` 6 · `.spawnTorches()` 7 · `.updDragon()` 8 · `.ch5Enter()` 9 · `.readLore()` 10 · `.touchBarrier()` 15 · `.takeMochi()` 18 · `.useCrystal()` 22 · `.openChest()` 29 · `interactRunePillar()` 88
 
-## src/npc/npcs.js (207 baris)
+## src/npc/npcs.js (212 baris)
 _Gerak NPC & hewan serta sapaan otomatis (barking dialog)_
-`NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 93 · `.updCritter()` 183
+`NPC_BARKS` 3 · `BARK_NODES` 58 · `popBark()` 59 · `updBarks()` 70 · `.updNpc()` 93 · `.updCritter()` 188
 
-## src/npc/brain.js (197 baris)
+## src/npc/npc_path.js (65 baris)
+_Pencari jalan NPC (A* kisi 8 px) mengitari tembok scene, agar NPC sampai ke tempat kerja dan tidak menabrak rumah._
+`NPC_NAV` 3 · `npcNavGrid()` 5 · `npcFindPath()` 16
+
+## src/npc/brain.js (226 baris)
 _"Otak" NPC: setiap NPC punya rutinitas sesuai perannya (bekerja, berkeliling, mengobrol, duduk, berpatroli), pulang saat malam._
-`NPC_ROLE` 4 · `STORY_NPC` 11 · `NPC_SCALES` 13 · `WORK` 21 · `SEATS` 35 · `SOCIAL` 36 · `IDLE_ICON` 37 · `.npcBrainInit()` 40 · `.npcEmote()` 58 · `.npcPickGoal()` 59 · `.npcWalkAnim()` 101 · `.npcBrain()` 112 · `.npcActStart()` 162 · `.npcActTick()` 167
+`NPC_ROLE` 4 · `STORY_NPC` 11 · `NPC_SCALES` 13 · `WORK` 21 · `SEATS` 35 · `SOCIAL` 36 · `IDLE_ICON` 37 · `.npcBrainInit()` 40 · `.npcEmote()` 60 · `.npcPickGoal()` 61 · `.npcWalkAnim()` 103 · `.npcBrain()` 122 · `.npcRoute()` 181 · `.npcGiveUp()` 187 · `.npcActStart()` 191 · `.npcActTick()` 196
 
 ## src/npc/crowd.js (232 baris)
 _Sistem Warga Latar Ringan (Ambient Crowd) — ala Stoneshard / Assassin's Creed._
@@ -443,9 +447,9 @@ _Ekonomi: papan permintaan, pedagang, gelar, statistik, resep, surat, kodeks (3)
 _Gelombang A (performa): culling objek di luar layar, entitas jauh "tidur", pengecekan berkala._
 `CULL_PAD` 4 · `.initCull()` 7 · `.updCull()` 22 · `_updEnemyP` 42 · `_updFeelP` 47 · `_updNpcP` 50 · `_updCritP` 56 · `_updHintP` 59
 
-## src/systems/stream.js (92 baris)
+## src/systems/stream.js (97 baris)
 _Gelombang B: tanah per chunk (streaming). Hanya potongan di sekitar layar yang dibuat, sisanya dibuat_
-`GT` 5 · `GTC` 6 · `GOV` 7 · `gtKey()` 8 · `groundOverview()` 9 · `gLayer()` 16 · `.initGround()` 18 · `.gFillView()` 28 · `.gNeed()` 30 · `.gEnsure()` 39 · `.updGround()` 55 · `.cleanGroundCache()` 80
+`GT` 5 · `GTC` 6 · `GOV` 7 · `gtKey()` 8 · `groundOverview()` 9 · `gLayer()` 16 · `.initGround()` 18 · `.gFillView()` 29 · `.gNeed()` 31 · `.gEnsure()` 40 · `.updGround()` 56 · `.cleanGroundCache()` 84
 
 ## src/systems/openworld.js (52 baris)
 _Dunia terbuka Tahap 1: wilayah tetangga digambar menempel di tepi wilayah aktif (tanah + objek),_
@@ -455,9 +459,9 @@ _Dunia terbuka Tahap 1: wilayah tetangga digambar menempel di tepi wilayah aktif
 _Dunia satu peta (langkah 1): wilayah di sekitar Arka berjalan BERSAMAAN sebagai scene World pasif_
 `REG_LOAD` 6 · `REG` 7 · `regSeq` 8 · `regionsOn()` 9 · `wposOf()` 10 · `relXY()` 11 · `removeRegions()` 12 · `.initPassive()` 15 · `.updPassive()` 21 · `.updRegions()` 38 · `.addRegion()` 52 · `.regBounds()` 59 · `.owHandoff()` 65 · `_hurtRegion` 87 · `_gotoRegion` 94
 
-## src/systems/groundlayer.js (51 baris)
+## src/systems/groundlayer.js (64 baris)
 _Lapisan tanah bersama (scene 'GL', selalu paling bawah): tanah SEMUA wilayah luar ruang yang dimuat + hutan pengisi celah,_
-`glOn()` 24 · `.glScene()` 26 · `.syncCams()` 32
+`glOn()` 28 · `.glScene()` 30 · `.syncCams()` 36
 
 ## src/systems/wilds.js (101 baris)
 _Hutan lebat pengisi celah kosong antarwilayah (dunia terbuka): tidak ada lagi area hitam. Digambar di lapisan tanah_
@@ -475,7 +479,7 @@ _Mode Benua di scene World: pembangunan peta gabungan, pelacakan wilayah tempat 
 _Warna Langit/Cahaya Ikut Bioma (T457)_
 
 
-## src/systems/benua_unload.js (49 baris)
+## src/systems/benua_unload.js (56 baris)
 _Mode benua: buang petak objek yang jauh dari Arka (memori). Mencatat semua yang dibuat spawnObj per petak lalu menghancurkannya._
 `UNLOAD_FAR` 3 · `.unloadFar()` 20
 
@@ -519,7 +523,7 @@ _Sistem Pohon Apel Siklus Berbuah & Tanpa Buah (8 Frame Wind Sway)_
 _Pantulan Karakter di Air (T460) — referensi: RPG klasik / Sea of Stars_
 
 
-## src/systems/tree_shadows.js (69 baris)
+## src/systems/tree_shadows.js (76 baris)
 _Bayangan Daun Bergoyang & Proyeksi Miring Dinamis (T448, T552) — referensi: Cobo #18, Stardew_
 
 
@@ -547,9 +551,9 @@ _DETAIL TAJUK POHON LEBAR — tajuk Sprout (24×31, dibesarkan 3×) berupa gumpa
 _POHON GAYA SPROUT LANDS — pohon biasa di wilayah luar (GRASS_EDGE.maps) memakai pohon dari deco_sprout_objs.png (3×),_
 `SPROUT_TREES` 6 · `sproutTreeTint()` 16 · `sproutTreePolish()` 27 · `sproutGiantSrc()` 53 · `sproutFruit()` 118 · `sproutTreeTufts()` 135 · `sproutTreeTex()` 150 · `SPROUT_TREE_ALIAS` 188 · `sproutTreeAlias()` 192 · `_buildTexturesTrees` 204
 
-## src/systems/sprout_houses.js (279 baris)
+## src/systems/sprout_houses.js (277 baris)
 _RUMAH GAYA SPROUT — bangunan desa/kota digambar ulang lewat kode (piksel 2×, garis tepi cokelat lembut, palet hangat),_
-`SP_PAL` 6 · `SPROUT_HOUSES` 17 · `spHouse()` 39 · `spBox3d()` 186 · `spStall()` 248 · `spScale()` 269 · `_buildTexturesHouses` 271
+`SP_PAL` 6 · `SPROUT_HOUSES` 17 · `spHouse()` 37 · `spBox3d()` 184 · `spStall()` 246 · `spScale()` 267 · `_buildTexturesHouses` 269
 
 ## src/systems/ref_houses.js (59 baris)
 _RUMAH DARI REFERENSI PEMILIK — rumah A/B/C, pondok merah/cokelat & pandai besi memakai gambar hasil tools/bake_houses.py_
@@ -567,9 +571,9 @@ _PASAR RAYA (Distrik Pasar) — 5 kios tenda dari gambar pemilik (assets/img/bui
 _GARNISUN KOTA — aset dari gambar pemilik (latar kotak-kotak palsu dibersihkan: kantong latar yang memperlihatkan_
 `GAR_ART` 6
 
-## src/systems/object_shadows.js (81 baris)
+## src/systems/object_shadows.js (86 baris)
 _BAYANGAN OBJEK — elips lembut di kaki setiap objek luar ruang (semak, batu, tunggul, bunga, jamur, pinus, pohon buah,_
-`OBJ_SHADOW` 6 · `objShadowTex()` 12 · `objFootW()` 28 · `objShadowAdd()` 42 · `objShadowScan()` 55
+`OBJ_SHADOW` 6 · `objShadowTex()` 12 · `objFootW()` 28 · `objShadowAdd()` 42 · `objShadowScan()` 60
 
 ## src/systems/bridges.js (87 baris)
 _JEMBATAN KAYU GAYA SPROUT — di titik penyeberangan lama (sungai Hutan M.river.bridge, jembatan kecil Danau)._
@@ -647,13 +651,25 @@ _KEHIDUPAN KOTA — peran kerja tambahan untuk NPC (prajurit, pemanah, pedagang 
 _Rencana tujuan NPC berperan LIFE_ROLES (life_roles.js): jam kerja, tempat kerja (objek peta di dekat pos), patroli malam,_
 `lifeWorkList()` 4 · `lifePathPt()` 10 · `lifePatrol` 16 · `lifeStay()` 17 · `LIFE_PLANS` 20 · `lifePlan()` 41
 
+## src/npc/job_data.js (68 baris)
+_PEKERJAAN BERURUTAN per NPC (koordinat lokal peta). Mesin: npc/jobs.js. Aturan: docs/NPC_RULES.md bag. 9._
+`JOBS` 4
+
+## src/npc/jobs.js (144 baris)
+_Mesin pekerjaan berurutan (JOBS di job_data.js): ambil alat/barang → kerjakan → antar → ulang, dengan alat di tangan & barang yang benar-benar dibawa._
+`JOB_ITEMS` 4 · `JOB_ACTS` 18 · `jobTex()` 34 · `jobOf()` 41 · `jobPinned()` 46 · `jobCarry()` 49 · `jobArrow()` 54 · `jobToolOff()` 61 · `jobDropPile()` 63 · `jobGoal()` 67 · `jobDone()` 72
+
+## src/npc/job_smith.js (29 baris)
+_Pak Besi menempa memakai lembar sprite: landasan di peta = landasan di lembar (baris 4 kolom 7), jadi pose tempa menyatu dengan objek peta._
+
+
 ## src/npc/life_duos.js (169 baris)
 _INTERAKSI ANTAR-NPC — sutradara kecil: tiap ±2 dtk mencari pasangan NPC di dekat pemain lalu memainkan adegan pendek:_
 `LIFE_DUO` 6 · `LIFE_GOSSIP` 7 · `LIFE_HAGGLE` 17 · `LIFE_LISTEN` 22 · `lifeIs` 23 · `LIFE_EMO_ANIM` 25 · `LIFE_DUO_KINDS` 26 · `lifeDuoSteps()` 37 · `lifeFree()` 71 · `.lifeDuoStart()` 77 · `.lifeDuoEnd()` 85 · `.lifeGo()` 94 · `.lifeDuoTick()` 99 · `.lifeDirector()` 138 · `.lifeDuoUpd()` 151
 
-## src/npc/life_sheet.js (131 baris)
+## src/npc/life_sheet.js (169 baris)
 _SPRITE SHEET NPC — tempat memasang lembar sprite hasil gambar (agent pemilik) tanpa mengubah kode lain._
-`NPC_SHEETS` 10 · `NPC_SHEET_FW` 77 · `NPC_SHEET_FPS` 78 · `regNpcSheet()` 84 · `LIFE_ANIM_FACE` 121
+`NPC_SHEETS` 10 · `NPC_SHEET_FW` 86 · `NPC_SHEET_DIM` 87 · `NPC_SHEET_FPS` 88 · `NPC_SHEET_SEQ` 96 · `regNpcSheet()` 101 · `LIFE_ANIM_FACE` 158
 
 ## src/ui/shop.js (383 baris)
 _Menu beli, jual, tempa_
@@ -715,7 +731,7 @@ _T450: Sinar matahari pagi di hutan (jam 6-9 di forest/deepwood)_
 _T447: Bayangan awan berjalan_
 
 
-## src/gfx/gptassets.js (76 baris)
+## src/gfx/gptassets.js (66 baris)
 _Aset buatan pemilik (GPT) yang menggantikan tampilan lama. Gambar ada di assets/img (gpt_<kunci>.png)_
 `GPT_SWAP` 4 · `GPT_LOOK` 8 · `applyGptSwap()` 21
 
@@ -731,9 +747,9 @@ _T439: Selaraskan warna objek KODE ke palet treeA / Verdant_
 _Sprite monster dari lembar GPT pemilik (assets/img/monsters/mon_<key>.png, strip 2 frame)._
 `GPT_MON` 5 · `GPT_MON_NEW` 7 · `applyGptMonsters()` 9
 
-## src/gfx/hero_arka.js (111 baris)
+## src/gfx/hero_arka.js (126 baris)
 _Sprite sheet lengkap Arka dari ChatGPT (assets/img/hero/hero_arka.png)._
-`HERO_FW` 5 · `HERO_ROW` 6 · `HERO_SKIN` 15 · `HERO_W8` 16 · `HERO_SWD` 17 · `WALK_SIDE_W` 18 · `walkSideF()` 19 · `HERO_G` 23 · `heroSkinToggle()` 24 · `regHeroArka()` 28 · `heroFrame()` 49
+`HERO_FW` 5 · `HERO_ROW` 6 · `HERO_SKIN` 15 · `HERO_W8` 16 · `HERO_W8DS` 17 · `WALK_SIDE_W` 18 · `walkSideF()` 19 · `HERO_G` 23 · `heroSkinToggle()` 24 · `regHeroArka()` 28 · `heroFrame()` 52
 
 ## src/gfx/enemy_sheets.js (69 baris)
 _Lembar musuh baru dari ChatGPT (assets/img/monsters/esh_<id>.png)._
@@ -778,6 +794,10 @@ _LAHAN PERTANIAN GAYA SPROUT — aset lengkap kebun:_
 ## src/systems/tree_farm.js (154 baris)
 _MENANAM POHON — bibit dibeli di kios Bu Sari, dipakai dari tas → ditanam di rumput di depan Arka (wilayah luar ruang)._
 `TREE_FARM` 6 · `ptreeList` 35 · `ptreeSaplingTex()` 37 · `ptreeStage()` 47 · `ptreePos()` 52 · `.plantTree()` 57 · `.ptreeSync()` 74 · `.ptreeMake()` 89 · `.ptreeDrop()` 109 · `.ptreeUse()` 115
+
+## src/systems/town_lights.js (132 baris)
+_CAHAYA DESA & KOTA — jendela rumah menyala saat malam (kaca pada gambar, kusen & teralis tetap) dan lampu jalan dipindah ke tepi jalan._
+`TOWN_LIGHTS` 4 · `TOWN_WIN` 8 · `townWinTex()` 23 · `townWinLit()` 37 · `townSpawnWindows()` 42 · `townLampFit()` 65 · `.townLightsUpd()` 116
 
 ## src/main.js (48 baris)
 _Mulai game Phaser_

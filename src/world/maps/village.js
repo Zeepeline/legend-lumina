@@ -87,6 +87,7 @@ MAPS.village = {
     ['barrel', 613, 560],
     ['crate', 695, 420],
     ['barrel', 790, 420],
+    ['anvilBesi', 742, 466], ['forge', 636, 442], /* bengkel Pak Besi */
     ['pot', 545, 565],
     ['planter', 572, 565],
     ['sign', 72, 600],
@@ -128,6 +129,7 @@ MAPS.village = {
     { id: 'woman', ch: 'woman', name: 'Bu Lastri', x: 250, y: 445, dir: 'down', wander: 16 },
     { id: 'smith', ch: 'smith', name: 'Pak Besi', x: 720, y: 435, dir: 'right' },
     { id: 'chick_master', ch: 'child', name: 'Kiki Penggembala', x: 820, y: 330, dir: 'down', wander: 14 },
+    { id: 'mira', ch: 'woman', name: 'Mira', x: 600, y: 350, dir: 'down' },
     { id: 'ayam', ch: 'child', name: 'Ayam Desa', x: 150, y: 460, dir: 'down', wander: 18 },
   ],
   animals: [['cat', 480, 345, 0], ['cat', 540, 345, 1], ['fox', 640, 600, 0], ['cat', 320, 235, 0], ['fox', 270, 600, 0]],

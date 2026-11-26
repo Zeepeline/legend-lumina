@@ -97,10 +97,10 @@ function regNpcRig(T, k, img) {
       side: [[4, 0], [5, 0], [5, 1], [5, 2]]
     };
     for (const d of NPC_RIG_DIRS) map[d].forEach(([r, c], i) => F.push([d + i, f(r, c)]));
-    F.push(['side4', f(5, 3)]);
+    F.push(['down4', f(1, 3)], ['up4', f(3, 3)], ['side4', f(5, 3)]);
+    walk.down = ['down1', 'down2', 'down3', 'down4'];
+    walk.up = ['up1', 'up2', 'up3', 'up4'];
     walk.side = ['side1', 'side2', 'side3', 'side4'];
-    walk.down = ['down1', 'down2', 'down3', 'down1'];
-    walk.up = ['up1', 'up2', 'up3', 'up1'];
     F.push(['brdown', f(0, 1)], ['brup', f(2, 1)], ['brside', f(4, 1)]);
     F.push(['noddown', f(6, 1)], ['nodup', f(2, 2)], ['nodside', f(6, 2)]);
     for (let i = 0; i < 4; i++) {

@@ -64,7 +64,19 @@ const CAST = {
     ['bw1', 'child', 'Kiko si Penabuh', 720, 676, 'drummer'], ['bw2', 'ratih', 'Pengamen Seruling', 600, 700, 'musician'],
     ['bw3', 'mom', 'Mbok Jum', 500, 560, 'sweeper'],
   ],
-  village: [['vl1', 'lestari', 'Mbak Sari', 470, 400, 'water'], ['vl2', 'darma', 'Pak Obor', 600, 300, 'lamplighter']],
+  village: [['vl1', 'lestari', 'Mbak Sari', 470, 400, 'water'], ['vl2', 'darma', 'Pak Obor', 600, 300, 'lamplighter'],
+    ['vl3', 'darma', 'Mas Tarno', 560, 440, 'citizen', {
+      lines: ['Pagi, Arka. Desa tenang, begini saja sudah syukur.',
+        'Habis dari sumur, mau mampir ke kebun Pak Darto.'] }],
+    ['vl4', 'ratih', 'Nenek Sumi', 440, 470, 'citizen', {
+      lines: ['Sudah makan, Cu? Jangan berangkat dengan perut kosong.',
+        'Dulu waktu Nenek muda, desa ini cuma tiga rumah.'] }],
+    ['vl5', 'woman', 'Mbak Ningsih', 660, 370, 'citizen', {
+      lines: ['Cucianku belum kering, semoga tidak hujan.',
+        'Kalau ke sumur pagi-pagi, airnya paling segar.'] }],
+    ['kn1', 'guard', 'Kesatria Arvan', 520, 500, 'guard', {
+      lines: ['Aku singgah sebentar sebelum kembali bertugas.',
+        'Desa setenang ini pantas dijaga baik-baik.'] }]],
   meadow: [['md1', 'farmer', 'Pak Giling', 260, 232, 'miller'], ['md2', 'gun', 'Tole Pemancing', 660, 780, 'fisher']],
   lake: [['lk1', 'hermit', 'Penjaga Mercusuar Tirta', 1100, 470, 'lightkeeper'], ['lk2', 'hunter', 'Musafir Kelana', 1080, 594, 'traveler']],
   road: [['rd1', 'darma', 'Musafir Gani', 590, 552, 'traveler'], ['rd2', 'woman', 'Musafir Laila', 530, 556, 'traveler']],

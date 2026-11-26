@@ -17,6 +17,9 @@ _(tanpa sub-bagian)_
 ## BENUA_LUMINA.md — Benua Lumina — Desain Dunia (201 baris, ~3600 token)
 1. Gagasan inti: kristal adalah paku segel 11 · 2. Sejarah singkat benua 25 · 3. Peta geografis (kasar) 39 · 4. Arus ekonomi (hubungan antarlokasi) 66 · 5. Kartu lokasi 87 · ✅ Desa Lumina — desa berkembang 91 · ✅ Hutan Lumina — wilayah alam luas 99 · ✅ Padang Angin + Desa Kincir 📝 — persimpangan & lumbung 106 · ✅ Gua Batu + Lembah Besi 📝 — tambang 113 · ✅ Rawa Senja + Desa Muara 📝 120 · ✅ Puncak Beku + Tapal Salju 📝 + Pegunungan Tulang Naga 📝 126 · 📝 Kota Lumina — kota besar (beberapa area) 132 · 📝 Simpang Rantau — kota dagang 139 · 📝 Teluk Karang — kota pelabuhan 144 · 📝 Kuil Penjaga Cahaya — lokasi khusus (padat makna) 149 · 📝 Reruntuhan Aurel — lokasi khusus 154 · 📝 Benteng Sendaru — lokasi khusus (sub-area) 158 · Wilayah Rahasia — ??? 163 · 🔒 Benua lain 166 · 6. Skala dibanding sekarang 171 · 7. Urutan dunia terbuka (pemain merasa "dunianya ternyata besar") 186 · 8. Keputusan 197
 
+## CHARACTER_STYLE.md — Gaya Karakter (WAJIB untuk semua tokoh: Arka, NPC, humanoid) (42 baris, ~600 token)
+1. Palet bersama (11 warna, `assets/templates/npc/karakter.gpl`) 6 · 2. Angka patokan (diukur dari referensi pemilik, tokoh ±46 px) 22 · 3. Wajah 28 · 4. Rambut, tangan, kaki 34 · 5. Hak cipta 39
+
 ## CODE_RULES.md — CODE_RULES — aturan menulis kode Legenda Lumina (63 baris, ~1200 token)
 1. Cara agen membaca proyek (urutan hemat konteks) 6 · 2. Batas ukuran (dicek otomatis) 11 · 3. Arsitektur (tetap, jangan diganti tanpa izin pemilik) 21 · 4. Pola yang dipakai 36 · 5. Gaya penulisan 51 · 6. Sebelum push 59
 
@@ -41,14 +44,14 @@ Visi 12 · Prinsip Storytelling 27 · Pacing 45 · Tujuan Pemain 65 · Immediate
 ## NPC_ANIM.md — NPC_ANIM — animasi NPC (jalan, napas, aksi cerita) (43 baris, ~800 token)
 Berkas 5 · Frame pada tekstur `ch_<ch>` 12 · API (di scene: `__game.sc.`) 16 · Perilaku otomatis 27 · Contoh konsol 33 · Batas 41
 
-## NPC_ROSTER.md — NPC_ROSTER — Daftar NPC Kota & Desa + Spesifikasi Sprite Sheet (700 baris, ~9600 token)
-0. Cara kerja singkat (wajib dibaca agent) 19 · Aturan gambar (agar senada dengan aset pemilik) 27 · 1. Format lembar 41 · 2. Baris tetap (semua NPC) 54 · Baris 0 — `walk_down` (4 frame, 8 fps) 56 · Baris 1 — `walk_up` (4 frame, 8 fps) 63 · Baris 2 — `walk_side` (4 frame, 8 fps, menghadap kanan) 66 · Baris 3 — `idle` (6 frame; game memakai kolom 0/1, 2/3, 4/5 sesuai arah) 72 · Baris 4 — `talk` (4 frame, 6 fps, menghadap bawah) 80 · 3. Pustaka animasi kegiatan (baris 5+) 90 · Militer 99 · Kandang & bayaran 143 · Pasar 160 · Hiburan & keramaian 200 · Ibadah, balai & akademi 250 · Kerja kota & desa 291 · 4. Daftar NPC 355 · 4.1 Gerbang Kota — Garnisun (`kgate`, barat gapura) 367 · 4.2 Distrik Pasar (`kpasar`) — Pasar Raya 417 · 4.3 Distrik Permukiman (`kpermukiman`) 493 · 4.4 Distrik Akademi (`kakademi`) 523 · 4.5 Kota Bawah (`kbawah`) 569 · 4.6 Desa & alam 583 · 4.7 Dalam ruangan 617 · 5. Interaksi antar-NPC (adegan) 645 · 6. Jadwal harian per peran (jam game) 664 · 7. Daftar periksa sebelum menyerahkan lembar 691
+## NPC_ROSTER.md — NPC_ROSTER — Daftar NPC Kota & Desa + Spesifikasi Sprite Sheet (736 baris, ~10300 token)
+0. Cara kerja singkat (wajib dibaca agent) 19 · Aturan gambar (agar senada dengan aset pemilik) 27 · 1. Format lembar 41 · 2. Baris tetap (semua NPC) 54 · Baris 0 — `walk_down` (4 frame, 8 fps) 56 · Baris 1 — `walk_up` (4 frame, 8 fps) 63 · Baris 2 — `walk_side` (4 frame, 8 fps, menghadap kanan) 66 · Baris 3 — `idle` (6 frame; game memakai kolom 0/1, 2/3, 4/5 sesuai arah) 72 · Baris 4 — `talk` (4 frame, 6 fps, menghadap bawah) 80 · 3. Pustaka animasi kegiatan (baris 5+) 90 · Militer 99 · Kandang & bayaran 143 · Pasar 160 · Hiburan & keramaian 200 · Ibadah, balai & akademi 250 · Kerja kota & desa 291 · 4. Daftar NPC 355 · 4.1 Gerbang Kota — Garnisun (`kgate`, barat gapura) 367 · 4.2 Distrik Pasar (`kpasar`) — Pasar Raya 417 · 4.3 Distrik Permukiman (`kpermukiman`) 493 · 4.4 Distrik Akademi (`kakademi`) 523 · 4.5 Kota Bawah (`kbawah`) 569 · 4.6 Desa & alam 583 · 4.7 Dalam ruangan 653 · 5. Interaksi antar-NPC (adegan) 681 · 6. Jadwal harian per peran (jam game) 700 · 7. Daftar periksa sebelum menyerahkan lembar 727
 
-## NPC_RULES.md — Aturan NPC & Kehidupan Dunia (WAJIB untuk semua agent) (64 baris, ~1200 token)
-1. Setiap NPC punya peran 7 · 2. Tempat kerja harus ada di peta 26 · 3. NPC cerita tetap terjangkau 30 · 4. Siklus siang-malam 34 · 5. Bereaksi pada pemain 39 · 6. Larangan 45 · 7. Dialog & UI (agar layar tidak membeku) 51 · 8. Kehidupan kota: peran kerja, jadwal & interaksi (v1.89.0) 57
+## NPC_RULES.md — Aturan NPC & Kehidupan Dunia (WAJIB untuk semua agent) (71 baris, ~1300 token)
+1. Setiap NPC punya peran 7 · 2. Tempat kerja harus ada di peta 26 · 3. NPC cerita tetap terjangkau 30 · 4. Siklus siang-malam 34 · 5. Bereaksi pada pemain 39 · 6. Larangan 45 · 7. Dialog & UI (agar layar tidak membeku) 51 · 8. Kehidupan kota: peran kerja, jadwal & interaksi (v1.89.0) 57 · 9. Pekerjaan berurutan (JOBS) 65
 
-## PLACEMENT_RULES.md — Aturan Penempatan Objek & Aset (WAJIB untuk semua agent) (73 baris, ~1100 token)
-1. Setiap objek harus punya alasan berada di situ 16 · 2. Jangan menghalangi 26 · 3. Kepadatan & ritme 38 · 4. Pengecualian yang disengaja 44 · 5. Aset gambar 54 · 6. Setelah menaruh objek 63 · Area berpagar (kandang, kebun) 70
+## PLACEMENT_RULES.md — Aturan Penempatan Objek & Aset (WAJIB untuk semua agent) (78 baris, ~1200 token)
+1. Setiap objek harus punya alasan berada di situ 16 · 2. Jangan menghalangi 26 · 3. Kepadatan & ritme 38 · 4. Pengecualian yang disengaja 44 · 5. Aset gambar 54 · 6. Setelah menaruh objek 63 · Area berpagar (kandang, kebun) 70 · Lampu jalan & cahaya malam 74
 
 ## PROMPT_ARKA.md — Prompt ChatGPT — sprite sheet lengkap Arka (karakter utama) (83 baris, ~1300 token)
 Blok umum (sudah ikut di tiap prompt) 8 · Lembar 1 — diam & jalan 15 · Lembar 2 — serangan kombo 1 & 2 27 · Lembar 3 — pukulan penutup & serangan berat 39 · Lembar 4 — berguling, kena pukul, kalah 48 · Lembar 5 — sihir & busur 58 · Lembar 6 — kehidupan sehari-hari (opsional) 67 · Kalau hasil meleset 78

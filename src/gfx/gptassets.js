@@ -3,7 +3,7 @@
 // (dibersihkan sesuai docs/VALIDATION_RULES.md, ukurannya disamakan dengan tekstur lama agar tata letak tetap benar).
 const GPT_SWAP = [ /* hanya yang gambarnya ada di assets/img (gpt_<kunci>.png) */
   "i_bushP", "i_bushW", "bush", "bushv", "rock", "i_rockWoods", "log",
-  "mush", "i_houseA", "i_houseB", "i_houseC", "i_market", "windmill", "pebbles"
+  "mush", "pebbles"
 ];
 const GPT_LOOK = {
   "domba": "g094", "ayam": "g090", "chick_master": "g023", "child": "g055", "rudi": "g074",
@@ -13,7 +13,7 @@ const GPT_LOOK = {
   "ka1": "g037", "ka2": "g075", "ka3": "g063", "ka4": "g032", "ka5": "g077", "kb1": "g073",
   "kb2": "g052", "kb3": "g012", "kb4": "g056"
 };
-IMG_LIST.push('gpt_v_village_well', 'gpt_v_house_brown_cottage', 'gpt_v_house_red_cottage');
+/* sumur, rumah, pasar & kincir GPT dihapus pemilik → gambar sp_* (systems/ref_houses.js) */
 IMG_LIST.push(...GPT_SWAP.map(k => 'gpt_' + k), 'npc_guard_spear'); /* gNNN tidak punya gambar → wajah CHARS.child (di bawah) */
 for (const k of new Set(Object.values(GPT_LOOK))) if (!CHARS[k]) CHARS[k] = CHARS.child; // gambar asli dari npc_<k>.png (regPortrait)
 // NPC berwajah kembar mendapat karakter sendiri (berdasarkan id)
@@ -41,19 +41,9 @@ function applyGptSwap(T, A) {
     const tc = T.addImage('cwall', IMGEL['gpt_cwall']);
     tc.add(0, 0, 0, 0, IMGEL['gpt_cwall'].width, IMGEL['gpt_cwall'].height);
   }
-  if (IMGEL['gpt_ctower']) {
-    if (T.exists('ctower')) T.remove('ctower');
-    const tt = T.addImage('ctower', IMGEL['gpt_ctower']);
-    tt.add(0, 0, 0, 0, IMGEL['gpt_ctower'].width, IMGEL['gpt_ctower'].height);
-  }
-  if (IMGEL['gpt_city_bridge']) {
-    if (T.exists('city_bridge')) T.remove('city_bridge');
-    const tb = T.addImage('city_bridge', IMGEL['gpt_city_bridge']);
-    tb.add(0, 0, 0, 0, IMGEL['gpt_city_bridge'].width, IMGEL['gpt_city_bridge'].height);
-  }
   const cityProps = ['gpt_city_lamp', 'gpt_city_lamp2', 'gpt_city_banner', 'gpt_city_banner_sm', 'gpt_city_fence',
     'gpt_city_rock_lg', 'gpt_city_rock_sm', 'gpt_city_flower_w', 'gpt_city_flower_p',
-    'gpt_city_cliff_l', 'gpt_city_cliff_r', 'gpt_city_cart', 'gpt_city_board', 'gpt_city_bridge', 'gpt_ctower'];
+    'gpt_city_cliff_l', 'gpt_city_cliff_r', 'gpt_city_cart', 'gpt_city_board'];
   for (const cp of cityProps) {
     if (IMGEL[cp]) {
       if (T.exists(cp)) T.remove(cp);

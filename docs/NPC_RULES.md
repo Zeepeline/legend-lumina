@@ -61,3 +61,10 @@ NPC yang dibutuhkan misi (`STORY_NPC`) hanya beraktivitas dalam radius kecil (±
 - **Interaksi antar-NPC** (`life_duos.js`): tawar-menawar, tanding, hormat, kejar-kejaran, gosip, menonton, bersulang, antar paket. Selama adegan, `o.duo` diisi dan otak NPC dilewati. NPC cerita tidak pernah dipindahkan oleh adegan.
 - **Pemeran** (`src/world/maps/cast.js`): `CAST[peta]` menambah NPC, `CAST_ROLE[peta]` memberi peran ke NPC lama. Menambah NPC pekerja: pastikan objek tempat kerjanya ada di dekatnya (aturan bag. 2).
 - **Sprite sheet** per NPC (`life_sheet.js`, `NPC_SHEETS`): format & daftar lengkap di `docs/NPC_ROSTER.md`. Tanpa lembar, gerak kerja memakai pengganti kode.
+
+## 9. Pekerjaan berurutan (JOBS)
+
+- `src/npc/job_data.js`: `JOBS[peta][idNpc] = { hours, steps }`; langkah = titik lokal + aksi (`JOB_ACTS`) + barang `take`/`drop` (`JOB_ITEMS`), mesin di `src/npc/jobs.js`.
+- Langkah maju hanya bila benar-benar selesai di tempatnya (`goal.here`). Malam, hujan, dan di luar `hours` memakai otak lama.
+- NPC yang sedang menjadi tujuan misi (`STAGE_GOAL`) tidak bekerja jauh dari pos (`jobPinned`).
+- Semua gerak NPC memakai `npcFindPath` (`npc_path.js`). Titik kerja wajib terjangkau; tes: `tests/npc_jobs.spec.js`.

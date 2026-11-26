@@ -16,7 +16,8 @@ function groundOverview(M) {
 function gLayer(M, ox, oy) { return { M, ox, oy, cols: Math.ceil(M.w / GT), rows: Math.ceil(M.h / GT) }; }
 Object.assign(World.prototype, {
   initGround(data) {
-    const M = this.M; this.gImgs = new Map(); this.gL = []; this.gStream = !M.indoor && !G.title && !window.STREAM_OFF; // STREAM_OFF: hanya untuk tes perbandingan
+    const M = this.M; this.gImgs = new Map(); this.gL = []; this._gAt = null; this._gMore = false; this._gSea = null;
+    this.gStream = !M.indoor && !G.title && !window.STREAM_OFF; // STREAM_OFF: hanya untuk tes perbandingan
     if (glOn(M)) { this.gStream = false; this.cameras.main.setBackgroundColor('rgba(0,0,0,0)'); return; } // tanah digambar lapisan bersama GL
     if (!this.gStream) { if (!this.textures.exists('gs_' + M.id)) this.textures.addCanvas('gs_' + M.id, bakeGround(this, M)); this.add.image(0, 0, 'gs_' + M.id).setOrigin(0).setDepth(-1e6); return; }
     if (M.benua) this.gL = M.regions.map(id => gLayer(MAPS[id], WORLD_POS[id][0], WORLD_POS[id][1])); /* benua: tanah tiap wilayah di posisi globalnya */
@@ -55,15 +56,18 @@ Object.assign(World.prototype, {
   updGround() {
     if (!this.gStream) return;
     const sea = typeof biomeSeasonId === 'function' ? biomeSeasonId() : ''; /* musim berganti → tanah dibuat ulang */
+    const v = this.cameras.main.worldView;
     if (this._gSea !== sea) {
       if (this._gSea != null) { for (const [, img] of this.gImgs) img.destroy(); this.gImgs.clear(); }
-      this._gSea = sea;
-    } this.gSpent = 0; const v = this.cameras.main.worldView, want = new Set();
+      this._gSea = sea; this._gAt = null;
+    } else if (!this._gMore && this._gAt && Math.abs(this._gAt[0] - v.x) < 16 && Math.abs(this._gAt[1] - v.y) < 16 &&
+      this._gAt[2] === v.width && this._gAt[3] === v.height) return;
+    this._gAt = [v.x, v.y, v.width, v.height]; this._gMore = false; this.gSpent = 0; const want = new Set();
     for (const L of this.gL) {
       if (v.right < L.ox - GT * GT_MARGIN || v.x > L.ox + L.M.w + GT * GT_MARGIN || v.bottom < L.oy - GT * GT_MARGIN || v.y > L.oy + L.M.h + GT * GT_MARGIN) continue;
       for (const [i, j] of this.gNeed(L, v.x, v.y, GT_MARGIN)) {
         want.add(gtKey(L.M, i, j)); const X = L.ox + i * GT, Y = L.oy + j * GT;
-        this.gEnsure(L, i, j, X < v.x + VW && X + GT > v.x && Y < v.y + VH && Y + GT > v.y);
+        if (!this.gEnsure(L, i, j, X < v.x + VW && X + GT > v.x && Y < v.y + VH && Y + GT > v.y)) this._gMore = true;
       }
     }
     // gambar potongan jauh dilepas dari layar (teksturnya tetap disimpan sampai LRU penuh)
@@ -86,6 +90,7 @@ Object.assign(World.prototype, {
     if (all && this.gImgs) {
       for (const [, img] of this.gImgs) img.destroy();
       this.gImgs.clear();
+      this._gAt = null;
     }
   },
 });

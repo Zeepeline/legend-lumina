@@ -4,6 +4,7 @@ from PIL import Image
 import numpy as np
 FW,FH=64,56
 FIX={}
+_ALIVE=[]   # gambar ber-FIX wajib tetap hidup: id() gambar yang dibuang dipakai ulang → posisi sel acak
 def cell(im, dx=0, dy=0, rot=0):
     c=Image.new('RGBA',(FW,FH),(0,0,0,0))
     a=np.asarray(im)[...,3]>0; xs=np.nonzero(a[-4:].any(0))[0]; fx=(xs.min()+xs.max())/2
@@ -27,6 +28,7 @@ D=None  # belum ada gambar depan: pakai samping
 from idle import idle4, blink4
 def idlecells(im, blink=False):
     fs=(blink4 if blink else idle4)(im, im.height-10)
+    _ALIVE.extend(fs)
     for f in fs:
         if id(im) in FIX: FIX[id(f)]=FIX[id(im)]
     return [cell(f) for f in fs]
@@ -51,7 +53,7 @@ def sway(fs, dxs):
     """Jumbai rambut ikut terayun saat menebas (gerakan ikutan ala Dimraeth): frame i digeser dxs[i] px."""
     out=[]
     for f,dx in zip(fs,dxs):
-        g=Image.fromarray(_hair(np.array(f),4,dx)) if dx else f
+        g=Image.fromarray(_hair(np.array(f),4,dx)) if dx else f; _ALIVE.append(g)
         if id(f) in FIX: FIX[id(g)]=FIX[id(f)]
         out.append(g)
     return out
@@ -60,7 +62,7 @@ def crouch(im, n):
     """Jongkok: n baris betis dibuang (badan turun n px, kaki tetap di tanah) — untuk pose mengisi tenaga."""
     a=np.array(im); H=a.shape[0]; y=H-9
     b=np.concatenate([np.zeros((n,)+a.shape[1:],a.dtype),a[:y],a[y+n:]])
-    g=Image.fromarray(b)
+    g=Image.fromarray(b); _ALIVE.append(g)
     if id(im) in FIX: FIX[id(g)]=FIX[id(im)]
     return g
 def def_heavy(fs):   # isi tenaga (jongkok 1 & 2 px, ancang-ancang) → tebas (smear) → lanjutan
@@ -102,16 +104,17 @@ def rowimgs(k):
         kind=k.split('_')[0]; kind={'atk1':'atk','atk2':'atk','atk3':'atk','cast':'still','bow':'still'}.get(kind,kind)
         return P[d][kind]
     return {'hurt':hurt,'die':die,'rise':rise,'sleep':sleep}.get(k,P['side']['still'])
-sheet=Image.new('RGBA',(4*FW,47*FH),(0,0,0,0))
+sheet=Image.new('RGBA',(4*FW,51*FH),(0,0,0,0))
 for r,k in enumerate(ROWS):
     for i,c in enumerate(rowimgs(k)): sheet.alpha_composite(c,(i*FW,r*FH))
 from unify_head import unify
-from walk_side import walk as _wside
 from walk_side import walk2 as _wside2
-SW=_wside2(unify([cell(S[j]) for j in (1,2,3,4,5,6)],1),2)   # 39–40 jalan samping 6 frame (gambar 2–7); kepala diseragamkan dari gambar 3 (wajah & mata jelas)
-for i,c in enumerate(SW): sheet.alpha_composite(c,((i%4)*FW,(39+i//4)*FH))
-for i in range(8): sheet.alpha_composite(cell(U[i]),((i%4)*FW,(41+i//4)*FH))   # 41–42 jalan 8 frame atas
-for i in range(8): sheet.alpha_composite(cell(Dw[i]),((i%4)*FW,(43+i//4)*FH))   # 43–44 jalan 8 frame bawah
+from walk8dir import diag_front, diag_back
+SW=_wside2(unify([cell(S[j]) for j in (1,2,3,4,5,6)],1),2)   # 39–40 jalan samping 6 frame (gambar 2–7); kepala diseragamkan dari gambar 3
+UC=[cell(U[i]) for i in range(8)]; DC=[cell(Dw[i]) for i in range(8)]
+# 39 samping · 41 atas · 43 bawah · 47 depan-kanan · 49 belakang-kanan (2 baris × 4 frame)
+for r0,cs in ((39,SW),(41,UC),(43,DC),(47,diag_front(DC,SW[0])),(49,diag_back(UC))):
+    for i,c in enumerate(cs): sheet.alpha_composite(c,((i%4)*FW,(r0+i//4)*FH))
 for i,c in enumerate(idlecells(D0,True)): sheet.alpha_composite(c,(i*FW,45*FH))     # 45 kedip, diam bawah
 for i,c in enumerate(idlecells(S[0],True)): sheet.alpha_composite(c,(i*FW,46*FH))   # 46 kedip, diam samping
 sheet.save('assets/img/hero/hero_mc2.png'); print(sheet.size)

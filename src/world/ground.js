@@ -382,7 +382,7 @@ function ringObjects(M) {
   return out;
 }
 function mapObjects(M) {
-  if (!M._list) M._list = [...M.objs, ...ringObjects(M), ...(M.border ? borderTrees(M) : []), ...(M.trees ? scatter(M, M.trees) : []), ...(M.decor ? scatter(M, M.decor) : [])];
+  if (!M._list) M._list = [...(M.objs || []), ...ringObjects(M), ...(M.border ? borderTrees(M) : []), ...(M.trees ? scatter(M, M.trees) : []), ...(M.decor ? scatter(M, M.decor) : [])];
   return M._list;
 }
 function mapWalls(M) {

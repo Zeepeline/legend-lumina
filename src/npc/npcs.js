@@ -93,15 +93,20 @@ Object.assign(World.prototype, {
   updNpc(o, dt, locked) {
     const s = o.spr; s.setDepth(s.y); o.sh.setPosition(s.x, s.y - 1).setDepth(s.y - .5); if (o.mark) o.mark.y = s.y - 31 + Math.sin(this.t * 6) * 1.5;
     const baseSc = o.baseSc || 1.2;
-    // T575: Napas halus saat diam & getaran ritmis langkah kaki saat berjalan (stride bobbing)
+    // T575: Napas halus saat diam & langkah kaki saat berjalan (NPC tanpa sprite sheet memakai stride bobbing)
+    const hasWalkAnim = (NPC_FR[o.ch] && NPC_FR[o.ch].poses) || (typeof NPC_SHEETS !== 'undefined' && NPC_SHEETS[o.id]);
     if (!o.walking && s) {
       s.scaleY = baseSc * (1 + Math.sin(this.t * 3.927 + (s.x * 0.04)) * 0.012);
       s.scaleX = baseSc;
     } else if (o.walking && s) {
-      const curSp = Math.hypot(s.body.velocity.x, s.body.velocity.y);
-      o.stepT = (o.stepT || 0) + dt * curSp * 0.28;
-      s.scaleY = baseSc * (1 + Math.sin(o.stepT * 8) * 0.024);
-      s.scaleX = baseSc * (1 - Math.sin(o.stepT * 8) * 0.012);
+      if (hasWalkAnim) {
+        s.scaleY = baseSc; s.scaleX = baseSc;
+      } else {
+        const curSp = Math.hypot(s.body.velocity.x, s.body.velocity.y);
+        o.stepT = (o.stepT || 0) + dt * curSp * 0.28;
+        s.scaleY = baseSc * (1 + Math.sin(o.stepT * 8) * 0.024);
+        s.scaleX = baseSc * (1 - Math.sin(o.stepT * 8) * 0.012);
+      }
     }
     const dPl = Math.hypot(this.pl.x - s.x, this.pl.y - s.y);
 

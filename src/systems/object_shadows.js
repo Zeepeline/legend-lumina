@@ -49,6 +49,11 @@ function objShadowAdd(sc, s) {
   const { minW, maxW, step } = OBJ_SHADOW, k = Math.max(0, Math.min(Math.floor((maxW - minW) / step), Math.round((fw - minW) / step)));
   const sh = sc.add.image(Math.round(s.x + 1), Math.round(s.y - 1), 'objsh', k).setDepth(s.y - 2) /* tepat di bawah objeknya (seperti bayangan pohon) */
     .setAlpha(sc.M.dark ? OBJ_SHADOW.alphaDark : OBJ_SHADOW.alpha);
+  if (sc.cullL) {
+    const pad = typeof CULL_PAD !== 'undefined' ? CULL_PAD : 96;
+    sc.cullL.push({ o: sh, x: sh.x, y: sh.y, r: Math.max(sh.displayWidth, sh.displayHeight) + pad });
+    sc.cullAt = null;
+  }
   s.once('destroy', () => { if (sh.active) sh.destroy(); });
 }
 // pindai objek diam baru (properti, semak, batu, pohon buah, …) — tokoh, musuh, hewan & pemain dilewati
@@ -73,7 +78,7 @@ function objShadowScan(sc) {
     const n = this.children ? this.children.list.length : 0; /* pindai bila ada objek baru, atau tiap ±1 dtk */
     this._shdT = (this._shdT || 0) - (delta || 16);
     if (n !== this._shdN || this._shdT <= 0) {
-      this._shdN = n; this._shdT = 1000;
+      this._shdN = n; this._shdT = 4000;
       try { objShadowScan(this); } catch (e) { OBJ_SHADOW.on = false; console.warn('object_shadows', e); }
     }
   };

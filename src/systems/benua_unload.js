@@ -21,18 +21,25 @@ Object.assign(World.prototype, {
     if (!this.cellRec || (this.unT = (this.unT || 0) - dt) > 0) return;
     this.unT = UNLOAD_EVERY;
     const px = this.pl.x, py = this.pl.y, C = OBJ_CELL;
+    let unloaded = false;
     for (const [k, R] of this.cellRec) {
       const [i, j] = k.split(',').map(Number);
       if (Math.hypot((i + .5) * C - px, (j + .5) * C - py) < UNLOAD_FAR) continue;
+      unloaded = true;
       const gone = new Set([...R.objs, ...R.walls]);
       for (const o of gone) if (o && o.active) o.destroy();
       const drop = a => { const s = new Set(a); return x => !s.has(x); };
       this.inter = this.inter.filter(drop(R.inter));
       this.lights = this.lights.filter(drop(R.lights));
       this.fades = this.fades.filter(drop(R.fades));
-      if (this.cullL) this.cullL = this.cullL.filter(c => !gone.has(c.o));
       this.cellRec.delete(k);
       if (this.objCells) this.objCells.delete(k);
+    }
+    if (unloaded) {
+      if (this.cullL) this.cullL = this.cullL.filter(c => c.o && c.o.active);
+      if (this.bushes) this.bushes = this.bushes.filter(b => b && b.active);
+      if (this._appleTrees) this._appleTrees = this._appleTrees.filter(t => t && (!t.s || t.s.active));
+      this.cullAt = null;
     }
   }
 });

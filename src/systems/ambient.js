@@ -43,7 +43,7 @@ function artCritters(T) {
     }
     addStrip({ textures: T }, k, strip(frs));
   };
-  for (const [k, sc] of [['rabbit', .5], ['squirrel', .5], ['deer', 1], ['duck', .55], ['owl', .55]]) {
+  for (const [k, sc] of [['rabbit', 1], ['squirrel', 1], ['deer', 1], ['duck', 1], ['owl', 1]]) {
     const img = IMGEL['ani_' + k];
     if (img) {
       if (T.exists('cr_' + k)) T.remove('cr_' + k);

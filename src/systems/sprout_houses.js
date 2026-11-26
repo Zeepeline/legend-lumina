@@ -26,8 +26,6 @@ const SPROUT_HOUSES = {
     houseC: [100, 132, { roof: 'red', wall: 'pl', chim: 1, awning: 1, hc: 114 }],
     gpt_v_house_red_cottage: [131, 120, { roof: 'red', wall: 'pl', chim: 1, wide: 1, dormer: 1, hc: 112 }],
     gpt_v_house_brown_cottage: [117, 120, { roof: 'brown', wall: 'pl', chim: 1, wing: 1, hc: 112 }],
-    gpt_v_house_brown_wing: [123, 120, { roof: 'brown', wall: 'pl', chim: 1, wing: 1, hc: 112 }],
-    gpt_v_house_red_shop: [128, 125, { roof: 'red', wall: 'pl', chim: 1, awning: 1, wide: 1, hc: 114 }],
     gpt_v_blacksmith_forge: [135, 125, { roof: 'red', wall: 'pl', chim: 1, smith: 1, wide: 1, hc: 114 }],
     houseBlue: [136, 124, { roof: 'blue', wall: 'pl', chim: 1, dormer: 1, wing: 1, porch: 1, wide: 1, hc: 114 }],
     gpt_v_house_blue: [136, 124, { roof: 'blue', wall: 'pl', chim: 1, dormer: 1, wing: 1, porch: 1, wide: 1, hc: 114 }],
