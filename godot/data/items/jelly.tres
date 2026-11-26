@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"jelly"
+name_key = "item_jelly_name"
+description_key = "item_jelly_desc"
+category = "material"
+heal_amount = 0
+mp_amount = 0
+price = 0
+sell_price = 3

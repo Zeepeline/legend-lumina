@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_uutwo"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_acad_gate.png" id="2_navei"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q5m6s"]
+size = Vector2(71.2, 67)
+
+[node name="Acad Gate" type="StaticBody2D" unique_id=33826768]
+collision_mask = 0
+script = ExtResource("1_uutwo")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=389252864]
+texture = ExtResource("2_navei")
+offset = Vector2(0, -37.5)
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=539006447]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=867303969]
+position = Vector2(0, -37.5)
+shape = SubResource("RectangleShape2D_q5m6s")

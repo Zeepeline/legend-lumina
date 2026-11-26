@@ -115,9 +115,9 @@ _Generator tanah, tabrakan grid, penyebar pohon_
 _RUMPUT — SATU SUMBER untuk seluruh dunia. Ganti tekstur rumput cukup di sini (atau ganti file PNG-nya):_
 `GRASS` 8 · `grassTiles()` 15 · `grassSS` 21 · `grassTex()` 22 · `grassPass()` 27 · `grassCanvas()` 45
 
-## src/world/grass_edge.js (216 baris)
+## src/world/grass_edge.js (217 baris)
 _TEPI RUMPUT BERPETAK (autotile 47 bentuk) — percobaan, hanya untuk peta di GRASS_EDGE.maps._
-`GRASS_EDGE` 7 · `EDGE_PAL` 11 · `COBBLE` 20 · `cobbleTile()` 21 · `GRASS_EDGE_MAP` 39 · `DIRT_S` 49 · `SAND_S` 50 · `WATER_S` 51 · `edgeClass()` 54 · `isGreen` 63 · `edgeClean()` 65 · `edgeTiles()` 78 · `grassEdgeData()` 91 · `grassEdgeCanvas()` 156
+`GRASS_EDGE` 7 · `EDGE_PAL` 11 · `COBBLE` 20 · `cobbleTile()` 21 · `GRASS_EDGE_MAP` 39 · `DIRT_S` 49 · `SAND_S` 50 · `WATER_S` 51 · `edgeClass()` 54 · `isGreen` 63 · `edgeClean()` 65 · `edgeTiles()` 78 · `grassEdgeData()` 91 · `grassEdgeCanvas()` 157
 
 ## src/world/biome_ground.js (111 baris)
 _TANAH BIOME — rumput Sprout di wilayah khas diberi warna biomenya (dipakai grassEdgeCanvas, grass_edge.js):_
@@ -535,9 +535,9 @@ _T506: Fasilitas Markas Rumah Arka (Stronghold) & T507: Ikatan Sekutu & Perbekal
 _Paket A (T469, T484, T485, T486) & Paket B Gelombang 18 (T528–T531: Spell Wheel, Relik, Sekutu Tempur, Ujian Bayangan)_
 `.updLostArrow()` 163 · `.summonCompanion()` 179 · `.updCompanion()` 188 · `.startShadowTrial()` 209
 
-## src/systems/ecology.js (221 baris)
+## src/systems/ecology.js (243 baris)
 _Ekologi Spawn & Perilaku Paket B: zona aman permukiman, validasi air/tembok, ritme siang-malam/hujan, & respawn habitat_
-`SAFE_ZONES` 3 · `SAFE_TOWN_MAPS` 6 · `DIURNAL_MOBS` 7 · `NOCTURNAL_MOBS` 8 · `RAIN_MOBS` 9 · `inSafeZone()` 11 · `isWaterAt()` 20 · `isWallAt()` 42 · `enemyEcoSightMul()` 53 · `._isSpawnSafe()` 64 · `.findSafeSpawn()` 74 · `.updHabitatRespawn()` 87
+`SAFE_ZONES` 3 · `SAFE_TOWN_MAPS` 6 · `DIURNAL_MOBS` 7 · `NOCTURNAL_MOBS` 8 · `RAIN_MOBS` 9 · `ecoResolve()` 11 · `inSafeZone()` 20 · `isWaterAt()` 29 · `isWallAt()` 55 · `enemyEcoSightMul()` 66 · `._isSpawnSafe()` 77 · `.findSafeSpawn()` 89 · `.updHabitatRespawn()` 102
 
 ## src/systems/gelombang20.js (184 baris)
 _Gelombang 20 (T553–T562): 10 Trik Lanjutan Suasana & Mekanik ala Cobo / Mytheria_

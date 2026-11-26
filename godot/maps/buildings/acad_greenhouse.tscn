@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_l405m"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_acad_greenhouse.png" id="2_jvqp8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jt2mh"]
+size = Vector2(110, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i7vtp"]
+size = Vector2(122, 105)
+
+[node name="Acad Greenhouse" type="StaticBody2D" unique_id=809878217]
+collision_mask = 0
+script = ExtResource("1_l405m")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2035874461]
+texture = ExtResource("2_jvqp8")
+offset = Vector2(0, -80.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=570672235]
+position = Vector2(0, -26)
+shape = SubResource("RectangleShape2D_jt2mh")
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=2125882420]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=1547458217]
+position = Vector2(0, -104.5)
+shape = SubResource("RectangleShape2D_i7vtp")

@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/monsters/esh_golem.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"golem"
+name_key = "enemy_golem_name"
+sprite_sheet = ExtResource("2_tex")
+frame_size = Vector2i(64, 63)
+ai_type = "melee"
+is_boss = false
+boss_flag = &""
+sprite_tint = Color(1, 1, 1, 1)
+sprite_scale = 1.0
+projectile_color = Color(0.62, 0.92, 0.45, 1)
+max_hp = 95
+attack = 22
+defense = 10
+move_speed = 28.0
+aggro_radius = 110.0
+attack_range = 34.0
+leash_radius = 200.0
+windup_sec = 0.62
+attack_sec = 0.3
+recover_sec = 0.7
+exp_reward = 46
+gold_min = 10
+gold_max = 18
+collision_radius = 12.0
+lunge_speed = 130.0
+drop_item_id = &"ore"
+drop_chance = 0.7

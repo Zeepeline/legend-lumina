@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/dialogue_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"darma_greet"
+speaker_key = "npc_darma_name"
+line_keys = PackedStringArray("dlg_darma_1")

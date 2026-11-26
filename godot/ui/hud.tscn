@@ -1,0 +1,259 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://ui/hud.gd" id="1_hud"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.09, 0.08, 0.07, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.75, 0.63, 0.42, 0.65)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 6.0
+content_margin_top = 5.0
+content_margin_right = 6.0
+content_margin_bottom = 5.0
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_hud")
+
+[node name="StatsPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 150.0
+offset_bottom = 66.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="StatsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="HpBar" type="ColorRect" parent="StatsPanel/VBox"]
+custom_minimum_size = Vector2(128, 9)
+layout_mode = 2
+color = Color(0.18, 0.12, 0.12, 0.95)
+
+[node name="HpTrail" type="ColorRect" parent="StatsPanel/VBox/HpBar"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 9.0
+color = Color(0.92, 0.76, 0.42, 0.85)
+
+[node name="HpFill" type="ColorRect" parent="StatsPanel/VBox/HpBar"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 9.0
+color = Color(0.84, 0.22, 0.24, 1)
+
+[node name="HpLabel" type="Label" parent="StatsPanel/VBox/HpBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 7
+text = "HP 100/100"
+vertical_alignment = 1
+
+[node name="MpBar" type="ColorRect" parent="StatsPanel/VBox"]
+custom_minimum_size = Vector2(128, 7)
+layout_mode = 2
+color = Color(0.1, 0.14, 0.2, 0.95)
+
+[node name="MpFill" type="ColorRect" parent="StatsPanel/VBox/MpBar"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 7.0
+color = Color(0.24, 0.56, 0.92, 1)
+
+[node name="MpLabel" type="Label" parent="StatsPanel/VBox/MpBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 6
+text = "MP 30/30"
+vertical_alignment = 1
+
+[node name="StaBar" type="ColorRect" parent="StatsPanel/VBox"]
+custom_minimum_size = Vector2(128, 7)
+layout_mode = 2
+color = Color(0.12, 0.16, 0.12, 0.95)
+
+[node name="StaFill" type="ColorRect" parent="StatsPanel/VBox/StaBar"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 7.0
+color = Color(0.32, 0.76, 0.42, 1)
+
+[node name="StaLabel" type="Label" parent="StatsPanel/VBox/StaBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 6
+text = "ST 100"
+vertical_alignment = 1
+
+[node name="InfoLabel" type="Label" parent="StatsPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.78, 1)
+theme_override_font_sizes/font_size = 7
+text = "Botol: 3/3 | Lv. 1 | Emas: 40"
+
+[node name="TopRightBox" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -310.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 28.0
+grow_horizontal = 0
+theme_override_constants/separation = 3
+alignment = 2
+
+[node name="MapLabel" type="Label" parent="TopRightBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.94, 0.84, 1)
+theme_override_colors/font_outline_color = Color(0.08, 0.06, 0.05, 0.95)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 8
+text = "Desa Lumina"
+
+[node name="TimeLabel" type="Label" parent="TopRightBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.88, 0.65, 1)
+theme_override_colors/font_outline_color = Color(0.08, 0.06, 0.05, 0.95)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 7
+text = "09:00"
+
+[node name="JournalButton" type="Button" parent="TopRightBox"]
+custom_minimum_size = Vector2(36, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 7
+text = "Jurnal"
+
+[node name="BagButton" type="Button" parent="TopRightBox"]
+custom_minimum_size = Vector2(28, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 7
+text = "Tas"
+
+[node name="MapButton" type="Button" parent="TopRightBox"]
+custom_minimum_size = Vector2(30, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 7
+text = "Peta"
+
+[node name="MenuButton" type="Button" parent="TopRightBox"]
+custom_minimum_size = Vector2(34, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 7
+text = "Menu"
+
+[node name="BossPanel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -108.0
+offset_top = -62.0
+offset_right = 108.0
+offset_bottom = -38.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="BossPanel"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="BossNameLabel" type="Label" parent="BossPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.55, 1)
+theme_override_font_sizes/font_size = 8
+text = "Boss"
+horizontal_alignment = 1
+
+[node name="BossHpBar" type="ColorRect" parent="BossPanel/VBox"]
+custom_minimum_size = Vector2(200, 6)
+layout_mode = 2
+color = Color(0.18, 0.1, 0.12, 0.95)
+
+[node name="BossHpFill" type="ColorRect" parent="BossPanel/VBox/BossHpBar"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 6.0
+color = Color(0.86, 0.2, 0.25, 1)
+
+[node name="PromptPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -82.0
+offset_top = -32.0
+offset_right = 82.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="PromptLabel" type="Label" parent="PromptPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.94, 0.72, 1)
+theme_override_font_sizes/font_size = 8
+text = "[E] Bicara"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ToastPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -124.0
+offset_top = 30.0
+offset_right = 124.0
+offset_bottom = 50.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="ToastLabel" type="Label" parent="ToastPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.92, 0.7, 1)
+theme_override_font_sizes/font_size = 8
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1

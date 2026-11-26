@@ -1,0 +1,52 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://main.gd" id="1_main"]
+[ext_resource type="Script" path="res://systems/world/day_night.gd" id="2_dn"]
+[ext_resource type="PackedScene" path="res://ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://ui/touch_controls.tscn" id="4_tc"]
+[ext_resource type="PackedScene" path="res://systems/dialogue/dialogue_box.tscn" id="5_dlg"]
+[ext_resource type="PackedScene" path="res://ui/inventory_menu.tscn" id="6_inv"]
+[ext_resource type="PackedScene" path="res://ui/shop_menu.tscn" id="7_shop"]
+[ext_resource type="PackedScene" path="res://ui/world_map.tscn" id="8_wmap"]
+[ext_resource type="PackedScene" path="res://ui/journal_menu.tscn" id="9_jrn"]
+[ext_resource type="PackedScene" path="res://ui/pause_menu.tscn" id="10_pause"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_main")
+
+[node name="WorldRoot" type="Node2D" parent="."]
+
+[node name="DayNight" type="CanvasModulate" parent="WorldRoot"]
+script = ExtResource("2_dn")
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="HUD" parent="UILayer" instance=ExtResource("3_hud")]
+
+[node name="TouchControls" parent="UILayer" instance=ExtResource("4_tc")]
+
+[node name="DialogueBox" parent="UILayer" instance=ExtResource("5_dlg")]
+
+[node name="InventoryMenu" parent="UILayer" instance=ExtResource("6_inv")]
+
+[node name="ShopMenu" parent="UILayer" instance=ExtResource("7_shop")]
+
+[node name="WorldMapMenu" parent="UILayer" instance=ExtResource("8_wmap")]
+
+[node name="JournalMenu" parent="UILayer" instance=ExtResource("9_jrn")]
+
+[node name="PauseMenu" parent="UILayer" instance=ExtResource("10_pause")]
+
+[node name="FadeLayer" type="CanvasLayer" parent="."]
+layer = 20
+
+[node name="FadeRect" type="ColorRect" parent="FadeLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)

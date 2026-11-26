@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_s3ecc"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_house_proto.png" id="2_c3tse"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uxteh"]
+size = Vector2(118, 46)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j7cys"]
+size = Vector2(130, 114)
+
+[node name="House Proto" type="StaticBody2D" unique_id=551861763]
+collision_mask = 0
+script = ExtResource("1_s3ecc")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1252643813]
+texture = ExtResource("2_c3tse")
+offset = Vector2(0, -84)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=55731442]
+position = Vector2(0, -25)
+shape = SubResource("RectangleShape2D_uxteh")
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=447792124]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=1615406852]
+position = Vector2(0, -107)
+shape = SubResource("RectangleShape2D_j7cys")

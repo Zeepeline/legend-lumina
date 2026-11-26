@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_epoxw"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_house_brown_cottage.png" id="2_1tgvq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3abt0"]
+size = Vector2(102, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mwig7"]
+size = Vector2(114, 104)
+
+[node name="House Brown" type="StaticBody2D" unique_id=356435244]
+collision_mask = 0
+script = ExtResource("1_epoxw")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1239714353]
+texture = ExtResource("2_1tgvq")
+offset = Vector2(0, -78)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2037698518]
+position = Vector2(0, -24)
+shape = SubResource("RectangleShape2D_3abt0")
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=511188769]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=1322446303]
+position = Vector2(0, -100)
+shape = SubResource("RectangleShape2D_mwig7")

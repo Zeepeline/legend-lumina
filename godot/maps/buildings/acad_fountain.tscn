@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_us5yu"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_acad_fountain.png" id="2_bw1fd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4ubsb"]
+size = Vector2(52, 24)
+
+[node name="Acad Fountain" type="StaticBody2D" unique_id=1701040882]
+collision_mask = 0
+script = ExtResource("1_us5yu")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=194885881]
+texture = ExtResource("2_bw1fd")
+offset = Vector2(0, -28)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=963062502]
+position = Vector2(0, -14)
+shape = SubResource("RectangleShape2D_4ubsb")

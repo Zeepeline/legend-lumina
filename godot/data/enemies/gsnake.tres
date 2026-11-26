@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/monsters/esh_snake.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"gsnake"
+name_key = "enemy_gsnake_name"
+sprite_sheet = ExtResource("2_tex")
+frame_size = Vector2i(38, 33)
+ai_type = "melee"
+is_boss = true
+boss_flag = &"boss_gsnake"
+sprite_tint = Color(1, 1, 1, 1)
+sprite_scale = 1.7
+projectile_color = Color(0.62, 0.92, 0.45, 1)
+max_hp = 160
+attack = 16
+defense = 5
+move_speed = 58.0
+aggro_radius = 145.0
+attack_range = 34.0
+leash_radius = 250.0
+windup_sec = 0.44
+attack_sec = 0.26
+recover_sec = 0.52
+exp_reward = 60
+gold_min = 40
+gold_max = 50
+collision_radius = 11.0
+lunge_speed = 175.0
+drop_item_id = &"hi_potion"
+drop_chance = 1.0

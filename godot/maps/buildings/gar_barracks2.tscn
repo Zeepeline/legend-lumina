@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_njgni"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_gar_barracks2.png" id="2_yu73n"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_krh8i"]
+size = Vector2(184, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6m6iu"]
+size = Vector2(196, 87)
+
+[node name="Gar Barracks 2" type="StaticBody2D" unique_id=517673763]
+collision_mask = 0
+script = ExtResource("1_njgni")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1225141292]
+texture = ExtResource("2_yu73n")
+offset = Vector2(0, -71.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=723410628]
+position = Vector2(0, -26)
+shape = SubResource("RectangleShape2D_krh8i")
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=1490947097]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=1117990691]
+position = Vector2(0, -95.5)
+shape = SubResource("RectangleShape2D_6m6iu")

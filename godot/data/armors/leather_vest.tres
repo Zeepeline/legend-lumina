@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ArmorData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/armor_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"leather_vest"
+name_key = "arm_leather_vest_name"
+description_key = "arm_leather_vest_desc"
+defense_bonus = 3
+max_hp_bonus = 10
+price = 55
+sell_price = 28

@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_d31vq"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_shrine.png" id="2_snqw7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4fvln"]
+size = Vector2(80, 26)
+
+[node name="Shrine Ruin" type="StaticBody2D" unique_id=1929540204]
+collision_mask = 0
+script = ExtResource("1_d31vq")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=147678442]
+texture = ExtResource("2_snqw7")
+offset = Vector2(0, -35)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=329662051]
+position = Vector2(0, -15)
+shape = SubResource("RectangleShape2D_4fvln")

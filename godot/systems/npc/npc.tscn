@@ -1,0 +1,47 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://systems/npc/npc.gd" id="1_npc"]
+[ext_resource type="Script" path="res://systems/npc/interactable.gd" id="2_inter"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(12, 6)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_talk"]
+radius = 20.0
+
+[node name="NpcActor" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 1
+script = ExtResource("1_npc")
+
+[node name="Shadow" type="Polygon2D" parent="."]
+z_index = -1
+color = Color(0, 0, 0, 0.32)
+polygon = PackedVector2Array(-7, -1, -5, -3, 0, -4, 5, -3, 7, -1, 5, 2, 0, 3, -5, 2)
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+offset = Vector2(0, -20)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Interactable" type="Area2D" parent="."]
+position = Vector2(0, -6)
+collision_layer = 64
+collision_mask = 0
+script = ExtResource("2_inter")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+shape = SubResource("CircleShape2D_talk")
+
+[node name="NameLabel" type="Label" parent="."]
+offset_left = -44.0
+offset_top = -44.0
+offset_right = 44.0
+offset_bottom = -30.0
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.98, 0.96, 0.86, 0.95)
+theme_override_colors/font_outline_color = Color(0.08, 0.06, 0.05, 0.95)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 8

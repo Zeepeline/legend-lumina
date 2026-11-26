@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/monsters/esh_wisp.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"wisp"
+name_key = "enemy_wisp_name"
+sprite_sheet = ExtResource("2_tex")
+frame_size = Vector2i(34, 31)
+ai_type = "fly"
+is_boss = false
+boss_flag = &""
+sprite_tint = Color(1, 1, 1, 1)
+sprite_scale = 1.0
+projectile_color = Color(0.62, 0.92, 0.45, 1)
+max_hp = 40
+attack = 19
+defense = 4
+move_speed = 58.0
+aggro_radius = 125.0
+attack_range = 26.0
+leash_radius = 210.0
+windup_sec = 0.4
+attack_sec = 0.24
+recover_sec = 0.48
+exp_reward = 30
+gold_min = 5
+gold_max = 10
+collision_radius = 7.0
+lunge_speed = 150.0
+drop_item_id = &"ether"
+drop_chance = 0.3

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"fish"
+name_key = "item_fish_name"
+description_key = "item_fish_desc"
+category = "consumable"
+heal_amount = 25
+mp_amount = 0
+price = 14
+sell_price = 7

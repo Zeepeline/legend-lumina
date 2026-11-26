@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_s5yrw"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_stall_potion.png" id="2_vjnwo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cu2i6"]
+size = Vector2(96, 36)
+
+[node name="Stall Potion" type="StaticBody2D" unique_id=1423069639]
+collision_mask = 0
+script = ExtResource("1_s5yrw")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1161133320]
+texture = ExtResource("2_vjnwo")
+offset = Vector2(0, -71)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1847250974]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_cu2i6")

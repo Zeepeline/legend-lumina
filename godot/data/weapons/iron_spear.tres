@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/weapon_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"iron_spear"
+name_key = "wpn_iron_spear_name"
+description_key = "wpn_iron_spear_desc"
+weapon_type = "spear"
+damage_bonus = 7
+magic_bonus = 0
+damage_mult = 1.05
+crit_chance = 0.12
+stamina_cost = 8.0
+knockback = 115.0
+cooldown = 0.36
+hitbox_radius = 14.0
+hitbox_reach = 26.0
+price = 70
+sell_price = 35

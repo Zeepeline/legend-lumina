@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_popxl"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_blacksmith_forge.png" id="2_le6st"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q8w3i"]
+size = Vector2(104, 46)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ssetn"]
+size = Vector2(116, 106)
+
+[node name="Blacksmith" type="StaticBody2D" unique_id=1497995935]
+collision_mask = 0
+script = ExtResource("1_popxl")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1941392523]
+texture = ExtResource("2_le6st")
+offset = Vector2(0, -80)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1311138830]
+position = Vector2(0, -25)
+shape = SubResource("RectangleShape2D_q8w3i")
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=1741678255]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=1453011507]
+position = Vector2(0, -103)
+shape = SubResource("RectangleShape2D_ssetn")

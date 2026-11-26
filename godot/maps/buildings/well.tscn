@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_xa6is"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_well.png" id="2_k6isg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yjatb"]
+size = Vector2(32, 18)
+
+[node name="Well" type="StaticBody2D" unique_id=21154779]
+collision_mask = 0
+script = ExtResource("1_xa6is")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=187290986]
+texture = ExtResource("2_k6isg")
+offset = Vector2(0, -37.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1175387121]
+position = Vector2(0, -11)
+shape = SubResource("RectangleShape2D_yjatb")

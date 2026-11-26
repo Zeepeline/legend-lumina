@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/monsters/esh_samurai.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"samurai"
+name_key = "enemy_samurai_name"
+sprite_sheet = ExtResource("2_tex")
+frame_size = Vector2i(96, 80)
+ai_type = "melee"
+is_boss = true
+boss_flag = &"boss_samurai"
+sprite_tint = Color(1, 1, 1, 1)
+sprite_scale = 1.0
+projectile_color = Color(0.62, 0.92, 0.45, 1)
+max_hp = 540
+attack = 24
+defense = 9
+move_speed = 74.0
+aggro_radius = 150.0
+attack_range = 38.0
+leash_radius = 260.0
+windup_sec = 0.42
+attack_sec = 0.26
+recover_sec = 0.48
+exp_reward = 350
+gold_min = 180
+gold_max = 260
+collision_radius = 12.0
+lunge_speed = 200.0
+drop_item_id = &"hi_potion"
+drop_chance = 1.0

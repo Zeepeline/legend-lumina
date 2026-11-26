@@ -1,0 +1,94 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://systems/enemies/enemy_base.gd" id="1_enemy"]
+[ext_resource type="Script" path="res://core/state_machine/state_machine.gd" id="2_fsm"]
+[ext_resource type="Script" path="res://systems/enemies/states/enemy_idle.gd" id="3_idle"]
+[ext_resource type="Script" path="res://systems/enemies/states/enemy_chase.gd" id="4_chase"]
+[ext_resource type="Script" path="res://systems/enemies/states/enemy_windup.gd" id="5_wind"]
+[ext_resource type="Script" path="res://systems/enemies/states/enemy_attack.gd" id="6_atk"]
+[ext_resource type="Script" path="res://systems/enemies/states/enemy_hurt.gd" id="7_hurt"]
+[ext_resource type="Script" path="res://systems/enemies/states/enemy_dead.gd" id="8_dead"]
+[ext_resource type="Script" path="res://systems/combat/hurtbox.gd" id="9_hurtbox"]
+[ext_resource type="Script" path="res://systems/combat/hitbox.gd" id="10_hitbox"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 9.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hurt"]
+radius = 12.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hit"]
+radius = 13.0
+
+[node name="EnemyBase" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 13
+script = ExtResource("1_enemy")
+
+[node name="Shadow" type="Polygon2D" parent="."]
+z_index = -1
+color = Color(0, 0, 0, 0.32)
+polygon = PackedVector2Array(-9, -1, -6, -3, 0, -4, 6, -3, 9, -1, 6, 2, 0, 3, -6, 2)
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+offset = Vector2(0, -18)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4)
+shape = SubResource("CircleShape2D_body")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+position = Vector2(0, -10)
+collision_layer = 4
+collision_mask = 16
+script = ExtResource("9_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("CircleShape2D_hurt")
+
+[node name="Hitbox" type="Area2D" parent="."]
+position = Vector2(0, -8)
+collision_layer = 32
+collision_mask = 2
+script = ExtResource("10_hitbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_hit")
+
+[node name="HpBarBg" type="ColorRect" parent="."]
+visible = false
+offset_left = -12.0
+offset_top = -34.0
+offset_right = 12.0
+offset_bottom = -30.0
+color = Color(0.08, 0.08, 0.1, 0.85)
+
+[node name="HpBarFill" type="ColorRect" parent="HpBarBg"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 23.0
+offset_bottom = 3.0
+color = Color(0.88, 0.24, 0.24, 1)
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state", "actor")]
+script = ExtResource("2_fsm")
+initial_state = NodePath("Idle")
+actor = NodePath("..")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("3_idle")
+
+[node name="Chase" type="Node" parent="StateMachine"]
+script = ExtResource("4_chase")
+
+[node name="Windup" type="Node" parent="StateMachine"]
+script = ExtResource("5_wind")
+
+[node name="Attack" type="Node" parent="StateMachine"]
+script = ExtResource("6_atk")
+
+[node name="Hurt" type="Node" parent="StateMachine"]
+script = ExtResource("7_hurt")
+
+[node name="Dead" type="Node" parent="StateMachine"]
+script = ExtResource("8_dead")

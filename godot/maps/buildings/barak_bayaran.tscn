@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_jumxj"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_barakBayaran.png" id="2_rn5op"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eacdk"]
+size = Vector2(104, 42)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n3x7f"]
+size = Vector2(116, 66)
+
+[node name="Barak Bayaran" type="StaticBody2D" unique_id=2122544177]
+collision_mask = 0
+script = ExtResource("1_jumxj")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1536310010]
+texture = ExtResource("2_rn5op")
+offset = Vector2(0, -58)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1849864588]
+position = Vector2(0, -23)
+shape = SubResource("RectangleShape2D_eacdk")
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=1997051588]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=124371919]
+position = Vector2(0, -79)
+shape = SubResource("RectangleShape2D_n3x7f")

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/weapon_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"battle_axe"
+name_key = "wpn_battle_axe_name"
+description_key = "wpn_battle_axe_desc"
+weapon_type = "axe"
+damage_bonus = 17
+magic_bonus = 0
+damage_mult = 1.25
+crit_chance = 0.18
+stamina_cost = 12.0
+knockback = 185.0
+cooldown = 0.48
+hitbox_radius = 21.0
+hitbox_reach = 18.0
+price = 180
+sell_price = 90

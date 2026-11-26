@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_fy828"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_cityHouse4.png" id="2_egukj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_og710"]
+size = Vector2(90, 42)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sgpt6"]
+size = Vector2(102, 82)
+
+[node name="City House 4" type="StaticBody2D" unique_id=1725075988]
+collision_mask = 0
+script = ExtResource("1_fy828")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1705308446]
+texture = ExtResource("2_egukj")
+offset = Vector2(0, -66)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=567801814]
+position = Vector2(0, -23)
+shape = SubResource("RectangleShape2D_og710")
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=1880161310]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=821915656]
+position = Vector2(0, -87)
+shape = SubResource("RectangleShape2D_sgpt6")

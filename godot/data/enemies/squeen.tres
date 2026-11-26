@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/monsters/esh_shroom.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"squeen"
+name_key = "enemy_squeen_name"
+sprite_sheet = ExtResource("2_tex")
+frame_size = Vector2i(40, 37)
+ai_type = "ranged"
+is_boss = true
+boss_flag = &"boss_squeen"
+sprite_tint = Color(0.94, 0.72, 1, 1)
+sprite_scale = 1.6
+projectile_color = Color(0.84, 0.42, 0.98, 1)
+max_hp = 150
+attack = 14
+defense = 4
+move_speed = 24.0
+aggro_radius = 145.0
+attack_range = 120.0
+leash_radius = 240.0
+windup_sec = 0.55
+attack_sec = 0.22
+recover_sec = 0.72
+exp_reward = 58
+gold_min = 35
+gold_max = 45
+collision_radius = 12.0
+lunge_speed = 0.0
+drop_item_id = &"hi_potion"
+drop_chance = 1.0

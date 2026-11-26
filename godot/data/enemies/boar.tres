@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/monsters/esh_boar.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"boar"
+name_key = "enemy_boar_name"
+sprite_sheet = ExtResource("2_tex")
+frame_size = Vector2i(42, 35)
+ai_type = "melee"
+is_boss = false
+boss_flag = &""
+sprite_tint = Color(1, 1, 1, 1)
+sprite_scale = 1.0
+projectile_color = Color(0.62, 0.92, 0.45, 1)
+max_hp = 50
+attack = 15
+defense = 4
+move_speed = 48.0
+aggro_radius = 120.0
+attack_range = 32.0
+leash_radius = 210.0
+windup_sec = 0.45
+attack_sec = 0.26
+recover_sec = 0.55
+exp_reward = 22
+gold_min = 5
+gold_max = 9
+collision_radius = 9.0
+lunge_speed = 165.0
+drop_item_id = &"tusk"
+drop_chance = 0.55

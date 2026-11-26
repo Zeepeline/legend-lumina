@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_xqum3"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_stall_scroll.png" id="2_2uc5k"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3sm2y"]
+size = Vector2(96, 36)
+
+[node name="Stall Scroll" type="StaticBody2D" unique_id=418036439]
+collision_mask = 0
+script = ExtResource("1_xqum3")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1492817038]
+texture = ExtResource("2_2uc5k")
+offset = Vector2(0, -71.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=778306329]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_3sm2y")

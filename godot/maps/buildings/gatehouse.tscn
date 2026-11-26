@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_ojr6y"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_gatehouse.png" id="2_dv2hw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3kemv"]
+size = Vector2(157.6, 120)
+
+[node name="Gatehouse" type="StaticBody2D" unique_id=1531600174]
+collision_mask = 0
+script = ExtResource("1_ojr6y")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=447554703]
+texture = ExtResource("2_dv2hw")
+offset = Vector2(0, -64)
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=2086263396]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=258313675]
+position = Vector2(0, -64)
+shape = SubResource("RectangleShape2D_3kemv")

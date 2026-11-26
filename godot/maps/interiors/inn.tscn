@@ -1,0 +1,139 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/interior/int_room2.png" id="1_wn3d6"]
+[ext_resource type="PackedScene" path="res://systems/npc/npc.tscn" id="2_ht6b0"]
+[ext_resource type="Script" path="res://systems/npc/npc.gd" id="3_eoror"]
+[ext_resource type="Texture2D" path="res://assets/art/npc/npc_inn.png" id="4_mffqs"]
+[ext_resource type="Resource" path="res://data/dialogues/inn_greet.tres" id="5_tv522"]
+[ext_resource type="Script" path="res://systems/world/bed_interactable.gd" id="6_2crwv"]
+[ext_resource type="Script" path="res://systems/world/spawn_point.gd" id="7_ollyx"]
+[ext_resource type="PackedScene" path="res://systems/world/portal.tscn" id="8_x1a64"]
+[ext_resource type="Script" path="res://systems/world/portal.gd" id="9_anpia"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_atvb0"]
+radius = 20.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4i7bg"]
+size = Vector2(136, 42)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_in246"]
+size = Vector2(10, 112)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eixfd"]
+size = Vector2(10, 112)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eo6lh"]
+size = Vector2(54, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d0b0d"]
+size = Vector2(53, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ib5ca"]
+size = Vector2(34, 6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yh66a"]
+size = Vector2(13, 9)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y1h30"]
+size = Vector2(15, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_txoag"]
+size = Vector2(26, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3y1qt"]
+size = Vector2(26, 27)
+
+[node name="Inn" type="Node2D" unique_id=298329339]
+metadata/is_indoor = true
+metadata/camera_zoom = 2.0
+metadata/map_bounds = Rect2i(0, 0, 136, 112)
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1977568617]
+z_index = -5
+offset_left = -240.0
+offset_top = -160.0
+offset_right = 376.0
+offset_bottom = 272.0
+color = Color(0.05, 0.03, 0.03, 1)
+
+[node name="RoomBg" type="Sprite2D" parent="." unique_id=89147435]
+z_index = -2
+texture = ExtResource("1_wn3d6")
+centered = false
+
+[node name="YSorted" type="Node2D" parent="." unique_id=185791847]
+y_sort_enabled = true
+
+[node name="BuRina" type="CharacterBody2D" parent="YSorted" unique_id=1762711529 instance=ExtResource("2_ht6b0")]
+position = Vector2(66, 54)
+collision_layer = 8
+script = ExtResource("3_eoror")
+npc_name_key = "npc_inn_name"
+sprite_sheet = ExtResource("4_mffqs")
+dialogue = ExtResource("5_tv522")
+
+[node name="BedInteract" type="Area2D" parent="." unique_id=2129391869]
+position = Vector2(22, 68)
+collision_layer = 64
+collision_mask = 0
+script = ExtResource("6_2crwv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BedInteract" unique_id=876228120]
+shape = SubResource("CircleShape2D_atvb0")
+
+[node name="Borders" type="StaticBody2D" parent="." unique_id=1664603489]
+collision_mask = 0
+
+[node name="Wall_0" type="CollisionShape2D" parent="Borders" unique_id=825511026]
+position = Vector2(68, 21)
+shape = SubResource("RectangleShape2D_4i7bg")
+
+[node name="Wall_1" type="CollisionShape2D" parent="Borders" unique_id=1535547244]
+position = Vector2(5, 56)
+shape = SubResource("RectangleShape2D_in246")
+
+[node name="Wall_2" type="CollisionShape2D" parent="Borders" unique_id=433885104]
+position = Vector2(131, 56)
+shape = SubResource("RectangleShape2D_eixfd")
+
+[node name="Wall_3" type="CollisionShape2D" parent="Borders" unique_id=1501249283]
+position = Vector2(27, 102)
+shape = SubResource("RectangleShape2D_eo6lh")
+
+[node name="Wall_4" type="CollisionShape2D" parent="Borders" unique_id=1329317885]
+position = Vector2(109.5, 102)
+shape = SubResource("RectangleShape2D_d0b0d")
+
+[node name="Wall_5" type="CollisionShape2D" parent="Borders" unique_id=500096869]
+position = Vector2(109, 45)
+shape = SubResource("RectangleShape2D_ib5ca")
+
+[node name="Wall_6" type="CollisionShape2D" parent="Borders" unique_id=562171192]
+position = Vector2(17.5, 46.5)
+shape = SubResource("RectangleShape2D_yh66a")
+
+[node name="Wall_7" type="CollisionShape2D" parent="Borders" unique_id=1617553885]
+position = Vector2(118.5, 56)
+shape = SubResource("RectangleShape2D_y1h30")
+
+[node name="Wall_8" type="CollisionShape2D" parent="Borders" unique_id=599067158]
+position = Vector2(23, 76)
+shape = SubResource("RectangleShape2D_txoag")
+
+[node name="Wall_9" type="CollisionShape2D" parent="Borders" unique_id=1325793289]
+position = Vector2(113, 78.5)
+shape = SubResource("RectangleShape2D_3y1qt")
+
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=753050714]
+
+[node name="Default" type="Marker2D" parent="SpawnPoints" unique_id=235333902]
+position = Vector2(68, 86)
+script = ExtResource("7_ollyx")
+
+[node name="ToVillage" type="Area2D" parent="." unique_id=639624300 instance=ExtResource("8_x1a64")]
+position = Vector2(68, 102)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("9_anpia")
+target_map = "res://maps/village.tscn"
+target_spawn_id = &"from_inn"

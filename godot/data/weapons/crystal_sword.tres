@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/weapon_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"crystal_sword"
+name_key = "wpn_crystal_sword_name"
+description_key = "wpn_crystal_sword_desc"
+weapon_type = "sword"
+damage_bonus = 22
+magic_bonus = 4
+damage_mult = 1.2
+crit_chance = 0.16
+stamina_cost = 8.0
+knockback = 160.0
+cooldown = 0.29
+hitbox_radius = 19.0
+hitbox_reach = 21.0
+price = 320
+sell_price = 160

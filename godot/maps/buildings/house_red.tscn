@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_xdmvg"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_house_red_cottage.png" id="2_3vvl3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_knlc8"]
+size = Vector2(102, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w8ntn"]
+size = Vector2(114, 104)
+
+[node name="House Red" type="StaticBody2D" unique_id=1361797795]
+collision_mask = 0
+script = ExtResource("1_xdmvg")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1178670107]
+texture = ExtResource("2_3vvl3")
+offset = Vector2(0, -78)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1730918991]
+position = Vector2(0, -24)
+shape = SubResource("RectangleShape2D_knlc8")
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=1692689240]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=350927980]
+position = Vector2(0, -100)
+shape = SubResource("RectangleShape2D_w8ntn")

@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_251ae"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_academy.png" id="2_rkmce"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4688p"]
+size = Vector2(220, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kd84o"]
+size = Vector2(232, 148)
+
+[node name="Academy" type="StaticBody2D" unique_id=50837243]
+collision_mask = 0
+script = ExtResource("1_251ae")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2091143555]
+texture = ExtResource("2_rkmce")
+offset = Vector2(0, -100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=602138143]
+position = Vector2(0, -24)
+shape = SubResource("RectangleShape2D_4688p")
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=1864003793]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=752294835]
+position = Vector2(0, -122)
+shape = SubResource("RectangleShape2D_kd84o")

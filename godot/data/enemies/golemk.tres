@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/monsters/esh_golem.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"golemk"
+name_key = "enemy_golemk_name"
+sprite_sheet = ExtResource("2_tex")
+frame_size = Vector2i(64, 63)
+ai_type = "melee"
+is_boss = true
+boss_flag = &"boss_golemk"
+sprite_tint = Color(0.9, 0.82, 0.66, 1)
+sprite_scale = 1.5
+projectile_color = Color(0.62, 0.92, 0.45, 1)
+max_hp = 460
+attack = 26
+defense = 12
+move_speed = 30.0
+aggro_radius = 150.0
+attack_range = 42.0
+leash_radius = 260.0
+windup_sec = 0.68
+attack_sec = 0.34
+recover_sec = 0.72
+exp_reward = 240
+gold_min = 150
+gold_max = 150
+collision_radius = 16.0
+lunge_speed = 150.0
+drop_item_id = &"shard"
+drop_chance = 1.0

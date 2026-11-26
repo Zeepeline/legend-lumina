@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_wgjd5"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_stall_weapon.png" id="2_0ef2d"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_82yp2"]
+size = Vector2(96, 36)
+
+[node name="Stall Weapon" type="StaticBody2D" unique_id=121250713]
+collision_mask = 0
+script = ExtResource("1_wgjd5")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1173198726]
+texture = ExtResource("2_0ef2d")
+offset = Vector2(0, -71)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=101688206]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_82yp2")

@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_insra"]
+[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_blades.png" id="2_yqrry"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0phkt"]
+size = Vector2(70, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a7umf"]
+size = Vector2(82, 40)
+
+[node name="Blades" type="StaticBody2D" unique_id=581089112]
+collision_mask = 0
+script = ExtResource("1_insra")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1007786464]
+texture = ExtResource("2_yqrry")
+offset = Vector2(0, -40)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1544347656]
+position = Vector2(0, -18)
+shape = SubResource("RectangleShape2D_0phkt")
+
+[node name="FadeArea" type="Area2D" parent="." unique_id=547388118]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=631576392]
+position = Vector2(0, -56)
+shape = SubResource("RectangleShape2D_a7umf")

@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/monsters/esh_plant.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"plant"
+name_key = "enemy_plant_name"
+sprite_sheet = ExtResource("2_tex")
+frame_size = Vector2i(44, 42)
+ai_type = "ranged"
+is_boss = false
+boss_flag = &""
+sprite_tint = Color(1, 1, 1, 1)
+sprite_scale = 1.0
+projectile_color = Color(0.68, 0.92, 0.42, 1)
+max_hp = 36
+attack = 12
+defense = 3
+move_speed = 0.0
+aggro_radius = 130.0
+attack_range = 115.0
+leash_radius = 180.0
+windup_sec = 0.5
+attack_sec = 0.2
+recover_sec = 0.8
+exp_reward = 15
+gold_min = 4
+gold_max = 8
+collision_radius = 8.0
+lunge_speed = 0.0
+drop_item_id = &"potion"
+drop_chance = 0.25

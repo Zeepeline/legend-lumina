@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/item_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"grilled_fish"
+name_key = "item_grilled_fish_name"
+description_key = "item_grilled_fish_desc"
+category = "consumable"
+heal_amount = 65
+mp_amount = 10
+price = 36
+sell_price = 18

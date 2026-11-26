@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/weapon_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"starter_sword"
+name_key = "wpn_starter_sword_name"
+description_key = "wpn_starter_sword_desc"
+weapon_type = "sword"
+damage_bonus = 4
+magic_bonus = 0
+damage_mult = 1.0
+crit_chance = 0.1
+stamina_cost = 7.0
+knockback = 135.0
+cooldown = 0.32
+hitbox_radius = 16.0
+hitbox_reach = 18.0
+price = 0
+sell_price = 5

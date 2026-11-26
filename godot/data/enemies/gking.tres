@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/monsters/esh_gking.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"gking"
+name_key = "enemy_gking_name"
+sprite_sheet = ExtResource("2_tex")
+frame_size = Vector2i(94, 64)
+ai_type = "melee"
+is_boss = true
+boss_flag = &"boss_gking"
+sprite_tint = Color(1, 1, 1, 1)
+sprite_scale = 1.0
+projectile_color = Color(0.62, 0.92, 0.45, 1)
+max_hp = 320
+attack = 19
+defense = 7
+move_speed = 44.0
+aggro_radius = 155.0
+attack_range = 38.0
+leash_radius = 260.0
+windup_sec = 0.5
+attack_sec = 0.28
+recover_sec = 0.58
+exp_reward = 160
+gold_min = 100
+gold_max = 120
+collision_radius = 12.0
+lunge_speed = 175.0
+drop_item_id = &"hi_potion"
+drop_chance = 1.0

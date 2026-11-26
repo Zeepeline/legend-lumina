@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/weapon_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"iron_sword"
+name_key = "wpn_iron_sword_name"
+description_key = "wpn_iron_sword_desc"
+weapon_type = "sword"
+damage_bonus = 8
+magic_bonus = 0
+damage_mult = 1.05
+crit_chance = 0.12
+stamina_cost = 7.0
+knockback = 140.0
+cooldown = 0.31
+hitbox_radius = 17.0
+hitbox_reach = 19.0
+price = 60
+sell_price = 30

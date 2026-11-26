@@ -1,0 +1,127 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/interior/int_room1.png" id="1_ehq6c"]
+[ext_resource type="PackedScene" path="res://systems/npc/npc.tscn" id="2_0r6ct"]
+[ext_resource type="Script" path="res://systems/npc/npc.gd" id="3_nu0ea"]
+[ext_resource type="Texture2D" path="res://assets/art/npc/npc_mom.png" id="4_jvurt"]
+[ext_resource type="Resource" path="res://data/dialogues/mom_greet.tres" id="5_qchue"]
+[ext_resource type="Script" path="res://systems/world/spawn_point.gd" id="6_1mnw0"]
+[ext_resource type="PackedScene" path="res://systems/world/portal.tscn" id="7_dy0ye"]
+[ext_resource type="Script" path="res://systems/world/portal.gd" id="8_mc1ro"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a28vd"]
+size = Vector2(127, 42)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k4nvs"]
+size = Vector2(10, 111)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0bmip"]
+size = Vector2(10, 111)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1mcb1"]
+size = Vector2(55, 19)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_40awt"]
+size = Vector2(44, 19)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qw3gc"]
+size = Vector2(24, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wn4gj"]
+size = Vector2(22, 11)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i35ja"]
+size = Vector2(42, 22)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7vrme"]
+size = Vector2(14, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4t2pi"]
+size = Vector2(14, 20)
+
+[node name="LinaHome" type="Node2D" unique_id=111392545]
+metadata/is_indoor = true
+metadata/camera_zoom = 2.0
+metadata/map_bounds = Rect2i(0, 0, 127, 111)
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1164792228]
+z_index = -5
+offset_left = -240.0
+offset_top = -160.0
+offset_right = 367.0
+offset_bottom = 271.0
+color = Color(0.05, 0.03, 0.03, 1)
+
+[node name="RoomBg" type="Sprite2D" parent="." unique_id=519176194]
+z_index = -2
+texture = ExtResource("1_ehq6c")
+centered = false
+flip_h = true
+
+[node name="YSorted" type="Node2D" parent="." unique_id=268473129]
+y_sort_enabled = true
+
+[node name="BuWulan" type="CharacterBody2D" parent="YSorted" unique_id=526817503 instance=ExtResource("2_0r6ct")]
+position = Vector2(88, 54)
+collision_layer = 8
+script = ExtResource("3_nu0ea")
+npc_name_key = "npc_mom_name"
+sprite_sheet = ExtResource("4_jvurt")
+dialogue = ExtResource("5_qchue")
+
+[node name="Borders" type="StaticBody2D" parent="." unique_id=1864064988]
+collision_mask = 0
+
+[node name="Wall_0" type="CollisionShape2D" parent="Borders" unique_id=1098027102]
+position = Vector2(63.5, 21)
+shape = SubResource("RectangleShape2D_a28vd")
+
+[node name="Wall_1" type="CollisionShape2D" parent="Borders" unique_id=1504120637]
+position = Vector2(5, 55.5)
+shape = SubResource("RectangleShape2D_k4nvs")
+
+[node name="Wall_2" type="CollisionShape2D" parent="Borders" unique_id=671910589]
+position = Vector2(122, 55.5)
+shape = SubResource("RectangleShape2D_0bmip")
+
+[node name="Wall_3" type="CollisionShape2D" parent="Borders" unique_id=1415943018]
+position = Vector2(27.5, 101.5)
+shape = SubResource("RectangleShape2D_1mcb1")
+
+[node name="Wall_4" type="CollisionShape2D" parent="Borders" unique_id=2013551508]
+position = Vector2(105, 101.5)
+shape = SubResource("RectangleShape2D_40awt")
+
+[node name="Wall_5" type="CollisionShape2D" parent="Borders" unique_id=326258930]
+position = Vector2(22, 49)
+shape = SubResource("RectangleShape2D_qw3gc")
+
+[node name="Wall_6" type="CollisionShape2D" parent="Borders" unique_id=1290752151]
+position = Vector2(21, 61.5)
+shape = SubResource("RectangleShape2D_wn4gj")
+
+[node name="Wall_7" type="CollisionShape2D" parent="Borders" unique_id=2002136873]
+position = Vector2(73, 67)
+shape = SubResource("RectangleShape2D_i35ja")
+
+[node name="Wall_8" type="CollisionShape2D" parent="Borders" unique_id=10630670]
+position = Vector2(110, 78)
+shape = SubResource("RectangleShape2D_7vrme")
+
+[node name="Wall_9" type="CollisionShape2D" parent="Borders" unique_id=772029807]
+position = Vector2(17, 82)
+shape = SubResource("RectangleShape2D_4t2pi")
+
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=846660334]
+
+[node name="Default" type="Marker2D" parent="SpawnPoints" unique_id=471124191]
+position = Vector2(69, 86)
+script = ExtResource("6_1mnw0")
+
+[node name="ToVillage" type="Area2D" parent="." unique_id=691812060 instance=ExtResource("7_dy0ye")]
+position = Vector2(69, 102)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("8_mc1ro")
+target_map = "res://maps/village.tscn"
+target_spawn_id = &"from_linahome"
