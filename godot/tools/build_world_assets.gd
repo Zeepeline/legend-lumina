@@ -128,6 +128,19 @@ func _build_tileset() -> TileSet:
 			c_td.set_custom_data("footstep", &"stone")
 			c_td.set_custom_data("terrain_type", &"cobble")
 
+	var sand_src: TileSetAtlasSource = TileSetAtlasSource.new()
+	sand_src.texture = MapBuilderHelper.load_res("res://assets/art/ground/gnd_sand_sprout.png") as Texture2D
+	sand_src.texture_region_size = Vector2i(16, 16)
+	ts.add_source(sand_src, 4)
+	for r: int in 4:
+		for c: int in 4:
+			var s_coords: Vector2i = Vector2i(c, r)
+			sand_src.create_tile(s_coords)
+			var s_td: TileData = sand_src.get_tile_data(s_coords, 0)
+			s_td.set_custom_data("walkable", true)
+			s_td.set_custom_data("footstep", &"dirt")
+			s_td.set_custom_data("terrain_type", &"sand")
+
 	return ts
 
 
@@ -371,31 +384,18 @@ func _build_village_map(ts: TileSet, buildings: Dictionary) -> void:
 	var rows: int = 45
 	var m: Dictionary = MapBuilderHelper.create_outdoor_base("Village", ts, cols, rows)
 	var root: Node2D = m["root"]
-	var grass: TileMapLayer = m["grass"]
 	var ysorted: Node2D = m["ysorted"]
 	var spawns: Node2D = m["spawns"]
-	var grid: Array[bool] = m["grid"]
 
-	MapBuilderHelper.carve_ellipse(grid, cols, rows, Vector2(31.5, 22.5), 5.2, 4.0)
-	var road_segs: Array[Array] = [
-		[Vector2(30, 19), Vector2(32, 0), 1.4], [Vector2(28, 24), Vector2(18, 29), 1.3],
-		[Vector2(18, 29), Vector2(0, 36), 1.4], [Vector2(35, 20), Vector2(46, 20), 1.3],
-		[Vector2(46, 20), Vector2(50, 16), 1.3], [Vector2(50, 16), Vector2(63, 16), 1.4],
-		[Vector2(31, 25), Vector2(28, 33), 1.3], [Vector2(28, 33), Vector2(32, 44), 1.6],
-		[Vector2(31, 14), Vector2(11, 14), 1.0], [Vector2(33, 13), Vector2(46, 15), 1.0],
-		[Vector2(47, 20), Vector2(48, 36), 1.1], [Vector2(48, 36), Vector2(54, 37), 1.1],
-		[Vector2(28, 34), Vector2(36, 37), 1.0], [Vector2(36, 37), Vector2(48, 36), 1.0],
-		[Vector2(28, 34), Vector2(23, 39), 1.0],
-	]
-	for seg: Array in road_segs:
-		MapBuilderHelper.carve_road(grid, cols, rows, seg[0], seg[1], seg[2])
-	for spot: Vector2i in [
-		Vector2i(22, 13), Vector2i(40, 13), Vector2i(16, 26), Vector2i(24, 38),
-		Vector2i(59, 9), Vector2i(11, 13), Vector2i(42, 34), Vector2i(33, 35),
-		Vector2i(53, 33), Vector2i(46, 14), Vector2i(12, 28)
-	]:
-		MapBuilderHelper.carve_ellipse(grid, cols, rows, Vector2(spot.x, spot.y), 2.2, 1.4)
-	MapBuilderHelper.apply_grass_autotile(grass, grid, cols, rows)
+	MapBuilderHelper.build_ground_from_custom_png(m, &"village", &"village", false, [
+		[Vector2(31, 19), Vector2(32, 0), 1.4],
+		[Vector2(0, 35), Vector2(18, 29), 1.4],
+		[Vector2(48, 16), Vector2(63, 16), 1.4],
+		[Vector2(31, 34), Vector2(32, 44), 1.5],
+	])
+
+	MapBuilderHelper.add_garden_bed(ysorted, root, "GardenBedN", Vector2(146, 392), 0)
+	MapBuilderHelper.add_garden_bed(ysorted, root, "GardenBedS", Vector2(146, 450), 1)
 
 	var b_placements: Array[Array] = [
 		["HouseDarto", "house_a", Vector2(355, 213)], ["Inn", "house_c", Vector2(642, 203)],
@@ -414,13 +414,15 @@ func _build_village_map(ts: TileSet, buildings: Dictionary) -> void:
 
 	var tree_placements: Array[Array] = [
 		[Vector2(108, 108), "big_dark"], [Vector2(148, 128), "big"], [Vector2(266, 186), "tall"],
-		[Vector2(382, 82), "big"], [Vector2(432, 78), "big_dark"], [Vector2(588, 92), "big"],
-		[Vector2(718, 86), "big_dark"], [Vector2(768, 94), "tall"], [Vector2(862, 128), "big"],
+		[Vector2(86, 174), "apple"], [Vector2(382, 82), "big"], [Vector2(432, 78), "big_dark"],
+		[Vector2(588, 92), "big"], [Vector2(718, 86), "big_dark"], [Vector2(768, 94), "tall"],
+		[Vector2(816, 114), "apple"], [Vector2(862, 128), "orange"], [Vector2(842, 166), "apple"],
 		[Vector2(78, 288), "big_dark"], [Vector2(64, 342), "big"], [Vector2(64, 482), "tall_dark"],
-		[Vector2(124, 646), "big_dark"], [Vector2(168, 650), "big"], [Vector2(292, 650), "tall"],
-		[Vector2(436, 666), "big"], [Vector2(650, 656), "big_dark"], [Vector2(716, 654), "big"],
-		[Vector2(776, 658), "tall_dark"], [Vector2(918, 656), "big"], [Vector2(954, 594), "big_dark"],
-		[Vector2(956, 466), "tall"], [Vector2(716, 452), "big"],
+		[Vector2(124, 624), "big_dark"], [Vector2(168, 634), "big"], [Vector2(214, 616), "apple"],
+		[Vector2(292, 650), "tall"], [Vector2(436, 666), "big"], [Vector2(650, 656), "big_dark"],
+		[Vector2(716, 654), "big"], [Vector2(776, 658), "tall_dark"], [Vector2(844, 652), "apple"],
+		[Vector2(918, 656), "big"], [Vector2(954, 594), "big_dark"],
+		[Vector2(956, 466), "tall"], [Vector2(716, 452), "apple"],
 	]
 	for idx: int in tree_placements.size():
 		var tp: Array = tree_placements[idx]
@@ -437,17 +439,15 @@ func _build_village_map(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_prop(ysorted, root, "Pot1", "res://assets/art/props/pot.png", Vector2(396, 220), Vector2(14, 6))
 	MapBuilderHelper.add_prop(ysorted, root, "Pot2", "res://assets/art/props/pot.png", Vector2(550, 566), Vector2(14, 6))
 
-	var deco_tex: Texture2D = MapBuilderHelper.load_res(DECO_OBJS_PATH) as Texture2D
-	for b_pos: Vector2 in [
-		Vector2(166, 104), Vector2(274, 202), Vector2(642, 104),
-		Vector2(788, 124), Vector2(306, 434), Vector2(412, 518), Vector2(732, 556)
-	]:
-		MapBuilderHelper.add_atlas_prop(ysorted, root, "Bush", deco_tex, Rect2(16, 48, 16, 16), 2.0, b_pos, Vector2(22, 8))
-	for f_pos: Vector2 in [
-		Vector2(470, 340), Vector2(548, 342), Vector2(315, 250),
-		Vector2(615, 260), Vector2(488, 570), Vector2(722, 410)
-	]:
-		MapBuilderHelper.add_atlas_prop(ysorted, root, "Flower", deco_tex, Rect2(99, 39, 9, 6), 2.0, f_pos, Vector2.ZERO)
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "VillageBush1", "res://assets/art/nature/bushG1.png", Vector2(166, 104), 0.72, Vector2(22, 8))
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "VillageBush2", "res://assets/art/nature/bushP.png", Vector2(274, 202), 0.75, Vector2(20, 8))
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "VillageBush3", "res://assets/art/nature/bushG1.png", Vector2(642, 104), 0.72, Vector2(22, 8))
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "VillageBush4", "res://assets/art/nature/bushP.png", Vector2(788, 124), 0.75, Vector2(20, 8))
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "VillageBush5", "res://assets/art/nature/bushW.png", Vector2(306, 434), 0.75, Vector2(20, 8))
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "VillageBush6", "res://assets/art/nature/bushP.png", Vector2(412, 518), 0.75, Vector2(20, 8))
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "VillageBush7", "res://assets/art/nature/bushW.png", Vector2(732, 556), 0.75, Vector2(20, 8))
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "VillageReeds1", "res://assets/art/ground/deco_reeds.png", Vector2(215, 600), 0.65, Vector2.ZERO, -4)
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "VillageReeds2", "res://assets/art/ground/deco_reeds.png", Vector2(824, 306), 0.65, Vector2.ZERO, -4)
 
 	var market_items: Array[StringName] = [&"potion", &"hi_potion", &"ether", &"bread_mila", &"honey"]
 	var smith_items: Array[StringName] = [&"iron_sword", &"steel_sword", &"iron_spear", &"battle_axe", &"leather_vest", &"iron_chainmail"]
@@ -463,17 +463,11 @@ func _build_village_map(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_animal(ysorted, root, "SquirrelV", "squirrel", Vector2(695, 445))
 	MapBuilderHelper.add_animal(ysorted, root, "DuckV", "duck", Vector2(830, 315))
 
-	MapBuilderHelper.add_borders(root, [
-		Rect2(0, -16, 470, 32), Rect2(554, -16, 470, 32),
-		Rect2(-16, 0, 32, 550), Rect2(-16, 626, 32, 94),
-		Rect2(1008, 0, 32, 230), Rect2(1008, 302, 32, 418),
-		Rect2(0, 704, 474, 32), Rect2(550, 704, 474, 32),
-	])
 	MapBuilderHelper.add_spawn(spawns, root, "Default", &"default", Vector2(512, 428))
 	MapBuilderHelper.add_spawn(spawns, root, "FromGlade", &"from_glade", Vector2(215, 470))
 	MapBuilderHelper.add_spawn(spawns, root, "FromForest", &"from_forest", Vector2(512, 666))
 	MapBuilderHelper.add_spawn(spawns, root, "FromMeadow", &"from_meadow", Vector2(972, 266))
-	MapBuilderHelper.add_spawn(spawns, root, "FromLake", &"from_lake", Vector2(48, 588))
+	MapBuilderHelper.add_spawn(spawns, root, "FromLake", &"from_lake", Vector2(48, 556))
 	MapBuilderHelper.add_spawn(spawns, root, "FromHome", &"from_home", Vector2(526, 580))
 	MapBuilderHelper.add_spawn(spawns, root, "FromInn", &"from_inn", Vector2(642, 232))
 	MapBuilderHelper.add_spawn(spawns, root, "FromElderHome", &"from_elderhome", Vector2(512, 118))
@@ -481,10 +475,13 @@ func _build_village_map(ts: TileSet, buildings: Dictionary) -> void:
 
 	MapBuilderHelper.add_portal(root, "ToForest", Vector2(512, 710), "res://maps/forest.tscn", &"from_village")
 	MapBuilderHelper.add_portal(root, "ToMeadow", Vector2(1012, 266), "res://maps/meadow.tscn", &"from_village", Vector2(22, 60))
-	MapBuilderHelper.add_portal(root, "ToLake", Vector2(12, 588), "res://maps/lake.tscn", &"from_village", Vector2(22, 60))
+	MapBuilderHelper.add_portal(root, "ToLake", Vector2(12, 556), "res://maps/lake.tscn", &"from_village", Vector2(22, 60))
 	MapBuilderHelper.add_portal(root, "ToTrainingGlade", Vector2(182, 456), "res://maps/training_glade.tscn", &"from_village", Vector2(24, 24))
 	MapBuilderHelper.add_portal(root, "DoorHome", Vector2(526, 558), "res://maps/interiors/home.tscn", &"default", Vector2(22, 12))
 	MapBuilderHelper.add_portal(root, "DoorInn", Vector2(642, 208), "res://maps/interiors/inn.tscn", &"default", Vector2(22, 12))
 	MapBuilderHelper.add_portal(root, "DoorElderHome", Vector2(512, 74), "res://maps/interiors/elderhome.tscn", &"default", Vector2(28, 14))
 	MapBuilderHelper.add_portal(root, "DoorLinaHome", Vector2(355, 218), "res://maps/interiors/linahome.tscn", &"default", Vector2(22, 12))
+
+	MapBuilderHelper.populate_nature_and_deco(m, &"village", &"village", [Vector2(146, 420), Vector2(506, 375)], [Rect2(96, 350, 108, 140), Rect2(320, 190, 380, 420)])
+	MapBuilderHelper.add_open_borders(root, &"village")
 	MapBuilderHelper.save_scene(root, "res://maps/village.tscn")

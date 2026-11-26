@@ -9,22 +9,22 @@ size = Vector2(90, 42)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ku64a"]
 size = Vector2(102, 82)
 
-[node name="City House 1" type="StaticBody2D" unique_id=797077563]
+[node name="City House 1" type="StaticBody2D" unique_id=138486928]
 collision_mask = 0
 script = ExtResource("1_5o6mq")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1013013034]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1813113750]
 texture = ExtResource("2_ts3i3")
 offset = Vector2(0, -66)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=176136490]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=307791015]
 position = Vector2(0, -23)
 shape = SubResource("RectangleShape2D_1fn42")
 
-[node name="FadeArea" type="Area2D" parent="." unique_id=1741966699]
+[node name="FadeArea" type="Area2D" parent="." unique_id=769616178]
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=1521290791]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=1605701284]
 position = Vector2(0, -87)
 shape = SubResource("RectangleShape2D_ku64a")

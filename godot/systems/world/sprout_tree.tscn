@@ -9,6 +9,7 @@ shader = ExtResource("2_shader")
 shader_parameter/sway_speed = 1.6
 shader_parameter/sway_pixels = 1.6
 shader_parameter/phase_offset = 0.0
+shader_parameter/biome_tint = 0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_big"]
 atlas = ExtResource("3_tex")

@@ -1,113 +1,272 @@
 class_name HudOverlay
 extends Control
+## HUD utama bergaya RPG aksi klasik gelap-transparan dengan bilah jurus berlian, kompas, kartu misi, dan banner wilayah.
 
+const STAT_BAR_W: float = 104.0
+const EXP_BAR_W: float = 76.0
+const BOSS_BAR_W: float = 216.0
+const PEACE_FADE_DELAY: float = 5.0
+
+@onready var stats_panel: PanelContainer = $StatsPanel
 @onready var hp_fill: ColorRect = $StatsPanel/VBox/HpBar/HpFill
 @onready var hp_trail: ColorRect = $StatsPanel/VBox/HpBar/HpTrail
 @onready var hp_label: Label = $StatsPanel/VBox/HpBar/HpLabel
+@onready var sta_fill: ColorRect = $StatsPanel/VBox/StaBar/StaFill
 @onready var mp_fill: ColorRect = $StatsPanel/VBox/MpBar/MpFill
 @onready var mp_label: Label = $StatsPanel/VBox/MpBar/MpLabel
-@onready var sta_fill: ColorRect = $StatsPanel/VBox/StaBar/StaFill
-@onready var sta_label: Label = $StatsPanel/VBox/StaBar/StaLabel
-@onready var info_label: Label = $StatsPanel/VBox/InfoLabel
-@onready var map_label: Label = $TopRightBox/MapLabel
-@onready var time_label: Label = $TopRightBox/TimeLabel
-@onready var journal_button: Button = $TopRightBox/JournalButton
-@onready var bag_button: Button = $TopRightBox/BagButton
-@onready var map_button: Button = $TopRightBox/MapButton
-@onready var menu_button: Button = $TopRightBox/MenuButton
+@onready var level_label: Label = $StatsPanel/VBox/ExpRow/LevelLabel
+@onready var exp_fill: ColorRect = $StatsPanel/VBox/ExpRow/ExpBar/ExpFill
+
+@onready var time_label: Label = $TopRightCapsule/HBox/TimeLabel
+@onready var compass_label: Label = $TopRightCapsule/HBox/CompassLabel
+@onready var gold_label: Label = $TopRightCapsule/HBox/GoldLabel
+@onready var flask_label: Label = $TopRightCapsule/HBox/FlaskLabel
+@onready var journal_button: Button = $TopRightCapsule/HBox/JournalButton
+@onready var bag_button: Button = $TopRightCapsule/HBox/BagButton
+@onready var map_button: Button = $TopRightCapsule/HBox/MapButton
+@onready var menu_button: Button = $TopRightCapsule/HBox/MenuButton
+
+@onready var quest_card: PanelContainer = $QuestCard
+@onready var quest_title_label: Label = $QuestCard/VBox/Header/QuestTitleLabel
+@onready var quest_toggle_btn: Button = $QuestCard/VBox/Header/QuestToggleBtn
+@onready var quest_desc_label: Label = $QuestCard/VBox/QuestDescLabel
+
+@onready var region_banner: PanelContainer = $RegionBanner
+@onready var region_title_label: Label = $RegionBanner/VBox/RegionTitleLabel
+@onready var region_subtitle_label: Label = $RegionBanner/VBox/RegionSubtitleLabel
+
+@onready var boss_panel: PanelContainer = $BossPanel
+@onready var boss_name_label: Label = $BossPanel/VBox/BossNameLabel
+@onready var boss_hp_fill: ColorRect = $BossPanel/VBox/BossHpBar/BossHpFill
+@onready var boss_hp_trail: ColorRect = $BossPanel/VBox/BossHpBar/BossHpTrail
+
 @onready var prompt_panel: PanelContainer = $PromptPanel
 @onready var prompt_label: Label = $PromptPanel/PromptLabel
 @onready var toast_panel: PanelContainer = $ToastPanel
 @onready var toast_label: Label = $ToastPanel/ToastLabel
-@onready var boss_panel: PanelContainer = $BossPanel
-@onready var boss_name_label: Label = $BossPanel/VBox/BossNameLabel
-@onready var boss_hp_fill: ColorRect = $BossPanel/VBox/BossHpBar/BossHpFill
 
 var _trail_ratio: float = 1.0
+var _boss_target_ratio: float = 1.0
+var _boss_trail_ratio: float = 1.0
+var _boss_active: bool = false
+var _peace_timer: float = 0.0
+var _stats_faded: bool = false
+var _quest_collapsed: bool = false
+var _last_banner_id: String = ""
+var _last_compass_dir: String = ""
 var _toast_tween: Tween = null
+var _banner_tween: Tween = null
+var _stats_tween: Tween = null
 
 
 func _ready() -> void:
 	prompt_panel.visible = false
 	toast_panel.visible = false
 	boss_panel.visible = false
+	region_banner.visible = false
+
 	journal_button.text = tr("ui_journal")
 	bag_button.text = tr("ui_bag")
 	map_button.text = tr("ui_map")
 	menu_button.text = tr("ui_menu")
-	EventsBus.ref.player_stats_changed.connect(_refresh_stats)
-	EventsBus.ref.skill_changed.connect(func(_s: StringName) -> void: _refresh_stats())
-	EventsBus.ref.interact_prompt_changed.connect(_on_interact_prompt)
-	EventsBus.ref.map_changed.connect(_on_map_changed)
-	EventsBus.ref.notification_requested.connect(_show_toast)
-	EventsBus.ref.time_of_day_changed.connect(_on_time_changed)
-	EventsBus.ref.boss_hp_changed.connect(_on_boss_hp_changed)
+	quest_title_label.text = tr("ui_quest_card_title")
+
+	if EventsBus.ref != null:
+		EventsBus.ref.player_stats_changed.connect(_refresh_stats)
+		EventsBus.ref.inventory_changed.connect(_refresh_stats)
+		EventsBus.ref.skill_changed.connect(func(_s: StringName) -> void: _refresh_stats())
+		EventsBus.ref.quest_updated.connect(_refresh_quest_card)
+		EventsBus.ref.interact_prompt_changed.connect(_on_interact_prompt)
+		EventsBus.ref.map_changed.connect(_on_map_changed)
+		EventsBus.ref.notification_requested.connect(_show_toast)
+		EventsBus.ref.time_of_day_changed.connect(_on_time_changed)
+		EventsBus.ref.boss_hp_changed.connect(_on_boss_hp_changed)
+
 	journal_button.pressed.connect(func() -> void: _tap_action(&"journal"))
 	bag_button.pressed.connect(func() -> void: _tap_action(&"inventory"))
 	map_button.pressed.connect(func() -> void: _tap_action(&"world_map"))
 	menu_button.pressed.connect(func() -> void: _tap_action(&"pause"))
+	quest_toggle_btn.pressed.connect(_toggle_quest_card)
+	stats_panel.mouse_entered.connect(_wake_stats_panel)
+
 	_refresh_stats()
-	_on_time_changed(GameStateStore.ref.world_hour)
+	_refresh_quest_card()
+	if GameStateStore.ref != null:
+		_on_time_changed(GameStateStore.ref.world_hour)
 
 
 func _process(delta: float) -> void:
 	var gs: GameStateStore = GameStateStore.ref
-	var target: float = clampf(float(gs.hp) / float(maxi(1, gs.total_max_hp())), 0.0, 1.0)
-	if _trail_ratio > target:
-		_trail_ratio = maxf(target, _trail_ratio - delta * 0.45)
-		hp_trail.size.x = 128.0 * _trail_ratio
-	else:
-		_trail_ratio = target
-		hp_trail.size.x = 128.0 * _trail_ratio
-		set_process(false)
+	if gs != null:
+		var cap_hp: int = gs.total_max_hp()
+		var hp_target: float = clampf(float(gs.hp) / float(maxi(1, cap_hp)), 0.0, 1.0)
+		if _trail_ratio > hp_target:
+			_trail_ratio = maxf(hp_target, _trail_ratio - delta * 0.45)
+			hp_trail.size.x = STAT_BAR_W * _trail_ratio
+		else:
+			_trail_ratio = hp_target
+			hp_trail.size.x = STAT_BAR_W * _trail_ratio
+
+		var is_peaceful: bool = (
+			gs.hp >= cap_hp
+			and gs.mp >= gs.max_mp
+			and gs.stamina >= gs.max_stamina - 0.5
+			and not _boss_active
+		)
+		if is_peaceful:
+			_peace_timer += delta
+			if _peace_timer >= PEACE_FADE_DELAY and not _stats_faded:
+				_set_stats_faded(true)
+		else:
+			_wake_stats_panel()
+
+	if _boss_active:
+		if _boss_trail_ratio > _boss_target_ratio:
+			_boss_trail_ratio = maxf(_boss_target_ratio, _boss_trail_ratio - delta * 0.38)
+			boss_hp_trail.size.x = BOSS_BAR_W * _boss_trail_ratio
+		else:
+			_boss_trail_ratio = _boss_target_ratio
+			boss_hp_trail.size.x = BOSS_BAR_W * _boss_trail_ratio
+
+	_update_compass()
+
+
+func _update_compass() -> void:
+	if SceneService.ref == null:
+		return
+	var player: Node2D = SceneService.ref.get_current_player()
+	if player == null or not is_instance_valid(player):
+		return
+	var f_var: Variant = player.get("facing")
+	if not (f_var is Vector2):
+		return
+	var f: Vector2 = f_var as Vector2
+	if f.length_squared() < 0.01:
+		return
+	var sector: int = posmod(roundi(f.angle() / (PI / 4.0)), 8)
+	var dirs: Array[String] = ["T", "TG", "S", "BD", "B", "BL", "U", "TL"]
+	var d_text: String = dirs[sector]
+	if d_text != _last_compass_dir:
+		_last_compass_dir = d_text
+		compass_label.text = "· %s" % d_text
+
+
+func _wake_stats_panel() -> void:
+	_peace_timer = 0.0
+	if _stats_faded:
+		_set_stats_faded(false)
+
+
+func _set_stats_faded(faded: bool) -> void:
+	_stats_faded = faded
+	if not is_inside_tree():
+		stats_panel.modulate.a = 0.38 if faded else 1.0
+		return
+	if _stats_tween != null and _stats_tween.is_valid():
+		_stats_tween.kill()
+	_stats_tween = create_tween()
+	_stats_tween.tween_property(stats_panel, "modulate:a", 0.38 if faded else 1.0, 0.35)
 
 
 func _refresh_stats() -> void:
 	var gs: GameStateStore = GameStateStore.ref
+	if gs == null:
+		return
+	_wake_stats_panel()
+
 	var cap_hp: int = gs.total_max_hp()
 	var hp_ratio: float = clampf(float(gs.hp) / float(maxi(1, cap_hp)), 0.0, 1.0)
-	hp_fill.size.x = 128.0 * hp_ratio
-	if _trail_ratio > hp_ratio:
-		set_process(true)
-	else:
+	hp_fill.size.x = STAT_BAR_W * hp_ratio
+	if _trail_ratio < hp_ratio:
 		_trail_ratio = hp_ratio
-		hp_trail.size.x = 128.0 * _trail_ratio
-	hp_label.text = "%s %d/%d" % [tr("ui_hp"), gs.hp, cap_hp]
-
-	var mp_ratio: float = clampf(float(gs.mp) / float(maxi(1, gs.max_mp)), 0.0, 1.0)
-	mp_fill.size.x = 128.0 * mp_ratio
-	mp_label.text = "%s %d/%d" % [tr("ui_mp"), gs.mp, gs.max_mp]
+		hp_trail.size.x = STAT_BAR_W * _trail_ratio
+	hp_label.text = "%d/%d" % [gs.hp, cap_hp]
 
 	var sta_ratio: float = clampf(gs.stamina / maxf(1.0, gs.max_stamina), 0.0, 1.0)
-	sta_fill.size.x = 128.0 * sta_ratio
-	sta_label.text = "%s %d" % [tr("ui_stamina"), int(roundf(gs.stamina))]
+	sta_fill.size.x = STAT_BAR_W * sta_ratio
 
-	var sk: Dictionary = SkillDatabase.get_skill(gs.active_skill_id)
-	var sk_name: String = tr(String(sk["name_key"])) if not sk.is_empty() else "-"
-	info_label.text = "%s: %d/%d | %s %d | %s: %d | %s" % [
-		tr("ui_flask"),
-		gs.flask_charges,
-		gs.flask_max,
-		tr("ui_level"),
-		gs.level,
-		tr("ui_gold"),
-		gs.gold,
-		sk_name,
-	]
+	var mp_ratio: float = clampf(float(gs.mp) / float(maxi(1, gs.max_mp)), 0.0, 1.0)
+	mp_fill.size.x = STAT_BAR_W * mp_ratio
+	mp_label.text = "%d/%d" % [gs.mp, gs.max_mp]
+
+	level_label.text = "Lv.%d" % gs.level
+	var needed_exp: int = maxi(1, CombatMath.exp_to_next_level(gs.level))
+	var exp_ratio: float = clampf(float(gs.exp) / float(needed_exp), 0.0, 1.0)
+	exp_fill.size.x = EXP_BAR_W * exp_ratio
+
+	gold_label.text = "%d G" % gs.gold
+	var dots: String = ""
+	for i: int in gs.flask_max:
+		dots += "●" if i < gs.flask_charges else "○"
+	var pot_count: int = (
+		InventoryLogic.count_item(gs.inventory, &"potion")
+		+ InventoryLogic.count_item(gs.inventory, &"hi_potion")
+	)
+	flask_label.text = "%s +%d" % [dots, pot_count] if pot_count > 0 else dots
+	_refresh_quest_card()
+
+
+func _refresh_quest_card() -> void:
+	var gs: GameStateStore = GameStateStore.ref
+	if gs == null:
+		return
+	var snap: Dictionary = gs.quest_snapshot()
+	var claimable_entry: Dictionary = {}
+	var active_entry: Dictionary = {}
+	for q: Dictionary in QuestDatabase.QUESTS:
+		var qid: StringName = q["id"]
+		if gs.claimed_quests.has(qid):
+			continue
+		if QuestDatabase.is_completed(q, snap):
+			if claimable_entry.is_empty():
+				claimable_entry = q
+		elif active_entry.is_empty():
+			active_entry = q
+
+	var chosen: Dictionary = claimable_entry if not claimable_entry.is_empty() else active_entry
+	if chosen.is_empty():
+		quest_title_label.text = tr("ui_quest_card_title")
+		quest_desc_label.text = tr("ui_quest_none")
+		return
+
+	var q_name: String = tr(String(chosen["name_key"]))
+	if not claimable_entry.is_empty():
+		quest_title_label.text = "%s · %s" % [tr("ui_quest_card_title"), tr("ui_quest_ready")]
+		quest_desc_label.text = q_name
+	else:
+		quest_title_label.text = tr("ui_quest_card_title")
+		quest_desc_label.text = "%s: %s" % [q_name, tr(String(chosen["desc_key"]))]
+
+
+func _toggle_quest_card() -> void:
+	_quest_collapsed = not _quest_collapsed
+	quest_desc_label.visible = not _quest_collapsed
+	quest_toggle_btn.text = "+" if _quest_collapsed else "-"
+	if AudioService.ref != null:
+		AudioService.ref.play_ui_id(&"ui_click")
 
 
 func _on_time_changed(hour: float) -> void:
 	var hh: int = int(hour) % 24
 	var mm: int = int((hour - float(int(hour))) * 60.0)
-	time_label.text = "%02d:%02d" % [hh, mm]
+	var icon: String = "☀" if (hour >= 5.5 and hour < 18.5) else "🌙"
+	time_label.text = "%s %02d:%02d" % [icon, hh, mm]
 
 
 func _on_boss_hp_changed(boss_name: String, cur_hp: int, cap_hp: int, active: bool) -> void:
-	boss_panel.visible = active and cur_hp > 0
-	if boss_panel.visible:
+	_boss_active = active and cur_hp > 0
+	boss_panel.visible = _boss_active
+	if _boss_active:
+		_wake_stats_panel()
 		boss_name_label.text = boss_name
-		var ratio: float = clampf(float(cur_hp) / float(maxi(1, cap_hp)), 0.0, 1.0)
-		boss_hp_fill.size.x = 200.0 * ratio
+		_boss_target_ratio = clampf(float(cur_hp) / float(maxi(1, cap_hp)), 0.0, 1.0)
+		boss_hp_fill.size.x = BOSS_BAR_W * _boss_target_ratio
+		if _boss_trail_ratio < _boss_target_ratio:
+			_boss_trail_ratio = _boss_target_ratio
+			boss_hp_trail.size.x = BOSS_BAR_W * _boss_trail_ratio
+	else:
+		_boss_target_ratio = 1.0
+		_boss_trail_ratio = 1.0
 
 
 func _on_interact_prompt(label_key: String, is_visible: bool) -> void:
@@ -118,15 +277,47 @@ func _on_interact_prompt(label_key: String, is_visible: bool) -> void:
 
 func _on_map_changed(map_path: String, _spawn_id: StringName) -> void:
 	var base: String = map_path.get_file().get_basename()
-	var key: String = "map_%s" % base
-	var translated: String = tr(key)
-	map_label.text = translated if translated != key else base.capitalize()
+	var rid: StringName = StringName(base)
+	var reg: Dictionary = WorldLayout.get_region(rid)
+	var title_text: String = ""
+	var sub_text: String = ""
+	if not reg.is_empty():
+		title_text = str(reg.get("name", ""))
+		sub_text = str(reg.get("subtitle", ""))
+	else:
+		var key: String = "map_%s" % base
+		var translated: String = tr(key)
+		title_text = translated if translated != key else base.capitalize()
+		sub_text = "Gua Gelap" if base == "cave" else ("Gelanggang & Ruangan" if GameStateStore.ref != null and GameStateStore.ref.is_indoor else "Wilayah Khusus")
+	if base != _last_banner_id:
+		_last_banner_id = base
+		_show_region_banner(title_text, sub_text)
+	_refresh_quest_card()
+
+
+func _show_region_banner(title_text: String, sub_text: String) -> void:
+	region_title_label.text = title_text.to_upper()
+	region_subtitle_label.text = sub_text
+	region_banner.visible = true
+	region_banner.modulate.a = 1.0
+	if not is_inside_tree():
+		return
+	if _banner_tween != null and _banner_tween.is_valid():
+		_banner_tween.kill()
+	region_banner.modulate.a = 0.0
+	_banner_tween = create_tween()
+	_banner_tween.tween_property(region_banner, "modulate:a", 1.0, 0.25)
+	_banner_tween.tween_interval(1.8)
+	_banner_tween.tween_property(region_banner, "modulate:a", 0.0, 0.45)
+	_banner_tween.tween_callback(func() -> void: region_banner.visible = false)
 
 
 func _show_toast(msg: String) -> void:
 	toast_label.text = msg
 	toast_panel.visible = true
 	toast_panel.modulate.a = 1.0
+	if not is_inside_tree():
+		return
 	if _toast_tween != null and _toast_tween.is_valid():
 		_toast_tween.kill()
 	_toast_tween = create_tween()
@@ -136,6 +327,7 @@ func _show_toast(msg: String) -> void:
 
 
 func _tap_action(action_name: StringName) -> void:
-	AudioService.ref.play_ui_id(&"ui_click")
+	if AudioService.ref != null:
+		AudioService.ref.play_ui_id(&"ui_click")
 	Input.action_press(action_name)
 	Input.action_release(action_name)

@@ -1,45 +1,37 @@
 class_name WorldMapMenu
 extends Control
-
-const REGIONS: Array[Dictionary] = [
-	{"path": "res://maps/kakademi.tscn", "key": "map_kakademi", "pos": Vector2(70, 2), "spawn": &"default"},
-	{"path": "res://maps/kbawah.tscn", "key": "map_kbawah", "pos": Vector2(2, 26), "spawn": &"default"},
-	{"path": "res://maps/kpasar.tscn", "key": "map_kpasar", "pos": Vector2(70, 26), "spawn": &"default"},
-	{"path": "res://maps/kpermukiman.tscn", "key": "map_kpermukiman", "pos": Vector2(138, 26), "spawn": &"default"},
-	{"path": "res://maps/road.tscn", "key": "map_road", "pos": Vector2(2, 52), "spawn": &"default"},
-	{"path": "res://maps/kgate.tscn", "key": "map_kgate", "pos": Vector2(70, 52), "spawn": &"default"},
-	{"path": "res://maps/snow.tscn", "key": "map_snow", "pos": Vector2(206, 52), "spawn": &"default"},
-	{"path": "res://maps/cave.tscn", "key": "map_cave", "pos": Vector2(274, 52), "spawn": &"default"},
-	{"path": "res://maps/lake.tscn", "key": "map_lake", "pos": Vector2(2, 78), "spawn": &"default"},
-	{"path": "res://maps/village.tscn", "key": "map_village", "pos": Vector2(70, 78), "spawn": &"default"},
-	{"path": "res://maps/meadow.tscn", "key": "map_meadow", "pos": Vector2(138, 78), "spawn": &"default"},
-	{"path": "res://maps/deepwood.tscn", "key": "map_deepwood", "pos": Vector2(2, 104), "spawn": &"default"},
-	{"path": "res://maps/forest.tscn", "key": "map_forest", "pos": Vector2(70, 104), "spawn": &"default"},
-	{"path": "res://maps/river.tscn", "key": "map_river", "pos": Vector2(138, 104), "spawn": &"default"},
-	{"path": "res://maps/swamp.tscn", "key": "map_swamp", "pos": Vector2(206, 104), "spawn": &"default"},
-]
+## Menu Peta Benua interaktif dengan tampilan proporsional Benua Lumina, zoom/pan, dan teleportasi Patung Cahaya.
 
 @onready var title_label: Label = $Center/Panel/Margin/VBox/Header/TitleLabel
+@onready var focus_btn: Button = $Center/Panel/Margin/VBox/Header/FocusBtn
+@onready var zoom_out_btn: Button = $Center/Panel/Margin/VBox/Header/ZoomOutBtn
+@onready var zoom_in_btn: Button = $Center/Panel/Margin/VBox/Header/ZoomInBtn
 @onready var close_btn: Button = $Center/Panel/Margin/VBox/Header/CloseBtn
-@onready var map_canvas: Control = $Center/Panel/Margin/VBox/MapCanvas
+@onready var map_canvas: WorldMapCanvas = $Center/Panel/Margin/VBox/MapCanvas
 @onready var info_label: Label = $Center/Panel/Margin/VBox/Footer/InfoLabel
 @onready var teleport_btn: Button = $Center/Panel/Margin/VBox/Footer/TeleportBtn
 
-var _selected_region: Dictionary = {}
+var _selected_id: StringName = &"village"
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 	title_label.text = tr("ui_worldmap_title")
+	focus_btn.text = "◎ %s" % tr("ui_focus_arka")
 	close_btn.text = tr("ui_close")
 	teleport_btn.text = tr("ui_teleport")
+
+	focus_btn.pressed.connect(_on_focus_pressed)
+	zoom_out_btn.pressed.connect(_on_zoom_out_pressed)
+	zoom_in_btn.pressed.connect(_on_zoom_in_pressed)
 	close_btn.pressed.connect(_close)
 	teleport_btn.pressed.connect(_on_teleport)
+	map_canvas.region_selected.connect(_on_region_selected)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"world_map") and not SceneService.ref.is_busy():
+	if SceneService.ref != null and event.is_action_pressed(&"world_map") and not SceneService.ref.is_busy():
 		get_viewport().set_input_as_handled()
 		if visible:
 			_close()
@@ -53,63 +45,80 @@ func _unhandled_input(event: InputEvent) -> void:
 func _open() -> void:
 	visible = true
 	get_tree().paused = true
-	AudioService.ref.play_ui_id(&"ui_click")
-	_selected_region = REGIONS[9]
-	for reg: Dictionary in REGIONS:
-		if String(reg["path"]) == GameStateStore.ref.current_map:
-			_selected_region = reg
-			break
-	_rebuild()
+	if AudioService.ref != null:
+		AudioService.ref.play_ui_id(&"ui_click")
+	var cur_id: StringName = &"village"
+	if GameStateStore.ref != null:
+		cur_id = WorldLayout.id_from_path(GameStateStore.ref.current_map)
+		if not WorldLayout.is_benua_id(cur_id):
+			var found_special: bool = false
+			for m: Dictionary in WorldLayout.SPECIAL_MARKERS:
+				if (m["id"] as StringName) == cur_id:
+					found_special = true
+					break
+			if not found_special:
+				cur_id = &"village"
+	_selected_id = cur_id
+	map_canvas.set_selected_id(_selected_id)
+	map_canvas.fit_continent()
+	_refresh_footer()
 	close_btn.grab_focus()
 
 
 func _close() -> void:
-	AudioService.ref.play_ui_id(&"ui_click")
+	if AudioService.ref != null:
+		AudioService.ref.play_ui_id(&"ui_click")
 	visible = false
 	get_tree().paused = false
 
 
-func _rebuild() -> void:
-	for ch: Node in map_canvas.get_children():
-		ch.queue_free()
-	var gs: GameStateStore = GameStateStore.ref
-	for reg: Dictionary in REGIONS:
-		var path: String = String(reg["path"])
-		var btn: Button = Button.new()
-		btn.position = reg["pos"] as Vector2
-		btn.custom_minimum_size = Vector2(64, 21)
-		btn.text = tr(String(reg["key"]))
-		btn.add_theme_font_size_override("font_size", 6)
-		var is_cur: bool = gs.current_map == path
-		var is_vis: bool = gs.visited_maps.has(path)
-		if is_cur:
-			btn.modulate = Color(1.0, 0.88, 0.45)
-		elif is_vis:
-			btn.modulate = Color(0.68, 0.96, 0.74)
-		else:
-			btn.modulate = Color(0.52, 0.54, 0.62)
-		btn.pressed.connect(func() -> void: _select_region(reg))
-		map_canvas.add_child(btn)
+func _on_focus_pressed() -> void:
+	if AudioService.ref != null:
+		AudioService.ref.play_ui_id(&"ui_click")
+	map_canvas.focus_player()
+
+
+func _on_zoom_out_pressed() -> void:
+	if AudioService.ref != null:
+		AudioService.ref.play_ui_id(&"ui_click")
+	map_canvas.zoom_out()
+
+
+func _on_zoom_in_pressed() -> void:
+	if AudioService.ref != null:
+		AudioService.ref.play_ui_id(&"ui_click")
+	map_canvas.zoom_in()
+
+
+func _on_region_selected(rid: StringName) -> void:
+	if AudioService.ref != null:
+		AudioService.ref.play_ui_id(&"ui_click")
+	_selected_id = rid
 	_refresh_footer()
 
 
-func _select_region(reg: Dictionary) -> void:
-	AudioService.ref.play_ui_id(&"ui_click")
-	_selected_region = reg
-	_refresh_footer()
+func _lookup_entry(rid: StringName) -> Dictionary:
+	var reg: Dictionary = WorldLayout.get_region(rid)
+	if not reg.is_empty():
+		return reg
+	for m: Dictionary in WorldLayout.SPECIAL_MARKERS:
+		if (m["id"] as StringName) == rid:
+			return m
+	return {}
 
 
 func _refresh_footer() -> void:
-	if _selected_region.is_empty():
+	var entry: Dictionary = _lookup_entry(_selected_id)
+	if entry.is_empty():
 		teleport_btn.disabled = true
-		info_label.text = ""
+		info_label.text = tr("ui_worldmap_hint")
 		return
 	var gs: GameStateStore = GameStateStore.ref
-	var path: String = String(_selected_region["path"])
-	var name_str: String = tr(String(_selected_region["key"]))
-	var is_cur: bool = gs.current_map == path
-	var has_shrine: bool = gs.unlocked_shrines.has(path)
-	var is_vis: bool = gs.visited_maps.has(path)
+	var path: String = str(entry.get("path", ""))
+	var name_str: String = str(entry.get("name", str(_selected_id)))
+	var is_cur: bool = gs != null and gs.current_map == path
+	var has_shrine: bool = gs != null and gs.unlocked_shrines.has(path)
+	var is_vis: bool = gs != null and gs.visited_maps.has(path)
 	var status: String = tr("ui_current_loc") if is_cur else (tr("ui_visited") if is_vis else tr("ui_unvisited"))
 	if not has_shrine:
 		status = "%s (%s)" % [status, tr("ui_shrine_locked")]
@@ -118,9 +127,11 @@ func _refresh_footer() -> void:
 
 
 func _on_teleport() -> void:
-	if _selected_region.is_empty():
+	var entry: Dictionary = _lookup_entry(_selected_id)
+	if entry.is_empty() or SceneService.ref == null:
 		return
-	var target_path: String = String(_selected_region["path"])
-	var target_spawn: StringName = _selected_region["spawn"]
+	var target_path: String = str(entry.get("path", ""))
+	if target_path.is_empty():
+		return
 	_close()
-	SceneService.ref.change_map(target_path, target_spawn, true)
+	SceneService.ref.change_map(target_path, &"default", true)

@@ -1,12 +1,13 @@
 [gd_resource type="TileSet" format=3]
 
-[ext_resource type="Texture2D" path="res://assets/art/ground/gnd_dirt.png" id="1_p037c"]
-[ext_resource type="Texture2D" path="res://assets/art/ground/gnd_edge_sprout.png" id="2_yqejd"]
-[ext_resource type="Texture2D" path="res://assets/art/ground/gnd_water_sprout.png" id="3_5vtse"]
-[ext_resource type="Texture2D" path="res://assets/art/ground/gnd_city_cobble.png" id="4_8qhe3"]
+[ext_resource type="Texture2D" path="res://assets/art/ground/gnd_dirt.png" id="1_yqejd"]
+[ext_resource type="Texture2D" path="res://assets/art/ground/gnd_edge_sprout.png" id="2_5vtse"]
+[ext_resource type="Texture2D" path="res://assets/art/ground/gnd_water_sprout.png" id="3_8qhe3"]
+[ext_resource type="Texture2D" path="res://assets/art/ground/gnd_city_cobble.png" id="4_ajp2j"]
+[ext_resource type="Texture2D" path="res://assets/art/ground/gnd_sand_sprout.png" id="5_1xxqg"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ajp2j"]
-texture = ExtResource("1_p037c")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5ctbl"]
+texture = ExtResource("1_yqejd")
 0:0/0 = 0
 0:0/0/custom_data_0 = true
 0:0/0/custom_data_1 = &"dirt"
@@ -264,8 +265,8 @@ texture = ExtResource("1_p037c")
 7:7/0/custom_data_1 = &"dirt"
 7:7/0/custom_data_2 = &"dirt"
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1xxqg"]
-texture = ExtResource("2_yqejd")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sthj8"]
+texture = ExtResource("2_5vtse")
 0:0/0 = 0
 0:0/0/terrain_set = 0
 0:0/0/terrain = 0
@@ -808,8 +809,8 @@ texture = ExtResource("2_yqejd")
 7:7/0/custom_data_1 = &"grass"
 7:7/0/custom_data_2 = &"grass"
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5ctbl"]
-texture = ExtResource("3_5vtse")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kjlif"]
+texture = ExtResource("3_8qhe3")
 0:0/animation_columns = 4
 0:0/animation_speed = 4.0
 0:0/animation_frame_0/duration = 1.0
@@ -821,8 +822,8 @@ texture = ExtResource("3_5vtse")
 0:0/0/custom_data_1 = &"water"
 0:0/0/custom_data_2 = &"water"
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sthj8"]
-texture = ExtResource("4_8qhe3")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4wqbc"]
+texture = ExtResource("4_ajp2j")
 0:0/0 = 0
 0:0/0/custom_data_0 = true
 0:0/0/custom_data_1 = &"stone"
@@ -888,6 +889,73 @@ texture = ExtResource("4_8qhe3")
 3:3/0/custom_data_1 = &"stone"
 3:3/0/custom_data_2 = &"cobble"
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hvy4l"]
+texture = ExtResource("5_1xxqg")
+0:0/0 = 0
+0:0/0/custom_data_0 = true
+0:0/0/custom_data_1 = &"dirt"
+0:0/0/custom_data_2 = &"sand"
+1:0/0 = 0
+1:0/0/custom_data_0 = true
+1:0/0/custom_data_1 = &"dirt"
+1:0/0/custom_data_2 = &"sand"
+2:0/0 = 0
+2:0/0/custom_data_0 = true
+2:0/0/custom_data_1 = &"dirt"
+2:0/0/custom_data_2 = &"sand"
+3:0/0 = 0
+3:0/0/custom_data_0 = true
+3:0/0/custom_data_1 = &"dirt"
+3:0/0/custom_data_2 = &"sand"
+0:1/0 = 0
+0:1/0/custom_data_0 = true
+0:1/0/custom_data_1 = &"dirt"
+0:1/0/custom_data_2 = &"sand"
+1:1/0 = 0
+1:1/0/custom_data_0 = true
+1:1/0/custom_data_1 = &"dirt"
+1:1/0/custom_data_2 = &"sand"
+2:1/0 = 0
+2:1/0/custom_data_0 = true
+2:1/0/custom_data_1 = &"dirt"
+2:1/0/custom_data_2 = &"sand"
+3:1/0 = 0
+3:1/0/custom_data_0 = true
+3:1/0/custom_data_1 = &"dirt"
+3:1/0/custom_data_2 = &"sand"
+0:2/0 = 0
+0:2/0/custom_data_0 = true
+0:2/0/custom_data_1 = &"dirt"
+0:2/0/custom_data_2 = &"sand"
+1:2/0 = 0
+1:2/0/custom_data_0 = true
+1:2/0/custom_data_1 = &"dirt"
+1:2/0/custom_data_2 = &"sand"
+2:2/0 = 0
+2:2/0/custom_data_0 = true
+2:2/0/custom_data_1 = &"dirt"
+2:2/0/custom_data_2 = &"sand"
+3:2/0 = 0
+3:2/0/custom_data_0 = true
+3:2/0/custom_data_1 = &"dirt"
+3:2/0/custom_data_2 = &"sand"
+0:3/0 = 0
+0:3/0/custom_data_0 = true
+0:3/0/custom_data_1 = &"dirt"
+0:3/0/custom_data_2 = &"sand"
+1:3/0 = 0
+1:3/0/custom_data_0 = true
+1:3/0/custom_data_1 = &"dirt"
+1:3/0/custom_data_2 = &"sand"
+2:3/0 = 0
+2:3/0/custom_data_0 = true
+2:3/0/custom_data_1 = &"dirt"
+2:3/0/custom_data_2 = &"sand"
+3:3/0 = 0
+3:3/0/custom_data_0 = true
+3:3/0/custom_data_1 = &"dirt"
+3:3/0/custom_data_2 = &"sand"
+
 [resource]
 physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 0
@@ -900,7 +968,8 @@ custom_data_layer_1/name = "footstep"
 custom_data_layer_1/type = 21
 custom_data_layer_2/name = "terrain_type"
 custom_data_layer_2/type = 21
-sources/0 = SubResource("TileSetAtlasSource_ajp2j")
-sources/1 = SubResource("TileSetAtlasSource_1xxqg")
-sources/2 = SubResource("TileSetAtlasSource_5ctbl")
-sources/3 = SubResource("TileSetAtlasSource_sthj8")
+sources/0 = SubResource("TileSetAtlasSource_5ctbl")
+sources/1 = SubResource("TileSetAtlasSource_sthj8")
+sources/2 = SubResource("TileSetAtlasSource_kjlif")
+sources/3 = SubResource("TileSetAtlasSource_4wqbc")
+sources/4 = SubResource("TileSetAtlasSource_hvy4l")

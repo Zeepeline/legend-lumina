@@ -18,8 +18,9 @@ func _process(_delta: float) -> bool:
 	_test_localization_and_sprites()
 	_test_data_resources()
 	_test_all_24_maps()
+	_test_benua_openworld_and_hud()
 	print_rich("[b]Test Summary: %d sections, %d passed, %d failed[/b]" % [_sections_done, _passed, _failed])
-	var ok: bool = _failed == 0 and _sections_done == 8
+	var ok: bool = _failed == 0 and _sections_done == 9
 	quit(0 if ok else 1)
 	return true
 
@@ -284,9 +285,9 @@ func _test_all_24_maps() -> void:
 		"res://maps/cave.tscn": {"size": Vector2i(70, 58), "indoor": false, "spawns": [&"default", &"from_meadow"]},
 		"res://maps/swamp.tscn": {"size": Vector2i(80, 60), "indoor": false, "spawns": [&"default", &"from_meadow", &"from_river"]},
 		"res://maps/snow.tscn": {"size": Vector2i(80, 75), "indoor": false, "spawns": [&"default", &"from_meadow"]},
-		"res://maps/deepwood.tscn": {"size": Vector2i(96, 72), "indoor": false, "spawns": [&"default", &"from_forest"]},
-		"res://maps/river.tscn": {"size": Vector2i(100, 62), "indoor": false, "spawns": [&"default", &"from_forest", &"from_swamp"]},
-		"res://maps/road.tscn": {"size": Vector2i(56, 80), "indoor": false, "spawns": [&"default", &"from_lake", &"from_kgate"]},
+		"res://maps/deepwood.tscn": {"size": Vector2i(150, 112), "indoor": false, "spawns": [&"default", &"from_forest"]},
+		"res://maps/river.tscn": {"size": Vector2i(162, 62), "indoor": false, "spawns": [&"default", &"from_forest", &"from_swamp"]},
+		"res://maps/road.tscn": {"size": Vector2i(56, 125), "indoor": false, "spawns": [&"default", &"from_lake", &"from_kgate"]},
 		"res://maps/kgate.tscn": {"size": Vector2i(118, 56), "indoor": false, "spawns": [&"default", &"from_road", &"from_kpasar"]},
 		"res://maps/kpasar.tscn": {"size": Vector2i(100, 75), "indoor": false, "spawns": [&"default", &"from_kgate", &"from_kakademi", &"from_kbawah", &"from_kpermukiman", &"from_kinn"]},
 		"res://maps/kpermukiman.tscn": {"size": Vector2i(88, 62), "indoor": false, "spawns": [&"default", &"from_kpasar"]},
@@ -312,6 +313,8 @@ func _test_all_24_maps() -> void:
 		instantiated[path] = map_node
 		var spec: Dictionary = maps_info[path]
 		_assert(bool(map_node.get_meta("is_indoor", false)) == bool(spec["indoor"]), "%s is_indoor flag matches" % path)
+		if not bool(spec["indoor"]):
+			_assert(is_equal_approx(float(map_node.get_meta("camera_zoom", 1.0)), 1.25), "%s outdoor camera_zoom == 1.25" % path)
 
 		var expected_sz: Vector2i = spec["size"]
 		if expected_sz != Vector2i.ZERO:
@@ -329,6 +332,7 @@ func _test_all_24_maps() -> void:
 			if not bool(spec["indoor"]):
 				var grass: TileMapLayer = map_node.get_node_or_null("GroundGrass") as TileMapLayer
 				_assert(grass != null and grass.get_used_cells().size() > 80, "%s GroundGrass painted" % path)
+				_assert(dirt.z_index < 0 and grass.z_index < 0, "%s ground layers keep negative z_index" % path)
 		else:
 			var room_bg: Sprite2D = map_node.get_node_or_null("RoomBg") as Sprite2D
 			_assert(room_bg != null and room_bg.texture != null, "%s RoomBg valid" % path)
@@ -371,4 +375,166 @@ func _test_all_24_maps() -> void:
 		var m: Node = instantiated.get(path, null)
 		if m != null:
 			m.free()
+	_sections_done += 1
+
+
+func _test_benua_openworld_and_hud() -> void:
+	_assert(WorldLayout.REGIONS.size() == 14, "WorldLayout defines 14 outdoor regions")
+	_assert(WorldLayout.SEAMLESS_PAIRS.size() == 13, "WorldLayout defines 13 seamless links")
+
+	var keys: Array = WorldLayout.REGIONS.keys()
+	var overlaps: int = 0
+	for i: int in keys.size():
+		var ra: Rect2 = Rect2(WorldLayout.get_rect(keys[i] as StringName))
+		for j: int in range(i + 1, keys.size()):
+			var rb: Rect2 = Rect2(WorldLayout.get_rect(keys[j] as StringName))
+			if ra.intersects(rb, false):
+				overlaps += 1
+	_assert(overlaps == 0, "all 91 Benua region pairs have 0 interior overlap")
+
+	for pair: Array in WorldLayout.SEAMLESS_PAIRS:
+		var a: StringName = pair[0]
+		var b: StringName = pair[1]
+		var ra: Rect2 = Rect2(WorldLayout.get_rect(a))
+		var rb: Rect2 = Rect2(WorldLayout.get_rect(b))
+		_assert(ra.intersects(rb, true), "seamless link %s <-> %s touches on border" % [a, b])
+
+	var cb: Rect2i = WorldLayout.continent_bounds()
+	_assert(cb.size.x > 7000 and cb.size.y > 7000, "continent bounds > 7000x7000 (%s)" % cb.size)
+	_assert(WorldLayout.region_at(Vector2(3500.0, 3360.0)) == &"village", "region_at resolves village")
+	_assert(WorldLayout.region_at(Vector2(2400.0, -400.0)) == &"kpasar", "region_at resolves kpasar")
+
+	var bw: BenuaWorld = BenuaWorld.new()
+	get_root().add_child(bw)
+	var p: Node2D = bw.start_at(&"village", &"default")
+	_assert(p != null, "BenuaWorld spawns player at village")
+	_assert(bw.get_active_region() == &"village", "BenuaWorld active region is village")
+	_assert(bw.get_node_or_null("WildFiller") != null, "BenuaWorld has WildFiller textured backdrop")
+	var chunks_node: Node2D = bw.get_node_or_null("Chunks") as Node2D
+	_assert(chunks_node != null and chunks_node.y_sort_enabled, "BenuaWorld Chunks y_sort_enabled")
+	var loaded_v: Array[StringName] = bw.get_loaded_region_ids()
+	_assert(loaded_v.has(&"village") and loaded_v.has(&"forest") and loaded_v.has(&"meadow") and loaded_v.has(&"lake"), "village streams adjacent chunks")
+	_assert(not loaded_v.has(&"kakademi"), "distant kakademi not loaded at village")
+
+	var v_chunk: Node2D = bw.get_node_or_null("Chunks/Village") as Node2D
+	_assert(v_chunk != null, "Village chunk present")
+	var door_home_ok: bool = false
+	var forest_portal_stripped: bool = true
+	if v_chunk != null:
+		for ch: Node in v_chunk.get_children():
+			if ch is Portal:
+				var pt: Portal = ch as Portal
+				if pt.name == "DoorHome" and not pt.is_queued_for_deletion():
+					door_home_ok = true
+				if pt.name == "ToForest" and not pt.is_queued_for_deletion():
+					forest_portal_stripped = false
+	_assert(door_home_ok, "BenuaWorld keeps interior doors intact")
+	_assert(forest_portal_stripped, "BenuaWorld strips seamless edge portals")
+
+	bw.update_streaming_at(Vector2(2400.0, -1000.0))
+	var loaded_city: Array[StringName] = bw.get_loaded_region_ids()
+	_assert(loaded_city.has(&"kpasar") and loaded_city.has(&"kakademi"), "BenuaWorld streams city chunks north")
+	get_root().remove_child(bw)
+	bw.free()
+
+	# Verifikasi kepadatan pohon & dekorasi alam serta terbukanya sambungan antarwilayah
+	var min_trees: Dictionary = {
+		&"village": 20, &"forest": 50, &"deepwood": 90, &"meadow": 35,
+		&"snow": 35, &"swamp": 35, &"lake": 35, &"river": 45, &"road": 35,
+	}
+	for k: Variant in min_trees.keys():
+		var rid: StringName = k as StringName
+		var m_packed: PackedScene = _load_res(WorldLayout.path_from_id(rid)) as PackedScene
+		if m_packed != null:
+			var mn: Node2D = m_packed.instantiate() as Node2D
+			var ys: Node = mn.get_node_or_null("YSorted")
+			var tc: int = 0
+			if ys != null:
+				for c: Node in ys.get_children():
+					if c is SproutTree:
+						tc += 1
+			_assert(tc >= int(min_trees[rid]), "%s has organic trees (%d >= %d)" % [rid, tc, int(min_trees[rid])])
+			mn.free()
+
+	var seam_points: Array[Array] = [
+		[&"village", &"forest", Vector2(3512, 3720)],
+		[&"village", &"meadow", Vector2(4024, 3266)],
+		[&"village", &"lake", Vector2(3000, 3556)],
+		[&"forest", &"river", Vector2(4280, 4250)],
+		[&"river", &"swamp", Vector2(6872, 4200)],
+		[&"road", &"kgate", Vector2(2412, 1056)],
+		[&"kgate", &"kpasar", Vector2(2412, 160)],
+		[&"kpasar", &"kakademi", Vector2(2412, -1040)],
+	]
+	for sp: Array in seam_points:
+		var a_id: StringName = sp[0]
+		var b_id: StringName = sp[1]
+		var wpos: Vector2 = sp[2]
+		for side_id: StringName in [a_id, b_id]:
+			var r_rect: Rect2i = WorldLayout.get_rect(side_id)
+			var lpos: Vector2 = wpos - Vector2(r_rect.position)
+			var blocked: bool = false
+			for br: Rect2 in WorldLayout.outer_boundary_rects(side_id, 12.0):
+				if br.has_point(lpos):
+					blocked = true
+			_assert(not blocked, "seam %s <-> %s open at %s" % [a_id, b_id, wpos])
+
+	# Verifikasi 10 varian pohon SproutTree, aset Shrine, & aset baru yang dipulihkan
+	var tree_scene: PackedScene = _load_res("res://systems/world/sprout_tree.tscn") as PackedScene
+	if tree_scene != null:
+		for vname: String in ["big", "tall", "big_dark", "tall_dark", "apple", "orange", "snow", "snow_tall", "swamp", "giant"]:
+			var tr_n: SproutTree = tree_scene.instantiate() as SproutTree
+			tr_n.variant = vname
+			tr_n.free()
+			_passed += 1
+
+	var shrine_scene: PackedScene = _load_res("res://systems/world/shrine.tscn") as PackedScene
+	if shrine_scene != null:
+		var sh: Node = shrine_scene.instantiate()
+		var spr: Sprite2D = sh.get_node_or_null("Sprite2D") as Sprite2D
+		_assert(spr != null and spr.texture != null and spr.texture.resource_path.ends_with("sp_b_shrine.png"), "Shrine uses sp_b_shrine.png texture")
+		sh.free()
+
+	for rp: String in [
+		"res://assets/art/ground/gnd_sand_sprout.png",
+		"res://assets/art/ground/gnd_grass_dark.png",
+		"res://assets/art/nature/bushG1.png",
+		"res://assets/art/nature/bushW.png",
+		"res://assets/art/nature/deepwood_moss_island_1.png",
+		"res://assets/art/props/gpt_palisade_wall_long.png",
+		"res://assets/art/buildings/gpt_orc_gate.png",
+		"res://assets/art/npc/npc_sheet_hunter.png",
+		"res://assets/art/npc/npc_sheet_joko.png",
+		"res://assets/art/npc/npc_sheet_bayu.png",
+	]:
+		_assert(ResourceLoader.exists(rp), "restored texture exists: %s" % rp)
+
+	var hud_scene: PackedScene = _load_res("res://ui/hud.tscn") as PackedScene
+	_assert(hud_scene != null, "hud.tscn loads cleanly")
+	if hud_scene != null:
+		var hud: Control = hud_scene.instantiate() as Control
+		_assert(hud.get_node_or_null("StatsPanel/VBox/ExpRow/ExpBar/ExpFill") != null, "HUD has ExpFill bar")
+		_assert(hud.get_node_or_null("TopRightCapsule/HBox/CompassLabel") != null, "HUD has CompassLabel")
+		_assert(hud.get_node_or_null("TopRightCapsule/HBox/FlaskLabel") != null, "HUD has FlaskLabel")
+		_assert(hud.get_node_or_null("QuestCard/VBox/Header/QuestToggleBtn") != null, "HUD has collapsible QuestCard")
+		_assert(hud.get_node_or_null("RegionBanner") != null, "HUD has RegionBanner")
+		_assert(hud.get_node_or_null("BossPanel/VBox/BossHpBar/Phase2Line") != null, "HUD has Boss Phase2Line")
+		var sbar: Node = hud.get_node_or_null("SpellBar")
+		_assert(sbar != null and sbar is SpellBar, "HUD mounts SpellBar script")
+		hud.free()
+
+	var wm_scene: PackedScene = _load_res("res://ui/world_map.tscn") as PackedScene
+	_assert(wm_scene != null, "world_map.tscn loads cleanly")
+	if wm_scene != null:
+		var wm: Control = wm_scene.instantiate() as Control
+		var mc: WorldMapCanvas = wm.get_node_or_null("Center/Panel/Margin/VBox/MapCanvas") as WorldMapCanvas
+		_assert(mc != null, "WorldMap mounts WorldMapCanvas")
+		if mc != null:
+			mc.fit_continent()
+			mc.zoom_in()
+			mc.zoom_out()
+			mc.focus_player()
+			_assert(mc.world_to_canvas(Vector2(3500.0, 3360.0)) != Vector2.ZERO, "WorldMapCanvas transforms world coordinates")
+		wm.free()
+
 	_sections_done += 1

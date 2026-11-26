@@ -9,6 +9,7 @@ var _world_root: Node = null
 var _fade_rect: ColorRect = null
 var _current_map: Node = null
 var _current_player: Node2D = null
+var _benua_world: BenuaWorld = null
 var _busy: bool = false
 
 
@@ -34,6 +35,10 @@ func is_busy() -> bool:
 	return _busy
 
 
+func get_current_player() -> Node2D:
+	return _current_player
+
+
 func change_map(path: String, spawn_id: StringName = &"default", use_fade: bool = true) -> void:
 	if _busy or _world_root == null:
 		return
@@ -42,6 +47,58 @@ func change_map(path: String, spawn_id: StringName = &"default", use_fade: bool 
 	tree.paused = true
 	if EventsBus.ref != null:
 		EventsBus.ref.boss_hp_changed.emit("", 0, 1, false)
+
+	var gs: GameStateStore = GameStateStore.ref
+	if WorldLayout.is_benua_map(path):
+		var target_id: StringName = WorldLayout.id_from_path(path)
+		if _benua_world != null and is_instance_valid(_benua_world) and _current_map == _benua_world:
+			if use_fade:
+				await _fade_to(1.0, 0.18)
+			_benua_world.teleport_player_to(target_id, spawn_id)
+			_current_player = _benua_world.get_player()
+			if gs != null:
+				gs.is_indoor = false
+				gs.is_dark_cave = false
+				gs.current_map = path
+				gs.spawn_id = spawn_id
+				gs.mark_map_visited(path)
+			if EventsBus.ref != null:
+				EventsBus.ref.map_changed.emit(path, spawn_id)
+			if use_fade:
+				await _fade_to(0.0, 0.2)
+			tree.paused = false
+			_busy = false
+			return
+
+		if use_fade:
+			await _fade_to(1.0, 0.2)
+		if _current_map != null:
+			if _current_map is BenuaWorld:
+				(_current_map as BenuaWorld).cleanup()
+			_current_map.queue_free()
+			_current_map = null
+			_current_player = null
+			await tree.process_frame
+
+		var bw: BenuaWorld = BenuaWorld.new()
+		_benua_world = bw
+		_current_map = bw
+		_world_root.add_child(bw)
+		_current_player = bw.start_at(target_id, spawn_id)
+		if gs != null:
+			gs.is_indoor = false
+			gs.is_dark_cave = false
+			gs.current_map = path
+			gs.spawn_id = spawn_id
+			gs.mark_map_visited(path)
+		if EventsBus.ref != null:
+			EventsBus.ref.map_changed.emit(path, spawn_id)
+		if use_fade:
+			await _fade_to(0.0, 0.22)
+		tree.paused = false
+		_busy = false
+		return
+
 	if use_fade:
 		await _fade_to(1.0, 0.2)
 
@@ -61,7 +118,10 @@ func change_map(path: String, spawn_id: StringName = &"default", use_fade: bool 
 		_busy = false
 		return
 
+	_benua_world = null
 	if _current_map != null:
+		if _current_map is BenuaWorld:
+			(_current_map as BenuaWorld).cleanup()
 		_current_map.queue_free()
 		_current_map = null
 		_current_player = null
@@ -71,7 +131,6 @@ func change_map(path: String, spawn_id: StringName = &"default", use_fade: bool 
 	_current_map = packed.instantiate()
 	_world_root.add_child(_current_map)
 
-	var gs: GameStateStore = GameStateStore.ref
 	gs.is_indoor = bool(_current_map.get_meta("is_indoor", false))
 	gs.is_dark_cave = bool(_current_map.get_meta("is_dark_cave", false))
 	gs.current_map = path
