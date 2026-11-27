@@ -2,6 +2,7 @@
 Kepala MC kaku (hanya bergeser per frame), jadi posisinya dicari dengan mencocokkan kepala frame diam, lalu kepala baru
 digambar di posisi yang sama. Dipakai oleh tools/npc_from_mc.py."""
 import numpy as np
+import npc_hair_art as HA
 from PIL import Image
 
 MC = 'godot/assets/art/hero/hero_mc2.png'
@@ -13,8 +14,8 @@ SKIN = {  # warna kulit (terang, bayangan)
 }
 # geometri kepala baru pada frame diam tiap arah (koordinat sel 64×56)
 GEO = {
-    'd': dict(cx=33.0, cy=16.8, rx=10.2, ry=8.6, chin=25, eyes=[(31, 21), (36, 21)], mouth=(34, 24), idle=(0, 0)),
-    's': dict(cx=32.0, cy=16.5, rx=9.6, ry=8.4, chin=24, eyes=[(37, 20)], mouth=(39, 23), idle=(0, 4)),
+    'd': dict(cx=33.0, cy=16.8, rx=10.2, ry=8.6, chin=25, eyes=[(31, 22), (36, 22)], mouth=(34, 25), idle=(0, 0)),
+    's': dict(cx=32.0, cy=16.5, rx=9.6, ry=8.4, chin=24, eyes=[(37, 19)], mouth=(36, 23), idle=(0, 4)),
     'u': dict(cx=32.5, cy=16.5, rx=10.0, ry=8.4, chin=24, eyes=[], mouth=None, idle=(0, 2)),
 }
 HEAD_ROWS = (6, 25)
@@ -203,6 +204,29 @@ def build_head(o, facing):
     if o.get('mata', 'titik') == 'titik':
         out[eyes_mc] = BLK
     under = np.zeros_like(face)
+    # --- kepala dari grid MC yang rambutnya disunting (npc_hair_art) — menimpa bentuk prosedural di atas ---
+    MAPST = {'poni': 'rata', 'jabrik': 'mc', 'keriting': 'bulat'}
+    gs = HA.head_grid(MAPST.get(st, st), facing)
+    out = np.zeros((H, W, 4), np.uint8)
+    hair = np.zeros((H, W), bool); face = np.zeros((H, W), bool)
+    for gy, row in enumerate(gs):
+        for gx, ch in enumerate(row):
+            X, Y = HA.X0 + gx, HA.Y0 + gy
+            if ch == 'F':
+                out[Y, X] = BLK
+            elif ch in '1234':
+                out[Y, X] = ramp[int(ch) - 1]; hair[Y, X] = True
+            elif ch == 's':
+                out[Y, X] = sk; face[Y, X] = True
+            elif ch == 'k':
+                out[Y, X] = sks; face[Y, X] = True
+            elif ch == 'm':
+                out[Y, X] = (236, 206, 172, 255); face[Y, X] = True
+    if o.get('mata', 'titik') != 'titik' and facing != 'u':
+        for ex, ey in g['eyes']:
+            for y in (ey, ey + 1):
+                if (out[y, ex] == BLK).all():
+                    out[y, ex] = sk
     # wajah: mata, alis, mulut
     eyes_st = o.get('mata', 'titik')
     if facing != 'u':
@@ -278,28 +302,30 @@ def build_head(o, facing):
                 out[y, int(cx - 6):int(cx + 8)] = dark
             elif facing == 's':
                 out[y, int(cx):int(cx + rx + 5)] = dark
-        elif kind == 'tudung':
-            big = np.vectorize(lambda x, y: ell(x, y, cx, cy, rx + 1.6, ry + 1.4))(xx, yy) & (yy <= chin + 3)
-            if facing == 'd':
-                hole = (yy >= 17) & (abs(xx + 0.5 - cx) < rx - 2.0) & (yy <= chin)
-            elif facing == 's':
-                hole = (yy >= 17) & (xx + 0.5 > cx) & (yy <= chin)
-            else:
-                hole = np.zeros_like(big)
-            m = big & ~hole
+        elif kind in ('tudung', 'helm'):
+            # mengikuti siluet rambut MC: rambut diganti kain/logam dengan bayangan yang sama
             hr = [col, np.array((*(col[:3] * 0.86).astype(np.uint8), 255), np.uint8), dark,
                   np.array((*(col[:3] * 0.5).astype(np.uint8), 255), np.uint8)]
-            for y, x in zip(*np.nonzero(m)):
-                out[y, x] = hr[max(0, tfull[y, x])]
-            if facing != 'u':
-                rim = m & nb4(hole)
-                out[rim] = dark
-        elif kind == 'helm':
-            m = np.vectorize(lambda x, y: ell(x, y, cx, cy - 0.5, rx + 0.8, ry + 0.8))(xx, yy) & (yy <= 18)
-            out[m] = col
-            out[m & (xx + 0.5 > cx + 3)] = dark
-            out[m & (yy == 18)] = dark
-            out[m & (yy < cy - 4) & (abs(xx + 0.5 - cx + 2) < 1)] = (237, 214, 187, 255)
+            idx = np.full((H, W), -1, int)
+            for t in range(4):
+                idx[hair & (out[..., :3] == ramp[t][:3]).all(-1)] = t
+            if kind == 'tudung':
+                m = hair.copy()
+                grow = nb4(m) & (out[..., 3] == 0) & (yy <= chin + 3) & (yy > cy - 2)
+                m |= grow
+                idx[grow] = 3
+                for y, x in zip(*np.nonzero(m)):
+                    out[y, x] = hr[max(0, min(3, idx[y, x] + (1 if idx[y, x] == 0 and (x + y) % 5 == 0 else 0)))]
+                if facing != 'u':
+                    out[m & nb4(face)] = hr[2]
+                hair[:] = m
+            else:
+                m = hair & (yy <= (18 if facing != 'u' else 20))
+                for y, x in zip(*np.nonzero(m)):
+                    out[y, x] = hr[0] if idx[y, x] <= 1 else hr[2]
+                out[m & ~np.roll(m, -1, 0)] = hr[3]                       # pinggir helm
+                band = m & (yy < cy - 2) & (abs(xx + 0.5 - (cx - 3)) < 1)  # kilap
+                out[band] = (237, 214, 187, 255)
     # garis tepi hitam
     solid = out[..., 3] > 0
     ring = nb4(solid) & ~solid
