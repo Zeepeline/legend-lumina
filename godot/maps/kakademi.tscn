@@ -21,8 +21,6 @@
 [ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_acad_pottree.png" id="19_eihaf"]
 [ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_acad_crates.png" id="20_povlt"]
 [ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_acad_wall.png" id="21_lrcd3"]
-[ext_resource type="Texture2D" path="res://assets/art/nature/gpt_city_cliff_c.png" id="22_t6bro"]
-[ext_resource type="Texture2D" path="res://assets/art/nature/gpt_city_cliff_r.png" id="23_e73q0"]
 [ext_resource type="PackedScene" path="res://systems/world/shrine.tscn" id="24_ycgct"]
 [ext_resource type="Script" path="res://systems/world/shrine.gd" id="25_nbvr6"]
 [ext_resource type="Resource" path="res://data/dialogues/shrine_rest.tres" id="26_bo6eb"]
@@ -576,30 +574,6 @@ offset = Vector2(0, -20.5)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="YSorted/AcadWallTop" unique_id=399442835]
 position = Vector2(0, -8)
 shape = SubResource("RectangleShape2D_syni3")
-
-[node name="AcadCliffC" type="StaticBody2D" parent="YSorted" unique_id=759041244]
-position = Vector2(220, 160)
-collision_mask = 0
-
-[node name="Sprite2D" type="Sprite2D" parent="YSorted/AcadCliffC" unique_id=1216330470]
-texture = ExtResource("22_t6bro")
-offset = Vector2(0, -24)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="YSorted/AcadCliffC" unique_id=1734181141]
-position = Vector2(0, -11)
-shape = SubResource("RectangleShape2D_p3jpk")
-
-[node name="AcadCliffR" type="StaticBody2D" parent="YSorted" unique_id=468974075]
-position = Vector2(1180, 160)
-collision_mask = 0
-
-[node name="Sprite2D" type="Sprite2D" parent="YSorted/AcadCliffR" unique_id=1791596915]
-texture = ExtResource("23_e73q0")
-offset = Vector2(0, -28)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="YSorted/AcadCliffR" unique_id=1958840287]
-position = Vector2(0, -12)
-shape = SubResource("RectangleShape2D_k6tnu")
 
 [node name="LightShrine" type="StaticBody2D" parent="YSorted" unique_id=1781694987 instance=ExtResource("24_ycgct")]
 position = Vector2(704, 760)

@@ -257,8 +257,6 @@ static func _build_kakademi(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_prop(ysorted, root, "AcadPotTree", "res://assets/art/buildings/sp_b_acad_pottree.png", Vector2(640, 676), Vector2(12, 8))
 	MapBuilderHelper.add_prop(ysorted, root, "AcadCrates", "res://assets/art/buildings/sp_b_acad_crates.png", Vector2(500, 606), Vector2(38, 16))
 	MapBuilderHelper.add_prop(ysorted, root, "AcadWallTop", "res://assets/art/buildings/sp_b_acad_wall.png", Vector2(704, 160), Vector2(72, 16))
-	MapBuilderHelper.add_prop(ysorted, root, "AcadCliffC", "res://assets/art/nature/gpt_city_cliff_c.png", Vector2(220, 160), Vector2(58, 22))
-	MapBuilderHelper.add_prop(ysorted, root, "AcadCliffR", "res://assets/art/nature/gpt_city_cliff_r.png", Vector2(1180, 160), Vector2(84, 24))
 
 	MapBuilderHelper.add_shrine(ysorted, root, Vector2(704, 760))
 	MapBuilderHelper.add_chest(ysorted, root, "KAkademiChest1", &"kakademi_c1", &"ether", 3, 100, Vector2(1040, 665))
@@ -302,8 +300,6 @@ static func _build_kbawah(ts: TileSet, buildings: Dictionary) -> void:
 
 	MapBuilderHelper.add_prop(ysorted, root, "KbwLamp1", "res://assets/art/props/gpt_city_lamp.png", Vector2(480, 558), Vector2(10, 8))
 	MapBuilderHelper.add_prop(ysorted, root, "KbwLamp2", "res://assets/art/props/gpt_city_lamp.png", Vector2(1040, 540), Vector2(10, 8))
-	MapBuilderHelper.add_prop(ysorted, root, "KbwCliffL", "res://assets/art/nature/gpt_city_cliff_l.png", Vector2(180, 180), Vector2(84, 24))
-	MapBuilderHelper.add_prop(ysorted, root, "KbwCliffS", "res://assets/art/nature/gpt_city_cliff_s.png", Vector2(960, 180), Vector2(54, 22))
 
 	MapBuilderHelper.add_shrine(ysorted, root, Vector2(770, 690))
 	MapBuilderHelper.add_chest(ysorted, root, "KBawahChest1", &"kbawah_c1", &"ore", 3, 95, Vector2(240, 700))

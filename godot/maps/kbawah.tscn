@@ -8,8 +8,6 @@
 [ext_resource type="PackedScene" path="res://maps/buildings/house_c.tscn" id="6_huiq7"]
 [ext_resource type="PackedScene" path="res://maps/buildings/house_brown.tscn" id="7_hokw7"]
 [ext_resource type="Texture2D" path="res://assets/art/props/gpt_city_lamp.png" id="8_t213b"]
-[ext_resource type="Texture2D" path="res://assets/art/nature/gpt_city_cliff_l.png" id="9_hsuiy"]
-[ext_resource type="Texture2D" path="res://assets/art/nature/gpt_city_cliff_s.png" id="10_xw53u"]
 [ext_resource type="PackedScene" path="res://systems/world/shrine.tscn" id="11_dpdcp"]
 [ext_resource type="Script" path="res://systems/world/shrine.gd" id="12_vdciu"]
 [ext_resource type="Resource" path="res://data/dialogues/shrine_rest.tres" id="13_brl4p"]
@@ -210,30 +208,6 @@ offset = Vector2(0, -33)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="YSorted/KbwLamp2" unique_id=1518412374]
 position = Vector2(0, -4)
 shape = SubResource("RectangleShape2D_wx4ts")
-
-[node name="KbwCliffL" type="StaticBody2D" parent="YSorted" unique_id=1844240478]
-position = Vector2(180, 180)
-collision_mask = 0
-
-[node name="Sprite2D" type="Sprite2D" parent="YSorted/KbwCliffL" unique_id=2033364804]
-texture = ExtResource("9_hsuiy")
-offset = Vector2(0, -28)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="YSorted/KbwCliffL" unique_id=2026030216]
-position = Vector2(0, -12)
-shape = SubResource("RectangleShape2D_h6t0p")
-
-[node name="KbwCliffS" type="StaticBody2D" parent="YSorted" unique_id=882475379]
-position = Vector2(960, 180)
-collision_mask = 0
-
-[node name="Sprite2D" type="Sprite2D" parent="YSorted/KbwCliffS" unique_id=280662359]
-texture = ExtResource("10_xw53u")
-offset = Vector2(0, -25)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="YSorted/KbwCliffS" unique_id=1333578847]
-position = Vector2(0, -11)
-shape = SubResource("RectangleShape2D_7rfml")
 
 [node name="LightShrine" type="StaticBody2D" parent="YSorted" unique_id=296776992 instance=ExtResource("11_dpdcp")]
 position = Vector2(770, 690)
