@@ -4,6 +4,7 @@ Hasil: godot/assets/art/npc/npc_mc_<id>.png — format 512×224 (8 kolom × 4 ba
 Pakai: python3 tools/npc_from_mc.py   (dari akar repo)"""
 import numpy as np
 from PIL import Image
+import npc_heads
 
 MC = 'godot/assets/art/hero/hero_mc2.png'
 OUT = 'godot/assets/art/npc/npc_mc_%s.png'
@@ -21,30 +22,30 @@ K = {'hitam': (6, 1, 5), 'marun': (90, 24, 33), 'merah': (177, 39, 26), 'zaitun'
 #   celana, kerah, sabuk, celemek = warna;  rok = 'pendek' | 'panjang' (gaun/jubah)
 #   topi = (warna, lebar pinggir);  helm = warna tudung yang menutup rambut
 NPC = {
-    'ac1':   dict(gaya_rambut='panjang', rambut=('birutua', 'hitam'), baju=('biru', 'birutua'), sepatu='birutua', rok='panjang', gaya='selempang', aksen='zaitun', kerah='krem'),
-    'ac2':   dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', gaya='rompi', rompi='biru', celana='birutua', kerah='krem'),
-    'ar1':   dict(gaya_rambut='sanggul', rambut=('krem', 'abu'), baju=('coklat', 'marun'), sepatu='marun', rok='panjang', gaya='kancing', kerah='krem', sabuk='marun'),
-    'bw1':   dict(gaya_rambut='pendek', rambut=('birutua', 'hitam'), baju=('merah', 'marun'), sepatu='coklat', gaya='selempang', aksen='krem', celana='coklat'),
-    'courier': dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('zaitun', 'hijau'), sepatu='coklat', topi=('biru', 1), gaya='selempang', aksen='coklat', celana='coklat'),
-    'gk1':   dict(rambut=('abu', 'abutua'), baju=('abu', 'abutua'), sepatu='abutua', helm='abu', gaya='zirah', celana='abutua', sabuk='coklat'),
-    'gk3':   dict(gaya_rambut='pendek', rambut=('zaitun', 'hijau'), baju=('hijau', 'abutua'), sepatu='coklat', gaya='rompi', rompi='coklat', celana='coklat'),
-    'guard': dict(rambut=('abu', 'abutua'), baju=('abu', 'abutua'), sepatu='abutua', helm='abu', gaya='zirah', kerah='merah', celana='merah', sabuk='coklat'),
-    'in1':   dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('krem', 'coklat'), sepatu='coklat', gaya='kancing', celana='coklat', sabuk='coklat'),
-    'merc1': dict(gaya_rambut='pendek', rambut=('oranye', 'merah'), baju=('abutua', 'hitam'), sepatu='hitam', gaya='rompi', rompi='coklat', celana='abutua', sabuk='coklat'),
-    'pm1':   dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('biru', 'birutua'), sepatu='coklat', topi=('biru', 2), gaya='kancing', kerah='krem', celana='birutua', sabuk='coklat'),
-    'pm2':   dict(jenggot=True, gaya_rambut='pendek', rambut=('abu', 'abutua'), baju=('krem', 'coklat'), sepatu='coklat', gaya='rompi', rompi='hijau', celana='coklat'),
-    'ps1':   dict(gaya_rambut='panjang', rambut=('kulit', 'oranye'), baju=('mawar', 'marun'), sepatu='marun', rok='pendek', kerah='krem', sabuk='krem'),
-    'ps2':   dict(jenggot=True, gaya_rambut='pendek', rambut=('abu', 'abutua'), baju=('coklat', 'marun'), sepatu='coklat', topi=('kulit', 3), celemek='krem', celana='coklat'),
-    'smith': dict(jenggot=True, gaya_rambut='pendek', rambut=('birutua', 'hitam'), baju=('krem', 'coklat'), sepatu='hitam', celemek='coklat', celana='abutua'),
-    'tp1':   dict(gaya_rambut='panjang', rambut=('hitam', 'hitam'), baju=('krem', 'abu'), sepatu='coklat', rok='panjang', gaya='selempang', aksen='merah'),
-    'farmer': dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', topi=('kulit', 3), gaya='overall', aksen='biru', celana='biru'),
-    'gun':   dict(jenggot=True, rambut=('coklat', 'marun'), baju=('coklat', 'marun'), sepatu='coklat', helm='kulit', gaya='rompi', rompi='abutua', celana='abutua', sabuk='hitam'),
-    'hermit': dict(jenggot=True, rambut=('mawar', 'marun'), baju=('mawar', 'marun'), sepatu='marun', rok='panjang', helm='mawar', sabuk='krem'),
-    'lestari': dict(gaya_rambut='panjang', rambut=('oranye', 'merah'), baju=('birutua', 'hitam'), sepatu='hitam', rok='panjang', kerah='krem', gaya='kancing'),
-    'nila':  dict(rambut=('coklat', 'marun'), baju=('oranye', 'coklat'), sepatu='coklat', rok='pendek', helm='coklat', sabuk='coklat'),
-    'ratih': dict(gaya_rambut='sanggul', rambut=('abu', 'abutua'), baju=('krem', 'abu'), sepatu='abutua', rok='panjang', gaya='rompi', rompi='mawar'),
-    'mom':   dict(gaya_rambut='sanggul', rambut=('coklat', 'marun'), baju=('biru', 'birutua'), sepatu='marun', rok='panjang', celemek='krem'),
-    'inn':   dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('hijau', 'abutua'), sepatu='coklat', celemek='krem', celana='coklat', kerah='krem'),
+    'ac1':   dict(rambut=('birutua', 'hitam'), baju=('biru', 'birutua'), sepatu='birutua', rok='panjang', gaya='selempang', aksen='zaitun', kerah='krem', gaya_rambut='panjang', mata='bulat', mulut='senyum', pipi=True),
+    'ac2':   dict(rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', gaya='rompi', rompi='biru', celana='birutua', kerah='krem', gaya_rambut='belah', mata='kacamata', alis='rambut'),
+    'ar1':   dict(rambut=('krem', 'abu'), baju=('coklat', 'marun'), sepatu='marun', rok='panjang', gaya='kancing', kerah='krem', sabuk='marun', gaya_rambut='sanggul', mata='sipit', kulit='sawo', keriput=True),
+    'bw1':   dict(rambut=('birutua', 'hitam'), baju=('merah', 'marun'), sepatu='coklat', gaya='selempang', aksen='krem', celana='coklat', gaya_rambut='jabrik', mata='titik', alis='hitam', mulut='senyum'),
+    'courier': dict(rambut=('coklat', 'marun'), baju=('zaitun', 'hijau'), sepatu='coklat', gaya='selempang', aksen='coklat', celana='coklat', gaya_rambut='poni', mata='bulat', topi=('topi', K['biru']), pipi=True, mulut='senyum'),
+    'gk1':   dict(rambut=('abu', 'abutua'), baju=('abu', 'abutua'), sepatu='abutua', gaya='zirah', celana='abutua', sabuk='coklat', gaya_rambut='cepak', mata='sipit', topi=('helm', K['abu']), alis='hitam', kulit='sawo'),
+    'gk3':   dict(rambut=('zaitun', 'hijau'), baju=('hijau', 'abutua'), sepatu='coklat', gaya='rompi', rompi='coklat', celana='coklat', gaya_rambut='keriting', mata='titik', kulit='gelap', mulut='senyum'),
+    'guard': dict(rambut=('abu', 'abutua'), baju=('abu', 'abutua'), sepatu='abutua', gaya='zirah', kerah='merah', celana='merah', sabuk='coklat', gaya_rambut='cepak', mata='sipit', topi=('helm', K['abu']), alis='hitam', kumis=True),
+    'in1':   dict(rambut=('coklat', 'marun'), baju=('krem', 'coklat'), sepatu='coklat', gaya='kancing', celana='coklat', sabuk='coklat', gaya_rambut='belah', mata='senyum', kumis=True, kulit='sawo'),
+    'merc1': dict(rambut=('oranye', 'merah'), baju=('abutua', 'hitam'), sepatu='hitam', gaya='rompi', rompi='coklat', celana='abutua', sabuk='coklat', gaya_rambut='jabrik', mata='sipit', alis='hitam', kulit='sawo'),
+    'pm1':   dict(rambut=('coklat', 'marun'), baju=('biru', 'birutua'), sepatu='coklat', gaya='kancing', kerah='krem', celana='birutua', sabuk='coklat', gaya_rambut='poni', mata='titik', topi=('topi', K['biru']), alis='rambut'),
+    'pm2':   dict(rambut=('abu', 'abutua'), baju=('krem', 'coklat'), sepatu='coklat', gaya='rompi', rompi='hijau', celana='coklat', gaya_rambut='botak', mata='senyum', jenggot=True, keriput=True),
+    'ps1':   dict(rambut=('kulit', 'oranye'), baju=('mawar', 'marun'), sepatu='marun', rok='pendek', kerah='krem', sabuk='krem', gaya_rambut='kuncir', mata='bulat', pipi=True, mulut='senyum'),
+    'ps2':   dict(rambut=('abu', 'abutua'), baju=('coklat', 'marun'), sepatu='coklat', celemek='krem', celana='coklat', gaya_rambut='botak', mata='sipit', topi=('caping', K['kulit']), kumis=True, kulit='sawo'),
+    'smith': dict(rambut=('birutua', 'hitam'), baju=('krem', 'coklat'), sepatu='hitam', celemek='coklat', celana='abutua', gaya_rambut='cepak', mata='sipit', jenggot=True, alis='hitam', kulit='gelap'),
+    'tp1':   dict(rambut=('hitam', 'hitam'), baju=('krem', 'abu'), sepatu='coklat', rok='panjang', gaya='selempang', aksen='merah', gaya_rambut='panjang', mata='sipit', alis='rambut'),
+    'farmer': dict(rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', gaya='overall', aksen='biru', celana='biru', gaya_rambut='poni', mata='senyum', topi=('caping', K['kulit']), kulit='sawo', mulut='senyum'),
+    'gun':   dict(rambut=('coklat', 'marun'), baju=('coklat', 'marun'), sepatu='coklat', gaya='rompi', rompi='abutua', celana='abutua', sabuk='hitam', gaya_rambut='jabrik', mata='titik', jenggot=True, topi=('tudung', K['coklat']), alis='hitam'),
+    'hermit': dict(rambut=('mawar', 'marun'), baju=('mawar', 'marun'), sepatu='marun', rok='panjang', sabuk='krem', gaya_rambut='botak', mata='senyum', jenggot=True, keriput=True, topi=('tudung', K['mawar'])),
+    'lestari': dict(rambut=('oranye', 'merah'), baju=('birutua', 'hitam'), sepatu='hitam', rok='panjang', kerah='krem', gaya='kancing', gaya_rambut='kuncir', mata='titik', alis='rambut', mulut='senyum'),
+    'nila':  dict(rambut=('coklat', 'marun'), baju=('oranye', 'coklat'), sepatu='coklat', rok='pendek', sabuk='coklat', gaya_rambut='keriting', mata='bulat', topi=('tudung', K['coklat']), kulit='gelap', pipi=True),
+    'ratih': dict(rambut=('abu', 'abutua'), baju=('krem', 'abu'), sepatu='abutua', rok='panjang', gaya='rompi', rompi='mawar', gaya_rambut='sanggul', mata='senyum', keriput=True, mulut='senyum'),
+    'mom':   dict(rambut=('coklat', 'marun'), baju=('biru', 'birutua'), sepatu='marun', rok='panjang', celemek='krem', gaya_rambut='sanggul', mata='bulat', pipi=True, mulut='senyum', kulit='sawo'),
+    'inn':   dict(rambut=('coklat', 'marun'), baju=('hijau', 'abutua'), sepatu='coklat', celemek='krem', celana='coklat', kerah='krem', gaya_rambut='belah', mata='titik', kumis=True, mulut='senyum'),
 }
 
 
@@ -87,28 +88,11 @@ def recolor(a, o, facing):
     b[eq(HAIR_L) & head] = (*hl, 255)
     b[(eq(HAIR_D) | eq(HAIR_S1) | eq(HAIR_S2)) & head] = (*hd, 255)
     paint_body(a, b, o, facing, top, neck, bot)
-    chin(a, b, facing, neck)
-    hair_style(a, b, o, facing, top, neck, (hl, hd))
-    hm = o.get('helm')
-    if hm:   # tudung/helm: rambut di atas mata jadi warna helm
-        eyes = [y for y in range(top, neck) if ((rgb[y] == (6, 1, 5)).all(-1) & skin[y].any()).any()]
-        lim = top + 9
-        hair = (eq(HAIR_L) | eq(HAIR_D) | eq(HAIR_S1) | eq(HAIR_S2)) & (yy < neck)
-        b[hair] = (*K[hm], 255)
-        b[hair & (yy < lim) & np.roll(~al, 1, 1)] = BLK
-    tp = o.get('topi')
-    if tp:
-        col, brim = K[tp[0]], tp[1]
-        hair = (b[..., 3] > 0) & (yy < top + 7) & ~(b[..., :3] == (6, 1, 5)).all(-1)
-        b[hair] = (*col, 255)
-        y = top + 6
-        xs = np.nonzero(b[y, :, 3] > 0)[0]
-        if len(xs):
-            x0, x1 = max(1, xs[0] - brim), min(b.shape[1] - 2, xs[-1] + brim)
-            b[y, x0:x1 + 1] = (*col, 255)
-            b[y - 1, x0:x1 + 1] = np.where(b[y - 1, x0:x1 + 1, 3:] > 0, b[y - 1, x0:x1 + 1], BLK)
-            b[y + 1, x0:x1 + 1] = np.where(b[y + 1, x0:x1 + 1, 3:] > 0, b[y + 1, x0:x1 + 1], BLK)
-            b[y, x0 - 1] = BLK; b[y, x1 + 1] = BLK
+    o = dict(o, _rambut=(hl, hd))
+    sk, sks = npc_heads.SKIN[o.get('kulit', 'terang')]
+    b[(eq((233, 185, 110))) & (b[..., :3] == (233, 185, 110)).all(-1)] = (*sk, 255)    # tangan/kaki ikut warna kulit
+    b[(eq((183, 115, 79))) & (b[..., :3] == (183, 115, 79)).all(-1)] = (*sks, 255)
+    npc_heads.draw_head(a, b, o, facing, o['_id'])
     return b
 
 
@@ -362,5 +346,5 @@ def build(nid, spec, A):
 if __name__ == '__main__':
     A = np.array(Image.open(MC).convert('RGBA'))
     for nid, o in NPC.items():
-        build(nid, o, A)
+        build(nid, dict(o, _id=nid), A)
         print('ok', nid)
