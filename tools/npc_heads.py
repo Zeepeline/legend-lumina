@@ -13,11 +13,25 @@ SKIN = {  # warna kulit (terang, bayangan)
 }
 # geometri kepala baru pada frame diam tiap arah (koordinat sel 64×56)
 GEO = {
-    'd': dict(cx=33.5, cy=17.0, rx=8.6, ry=8.6, chin=25, eyes=[(31, 21), (36, 21)], mouth=(34, 24), idle=(0, 0)),
-    's': dict(cx=32.5, cy=16.5, rx=8.4, ry=8.2, chin=24, eyes=[(37, 20)], mouth=(39, 23), idle=(0, 4)),
-    'u': dict(cx=32.5, cy=16.5, rx=8.6, ry=8.4, chin=24, eyes=[], mouth=None, idle=(0, 2)),
+    'd': dict(cx=33.0, cy=16.8, rx=10.2, ry=8.6, chin=25, eyes=[(31, 21), (36, 21)], mouth=(34, 24), idle=(0, 0)),
+    's': dict(cx=32.0, cy=16.5, rx=9.6, ry=8.4, chin=24, eyes=[(37, 20)], mouth=(39, 23), idle=(0, 4)),
+    'u': dict(cx=32.5, cy=16.5, rx=10.0, ry=8.4, chin=24, eyes=[], mouth=None, idle=(0, 2)),
 }
-HEAD_ROWS = (6, 25)   # baris kepala MC (frame diam)
+HEAD_ROWS = (6, 25)
+# ramp rambut gaya tokoh utama: terang, tengah (helai), bayangan, tergelap — bayangan agak kebiruan seperti rambut MC
+RAMP = {
+    'zaitun': ((166, 171, 64), (120, 139, 79), (67, 85, 109), (48, 52, 88)),
+    'coklat': ((150, 98, 62), (112, 59, 46), (84, 25, 32), (48, 52, 88)),
+    'oranye': ((207, 115, 69), (163, 41, 28), (84, 25, 32), (48, 52, 88)),
+    'merah': ((177, 39, 26), (163, 41, 28), (84, 25, 32), (48, 52, 88)),
+    'mawar': ((172, 74, 74), (145, 96, 80), (84, 25, 32), (48, 52, 88)),
+    'krem': ((237, 214, 187), (176, 172, 168), (98, 96, 104), (67, 85, 109)),
+    'abu': ((176, 172, 168), (145, 140, 140), (98, 96, 104), (67, 85, 109)),
+    'kulit': ((240, 194, 113), (207, 115, 69), (145, 96, 80), (84, 25, 32)),
+    'birutua': ((67, 85, 109), (45, 49, 97), (48, 52, 88), (6, 1, 5)),
+    'hitam': ((48, 52, 88), (45, 49, 97), (6, 1, 5), (6, 1, 5)),
+    'hijau': ((123, 147, 69), (120, 139, 79), (67, 85, 109), (48, 52, 88)),
+}   # baris kepala MC (frame diam)
 
 _A = np.array(Image.open(MC).convert('RGBA'))
 _IDLE = {}
@@ -45,7 +59,7 @@ def find_offset(a, facing):
 
 def ell(x, y, cx, cy, rx, ry):
     if y + 0.5 > cy:
-        rx *= 0.9
+        rx *= 1.0 - 0.28 * min(1.0, (y + 0.5 - cy) / ry * 1.4)
     return ((x + 0.5 - cx) / rx) ** 2 + ((y + 0.5 - cy) / ry) ** 2 <= 1.0
 
 
@@ -54,6 +68,8 @@ def build_head(o, facing):
     g = GEO[facing]
     cx, cy, rx, ry, chin = g['cx'], g['cy'], g['rx'], g['ry'], g['chin']
     hl, hd = (np.array((*c, 255), np.uint8) for c in o['_rambut'])
+    ramp = [np.array((*c, 255), np.uint8) for c in RAMP.get(o['rambut'][0], (o['_rambut'][0], o['_rambut'][1], (67, 85, 109), (48, 52, 88)))]
+    hl, hd = ramp[0], ramp[2]
     sk, sks = (np.array((*c, 255), np.uint8) for c in SKIN[o.get('kulit', 'terang')])
     st = o.get('gaya_rambut', 'poni')
     H, W = 56, 64
@@ -76,35 +92,37 @@ def build_head(o, facing):
         rel = (x + 0.5 - cx)
         edge = abs(rel) > rx - 2.2
         if st == 'poni':
-            return 23 if edge else 19
+            return 24 if edge else 20
         if st == 'belah':
-            return 23 if edge else int(16 + max(0.0, -rel) * 0.45)
+            return 24 if edge else int(17 + max(0.0, -rel) * 0.4)
         if st == 'cepak':
-            return 18 if edge else 14
+            return 19 if edge else 15
         if st == 'jabrik':
-            return 22 if edge else 18 + (int(x) % 3 == 0)
+            return 23 if edge else 19 + (int(x) % 3 == 0)
         if st in ('panjang', 'kuncir'):
-            return 24 if edge else (16 if abs(rel) < 1 else 18)
+            return 25 if edge else (17 if abs(rel) < 1 else 19)
         if st == 'sanggul':
-            return 21 if edge else 15
+            return 23 if edge else 18
         if st == 'keriting':
             return 22 if edge else 17
         if st == 'botak':
             return 20 if edge else 0
         return 19
+    def tooth(x):
+        return 0 if st in ('cepak', 'botak', 'sanggul') else (2 - abs(int(x) % 4 - 2))
     if facing == 'u':
         hair[:] = skull
         if st == 'botak':
             hair &= (yy > cy - 1)
     elif facing == 'd':
         for x in range(W):
-            hair[:, x] = skull[:, x] & (yy[:, x] < hairline(x))
+            hair[:, x] = skull[:, x] & (yy[:, x] < hairline(x) + tooth(x))
         if st == 'botak':
             hair &= (abs(xx + 0.5 - cx) > rx - 2.5) & (yy > cy - 2) & (yy < cy + 5)
     else:   # samping: rambut menutup belakang kepala; depan = wajah
         front = cx - 1.0
         for x in range(W):
-            hlx = hairline(x) if x + 0.5 > front else 99
+            hlx = hairline(x) + tooth(x) if x + 0.5 > front else 99
             hair[:, x] = skull[:, x] & (yy[:, x] < hlx)
         if st == 'botak':
             hair &= (xx + 0.5 < cx) & (yy > cy - 2) & (yy < cy + 5)
@@ -156,30 +174,41 @@ def build_head(o, facing):
     hair |= extra
     out = np.zeros((H, W, 4), np.uint8)
     face = skull & ~hair
+    # --- tekstur dipindah dari kepala MC: rambut memakai pola helai & bayangan MC, wajah memakai wajah MC ---
+    mc, _ = _IDLE[facing]
+    mrgb = mc[..., :3]; mal = mc[..., 3] > 0
+    meq = lambda c: (mrgb == c).all(-1) & mal
+    tone = np.full((H, W), -1, int)
+    for t, c in enumerate(((166, 171, 64), (120, 139, 79), (67, 85, 109), (48, 52, 88))):
+        tone[meq(c)] = t
+    tone[:HEAD_ROWS[0]] = -1
+    tone[chin + 1:] = -1
+    L0, L1, L2, L3 = ramp
+    tfull = tone.copy()
+    for y in range(H):
+        for x in range(W):
+            if tfull[y, x] < 0 and y < chin + 12:
+                yr = min(max(y, int(top_y) + 1), chin)
+                cand = [(abs(xx2 - x) + abs(yy2 - y) * 2, tone[yy2, xx2]) for yy2 in range(max(0, yr - 3), yr + 4)
+                        for xx2 in range(max(0, x - 6), min(W, x + 7)) if tone[yy2, xx2] >= 0]
+                tfull[y, x] = min(cand)[1] if cand else (0 if y < cy else 2)
+    for y, x in zip(*np.nonzero(hair)):
+        out[y, x] = ramp[max(0, tfull[y, x])]
+    msk = meq((233, 185, 110)); mks = meq((183, 115, 79))
     out[face] = sk
-    # bayangan wajah: di bawah rambut & sisi kanan
-    under = face & np.roll(hair, 1, 0)
-    out[under] = sks
-    if facing == 'd':
-        out[face & (xx + 0.5 > right - 1.5)] = sks
-    out[hair] = hl
-    hb = hair & ~np.roll(hair, -1, 0)                       # tepi bawah rambut
-    out[hb] = hd
-    shade = hair & (xx + 0.5 > cx + rx * 0.4) & (yy > top_y + 1)       # sisi kanan gelap (cahaya dari kiri atas)
-    out[shade] = hd
-    out[hair & (yy > cy + 3)] = hd
-    if st == 'cepak':
-        out[hair] = hd
-        out[hair & (yy < cy - 3) & (xx + 0.5 < cx + 2)] = hl
-    # helai rambut: garis pendek gelap di bagian terang
-    strands = hair & (yy > top_y + 2) & (yy < top_y + 6) & ((xx - int(cx) + 1) % 4 == 0) & ~shade
-    out[strands] = hd
+    out[face & mks] = sks
+    out[face & np.roll(hair, 1, 0)] = sks                     # bayangan tipis di bawah poni
+    eyes_mc = meq((6, 1, 5)) & face & np.roll(msk | mks, 1, 1) & np.roll(msk | mks, -1, 1)
+    out[face & meq((236, 206, 172))] = (236, 206, 172, 255)   # mulut MC
+    if o.get('mata', 'titik') == 'titik':
+        out[eyes_mc] = BLK
+    under = np.zeros_like(face)
     # wajah: mata, alis, mulut
     eyes_st = o.get('mata', 'titik')
     if facing != 'u':
         for ex, ey in g['eyes']:
             if eyes_st == 'titik':
-                out[ey:ey + 2, ex] = BLK
+                pass
             elif eyes_st == 'sipit':
                 out[ey + 1, ex - 1:ex + 1] = BLK
             elif eyes_st == 'bulat':
@@ -198,9 +227,11 @@ def build_head(o, facing):
         if facing == 'd' and eyes_st == 'kacamata':
             out[g['eyes'][0][1] - 1, g['eyes'][0][0] + 2:g['eyes'][1][0] - 1] = BLK
         mx, my = g['mouth']
-        mt = o.get('mulut', 'garis')
+        mt = o.get('mulut', 'mc')
         if mt == 'garis':
             out[my, mx - 1:mx + 1] = sks
+        elif mt == 'mc':
+            out[my, mx - 1:mx + 1] = (236, 206, 172, 255)
         elif mt == 'senyum':
             out[my, mx - 1:mx + 1] = BLK
         if o.get('pipi'):
@@ -256,8 +287,10 @@ def build_head(o, facing):
             else:
                 hole = np.zeros_like(big)
             m = big & ~hole
-            out[m] = col
-            out[m & ((xx + 0.5 > cx + rx * 0.4) | (yy > cy + 3))] = dark
+            hr = [col, np.array((*(col[:3] * 0.86).astype(np.uint8), 255), np.uint8), dark,
+                  np.array((*(col[:3] * 0.5).astype(np.uint8), 255), np.uint8)]
+            for y, x in zip(*np.nonzero(m)):
+                out[y, x] = hr[max(0, tfull[y, x])]
             if facing != 'u':
                 rim = m & nb4(hole)
                 out[rim] = dark
@@ -271,6 +304,9 @@ def build_head(o, facing):
     solid = out[..., 3] > 0
     ring = nb4(solid) & ~solid
     out[ring] = BLK
+    if not hat and st != 'botak':
+        hair_ring = ring & nb4(hair) & (yy > cy + 1) & ~nb4(face)
+        out[hair_ring] = ramp[3] if ramp[3][:3].sum() > 30 else BLK
     return out
 
 
