@@ -175,6 +175,50 @@ def blend(na, nb, seed):
     return oa, ob
 
 
+WILD = 'godot/assets/art/ground/gnd_wild_sprout.png'
+WILD_MOD = np.array([0.95, 0.97, 0.95])   # sama dengan modulate WildFillerLayer (benua_world.gd)
+
+
+def outer_fade(IMG, R, shared):
+    """Tepi wilayah yang tidak bersentuhan wilayah lain: garis lurus diganti gelombang yang menyatu dengan rumput pengisi
+    luar wilayah (tekstur & posisi persis sama dengan WildFillerLayer: ubin dari continent_bounds().grow(900))."""
+    wild = np.array(Image.open(WILD).convert('RGB')).astype(float)
+    T = wild.shape[0]
+    bx = min(r[0] for r in R.values()) - 900
+    by = min(r[1] for r in R.values()) - 900
+    for n, (k, (x, y, w, h)) in enumerate(R.items()):
+        img = IMG[k]
+        for side in 'NSWE':
+            L = w if side in 'NS' else h
+            free = np.ones(L, bool)
+            for a0, a1 in shared[k][side]:
+                free[max(0, a0 - 8):min(L, a1 + 8)] = False
+            if not free.any():
+                continue
+            f = (smooth_noise(L, 500 + n * 7 + 'NSWE'.index(side)) * 0.5 + 0.5) * BAND * 0.8 + 6
+            for i in np.nonzero(free)[0]:
+                d = int(f[i])
+                for j in range(d):
+                    if side == 'N': px, py = i, j
+                    elif side == 'S': px, py = i, h - 1 - j
+                    elif side == 'W': px, py = j, i
+                    else: px, py = w - 1 - j, i
+                    gx, gy = x + px - bx, y + py - by
+                    img[py, px, :3] = (wild[gy % T, gx % T] * WILD_MOD).astype(np.uint8)
+                    img[py, px, 3] = 255
+
+
+def shared_spans(R):
+    out = {k: {s: [] for s in 'NSWE'} for k in R}
+    for a, b, side, g0, g1 in edges(R):
+        ax, ay = R[a][0], R[a][1]; bx_, by_ = R[b][0], R[b][1]
+        if side == 'S':
+            out[a]['S'].append((g0 - ax, g1 - ax)); out[b]['N'].append((g0 - bx_, g1 - bx_))
+        else:
+            out[a]['E'].append((g0 - ay, g1 - ay)); out[b]['W'].append((g0 - by_, g1 - by_))
+    return out
+
+
 def main():
     R = regions()
     IMG = {}
@@ -191,6 +235,7 @@ def main():
         put(IMG[a], R[a], side, g0, g1, depth, False, sa)
         put(IMG[b], R[b], side, g0, g1, depth, True, sb)
         print('sambung', a, b, side, g1 - g0)
+    outer_fade(IMG, R, shared_spans(R))
     for k, a in IMG.items():
         Image.fromarray(a).save(OUT % k)
 
