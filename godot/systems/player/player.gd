@@ -22,6 +22,7 @@ var attack_buffered: bool = false
 var attack_hold_time: float = 0.0
 var roll_cooldown: float = 0.0
 var fireball_cooldown: float = 0.0
+var cast_anim_t: float = 0.0 ## sisa waktu pose merapal (anim cast_*), menahan anim diam/jalan
 var stamina_delay: float = 0.0
 var invuln_timer: float = 0.0
 var pending_knockback: Vector2 = Vector2.ZERO
@@ -56,6 +57,7 @@ func _physics_process(delta: float) -> void:
 		roll_cooldown = maxf(0.0, roll_cooldown - delta)
 	if fireball_cooldown > 0.0:
 		fireball_cooldown = maxf(0.0, fireball_cooldown - delta)
+		cast_anim_t = maxf(0.0, cast_anim_t - delta)
 	if stamina_delay > 0.0:
 		stamina_delay = maxf(0.0, stamina_delay - delta)
 	if invuln_timer > 0.0:
@@ -105,6 +107,8 @@ func dir_suffix_4() -> String:
 
 
 func play_directional_anim(prefix: String, use_8_dir: bool = false) -> void:
+	if cast_anim_t > 0.0 and not prefix.begins_with("cast") and not prefix.begins_with("atk"):
+		return
 	var suffix: String = dir_suffix_4()
 	var flip: bool = facing.x < -0.1
 	if use_8_dir:
@@ -191,6 +195,8 @@ func try_cast_skill() -> bool:
 		EventsBus.ref.notification_requested.emit(tr("msg_no_mp"))
 		return false
 	fireball_cooldown = 0.50
+	cast_anim_t = 0.34
+	play_directional_anim("cast", false)
 	var tier: int = gs.record_skill_use(sk_id)
 	var t_mult: float = SkillDatabase.tier_multiplier(tier)
 	var power: float = float(sk.get("base_power", 1.9))

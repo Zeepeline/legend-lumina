@@ -89,6 +89,11 @@ static func _build(tex: Texture2D) -> SpriteFrames:
 	_add_row_anim(sf, tex, &"atk2_side", 12, 14.0, false, atk_weights)
 	_add_row_anim(sf, tex, &"atk3_side", 15, 11.0, false, atk_weights)
 
+	var cast_w: Array[float] = [0.8, 1.0, 1.0, 1.4]
+	_add_row_anim(sf, tex, &"cast_down", 25, 14.0, false, cast_w)
+	_add_row_anim(sf, tex, &"cast_up", 26, 14.0, false, cast_w)
+	_add_row_anim(sf, tex, &"cast_side", 27, 14.0, false, cast_w)
+
 	_add_row_anim(sf, tex, &"roll_down", 19, 14.0, false)
 	_add_row_anim(sf, tex, &"roll_up", 20, 14.0, false)
 	_add_row_anim(sf, tex, &"roll_side", 21, 14.0, false)
