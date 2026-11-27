@@ -73,7 +73,17 @@ func _build_frames(tex: Texture2D) -> SpriteFrames:
 		sf.remove_animation(&"default")
 	var w: int = tex.get_width()
 	var h: int = tex.get_height()
-	if w == 384 and h >= 240:
+	if w == 512 and h == 224:
+		# Lembar NPC bergaya tokoh utama (tools/npc_from_mc.py): sel 64×56, 8 kolom × 4 baris
+		_is_portrait = false
+		sprite.offset = Vector2(0.0, -28.0)
+		_slice_row(sf, tex, &"walk_down", 0, 8.0, 4, 64, 56)
+		_slice_row(sf, tex, &"walk_up", 1, 8.0, 4, 64, 56)
+		_slice_row(sf, tex, &"walk_side", 2, 8.0, 4, 64, 56)
+		_slice_row_cols(sf, tex, &"idle_down", 3, 0, 2.5, 2, 64, 56)
+		_slice_row_cols(sf, tex, &"idle_side", 3, 2, 2.5, 2, 64, 56)
+		_slice_row_cols(sf, tex, &"idle_up", 3, 4, 2.5, 2, 64, 56)
+	elif w == 384 and h >= 240:
 		_is_portrait = false
 		sprite.offset = Vector2(0.0, -24.0)
 		_slice_row(sf, tex, &"walk_down", 0, 7.0, 4, 48, 48)
