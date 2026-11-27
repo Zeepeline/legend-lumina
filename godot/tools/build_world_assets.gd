@@ -288,7 +288,7 @@ func _build_interiors(ts: TileSet) -> void:
 	grass.queue_free()
 
 	MapBuilderHelper.add_shrine(ysorted, root, Vector2(160, 120))
-	MapBuilderHelper.add_npc(ysorted, root, "PendetaElian", "npc_priest_name", "res://assets/art/npc/npc_priest.png", "res://data/dialogues/priest_greet.tres", Vector2(215, 130), "left")
+	MapBuilderHelper.add_npc(ysorted, root, "PendetaElian", "npc_priest_name", "res://assets/art/npc/npc_sheet_tp1.png", "res://data/dialogues/priest_greet.tres", Vector2(215, 130), "left")
 	MapBuilderHelper.add_chest(ysorted, root, "TempleChest", &"temple_c1", &"crystal_sword", 1, 80, Vector2(96, 135))
 	MapBuilderHelper.add_borders(root, [
 		Rect2(0, 0, 320, 44), Rect2(0, 0, 24, 256), Rect2(296, 0, 24, 256),
@@ -451,12 +451,12 @@ func _build_village_map(ts: TileSet, buildings: Dictionary) -> void:
 
 	var market_items: Array[StringName] = [&"potion", &"hi_potion", &"ether", &"bread_mila", &"honey"]
 	var smith_items: Array[StringName] = [&"iron_sword", &"steel_sword", &"iron_spear", &"battle_axe", &"leather_vest", &"iron_chainmail"]
-	MapBuilderHelper.add_npc(ysorted, root, "TetuaBram", "npc_elder_name", "res://assets/art/npc/npc_elder.png", "res://data/dialogues/elder_intro.tres", Vector2(486, 145), "down")
-	MapBuilderHelper.add_npc(ysorted, root, "PakDarto", "npc_farmer_name", "res://assets/art/npc/npc_farmer.png", "res://data/dialogues/farmer_greet.tres", Vector2(335, 238), "right", 16.0)
-	MapBuilderHelper.add_npc(ysorted, root, "Lina", "npc_lina_name", "res://assets/art/npc/npc_girl.png", "res://data/dialogues/villager_greet.tres", Vector2(382, 238), "left", 16.0)
-	MapBuilderHelper.add_npc(ysorted, root, "BuSari", "npc_merchant_name", "res://assets/art/npc/npc_merchant.png", "res://data/dialogues/merchant_greet.tres", Vector2(730, 245), "down", 0.0, &"village_market", "ui_shop_village", market_items)
-	MapBuilderHelper.add_npc(ysorted, root, "PakBesi", "npc_smith_name", "res://assets/art/npc/npc_smith.png", "res://data/dialogues/smith_greet.tres", Vector2(856, 568), "left", 0.0, &"village_smith", "ui_shop_smith", smith_items)
-	MapBuilderHelper.add_npc(ysorted, root, "Penjaga", "npc_guard_name", "res://assets/art/npc/npc_guard.png", "res://data/dialogues/guard_greet.tres", Vector2(468, 650), "right")
+	MapBuilderHelper.add_npc(ysorted, root, "TetuaBram", "npc_elder_name", "res://assets/art/npc/npc_sheet_elder.png", "res://data/dialogues/elder_intro.tres", Vector2(486, 145), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "PakDarto", "npc_farmer_name", "res://assets/art/npc/npc_sheet_farmer.png", "res://data/dialogues/farmer_greet.tres", Vector2(335, 238), "right", 16.0)
+	MapBuilderHelper.add_npc(ysorted, root, "Lina", "npc_lina_name", "res://assets/art/npc/npc_sheet_girl.png", "res://data/dialogues/villager_greet.tres", Vector2(382, 238), "left", 16.0)
+	MapBuilderHelper.add_npc(ysorted, root, "BuSari", "npc_merchant_name", "res://assets/art/npc/npc_sheet_merchant.png", "res://data/dialogues/merchant_greet.tres", Vector2(730, 245), "down", 0.0, &"village_market", "ui_shop_village", market_items)
+	MapBuilderHelper.add_npc(ysorted, root, "PakBesi", "npc_smith_name", "res://assets/art/npc/npc_sheet_smith.png", "res://data/dialogues/smith_greet.tres", Vector2(856, 568), "left", 0.0, &"village_smith", "ui_shop_smith", smith_items)
+	MapBuilderHelper.add_npc(ysorted, root, "Penjaga", "npc_guard_name", "res://assets/art/npc/npc_sheet_guard.png", "res://data/dialogues/guard_greet.tres", Vector2(468, 650), "right")
 
 	MapBuilderHelper.add_chest(ysorted, root, "VillageChest", &"village_c1", &"potion", 2, 25, Vector2(140, 488))
 	MapBuilderHelper.add_animal(ysorted, root, "RabbitV", "rabbit", Vector2(240, 290))

@@ -6,14 +6,14 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_82yp2"]
 size = Vector2(96, 36)
 
-[node name="Stall Weapon" type="StaticBody2D" unique_id=273844146]
+[node name="Stall Weapon" type="StaticBody2D" unique_id=660081364]
 collision_mask = 0
 script = ExtResource("1_wgjd5")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=617077294]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=720641610]
 texture = ExtResource("2_0ef2d")
 offset = Vector2(0, -71)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1938100454]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1946517679]
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_82yp2")

@@ -149,8 +149,8 @@ static func _build_kpasar(ts: TileSet, buildings: Dictionary) -> void:
 	var city_market_items: Array[StringName] = [&"potion", &"hi_potion", &"ether", &"grilled_fish", &"shard"]
 	var city_smith_items: Array[StringName] = [&"steel_sword", &"crystal_sword", &"iron_spear", &"battle_axe", &"iron_chainmail", &"stone_armor"]
 	MapBuilderHelper.add_npc(ysorted, root, "PedagangKota", "npc_city_merchant", "res://assets/art/npc/npc_sheet_ps1.png", "res://data/dialogues/city_market_greet.tres", Vector2(700, 590), "down", 0.0, &"city_market", "ui_shop_city_market", city_market_items)
-	MapBuilderHelper.add_npc(ysorted, root, "PandaiBesiKota", "npc_city_smith", "res://assets/art/npc/npc_smith.png", "res://data/dialogues/city_smith_greet.tres", Vector2(940, 590), "down", 0.0, &"city_smith", "ui_shop_city_smith", city_smith_items)
-	MapBuilderHelper.add_npc(ysorted, root, "JuruLelangBastian", "npc_bastian", "res://assets/art/npc/npc_elder.png", "res://data/dialogues/bastian_greet.tres", Vector2(740, 390), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "PandaiBesiKota", "npc_city_smith", "res://assets/art/npc/npc_sheet_smith.png", "res://data/dialogues/city_smith_greet.tres", Vector2(940, 590), "down", 0.0, &"city_smith", "ui_shop_city_smith", city_smith_items)
+	MapBuilderHelper.add_npc(ysorted, root, "JuruLelangBastian", "npc_bastian", "res://assets/art/npc/npc_sheet_elder.png", "res://data/dialogues/bastian_greet.tres", Vector2(740, 390), "down")
 	MapBuilderHelper.add_npc(ysorted, root, "WargaPasar", "npc_citizen", "res://assets/art/npc/npc_sheet_ps2.png", "res://data/dialogues/citizen_greet.tres", Vector2(660, 760), "down", 18.0)
 	MapBuilderHelper.add_npc(ysorted, root, "PenjagaPasar", "npc_guard_name", "res://assets/art/npc/npc_guard_spear.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(1470, 645), "left")
 
@@ -311,8 +311,8 @@ static func _build_kbawah(ts: TileSet, buildings: Dictionary) -> void:
 	var night_items: Array[StringName] = [&"hi_potion", &"ether", &"grilled_fish", &"steel_sword", &"iron_chainmail"]
 	MapBuilderHelper.add_npc(ysorted, root, "GuruLestari", "npc_lestari", "res://assets/art/npc/npc_lestari.png", "res://data/dialogues/lestari_greet.tres", Vector2(560, 600), "down", 0.0, &"", "", [], &"heal", 0)
 	MapBuilderHelper.add_npc(ysorted, root, "PengawasGelanggang", "npc_arena_master", "res://assets/art/npc/npc_sheet_bw1.png", "res://data/dialogues/arena_master_greet.tres", Vector2(655, 700), "down")
-	MapBuilderHelper.add_npc(ysorted, root, "PedagangMalam", "npc_night_merchant", "res://assets/art/npc/npc_merchant.png", "res://data/dialogues/night_merchant_greet.tres", Vector2(500, 640), "down", 0.0, &"night_market", "ui_shop_night", night_items)
-	MapBuilderHelper.add_npc(ysorted, root, "WargaBawah", "npc_citizen", "res://assets/art/npc/npc_farmer.png", "res://data/dialogues/citizen_greet.tres", Vector2(320, 560), "down", 18.0)
+	MapBuilderHelper.add_npc(ysorted, root, "PedagangMalam", "npc_night_merchant", "res://assets/art/npc/npc_sheet_merchant.png", "res://data/dialogues/night_merchant_greet.tres", Vector2(500, 640), "down", 0.0, &"night_market", "ui_shop_night", night_items)
+	MapBuilderHelper.add_npc(ysorted, root, "WargaBawah", "npc_citizen", "res://assets/art/npc/npc_sheet_farmer.png", "res://data/dialogues/citizen_greet.tres", Vector2(320, 560), "down", 18.0)
 
 	MapBuilderHelper.add_spawn(spawns, root, "Default", &"default", Vector2(600, 560))
 	MapBuilderHelper.add_spawn(spawns, root, "FromKPasar", &"from_kpasar", Vector2(1138, 500))
@@ -346,7 +346,7 @@ static func _build_kinn(ts: TileSet) -> void:
 	MapBuilderHelper.add_bed(root, "RestBed", Vector2(246, 108))
 	MapBuilderHelper.add_prop(ysorted, root, "KInnTable", "res://assets/art/interior/int_table_round.png", Vector2(120, 130), Vector2(30, 16))
 	MapBuilderHelper.add_prop(ysorted, root, "KInnRug", "res://assets/art/interior/int_rug_red.png", Vector2(160, 175), Vector2.ZERO, -1)
-	MapBuilderHelper.add_npc(ysorted, root, "BuLaras", "npc_laras", "res://assets/art/npc/npc_inn.png", "res://data/dialogues/laras_greet.tres", Vector2(150, 96), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "BuLaras", "npc_laras", "res://assets/art/npc/npc_sheet_in1.png", "res://data/dialogues/laras_greet.tres", Vector2(150, 96), "down")
 	MapBuilderHelper.add_chest(ysorted, root, "KInnChest", &"kinn_c1", &"grilled_fish", 2, 35, Vector2(68, 92))
 
 	MapBuilderHelper.add_borders(root, [
@@ -378,7 +378,7 @@ static func _build_arsip(ts: TileSet) -> void:
 	MapBuilderHelper.add_prop(ysorted, root, "BookcaseR", "res://assets/art/interior/int_bookshelf.png", Vector2(238, 76), Vector2(36, 18))
 	MapBuilderHelper.add_prop(ysorted, root, "ArsipTable", "res://assets/art/interior/int_table_flower.png", Vector2(160, 140), Vector2(32, 16))
 	MapBuilderHelper.add_prop(ysorted, root, "ArsipRug", "res://assets/art/interior/int_rug_blue.png", Vector2(160, 168), Vector2.ZERO, -1)
-	MapBuilderHelper.add_npc(ysorted, root, "Arsiparis", "npc_archivist", "res://assets/art/npc/npc_priest.png", "res://data/dialogues/archivist_greet.tres", Vector2(160, 98), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "Arsiparis", "npc_archivist", "res://assets/art/npc/npc_sheet_ar1.png", "res://data/dialogues/archivist_greet.tres", Vector2(160, 98), "down")
 	MapBuilderHelper.add_chest(ysorted, root, "ArsipChest", &"arsip_c1", &"shard", 3, 60, Vector2(252, 128))
 
 	MapBuilderHelper.add_borders(root, [

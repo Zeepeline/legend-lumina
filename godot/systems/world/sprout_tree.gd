@@ -1,7 +1,16 @@
 class_name SproutTree
 extends BuildingProp
 
-const SPROUT_OBJS_TEX: Texture2D = preload("res://assets/art/ground/deco_sprout_objs.png")
+const TEX_BIG: Texture2D = preload("res://assets/art/nature/tree_big.png")
+const TEX_BIG_DARK: Texture2D = preload("res://assets/art/nature/tree_big_dark.png")
+const TEX_BIG_SNOW: Texture2D = preload("res://assets/art/nature/tree_big_snow.png")
+const TEX_BIG_SWAMP: Texture2D = preload("res://assets/art/nature/tree_big_swamp.png")
+const TEX_APPLE: Texture2D = preload("res://assets/art/nature/tree_apple.png")
+const TEX_ORANGE: Texture2D = preload("res://assets/art/nature/tree_orange.png")
+const TEX_TALL: Texture2D = preload("res://assets/art/nature/tree_tall.png")
+const TEX_TALL_DARK: Texture2D = preload("res://assets/art/nature/tree_tall_dark.png")
+const TEX_TALL_SNOW: Texture2D = preload("res://assets/art/nature/tree_tall_snow.png")
+const TEX_GIANT: Texture2D = preload("res://assets/art/nature/tree_giant.png")
 
 @export_enum("big", "tall", "big_dark", "tall_dark", "apple", "orange", "snow", "snow_tall", "swamp", "giant") var variant: String = "big"
 
@@ -14,41 +23,42 @@ func _ready() -> void:
 func _apply_variant() -> void:
 	if sprite == null:
 		return
-	var is_tall: bool = variant == "tall" or variant == "tall_dark" or variant == "snow_tall"
-	var is_fruit: bool = variant == "apple" or variant == "orange"
 	var is_giant: bool = variant == "giant"
-	var at: AtlasTexture = AtlasTexture.new()
-	at.atlas = SPROUT_OBJS_TEX
-	if is_tall:
-		at.region = Rect2(1, 0, 14, 29)
-		sprite.offset = Vector2(0.0, -14.5)
-	elif is_fruit:
-		at.region = Rect2(52, 1, 24, 31)
-		sprite.offset = Vector2(0.0, -15.5)
-	else:
-		at.region = Rect2(20, 1, 24, 31)
-		sprite.offset = Vector2(0.0, -15.5)
-	sprite.texture = at
-	sprite.scale = Vector2(4.2, 4.2) if is_giant else Vector2(3.0, 3.0)
+	var tex: Texture2D = TEX_BIG
+	match variant:
+		"big":
+			tex = TEX_BIG
+		"big_dark":
+			tex = TEX_BIG_DARK
+		"snow":
+			tex = TEX_BIG_SNOW
+		"swamp":
+			tex = TEX_BIG_SWAMP
+		"apple":
+			tex = TEX_APPLE
+		"orange":
+			tex = TEX_ORANGE
+		"tall":
+			tex = TEX_TALL
+		"tall_dark":
+			tex = TEX_TALL_DARK
+		"snow_tall":
+			tex = TEX_TALL_SNOW
+		"giant":
+			tex = TEX_GIANT
+
+	sprite.texture = tex
+	sprite.scale = Vector2.ONE
+	sprite.offset = Vector2(0.0, -float(tex.get_height()) * 0.5)
 	sprite.modulate = Color.WHITE
 
 	var shadow: Node2D = get_node_or_null("Shadow") as Node2D
 	if shadow != null:
-		shadow.scale = Vector2(1.4, 1.4) if is_giant else Vector2.ONE
-
-	var tint_id: int = 0
-	if variant == "big_dark" or variant == "tall_dark" or variant == "giant":
-		tint_id = 1
-	elif variant == "snow" or variant == "snow_tall":
-		tint_id = 2
-	elif variant == "swamp":
-		tint_id = 3
-	elif variant == "orange":
-		tint_id = 4
+		shadow.scale = Vector2(2.2, 2.2) if is_giant else Vector2.ONE
 
 	var mat: ShaderMaterial = sprite.material as ShaderMaterial
 	if mat != null:
 		var unique_mat: ShaderMaterial = mat.duplicate() as ShaderMaterial
 		unique_mat.set_shader_parameter("phase_offset", fmod(absf(position.x * 0.07 + position.y * 0.03), TAU))
-		unique_mat.set_shader_parameter("biome_tint", tint_id)
 		sprite.material = unique_mat
+

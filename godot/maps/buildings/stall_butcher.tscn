@@ -6,14 +6,14 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cbpdu"]
 size = Vector2(96, 36)
 
-[node name="Stall Butcher" type="StaticBody2D" unique_id=1461382381]
+[node name="Stall Butcher" type="StaticBody2D" unique_id=24814459]
 collision_mask = 0
 script = ExtResource("1_ika0h")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=812807791]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1031736790]
 texture = ExtResource("2_uotjq")
 offset = Vector2(0, -71.5)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1527348490]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1322098977]
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_cbpdu")

@@ -65,9 +65,17 @@ static func create_outdoor_base(map_name: String, ts: TileSet, cols: int, rows: 
 	root.add_child(grass)
 	grass.owner = root
 
+	var ground_spr: Sprite2D = Sprite2D.new()
+	ground_spr.name = "GroundSprite"
+	ground_spr.z_index = -8
+	ground_spr.centered = false
+	ground_spr.position = Vector2.ZERO
+	root.add_child(ground_spr)
+	ground_spr.owner = root
+
 	var water: TileMapLayer = TileMapLayer.new()
 	water.name = "GroundWater"
-	water.z_index = -9
+	water.z_index = -7
 	water.tile_set = ts
 	root.add_child(water)
 	water.owner = root
@@ -93,6 +101,7 @@ static func create_outdoor_base(map_name: String, ts: TileSet, cols: int, rows: 
 
 	return {
 		"root": root,
+		"ground_spr": ground_spr,
 		"dirt": dirt,
 		"sand": sand,
 		"grass": grass,
@@ -246,13 +255,18 @@ static func build_ground_from_custom_png(
 	var cols: int = int(m["cols"])
 	var rows: int = int(m["rows"])
 
-	var rel_path: String = "res://tools/custom_grounds/gnd_%s_custom.png" % str(region_id)
+	var ground_spr: Sprite2D = m.get("ground_spr") as Sprite2D
+	var rel_path: String = "res://assets/art/ground/gnd_%s_custom.png" % str(region_id)
 	var abs_path: String = ProjectSettings.globalize_path(rel_path)
 	var img: Image = Image.load_from_file(abs_path)
 	if img == null or img.is_empty():
 		push_warning("MapBuilderHelper: custom ground tidak ditemukan: %s" % rel_path)
+		fill_dirt_layer(dirt, cols, rows)
 		apply_grass_autotile(grass, grid, cols, rows)
 		return
+
+	if ground_spr != null:
+		ground_spr.texture = load_res(rel_path) as Texture2D
 
 	var iw: int = img.get_width()
 	var ih: int = img.get_height()

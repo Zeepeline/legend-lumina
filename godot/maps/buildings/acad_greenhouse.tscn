@@ -9,22 +9,22 @@ size = Vector2(110, 48)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i7vtp"]
 size = Vector2(122, 105)
 
-[node name="Acad Greenhouse" type="StaticBody2D" unique_id=92983485]
+[node name="Acad Greenhouse" type="StaticBody2D" unique_id=486588258]
 collision_mask = 0
 script = ExtResource("1_l405m")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1172355573]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=454322428]
 texture = ExtResource("2_jvqp8")
 offset = Vector2(0, -80.5)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1890242509]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1262949416]
 position = Vector2(0, -26)
 shape = SubResource("RectangleShape2D_jt2mh")
 
-[node name="FadeArea" type="Area2D" parent="." unique_id=921146137]
+[node name="FadeArea" type="Area2D" parent="." unique_id=2111964103]
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=278779523]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=159877804]
 position = Vector2(0, -104.5)
 shape = SubResource("RectangleShape2D_i7vtp")

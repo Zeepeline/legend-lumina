@@ -205,7 +205,8 @@ func _enforce_ground_z_order(chunk: Node2D) -> void:
 		"GroundDirt": -12,
 		"GroundSand": -11,
 		"GroundGrass": -10,
-		"GroundWater": -9,
+		"GroundSprite": -8,
+		"GroundWater": -7,
 	}
 	for lname: Variant in z_map.keys():
 		var layer: CanvasItem = chunk.get_node_or_null(str(lname)) as CanvasItem
