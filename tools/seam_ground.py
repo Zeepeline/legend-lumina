@@ -219,6 +219,31 @@ def shared_spans(R):
     return out
 
 
+BRIDGES = 'tools/bridges/bridges.json'   # jembatan kayu (posisi & gambar dari versi web lama: bridgeFit/bridgeArt)
+BRIDGES_GD = 'godot/core/bridges_data.gd'
+
+
+def paste_bridges(IMG):
+    import json
+    B = json.load(open(BRIDGES))
+    lines = ['class_name BridgesData', 'extends RefCounted', '## DIBUAT OTOMATIS oleh tools/seam_ground.py — jangan disunting tangan.',
+             '## Jembatan kayu per wilayah (koordinat lokal, piksel). BenuaWorld menghapus petak air (tabrakan) di bawahnya.',
+             '', 'const LIST: Dictionary = {']
+    for k, L in B.items():
+        if k not in IMG:
+            continue
+        rects = []
+        for o in L:
+            art = Image.open(o['img']).convert('RGBA')
+            base = Image.fromarray(IMG[k])
+            base.alpha_composite(art, (o['x'], o['y']))
+            IMG[k] = np.array(base)
+            rects.append('Rect2i(%d, %d, %d, %d)' % (o['x'], o['y'], o['w'], o['h']))
+        lines.append('\t&"%s": [%s],' % (k, ', '.join(rects)))
+    lines.append('}')
+    open(BRIDGES_GD, 'w').write('\n'.join(lines) + '\n')
+
+
 def main():
     R = regions()
     IMG = {}
@@ -236,6 +261,7 @@ def main():
         put(IMG[b], R[b], side, g0, g1, depth, True, sb)
         print('sambung', a, b, side, g1 - g0)
     outer_fade(IMG, R, shared_spans(R))
+    paste_bridges(IMG)
     for k, a in IMG.items():
         Image.fromarray(a).save(OUT % k)
 

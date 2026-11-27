@@ -189,6 +189,7 @@ func _load_region(rid: StringName) -> void:
 	var rect: Rect2i = reg["rect"]
 	chunk.position = Vector2(rect.position)
 	chunk.y_sort_enabled = true
+	chunk.set_meta("region_id", str(rid))
 	_enforce_ground_z_order(chunk)
 	_strip_seamless_portals(chunk, rid)
 	_chunks_root.add_child(chunk)
@@ -212,6 +213,14 @@ func _enforce_ground_z_order(chunk: Node2D) -> void:
 	var water: CanvasItem = chunk.get_node_or_null("GroundWater") as CanvasItem
 	if water != null:
 		water.self_modulate = Color(1.0, 1.0, 1.0, 0.0)
+	# Jembatan (sudah tergambar di gambar tanah): petak air di bawahnya dihapus agar bisa diseberangi.
+	var tml: TileMapLayer = water as TileMapLayer
+	var rid: StringName = StringName(str(chunk.get_meta("region_id", "")))
+	if tml != null and BridgesData.LIST.has(rid):
+		for br: Rect2i in BridgesData.LIST[rid]:
+			for cy: int in range(floori(br.position.y / 16.0), ceili(br.end.y / 16.0)):
+				for cx: int in range(floori((br.position.x + 4) / 16.0), ceili((br.end.x - 4) / 16.0)):
+					tml.erase_cell(Vector2i(cx, cy))
 
 
 func _unload_region(rid: StringName) -> void:
