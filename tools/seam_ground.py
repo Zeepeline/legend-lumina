@@ -40,9 +40,11 @@ def fit(a, w, h):
 
 
 def is_dirt(px):
-    """Jalan tanah (dua keluarga warna: Sprout cokelat & kota kuning-oranye), bukan rumput/air/salju."""
+    """Jalan: tanah Sprout cokelat atau paving batu kota (abu hangat), bukan rumput/air/salju."""
     r, g, b = px[..., 0].astype(int), px[..., 1].astype(int), px[..., 2].astype(int)
-    return (r > 120) & (r > g + 18) & (g > 80) & (b < 120) & (r - b > 60)
+    soil = (r > 120) & (r > g + 18) & (g > 80) & (b < 120) & (r - b > 60)
+    cobble = (abs(r - g) < 14) & (r - b > 4) & (r - b < 28) & (r > 120) & (r < 215)   # paving batu kota (abu hangat)
+    return soil | cobble
 
 
 def runs(mask):
