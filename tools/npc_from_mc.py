@@ -89,7 +89,7 @@ def recolor(a, o, facing):
     b[(eq(HAIR_D) | eq(HAIR_S1) | eq(HAIR_S2)) & head] = (*hd, 255)
     paint_body(a, b, o, facing, top, neck, bot)
     o = dict(o, _rambut=(hl, hd))
-    sk, sks = npc_heads.SKIN[o.get('kulit', 'terang')]
+    sk, sks = npc_heads.skin_of(o)
     b[(eq((233, 185, 110))) & (b[..., :3] == (233, 185, 110)).all(-1)] = (*sk, 255)    # tangan/kaki ikut warna kulit
     b[(eq((183, 115, 79))) & (b[..., :3] == (183, 115, 79)).all(-1)] = (*sks, 255)
     npc_heads.draw_head(a, b, o, facing, o['_id'])

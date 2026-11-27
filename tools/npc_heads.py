@@ -342,6 +342,18 @@ def nb4(m):
 
 
 _CACHE = {}
+REF_SKIN = {}
+try:
+    for line in open('tools/npc_ref/heads/kulit.txt'):
+        k, *v = line.split()
+        REF_SKIN[k] = (tuple(map(int, v[:3])), tuple(map(int, v[3:6])))
+except OSError:
+    pass
+
+
+def skin_of(o):
+    """Warna kulit NPC: dari gambar referensi pemilik bila ada, kalau tidak dari pilihan `kulit`."""
+    return REF_SKIN.get(o.get('_id'), SKIN[o.get('kulit', 'terang')])
 
 
 def draw_head(a, b, o, facing, key):
@@ -349,7 +361,15 @@ def draw_head(a, b, o, facing, key):
     dx, dy, m = find_offset(a, facing)
     ck = (key, facing)
     if ck not in _CACHE:
-        _CACHE[ck] = build_head(o, facing)
+        import os
+        ref = f'tools/npc_ref/heads/{key}_{"u" if facing == "u" else "d"}.png'
+        if os.path.exists(ref):   # kepala dari gambar referensi pemilik
+            _CACHE[ck] = np.array(Image.open(ref).convert('RGBA'))
+            if facing != 'd':     # kepala referensi digambar pada posisi frame diam bawah
+                gd, gf = GEO['d'], GEO[facing]
+                _CACHE[ck] = np.roll(_CACHE[ck], int(round(gf['cx'] - gd['cx'])), 1)
+        else:
+            _CACHE[ck] = build_head(o, facing)
     hd = np.roll(np.roll(_CACHE[ck], dy, 0), dx, 1)
     g = GEO[facing]
     chin = g['chin'] + dy
@@ -359,7 +379,7 @@ def draw_head(a, b, o, facing, key):
     s = hd[..., 3] > 0
     b[s] = hd[s]
     # leher
-    sk, sks = SKIN[o.get('kulit', 'terang')]
+    sk, sks = skin_of(o)
     ncx = int(g['cx'] + dx) if facing == 'd' else int(g['cx'] + dx) + 3
     if facing != 'u':
         for y in (chin + 1, chin + 2):
