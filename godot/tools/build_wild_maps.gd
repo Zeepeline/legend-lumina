@@ -82,7 +82,7 @@ static func _build_forest(ts: TileSet) -> void:
 
 	MapBuilderHelper.add_shrine(ysorted, root, Vector2(640, 1065))
 	MapBuilderHelper.add_fishing_spot(root, "ForestFish", Vector2(215, 600))
-	MapBuilderHelper.add_npc(ysorted, root, "PemburuRaka", "npc_hunter_name", "res://assets/art/npc/npc_sheet_hunter.png", "res://data/dialogues/hunter_greet.tres", Vector2(540, 115), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "PemburuRaka", "npc_hunter_name", "res://assets/art/npc/npc_mc_hunter.png", "res://data/dialogues/hunter_greet.tres", Vector2(540, 115), "down")
 	MapBuilderHelper.add_chest(ysorted, root, "ForestChest1", &"forest_c1", &"hi_potion", 1, 45, Vector2(1060, 320))
 	MapBuilderHelper.add_chest(ysorted, root, "ForestChest2", &"forest_c2", &"iron_sword", 1, 0, Vector2(210, 820))
 	MapBuilderHelper.add_chest(ysorted, root, "ForestChest3", &"forest_c3", &"ether", 2, 30, Vector2(676, 165))
@@ -149,11 +149,11 @@ static func _build_meadow(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_prop(ysorted, root, "CaveEntrance", "res://assets/art/buildings/sp_b_shrine.png", Vector2(1200, 180), Vector2(76, 22))
 
 	MapBuilderHelper.add_shrine(ysorted, root, Vector2(460, 425))
-	MapBuilderHelper.add_npc(ysorted, root, "PakJoko", "npc_joko_name", "res://assets/art/npc/npc_sheet_joko.png", "res://data/dialogues/joko_greet.tres", Vector2(340, 290), "down", 20.0)
-	MapBuilderHelper.add_npc(ysorted, root, "Wati", "npc_wati_name", "res://assets/art/npc/npc_sheet_wati.png", "res://data/dialogues/wati_greet.tres", Vector2(185, 290), "down", 18.0)
-	MapBuilderHelper.add_npc(ysorted, root, "Darma", "npc_darma_name", "res://assets/art/npc/npc_sheet_darma.png", "res://data/dialogues/darma_greet.tres", Vector2(520, 290), "left")
+	MapBuilderHelper.add_npc(ysorted, root, "PakJoko", "npc_joko_name", "res://assets/art/npc/npc_mc_joko.png", "res://data/dialogues/joko_greet.tres", Vector2(340, 290), "down", 20.0)
+	MapBuilderHelper.add_npc(ysorted, root, "Wati", "npc_wati_name", "res://assets/art/npc/npc_mc_wati.png", "res://data/dialogues/wati_greet.tres", Vector2(185, 290), "down", 18.0)
+	MapBuilderHelper.add_npc(ysorted, root, "Darma", "npc_darma_name", "res://assets/art/npc/npc_mc_darma.png", "res://data/dialogues/darma_greet.tres", Vector2(520, 290), "left")
 	var shop_items: Array[StringName] = [&"potion", &"hi_potion", &"ether", &"honey", &"leather_vest"]
-	MapBuilderHelper.add_npc(ysorted, root, "PedagangBayu", "npc_bayu_name", "res://assets/art/npc/npc_sheet_bayu.png", "res://data/dialogues/bayu_greet.tres", Vector2(248, 372), "down", 0.0, &"meadow_shop", "ui_shop_meadow", shop_items)
+	MapBuilderHelper.add_npc(ysorted, root, "PedagangBayu", "npc_bayu_name", "res://assets/art/npc/npc_mc_bayu.png", "res://data/dialogues/bayu_greet.tres", Vector2(248, 372), "down", 0.0, &"meadow_shop", "ui_shop_meadow", shop_items)
 
 	MapBuilderHelper.add_chest(ysorted, root, "MeadowChest1", &"meadow_m1", &"hi_potion", 1, 50, Vector2(300, 868))
 	MapBuilderHelper.add_chest(ysorted, root, "MeadowChest2", &"meadow_m2", &"steel_sword", 1, 0, Vector2(1255, 815))
@@ -424,7 +424,7 @@ static func _build_deepwood(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_scaled_prop(ysorted, root, "DwMoss2", "res://assets/art/nature/deepwood_moss_island_2.png", Vector2(1740, 1280), 1.0, Vector2.ZERO, -5)
 
 	MapBuilderHelper.add_shrine(ysorted, root, Vector2(560, 375))
-	MapBuilderHelper.add_npc(ysorted, root, "Sambo", "npc_sambo_name", "res://assets/art/npc/npc_sheet_darma.png", "res://data/dialogues/sambo_greet.tres", Vector2(1310, 810), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "Sambo", "npc_sambo_name", "res://assets/art/npc/npc_mc_darma.png", "res://data/dialogues/sambo_greet.tres", Vector2(1310, 810), "down")
 	MapBuilderHelper.add_chest(ysorted, root, "DwChest1", &"dw_c1", &"crystal_sword", 1, 120, Vector2(560, 420))
 	MapBuilderHelper.add_chest(ysorted, root, "DwChest2", &"dw_c2", &"iron_chainmail", 1, 0, Vector2(1940, 1390))
 	MapBuilderHelper.add_chest(ysorted, root, "DwChest3", &"dw_c3", &"hi_potion", 2, 100, Vector2(340, 1510))
@@ -475,7 +475,7 @@ static func _build_river(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_scaled_prop(ysorted, root, "RiverRockCluster", "res://assets/art/ground/deco_water_rock_cluster.png", Vector2(880, 565), 0.65, Vector2(36, 18))
 	MapBuilderHelper.add_shrine(ysorted, root, Vector2(1180, 725))
 	MapBuilderHelper.add_fishing_spot(root, "RiverFish", Vector2(1060, 625))
-	MapBuilderHelper.add_npc(ysorted, root, "PakTeguh", "npc_teguh_name", "res://assets/art/npc/npc_sheet_joko.png", "res://data/dialogues/teguh_greet.tres", Vector2(1240, 770), "down", 14.0)
+	MapBuilderHelper.add_npc(ysorted, root, "PakTeguh", "npc_teguh_name", "res://assets/art/npc/npc_mc_joko.png", "res://data/dialogues/teguh_greet.tres", Vector2(1240, 770), "down", 14.0)
 	MapBuilderHelper.add_chest(ysorted, root, "RiverChest1", &"rv_1", &"hi_potion", 1, 90, Vector2(1840, 225))
 	MapBuilderHelper.add_chest(ysorted, root, "RiverChest2", &"rv_2", &"ether", 2, 70, Vector2(2280, 860))
 
@@ -523,7 +523,7 @@ static func _build_road(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_scaled_prop(ysorted, root, "RoadPalisadeBarricade", "res://assets/art/props/gpt_palisade_barricade.png", Vector2(360, 625), 0.52, Vector2(36, 14))
 
 	MapBuilderHelper.add_shrine(ysorted, root, Vector2(448, 1205))
-	MapBuilderHelper.add_npc(ysorted, root, "KusirKafilah", "npc_kafilah_name", "res://assets/art/npc/npc_sheet_darma.png", "res://data/dialogues/kafilah_greet.tres", Vector2(395, 1185), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "KusirKafilah", "npc_kafilah_name", "res://assets/art/npc/npc_mc_darma.png", "res://data/dialogues/kafilah_greet.tres", Vector2(395, 1185), "down")
 	MapBuilderHelper.add_chest(ysorted, root, "RoadChest1", &"road_c1", &"hi_potion", 1, 60, Vector2(355, 560))
 	MapBuilderHelper.add_chest(ysorted, root, "RoadChest2", &"road_c2", &"ether", 2, 50, Vector2(545, 230))
 	MapBuilderHelper.add_animal(ysorted, root, "RabbitRoad", "rabbit", Vector2(340, 1520))

@@ -46,6 +46,18 @@ NPC = {
     'ratih': dict(rambut=('abu', 'abutua'), baju=('krem', 'abu'), sepatu='abutua', rok='panjang', gaya='rompi', rompi='mawar', gaya_rambut='sanggul', mata='senyum', keriput=True, mulut='senyum'),
     'mom':   dict(rambut=('coklat', 'marun'), baju=('biru', 'birutua'), sepatu='marun', rok='panjang', celemek='krem', gaya_rambut='sanggul', mata='bulat', pipi=True, mulut='senyum', kulit='sawo'),
     'inn':   dict(rambut=('coklat', 'marun'), baju=('hijau', 'abutua'), sepatu='coklat', celemek='krem', celana='coklat', kerah='krem', gaya_rambut='belah', mata='titik', kumis=True, mulut='senyum'),
+    # NPC tambahan (kepala diturunkan dari gambar referensi pemilik, lihat npc_ref_heads.DERIVED)
+    'girl':  dict(rambut=('coklat', 'marun'), baju=('merah', 'marun'), sepatu='marun', celana='marun', kerah='krem'),
+    'guard_spear': dict(rambut=('abu', 'abutua'), baju=('biru', 'birutua'), sepatu='birutua', gaya='zirah', celana='birutua', sabuk='coklat'),
+    'darma': dict(rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', gaya='rompi', rompi='coklat', celana='marun', sabuk='coklat'),
+    'merchant': dict(rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', gaya='rompi', rompi='coklat', celemek='krem', rok='panjang'),
+    'joko':  dict(rambut=('abu', 'abutua'), baju=('abutua', 'hitam'), sepatu='coklat', celemek='coklat', celana='abutua'),
+    'elder': dict(rambut=('abu', 'abutua'), baju=('abu', 'abutua'), sepatu='abutua', rok='panjang', sabuk='coklat', kerah='krem'),
+    'wati':  dict(rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', celemek='coklat', rok='panjang'),
+    'hunter': dict(rambut=('coklat', 'marun'), baju=('hijau', 'abutua'), sepatu='coklat', gaya='rompi', rompi='coklat', celana='coklat', sabuk='marun'),
+    'gk4':   dict(rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', gaya='overall', aksen='abutua', celana='abutua'),
+    'gk2':   dict(rambut=('abu', 'abutua'), baju=('abutua', 'hitam'), sepatu='hitam', gaya='zirah', celana='marun', sabuk='coklat'),
+    'bayu':  dict(rambut=('coklat', 'marun'), baju=('merah', 'marun'), sepatu='coklat', gaya='rompi', rompi='krem', celana='abutua', sabuk='coklat'),
 }
 
 

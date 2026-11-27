@@ -503,9 +503,9 @@ func _test_benua_openworld_and_hud() -> void:
 		"res://assets/art/nature/deepwood_moss_island_1.png",
 		"res://assets/art/props/gpt_palisade_wall_long.png",
 		"res://assets/art/buildings/gpt_orc_gate.png",
-		"res://assets/art/npc/npc_sheet_hunter.png",
-		"res://assets/art/npc/npc_sheet_joko.png",
-		"res://assets/art/npc/npc_sheet_bayu.png",
+		"res://assets/art/npc/npc_mc_hunter.png",
+		"res://assets/art/npc/npc_mc_joko.png",
+		"res://assets/art/npc/npc_mc_bayu.png",
 	]:
 		_assert(ResourceLoader.exists(rp), "restored texture exists: %s" % rp)
 

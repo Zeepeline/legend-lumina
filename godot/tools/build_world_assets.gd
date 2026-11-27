@@ -451,10 +451,10 @@ func _build_village_map(ts: TileSet, buildings: Dictionary) -> void:
 
 	var market_items: Array[StringName] = [&"potion", &"hi_potion", &"ether", &"bread_mila", &"honey"]
 	var smith_items: Array[StringName] = [&"iron_sword", &"steel_sword", &"iron_spear", &"battle_axe", &"leather_vest", &"iron_chainmail"]
-	MapBuilderHelper.add_npc(ysorted, root, "TetuaBram", "npc_elder_name", "res://assets/art/npc/npc_sheet_elder.png", "res://data/dialogues/elder_intro.tres", Vector2(486, 145), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "TetuaBram", "npc_elder_name", "res://assets/art/npc/npc_mc_elder.png", "res://data/dialogues/elder_intro.tres", Vector2(486, 145), "down")
 	MapBuilderHelper.add_npc(ysorted, root, "PakDarto", "npc_farmer_name", "res://assets/art/npc/npc_sheet_farmer.png", "res://data/dialogues/farmer_greet.tres", Vector2(335, 238), "right", 16.0)
-	MapBuilderHelper.add_npc(ysorted, root, "Lina", "npc_lina_name", "res://assets/art/npc/npc_sheet_girl.png", "res://data/dialogues/villager_greet.tres", Vector2(382, 238), "left", 16.0)
-	MapBuilderHelper.add_npc(ysorted, root, "BuSari", "npc_merchant_name", "res://assets/art/npc/npc_sheet_merchant.png", "res://data/dialogues/merchant_greet.tres", Vector2(730, 245), "down", 0.0, &"village_market", "ui_shop_village", market_items)
+	MapBuilderHelper.add_npc(ysorted, root, "Lina", "npc_lina_name", "res://assets/art/npc/npc_mc_girl.png", "res://data/dialogues/villager_greet.tres", Vector2(382, 238), "left", 16.0)
+	MapBuilderHelper.add_npc(ysorted, root, "BuSari", "npc_merchant_name", "res://assets/art/npc/npc_mc_merchant.png", "res://data/dialogues/merchant_greet.tres", Vector2(730, 245), "down", 0.0, &"village_market", "ui_shop_village", market_items)
 	MapBuilderHelper.add_npc(ysorted, root, "PakBesi", "npc_smith_name", "res://assets/art/npc/npc_sheet_smith.png", "res://data/dialogues/smith_greet.tres", Vector2(856, 568), "left", 0.0, &"village_smith", "ui_shop_smith", smith_items)
 	MapBuilderHelper.add_npc(ysorted, root, "Penjaga", "npc_guard_name", "res://assets/art/npc/npc_sheet_guard.png", "res://data/dialogues/guard_greet.tres", Vector2(468, 650), "right")
 

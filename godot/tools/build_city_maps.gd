@@ -85,13 +85,13 @@ static func _build_kgate(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_chest(ysorted, root, "KGateChest1", &"kgate_c1", &"hi_potion", 1, 70, Vector2(1460, 720))
 
 	MapBuilderHelper.add_npc(ysorted, root, "KaptenBratasena", "npc_bratasena", "res://assets/art/npc/npc_sheet_gk1.png", "res://data/dialogues/bratasena_greet.tres", Vector2(410, 265), "down")
-	MapBuilderHelper.add_npc(ysorted, root, "PrajuritAnggara", "npc_anggara", "res://assets/art/npc/npc_sheet_gk2.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(330, 500), "down", 16.0)
+	MapBuilderHelper.add_npc(ysorted, root, "PrajuritAnggara", "npc_anggara", "res://assets/art/npc/npc_mc_gk2.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(330, 500), "down", 16.0)
 	MapBuilderHelper.add_npc(ysorted, root, "PemanahRaka", "npc_raka_archer", "res://assets/art/npc/npc_sheet_gk3.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(380, 590), "down")
-	MapBuilderHelper.add_npc(ysorted, root, "PakSardi", "npc_sardi", "res://assets/art/npc/npc_sheet_gk4.png", "res://data/dialogues/citizen_greet.tres", Vector2(536, 232), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "PakSardi", "npc_sardi", "res://assets/art/npc/npc_mc_gk4.png", "res://data/dialogues/citizen_greet.tres", Vector2(536, 232), "down")
 	MapBuilderHelper.add_npc(ysorted, root, "PerekrutBayaran", "npc_merc", "res://assets/art/npc/npc_sheet_merc1.png", "res://data/dialogues/merc_greet.tres", Vector2(1030, 668), "down")
 	MapBuilderHelper.add_npc(ysorted, root, "BudiKurir", "npc_courier", "res://assets/art/npc/npc_sheet_courier.png", "res://data/dialogues/courier_greet.tres", Vector2(1100, 705), "down", 12.0)
-	MapBuilderHelper.add_npc(ysorted, root, "PenjagaGerbangL", "npc_guard_name", "res://assets/art/npc/npc_guard_spear.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(1256, 492), "down")
-	MapBuilderHelper.add_npc(ysorted, root, "PenjagaGerbangR", "npc_guard_name", "res://assets/art/npc/npc_guard_spear.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(1344, 492), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "PenjagaGerbangL", "npc_guard_name", "res://assets/art/npc/npc_mc_guard_spear.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(1256, 492), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "PenjagaGerbangR", "npc_guard_name", "res://assets/art/npc/npc_mc_guard_spear.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(1344, 492), "down")
 
 	MapBuilderHelper.add_spawn(spawns, root, "Default", &"default", Vector2(1300, 740))
 	MapBuilderHelper.add_spawn(spawns, root, "FromRoad", &"from_road", Vector2(1300, 825))
@@ -150,9 +150,9 @@ static func _build_kpasar(ts: TileSet, buildings: Dictionary) -> void:
 	var city_smith_items: Array[StringName] = [&"steel_sword", &"crystal_sword", &"iron_spear", &"battle_axe", &"iron_chainmail", &"stone_armor"]
 	MapBuilderHelper.add_npc(ysorted, root, "PedagangKota", "npc_city_merchant", "res://assets/art/npc/npc_sheet_ps1.png", "res://data/dialogues/city_market_greet.tres", Vector2(700, 590), "down", 0.0, &"city_market", "ui_shop_city_market", city_market_items)
 	MapBuilderHelper.add_npc(ysorted, root, "PandaiBesiKota", "npc_city_smith", "res://assets/art/npc/npc_sheet_smith.png", "res://data/dialogues/city_smith_greet.tres", Vector2(940, 590), "down", 0.0, &"city_smith", "ui_shop_city_smith", city_smith_items)
-	MapBuilderHelper.add_npc(ysorted, root, "JuruLelangBastian", "npc_bastian", "res://assets/art/npc/npc_sheet_elder.png", "res://data/dialogues/bastian_greet.tres", Vector2(740, 390), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "JuruLelangBastian", "npc_bastian", "res://assets/art/npc/npc_mc_elder.png", "res://data/dialogues/bastian_greet.tres", Vector2(740, 390), "down")
 	MapBuilderHelper.add_npc(ysorted, root, "WargaPasar", "npc_citizen", "res://assets/art/npc/npc_sheet_ps2.png", "res://data/dialogues/citizen_greet.tres", Vector2(660, 760), "down", 18.0)
-	MapBuilderHelper.add_npc(ysorted, root, "PenjagaPasar", "npc_guard_name", "res://assets/art/npc/npc_guard_spear.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(1470, 645), "left")
+	MapBuilderHelper.add_npc(ysorted, root, "PenjagaPasar", "npc_guard_name", "res://assets/art/npc/npc_mc_guard_spear.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(1470, 645), "left")
 
 	MapBuilderHelper.add_spawn(spawns, root, "Default", &"default", Vector2(800, 730))
 	MapBuilderHelper.add_spawn(spawns, root, "FromKGate", &"from_kgate", Vector2(800, 1138))
@@ -204,7 +204,7 @@ static func _build_kpermukiman(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_chest(ysorted, root, "KPermChest1", &"kperm_c1", &"hi_potion", 2, 85, Vector2(1240, 500))
 	MapBuilderHelper.add_npc(ysorted, root, "PetugasDewan", "npc_dewan", "res://assets/art/npc/npc_sheet_pm1.png", "res://data/dialogues/dewan_greet.tres", Vector2(688, 412), "down")
 	MapBuilderHelper.add_npc(ysorted, root, "WargaPermukiman", "npc_citizen", "res://assets/art/npc/npc_sheet_pm2.png", "res://data/dialogues/citizen_greet.tres", Vector2(420, 540), "down", 18.0)
-	MapBuilderHelper.add_npc(ysorted, root, "PenjagaPerm", "npc_guard_name", "res://assets/art/npc/npc_guard_spear.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(160, 540), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "PenjagaPerm", "npc_guard_name", "res://assets/art/npc/npc_mc_guard_spear.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(160, 540), "down")
 
 	MapBuilderHelper.add_spawn(spawns, root, "Default", &"default", Vector2(688, 560))
 	MapBuilderHelper.add_spawn(spawns, root, "FromKPasar", &"from_kpasar", Vector2(62, 500))
@@ -263,7 +263,7 @@ static func _build_kakademi(ts: TileSet, buildings: Dictionary) -> void:
 
 	MapBuilderHelper.add_npc(ysorted, root, "GuruTuaAkademi", "npc_acad_guru", "res://assets/art/npc/npc_sheet_ac1.png", "res://data/dialogues/acad_guru_greet.tres", Vector2(635, 580), "down", 0.0, &"", "", [], &"holy", 150)
 	MapBuilderHelper.add_npc(ysorted, root, "MuridAkademi", "npc_acad_student", "res://assets/art/npc/npc_sheet_ac2.png", "res://data/dialogues/acad_student_greet.tres", Vector2(980, 680), "down", 18.0)
-	MapBuilderHelper.add_npc(ysorted, root, "PenjagaAkademi", "npc_guard_name", "res://assets/art/npc/npc_guard_spear.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(640, 700), "down")
+	MapBuilderHelper.add_npc(ysorted, root, "PenjagaAkademi", "npc_guard_name", "res://assets/art/npc/npc_mc_guard_spear.png", "res://data/dialogues/guard_gate_greet.tres", Vector2(640, 700), "down")
 
 	MapBuilderHelper.add_spawn(spawns, root, "Default", &"default", Vector2(704, 795))
 	MapBuilderHelper.add_spawn(spawns, root, "FromKPasar", &"from_kpasar", Vector2(704, 930))
@@ -307,7 +307,7 @@ static func _build_kbawah(ts: TileSet, buildings: Dictionary) -> void:
 	var night_items: Array[StringName] = [&"hi_potion", &"ether", &"grilled_fish", &"steel_sword", &"iron_chainmail"]
 	MapBuilderHelper.add_npc(ysorted, root, "GuruLestari", "npc_lestari", "res://assets/art/npc/npc_lestari.png", "res://data/dialogues/lestari_greet.tres", Vector2(560, 600), "down", 0.0, &"", "", [], &"heal", 0)
 	MapBuilderHelper.add_npc(ysorted, root, "PengawasGelanggang", "npc_arena_master", "res://assets/art/npc/npc_sheet_bw1.png", "res://data/dialogues/arena_master_greet.tres", Vector2(655, 700), "down")
-	MapBuilderHelper.add_npc(ysorted, root, "PedagangMalam", "npc_night_merchant", "res://assets/art/npc/npc_sheet_merchant.png", "res://data/dialogues/night_merchant_greet.tres", Vector2(500, 640), "down", 0.0, &"night_market", "ui_shop_night", night_items)
+	MapBuilderHelper.add_npc(ysorted, root, "PedagangMalam", "npc_night_merchant", "res://assets/art/npc/npc_mc_merchant.png", "res://data/dialogues/night_merchant_greet.tres", Vector2(500, 640), "down", 0.0, &"night_market", "ui_shop_night", night_items)
 	MapBuilderHelper.add_npc(ysorted, root, "WargaBawah", "npc_citizen", "res://assets/art/npc/npc_sheet_farmer.png", "res://data/dialogues/citizen_greet.tres", Vector2(320, 560), "down", 18.0)
 
 	MapBuilderHelper.add_spawn(spawns, root, "Default", &"default", Vector2(600, 560))

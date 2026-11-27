@@ -20,14 +20,18 @@ func _process(_d: float) -> bool:
 		return false
 	if frame == 120:
 		for n: Node in root.find_children("*", "", true, false):
-			if n.get("sprite_sheet") is Texture2D and str((n.get("sprite_sheet") as Texture2D).resource_path).contains("npc_mc_"):
+			var rp: String = str((n.get("sprite_sheet") as Texture2D).resource_path) if n.get("sprite_sheet") is Texture2D else ""
+			if rp.contains("npc_mc_") and (OS.get_environment("NPC_FILTER") == "" or rp.get_file().get_basename().trim_prefix("npc_mc_") in OS.get_environment("NPC_FILTER").split(",")):
 				targets.append(n)
 		printerr("NPC mc: %d dari %d node" % [targets.size(), root.find_children("*", "", true, false).size()])
 		return false
 	if frame < 121: return false
-	if idx >= mini(targets.size(), 12): return true
+	if idx >= mini(targets.size(), 40): return true
+	if not is_instance_valid(targets[idx]):
+		idx += 1; wait = 0
+		return false
 	var t: Node2D = targets[idx] as Node2D
-	if wait == 0 and is_instance_valid(t):
+	if wait == 0:
 		pl.global_position = t.global_position + Vector2(-40, 20)
 	wait += 1
 	if wait == 30:

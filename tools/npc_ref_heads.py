@@ -173,6 +173,56 @@ def skin_tone(d):
     return tuple(base), tuple(shade)
 
 
+# NPC yang tidak ada di gambar referensi: kepala diturunkan dari kepala referensi lain, warna rambut/kulit diganti.
+# id: (sumber, ramp rambut terang→gelap atau None, kulit (terang, bayangan) atau None)
+DERIVED = {
+    'girl': ('_mc', None, None),                                                    # gadis berkonde di pojok gambar
+    'guard_spear': ('gk1', None, ((214, 160, 112), (170, 120, 84))),
+    'darma': ('merc1', ((120, 78, 50), (92, 58, 40), (64, 40, 30), (40, 26, 22)), ((176, 118, 78), (138, 88, 58))),
+    'merchant': ('tp1', ((150, 98, 62), (122, 76, 50), (92, 56, 40), (60, 36, 30)), None),
+    'joko': ('pm2', ((150, 146, 142), (120, 116, 114), (90, 88, 92), (60, 58, 66)), ((176, 118, 78), (138, 88, 58))),
+    'elder': ('smith', ((206, 204, 200), (170, 168, 166), (130, 128, 132), (90, 88, 96)), None),
+    'wati': ('nila', ((122, 54, 40), (98, 42, 34), (74, 32, 30), (48, 22, 24)), None),
+    'hunter': ('ac1', ((120, 60, 40), (96, 46, 34), (72, 34, 30), (46, 24, 24)), None),
+    'gk4': ('ar1', ((196, 150, 90), (160, 116, 70), (120, 84, 56), (80, 56, 40)), ((214, 160, 112), (170, 120, 84))),
+    'gk2': ('guard', None, ((176, 118, 78), (138, 88, 58))),
+    'bayu': ('in1', ((64, 44, 36), (52, 36, 30), (40, 28, 26), (28, 20, 20)), ((176, 118, 78), (138, 88, 58))),
+}
+
+
+TOL = {'wati': 0.6}
+
+
+def recolor(d, hair_ramp, skin, tol=0.2):
+    out = d.copy()
+    m = d[..., 3] > 0
+    sk = skin_mask(d)
+    rgb = d[..., :3].astype(int)
+    lum = rgb.sum(-1)
+    if hair_ramp is not None:
+        hair = m & ~sk & (lum > 110)
+        # hanya warna rambut: warna yang paling banyak di bagian atas kepala & warna sejenisnya
+        top = rgb[CELL_Y:CELL_Y + 8][hair[CELL_Y:CELL_Y + 8]]
+        if len(top):
+            ref = np.median(top, 0)
+            hue = lambda c: np.array(c) / max(1, sum(c))
+            hr = hue(ref)
+            sel = hair & (np.abs(rgb / np.maximum(1, lum)[..., None] - hr).sum(-1) < tol)
+            ls = np.sort(lum[sel])
+            if len(ls):
+                q = np.quantile(ls, [0.25, 0.5, 0.75])
+                for y, x in zip(*np.nonzero(sel)):
+                    i = 0 if lum[y, x] >= q[2] else 1 if lum[y, x] >= q[1] else 2 if lum[y, x] >= q[0] else 3
+                    out[y, x, :3] = hair_ramp[i]
+    if skin is not None:
+        ls = np.sort(lum[sk])
+        if len(ls):
+            mid = np.median(ls)
+            for y, x in zip(*np.nonzero(sk)):
+                out[y, x, :3] = skin[0] if lum[y, x] >= mid else skin[1]
+    return out
+
+
 def main():
     R = small()
     os.makedirs(OUT, exist_ok=True)
@@ -186,6 +236,15 @@ def main():
         Image.fromarray(d).save(f'{OUT}/{nid}_d.png')
         Image.fromarray(back(d)).save(f'{OUT}/{nid}_u.png')
         tones[nid] = skin_tone(d)
+    for nid, (src, hr, skn) in DERIVED.items():
+        slot = ORDER.index(src)
+        d = head(slot, R)
+        if src in LONG_HAIR:
+            d = long_extra(slot, R, d)
+        d = recolor(d, hr, skn, TOL.get(nid, 0.2))
+        Image.fromarray(d).save(f'{OUT}/{nid}_d.png')
+        Image.fromarray(back(d)).save(f'{OUT}/{nid}_u.png')
+        tones[nid] = skn if skn else skin_tone(d)
     with open(f'{OUT}/kulit.txt', 'w') as f:
         for k, v in tones.items():
             if v:
