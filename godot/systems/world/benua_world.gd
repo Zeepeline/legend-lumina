@@ -3,7 +3,7 @@ extends Node2D
 ## Pengelola dunia terbuka Benua Lumina: menjahit 14 wilayah luar ruangan dengan chunk streaming & y-sort lintas wilayah.
 
 const PLAYER_SCENE: PackedScene = preload("res://systems/player/player.tscn")
-const WILD_GRASS_TEX: Texture2D = preload("res://assets/art/ground/gnd_grass_dark.png")
+const WILD_GRASS_TEX: Texture2D = preload("res://assets/art/ground/gnd_wild_sprout.png")
 const OUTDOOR_CAMERA_ZOOM: float = 1.25
 const STREAM_LOAD_DIST: float = 900.0
 const STREAM_UNLOAD_DIST: float = 1550.0
@@ -12,14 +12,9 @@ const STREAM_CHECK_INTERVAL: float = 0.25
 
 class WildFillerLayer extends Node2D:
 	func _draw() -> void:
+		# Luar wilayah: rumput Sprout kotak-kotak yang sama dengan tanah benua, sedikit lebih gelap (tidak bisa dimasuki).
 		var bounds: Rect2i = WorldLayout.continent_bounds().grow(900)
-		draw_rect(Rect2(bounds), Color("#1d3419"))
-		draw_texture_rect(WILD_GRASS_TEX, Rect2(bounds), true, Color(0.45, 0.58, 0.42, 0.90))
-		for k: Variant in WorldLayout.REGIONS.keys():
-			var reg: Dictionary = WorldLayout.REGIONS[k]
-			var r: Rect2i = reg["rect"]
-			var c: Color = reg.get("color", Color("#2a3b2a"))
-			draw_rect(Rect2(r), c.darkened(0.28))
+		draw_texture_rect(WILD_GRASS_TEX, Rect2(bounds), true, Color(0.95, 0.97, 0.95, 1.0))
 
 
 var _wild_filler: WildFillerLayer = null
@@ -212,6 +207,11 @@ func _enforce_ground_z_order(chunk: Node2D) -> void:
 		var layer: CanvasItem = chunk.get_node_or_null(str(lname)) as CanvasItem
 		if layer != null:
 			layer.z_index = int(z_map[lname])
+	# Air sudah tergambar di gambar tanah (tepi pasir & kedalaman). Petak air TileMap hanya dipakai untuk tabrakan:
+	# dibuat tak terlihat agar tidak menimpa gambar dengan kotak biru polos yang tidak pas.
+	var water: CanvasItem = chunk.get_node_or_null("GroundWater") as CanvasItem
+	if water != null:
+		water.self_modulate = Color(1.0, 1.0, 1.0, 0.0)
 
 
 func _unload_region(rid: StringName) -> void:
