@@ -21,30 +21,30 @@ K = {'hitam': (6, 1, 5), 'marun': (90, 24, 33), 'merah': (177, 39, 26), 'zaitun'
 #   celana, kerah, sabuk, celemek = warna;  rok = 'pendek' | 'panjang' (gaun/jubah)
 #   topi = (warna, lebar pinggir);  helm = warna tudung yang menutup rambut
 NPC = {
-    'ac1':   dict(rambut=('birutua', 'hitam'), baju=('biru', 'birutua'), sepatu='birutua', rok='panjang', gaya='selempang', aksen='zaitun', kerah='krem'),
-    'ac2':   dict(rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', gaya='rompi', rompi='biru', celana='birutua', kerah='krem'),
-    'ar1':   dict(rambut=('krem', 'abu'), baju=('coklat', 'marun'), sepatu='marun', rok='panjang', gaya='kancing', kerah='krem', sabuk='marun'),
-    'bw1':   dict(rambut=('birutua', 'hitam'), baju=('merah', 'marun'), sepatu='coklat', gaya='selempang', aksen='krem', celana='coklat'),
-    'courier': dict(rambut=('coklat', 'marun'), baju=('zaitun', 'hijau'), sepatu='coklat', topi=('biru', 1), gaya='selempang', aksen='coklat', celana='coklat'),
+    'ac1':   dict(gaya_rambut='panjang', rambut=('birutua', 'hitam'), baju=('biru', 'birutua'), sepatu='birutua', rok='panjang', gaya='selempang', aksen='zaitun', kerah='krem'),
+    'ac2':   dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', gaya='rompi', rompi='biru', celana='birutua', kerah='krem'),
+    'ar1':   dict(gaya_rambut='sanggul', rambut=('krem', 'abu'), baju=('coklat', 'marun'), sepatu='marun', rok='panjang', gaya='kancing', kerah='krem', sabuk='marun'),
+    'bw1':   dict(gaya_rambut='pendek', rambut=('birutua', 'hitam'), baju=('merah', 'marun'), sepatu='coklat', gaya='selempang', aksen='krem', celana='coklat'),
+    'courier': dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('zaitun', 'hijau'), sepatu='coklat', topi=('biru', 1), gaya='selempang', aksen='coklat', celana='coklat'),
     'gk1':   dict(rambut=('abu', 'abutua'), baju=('abu', 'abutua'), sepatu='abutua', helm='abu', gaya='zirah', celana='abutua', sabuk='coklat'),
-    'gk3':   dict(rambut=('zaitun', 'hijau'), baju=('hijau', 'abutua'), sepatu='coklat', gaya='rompi', rompi='coklat', celana='coklat'),
+    'gk3':   dict(gaya_rambut='pendek', rambut=('zaitun', 'hijau'), baju=('hijau', 'abutua'), sepatu='coklat', gaya='rompi', rompi='coklat', celana='coklat'),
     'guard': dict(rambut=('abu', 'abutua'), baju=('abu', 'abutua'), sepatu='abutua', helm='abu', gaya='zirah', kerah='merah', celana='merah', sabuk='coklat'),
-    'in1':   dict(rambut=('coklat', 'marun'), baju=('krem', 'coklat'), sepatu='coklat', gaya='kancing', celana='coklat', sabuk='coklat'),
-    'merc1': dict(rambut=('oranye', 'merah'), baju=('abutua', 'hitam'), sepatu='hitam', gaya='rompi', rompi='coklat', celana='abutua', sabuk='coklat'),
-    'pm1':   dict(rambut=('coklat', 'marun'), baju=('biru', 'birutua'), sepatu='coklat', topi=('biru', 2), gaya='kancing', kerah='krem', celana='birutua', sabuk='coklat'),
-    'pm2':   dict(rambut=('abu', 'abutua'), baju=('krem', 'coklat'), sepatu='coklat', gaya='rompi', rompi='hijau', celana='coklat'),
-    'ps1':   dict(rambut=('kulit', 'oranye'), baju=('mawar', 'marun'), sepatu='marun', rok='pendek', kerah='krem', sabuk='krem'),
-    'ps2':   dict(rambut=('abu', 'abutua'), baju=('coklat', 'marun'), sepatu='coklat', topi=('kulit', 3), celemek='krem', celana='coklat'),
-    'smith': dict(rambut=('birutua', 'hitam'), baju=('krem', 'coklat'), sepatu='hitam', celemek='coklat', celana='abutua'),
-    'tp1':   dict(rambut=('hitam', 'hitam'), baju=('krem', 'abu'), sepatu='coklat', rok='panjang', gaya='selempang', aksen='merah'),
-    'farmer': dict(rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', topi=('kulit', 3), gaya='overall', aksen='biru', celana='biru'),
-    'gun':   dict(rambut=('coklat', 'marun'), baju=('coklat', 'marun'), sepatu='coklat', helm='kulit', gaya='rompi', rompi='abutua', celana='abutua', sabuk='hitam'),
-    'hermit': dict(rambut=('mawar', 'marun'), baju=('mawar', 'marun'), sepatu='marun', rok='panjang', helm='mawar', sabuk='krem'),
-    'lestari': dict(rambut=('oranye', 'merah'), baju=('birutua', 'hitam'), sepatu='hitam', rok='panjang', kerah='krem', gaya='kancing'),
+    'in1':   dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('krem', 'coklat'), sepatu='coklat', gaya='kancing', celana='coklat', sabuk='coklat'),
+    'merc1': dict(gaya_rambut='pendek', rambut=('oranye', 'merah'), baju=('abutua', 'hitam'), sepatu='hitam', gaya='rompi', rompi='coklat', celana='abutua', sabuk='coklat'),
+    'pm1':   dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('biru', 'birutua'), sepatu='coklat', topi=('biru', 2), gaya='kancing', kerah='krem', celana='birutua', sabuk='coklat'),
+    'pm2':   dict(jenggot=True, gaya_rambut='pendek', rambut=('abu', 'abutua'), baju=('krem', 'coklat'), sepatu='coklat', gaya='rompi', rompi='hijau', celana='coklat'),
+    'ps1':   dict(gaya_rambut='panjang', rambut=('kulit', 'oranye'), baju=('mawar', 'marun'), sepatu='marun', rok='pendek', kerah='krem', sabuk='krem'),
+    'ps2':   dict(jenggot=True, gaya_rambut='pendek', rambut=('abu', 'abutua'), baju=('coklat', 'marun'), sepatu='coklat', topi=('kulit', 3), celemek='krem', celana='coklat'),
+    'smith': dict(jenggot=True, gaya_rambut='pendek', rambut=('birutua', 'hitam'), baju=('krem', 'coklat'), sepatu='hitam', celemek='coklat', celana='abutua'),
+    'tp1':   dict(gaya_rambut='panjang', rambut=('hitam', 'hitam'), baju=('krem', 'abu'), sepatu='coklat', rok='panjang', gaya='selempang', aksen='merah'),
+    'farmer': dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('krem', 'abu'), sepatu='coklat', topi=('kulit', 3), gaya='overall', aksen='biru', celana='biru'),
+    'gun':   dict(jenggot=True, rambut=('coklat', 'marun'), baju=('coklat', 'marun'), sepatu='coklat', helm='kulit', gaya='rompi', rompi='abutua', celana='abutua', sabuk='hitam'),
+    'hermit': dict(jenggot=True, rambut=('mawar', 'marun'), baju=('mawar', 'marun'), sepatu='marun', rok='panjang', helm='mawar', sabuk='krem'),
+    'lestari': dict(gaya_rambut='panjang', rambut=('oranye', 'merah'), baju=('birutua', 'hitam'), sepatu='hitam', rok='panjang', kerah='krem', gaya='kancing'),
     'nila':  dict(rambut=('coklat', 'marun'), baju=('oranye', 'coklat'), sepatu='coklat', rok='pendek', helm='coklat', sabuk='coklat'),
-    'ratih': dict(rambut=('abu', 'abutua'), baju=('krem', 'abu'), sepatu='abutua', rok='panjang', gaya='rompi', rompi='mawar'),
-    'mom':   dict(rambut=('coklat', 'marun'), baju=('biru', 'birutua'), sepatu='marun', rok='panjang', celemek='krem'),
-    'inn':   dict(rambut=('coklat', 'marun'), baju=('hijau', 'abutua'), sepatu='coklat', celemek='krem', celana='coklat', kerah='krem'),
+    'ratih': dict(gaya_rambut='sanggul', rambut=('abu', 'abutua'), baju=('krem', 'abu'), sepatu='abutua', rok='panjang', gaya='rompi', rompi='mawar'),
+    'mom':   dict(gaya_rambut='sanggul', rambut=('coklat', 'marun'), baju=('biru', 'birutua'), sepatu='marun', rok='panjang', celemek='krem'),
+    'inn':   dict(gaya_rambut='pendek', rambut=('coklat', 'marun'), baju=('hijau', 'abutua'), sepatu='coklat', celemek='krem', celana='coklat', kerah='krem'),
 }
 
 
@@ -87,6 +87,8 @@ def recolor(a, o, facing):
     b[eq(HAIR_L) & head] = (*hl, 255)
     b[(eq(HAIR_D) | eq(HAIR_S1) | eq(HAIR_S2)) & head] = (*hd, 255)
     paint_body(a, b, o, facing, top, neck, bot)
+    chin(a, b, facing, neck)
+    hair_style(a, b, o, facing, top, neck, (hl, hd))
     hm = o.get('helm')
     if hm:   # tudung/helm: rambut di atas mata jadi warna helm
         eyes = [y for y in range(top, neck) if ((rgb[y] == (6, 1, 5)).all(-1) & skin[y].any()).any()]
@@ -146,9 +148,9 @@ def paint_body(a, b, o, facing, top, neck, bot):
     T = al & rows & ~hand
     edge = T & nb4(~al)
     F = eq((6, 1, 5)); E = eq((84, 25, 32)); J = eq((163, 41, 28))
-    line = F & nb4(J | E) & ~edge
+    line = F & nb4(J | (E & (yy > neck + 4))) & ~edge
     b[T] = main
-    b[T & E] = shade
+    b[T & E & (yy > neck + 4)] = shade   # syal tokoh utama (baris leher) tidak dipertahankan
     b[T & line] = BLK
     b[edge] = BLK
     inner = T & ~edge
@@ -158,7 +160,7 @@ def paint_body(a, b, o, facing, top, neck, bot):
         b[m & inner] = col
     # kerah
     if o.get('kerah'):
-        band((yy >= neck - 1) & (yy <= neck), C(o['kerah']))
+        band((yy == neck + 2) & (abs(xx - cx) <= 4), C(o['kerah']))
     # badan berbagai potongan
     st = o.get('gaya', 'kemeja')
     if st == 'rompi':
@@ -187,8 +189,8 @@ def paint_body(a, b, o, facing, top, neck, bot):
             for y in range(neck + 3, hip + 4):
                 xr = np.nonzero(al[y])[0]
                 if len(xr):
-                    x0 = xr[0]   # menghadap kiri: depan = sisi kiri
-                    m[y, x0 + 1:x0 + 4] = True
+                    x1 = xr[-1]   # menghadap kanan: depan = sisi kanan
+                    m[y, x1 - 3:x1] = True
         b[m & ~hand] = C(ap)
         b[m & ~hand & nb4(~m) & (abs(xx - cx) <= 4 if face == 'd' else True) & (yy > neck + 3)] = np.where(face == 'd', 1, 1) * BLK
     # sabuk
@@ -219,6 +221,135 @@ def paint_body(a, b, o, facing, top, neck, bot):
     b[boots & (yy >= bot - 5)] = C(o['sepatu'])
     return hip
 
+
+def chin(a, b, facing, neck):
+    """Buang syal penutup mulut tokoh utama: dagu & leher terlihat, baju mulai di bawahnya."""
+    if facing == 'u':
+        return
+    BLK = (6, 1, 5, 255); L = (233, 185, 110, 255); Kc = (183, 115, 79, 255)
+    rgb = a[..., :3]; al = a[..., 3] > 0
+    skin = ((rgb == (233, 185, 110)).all(-1) | (rgb == (183, 115, 79)).all(-1)) & al
+    ref = None
+    for y in range(neck - 2, neck - 6, -1):
+        xs = np.nonzero(skin[y])[0]
+        if len(xs) >= 4:
+            ref = (xs[0], xs[-1]); break
+    if ref is None:
+        return
+    x0, x1 = ref
+    if facing == 's':      # tampak samping menghadap kanan: dagu di depan (kanan)
+        x0 = max(x0, x1 - 6)
+    for y in range(neck - 2, neck):
+        for x in range(x0, x1 + 1):
+            if not (b[y, x, :3] == (6, 1, 5)).all() or y == neck - 1:
+                b[y, x] = L
+    b[neck - 1, x1] = Kc
+    b[neck, x0 + 1:x1] = L
+    b[neck, x1 - 1] = Kc
+    b[neck, x0] = BLK; b[neck, x1] = BLK
+    nc = (x0 + x1) // 2 if facing == 'd' else x1 - 3
+    b[neck + 1, x0:x1 + 1] = BLK
+    b[neck + 1, nc - 1:nc + 2] = Kc
+    b[neck - 2:neck + 1, x1 + 1] = BLK
+    if facing == 'd':
+        b[neck - 2:neck + 1, x0 - 1] = BLK
+
+
+def hair_style(a, b, o, facing, top, neck, cols):
+    """Gaya rambut per NPC: pendek | panjang | sanggul | botak, + jenggot. Wajah tetap wajah tokoh utama."""
+    BLK = (6, 1, 5, 255)
+    hl, hd = (np.array((*c, 255), np.uint8) for c in cols)
+    rgb = a[..., :3]; al = a[..., 3] > 0
+    H_, W_ = al.shape
+    skin = ((rgb == (233, 185, 110)).all(-1) | (rgb == (183, 115, 79)).all(-1)) & al
+    fr = [y for y in range(top, neck) if skin[y].sum() >= 3]
+    if not fr:
+        return
+    eye = fr[0] + 4
+    hx = np.nonzero(al[top:neck].any(0))[0]
+    x0, x1 = hx[0], hx[-1]
+    cx = (x0 + x1) // 2
+    st = o.get('gaya_rambut', 'biasa')
+
+    def put(y, x, c):
+        if 0 <= y < H_ and 0 <= x < W_:
+            b[y, x] = c
+
+    def outline_new(m):
+        p = np.pad(m, 1)
+        ring = (p[:-2, 1:-1] | p[2:, 1:-1] | p[1:-1, :-2] | p[1:-1, 2:]) & ~m & (b[..., 3] == 0)
+        b[ring] = BLK
+
+    if st == 'pendek':   # potong ujung jambul & helai samping
+        b[top:top + 2] = 0
+        for y in range(top + 2, eye + 6):
+            xs = np.nonzero(b[y, :, 3] > 0)[0]
+            if len(xs):
+                if y < eye:
+                    b[y, xs[0]] = BLK; b[y, xs[-1]] = BLK
+        row = np.nonzero(b[top + 2, :, 3] > 0)[0]
+        if len(row):
+            b[top + 2, row[0]:row[-1] + 1] = BLK
+        side = ~skin & (b[..., 3] > 0) & (np.arange(H_)[:, None] >= eye) & (np.arange(H_)[:, None] < neck)
+        hair = side & ~((b[..., :3] == (6, 1, 5)).all(-1))
+        far = np.zeros_like(hair)
+        if facing != 's':
+            far[:, :x0 + 3] = True
+        hair &= far & ((np.array(b[..., :3]) == hl[:3]).all(-1) | (b[..., :3] == hd[:3]).all(-1))
+        b[hair] = 0
+        outline_new((b[..., 3] > 0) & ~((b[..., :3] == (6, 1, 5)).all(-1)))
+    elif st == 'panjang':   # rambut terurai sampai bahu/punggung
+        y1 = neck + 8
+        m = np.zeros((H_, W_), bool)
+        if facing == 'u':
+            m[eye:y1, x0 + 1:x1] = True
+        elif facing == 'd':
+            m[eye:y1, x0:x0 + 3] = True; m[eye:y1, x1 - 2:x1 + 1] = True
+        else:
+            m[eye:y1, x0:x0 + 5] = True
+        for y in range(eye, y1):
+            for x in np.nonzero(m[y])[0]:
+                b[y, x] = hd if (x in (x0 + 1, x1 - 1) or y > y1 - 3) else hl
+        outline_new(m)
+        b[y1, :][m[y1 - 1]] = BLK
+        for y in range(eye, y1):
+            xs = np.nonzero(m[y])[0]
+            if len(xs):
+                b[y, xs[0]] = BLK if facing != 'u' or y > neck else b[y, xs[0]]
+                b[y, xs[-1]] = BLK
+    elif st == 'sanggul':   # sanggul bulat di puncak / belakang kepala
+        cy, bx = (top + 1, cx) if facing != 's' else (top + 4, x0 + 1)
+        m = np.zeros((H_, W_), bool)
+        for y in range(cy - 3, cy + 2):
+            for x in range(bx - 3, bx + 4):
+                if ((x - bx) / 3.4) ** 2 + ((y - cy + 0.5) / 2.6) ** 2 <= 1:
+                    m[y, x] = True
+        m &= ~(b[..., 3] > 0) | (np.arange(H_)[:, None] < cy + 1)
+        b[m] = hl
+        b[m & (np.arange(H_)[:, None] >= cy)] = hd
+        outline_new(m)
+    elif st == 'botak':   # puncak botak, rambut tipis di samping
+        hair = (b[..., 3] > 0) & (np.arange(H_)[:, None] < eye - 1) & ~((b[..., :3] == (6, 1, 5)).all(-1))
+        b[hair] = (233, 185, 110, 255)
+        b[hair & (np.roll(~hair, 1, 0))] = (233, 185, 110, 255)
+        b[hair & ((np.arange(W_)[None, :] <= x0 + 2) | (np.arange(W_)[None, :] >= x1 - 2))] = hl
+        b[top:top + 2] = 0
+        row = np.nonzero(b[top + 2, :, 3] > 0)[0]
+        if len(row):
+            b[top + 2, row[0]:row[-1] + 1] = BLK
+    if o.get('jenggot') and facing != 'u':   # jenggot di dagu & pipi bawah
+        for y in range(neck - 2, neck + 2):
+            xs = np.nonzero((b[y, :, :3] == (233, 185, 110)).all(-1) | (b[y, :, :3] == (183, 115, 79)).all(-1))[0]
+            xs = xs[(xs >= x0) & (xs <= x1)]
+            if len(xs):
+                b[y, xs[0]:xs[-1] + 1] = hl if y < neck else hd
+                put(y, xs[0] - 1, BLK); put(y, xs[-1] + 1, BLK)
+        y = neck + 2
+        xs = np.nonzero(b[neck + 1, :, 3] > 0)[0]
+        mid = cx if facing == 'd' else x1 - 4
+        b[y, mid - 2:mid + 3] = hd
+        b[y + 1, mid - 1:mid + 2] = BLK
+        b[y, mid - 3] = BLK; b[y, mid + 3] = BLK
 
 def build(nid, spec, A):
     out = np.zeros((4 * FH, 8 * FW, 4), np.uint8)
