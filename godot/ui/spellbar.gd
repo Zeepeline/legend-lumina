@@ -1,10 +1,22 @@
 class_name SpellBar
 extends Control
-## Bilah 5 slot jurus berbentuk berlian miring 45 derajat bergaya web versi HD (gradasi, cahaya emas, ikon vektor tajam).
+## Bilah 5 slot jurus bergaya kayu & perkamen: kotak perkamen berbingkai, ikon piksel, slot aktif berbingkai emas,
+## jeda tunggu berupa tirai gelap yang turun, biaya MP di pojok kanan bawah.
 
 const SLOT_COUNT: int = 5
-const SLOT_STEP: float = 28.0
+const SLOT_STEP: float = 27.0
+const SLOT_SIZE: float = 24.0
 const DIAMOND_R: float = 11.0
+const ICONS: Dictionary = {
+	&"fire": preload("res://assets/art/ui/ic_fire.png"),
+	&"venom": preload("res://assets/art/ui/ic_venom.png"),
+	&"nova": preload("res://assets/art/ui/ic_nova.png"),
+	&"heal": preload("res://assets/art/ui/ic_heal.png"),
+	&"holy": preload("res://assets/art/ui/ic_holy.png"),
+}
+const LOCK_TEX: Texture2D = preload("res://assets/art/ui/ic_lock.png")
+const SLOT_TEX: Texture2D = preload("res://assets/art/ui/slot.png")
+const SLOT_SEL_TEX: Texture2D = preload("res://assets/art/ui/slot_sel.png")
 const MAX_COOLDOWN: float = 0.50
 
 var _cooldown_ratio: float = 0.0
@@ -13,10 +25,14 @@ var _active_id: StringName = &"fire"
 var _mp_cur: int = 30
 var _learned: Array[StringName] = [&"fire"]
 var _touch_offset: bool = false
+var _sb: StyleBoxTexture = null
+var _sb_sel: StyleBoxTexture = null
 
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(148.0, 34.0)
+	custom_minimum_size = Vector2(136.0, 27.0)
+	_sb = _make_sb(SLOT_TEX)
+	_sb_sel = _make_sb(SLOT_SEL_TEX)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	if EventsBus.ref != null:
 		EventsBus.ref.player_stats_changed.connect(refresh_from_state)
@@ -55,14 +71,14 @@ func refresh_from_state() -> void:
 
 func _on_touch_toggled(enabled: bool) -> void:
 	_touch_offset = enabled
-	offset_top = -56.0 if enabled else -36.0
+	offset_top = -49.0 if enabled else -29.0
 	offset_bottom = -22.0 if enabled else -2.0
 
 
 func _slot_center(idx: int) -> Vector2:
 	var total_w: float = float(SLOT_COUNT - 1) * SLOT_STEP
 	var start_x: float = (size.x - total_w) * 0.5
-	return Vector2(start_x + float(idx) * SLOT_STEP, size.y * 0.5 - 1.5)
+	return Vector2(floorf(start_x + float(idx) * SLOT_STEP), floorf(size.y * 0.5))
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -81,7 +97,7 @@ func _gui_input(event: InputEvent) -> void:
 	var count: int = mini(SLOT_COUNT, SkillDatabase.SKILLS.size())
 	for i: int in count:
 		var c: Vector2 = _slot_center(i)
-		if absf(tap_pos.x - c.x) + absf(tap_pos.y - c.y) <= DIAMOND_R + 3.5:
+		if absf(tap_pos.x - c.x) <= SLOT_SIZE * 0.5 + 1.0 and absf(tap_pos.y - c.y) <= SLOT_SIZE * 0.5 + 1.0:
 			var sk: Dictionary = SkillDatabase.SKILLS[i]
 			var sk_id: StringName = sk["id"]
 			if _learned.has(sk_id) and GameStateStore.ref != null:
@@ -95,22 +111,18 @@ func _gui_input(event: InputEvent) -> void:
 			return
 
 
-func _diamond_pts(c: Vector2, r: float) -> PackedVector2Array:
-	return PackedVector2Array([
-		c + Vector2(0.0, -r),
-		c + Vector2(r, 0.0),
-		c + Vector2(0.0, r),
-		c + Vector2(-r, 0.0),
-	])
-
-
-func _diamond_loop(c: Vector2, r: float) -> PackedVector2Array:
-	var pts: PackedVector2Array = _diamond_pts(c, r)
-	return PackedVector2Array([pts[0], pts[1], pts[2], pts[3], pts[0]])
+func _make_sb(tex: Texture2D) -> StyleBoxTexture:
+	var sb: StyleBoxTexture = StyleBoxTexture.new()
+	sb.texture = tex
+	sb.texture_margin_left = 3.0
+	sb.texture_margin_top = 3.0
+	sb.texture_margin_right = 3.0
+	sb.texture_margin_bottom = 3.0
+	return sb
 
 
 func _draw() -> void:
-	var font: Font = ThemeDB.fallback_font
+	var font: Font = get_theme_default_font()
 	var count: int = mini(SLOT_COUNT, SkillDatabase.SKILLS.size())
 	for i: int in count:
 		var sk: Dictionary = SkillDatabase.SKILLS[i]
@@ -119,97 +131,18 @@ func _draw() -> void:
 		var is_active: bool = is_learned and _active_id == sk_id
 		var mp_cost: int = int(sk["mp_cost"])
 		var no_mp: bool = is_learned and _mp_cur < mp_cost
-		var base_color: Color = sk["color"]
 		var c: Vector2 = _slot_center(i)
-		var slot_alpha: float = 0.48 if no_mp else (1.0 if is_learned else 0.62)
-
-		# Soft drop shadow
-		draw_colored_polygon(_diamond_pts(c + Vector2(0.0, 1.8), DIAMOND_R + 0.5), Color(0.0, 0.0, 0.0, 0.55 * slot_alpha))
-
-		# Layered radiant gold glow for active slot (matches web .s-slot.act)
-		if is_active:
-			draw_colored_polygon(_diamond_pts(c, DIAMOND_R + 3.4), Color(1.0, 0.843, 0.353, 0.16))
-			draw_polyline(_diamond_loop(c, DIAMOND_R + 2.0), Color(1.0, 0.886, 0.478, 0.48), 1.6, true)
-
-		# Metallic dark gradient diamond body (#252028 -> #141218)
-		var pts: PackedVector2Array = _diamond_pts(c, DIAMOND_R)
-		var top_bg: Color = Color(0.165, 0.141, 0.184, 0.96 * slot_alpha) if is_learned else Color(0.095, 0.095, 0.125, 0.72)
-		var mid_bg: Color = Color(0.118, 0.106, 0.137, 0.96 * slot_alpha) if is_learned else Color(0.075, 0.078, 0.105, 0.72)
-		var bot_bg: Color = Color(0.078, 0.071, 0.094, 0.98 * slot_alpha) if is_learned else Color(0.055, 0.058, 0.082, 0.72)
-		draw_polygon(pts, PackedColorArray([top_bg, mid_bg, bot_bg, mid_bg]))
-
-		# Subtle inner gold bevel filigree
-		draw_polyline(_diamond_loop(c, DIAMOND_R - 1.6), Color(1.0, 0.886, 0.478, (0.28 if is_active else 0.14) * slot_alpha), 0.7, true)
-
+		var r: Rect2 = Rect2(c - Vector2(SLOT_SIZE, SLOT_SIZE) * 0.5, Vector2(SLOT_SIZE, SLOT_SIZE))
+		draw_style_box(_sb_sel if is_active else _sb, r)
+		var tex: Texture2D = (ICONS.get(sk_id, LOCK_TEX) as Texture2D) if is_learned else LOCK_TEX
+		var ipos: Vector2 = (c - tex.get_size() * 0.5).floor() - Vector2(0.0, 1.0)
+		var mod: Color = Color(1, 1, 1, 0.45) if no_mp else (Color(1, 1, 1, 1) if is_learned else Color(1, 1, 1, 0.7))
+		draw_texture(tex, ipos, mod)
+		if is_active and _cooldown_ratio > 0.02:
+			var ch: float = floorf((SLOT_SIZE - 4.0) * _cooldown_ratio)
+			draw_rect(Rect2(r.position.x + 2.0, r.position.y + 2.0, SLOT_SIZE - 4.0, ch), Color(0.024, 0.004, 0.02, 0.55))
 		if is_learned:
-			# Soft elemental radial aura inside diamond
-			var aura_a: float = (0.34 if is_active else 0.18) * slot_alpha
-			draw_colored_polygon(_diamond_pts(c, DIAMOND_R - 2.6), Color(base_color.r, base_color.g, base_color.b, aura_a))
-			_draw_skill_glyph(c, sk_id, is_active, no_mp)
-
-			# Cooldown radial sweep + numeric countdown
-			if is_active and _cooldown_ratio > 0.02:
-				draw_arc(c, DIAMOND_R - 2.2, -PI * 0.5, -PI * 0.5 + TAU * _cooldown_ratio, 18, Color(0.02, 0.03, 0.06, 0.78), 6.0, true)
-				if _cooldown_sec >= 0.1:
-					var cd_txt: String = "%.1f" % _cooldown_sec
-					draw_string_outline(font, c + Vector2(-7.0, 2.5), cd_txt, HORIZONTAL_ALIGNMENT_CENTER, 14, 7, 2, Color(0.0, 0.0, 0.0, 0.9))
-					draw_string(font, c + Vector2(-7.0, 2.5), cd_txt, HORIZONTAL_ALIGNMENT_CENTER, 14, 7, Color(1.0, 1.0, 1.0, 0.96))
-
-		# Outer metallic border (#ffe27a active / #8a6c3a learned / muted locked)
-		var border_col: Color = Color(1.0, 0.886, 0.478, 1.0) if is_active else (Color(0.541, 0.424, 0.227, 0.95 * slot_alpha) if is_learned else Color(0.25, 0.27, 0.34, 0.72))
-		draw_polyline(_diamond_loop(c, DIAMOND_R), border_col, 1.4 if is_active else 1.1, true)
-
-		# Crisp MP cost label below diamond with dark outline
-		var cost_text: String = "%d" % mp_cost if is_learned else "·"
-		var cost_col: Color = Color(0.541, 0.847, 1.0, 0.98) if not no_mp else Color(1.0, 0.42, 0.42, 0.95)
-		if not is_learned:
-			cost_col = Color(0.48, 0.50, 0.58, 0.70)
-		var txt_pos: Vector2 = c + Vector2(-6.0, DIAMOND_R + 5.0)
-		draw_string_outline(font, txt_pos, cost_text, HORIZONTAL_ALIGNMENT_CENTER, 12, 6, 2, Color(0.0, 0.0, 0.0, 0.90))
-		draw_string(font, txt_pos, cost_text, HORIZONTAL_ALIGNMENT_CENTER, 12, 6, cost_col)
-
-
-func _draw_skill_glyph(c: Vector2, sk_id: StringName, is_active: bool, dimmed: bool) -> void:
-	var a: float = 0.48 if dimmed else (1.0 if is_active else 0.84)
-	match sk_id:
-		&"fire":
-			# Layered flame (orange outer + bright yellow core)
-			draw_colored_polygon(PackedVector2Array([
-				c + Vector2(0.0, -5.2), c + Vector2(3.6, 0.8), c + Vector2(2.2, 4.2), c + Vector2(0.0, 4.8), c + Vector2(-2.2, 4.2), c + Vector2(-3.6, 0.8),
-			]), Color(1.0, 0.44, 0.14, a))
-			draw_colored_polygon(PackedVector2Array([
-				c + Vector2(0.0, -2.4), c + Vector2(1.8, 1.6), c + Vector2(0.0, 3.6), c + Vector2(-1.8, 1.6),
-			]), Color(1.0, 0.92, 0.44, a))
-		&"venom":
-			# Toxic emerald droplet with highlight
-			draw_colored_polygon(PackedVector2Array([
-				c + Vector2(0.0, -4.8), c + Vector2(3.2, 1.2), c + Vector2(0.0, 4.2), c + Vector2(-3.2, 1.2),
-			]), Color(0.32, 0.88, 0.36, a))
-			draw_circle(c + Vector2(0.0, 1.4), 2.8, Color(0.24, 0.78, 0.30, a))
-			draw_circle(c + Vector2(-1.0, 0.6), 0.9, Color(0.84, 1.0, 0.76, a))
-		&"nova":
-			# 6-point frost crystal star
-			var ice_col: Color = Color(0.68, 0.94, 1.0, a)
-			for k: int in 3:
-				var ang: float = float(k) * PI / 3.0
-				var d: Vector2 = Vector2.RIGHT.rotated(ang) * 4.6
-				draw_line(c - d, c + d, ice_col, 1.25, true)
-			draw_circle(c, 1.7, Color(1.0, 1.0, 1.0, a))
-		&"heal":
-			# Radiant emerald cross
-			draw_rect(Rect2(c.x - 1.4, c.y - 4.4, 2.8, 8.8), Color(0.32, 0.92, 0.56, a))
-			draw_rect(Rect2(c.x - 4.4, c.y - 1.4, 8.8, 2.8), Color(0.32, 0.92, 0.56, a))
-			draw_rect(Rect2(c.x - 0.7, c.y - 3.0, 1.4, 6.0), Color(0.86, 1.0, 0.92, a))
-			draw_rect(Rect2(c.x - 3.0, c.y - 0.7, 6.0, 1.4), Color(0.86, 1.0, 0.92, a))
-		&"holy":
-			# Golden 8-ray starburst
-			var gold_col: Color = Color(1.0, 0.90, 0.45, a)
-			for k: int in 4:
-				var ang: float = float(k) * PI * 0.5
-				var d: Vector2 = Vector2.RIGHT.rotated(ang)
-				draw_line(c - d * 5.0, c + d * 5.0, gold_col, 1.25, true)
-			for k: int in 4:
-				var ang: float = float(k) * PI * 0.5 + PI * 0.25
-				var d: Vector2 = Vector2.RIGHT.rotated(ang)
-				draw_line(c - d * 3.0, c + d * 3.0, Color(1.0, 0.96, 0.76, a), 0.9, true)
-			draw_circle(c, 1.9, Color(1.0, 1.0, 0.95, a))
+			var cost_text: String = "%d" % mp_cost
+			var col: Color = Color(0.243, 0.471, 0.745, 1.0) if not no_mp else Color(0.639, 0.161, 0.11, 1.0)
+			var tw: float = font.get_string_size(cost_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 10).x
+			draw_string(font, Vector2(r.end.x - 3.0 - tw, r.end.y - 3.0), cost_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, col)

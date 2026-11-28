@@ -37,7 +37,6 @@ offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_dlg")
 
 [node name="Margin" type="MarginContainer" parent="Panel"]
 layout_mode = 2
@@ -54,21 +53,17 @@ theme_override_constants/separation = 3
 
 [node name="SpeakerLabel" type="Label" parent="Panel/Margin/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.48, 1)
-theme_override_font_sizes/font_size = 9
+theme_type_variation = &"HeadLabel"
 text = "Tetua Bram"
 
 [node name="BodyLabel" type="Label" parent="Panel/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.96, 0.94, 0.9, 1)
-theme_override_font_sizes/font_size = 9
 text = ""
 autowrap_mode = 3
 
 [node name="HintLabel" type="Label" parent="Panel/Margin/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.72, 0.64, 0.9)
-theme_override_font_sizes/font_size = 7
+theme_override_colors/font_color = Color(0.569, 0.376, 0.314, 1)
 text = "[E / Ketuk] Lanjut"
 horizontal_alignment = 2

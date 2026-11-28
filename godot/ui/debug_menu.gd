@@ -116,7 +116,6 @@ func _build_ui() -> void:
 	var title: Label = Label.new()
 	title.text = "MODE DEVELOPER [F3 / ~]"
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title.add_theme_font_size_override("font_size", 8)
 	title.add_theme_color_override("font_color", Color(1.0, 0.86, 0.42))
 	header.add_child(title)
 
@@ -124,7 +123,6 @@ func _build_ui() -> void:
 	header.add_child(close_btn)
 
 	_info_label = Label.new()
-	_info_label.add_theme_font_size_override("font_size", 6)
 	_info_label.add_theme_color_override("font_color", Color(0.76, 0.88, 1.0))
 	vbox.add_child(_info_label)
 
@@ -160,7 +158,6 @@ func _build_ui() -> void:
 
 	var tp_lbl: Label = Label.new()
 	tp_lbl.text = "Teleport Instan (24 Peta & Interior):"
-	tp_lbl.add_theme_font_size_override("font_size", 7)
 	tp_lbl.add_theme_color_override("font_color", Color(0.95, 0.85, 0.55))
 	vbox.add_child(tp_lbl)
 
@@ -195,7 +192,6 @@ func _build_ui() -> void:
 func _make_btn(label_text: String, cb: Callable) -> Button:
 	var btn: Button = Button.new()
 	btn.text = label_text
-	btn.add_theme_font_size_override("font_size", 6)
 	btn.pressed.connect(cb)
 	return btn
 

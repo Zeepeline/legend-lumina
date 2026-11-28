@@ -1,0 +1,177 @@
+[gd_resource type="Theme" load_steps=22 format=3]
+
+[ext_resource type="FontFile" path="res://assets/art/ui/lumina_pixel.fnt" id="1_font"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/wood_panel.png" id="2_panel"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/wood_button.png" id="3_btn"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/wood_button_hover.png" id="4_btnh"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/wood_button_pressed.png" id="5_btnp"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/wood_button_disabled.png" id="6_btnd"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/parchment.png" id="7_parch"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/parchment_dark.png" id="8_parchd"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/ribbon_on.png" id="9_ron"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/ribbon_off.png" id="10_roff"]
+
+[sub_resource type="StyleBoxTexture" id="panel"]
+texture = ExtResource("2_panel")
+texture_margin_left = 6.0
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 6.0
+content_margin_left = 8.0
+content_margin_top = 7.0
+content_margin_right = 8.0
+content_margin_bottom = 7.0
+
+[sub_resource type="StyleBoxTexture" id="btn"]
+texture = ExtResource("3_btn")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+content_margin_left = 7.0
+content_margin_top = 4.0
+content_margin_right = 7.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="btn_h"]
+texture = ExtResource("4_btnh")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+content_margin_left = 7.0
+content_margin_top = 4.0
+content_margin_right = 7.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="btn_p"]
+texture = ExtResource("5_btnp")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+content_margin_left = 7.0
+content_margin_top = 5.0
+content_margin_right = 7.0
+content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="btn_d"]
+texture = ExtResource("6_btnd")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+content_margin_left = 7.0
+content_margin_top = 4.0
+content_margin_right = 7.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="focus"]
+
+[sub_resource type="StyleBoxTexture" id="parch"]
+texture = ExtResource("7_parch")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 2.0
+content_margin_left = 5.0
+content_margin_top = 4.0
+content_margin_right = 5.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="parch_d"]
+texture = ExtResource("8_parchd")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 2.0
+content_margin_left = 4.0
+content_margin_top = 3.0
+content_margin_right = 4.0
+content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="tab_on"]
+texture = ExtResource("9_ron")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+content_margin_left = 6.0
+content_margin_top = 3.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxTexture" id="tab_off"]
+texture = ExtResource("10_roff")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+content_margin_left = 6.0
+content_margin_top = 3.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="scroll_bg"]
+bg_color = Color(0.706, 0.549, 0.392, 1)
+content_margin_left = 2.0
+content_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="grabber"]
+bg_color = Color(0.439, 0.231, 0.18, 1)
+border_width_left = 1
+border_width_right = 1
+border_color = Color(0.024, 0.004, 0.02, 1)
+
+[resource]
+default_font = ExtResource("1_font")
+default_font_size = 10
+Button/colors/font_color = Color(0.925, 0.808, 0.675, 1)
+Button/colors/font_hover_color = Color(0.98, 0.94, 0.86, 1)
+Button/colors/font_pressed_color = Color(0.94, 0.76, 0.443, 1)
+Button/colors/font_focus_color = Color(0.925, 0.808, 0.675, 1)
+Button/colors/font_hover_pressed_color = Color(0.94, 0.76, 0.443, 1)
+Button/colors/font_disabled_color = Color(0.62, 0.58, 0.56, 1)
+Button/styles/normal = SubResource("btn")
+Button/styles/hover = SubResource("btn_h")
+Button/styles/pressed = SubResource("btn_p")
+Button/styles/hover_pressed = SubResource("btn_p")
+Button/styles/disabled = SubResource("btn_d")
+Button/styles/focus = SubResource("focus")
+Label/colors/font_color = Color(0.329, 0.098, 0.125, 1)
+Label/colors/font_shadow_color = Color(0, 0, 0, 0)
+Label/constants/line_spacing = 1
+RichTextLabel/colors/default_color = Color(0.329, 0.098, 0.125, 1)
+Panel/styles/panel = SubResource("panel")
+PanelContainer/styles/panel = SubResource("panel")
+PlankPanel/base_type = &"PanelContainer"
+PlankPanel/styles/panel = SubResource("btn")
+ParchmentPanel/base_type = &"PanelContainer"
+ParchmentPanel/styles/panel = SubResource("parch")
+SlotPanel/base_type = &"PanelContainer"
+SlotPanel/styles/panel = SubResource("parch_d")
+TabOn/base_type = &"Button"
+TabOn/colors/font_color = Color(0.98, 0.94, 0.86, 1)
+TabOn/colors/font_hover_color = Color(0.98, 0.94, 0.86, 1)
+TabOn/styles/normal = SubResource("tab_on")
+TabOn/styles/hover = SubResource("tab_on")
+TabOn/styles/pressed = SubResource("tab_on")
+TabOff/base_type = &"Button"
+TabOff/colors/font_color = Color(0.86, 0.745, 0.667, 1)
+TabOff/colors/font_hover_color = Color(0.98, 0.94, 0.86, 1)
+TabOff/styles/normal = SubResource("tab_off")
+TabOff/styles/hover = SubResource("tab_off")
+TabOff/styles/pressed = SubResource("tab_on")
+TitleLabel/base_type = &"Label"
+TitleLabel/colors/font_color = Color(0.639, 0.161, 0.11, 1)
+TitleLabel/font_sizes/font_size = 20
+HeadLabel/base_type = &"Label"
+HeadLabel/colors/font_color = Color(0.639, 0.161, 0.11, 1)
+LightLabel/base_type = &"Label"
+LightLabel/colors/font_color = Color(0.98, 0.94, 0.86, 1)
+LightLabel/colors/font_outline_color = Color(0.024, 0.004, 0.02, 1)
+LightLabel/constants/outline_size = 0
+VScrollBar/styles/scroll = SubResource("scroll_bg")
+VScrollBar/styles/grabber = SubResource("grabber")
+VScrollBar/styles/grabber_highlight = SubResource("grabber")
+VScrollBar/styles/grabber_pressed = SubResource("grabber")

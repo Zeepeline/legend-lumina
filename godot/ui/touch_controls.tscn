@@ -47,7 +47,6 @@ offset_left = 48.0
 offset_top = 34.0
 offset_right = 92.0
 offset_bottom = 66.0
-theme_override_font_sizes/font_size = 8
 action_mode = 0
 text = "Serang"
 
@@ -57,7 +56,6 @@ offset_left = 4.0
 offset_top = 42.0
 offset_right = 44.0
 offset_bottom = 68.0
-theme_override_font_sizes/font_size = 8
 action_mode = 0
 text = "Guling"
 
@@ -67,7 +65,6 @@ offset_left = 48.0
 offset_top = 2.0
 offset_right = 92.0
 offset_bottom = 28.0
-theme_override_font_sizes/font_size = 8
 action_mode = 0
 text = "Aksi"
 
@@ -77,7 +74,6 @@ offset_left = 4.0
 offset_top = 8.0
 offset_right = 44.0
 offset_bottom = 34.0
-theme_override_font_sizes/font_size = 8
 action_mode = 0
 text = "Botol"
 
@@ -87,6 +83,5 @@ offset_left = 4.0
 offset_top = -24.0
 offset_right = 44.0
 offset_bottom = 2.0
-theme_override_font_sizes/font_size = 8
 action_mode = 0
 text = "Sihir"

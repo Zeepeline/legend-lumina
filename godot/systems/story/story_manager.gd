@@ -342,8 +342,10 @@ func _spawn_ch1a_mila() -> void:
 	var lbl: Label = Label.new()
 	lbl.text = "Mila"
 	lbl.position = Vector2(-12.0, -40.0)
-	lbl.add_theme_font_size_override("font_size", 7)
-	lbl.add_theme_color_override("font_color", Color(1.0, 0.94, 0.72))
+	lbl.add_theme_color_override("font_color", Color(0.98, 0.94, 0.86))
+	lbl.add_theme_color_override("font_shadow_color", Color(0.024, 0.004, 0.02, 1.0))
+	lbl.add_theme_constant_override("shadow_offset_x", 1)
+	lbl.add_theme_constant_override("shadow_offset_y", 1)
 	mila.add_child(lbl)
 
 	var ia: Interactable = Interactable.new()
@@ -444,20 +446,17 @@ func _build_name_modal() -> void:
 	var title: Label = Label.new()
 	title.text = "Siapa namamu?"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 9)
-	title.add_theme_color_override("font_color", Color(1.0, 0.88, 0.48))
+	title.theme_type_variation = &"HeadLabel"
 	vbox.add_child(title)
 
 	_name_input = LineEdit.new()
 	_name_input.text = "Arka"
 	_name_input.max_length = 16
 	_name_input.alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_name_input.add_theme_font_size_override("font_size", 8)
 	_name_input.text_submitted.connect(func(_t: String) -> void: _name_confirmed = true)
 	vbox.add_child(_name_input)
 
 	var ok_btn: Button = Button.new()
 	ok_btn.text = "Konfirmasi"
-	ok_btn.add_theme_font_size_override("font_size", 7)
 	ok_btn.pressed.connect(func() -> void: _name_confirmed = true)
 	vbox.add_child(ok_btn)

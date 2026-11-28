@@ -519,7 +519,7 @@ func _test_benua_openworld_and_hud() -> void:
 	_assert(hud_scene != null, "hud.tscn loads cleanly")
 	if hud_scene != null:
 		var hud: Control = hud_scene.instantiate() as Control
-		_assert(hud.get_node_or_null("StatsPanel/VBox/ExpRow/ExpBar/ExpFill") != null, "HUD has ExpFill bar")
+		_assert(hud.get_node_or_null("StatsPanel/HBox/VBox/ExpRow/ExpBar/ExpFill") != null, "HUD has ExpFill bar")
 		_assert(hud.get_node_or_null("TopRightCapsule/HBox/CompassLabel") != null, "HUD has CompassLabel")
 		_assert(hud.get_node_or_null("TopRightCapsule/HBox/FlaskLabel") != null, "HUD has FlaskLabel")
 		_assert(hud.get_node_or_null("QuestCard/VBox/Header/QuestToggleBtn") != null, "HUD has collapsible QuestCard")

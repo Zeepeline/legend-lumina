@@ -26,7 +26,7 @@ func _process(_d: float) -> bool:
 		printerr("NPC mc: %d dari %d node" % [targets.size(), root.find_children("*", "", true, false).size()])
 		return false
 	if frame < 121: return false
-	if idx >= mini(targets.size(), 40): return true
+	if idx >= mini(targets.size(), int(OS.get_environment("NPC_MAX")) if OS.get_environment("NPC_MAX") != "" else 40): return true
 	if not is_instance_valid(targets[idx]):
 		idx += 1; wait = 0
 		return false

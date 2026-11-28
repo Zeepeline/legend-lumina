@@ -45,7 +45,6 @@ func _open() -> void:
 	get_tree().paused = true
 	AudioService.ref.play_ui_id(&"ui_click")
 	_rebuild()
-	tab_quests.grab_focus()
 
 
 func _close() -> void:
@@ -66,6 +65,9 @@ func _rebuild_if_open() -> void:
 
 
 func _rebuild() -> void:
+	tab_quests.theme_type_variation = &"TabOn" if _tab == "quests" else &"TabOff"
+	tab_skills.theme_type_variation = &"TabOn" if _tab == "skills" else &"TabOff"
+	tab_craft.theme_type_variation = &"TabOn" if _tab == "craft" else &"TabOff"
 	for ch: Node in list_box.get_children():
 		ch.queue_free()
 	var gs: GameStateStore = GameStateStore.ref
@@ -88,8 +90,8 @@ func _rebuild() -> void:
 			)
 		var hdr: Label = Label.new()
 		hdr.text = "— %s —" % tr("ui_ach_header")
-		hdr.add_theme_font_size_override("font_size", 8)
-		hdr.add_theme_color_override("font_color", Color(0.85, 0.92, 1.0))
+		hdr.theme_type_variation = &"TitleLabel"
+		hdr.add_theme_font_size_override("font_size", 10)
 		list_box.add_child(hdr)
 		for ach: Dictionary in QuestDatabase.ACHIEVEMENTS:
 			var done_a: bool = QuestDatabase.is_completed(ach, snap)
@@ -132,15 +134,12 @@ func _add_row(title: String, desc: String, action_text: String, disabled: bool, 
 
 	var lbl_t: Label = Label.new()
 	lbl_t.text = title
-	lbl_t.add_theme_font_size_override("font_size", 8)
-	lbl_t.add_theme_color_override("font_color", Color(1.0, 0.92, 0.65))
+	lbl_t.theme_type_variation = &"HeadLabel"
 	col.add_child(lbl_t)
 
 	var lbl_d: Label = Label.new()
 	lbl_d.text = desc
 	lbl_d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl_d.add_theme_font_size_override("font_size", 7)
-	lbl_d.add_theme_color_override("font_color", Color(0.84, 0.82, 0.78))
 	col.add_child(lbl_d)
 	row.add_child(col)
 
@@ -149,7 +148,6 @@ func _add_row(title: String, desc: String, action_text: String, disabled: bool, 
 		btn.text = action_text
 		btn.disabled = disabled
 		btn.custom_minimum_size = Vector2(58, 18)
-		btn.add_theme_font_size_override("font_size", 7)
 		if on_press.is_valid():
 			btn.pressed.connect(on_press)
 		row.add_child(btn)

@@ -1,17 +1,17 @@
 class_name HudOverlay
 extends Control
-## HUD utama bergaya web Legenda Lumina dalam kualitas HD (bilah gradasi, ikon vektor tajam, kartu misi kayu, bilah jurus berlian).
+## HUD utama bergaya kayu & perkamen piksel: panel status berpotret, tombol ikon kayu, papan info, catatan misi, bilah jurus kayu.
 
 const PEACE_FADE_DELAY: float = 5.0
 
 @onready var stats_panel: PanelContainer = $StatsPanel
-@onready var hp_bar: HudGradientBar = $StatsPanel/VBox/HpBar
-@onready var hp_label: Label = $StatsPanel/VBox/HpBar/HpLabel
-@onready var sta_bar: HudGradientBar = $StatsPanel/VBox/StaBar
-@onready var mp_bar: HudGradientBar = $StatsPanel/VBox/MpBar
-@onready var mp_label: Label = $StatsPanel/VBox/MpBar/MpLabel
-@onready var level_label: Label = $StatsPanel/VBox/ExpRow/LevelLabel
-@onready var exp_bar: HudGradientBar = $StatsPanel/VBox/ExpRow/ExpBar
+@onready var hp_bar: HudGradientBar = $StatsPanel/HBox/VBox/HpBar
+@onready var hp_label: Label = $StatsPanel/HBox/VBox/HpBar/HpLabel
+@onready var sta_bar: HudGradientBar = $StatsPanel/HBox/VBox/StaBar
+@onready var mp_bar: HudGradientBar = $StatsPanel/HBox/VBox/MpBar
+@onready var mp_label: Label = $StatsPanel/HBox/VBox/MpBar/MpLabel
+@onready var level_label: Label = $StatsPanel/HBox/VBox/ExpRow/LevelLabel
+@onready var exp_bar: HudGradientBar = $StatsPanel/HBox/VBox/ExpRow/ExpBar
 
 @onready var time_icon: HudVectorIcon = $TopRightCapsule/HBox/TimeGroup/TimeIcon
 @onready var time_label: Label = $TopRightCapsule/HBox/TimeGroup/TimeLabel
@@ -67,10 +67,11 @@ func _ready() -> void:
 	boss_panel.visible = false
 	region_banner.visible = false
 
-	journal_button.text = tr("ui_journal")
-	bag_button.text = tr("ui_bag")
-	map_button.text = tr("ui_map")
-	menu_button.text = tr("ui_menu")
+	journal_button.tooltip_text = tr("ui_journal")
+	bag_button.tooltip_text = tr("ui_bag")
+	map_button.tooltip_text = tr("ui_map")
+	menu_button.tooltip_text = tr("ui_menu")
+	dev_button.visible = false
 	quest_title_label.text = tr("ui_quest_card_title").to_upper()
 
 	if EventsBus.ref != null:
@@ -162,12 +163,12 @@ func _wake_stats_panel() -> void:
 func _set_stats_faded(faded: bool) -> void:
 	_stats_faded = faded
 	if not is_inside_tree():
-		stats_panel.modulate.a = 0.35 if faded else 1.0
+		stats_panel.modulate.a = 0.75 if faded else 1.0
 		return
 	if _stats_tween != null and _stats_tween.is_valid():
 		_stats_tween.kill()
 	_stats_tween = create_tween()
-	_stats_tween.tween_property(stats_panel, "modulate:a", 0.35 if faded else 1.0, 0.35)
+	_stats_tween.tween_property(stats_panel, "modulate:a", 0.75 if faded else 1.0, 0.35)
 
 
 func _refresh_stats() -> void:
@@ -198,7 +199,7 @@ func _refresh_stats() -> void:
 	gold_label.text = "%d" % gs.gold
 	var dots: String = ""
 	for i: int in gs.flask_max:
-		dots += "●" if i < gs.flask_charges else "○"
+		dots += "•" if i < gs.flask_charges else "·"
 	flask_label.text = dots
 	var pot_count: int = (
 		InventoryLogic.count_item(gs.inventory, &"potion")
@@ -245,7 +246,7 @@ func _toggle_quest_card() -> void:
 	_quest_collapsed = not _quest_collapsed
 	quest_divider.visible = not _quest_collapsed
 	quest_desc_label.visible = not _quest_collapsed
-	quest_toggle_btn.text = "+" if _quest_collapsed else "−"
+	quest_toggle_btn.text = "+" if _quest_collapsed else "-"
 	if AudioService.ref != null:
 		AudioService.ref.play_ui_id(&"ui_click")
 

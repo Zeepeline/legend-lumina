@@ -44,7 +44,6 @@ grow_vertical = 2
 [node name="Panel" type="PanelContainer" parent="Center"]
 custom_minimum_size = Vector2(326, 214)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_jrn")
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel"]
 layout_mode = 2
@@ -63,14 +62,11 @@ layout_mode = 2
 [node name="TitleLabel" type="Label" parent="Center/Panel/Margin/VBox/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(1, 0.86, 0.5, 1)
-theme_override_font_sizes/font_size = 10
 text = "Jurnal, Jurus & Kerajinan"
 
 [node name="CloseBtn" type="Button" parent="Center/Panel/Margin/VBox/Header"]
 custom_minimum_size = Vector2(44, 18)
 layout_mode = 2
-theme_override_font_sizes/font_size = 7
 text = "Tutup"
 
 [node name="Tabs" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
@@ -80,19 +76,16 @@ theme_override_constants/separation = 4
 [node name="QuestsTab" type="Button" parent="Center/Panel/Margin/VBox/Tabs"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
 text = "Misi"
 
 [node name="SkillsTab" type="Button" parent="Center/Panel/Margin/VBox/Tabs"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
 text = "Jurus"
 
 [node name="CraftTab" type="Button" parent="Center/Panel/Margin/VBox/Tabs"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
 text = "Kerajinan"
 
 [node name="Scroll" type="ScrollContainer" parent="Center/Panel/Margin/VBox"]

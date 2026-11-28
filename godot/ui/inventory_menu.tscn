@@ -1,21 +1,15 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://ui/inventory_menu.gd" id="1_inv"]
+[ext_resource type="Texture2D" path="res://assets/art/hero/hero_mc2.png" id="2_hero"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/seal_close.png" id="3_seal"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inv"]
-bg_color = Color(0.08, 0.07, 0.06, 0.94)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.85, 0.72, 0.45, 0.88)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+[sub_resource type="AtlasTexture" id="AtlasTexture_fig"]
+atlas = ExtResource("2_hero")
+region = Rect2(0, 0, 64, 56)
 
 [node name="InventoryMenu" type="Control"]
-visible = false
+process_mode = 3
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,7 +25,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.55)
+color = Color(0.024, 0.004, 0.02, 0.55)
 
 [node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -41,71 +35,220 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Center"]
-custom_minimum_size = Vector2(310, 210)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_inv")
-
-[node name="Margin" type="MarginContainer" parent="Center/Panel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
-
-[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="Header" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+[node name="Root" type="Control" parent="Center"]
+custom_minimum_size = Vector2(410, 248)
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="Center/Panel/Margin/VBox/Header"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(1, 0.86, 0.5, 1)
-theme_override_font_sizes/font_size = 10
-text = "Tas & Perlengkapan"
+[node name="Tabs" type="HBoxContainer" parent="Center/Root"]
+layout_mode = 0
+offset_left = 150.0
+offset_right = 360.0
+offset_bottom = 16.0
+theme_override_constants/separation = 3
 
-[node name="CloseBtn" type="Button" parent="Center/Panel/Margin/VBox/Header"]
-custom_minimum_size = Vector2(44, 18)
+[node name="ItemsTab" type="Button" parent="Center/Root/Tabs"]
+custom_minimum_size = Vector2(62, 16)
 layout_mode = 2
-theme_override_font_sizes/font_size = 7
-text = "Tutup"
-
-[node name="StatsLabel" type="Label" parent="Center/Panel/Margin/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.9, 0.85, 1)
-theme_override_font_sizes/font_size = 7
-text = "ATK: 14 | DEF: 4"
-
-[node name="Tabs" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="ItemsTab" type="Button" parent="Center/Panel/Margin/VBox/Tabs"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
+focus_mode = 0
+theme_type_variation = &"TabOn"
 text = "Barang"
 
-[node name="WeaponsTab" type="Button" parent="Center/Panel/Margin/VBox/Tabs"]
+[node name="WeaponsTab" type="Button" parent="Center/Root/Tabs"]
+custom_minimum_size = Vector2(62, 16)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
+focus_mode = 0
+theme_type_variation = &"TabOff"
 text = "Senjata"
 
-[node name="ArmorsTab" type="Button" parent="Center/Panel/Margin/VBox/Tabs"]
+[node name="ArmorsTab" type="Button" parent="Center/Root/Tabs"]
+custom_minimum_size = Vector2(62, 16)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
+focus_mode = 0
+theme_type_variation = &"TabOff"
 text = "Zirah"
 
-[node name="Scroll" type="ScrollContainer" parent="Center/Panel/Margin/VBox"]
-layout_mode = 2
-size_flags_vertical = 3
+[node name="Panel" type="PanelContainer" parent="Center/Root"]
+layout_mode = 0
+offset_top = 14.0
+offset_right = 410.0
+offset_bottom = 248.0
 
-[node name="ListBox" type="VBoxContainer" parent="Center/Panel/Margin/VBox/Scroll"]
+[node name="HBox" type="HBoxContainer" parent="Center/Root/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Left" type="PanelContainer" parent="Center/Root/Panel/HBox"]
+custom_minimum_size = Vector2(122, 0)
+layout_mode = 2
+theme_type_variation = &"SlotPanel"
+
+[node name="VBox" type="VBoxContainer" parent="Center/Root/Panel/HBox/Left"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="FigureFrame" type="PanelContainer" parent="Center/Root/Panel/HBox/Left/VBox"]
+custom_minimum_size = Vector2(68, 58)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"ParchmentPanel"
+
+[node name="Figure" type="TextureRect" parent="Center/Root/Panel/HBox/Left/VBox/FigureFrame"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_fig")
+stretch_mode = 3
+
+[node name="LevelLabel" type="Label" parent="Center/Root/Panel/HBox/Left/VBox"]
+layout_mode = 2
+theme_type_variation = &"HeadLabel"
+text = "Lv. 1"
+horizontal_alignment = 1
+
+[node name="WeaponRow" type="HBoxContainer" parent="Center/Root/Panel/HBox/Left/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="WeaponIconFrame" type="PanelContainer" parent="Center/Root/Panel/HBox/Left/VBox/WeaponRow"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_type_variation = &"ParchmentPanel"
+
+[node name="WeaponIcon" type="TextureRect" parent="Center/Root/Panel/HBox/Left/VBox/WeaponRow/WeaponIconFrame"]
+layout_mode = 2
+stretch_mode = 3
+
+[node name="WeaponText" type="VBoxContainer" parent="Center/Root/Panel/HBox/Left/VBox/WeaponRow"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="WeaponCat" type="Label" parent="Center/Root/Panel/HBox/Left/VBox/WeaponRow/WeaponText"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.569, 0.376, 0.314, 1)
+text = "Senjata"
+
+[node name="WeaponName" type="Label" parent="Center/Root/Panel/HBox/Left/VBox/WeaponRow/WeaponText"]
+layout_mode = 2
+text = "-"
+
+[node name="ArmorRow" type="HBoxContainer" parent="Center/Root/Panel/HBox/Left/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ArmorIconFrame" type="PanelContainer" parent="Center/Root/Panel/HBox/Left/VBox/ArmorRow"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_type_variation = &"ParchmentPanel"
+
+[node name="ArmorIcon" type="TextureRect" parent="Center/Root/Panel/HBox/Left/VBox/ArmorRow/ArmorIconFrame"]
+layout_mode = 2
+stretch_mode = 3
+
+[node name="ArmorText" type="VBoxContainer" parent="Center/Root/Panel/HBox/Left/VBox/ArmorRow"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ArmorCat" type="Label" parent="Center/Root/Panel/HBox/Left/VBox/ArmorRow/ArmorText"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.569, 0.376, 0.314, 1)
+text = "Zirah"
+
+[node name="ArmorName" type="Label" parent="Center/Root/Panel/HBox/Left/VBox/ArmorRow/ArmorText"]
+layout_mode = 2
+text = "-"
+
+[node name="Divider" type="ColorRect" parent="Center/Root/Panel/HBox/Left/VBox"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+color = Color(0.706, 0.549, 0.392, 1)
+
+[node name="StatsGrid" type="GridContainer" parent="Center/Root/Panel/HBox/Left/VBox"]
+layout_mode = 2
+theme_override_constants/v_separation = 1
+columns = 2
+
+[node name="Right" type="VBoxContainer" parent="Center/Root/Panel/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="Grid" type="GridContainer" parent="Center/Root/Panel/HBox/Right"]
+layout_mode = 2
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+columns = 9
+
+[node name="Detail" type="PanelContainer" parent="Center/Root/Panel/HBox/Right"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ParchmentPanel"
+
+[node name="VBox" type="VBoxContainer" parent="Center/Root/Panel/HBox/Right/Detail"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Top" type="HBoxContainer" parent="Center/Root/Panel/HBox/Right/Detail/VBox"]
+layout_mode = 2
 theme_override_constants/separation = 5
+
+[node name="IconFrame" type="PanelContainer" parent="Center/Root/Panel/HBox/Right/Detail/VBox/Top"]
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+theme_type_variation = &"SlotPanel"
+
+[node name="Icon" type="TextureRect" parent="Center/Root/Panel/HBox/Right/Detail/VBox/Top/IconFrame"]
+layout_mode = 2
+stretch_mode = 3
+
+[node name="Names" type="VBoxContainer" parent="Center/Root/Panel/HBox/Right/Detail/VBox/Top"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="NameLabel" type="Label" parent="Center/Root/Panel/HBox/Right/Detail/VBox/Top/Names"]
+layout_mode = 2
+theme_type_variation = &"HeadLabel"
+text = ""
+
+[node name="QtyLabel" type="Label" parent="Center/Root/Panel/HBox/Right/Detail/VBox/Top/Names"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.569, 0.376, 0.314, 1)
+text = ""
+
+[node name="ActionBtn" type="Button" parent="Center/Root/Panel/HBox/Right/Detail/VBox/Top"]
+custom_minimum_size = Vector2(56, 18)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+text = "Pakai"
+
+[node name="Divider" type="ColorRect" parent="Center/Root/Panel/HBox/Right/Detail/VBox"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+color = Color(0.914, 0.725, 0.431, 1)
+
+[node name="DescLabel" type="Label" parent="Center/Root/Panel/HBox/Right/Detail/VBox"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+text = ""
+autowrap_mode = 3
+
+[node name="TitlePlate" type="PanelContainer" parent="Center/Root"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 2.0
+offset_right = 130.0
+offset_bottom = 21.0
+theme_type_variation = &"PlankPanel"
+
+[node name="TitleLabel" type="Label" parent="Center/Root/TitlePlate"]
+layout_mode = 2
+theme_type_variation = &"LightLabel"
+text = "Tas"
+
+[node name="CloseBtn" type="TextureButton" parent="Center/Root"]
+layout_mode = 0
+offset_left = 398.0
+offset_top = 7.0
+offset_right = 413.0
+offset_bottom = 22.0
+focus_mode = 0
+texture_normal = ExtResource("3_seal")

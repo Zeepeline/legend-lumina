@@ -16,8 +16,10 @@ static func spawn(parent: Node, world_pos: Vector2, text_val: String, color: Col
 	lbl.custom_minimum_size = Vector2(56.0, 16.0)
 	lbl.add_theme_font_size_override("font_size", 10)
 	lbl.add_theme_color_override("font_color", color)
-	lbl.add_theme_color_override("font_outline_color", Color(0.08, 0.06, 0.05, 0.95))
-	lbl.add_theme_constant_override("outline_size", 3)
+	lbl.add_theme_color_override("font_shadow_color", Color(0.024, 0.004, 0.02, 1.0))
+	lbl.add_theme_constant_override("shadow_offset_x", 1)
+	lbl.add_theme_constant_override("shadow_offset_y", 1)
+	lbl.add_theme_constant_override("shadow_outline_size", 1)
 	popup.add_child(lbl)
 	parent.add_child(popup)
 
