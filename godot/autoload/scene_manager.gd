@@ -163,6 +163,10 @@ func _spawn_player(map_node: Node, spawn_id: StringName) -> void:
 	var bounds: Rect2i = _compute_map_bounds(map_node)
 	if bounds.size != Vector2i.ZERO and player_inst.has_method("set_camera_limits"):
 		player_inst.call("set_camera_limits", bounds, zoom_val)
+	if player_inst.has_method("reset_physics_interpolation"):
+		player_inst.call("reset_physics_interpolation")
+	if player_inst.has_method("snap_camera"):
+		player_inst.call("snap_camera")
 
 
 func _find_spawn_position(map_node: Node, spawn_id: StringName) -> Vector2:

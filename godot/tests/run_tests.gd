@@ -19,8 +19,9 @@ func _process(_delta: float) -> bool:
 	_test_data_resources()
 	_test_all_24_maps()
 	_test_benua_openworld_and_hud()
+	_test_river_and_bridge_connectivity()
 	print_rich("[b]Test Summary: %d sections, %d passed, %d failed[/b]" % [_sections_done, _passed, _failed])
-	var ok: bool = _failed == 0 and _sections_done == 9
+	var ok: bool = _failed == 0 and _sections_done == 10
 	quit(0 if ok else 1)
 	return true
 
@@ -319,7 +320,9 @@ func _test_all_24_maps() -> void:
 		var expected_sz: Vector2i = spec["size"]
 		if expected_sz != Vector2i.ZERO:
 			var dirt: TileMapLayer = map_node.get_node_or_null("GroundDirt") as TileMapLayer
-			_assert(dirt != null, "%s has GroundDirt" % path)
+			var gspr: Sprite2D = map_node.get_node_or_null("GroundSprite") as Sprite2D
+			var gter: TileMapLayer = map_node.get_node_or_null("GroundTerrain") as TileMapLayer
+			_assert(dirt != null or gter != null or (gspr != null and gspr.texture != null), "%s has ground layer" % path)
 			if dirt != null:
 				_assert(dirt.tile_set != null and dirt.tile_set.resource_path == "res://maps/tilesets/sprout_overworld.tres", "%s shares sprout_overworld.tres" % path)
 				_assert(dirt.get_used_rect().size == expected_sz, "%s GroundDirt size matches %s" % [path, expected_sz])
@@ -331,8 +334,13 @@ func _test_all_24_maps() -> void:
 				_assert(holes == 0, "%s GroundDirt has 0 holes" % path)
 			if not bool(spec["indoor"]):
 				var grass: TileMapLayer = map_node.get_node_or_null("GroundGrass") as TileMapLayer
-				_assert(grass != null and grass.get_used_cells().size() > 80, "%s GroundGrass painted" % path)
-				_assert(dirt.z_index < 0 and grass.z_index < 0, "%s ground layers keep negative z_index" % path)
+				if grass != null and dirt != null:
+					_assert(grass.get_used_cells().size() > 80, "%s GroundGrass painted" % path)
+					_assert(dirt.z_index < 0 and grass.z_index < 0, "%s ground layers keep negative z_index" % path)
+				elif gter != null:
+					_assert(gter.z_index < 0 and gter.get_used_cells().size() > 80, "%s GroundTerrain valid" % path)
+				else:
+					_assert(gspr != null and gspr.z_index < 0, "%s GroundSprite keeps negative z_index" % path)
 		else:
 			var room_bg: Sprite2D = map_node.get_node_or_null("RoomBg") as Sprite2D
 			_assert(room_bg != null and room_bg.texture != null, "%s RoomBg valid" % path)
@@ -498,9 +506,7 @@ func _test_benua_openworld_and_hud() -> void:
 	for rp: String in [
 		"res://assets/art/ground/gnd_sand_sprout.png",
 		"res://assets/art/ground/gnd_grass_dark.png",
-		"res://assets/art/nature/bushG1.png",
-		"res://assets/art/nature/bushW.png",
-		"res://assets/art/nature/deepwood_moss_island_1.png",
+		"res://assets/art/ground/lumina_tileset.png",
 		"res://assets/art/props/gpt_palisade_wall_long.png",
 		"res://assets/art/buildings/gpt_orc_gate.png",
 		"res://assets/art/npc/npc_mc_hunter.png",
@@ -536,5 +542,63 @@ func _test_benua_openworld_and_hud() -> void:
 			mc.focus_player()
 			_assert(mc.world_to_canvas(Vector2(3500.0, 3360.0)) != Vector2.ZERO, "WorldMapCanvas transforms world coordinates")
 		wm.free()
+
+	_sections_done += 1
+
+
+func _test_river_and_bridge_connectivity() -> void:
+	var global_water: Dictionary = {}
+	for k: Variant in WorldLayout.REGIONS.keys():
+		var rid: StringName = k as StringName
+		var reg: Dictionary = WorldLayout.REGIONS[rid]
+		var rect: Rect2i = reg["rect"]
+		var gx0: int = rect.position.x / 16
+		var gy0: int = rect.position.y / 16
+		var packed: PackedScene = _load_res(str(reg["path"])) as PackedScene
+		if packed == null:
+			continue
+		var root: Node2D = packed.instantiate() as Node2D
+		var terrain: TileMapLayer = root.get_node_or_null("GroundTerrain") as TileMapLayer
+		var local_water: Dictionary = {}
+		if terrain != null:
+			for c: Vector2i in terrain.get_used_cells():
+				var ac: Vector2i = terrain.get_cell_atlas_coords(c)
+				if ac.x >= 12 and (ac.y == 0 or ac.y == 1):
+					local_water[c] = true
+					global_water[Vector2i(gx0 + c.x, gy0 + c.y)] = rid
+
+		# Pastikan setiap node Bridge_* punya ubin air di bawah tengah jembatannya
+		for ch: Node in root.get_children():
+			if ch is Sprite2D and ch.name.begins_with("Bridge"):
+				var bspr: Sprite2D = ch as Sprite2D
+				if bspr.texture != null:
+					var bsz: Vector2 = bspr.texture.get_size() * bspr.scale
+					var mid: Vector2i = Vector2i(int((bspr.position.x + bsz.x * 0.5) / 16.0), int((bspr.position.y + bsz.y * 0.5) / 16.0))
+					var has_w: bool = false
+					for dy: int in [-1, 0, 1]:
+						for dx: int in [-1, 0, 1]:
+							if local_water.has(mid + Vector2i(dx, dy)):
+								has_w = true
+								break
+						if has_w:
+							break
+					_assert(has_w, "%s/%s sits over water" % [str(rid), bspr.name])
+		root.free()
+
+	# Cek 5 perbatasan sungai utama lintas wilayah
+	var linked: Dictionary = {}
+	for gc: Variant in global_water.keys():
+		var pos: Vector2i = gc as Vector2i
+		var ra: StringName = global_water[pos]
+		for d: Vector2i in [Vector2i(1, 0), Vector2i(0, 1)]:
+			var nb: Vector2i = pos + d
+			if global_water.has(nb):
+				var rb: StringName = global_water[nb]
+				if ra != rb:
+					var key: String = "%s<->%s" % [str(ra), str(rb)] if str(ra) < str(rb) else "%s<->%s" % [str(rb), str(ra)]
+					linked[key] = true
+
+	for req: String in ["forest<->lake", "forest<->river", "meadow<->snow", "meadow<->river", "river<->swamp"]:
+		_assert(linked.has(req), "river border connected: %s" % req)
 
 	_sections_done += 1

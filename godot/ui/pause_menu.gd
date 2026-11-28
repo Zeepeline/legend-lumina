@@ -8,6 +8,7 @@ extends Control
 @onready var skin_btn: Button = $Center/Panel/Margin/VBox/SkinBtn
 @onready var relaxed_btn: Button = $Center/Panel/Margin/VBox/RelaxedBtn
 @onready var touch_btn: Button = $Center/Panel/Margin/VBox/TouchBtn
+@onready var fullscreen_btn: Button = $Center/Panel/Margin/VBox/FullscreenBtn
 @onready var music_vol_btn: Button = $Center/Panel/Margin/VBox/MusicVolBtn
 @onready var sfx_vol_btn: Button = $Center/Panel/Margin/VBox/SfxVolBtn
 
@@ -21,12 +22,23 @@ func _ready() -> void:
 	skin_btn.pressed.connect(_on_switch_skin)
 	relaxed_btn.pressed.connect(_on_toggle_relaxed)
 	touch_btn.pressed.connect(_on_toggle_touch)
+	fullscreen_btn.pressed.connect(_on_toggle_fullscreen)
 	music_vol_btn.pressed.connect(_on_cycle_music_vol)
 	sfx_vol_btn.pressed.connect(_on_cycle_sfx_vol)
 	_refresh_labels()
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		var kev: InputEventKey = event as InputEventKey
+		if kev.pressed and not kev.echo:
+			var is_f11: bool = kev.keycode == KEY_F11
+			var is_alt_enter: bool = (kev.keycode == KEY_ENTER or kev.keycode == KEY_KP_ENTER) and kev.alt_pressed
+			var is_mac_fs: bool = kev.keycode == KEY_F and kev.meta_pressed and kev.ctrl_pressed
+			if is_f11 or is_alt_enter or is_mac_fs:
+				get_viewport().set_input_as_handled()
+				_on_toggle_fullscreen()
+				return
 	if event.is_action_pressed(&"pause") and not SceneService.ref.is_busy():
 		get_viewport().set_input_as_handled()
 		if visible:
@@ -61,6 +73,8 @@ func _refresh_labels() -> void:
 	relaxed_btn.text = tr("ui_relaxed_mode") % tr(rel_key)
 	var touch_key: String = "ui_on" if gs.is_touch_enabled() else "ui_off"
 	touch_btn.text = tr("ui_touch_controls") % tr(touch_key)
+	var is_fs: bool = _is_fullscreen()
+	fullscreen_btn.text = "Layar Penuh: %s" % tr("ui_on" if is_fs else "ui_off")
 	music_vol_btn.text = tr("ui_music_vol") % ("%d%%" % roundi(gs.music_volume * 100.0))
 	sfx_vol_btn.text = tr("ui_sfx_vol") % ("%d%%" % roundi(gs.sfx_volume * 100.0))
 
@@ -101,6 +115,24 @@ func _on_toggle_relaxed() -> void:
 func _on_toggle_touch() -> void:
 	AudioService.ref.play_ui_id(&"ui_click")
 	GameStateStore.ref.toggle_touch_controls()
+	_refresh_labels()
+
+
+func _is_fullscreen() -> bool:
+	if DisplayServer.get_name() == "headless":
+		return false
+	var mode: DisplayServer.WindowMode = DisplayServer.window_get_mode()
+	return mode == DisplayServer.WINDOW_MODE_FULLSCREEN or mode == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+
+
+func _on_toggle_fullscreen() -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	AudioService.ref.play_ui_id(&"ui_click")
+	if _is_fullscreen():
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	_refresh_labels()
 
 

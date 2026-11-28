@@ -36,12 +36,13 @@ script = ExtResource("2_inter")
 shape = SubResource("CircleShape2D_talk")
 
 [node name="NameLabel" type="Label" parent="."]
-offset_left = -44.0
-offset_top = -44.0
-offset_right = 44.0
-offset_bottom = -30.0
+visible = false
+offset_left = -48.0
+offset_top = -54.0
+offset_right = 48.0
+offset_bottom = -42.0
 horizontal_alignment = 1
 theme_override_colors/font_color = Color(0.98, 0.96, 0.86, 0.95)
 theme_override_colors/font_outline_color = Color(0.08, 0.06, 0.05, 0.95)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 8
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 6

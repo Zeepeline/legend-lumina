@@ -6,18 +6,18 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q5m6s"]
 size = Vector2(71.2, 67)
 
-[node name="Acad Gate" type="StaticBody2D" unique_id=1989180309]
+[node name="Acad Gate" type="StaticBody2D" unique_id=1031890789]
 collision_mask = 0
 script = ExtResource("1_uutwo")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=905579603]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=168860757]
 texture = ExtResource("2_navei")
 offset = Vector2(0, -37.5)
 
-[node name="FadeArea" type="Area2D" parent="." unique_id=1159734640]
+[node name="FadeArea" type="Area2D" parent="." unique_id=1110609486]
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=333958753]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=117498697]
 position = Vector2(0, -37.5)
 shape = SubResource("RectangleShape2D_q5m6s")

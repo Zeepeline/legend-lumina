@@ -56,7 +56,7 @@ func _build_tileset() -> TileSet:
 			td.set_custom_data("terrain_type", &"dirt")
 
 	var edge_src: TileSetAtlasSource = TileSetAtlasSource.new()
-	edge_src.texture = MapBuilderHelper.load_res("res://assets/art/ground/gnd_edge_sprout.png") as Texture2D
+	edge_src.texture = MapBuilderHelper.load_res("res://assets/art/ground/gnd_wild_sprout.png") as Texture2D
 	edge_src.texture_region_size = Vector2i(16, 16)
 	ts.add_source(edge_src, 1)
 

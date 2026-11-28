@@ -1,3 +1,4 @@
+@tool
 class_name BuildingProp
 extends StaticBody2D
 
@@ -8,6 +9,8 @@ var _fade_tween: Tween = null
 
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
 	if fade_area != null:
 		fade_area.body_entered.connect(_on_fade_entered)
 		fade_area.body_exited.connect(_on_fade_exited)

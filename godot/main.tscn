@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://main.gd" id="1_main"]
 [ext_resource type="Script" path="res://systems/world/day_night.gd" id="2_dn"]
@@ -10,6 +10,9 @@
 [ext_resource type="PackedScene" path="res://ui/world_map.tscn" id="8_wmap"]
 [ext_resource type="PackedScene" path="res://ui/journal_menu.tscn" id="9_jrn"]
 [ext_resource type="PackedScene" path="res://ui/pause_menu.tscn" id="10_pause"]
+[ext_resource type="Script" path="res://ui/debug_menu.gd" id="11_debug"]
+[ext_resource type="Script" path="res://systems/world/weather_overlay.gd" id="12_weather"]
+[ext_resource type="Script" path="res://systems/story/story_manager.gd" id="13_story"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_main")
@@ -18,6 +21,19 @@ script = ExtResource("1_main")
 
 [node name="DayNight" type="CanvasModulate" parent="WorldRoot"]
 script = ExtResource("2_dn")
+
+[node name="WeatherLayer" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="WeatherOverlay" type="Control" parent="WeatherLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("12_weather")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 layer = 10
@@ -37,6 +53,12 @@ layer = 10
 [node name="JournalMenu" parent="UILayer" instance=ExtResource("9_jrn")]
 
 [node name="PauseMenu" parent="UILayer" instance=ExtResource("10_pause")]
+
+[node name="DebugMenu" type="Control" parent="UILayer"]
+script = ExtResource("11_debug")
+
+[node name="StoryManager" type="Control" parent="UILayer"]
+script = ExtResource("13_story")
 
 [node name="FadeLayer" type="CanvasLayer" parent="."]
 layer = 20

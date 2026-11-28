@@ -9,22 +9,22 @@ size = Vector2(70, 32)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_a7umf"]
 size = Vector2(82, 40)
 
-[node name="Blades" type="StaticBody2D" unique_id=1337458428]
+[node name="Blades" type="StaticBody2D" unique_id=622199137]
 collision_mask = 0
 script = ExtResource("1_insra")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1675787169]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=505541234]
 texture = ExtResource("2_yqrry")
 offset = Vector2(0, -40)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1956994787]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=206491760]
 position = Vector2(0, -18)
 shape = SubResource("RectangleShape2D_0phkt")
 
-[node name="FadeArea" type="Area2D" parent="." unique_id=1210204526]
+[node name="FadeArea" type="Area2D" parent="." unique_id=1402179481]
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=558288582]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=1482873025]
 position = Vector2(0, -56)
 shape = SubResource("RectangleShape2D_a7umf")

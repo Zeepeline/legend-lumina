@@ -6,14 +6,14 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cu2i6"]
 size = Vector2(96, 36)
 
-[node name="Stall Potion" type="StaticBody2D" unique_id=1229438022]
+[node name="Stall Potion" type="StaticBody2D" unique_id=788853757]
 collision_mask = 0
 script = ExtResource("1_s5yrw")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2133547971]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1773334514]
 texture = ExtResource("2_vjnwo")
 offset = Vector2(0, -71)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1263387902]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1462033642]
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_cu2i6")

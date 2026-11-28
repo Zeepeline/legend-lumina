@@ -29,6 +29,7 @@ var pending_knockback: Vector2 = Vector2.ZERO
 
 var _shake_amp: float = 0.0
 var _shake_time: float = 0.0
+var _smoothing_restore_frames: int = 0
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _interactables: Array[Area2D] = []
 
@@ -49,6 +50,13 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _smoothing_restore_frames > 0:
+		_smoothing_restore_frames -= 1
+		if camera != null:
+			camera.reset_smoothing()
+			camera.force_update_scroll()
+			if _smoothing_restore_frames == 0:
+				camera.position_smoothing_enabled = true
 	if combo_window > 0.0:
 		combo_window = maxf(0.0, combo_window - delta)
 		if combo_window <= 0.0 and not state_machine.is_in(&"Attack"):
@@ -352,6 +360,17 @@ func set_camera_limits(bounds: Rect2i, zoom_val: float = 1.0) -> void:
 	camera.limit_top = bounds.position.y - pad_y
 	camera.limit_right = bounds.position.x + bounds.size.x + pad_x
 	camera.limit_bottom = bounds.position.y + bounds.size.y + pad_y
+	snap_camera()
+
+
+func snap_camera() -> void:
+	if camera == null:
+		return
+	camera.position_smoothing_enabled = false
+	camera.make_current()
+	camera.reset_smoothing()
+	camera.force_update_scroll()
+	_smoothing_restore_frames = 2
 
 
 func shake_camera(intensity: float, duration: float) -> void:
@@ -381,6 +400,7 @@ func _refresh_torch_visibility(hour: float) -> void:
 	var gs: GameStateStore = GameStateStore.ref
 	var is_night: bool = hour >= 18.5 or hour < 5.5
 	torch_light.enabled = gs.is_dark_cave or (not gs.is_indoor and is_night)
+	torch_light.energy = 0.85
 
 
 func _apply_skin(skin_id: StringName) -> void:

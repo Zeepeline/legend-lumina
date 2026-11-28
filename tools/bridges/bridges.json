@@ -72,5 +72,23 @@
    "h": 48,
    "img": "tools/bridges/snow_0.png"
   }
+ ],
+ "meadow": [
+  {
+   "axis": "h",
+   "x": 584,
+   "y": 464,
+   "w": 192,
+   "h": 48,
+   "img": "tools/bridges/snow_0.png"
+  },
+  {
+   "axis": "v",
+   "x": 936,
+   "y": 792,
+   "w": 48,
+   "h": 144,
+   "img": "tools/bridges/river_1.png"
+  }
  ]
 }

@@ -1,19 +1,21 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://chx3qe8msi54b"]
 
-[ext_resource type="Script" path="res://systems/world/building_prop.gd" id="1_londi"]
-[ext_resource type="Texture2D" path="res://assets/art/buildings/sp_b_citywall_l.png" id="2_lemy1"]
+[ext_resource type="Script" uid="uid://na8f4w7mfigv" path="res://systems/world/building_prop.gd" id="1_londi"]
+[ext_resource type="Texture2D" uid="uid://dap4tl7w2x3di" path="res://assets/art/buildings/sp_b_citywall_l.png" id="2_lemy1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1fpqu"]
 size = Vector2(480, 26)
 
-[node name="Citywall L" type="StaticBody2D" unique_id=1748591656]
+[node name="Citywall L" type="StaticBody2D" unique_id=1243197401]
 collision_mask = 0
 script = ExtResource("1_londi")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=834182279]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1817092869]
+position = Vector2(6, 0)
+scale = Vector2(1.0245901, 1)
 texture = ExtResource("2_lemy1")
 offset = Vector2(0, -33)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1592805517]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1148658818]
 position = Vector2(0, -15)
 shape = SubResource("RectangleShape2D_1fpqu")

@@ -6,14 +6,14 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4fvln"]
 size = Vector2(80, 26)
 
-[node name="Shrine Ruin" type="StaticBody2D" unique_id=551635263]
+[node name="Shrine Ruin" type="StaticBody2D" unique_id=1347607563]
 collision_mask = 0
 script = ExtResource("1_d31vq")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=770829651]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=960747127]
 texture = ExtResource("2_snqw7")
 offset = Vector2(0, -35)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1479075531]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=785733116]
 position = Vector2(0, -15)
 shape = SubResource("RectangleShape2D_4fvln")

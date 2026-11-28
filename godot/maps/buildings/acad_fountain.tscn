@@ -6,14 +6,14 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4ubsb"]
 size = Vector2(52, 24)
 
-[node name="Acad Fountain" type="StaticBody2D" unique_id=114349814]
+[node name="Acad Fountain" type="StaticBody2D" unique_id=2050420890]
 collision_mask = 0
 script = ExtResource("1_us5yu")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=719957639]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=854211133]
 texture = ExtResource("2_bw1fd")
 offset = Vector2(0, -28)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1301609844]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=318749081]
 position = Vector2(0, -14)
 shape = SubResource("RectangleShape2D_4ubsb")

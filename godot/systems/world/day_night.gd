@@ -1,27 +1,57 @@
 class_name DayNightController
 extends CanvasModulate
+## Pengatur pencahayaan siang-malam dan nuansa bioma (termasuk keteduhan Hutan Dalam & Rawa Senja).
+
+const BIOME_TINTS: Dictionary = {
+	&"deepwood": Color(0.56, 0.66, 0.62, 1.0),
+	&"swamp": Color(0.78, 0.82, 0.74, 1.0),
+	&"forest": Color(0.91, 0.95, 0.91, 1.0),
+	&"kbawah": Color(0.85, 0.85, 0.92, 1.0),
+}
+
+var _tint_tween: Tween = null
 
 
 func _ready() -> void:
 	if EventsBus.ref != null:
-		EventsBus.ref.time_of_day_changed.connect(_update_tint)
+		EventsBus.ref.time_of_day_changed.connect(_on_time_changed)
 		EventsBus.ref.map_changed.connect(_on_map_changed)
-	_update_tint(GameStateStore.ref.world_hour)
+	_apply_tint(GameStateStore.ref.world_hour, false)
+
+
+func _on_time_changed(hour: float) -> void:
+	_apply_tint(hour, false)
 
 
 func _on_map_changed(_path: String, _spawn: StringName) -> void:
-	_update_tint(GameStateStore.ref.world_hour)
+	_apply_tint(GameStateStore.ref.world_hour, true)
 
 
-func _update_tint(hour: float) -> void:
+func _apply_tint(hour: float, smooth: bool) -> void:
+	var target: Color = _compute_target_color(hour)
+	if not smooth or not is_inside_tree():
+		color = target
+		return
+	if _tint_tween != null and _tint_tween.is_valid():
+		_tint_tween.kill()
+	_tint_tween = create_tween()
+	_tint_tween.tween_property(self, "color", target, 0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+
+
+func _compute_target_color(hour: float) -> Color:
 	var gs: GameStateStore = GameStateStore.ref
+	if gs == null:
+		return Color.WHITE
 	if gs.is_indoor:
-		color = Color.WHITE
-		return
+		return Color.WHITE
 	if gs.is_dark_cave:
-		color = Color(0.28, 0.26, 0.38, 1.0)
-		return
-	color = _color_for_hour(hour)
+		return Color(0.28, 0.26, 0.38, 1.0)
+	var base_c: Color = _color_for_hour(hour)
+	var rid: StringName = WorldLayout.id_from_path(gs.current_map)
+	if BIOME_TINTS.has(rid):
+		var bt: Color = BIOME_TINTS[rid] as Color
+		return Color(base_c.r * bt.r, base_c.g * bt.g, base_c.b * bt.b, 1.0)
+	return base_c
 
 
 func _color_for_hour(h: float) -> Color:

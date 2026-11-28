@@ -26,6 +26,8 @@ var equipped_armor_id: StringName = &"cloth_tunic"
 var owned_weapons: Array[StringName] = [&"starter_sword"]
 var owned_armors: Array[StringName] = [&"cloth_tunic"]
 var skin_id: StringName = &"mc2_slave"
+var player_name: String = "Arka"
+var story_stage: int = 0
 var relaxed_mode: bool = false
 var current_map: String = DEFAULT_MAP
 var spawn_id: StringName = DEFAULT_SPAWN
@@ -568,6 +570,8 @@ func to_dict() -> Dictionary:
 		"owned_weapons": wpn_strs,
 		"owned_armors": arm_strs,
 		"skin_id": String(skin_id),
+		"player_name": player_name,
+		"story_stage": story_stage,
 		"relaxed_mode": relaxed_mode,
 		"current_map": current_map,
 		"spawn_id": String(spawn_id),

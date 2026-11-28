@@ -94,6 +94,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 9
 text = "Kontrol Sentuh"
 
+[node name="FullscreenBtn" type="Button" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "Layar Penuh: Aktif"
+
 [node name="MusicVolBtn" type="Button" parent="Center/Panel/Margin/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 9

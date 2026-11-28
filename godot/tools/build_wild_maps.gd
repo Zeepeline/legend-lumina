@@ -87,15 +87,25 @@ static func _build_forest(ts: TileSet) -> void:
 	MapBuilderHelper.add_chest(ysorted, root, "ForestChest2", &"forest_c2", &"iron_sword", 1, 0, Vector2(210, 820))
 	MapBuilderHelper.add_chest(ysorted, root, "ForestChest3", &"forest_c3", &"ether", 2, 30, Vector2(676, 165))
 	MapBuilderHelper.add_animal(ysorted, root, "DeerForest", "deer", Vector2(490, 440))
+	MapBuilderHelper.add_animal(ysorted, root, "DeerForest2", "deer", Vector2(360, 880))
 	MapBuilderHelper.add_animal(ysorted, root, "OwlForest", "owl", Vector2(540, 250))
+	MapBuilderHelper.add_animal(ysorted, root, "SquirrelForest1", "squirrel", Vector2(720, 560))
+	MapBuilderHelper.add_animal(ysorted, root, "RabbitForest1", "rabbit", Vector2(420, 175))
+	MapBuilderHelper.add_animal(ysorted, root, "RabbitForest2", "rabbit", Vector2(820, 920))
 
 	MapBuilderHelper.add_enemy(ysorted, root, "BossGoblinChief", "gchief", Vector2(1010, 320))
 	MapBuilderHelper.add_enemy(ysorted, root, "BossSlaverCapt", "slaver_captain", Vector2(290, 645))
 	MapBuilderHelper.add_enemy(ysorted, root, "Slaver1", "slaver", Vector2(245, 665))
+	MapBuilderHelper.add_enemy(ysorted, root, "Slaver2", "slaver", Vector2(335, 685))
 	MapBuilderHelper.add_enemy(ysorted, root, "BoarF1", "boar", Vector2(490, 230))
+	MapBuilderHelper.add_enemy(ysorted, root, "BoarF2", "boar", Vector2(760, 460))
 	MapBuilderHelper.add_enemy(ysorted, root, "BatF1", "bat", Vector2(440, 390))
+	MapBuilderHelper.add_enemy(ysorted, root, "BatF2", "bat", Vector2(680, 740))
 	MapBuilderHelper.add_enemy(ysorted, root, "ShroomF1", "shroom", Vector2(205, 760))
+	MapBuilderHelper.add_enemy(ysorted, root, "ShroomF2", "shroom", Vector2(480, 960))
 	MapBuilderHelper.add_enemy(ysorted, root, "SnakeF1", "snake", Vector2(960, 830))
+	MapBuilderHelper.add_enemy(ysorted, root, "SnakeF2", "snake", Vector2(1080, 580))
+	MapBuilderHelper.add_enemy(ysorted, root, "BoarF3", "boar", Vector2(860, 1020))
 
 	MapBuilderHelper.add_spawn(spawns, root, "Default", &"default", Vector2(512, 120))
 	MapBuilderHelper.add_spawn(spawns, root, "FromVillage", &"from_village", Vector2(512, 62))
@@ -422,29 +432,75 @@ static func _build_deepwood(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_scaled_prop(ysorted, root, "DwPalisadeBanner", "res://assets/art/props/gpt_palisade_post_banner.png", Vector2(420, 1505), 0.50, Vector2(32, 16))
 	MapBuilderHelper.add_scaled_prop(ysorted, root, "DwMoss1", "res://assets/art/nature/deepwood_moss_island_1.png", Vector2(680, 430), 1.0, Vector2.ZERO, -5)
 	MapBuilderHelper.add_scaled_prop(ysorted, root, "DwMoss2", "res://assets/art/nature/deepwood_moss_island_2.png", Vector2(1740, 1280), 1.0, Vector2.ZERO, -5)
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "DwMoss3", "res://assets/art/nature/deepwood_moss_island_1.png", Vector2(1420, 620), 1.0, Vector2.ZERO, -5)
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "DwMoss4", "res://assets/art/nature/deepwood_moss_island_2.png", Vector2(960, 1040), 1.0, Vector2.ZERO, -5)
 
 	MapBuilderHelper.add_shrine(ysorted, root, Vector2(560, 375))
 	MapBuilderHelper.add_npc(ysorted, root, "Sambo", "npc_sambo_name", "res://assets/art/npc/npc_mc_darma.png", "res://data/dialogues/sambo_greet.tres", Vector2(1310, 810), "down")
+	# Micro-landmark: Perkemahan Penjelajah Sambo (obor, jamur, semak ungu)
+	MapBuilderHelper.add_prop(ysorted, root, "DwCampTorch", "res://assets/art/goblin/goblin_torch.png", Vector2(1272, 798), Vector2(10, 8))
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "DwCampShroom", "res://assets/art/nature/clutter_mushrooms.png", Vector2(1352, 822), 1.1, Vector2.ZERO, -4)
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "DwCampBushP", "res://assets/art/nature/bushP.png", Vector2(1258, 836), 0.75, Vector2(18, 8))
+	# Lorong rahasia & peti tersembunyi di celah utara (ala Secret Woods)
+	MapBuilderHelper.add_chest(ysorted, root, "DwSecretChest", &"dw_secret", &"hi_potion", 2, 180, Vector2(1460, 215))
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "DwSecretBush1", "res://assets/art/nature/bushP.png", Vector2(1425, 225), 0.72, Vector2(18, 8))
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "DwSecretBush2", "res://assets/art/nature/bushP.png", Vector2(1495, 225), 0.72, Vector2(18, 8))
+	MapBuilderHelper.add_scaled_prop(ysorted, root, "DwSecretShroom", "res://assets/art/nature/clutter_mushrooms.png", Vector2(1460, 244), 1.2, Vector2.ZERO, -4)
 	MapBuilderHelper.add_chest(ysorted, root, "DwChest1", &"dw_c1", &"crystal_sword", 1, 120, Vector2(560, 420))
 	MapBuilderHelper.add_chest(ysorted, root, "DwChest2", &"dw_c2", &"iron_chainmail", 1, 0, Vector2(1940, 1390))
 	MapBuilderHelper.add_chest(ysorted, root, "DwChest3", &"dw_c3", &"hi_potion", 2, 100, Vector2(340, 1510))
 	MapBuilderHelper.add_animal(ysorted, root, "SquirrelDw", "squirrel", Vector2(2040, 460))
+	MapBuilderHelper.add_animal(ysorted, root, "SquirrelDw2", "squirrel", Vector2(1140, 480))
+	MapBuilderHelper.add_animal(ysorted, root, "OwlDw1", "owl", Vector2(1620, 420))
+	MapBuilderHelper.add_animal(ysorted, root, "OwlDw2", "owl", Vector2(880, 760))
+	MapBuilderHelper.add_animal(ysorted, root, "DeerDw1", "deer", Vector2(1760, 740))
+	MapBuilderHelper.add_animal(ysorted, root, "RabbitDw1", "rabbit", Vector2(1480, 1180))
+	MapBuilderHelper.add_animal(ysorted, root, "OwlDw3", "owl", Vector2(460, 880))
 
 	MapBuilderHelper.add_enemy(ysorted, root, "BossGKing", "gking", Vector2(520, 1410))
 	MapBuilderHelper.add_enemy(ysorted, root, "BossSQueen", "squeen", Vector2(1820, 1340))
 	MapBuilderHelper.add_enemy(ysorted, root, "GhostDw1", "ghost", Vector2(640, 410))
 	MapBuilderHelper.add_enemy(ysorted, root, "GhostDw2", "ghost", Vector2(1180, 620))
+	MapBuilderHelper.add_enemy(ysorted, root, "GhostDw3", "ghost", Vector2(920, 320))
 	MapBuilderHelper.add_enemy(ysorted, root, "GolemDw1", "golem", Vector2(820, 470))
+	MapBuilderHelper.add_enemy(ysorted, root, "GolemDw2", "golem", Vector2(1460, 1360))
 	MapBuilderHelper.add_enemy(ysorted, root, "BoarDw1", "boar", Vector2(1880, 430))
 	MapBuilderHelper.add_enemy(ysorted, root, "BoarDw2", "boar", Vector2(1540, 960))
+	MapBuilderHelper.add_enemy(ysorted, root, "BoarDw3", "boar", Vector2(2120, 680))
 	MapBuilderHelper.add_enemy(ysorted, root, "SnakeDw1", "snake", Vector2(1060, 1180))
+	MapBuilderHelper.add_enemy(ysorted, root, "SnakeDw2", "snake", Vector2(1980, 1020))
+	MapBuilderHelper.add_enemy(ysorted, root, "ShroomDw1", "shroom", Vector2(1320, 440))
+	MapBuilderHelper.add_enemy(ysorted, root, "ShroomDw2", "shroom", Vector2(760, 980))
+	MapBuilderHelper.add_enemy(ysorted, root, "BatDw1", "bat", Vector2(1680, 560))
+	MapBuilderHelper.add_enemy(ysorted, root, "BatDw2", "bat", Vector2(1240, 1060))
+	MapBuilderHelper.add_enemy(ysorted, root, "BatDw3", "bat", Vector2(520, 1140))
 
 	MapBuilderHelper.add_spawn(spawns, root, "Default", &"default", Vector2(2260, 402))
 	MapBuilderHelper.add_spawn(spawns, root, "FromForest", &"from_forest", Vector2(2330, 402))
 	MapBuilderHelper.add_portal(root, "ToForest", Vector2(2386, 402), "res://maps/forest.tscn", &"from_deepwood", Vector2(22, 56))
 
-	MapBuilderHelper.add_open_tree_border(ysorted, root, &"deepwood", 2400, 1792, 92, "tall_dark", "giant")
-	MapBuilderHelper.populate_nature_and_deco(m, &"deepwood", &"deepwood", [Vector2(560, 375)], [Rect2(320, 1280, 360, 260)])
+	# Koridor Choke & Release: dinding pohon raksasa mengapit Gerbang Rimba Timur & lorong rahasia utara
+	var choke_trees: Array[Array] = [
+		[Vector2(2280, 305), "giant"], [Vector2(2205, 312), "tall_dark"], [Vector2(2130, 302), "giant"],
+		[Vector2(2285, 502), "giant"], [Vector2(2210, 496), "tall_dark"], [Vector2(2135, 508), "giant"],
+		[Vector2(1405, 275), "giant"], [Vector2(1515, 275), "giant"], [Vector2(1460, 145), "giant"],
+		[Vector2(1040, 1290), "giant"], [Vector2(1090, 1380), "tall_dark"], [Vector2(1135, 1465), "giant"],
+	]
+	for ci: int in choke_trees.size():
+		var ct: Array = choke_trees[ci]
+		MapBuilderHelper.add_tree(ysorted, root, "DwChokeTree_%d" % ci, ct[0] as Vector2, str(ct[1]))
+
+	var atmo: DeepwoodAtmosphere = DeepwoodAtmosphere.new()
+	atmo.name = "DeepwoodAtmosphere"
+	root.add_child(atmo)
+	atmo.owner = root
+
+	MapBuilderHelper.add_open_tree_border(ysorted, root, &"deepwood", 2400, 1792, 68, "tall_dark", "giant")
+	MapBuilderHelper.populate_nature_and_deco(
+		m, &"deepwood", &"deepwood",
+		[Vector2(560, 375), Vector2(1310, 810), Vector2(1460, 215), Vector2(1820, 1340)],
+		[Rect2(320, 1280, 360, 260), Rect2(1410, 175, 100, 90)]
+	)
 	MapBuilderHelper.add_open_borders(root, &"deepwood")
 	MapBuilderHelper.save_scene(root, "res://maps/deepwood.tscn")
 

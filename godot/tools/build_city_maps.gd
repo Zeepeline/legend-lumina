@@ -28,6 +28,28 @@ static func _place_building(
 	inst.owner = root
 
 
+static func _add_wall_run_h(ysorted: Node2D, root: Node, prefix: String, x_start: float, x_end: float, y: float) -> void:
+	var x: float = x_start
+	var idx: int = 0
+	while x <= x_end:
+		MapBuilderHelper.add_prop(ysorted, root, "%sH_%d" % [prefix, idx], "res://assets/art/buildings/sp_b_citywall_h.png", Vector2(x, y), Vector2(108, 22))
+		x += 108.0
+		idx += 1
+
+
+static func _add_wall_run_v(ysorted: Node2D, root: Node, prefix: String, x: float, y_start: float, y_end: float) -> void:
+	var y: float = y_start
+	var idx: int = 0
+	while y <= y_end:
+		MapBuilderHelper.add_prop(ysorted, root, "%sV_%d" % [prefix, idx], "res://assets/art/buildings/sp_b_citywall_v.png", Vector2(x, y), Vector2(36, 128))
+		y += 128.0
+		idx += 1
+
+
+static func _add_wall_tower(ysorted: Node2D, root: Node, node_name: String, pos: Vector2) -> void:
+	MapBuilderHelper.add_prop(ysorted, root, node_name, "res://assets/art/buildings/sp_b_citywall_tower.png", pos, Vector2(64, 30))
+
+
 static func _build_kgate(ts: TileSet, buildings: Dictionary) -> void:
 	var cols: int = 118
 	var rows: int = 56
@@ -43,8 +65,10 @@ static func _build_kgate(ts: TileSet, buildings: Dictionary) -> void:
 	)
 
 	_place_building(ysorted, root, buildings, "gatehouse", "Gatehouse", Vector2(1300, 442))
-	_place_building(ysorted, root, buildings, "citywall_l", "CityWallL", Vector2(965, 424))
-	_place_building(ysorted, root, buildings, "citywall_r", "CityWallR", Vector2(1634, 424))
+	_place_building(ysorted, root, buildings, "citywall_l", "CityWallL", Vector2(969, 438))
+	_place_building(ysorted, root, buildings, "citywall_r", "CityWallR", Vector2(1630, 438))
+	_add_wall_tower(ysorted, root, "GateWallTowerW", Vector2(724, 444))
+	_add_wall_tower(ysorted, root, "GateWallTowerE", Vector2(1862, 444))
 	_place_building(ysorted, root, buildings, "barak_bayaran", "BarakBayaran", Vector2(1000, 628))
 
 	_place_building(ysorted, root, buildings, "gar_hall", "GarHall", Vector2(380, 222))
@@ -117,25 +141,44 @@ static func _build_kpasar(ts: TileSet, buildings: Dictionary) -> void:
 
 	_place_building(ysorted, root, buildings, "fountain", "PasarFountain", Vector2(800, 640))
 	var stalls: Array[Array] = [
-		["stall_potion", "StallPotionN", Vector2(470, 540)],
-		["stall_butcher", "StallButcherN", Vector2(590, 540)],
-		["stall_weapon", "StallWeaponN", Vector2(1010, 540)],
-		["stall_scroll", "StallScrollN", Vector2(1130, 540)],
-		["stall_food", "StallFoodS", Vector2(470, 870)],
-		["stall_scroll", "StallScrollS", Vector2(590, 870)],
-		["stall_potion", "StallPotionS", Vector2(1010, 870)],
-		["stall_weapon", "StallWeaponS", Vector2(1130, 870)],
+		# Deretan tenda pasar utara (kiri & kanan alun-alun)
+		["market_stall", "StallN1", Vector2(270, 520)],
+		["stall_food", "StallN2", Vector2(360, 520)],
+		["stall_potion", "StallPotionN", Vector2(450, 520)],
+		["stall_butcher", "StallButcherN", Vector2(540, 520)],
+		["market_stall", "StallN5", Vector2(630, 520)],
+		["market_stall", "StallN6", Vector2(970, 520)],
+		["stall_weapon", "StallWeaponN", Vector2(1060, 520)],
+		["stall_scroll", "StallScrollN", Vector2(1150, 520)],
+		["stall_food", "StallN9", Vector2(1240, 520)],
+		["market_stall", "StallN10", Vector2(1330, 520)],
+		# Deretan tenda pasar selatan (kiri & kanan alun-alun)
+		["market_stall", "StallS1", Vector2(320, 855)],
+		["stall_food", "StallFoodS", Vector2(420, 855)],
+		["stall_scroll", "StallScrollS", Vector2(520, 855)],
+		["stall_butcher", "StallS4", Vector2(620, 855)],
+		["stall_food", "StallS5", Vector2(980, 855)],
+		["stall_potion", "StallPotionS", Vector2(1080, 855)],
+		["stall_weapon", "StallWeaponS", Vector2(1180, 855)],
+		["market_stall", "StallS8", Vector2(1280, 855)],
 	]
 	for st: Array in stalls:
 		_place_building(ysorted, root, buildings, st[0], st[1], st[2])
 
+	# Deretan rumah perkotaan padat (jarak rapat ~104px, bebas renggangan kosong)
 	var houses: Array[Array] = [
-		["city_house_2", "PasarHN1", Vector2(178, 306)], ["city_house_4", "PasarHN2", Vector2(308, 290)],
-		["city_house_5", "PasarInnBldg", Vector2(556, 304)], ["city_house_3", "PasarHN4", Vector2(1044, 302)],
-		["city_house_4", "PasarHN5", Vector2(1296, 290)], ["city_house_2", "PasarHN6", Vector2(1428, 308)],
-		["city_house_3", "PasarHS1", Vector2(178, 1094)], ["city_house_2", "PasarHS2", Vector2(310, 1110)],
-		["city_house_4", "PasarHS3", Vector2(556, 1096)], ["city_house_5", "PasarHS4", Vector2(1044, 1094)],
-		["city_house_3", "PasarHS5", Vector2(1296, 1110)], ["city_house_4", "PasarHS6", Vector2(1428, 1092)],
+		["city_house_1", "PasarHN1", Vector2(130, 304)], ["city_house_2", "PasarHN2", Vector2(234, 296)],
+		["city_house_3", "PasarHN3", Vector2(338, 304)], ["city_house_4", "PasarHN4L", Vector2(442, 296)],
+		["city_house_5", "PasarInnBldg", Vector2(556, 304)],
+		["city_house_3", "PasarHN4", Vector2(1044, 304)], ["city_house_1", "PasarHN5L", Vector2(1148, 296)],
+		["city_house_4", "PasarHN5", Vector2(1252, 304)], ["city_house_2", "PasarHN6", Vector2(1356, 296)],
+		["city_house_5", "PasarHN7", Vector2(1460, 304)],
+		["city_house_3", "PasarHS1", Vector2(130, 1094)], ["city_house_2", "PasarHS2", Vector2(234, 1102)],
+		["city_house_1", "PasarHS2B", Vector2(338, 1094)], ["city_house_4", "PasarHS3L", Vector2(442, 1102)],
+		["city_house_4", "PasarHS3", Vector2(556, 1096)],
+		["city_house_5", "PasarHS4", Vector2(1044, 1094)], ["city_house_2", "PasarHS4B", Vector2(1148, 1102)],
+		["city_house_3", "PasarHS5", Vector2(1252, 1094)], ["city_house_1", "PasarHS5B", Vector2(1356, 1102)],
+		["city_house_4", "PasarHS6", Vector2(1460, 1094)],
 	]
 	for hs: Array in houses:
 		_place_building(ysorted, root, buildings, hs[0], hs[1], hs[2])
@@ -186,14 +229,21 @@ static func _build_kpermukiman(ts: TileSet, buildings: Dictionary) -> void:
 	_place_building(ysorted, root, buildings, "balai_dewan", "BalaiDewan", Vector2(688, 360))
 	_place_building(ysorted, root, buildings, "well", "PermukimanWell", Vector2(688, 520))
 
+	# Deretan rumah permukiman kota padat (4 blok rapat) + 2 tenda pedagang lokal
 	var p_houses: Array[Array] = [
-		["city_house_1", "PermH1", Vector2(204, 240)], ["city_house_2", "PermH2", Vector2(360, 232)],
-		["city_house_3", "PermH3", Vector2(1016, 232)], ["city_house_4", "PermH4", Vector2(1172, 240)],
-		["city_house_2", "PermH5", Vector2(204, 710)], ["city_house_1", "PermH6", Vector2(360, 718)],
-		["city_house_5", "PermH7", Vector2(1016, 718)], ["city_house_3", "PermH8", Vector2(1172, 710)],
+		["city_house_1", "PermH1", Vector2(148, 240)], ["city_house_2", "PermH2", Vector2(252, 232)],
+		["city_house_4", "PermH2B", Vector2(356, 240)], ["city_house_3", "PermH2C", Vector2(460, 232)],
+		["city_house_3", "PermH3", Vector2(948, 232)], ["city_house_5", "PermH3B", Vector2(1052, 240)],
+		["city_house_4", "PermH4", Vector2(1156, 232)], ["city_house_1", "PermH4B", Vector2(1260, 240)],
+		["city_house_2", "PermH5", Vector2(148, 712)], ["city_house_1", "PermH6", Vector2(252, 720)],
+		["city_house_5", "PermH6B", Vector2(356, 712)], ["city_house_4", "PermH6C", Vector2(460, 720)],
+		["city_house_5", "PermH7", Vector2(948, 720)], ["city_house_2", "PermH7B", Vector2(1052, 712)],
+		["city_house_3", "PermH8", Vector2(1156, 720)], ["city_house_1", "PermH8B", Vector2(1260, 712)],
 	]
 	for ph: Array in p_houses:
 		_place_building(ysorted, root, buildings, ph[0], ph[1], ph[2])
+	_place_building(ysorted, root, buildings, "stall_food", "PermStallW", Vector2(540, 520))
+	_place_building(ysorted, root, buildings, "market_stall", "PermStallE", Vector2(836, 520))
 
 	MapBuilderHelper.add_prop(ysorted, root, "PermLamp1", "res://assets/art/props/gpt_city_lamp2.png", Vector2(620, 430), Vector2(10, 8))
 	MapBuilderHelper.add_prop(ysorted, root, "PermLamp2", "res://assets/art/props/gpt_city_lamp2.png", Vector2(756, 430), Vector2(10, 8))
@@ -209,6 +259,12 @@ static func _build_kpermukiman(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_spawn(spawns, root, "Default", &"default", Vector2(688, 560))
 	MapBuilderHelper.add_spawn(spawns, root, "FromKPasar", &"from_kpasar", Vector2(62, 500))
 	MapBuilderHelper.add_portal(root, "ToKPasar", Vector2(14, 500), "res://maps/kpasar.tscn", &"from_kpermukiman", Vector2(22, 60))
+
+	_add_wall_run_h(ysorted, root, "PermWallN", 80.0, 1320.0, 64.0)
+	_add_wall_run_h(ysorted, root, "PermWallS", 80.0, 1320.0, 976.0)
+	_add_wall_run_v(ysorted, root, "PermWallE", 1384.0, 160.0, 910.0)
+	_add_wall_tower(ysorted, root, "PermTowerNE", Vector2(1372, 92))
+	_add_wall_tower(ysorted, root, "PermTowerSE", Vector2(1372, 978))
 
 	MapBuilderHelper.add_open_tree_border(ysorted, root, &"kpermukiman", 1408, 992, 120, "big", "tall")
 	MapBuilderHelper.populate_nature_and_deco(m, &"kpermukiman", &"city", [Vector2(688, 520)])
@@ -271,6 +327,17 @@ static func _build_kakademi(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_portal(root, "ToKPasar", Vector2(704, 978), "res://maps/kpasar.tscn", &"from_kakademi")
 	MapBuilderHelper.add_portal(root, "DoorArsip", Vector2(704, 386), "res://maps/interiors/arsip.tscn", &"default", Vector2(32, 16))
 
+	_add_wall_run_h(ysorted, root, "AcadWallN", 80.0, 1320.0, 64.0)
+	_add_wall_run_h(ysorted, root, "AcadWallSW", 80.0, 560.0, 976.0)
+	_add_wall_run_h(ysorted, root, "AcadWallSE", 848.0, 1320.0, 976.0)
+	_add_wall_run_v(ysorted, root, "AcadWallW", 24.0, 160.0, 910.0)
+	_add_wall_run_v(ysorted, root, "AcadWallE", 1384.0, 160.0, 910.0)
+	_add_wall_tower(ysorted, root, "AcadTowerNW", Vector2(36, 92))
+	_add_wall_tower(ysorted, root, "AcadTowerNMid", Vector2(704, 76))
+	_add_wall_tower(ysorted, root, "AcadTowerNE", Vector2(1372, 92))
+	_add_wall_tower(ysorted, root, "AcadTowerSW", Vector2(36, 978))
+	_add_wall_tower(ysorted, root, "AcadTowerSE", Vector2(1372, 978))
+
 	MapBuilderHelper.add_open_tree_border(ysorted, root, &"kakademi", 1408, 992, 120, "big", "tall")
 	MapBuilderHelper.populate_nature_and_deco(m, &"kakademi", &"city", [Vector2(704, 760)], [Rect2(140, 260, 1140, 420)])
 	MapBuilderHelper.add_open_borders(root, &"kakademi")
@@ -315,6 +382,12 @@ static func _build_kbawah(ts: TileSet, buildings: Dictionary) -> void:
 	MapBuilderHelper.add_spawn(spawns, root, "FromArena", &"from_arena", Vector2(700, 712))
 	MapBuilderHelper.add_portal(root, "ToKPasar", Vector2(1186, 500), "res://maps/kpasar.tscn", &"from_kbawah", Vector2(22, 60))
 	MapBuilderHelper.add_portal(root, "DoorArena", Vector2(700, 672), "res://maps/interiors/arena.tscn", &"default", Vector2(32, 18))
+
+	_add_wall_run_h(ysorted, root, "BawahWallN", 80.0, 1120.0, 64.0)
+	_add_wall_run_h(ysorted, root, "BawahWallS", 80.0, 1120.0, 976.0)
+	_add_wall_run_v(ysorted, root, "BawahWallW", 24.0, 160.0, 910.0)
+	_add_wall_tower(ysorted, root, "BawahTowerNW", Vector2(36, 92))
+	_add_wall_tower(ysorted, root, "BawahTowerSW", Vector2(36, 978))
 
 	MapBuilderHelper.add_open_tree_border(ysorted, root, &"kbawah", 1200, 992, 120, "big_dark", "tall_dark")
 	MapBuilderHelper.populate_nature_and_deco(m, &"kbawah", &"city", [Vector2(770, 690)])

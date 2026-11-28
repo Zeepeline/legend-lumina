@@ -41,12 +41,12 @@ size = Vector2(14, 28)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_54foc"]
 size = Vector2(14, 20)
 
-[node name="Home" type="Node2D" unique_id=1474154322]
+[node name="Home" type="Node2D" unique_id=31760985]
 metadata/is_indoor = true
 metadata/camera_zoom = 2.0
 metadata/map_bounds = Rect2i(0, 0, 127, 111)
 
-[node name="Backdrop" type="ColorRect" parent="." unique_id=864353608]
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1489547412]
 z_index = -5
 offset_left = -240.0
 offset_top = -160.0
@@ -54,15 +54,15 @@ offset_right = 367.0
 offset_bottom = 271.0
 color = Color(0.05, 0.03, 0.03, 1)
 
-[node name="RoomBg" type="Sprite2D" parent="." unique_id=875454014]
+[node name="RoomBg" type="Sprite2D" parent="." unique_id=1439604487]
 z_index = -2
 texture = ExtResource("1_ipevh")
 centered = false
 
-[node name="YSorted" type="Node2D" parent="." unique_id=2116299086]
+[node name="YSorted" type="Node2D" parent="." unique_id=2130020186]
 y_sort_enabled = true
 
-[node name="RoomChest" type="StaticBody2D" parent="YSorted" unique_id=841142669 instance=ExtResource("2_ycqtd")]
+[node name="RoomChest" type="StaticBody2D" parent="YSorted" unique_id=2115769805 instance=ExtResource("2_ycqtd")]
 position = Vector2(24, 52)
 collision_mask = 0
 script = ExtResource("3_lmneb")
@@ -70,65 +70,65 @@ chest_id = &"home_c1"
 reward_item_id = &"bread_mila"
 reward_gold = 15
 
-[node name="BedInteract" type="Area2D" parent="." unique_id=243234793]
+[node name="BedInteract" type="Area2D" parent="." unique_id=248195091]
 position = Vector2(92, 52)
 collision_layer = 64
 collision_mask = 0
 script = ExtResource("4_ni3mq")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BedInteract" unique_id=1726396569]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BedInteract" unique_id=1463315513]
 shape = SubResource("CircleShape2D_gxldi")
 
-[node name="Borders" type="StaticBody2D" parent="." unique_id=1529902959]
+[node name="Borders" type="StaticBody2D" parent="." unique_id=250279981]
 collision_mask = 0
 
-[node name="Wall_0" type="CollisionShape2D" parent="Borders" unique_id=1353337746]
+[node name="Wall_0" type="CollisionShape2D" parent="Borders" unique_id=1001607353]
 position = Vector2(63.5, 21)
 shape = SubResource("RectangleShape2D_fs0mm")
 
-[node name="Wall_1" type="CollisionShape2D" parent="Borders" unique_id=684771734]
+[node name="Wall_1" type="CollisionShape2D" parent="Borders" unique_id=1145499297]
 position = Vector2(5, 55.5)
 shape = SubResource("RectangleShape2D_747ng")
 
-[node name="Wall_2" type="CollisionShape2D" parent="Borders" unique_id=387142149]
+[node name="Wall_2" type="CollisionShape2D" parent="Borders" unique_id=619609518]
 position = Vector2(122, 55.5)
 shape = SubResource("RectangleShape2D_x8j4k")
 
-[node name="Wall_3" type="CollisionShape2D" parent="Borders" unique_id=1455901728]
+[node name="Wall_3" type="CollisionShape2D" parent="Borders" unique_id=327761294]
 position = Vector2(22, 101.5)
 shape = SubResource("RectangleShape2D_1t7ql")
 
-[node name="Wall_4" type="CollisionShape2D" parent="Borders" unique_id=772509425]
+[node name="Wall_4" type="CollisionShape2D" parent="Borders" unique_id=888842138]
 position = Vector2(99.5, 101.5)
 shape = SubResource("RectangleShape2D_dx0tw")
 
-[node name="Wall_5" type="CollisionShape2D" parent="Borders" unique_id=569801575]
+[node name="Wall_5" type="CollisionShape2D" parent="Borders" unique_id=1494403260]
 position = Vector2(105, 49)
 shape = SubResource("RectangleShape2D_ofxer")
 
-[node name="Wall_6" type="CollisionShape2D" parent="Borders" unique_id=311923748]
+[node name="Wall_6" type="CollisionShape2D" parent="Borders" unique_id=2025542782]
 position = Vector2(106, 61.5)
 shape = SubResource("RectangleShape2D_jt4w1")
 
-[node name="Wall_7" type="CollisionShape2D" parent="Borders" unique_id=387504453]
+[node name="Wall_7" type="CollisionShape2D" parent="Borders" unique_id=168077066]
 position = Vector2(54, 67)
 shape = SubResource("RectangleShape2D_2hul2")
 
-[node name="Wall_8" type="CollisionShape2D" parent="Borders" unique_id=946537357]
+[node name="Wall_8" type="CollisionShape2D" parent="Borders" unique_id=1519089647]
 position = Vector2(17, 78)
 shape = SubResource("RectangleShape2D_5wmej")
 
-[node name="Wall_9" type="CollisionShape2D" parent="Borders" unique_id=1475716506]
+[node name="Wall_9" type="CollisionShape2D" parent="Borders" unique_id=1966365586]
 position = Vector2(110, 82)
 shape = SubResource("RectangleShape2D_54foc")
 
-[node name="SpawnPoints" type="Node2D" parent="." unique_id=854453727]
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=1239978313]
 
-[node name="Default" type="Marker2D" parent="SpawnPoints" unique_id=673586949]
+[node name="Default" type="Marker2D" parent="SpawnPoints" unique_id=1740816557]
 position = Vector2(58, 86)
 script = ExtResource("5_pmw0w")
 
-[node name="ToVillage" type="Area2D" parent="." unique_id=2122167066 instance=ExtResource("6_ohsd1")]
+[node name="ToVillage" type="Area2D" parent="." unique_id=1130213655 instance=ExtResource("6_ohsd1")]
 position = Vector2(58, 102)
 collision_layer = 0
 collision_mask = 2

@@ -9,22 +9,22 @@ size = Vector2(220, 44)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kd84o"]
 size = Vector2(232, 148)
 
-[node name="Academy" type="StaticBody2D" unique_id=508840717]
+[node name="Academy" type="StaticBody2D" unique_id=1098748449]
 collision_mask = 0
 script = ExtResource("1_251ae")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=437563498]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1193724916]
 texture = ExtResource("2_rkmce")
 offset = Vector2(0, -100)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=784063950]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=475634531]
 position = Vector2(0, -24)
 shape = SubResource("RectangleShape2D_4688p")
 
-[node name="FadeArea" type="Area2D" parent="." unique_id=724841325]
+[node name="FadeArea" type="Area2D" parent="." unique_id=550462629]
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=1712679898]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FadeArea" unique_id=1919056436]
 position = Vector2(0, -122)
 shape = SubResource("RectangleShape2D_kd84o")

@@ -224,6 +224,8 @@ BRIDGES_GD = 'godot/core/bridges_data.gd'
 
 
 def paste_bridges(IMG):
+    """Tulis BridgesData (posisi jembatan) tanpa menempelkan gambar jembatan ke PNG tanah,
+    karena jembatan kini berupa node Sprite2D terpisah yang bisa ditarik langsung di Godot Editor."""
     import json
     B = json.load(open(BRIDGES))
     lines = ['class_name BridgesData', 'extends RefCounted', '## DIBUAT OTOMATIS oleh tools/seam_ground.py — jangan disunting tangan.',
@@ -234,14 +236,80 @@ def paste_bridges(IMG):
             continue
         rects = []
         for o in L:
-            art = Image.open(o['img']).convert('RGBA')
-            base = Image.fromarray(IMG[k])
-            base.alpha_composite(art, (o['x'], o['y']))
-            IMG[k] = np.array(base)
             rects.append('Rect2i(%d, %d, %d, %d)' % (o['x'], o['y'], o['w'], o['h']))
         lines.append('\t&"%s": [%s],' % (k, ', '.join(rects)))
     lines.append('}')
     open(BRIDGES_GD, 'w').write('\n'.join(lines) + '\n')
+
+
+def fix_meadow_fords(IMG):
+    """Ganti 2 jembatan pasir di tengah sungai Padang Angin (meadow) dengan air sungai utuh
+    (jembatan kayunya ditempel di atasnya oleh paste_bridges)."""
+    if 'meadow' not in IMG:
+        return
+    a = IMG['meadow']
+    wat = np.array(Image.open('godot/assets/art/ground/gnd_water_sprout.png').convert('RGBA'))[:16, :16]
+    wh, ww = 16, 16
+    r, g, b = a[..., 0].astype(int), a[..., 1].astype(int), a[..., 2].astype(int)
+    w = (b > r + 15) & (b > 130) & (g > 110) & (r < 175)
+    s = (r > 165) & (g > 145) & (b > 100) & (b < 168) & (r > b + 20)
+    # Pasir yang diapit air di atas & bawah (penyeberangan atas) atau kiri & kanan (penyeberangan bawah)
+    hb = np.zeros_like(s)
+    hb[48:-48, :] = s[48:-48, :] & w[:-96, :] & w[96:, :]
+    vb = np.zeros_like(s)
+    vb[:, 48:-48] = s[:, 48:-48] & w[:, :-96] & w[:, 96:]
+    ford = hb | vb
+    ys, xs = np.nonzero(ford)
+    for y, x in zip(ys, xs):
+        a[y, x] = wat[y % wh, x % ww]
+
+
+def _make_clean_grass_tile():
+    """Buat ubin rumput pixel-art 64×64 bersih tanpa bercak gelap/bayangan permanen."""
+    rng = np.random.default_rng(123)
+    tile = np.full((64, 64, 3), [155, 199, 92], dtype=np.uint8)
+    # Tekstur piksel sangat halus (±4) + sedikit helai rumput kecil
+    noise = rng.integers(-4, 5, size=(64, 64, 1))
+    tile = np.clip(tile.astype(int) + noise, 0, 255).astype(np.uint8)
+    for _ in range(28):
+        y, x = int(rng.integers(1, 63)), int(rng.integers(1, 63))
+        col = [138, 182, 78] if rng.random() < 0.6 else [172, 212, 108]
+        tile[y, x] = col
+        if rng.random() < 0.5:
+            tile[y - 1, x] = col
+    return tile.astype(float)
+
+
+def flatten_grass(IMG, R):
+    """Ganti bercak rumput gelap-terang (bayangan permanen di PNG) dengan rumput pixel-art bersih seragam,
+    sambil menjaga jalan tanah, paving kota, air, pasir, dan salju tetap utuh."""
+    clean = _make_clean_grass_tile()
+    T = clean.shape[0]
+    bx = min(r[0] for r in R.values()) - 900
+    by = min(r[1] for r in R.values()) - 900
+    for k, (x, y, w, h) in R.items():
+        if k == 'snow':
+            continue
+        a = IMG[k]
+        r, g, b = a[..., 0].astype(int), a[..., 1].astype(int), a[..., 2].astype(int)
+        water = (b > r + 15) & (b > 130) & (g > 110) & (r < 175)
+        # Pasir hanya dilindungi jika dekat air (radius 24px), supaya bintik kuning di tengah rumput ikut dibersihkan
+        near_w = water.copy()
+        for sh in (4, 8, 12, 16, 20, 24):
+            near_w[sh:, :] |= water[:-sh, :]
+            near_w[:-sh, :] |= water[sh:, :]
+            near_w[:, sh:] |= water[:, :-sh]
+            near_w[:, :-sh] |= water[:, sh:]
+        sand = (r > 165) & (g > 145) & (b > 100) & (b < 168) & (r > b + 20) & near_w
+        dirt = is_dirt(a)
+        grass = ~water & ~sand & ~dirt
+        if not grass.any():
+            continue
+        ys, xs = np.nonzero(grass)
+        gys = (y + ys - by) % T
+        gxs = (x + xs - bx) % T
+        tint = np.array([0.82, 0.86, 0.74]) if k == 'swamp' else np.array([1.0, 1.0, 1.0])
+        a[ys, xs, :3] = np.clip(clean[gys, gxs] * tint, 0, 255).astype(np.uint8)
 
 
 def main():
@@ -249,6 +317,8 @@ def main():
     IMG = {}
     for k, (x, y, w, h) in R.items():
         IMG[k] = fit(np.array(Image.open(SRC % k).convert('RGBA')), w, h)
+    fix_meadow_fords(IMG)
+    flatten_grass(IMG, R)
     for i, (a, b, side, g0, g1) in enumerate(edges(R)):
         depth = max(BAND, LINK) + 4
         sa = strip(IMG[a], R[a], side, g0, g1, depth, False)

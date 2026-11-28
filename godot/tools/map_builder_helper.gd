@@ -710,15 +710,15 @@ static func populate_nature_and_deco(
 	var tree_threshold: int = 58
 	var max_trees: int = 120
 	if biome == &"deepwood":
-		step_cells = 3
-		min_tree_dist = 64.0
-		tree_threshold = 44
-		max_trees = 135
+		step_cells = 2
+		min_tree_dist = 46.0
+		tree_threshold = 30
+		max_trees = 260
 	elif biome == &"forest":
-		step_cells = 3
-		min_tree_dist = 56.0
-		tree_threshold = 46
-		max_trees = 85
+		step_cells = 2
+		min_tree_dist = 48.0
+		tree_threshold = 36
+		max_trees = 130
 	elif biome == &"snow" or biome == &"swamp":
 		step_cells = 3
 		min_tree_dist = 58.0
@@ -757,7 +757,7 @@ static func populate_nature_and_deco(
 			added_trees += 1
 
 	# Semak, batu, bunga, dan clutter organik di tanah rumput
-	var max_deco: int = 110 if (biome == &"deepwood" or biome == &"river") else (42 if biome == &"city" else 76)
+	var max_deco: int = 280 if biome == &"deepwood" else (160 if biome == &"forest" else (110 if biome == &"river" else (42 if biome == &"city" else 76)))
 	var added_deco: int = 0
 	var placed_deco: Array[Vector2] = []
 	for r: int in range(2, rows - 2, 2):
@@ -822,9 +822,7 @@ static func _pick_biome_tree(biome: StringName, h: int) -> String:
 				return "tall_dark"
 			return "big_dark" if k < 8 else "tall"
 		&"deepwood":
-			if k < 3:
-				return "giant"
-			return "tall_dark" if k < 7 else "big_dark"
+			return "giant" if k < 4 else "tall_dark"
 		&"snow":
 			return "snow" if k < 7 else "snow_tall"
 		&"swamp":
@@ -853,17 +851,22 @@ static func _spawn_biome_deco(ysorted: Node2D, root: Node, biome: StringName, ki
 			tex_path = "res://assets/art/nature/clutter_pebbles.png"
 			sc = 1.0
 	elif biome == &"deepwood":
-		if kind < 2:
+		if kind == 0:
+			tex_path = "res://assets/art/nature/bushP.png"
+			sc = 0.72
+			col_sz = Vector2(20, 8)
+		elif kind < 3:
 			tex_path = "res://assets/art/nature/bushG2.png"
 			sc = 0.72
 			col_sz = Vector2(22, 8)
-		elif kind < 4:
+		elif kind < 5:
 			tex_path = "res://assets/art/nature/deepwood_moss_island_1.png"
 			sc = 0.90
-		elif kind < 6:
+		elif kind < 7:
 			tex_path = "res://assets/art/nature/dwclutter_fallen_leaves.png"
-		elif kind < 8:
-			tex_path = "res://assets/art/nature/dwclutter_mushroom.png"
+		elif kind < 9:
+			tex_path = "res://assets/art/nature/clutter_mushrooms.png"
+			sc = 1.0
 		else:
 			tex_path = "res://assets/art/nature/stumpWoods.png"
 			sc = 0.80

@@ -30,16 +30,29 @@ func _ready() -> void:
 	_wander_target = _home_pos
 	if not npc_name_key.is_empty():
 		name_label.text = tr(npc_name_key)
+	name_label.visible = false
 	if shop_id != &"":
 		interactable.prompt_key = "prompt_shop"
 	if sprite_sheet != null:
 		sprite.sprite_frames = _build_frames(sprite_sheet)
 	_play_idle(facing_dir)
 	interactable.interacted.connect(_on_interacted)
+	interactable.body_entered.connect(_on_near_body_entered)
+	interactable.body_exited.connect(_on_near_body_exited)
 	if EventsBus.ref != null:
 		EventsBus.ref.dialogue_finished.connect(_on_dialogue_finished)
 	if wander_radius <= 0.0:
 		set_physics_process(false)
+
+
+func _on_near_body_entered(body: Node) -> void:
+	if body.is_in_group(&"player") and not npc_name_key.is_empty():
+		name_label.visible = true
+
+
+func _on_near_body_exited(body: Node) -> void:
+	if body.is_in_group(&"player"):
+		name_label.visible = false
 
 
 func _physics_process(delta: float) -> void:
@@ -198,6 +211,8 @@ func _on_interacted(by: Node) -> void:
 	if by is Node2D:
 		var player_node: Node2D = by as Node2D
 		_face_vector(player_node.global_position - global_position, false)
+	if StoryManager.ref != null and StoryManager.ref.try_handle_npc_interaction(npc_name_key, self):
+		return
 	if shop_id != &"":
 		var title: String = shop_title_key if not shop_title_key.is_empty() else npc_name_key
 		EventsBus.ref.shop_requested.emit(shop_id, title, shop_item_ids)

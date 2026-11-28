@@ -4,8 +4,8 @@ extends Node2D
 
 const PLAYER_SCENE: PackedScene = preload("res://systems/player/player.tscn")
 const WILD_GRASS_TEX: Texture2D = preload("res://assets/art/ground/gnd_wild_sprout.png")
-const OUTDOOR_CAMERA_ZOOM: float = 1.25
-const STREAM_LOAD_DIST: float = 900.0
+const OUTDOOR_CAMERA_ZOOM: float = 0.70
+const STREAM_LOAD_DIST: float = 1050.0
 const STREAM_UNLOAD_DIST: float = 1550.0
 const STREAM_CHECK_INTERVAL: float = 0.25
 
@@ -63,10 +63,11 @@ func start_at(region_id: StringName, spawn_id: StringName = &"default") -> Node2
 	var world_pos: Vector2 = Vector2(region_rect.position) + local_pos
 	update_streaming_at(world_pos)
 
-	var parent_node: Node = _get_ysorted_parent(chunk)
 	_player = PLAYER_SCENE.instantiate() as Node2D
-	_player.position = local_pos
-	parent_node.add_child(_player)
+	_player.position = world_pos
+	_chunks_root.add_child(_player)
+	if _player.has_method("reset_physics_interpolation"):
+		_player.call("reset_physics_interpolation")
 	_apply_continent_camera()
 	return _player
 
@@ -85,10 +86,9 @@ func teleport_player_to(region_id: StringName, spawn_id: StringName = &"default"
 	var world_pos: Vector2 = Vector2(region_rect.position) + local_pos
 	update_streaming_at(world_pos)
 
-	var target_parent: Node = _get_ysorted_parent(chunk)
-	if _player.get_parent() != target_parent:
-		_player.reparent(target_parent, false)
-	_player.position = local_pos
+	if _player.get_parent() != _chunks_root:
+		_player.reparent(_chunks_root, false)
+	_player.position = world_pos
 	if _player.has_method("reset_physics_interpolation"):
 		_player.call("reset_physics_interpolation")
 	_apply_continent_camera()
@@ -147,11 +147,6 @@ func _on_region_crossed(new_rid: StringName) -> void:
 	if not _loaded_chunks.has(new_rid):
 		_load_region(new_rid)
 	_active_region = new_rid
-	var new_chunk: Node2D = _loaded_chunks.get(new_rid, null)
-	if new_chunk != null and _player != null and is_instance_valid(_player):
-		var target_parent: Node = _get_ysorted_parent(new_chunk)
-		if _player.get_parent() != target_parent:
-			_player.reparent(target_parent, true)
 
 	var new_path: String = WorldLayout.path_from_id(new_rid)
 	if GameStateStore.ref != null:
@@ -208,19 +203,46 @@ func _enforce_ground_z_order(chunk: Node2D) -> void:
 		var layer: CanvasItem = chunk.get_node_or_null(str(lname)) as CanvasItem
 		if layer != null:
 			layer.z_index = int(z_map[lname])
-	# Air sudah tergambar di gambar tanah (tepi pasir & kedalaman). Petak air TileMap hanya dipakai untuk tabrakan:
-	# dibuat tak terlihat agar tidak menimpa gambar dengan kotak biru polos yang tidak pas.
+	# Nuansa rumput & tanah per bioma sudah dipanggang mulus ke gnd_*_custom.png oleh tools/seam_ground.py
+	# (tanpa modulate kotak kaku di sini agar perbatasan antar wilayah tidak pernah bergaris lurus).
+	# Jika peta sudah memakai GroundTerrain (100% TileMapLayer murni), biarkan GroundWater tetap terlihat!
+	# Untuk peta lama yang masih memakai GroundSprite PNG, GroundWater dibuat transparan (tabrakan saja).
+	var has_terrain: bool = chunk.get_node_or_null("GroundTerrain") != null
 	var water: CanvasItem = chunk.get_node_or_null("GroundWater") as CanvasItem
-	if water != null:
+	if water != null and not has_terrain:
 		water.self_modulate = Color(1.0, 1.0, 1.0, 0.0)
-	# Jembatan (sudah tergambar di gambar tanah): petak air di bawahnya dihapus agar bisa diseberangi.
+	# Jembatan (node Sprite2D terpisah yang bisa digeser di editor, plus fallback BridgesData):
+	# hapus/ganti tabrakan air di bawah jembatan agar pemain bisa menyeberang dengan mulus.
 	var tml: TileMapLayer = water as TileMapLayer
+	var gter: TileMapLayer = chunk.get_node_or_null("GroundTerrain") as TileMapLayer
 	var rid: StringName = StringName(str(chunk.get_meta("region_id", "")))
-	if tml != null and BridgesData.LIST.has(rid):
-		for br: Rect2i in BridgesData.LIST[rid]:
-			for cy: int in range(floori(br.position.y / 16.0), ceili(br.end.y / 16.0)):
-				for cx: int in range(floori((br.position.x + 4) / 16.0), ceili((br.end.x - 4) / 16.0)):
+	var bridge_rects: Array[Rect2i] = []
+	for ch: Node in chunk.get_children():
+		if ch is Sprite2D and ch.name.begins_with("Bridge"):
+			var bspr: Sprite2D = ch as Sprite2D
+			if bspr.texture != null:
+				var bsz: Vector2 = bspr.texture.get_size() * bspr.scale
+				var bpos: Vector2 = bspr.position - (bsz * 0.5 if bspr.centered else Vector2.ZERO)
+				bridge_rects.append(Rect2i(int(bpos.x), int(bpos.y), int(bsz.x), int(bsz.y)))
+	if bridge_rects.is_empty() and BridgesData.LIST.has(rid):
+		for br_data: Rect2i in BridgesData.LIST[rid]:
+			bridge_rects.append(br_data)
+	for br: Rect2i in bridge_rects:
+		for cy: int in range(floori(br.position.y / 16.0), ceili(br.end.y / 16.0)):
+			for cx: int in range(floori((br.position.x + 4) / 16.0), ceili((br.end.x - 4) / 16.0)):
+				if tml != null:
 					tml.erase_cell(Vector2i(cx, cy))
+				if gter != null:
+					# Ganti ubin air bertabrakan di bawah jembatan jadi ubin pasir bebas tabrakan (tertutup visual jembatan)
+					gter.set_cell(Vector2i(cx, cy), 2, Vector2i(11, 0))
+	if chunk.get_node_or_null("WaterShimmer") == null:
+		var shimmer: WaterShimmerLayer = WaterShimmerLayer.new()
+		shimmer.name = "WaterShimmer"
+		if gter != null:
+			shimmer.setup_from_terrain_layer(gter)
+		elif tml != null:
+			shimmer.setup_from_water_layer(tml)
+		chunk.add_child(shimmer)
 
 
 func _unload_region(rid: StringName) -> void:

@@ -1,0 +1,116 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://maps/village.tscn" id="1_jseqj"]
+[ext_resource type="PackedScene" path="res://maps/lake.tscn" id="2_15tx3"]
+[ext_resource type="PackedScene" path="res://maps/meadow.tscn" id="3_u2ifq"]
+[ext_resource type="PackedScene" path="res://maps/forest.tscn" id="4_spk20"]
+[ext_resource type="PackedScene" path="res://maps/deepwood.tscn" id="5_lcj36"]
+[ext_resource type="PackedScene" path="res://maps/river.tscn" id="6_01kjp"]
+[ext_resource type="PackedScene" path="res://maps/swamp.tscn" id="7_q4hjk"]
+[ext_resource type="PackedScene" path="res://maps/snow.tscn" id="8_13qij"]
+[ext_resource type="PackedScene" path="res://maps/road.tscn" id="9_fwgav"]
+[ext_resource type="PackedScene" path="res://maps/kgate.tscn" id="10_lch5s"]
+[ext_resource type="PackedScene" path="res://maps/kpasar.tscn" id="11_rumsq"]
+[ext_resource type="PackedScene" path="res://maps/kakademi.tscn" id="12_jvhns"]
+[ext_resource type="PackedScene" path="res://maps/kbawah.tscn" id="13_tl0cn"]
+[ext_resource type="PackedScene" path="res://maps/kpermukiman.tscn" id="14_t2q6a"]
+
+[node name="BenuaFull" type="Node2D" unique_id=427672658]
+
+[node name="Region_village" type="Node2D" parent="." unique_id=2105966083 instance=ExtResource("1_jseqj")]
+y_sort_enabled = true
+position = Vector2(3000, 3000)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_lake" type="Node2D" parent="." unique_id=854081759 instance=ExtResource("2_15tx3")]
+y_sort_enabled = true
+position = Vector2(1592, 3056)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_meadow" type="Node2D" parent="." unique_id=168533828 instance=ExtResource("3_u2ifq")]
+y_sort_enabled = true
+position = Vector2(4024, 2680)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_forest" type="Node2D" parent="." unique_id=1258757154 instance=ExtResource("4_spk20")]
+y_sort_enabled = true
+position = Vector2(3000, 3720)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_deepwood" type="Node2D" parent="." unique_id=1092932459 instance=ExtResource("5_lcj36")]
+y_sort_enabled = true
+position = Vector2(600, 4048)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_river" type="Node2D" parent="." unique_id=579549674 instance=ExtResource("6_01kjp")]
+y_sort_enabled = true
+position = Vector2(4280, 3720)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_swamp" type="Node2D" parent="." unique_id=945868173 instance=ExtResource("7_q4hjk")]
+y_sort_enabled = true
+position = Vector2(6872, 3720)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_snow" type="Node2D" parent="." unique_id=2012676589 instance=ExtResource("8_13qij")]
+y_sort_enabled = true
+position = Vector2(3984, 1480)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_road" type="Node2D" parent="." unique_id=84924646 instance=ExtResource("9_fwgav")]
+y_sort_enabled = true
+position = Vector2(1964, 1056)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_kgate" type="Node2D" parent="." unique_id=78866041 instance=ExtResource("10_lch5s")]
+y_sort_enabled = true
+position = Vector2(1112, 160)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_kpasar" type="Node2D" parent="." unique_id=1357816453 instance=ExtResource("11_rumsq")]
+y_sort_enabled = true
+position = Vector2(1612, -1040)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_kakademi" type="Node2D" parent="." unique_id=737987100 instance=ExtResource("12_jvhns")]
+y_sort_enabled = true
+position = Vector2(1708, -2032)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_kbawah" type="Node2D" parent="." unique_id=1255053524 instance=ExtResource("13_tl0cn")]
+y_sort_enabled = true
+position = Vector2(412, -920)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false
+
+[node name="Region_kpermukiman" type="Node2D" parent="." unique_id=252346867 instance=ExtResource("14_t2q6a")]
+y_sort_enabled = true
+position = Vector2(3212, -920)
+metadata/is_indoor = false
+metadata/camera_zoom = 1.25
+metadata/is_dark_cave = false

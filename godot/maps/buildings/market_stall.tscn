@@ -6,14 +6,14 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o0i7m"]
 size = Vector2(54, 22)
 
-[node name="Market Stall" type="StaticBody2D" unique_id=1756565672]
+[node name="Market Stall" type="StaticBody2D" unique_id=1941562333]
 collision_mask = 0
 script = ExtResource("1_rbqtn")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1778755241]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1118517634]
 texture = ExtResource("2_vv7wj")
 offset = Vector2(0, -39)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=656546806]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=228601490]
 position = Vector2(0, -13)
 shape = SubResource("RectangleShape2D_o0i7m")

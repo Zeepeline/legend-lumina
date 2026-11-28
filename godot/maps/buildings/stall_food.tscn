@@ -6,14 +6,14 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lnlv5"]
 size = Vector2(96, 36)
 
-[node name="Stall Food" type="StaticBody2D" unique_id=120720547]
+[node name="Stall Food" type="StaticBody2D" unique_id=598277938]
 collision_mask = 0
 script = ExtResource("1_m2fr8")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=365629809]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=732678581]
 texture = ExtResource("2_kwpyq")
 offset = Vector2(0, -72)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1817164448]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=704421047]
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_lnlv5")

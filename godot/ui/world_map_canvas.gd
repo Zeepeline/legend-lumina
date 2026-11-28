@@ -8,6 +8,23 @@ const MIN_ZOOM: float = 0.020
 const MAX_ZOOM: float = 0.140
 const DEFAULT_ZOOM: float = 0.036
 
+const REGION_TEXTURES: Dictionary = {
+	&"village": preload("res://assets/art/ground/gnd_village_custom.png"),
+	&"lake": preload("res://assets/art/ground/gnd_lake_custom.png"),
+	&"meadow": preload("res://assets/art/ground/gnd_meadow_custom.png"),
+	&"forest": preload("res://assets/art/ground/gnd_forest_custom.png"),
+	&"deepwood": preload("res://assets/art/ground/gnd_deepwood_custom.png"),
+	&"river": preload("res://assets/art/ground/gnd_river_custom.png"),
+	&"swamp": preload("res://assets/art/ground/gnd_swamp_custom.png"),
+	&"snow": preload("res://assets/art/ground/gnd_snow_custom.png"),
+	&"road": preload("res://assets/art/ground/gnd_road_custom.png"),
+	&"kgate": preload("res://assets/art/ground/gnd_kgate_custom.png"),
+	&"kpasar": preload("res://assets/art/ground/gnd_kpasar_custom.png"),
+	&"kakademi": preload("res://assets/art/ground/gnd_kakademi_custom.png"),
+	&"kbawah": preload("res://assets/art/ground/gnd_kbawah_custom.png"),
+	&"kpermukiman": preload("res://assets/art/ground/gnd_kpermukiman_custom.png"),
+}
+
 var _pan_center_world: Vector2 = Vector2(3900.0, 2200.0)
 var _zoom: float = DEFAULT_ZOOM
 var _selected_id: StringName = &"village"
@@ -162,7 +179,8 @@ func _player_world_position() -> Vector2:
 
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, size), Color("#0d1522"))
+	# Latar laut/perairan RPG klasik di sekeliling Benua Lumina
+	draw_rect(Rect2(Vector2.ZERO, size), Color("#1b496b"))
 
 	var grid_step: float = 1000.0
 	var top_left_w: Vector2 = canvas_to_world(Vector2.ZERO)
@@ -171,27 +189,31 @@ func _draw() -> void:
 	var gx: float = gx_start
 	while gx <= bot_right_w.x:
 		var cx: float = world_to_canvas(Vector2(gx, 0.0)).x
-		draw_line(Vector2(cx, 0.0), Vector2(cx, size.y), Color(0.22, 0.30, 0.42, 0.20), 1.0)
+		draw_line(Vector2(cx, 0.0), Vector2(cx, size.y), Color(0.55, 0.78, 0.92, 0.10), 1.0)
 		gx += grid_step
 	var gy_start: float = floorf(top_left_w.y / grid_step) * grid_step
 	var gy: float = gy_start
 	while gy <= bot_right_w.y:
 		var cy: float = world_to_canvas(Vector2(0.0, gy)).y
-		draw_line(Vector2(0.0, cy), Vector2(size.x, cy), Color(0.22, 0.30, 0.42, 0.20), 1.0)
+		draw_line(Vector2(0.0, cy), Vector2(size.x, cy), Color(0.55, 0.78, 0.92, 0.10), 1.0)
 		gy += grid_step
 
 	var gs: GameStateStore = GameStateStore.ref
 	var cur_path: String = gs.current_map if gs != null else ""
 
-	# Garis jalan penghubung antar wilayah
-	for pair: Array in WorldLayout.SEAMLESS_PAIRS:
-		var ra: Rect2i = WorldLayout.get_rect(pair[0] as StringName)
-		var rb: Rect2i = WorldLayout.get_rect(pair[1] as StringName)
-		var ca: Vector2 = world_to_canvas(Vector2(ra.position) + Vector2(ra.size) * 0.5)
-		var cb: Vector2 = world_to_canvas(Vector2(rb.position) + Vector2(rb.size) * 0.5)
-		draw_line(ca, cb, Color(0.84, 0.74, 0.50, 0.38), 1.5)
+	# Lapisan 1: Render peta daratan asli (gnd_*_custom.png) menyambung menjadi satu benua utuh
+	for k: Variant in WorldLayout.REGIONS.keys():
+		var rid: StringName = k as StringName
+		var reg: Dictionary = WorldLayout.REGIONS[rid]
+		var r: Rect2i = reg["rect"]
+		var tl: Vector2 = world_to_canvas(Vector2(r.position))
+		var sz: Vector2 = Vector2(r.size) * _zoom
+		var draw_r: Rect2 = Rect2(tl, sz)
+		if draw_r.end.x < -8.0 or draw_r.position.x > size.x + 8.0 or draw_r.end.y < -8.0 or draw_r.position.y > size.y + 8.0:
+			continue
+		# Tepi pantai/bayangan lembut di sekitar benua
+		draw_rect(draw_r.grow(2.5), Color(0.08, 0.22, 0.34, 0.45))
 
-	# Menggambar 14 blok wilayah benua sesuai skala riil
 	var font: Font = ThemeDB.fallback_font
 	for k: Variant in WorldLayout.REGIONS.keys():
 		var rid: StringName = k as StringName
@@ -207,31 +229,37 @@ func _draw() -> void:
 		var is_vis: bool = gs != null and gs.visited_maps.has(map_path)
 		var is_cur: bool = cur_path == map_path
 		var is_sel: bool = _selected_id == rid
-		var col: Color = reg.get("color", Color("#4e7844"))
-		if not is_vis:
-			col = col.darkened(0.55)
-			col.s = col.s * 0.45
 
-		draw_rect(draw_r.grow(1.5), Color(0.05, 0.08, 0.12, 0.55))
-		draw_rect(draw_r, col)
+		var tex: Texture2D = REGION_TEXTURES.get(rid, null) as Texture2D
+		if tex != null:
+			var tint: Color = Color.WHITE if is_vis else Color(0.54, 0.58, 0.66, 0.94)
+			if rid == &"deepwood" and is_vis:
+				tint = Color(0.76, 0.86, 0.78, 1.0)
+			draw_texture_rect(tex, draw_r, false, tint)
+		else:
+			var col: Color = reg.get("color", Color("#4e7844"))
+			draw_rect(draw_r, col if is_vis else col.darkened(0.55))
 
-		var border_col: Color = Color(0.98, 0.84, 0.34, 1.0) if is_sel else (Color(0.55, 0.94, 0.75, 0.95) if is_cur else Color(0.18, 0.22, 0.28, 0.90))
-		draw_rect(draw_r, border_col, false, 1.8 if is_sel else 1.0)
+		if is_sel or is_cur:
+			var border_col: Color = Color(0.98, 0.86, 0.36, 0.95) if is_sel else Color(0.42, 0.96, 0.84, 0.85)
+			draw_rect(draw_r, border_col, false, 1.6 if is_sel else 1.1)
 
 		var shrine_id: StringName = reg.get("shrine_id", &"")
 		if shrine_id != &"":
 			var unlocked: bool = gs != null and gs.unlocked_shrines.has(map_path)
 			var pin: Vector2 = draw_r.get_center() + Vector2(0.0, -minf(8.0, draw_r.size.y * 0.22))
 			var pin_col: Color = Color(0.98, 0.84, 0.32) if unlocked else Color(0.45, 0.48, 0.55)
-			draw_circle(pin, 2.3, pin_col)
+			draw_circle(pin, 2.5, pin_col)
 			if unlocked:
-				draw_circle(pin, 3.8, Color(0.98, 0.84, 0.32, 0.35))
+				draw_circle(pin, 4.2, Color(0.98, 0.84, 0.32, 0.38))
 
 		if draw_r.size.x >= 26.0 and draw_r.size.y >= 16.0:
 			var label_str: String = str(reg["name"])
 			var f_sz: int = 6 if _zoom >= 0.032 else 5
-			var txt_col: Color = Color(0.98, 0.96, 0.88, 0.95) if is_vis else Color(0.70, 0.74, 0.80, 0.72)
-			draw_string(font, Vector2(draw_r.position.x + 2.0, draw_r.get_center().y + 5.0), label_str, HORIZONTAL_ALIGNMENT_CENTER, int(draw_r.size.x) - 4, f_sz, txt_col)
+			var txt_col: Color = Color(1.0, 0.98, 0.90, 0.98) if is_vis else Color(0.78, 0.82, 0.88, 0.80)
+			var tpos: Vector2 = Vector2(draw_r.position.x + 2.0, draw_r.get_center().y + 5.0)
+			draw_string_outline(font, tpos, label_str, HORIZONTAL_ALIGNMENT_CENTER, int(draw_r.size.x) - 4, f_sz, 2, Color(0.05, 0.07, 0.10, 0.92))
+			draw_string(font, tpos, label_str, HORIZONTAL_ALIGNMENT_CENTER, int(draw_r.size.x) - 4, f_sz, txt_col)
 
 	# Penanda khusus (Gua Batu, Arena Latihan)
 	for m: Dictionary in WorldLayout.SPECIAL_MARKERS:

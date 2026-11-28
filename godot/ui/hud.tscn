@@ -1,69 +1,154 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://ui/spellbar.gd" id="2_spell"]
+[ext_resource type="Script" path="res://ui/hud_bar.gd" id="3_bar"]
+[ext_resource type="Script" path="res://ui/hud_icon.gd" id="4_icon"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dark"]
-bg_color = Color(0.08, 0.09, 0.125, 0.88)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud"]
+bg_color = Color(0.094, 0.102, 0.125, 0.94)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.24, 0.27, 0.35, 0.85)
+border_color = Color(0.18, 0.204, 0.251, 0.96)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0.56)
+shadow_size = 3
+shadow_offset = Vector2(0, 2)
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud2"]
+bg_color = Color(0.094, 0.102, 0.125, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18, 0.204, 0.251, 0.96)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0.56)
+shadow_size = 3
+shadow_offset = Vector2(0, 2)
+content_margin_left = 7.0
+content_margin_top = 3.0
+content_margin_right = 7.0
+content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_quest"]
+bg_color = Color(0.243, 0.145, 0.078, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.365, 0.227, 0.129, 0.96)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+shadow_color = Color(0.102, 0.055, 0.031, 0.85)
+shadow_size = 2
+shadow_offset = Vector2(0, 2)
+content_margin_left = 6.0
+content_margin_top = 3.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qbtn"]
+bg_color = Color(0.165, 0.094, 0.047, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.54, 0.36, 0.18, 0.85)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+content_margin_left = 2.0
+content_margin_top = 0.0
+content_margin_right = 2.0
+content_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_quickbtn"]
+bg_color = Color(0.094, 0.102, 0.125, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.22, 0.25, 0.32, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 2
+shadow_offset = Vector2(0, 1)
+content_margin_left = 5.0
+content_margin_top = 1.0
+content_margin_right = 5.0
+content_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_quickbtn_hover"]
+bg_color = Color(0.16, 0.175, 0.22, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.95, 0.80, 0.36, 0.95)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 content_margin_left = 5.0
-content_margin_top = 4.0
+content_margin_top = 1.0
 content_margin_right = 5.0
-content_margin_bottom = 4.0
+content_margin_bottom = 1.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_capsule"]
-bg_color = Color(0.08, 0.09, 0.125, 0.9)
+[sub_resource type="Gradient" id="Gradient_banner"]
+offsets = PackedFloat32Array(0, 0.18, 0.82, 1)
+colors = PackedColorArray(0.055, 0.078, 0.149, 0, 0.055, 0.078, 0.149, 0.9, 0.055, 0.078, 0.149, 0.9, 0.055, 0.078, 0.149, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_banner"]
+gradient = SubResource("Gradient_banner")
+width = 256
+height = 8
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_banner"]
+texture = SubResource("GradientTexture2D_banner")
+content_margin_left = 24.0
+content_margin_top = 5.0
+content_margin_right = 24.0
+content_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_boss"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill"]
+bg_color = Color(0.086, 0.094, 0.122, 0.92)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.28, 0.32, 0.42, 0.9)
+border_color = Color(0.541, 0.424, 0.227, 0.92)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
-content_margin_left = 6.0
-content_margin_top = 2.0
-content_margin_right = 6.0
-content_margin_bottom = 2.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_banner"]
-bg_color = Color(0.07, 0.08, 0.115, 0.9)
-border_width_top = 1
-border_width_bottom = 1
-border_color = Color(0.9, 0.74, 0.36, 0.88)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-content_margin_left = 10.0
+shadow_color = Color(0, 0, 0, 0.55)
+shadow_size = 3
+shadow_offset = Vector2(0, 2)
+content_margin_left = 8.0
 content_margin_top = 3.0
-content_margin_right = 10.0
+content_margin_right = 8.0
 content_margin_bottom = 3.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
-bg_color = Color(0.15, 0.17, 0.24, 0.95)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.32, 0.36, 0.48, 0.85)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-content_margin_left = 4.0
-content_margin_top = 1.0
-content_margin_right = 4.0
-content_margin_bottom = 1.0
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -77,78 +162,75 @@ script = ExtResource("1_hud")
 
 [node name="StatsPanel" type="PanelContainer" parent="."]
 layout_mode = 0
-offset_left = 6.0
-offset_top = 6.0
-offset_right = 122.0
-offset_bottom = 48.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_dark")
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 107.0
+offset_bottom = 47.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud")
 
 [node name="VBox" type="VBoxContainer" parent="StatsPanel"]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="HpBar" type="ColorRect" parent="StatsPanel/VBox"]
-custom_minimum_size = Vector2(104, 7)
+[node name="HpBar" type="Control" parent="StatsPanel/VBox"]
+custom_minimum_size = Vector2(90, 9)
 layout_mode = 2
-color = Color(0.16, 0.1, 0.12, 0.95)
-
-[node name="HpTrail" type="ColorRect" parent="StatsPanel/VBox/HpBar"]
-layout_mode = 0
-offset_right = 104.0
-offset_bottom = 7.0
-color = Color(0.92, 0.74, 0.32, 0.88)
-
-[node name="HpFill" type="ColorRect" parent="StatsPanel/VBox/HpBar"]
-layout_mode = 0
-offset_right = 104.0
-offset_bottom = 7.0
-color = Color(0.86, 0.22, 0.25, 1)
+script = ExtResource("3_bar")
+fill_top = Color(0.973, 0.443, 0.443, 1)
+fill_bottom = Color(0.863, 0.149, 0.149, 1)
+ghost_top = Color(1, 0.627, 0.565, 0.92)
+ghost_bottom = Color(0.725, 0.11, 0.11, 0.92)
+show_ghost = true
 
 [node name="HpLabel" type="Label" parent="StatsPanel/VBox/HpBar"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 3.0
+offset_left = 2.0
 offset_right = -3.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 5
 text = "100/100"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="StaBar" type="ColorRect" parent="StatsPanel/VBox"]
-custom_minimum_size = Vector2(104, 4)
+[node name="StaBar" type="Control" parent="StatsPanel/VBox"]
+custom_minimum_size = Vector2(90, 5)
 layout_mode = 2
-color = Color(0.1, 0.14, 0.11, 0.95)
+script = ExtResource("3_bar")
+fill_top = Color(0.204, 0.827, 0.6, 1)
+fill_bottom = Color(0.02, 0.588, 0.412, 1)
 
-[node name="StaFill" type="ColorRect" parent="StatsPanel/VBox/StaBar"]
-layout_mode = 0
-offset_right = 104.0
-offset_bottom = 4.0
-color = Color(0.28, 0.74, 0.38, 1)
-
-[node name="MpBar" type="ColorRect" parent="StatsPanel/VBox"]
-custom_minimum_size = Vector2(104, 5)
+[node name="MpBar" type="Control" parent="StatsPanel/VBox"]
+custom_minimum_size = Vector2(90, 8)
 layout_mode = 2
-color = Color(0.09, 0.12, 0.19, 0.95)
-
-[node name="MpFill" type="ColorRect" parent="StatsPanel/VBox/MpBar"]
-layout_mode = 0
-offset_right = 104.0
-offset_bottom = 5.0
-color = Color(0.24, 0.54, 0.92, 1)
+script = ExtResource("3_bar")
+fill_top = Color(0.22, 0.741, 0.973, 1)
+fill_bottom = Color(0.008, 0.518, 0.78, 1)
 
 [node name="MpLabel" type="Label" parent="StatsPanel/VBox/MpBar"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 3.0
+offset_left = 2.0
 offset_right = -3.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 5
 text = "30/30"
 horizontal_alignment = 2
@@ -160,90 +242,190 @@ theme_override_constants/separation = 4
 
 [node name="LevelLabel" type="Label" parent="StatsPanel/VBox/ExpRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.8, 0.36, 1)
+theme_override_colors/font_color = Color(0.89, 0.93, 0.98, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 6
-text = "Lv.1"
+text = "LV 1"
 
-[node name="ExpBar" type="ColorRect" parent="StatsPanel/VBox/ExpRow"]
-custom_minimum_size = Vector2(76, 3)
+[node name="ExpBar" type="Control" parent="StatsPanel/VBox/ExpRow"]
+custom_minimum_size = Vector2(64, 4)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
-color = Color(0.14, 0.15, 0.2, 0.95)
+script = ExtResource("3_bar")
+fill_top = Color(0.984, 0.749, 0.141, 1)
+fill_bottom = Color(0.851, 0.467, 0.024, 1)
+corner_radius = 1.5
+gloss_alpha = 0.28
 
-[node name="ExpFill" type="ColorRect" parent="StatsPanel/VBox/ExpRow/ExpBar"]
+[node name="ExpFill" type="Control" parent="StatsPanel/VBox/ExpRow/ExpBar"]
+visible = false
 layout_mode = 0
-offset_right = 0.0
-offset_bottom = 3.0
-color = Color(0.92, 0.74, 0.26, 1)
+
+[node name="QuickBar" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -296.0
+offset_top = 6.0
+offset_right = -152.0
+offset_bottom = 22.0
+grow_horizontal = 0
+theme_override_constants/separation = 3
+alignment = 2
+
+[node name="JournalButton" type="Button" parent="QuickBar"]
+custom_minimum_size = Vector2(26, 15)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.90, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.52, 1)
+theme_override_font_sizes/font_size = 6
+theme_override_styles/normal = SubResource("StyleBoxFlat_quickbtn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_quickbtn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_quickbtn_hover")
+text = "Jurnal"
+
+[node name="BagButton" type="Button" parent="QuickBar"]
+custom_minimum_size = Vector2(22, 15)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.90, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.52, 1)
+theme_override_font_sizes/font_size = 6
+theme_override_styles/normal = SubResource("StyleBoxFlat_quickbtn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_quickbtn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_quickbtn_hover")
+text = "Tas"
+
+[node name="MapButton" type="Button" parent="QuickBar"]
+custom_minimum_size = Vector2(24, 15)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.90, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.52, 1)
+theme_override_font_sizes/font_size = 6
+theme_override_styles/normal = SubResource("StyleBoxFlat_quickbtn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_quickbtn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_quickbtn_hover")
+text = "Peta"
+
+[node name="MenuButton" type="Button" parent="QuickBar"]
+custom_minimum_size = Vector2(26, 15)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.90, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.52, 1)
+theme_override_font_sizes/font_size = 6
+theme_override_styles/normal = SubResource("StyleBoxFlat_quickbtn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_quickbtn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_quickbtn_hover")
+text = "Menu"
+
+[node name="DevButton" type="Button" parent="QuickBar"]
+custom_minimum_size = Vector2(22, 15)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.42, 1)
+theme_override_colors/font_hover_color = Color(1, 0.96, 0.72, 1)
+theme_override_font_sizes/font_size = 6
+theme_override_styles/normal = SubResource("StyleBoxFlat_quickbtn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_quickbtn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_quickbtn_hover")
+text = "Dev"
 
 [node name="TopRightCapsule" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -286.0
-offset_top = 6.0
-offset_right = -6.0
-offset_bottom = 26.0
+offset_left = -148.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = 25.0
 grow_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_capsule")
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud2")
 
 [node name="HBox" type="HBoxContainer" parent="TopRightCapsule"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 5
 alignment = 2
 
-[node name="TimeLabel" type="Label" parent="TopRightCapsule/HBox"]
+[node name="TimeGroup" type="HBoxContainer" parent="TopRightCapsule/HBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.94, 0.89, 0.7, 1)
-theme_override_font_sizes/font_size = 6
+theme_override_constants/separation = 2
+
+[node name="TimeIcon" type="Control" parent="TopRightCapsule/HBox/TimeGroup"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("4_icon")
+icon_kind = "sun"
+
+[node name="TimeLabel" type="Label" parent="TopRightCapsule/HBox/TimeGroup"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.92, 0.78, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 7
 text = "09:00"
+
+[node name="CompassIcon" type="Control" parent="TopRightCapsule/HBox"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("4_icon")
+icon_kind = "compass"
 
 [node name="CompassLabel" type="Label" parent="TopRightCapsule/HBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.7, 0.84, 0.96, 1)
-theme_override_font_sizes/font_size = 6
-text = "· S"
+theme_override_colors/font_color = Color(1, 0.886, 0.478, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 7
+text = "U"
+
+[node name="CoinIcon" type="Control" parent="TopRightCapsule/HBox"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("4_icon")
+icon_kind = "coin"
 
 [node name="GoldLabel" type="Label" parent="TopRightCapsule/HBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.8, 0.35, 1)
-theme_override_font_sizes/font_size = 6
-text = "40 G"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 7
+text = "40"
+
+[node name="PotionIcon" type="Control" parent="TopRightCapsule/HBox"]
+custom_minimum_size = Vector2(9, 10)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("4_icon")
+icon_kind = "potion"
 
 [node name="FlaskLabel" type="Label" parent="TopRightCapsule/HBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.72, 0.25, 1)
-theme_override_font_sizes/font_size = 6
+theme_override_colors/font_color = Color(1, 0.886, 0.478, 1)
+theme_override_colors/font_shadow_color = Color(1, 0.784, 0.231, 0.65)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_outline_size = 2
+theme_override_font_sizes/font_size = 7
 text = "●●●"
 
-[node name="JournalButton" type="Button" parent="TopRightCapsule/HBox"]
-custom_minimum_size = Vector2(28, 14)
+[node name="PotionCountLabel" type="Label" parent="TopRightCapsule/HBox"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.627, 0.941, 0.502, 0.92)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 6
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-text = "Jurnal"
-
-[node name="BagButton" type="Button" parent="TopRightCapsule/HBox"]
-custom_minimum_size = Vector2(22, 14)
-layout_mode = 2
-theme_override_font_sizes/font_size = 6
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-text = "Tas"
-
-[node name="MapButton" type="Button" parent="TopRightCapsule/HBox"]
-custom_minimum_size = Vector2(24, 14)
-layout_mode = 2
-theme_override_font_sizes/font_size = 6
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-text = "Peta"
-
-[node name="MenuButton" type="Button" parent="TopRightCapsule/HBox"]
-custom_minimum_size = Vector2(26, 14)
-layout_mode = 2
-theme_override_font_sizes/font_size = 6
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-text = "Menu"
+text = "+2"
 
 [node name="QuestCard" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -252,10 +434,10 @@ anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -152.0
 offset_top = 29.0
-offset_right = -6.0
-offset_bottom = 64.0
+offset_right = -5.0
+offset_bottom = 66.0
 grow_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_dark")
+theme_override_styles/panel = SubResource("StyleBoxFlat_quest")
 
 [node name="VBox" type="VBoxContainer" parent="QuestCard"]
 layout_mode = 2
@@ -267,20 +449,33 @@ layout_mode = 2
 [node name="QuestTitleLabel" type="Label" parent="QuestCard/VBox/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.95, 0.8, 0.42, 1)
+theme_override_colors/font_color = Color(1, 0.886, 0.478, 1)
+theme_override_colors/font_shadow_color = Color(0.1, 0.05, 0.02, 0.95)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 6
-text = "Misi Aktif"
+text = "MISI AKTIF"
 
 [node name="QuestToggleBtn" type="Button" parent="QuestCard/VBox/Header"]
-custom_minimum_size = Vector2(14, 12)
+custom_minimum_size = Vector2(13, 11)
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.886, 0.478, 1)
 theme_override_font_sizes/font_size = 6
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-text = "-"
+theme_override_styles/normal = SubResource("StyleBoxFlat_qbtn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_qbtn")
+text = "−"
+
+[node name="QuestDivider" type="ColorRect" parent="QuestCard/VBox"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+color = Color(1, 0.92, 0.78, 0.18)
 
 [node name="QuestDescLabel" type="Label" parent="QuestCard/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.84, 0.86, 0.9, 1)
+theme_override_colors/font_color = Color(0.95, 0.91, 0.84, 1)
+theme_override_colors/font_shadow_color = Color(0.08, 0.04, 0.02, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 6
 text = "-"
 autowrap_mode = 2
@@ -291,31 +486,48 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -96.0
-offset_top = 28.0
-offset_right = 96.0
-offset_bottom = 58.0
+offset_left = -124.0
+offset_top = 34.0
+offset_right = 124.0
+offset_bottom = 68.0
 grow_horizontal = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_banner")
+theme_override_styles/panel = SubResource("StyleBoxTexture_banner")
 
 [node name="VBox" type="VBoxContainer" parent="RegionBanner"]
 layout_mode = 2
-theme_override_constants/separation = 1
+theme_override_constants/separation = 2
 
-[node name="RegionTitleLabel" type="Label" parent="RegionBanner/VBox"]
+[node name="TopGoldLine" type="ColorRect" parent="RegionBanner/VBox"]
+custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.82, 0.42, 1)
-theme_override_font_sizes/font_size = 9
-text = "DESA LUMINA"
-horizontal_alignment = 1
+color = Color(0.851, 0.761, 0.541, 0.88)
 
 [node name="RegionSubtitleLabel" type="Label" parent="RegionBanner/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.84, 0.82, 0.75, 1)
+theme_override_colors/font_color = Color(0.722, 0.78, 0.878, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 6
-text = "Pemukiman Damai"
+text = "MEMASUKI"
 horizontal_alignment = 1
+
+[node name="RegionTitleLabel" type="Label" parent="RegionBanner/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.969, 0.925, 0.784, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 3
+theme_override_font_sizes/font_size = 11
+text = "DESA LUMINA"
+horizontal_alignment = 1
+
+[node name="BottomGoldLine" type="ColorRect" parent="RegionBanner/VBox"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+color = Color(0.851, 0.761, 0.541, 0.88)
 
 [node name="BossPanel" type="PanelContainer" parent="."]
 visible = false
@@ -325,14 +537,14 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -114.0
-offset_top = -76.0
-offset_right = 114.0
-offset_bottom = -51.0
+offset_left = -112.0
+offset_top = -68.0
+offset_right = 112.0
+offset_bottom = -44.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_dark")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_boss")
 
 [node name="VBox" type="VBoxContainer" parent="BossPanel"]
 layout_mode = 2
@@ -340,34 +552,35 @@ theme_override_constants/separation = 2
 
 [node name="BossNameLabel" type="Label" parent="BossPanel/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.84, 0.52, 1)
-theme_override_font_sizes/font_size = 7
+theme_override_colors/font_color = Color(1, 0.886, 0.478, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 8
 text = "Boss"
-horizontal_alignment = 1
+horizontal_alignment = 0
 
-[node name="BossHpBar" type="ColorRect" parent="BossPanel/VBox"]
-custom_minimum_size = Vector2(216, 6)
+[node name="BossHpBar" type="Control" parent="BossPanel/VBox"]
+custom_minimum_size = Vector2(220, 7)
 layout_mode = 2
-color = Color(0.16, 0.09, 0.11, 0.95)
-
-[node name="BossHpTrail" type="ColorRect" parent="BossPanel/VBox/BossHpBar"]
-layout_mode = 0
-offset_right = 216.0
-offset_bottom = 6.0
-color = Color(0.92, 0.72, 0.28, 0.85)
-
-[node name="BossHpFill" type="ColorRect" parent="BossPanel/VBox/BossHpBar"]
-layout_mode = 0
-offset_right = 216.0
-offset_bottom = 6.0
-color = Color(0.86, 0.19, 0.23, 1)
+script = ExtResource("3_bar")
+bg_color = Color(0.165, 0.078, 0.078, 0.96)
+border_color = Color(1, 0.902, 0.706, 0.48)
+fill_top = Color(1, 0.478, 0.416, 1)
+fill_bottom = Color(0.722, 0.118, 0.125, 1)
+ghost_top = Color(1, 1, 1, 0.8)
+ghost_bottom = Color(0.92, 0.92, 0.96, 0.75)
+show_ghost = true
 
 [node name="Phase2Line" type="ColorRect" parent="BossPanel/VBox/BossHpBar"]
 layout_mode = 0
-offset_left = 108.0
-offset_right = 109.0
+offset_left = 110.0
+offset_top = 1.0
+offset_right = 111.5
 offset_bottom = 6.0
-color = Color(0.98, 0.9, 0.62, 0.9)
+color = Color(1, 0.886, 0.478, 0.88)
 
 [node name="PromptPanel" type="PanelContainer" parent="."]
 visible = false
@@ -377,18 +590,21 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -68.0
-offset_top = -50.0
-offset_right = 68.0
-offset_bottom = -34.0
+offset_left = -70.0
+offset_top = -54.0
+offset_right = 70.0
+offset_bottom = -37.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_dark")
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
 
 [node name="PromptLabel" type="Label" parent="PromptPanel"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.94, 0.72, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 7
 text = "[E] Bicara"
 horizontal_alignment = 1
@@ -401,9 +617,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -64.0
-offset_top = -32.0
-offset_right = 64.0
+offset_left = -74.0
+offset_top = -36.0
+offset_right = 74.0
 offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 0
@@ -415,17 +631,20 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -118.0
-offset_top = 60.0
-offset_right = 118.0
-offset_bottom = 78.0
+offset_left = -120.0
+offset_top = 72.0
+offset_right = 120.0
+offset_bottom = 90.0
 grow_horizontal = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_dark")
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
 
 [node name="ToastLabel" type="Label" parent="ToastPanel"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.92, 0.7, 1)
+theme_override_colors/font_color = Color(1, 0.93, 0.72, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 7
 text = ""
 horizontal_alignment = 1
