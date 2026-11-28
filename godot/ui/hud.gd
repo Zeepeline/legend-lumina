@@ -13,14 +13,16 @@ const PEACE_FADE_DELAY: float = 5.0
 @onready var level_label: Label = $StatsPanel/HBox/VBox/ExpRow/LevelLabel
 @onready var exp_bar: HudGradientBar = $StatsPanel/HBox/VBox/ExpRow/ExpBar
 
-@onready var time_icon: HudVectorIcon = $TopRightCapsule/HBox/TimeGroup/TimeIcon
-@onready var time_label: Label = $TopRightCapsule/HBox/TimeGroup/TimeLabel
+@onready var time_icon: HudVectorIcon = $ClockRow/ClockPlank/TimeGroup/TimeIcon
+@onready var time_label: Label = $ClockRow/ClockPlank/TimeGroup/TimeLabel
 @onready var compass_icon: HudVectorIcon = $TopRightCapsule/HBox/CompassIcon
 @onready var compass_label: Label = $TopRightCapsule/HBox/CompassLabel
 @onready var gold_label: Label = $TopRightCapsule/HBox/GoldLabel
 @onready var flask_label: Label = $TopRightCapsule/HBox/FlaskLabel
 @onready var potion_count_label: Label = $TopRightCapsule/HBox/PotionCountLabel
 
+@onready var quick_bar: VBoxContainer = $QuickBar
+@onready var menu_toggle: Button = $ClockRow/MenuToggle
 @onready var journal_button: Button = $QuickBar/JournalButton
 @onready var bag_button: Button = $QuickBar/BagButton
 @onready var map_button: Button = $QuickBar/MapButton
@@ -68,10 +70,12 @@ func _ready() -> void:
 	boss_panel.visible = false
 	region_banner.visible = false
 
-	journal_button.tooltip_text = tr("ui_journal")
-	bag_button.tooltip_text = tr("ui_bag")
-	map_button.tooltip_text = tr("ui_map")
-	menu_button.tooltip_text = tr("ui_menu")
+	journal_button.text = tr("ui_journal")
+	bag_button.text = tr("ui_bag")
+	map_button.text = tr("ui_map")
+	menu_button.text = tr("ui_menu")
+	menu_toggle.tooltip_text = tr("ui_menu")
+	menu_toggle.pressed.connect(_toggle_quick_menu)
 	dev_button.visible = false
 	quest_title_label.text = tr("ui_quest_card_title").to_upper()
 
@@ -336,7 +340,14 @@ func _on_dev_pressed() -> void:
 		dbg.toggle_open()
 
 
+func _toggle_quick_menu() -> void:
+	quick_bar.visible = not quick_bar.visible
+	if AudioService.ref != null:
+		AudioService.ref.play_ui_id(&"ui_click")
+
+
 func _tap_action(action_name: StringName) -> void:
+	quick_bar.visible = false
 	if AudioService.ref != null:
 		AudioService.ref.play_ui_id(&"ui_click")
 	Input.action_press(action_name)

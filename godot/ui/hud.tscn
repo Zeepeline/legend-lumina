@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://ui/spellbar.gd" id="2_spell"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/ic_map.png" id="8_map"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/ic_gear.png" id="9_gear"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/ic_scroll.png" id="10_scroll"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/ic_menu.png" id="11_menu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_face"]
 atlas = ExtResource("5_hero")
@@ -125,55 +126,96 @@ highlight = Color(0.98, 0.94, 0.86, 1)
 layout_mode = 0
 mouse_filter = 2
 
-[node name="QuickBar" type="HBoxContainer" parent="."]
+[node name="ClockRow" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 130.0
-offset_top = 3.0
-offset_right = 235.0
-offset_bottom = 27.0
+offset_left = 3.0
+offset_top = 51.0
+offset_right = 127.0
+offset_bottom = 70.0
 theme_override_constants/separation = 3
 
-[node name="JournalButton" type="Button" parent="QuickBar"]
-custom_minimum_size = Vector2(24, 24)
+[node name="ClockPlank" type="PanelContainer" parent="ClockRow"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"PlankPanel"
+
+[node name="TimeGroup" type="HBoxContainer" parent="ClockRow/ClockPlank"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="TimeIcon" type="Control" parent="ClockRow/ClockPlank/TimeGroup"]
+custom_minimum_size = Vector2(7, 9)
+layout_mode = 2
+script = ExtResource("4_icon")
+icon_kind = "sun"
+
+[node name="TimeLabel" type="Label" parent="ClockRow/ClockPlank/TimeGroup"]
+layout_mode = 2
+theme_type_variation = &"LightLabel"
+text = "09:00"
+
+[node name="MenuToggle" type="Button" parent="ClockRow"]
+custom_minimum_size = Vector2(19, 19)
 layout_mode = 2
 focus_mode = 0
-icon = ExtResource("6_book")
+icon = ExtResource("11_menu")
 icon_alignment = 1
+
+[node name="QuickBar" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 3.0
+offset_top = 72.0
+offset_right = 83.0
+offset_bottom = 160.0
+theme_override_constants/separation = 2
+
+[node name="JournalButton" type="Button" parent="QuickBar"]
+custom_minimum_size = Vector2(80, 20)
+layout_mode = 2
+focus_mode = 0
+text = "Jurnal"
+icon = ExtResource("6_book")
+alignment = 0
 
 [node name="BagButton" type="Button" parent="QuickBar"]
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(80, 20)
 layout_mode = 2
 focus_mode = 0
+text = "Tas"
 icon = ExtResource("7_bag")
-icon_alignment = 1
+alignment = 0
 
 [node name="MapButton" type="Button" parent="QuickBar"]
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(80, 20)
 layout_mode = 2
 focus_mode = 0
+text = "Peta"
 icon = ExtResource("8_map")
-icon_alignment = 1
+alignment = 0
 
 [node name="MenuButton" type="Button" parent="QuickBar"]
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(80, 20)
 layout_mode = 2
 focus_mode = 0
+text = "Menu"
 icon = ExtResource("9_gear")
-icon_alignment = 1
+alignment = 0
 
 [node name="DevButton" type="Button" parent="QuickBar"]
 visible = false
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(80, 20)
 layout_mode = 2
 focus_mode = 0
-text = "D"
+text = "Dev"
+alignment = 0
 
 [node name="TopRightCapsule" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -238.0
+offset_left = -200.0
 offset_top = 3.0
 offset_right = -3.0
 offset_bottom = 21.0
@@ -183,21 +225,6 @@ theme_type_variation = &"PlankPanel"
 [node name="HBox" type="HBoxContainer" parent="TopRightCapsule"]
 layout_mode = 2
 theme_override_constants/separation = 3
-
-[node name="TimeGroup" type="HBoxContainer" parent="TopRightCapsule/HBox"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="TimeIcon" type="Control" parent="TopRightCapsule/HBox/TimeGroup"]
-custom_minimum_size = Vector2(7, 9)
-layout_mode = 2
-script = ExtResource("4_icon")
-icon_kind = "sun"
-
-[node name="TimeLabel" type="Label" parent="TopRightCapsule/HBox/TimeGroup"]
-layout_mode = 2
-theme_type_variation = &"LightLabel"
-text = "09:00"
 
 [node name="CompassIcon" type="Control" parent="TopRightCapsule/HBox"]
 visible = false
@@ -210,11 +237,6 @@ icon_kind = "compass"
 visible = false
 layout_mode = 2
 text = "U"
-
-[node name="Gap1" type="Control" parent="TopRightCapsule/HBox"]
-custom_minimum_size = Vector2(3, 0)
-layout_mode = 2
-mouse_filter = 2
 
 [node name="CoinIcon" type="Control" parent="TopRightCapsule/HBox"]
 custom_minimum_size = Vector2(6, 9)

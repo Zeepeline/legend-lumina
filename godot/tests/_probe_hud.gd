@@ -15,6 +15,9 @@ func _process(_d: float) -> bool:
 	if frame == 330 and OS.get_environment("QUEST") == "1":
 		for n: Node in root.find_children("QuestNameBtn", "", true, false):
 			(n as Button).pressed.emit()
+	if frame == 335 and OS.get_environment("MENUBTN") == "1":
+		for n: Node in root.find_children("MenuToggle", "", true, false):
+			(n as Button).pressed.emit()
 	if frame == 420:
 		root.get_viewport().get_texture().get_image().save_png("/tmp/gt/hud.png")
 		return true
