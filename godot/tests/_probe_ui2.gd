@@ -18,7 +18,10 @@ func _process(_d: float) -> bool:
 			if f.ends_with(".tres"):
 				dlg = ResourceLoader.load("res://data/dialogues/" + f.trim_suffix(".remap"))
 				break
+		DialogueBox.pending_sheet = load("res://assets/art/npc/npc_mc_ratih.png") as Texture2D
 		EventsBus.ref.dialogue_requested.emit(dlg)
+	if frame == 395:
+		Input.action_press(&"ui_accept"); Input.action_release(&"ui_accept")
 	if frame == 420:
 		root.get_viewport().get_texture().get_image().save_png("/tmp/gt/menu_dialog.png")
 		return true

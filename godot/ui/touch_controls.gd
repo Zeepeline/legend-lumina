@@ -1,5 +1,7 @@
 class_name TouchControls
 extends Control
+## Kontrol sentuh: joystick kayu di kiri; di kanan tombol bundar berikon — Serang (besar, merah) di pojok,
+## Guling, Sihir (ikon jurus aktif), Botol melingkar di sekitarnya; tombol Aksi hanya tampil saat ada interaksi.
 
 @onready var joystick_area: Control = $JoystickArea
 @onready var btn_attack: Button = $ActionPad/AttackButton
@@ -24,17 +26,30 @@ func _ready() -> void:
 	EventsBus.ref.dialogue_finished.connect(_on_dialogue_ended)
 	joystick_area.gui_input.connect(_on_joystick_gui_input)
 
-	btn_attack.text = tr("ui_touch_atk")
-	btn_roll.text = tr("ui_touch_roll")
-	btn_interact.text = tr("ui_touch_act")
-	btn_heal.text = tr("ui_touch_heal")
-	btn_skill.text = tr("ui_touch_skill")
+	btn_attack.tooltip_text = tr("ui_touch_atk")
+	btn_roll.tooltip_text = tr("ui_touch_roll")
+	btn_interact.tooltip_text = tr("ui_touch_act")
+	btn_heal.tooltip_text = tr("ui_touch_heal")
+	btn_skill.tooltip_text = tr("ui_touch_skill")
+	# tombol Aksi hanya muncul saat ada yang bisa diajak bicara/dibuka
+	btn_interact.visible = false
+	EventsBus.ref.interact_prompt_changed.connect(func(_k: String, shown: bool) -> void: btn_interact.visible = shown)
+	EventsBus.ref.skill_changed.connect(func(_id: StringName) -> void: _refresh_skill_icon())
+	_refresh_skill_icon()
 
 	_bind_action_button(btn_attack, &"attack")
 	_bind_action_button(btn_roll, &"roll")
 	_bind_action_button(btn_interact, &"interact")
 	_bind_action_button(btn_heal, &"heal")
 	_bind_action_button(btn_skill, &"skill")
+
+
+func _refresh_skill_icon() -> void:
+	if GameStateStore.ref == null:
+		return
+	var tex: Texture2D = SpellBar.ICONS.get(GameStateStore.ref.active_skill_id, null) as Texture2D
+	if tex != null:
+		btn_skill.icon = tex
 
 
 func _bind_action_button(btn: Button, action_name: StringName) -> void:

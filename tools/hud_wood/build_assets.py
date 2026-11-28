@@ -260,6 +260,35 @@ ICONS.update({
 })
 PAL['X'] = RED
 
+ICONS.update({
+    'roll': ["....FFFF....", "..FFWWWWFF..", ".FWWFFFFWWF.", ".FWF....FWF.", "FWF......FF.", "FWF.....FWF.", "FWF....FWWWF", ".FWF....FWF.", ".FWWF....F..", "..FFWWF.....", "....FFF.....", "............"],
+    'talk': ["............", ".FFFFFFFFFF.", "FWWWWWWWWWWF", "FWFFWFFWFFWF", "FWWWWWWWWWWF", "FWFFFWFFFWWF", "FWWWWWWWWWWF", ".FFFWFFFFFF.", "...FWF......", "...FF.......", "............", "............"],
+    'sword_big': [".........FFF", "........FWWF", ".......FWWF.", "......FWWF..", ".....FWWF...", "..F.FWWF....", "..FFWWF.....", "...FYF......", "..FIFF......", ".FIF.F......", "FIF.........", "FF.........."],
+})
+
+
+def round_button(d, fill, pressed=False):
+    im = canvas(d, d)
+    r = d / 2 - 0.5
+    c = (d - 1) / 2
+    for y in range(d):
+        for x in range(d):
+            dist = ((x - c) ** 2 + (y - c) ** 2) ** 0.5
+            if dist > r + 0.3:
+                continue
+            if dist > r - 1:
+                col = F
+            elif dist > r - 3:
+                col = K if (y < c and not pressed) else (I if not pressed else G)
+            elif dist > r - 4:
+                col = F
+            else:
+                col = fill
+                if (y - c) < -(r - 6) * 0.55 and not pressed:
+                    col = tuple(min(255, int(v * 1.2)) for v in fill)
+            im.putpixel((x, y), (*col, 255))
+    return im
+
 
 def icon(name):
     art = ICONS[name]
@@ -284,6 +313,10 @@ def main():
     slot(False).save(f'{OUT}/slot.png'); slot(True).save(f'{OUT}/slot_sel.png')
     ribbon(True).save(f'{OUT}/ribbon_on.png'); ribbon(False).save(f'{OUT}/ribbon_off.png')
     seal().save(f'{OUT}/seal_close.png')
+    round_button(30, PLANK).save(f'{OUT}/btn_round.png')
+    round_button(30, (92, 50, 38), True).save(f'{OUT}/btn_round_p.png')
+    round_button(40, RED).save(f'{OUT}/btn_round_big.png')
+    round_button(40, MAR, True).save(f'{OUT}/btn_round_big_p.png')
     for n in ICONS:
         icon(n).save(f'{OUT}/ic_{n}.png')
     print('ok')

@@ -170,6 +170,11 @@ func _on_hurtbox_hurt(incoming: Hitbox) -> void:
 	if push_dir.length_squared() < 0.01:
 		push_dir = -facing
 	apply_direct_damage(dmg, incoming.is_crit, push_dir * incoming.knockback)
+	var pl: Player = incoming.source as Player
+	if pl != null:
+		var heavy: bool = incoming.is_crit or pl.combo_step >= 3
+		HitStop.apply(get_tree(), 0.07 if heavy else 0.045)
+		pl.shake_camera(2.0 if heavy else 1.2, 0.08)
 
 
 func apply_direct_damage(dmg: int, is_crit_hit: bool, knockback_vec: Vector2) -> void:

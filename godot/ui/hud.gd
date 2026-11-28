@@ -62,6 +62,9 @@ var _last_compass_dir: String = ""
 var _toast_tween: Tween = null
 var _banner_tween: Tween = null
 var _stats_tween: Tween = null
+## Perangkat masukan terakhir ("kb", "pad", "touch") untuk menyesuaikan petunjuk tombol.
+var _device: String = "kb"
+var _prompt_key: String = ""
 
 
 func _ready() -> void:
@@ -103,6 +106,8 @@ func _ready() -> void:
 	_refresh_quest_card()
 	if GameStateStore.ref != null:
 		_on_time_changed(GameStateStore.ref.world_hour)
+		if GameStateStore.ref.is_touch_enabled():
+			_device = "touch"
 
 
 func _process(delta: float) -> void:
@@ -279,8 +284,32 @@ func _on_boss_hp_changed(boss_name: String, cur_hp: int, cap_hp: int, active: bo
 
 func _on_interact_prompt(label_key: String, is_visible: bool) -> void:
 	prompt_panel.visible = is_visible and not label_key.is_empty()
+	_prompt_key = label_key if prompt_panel.visible else ""
 	if prompt_panel.visible:
-		prompt_label.text = tr(label_key)
+		prompt_label.text = device_prompt(tr(label_key), _device)
+
+
+## Ganti petunjuk tombol [E] sesuai perangkat: [A] untuk controller, tanpa petunjuk untuk layar sentuh.
+static func device_prompt(text: String, device: String) -> String:
+	if device == "pad":
+		return text.replace("[E]", "[A]")
+	if device == "touch":
+		return text.replace("[E] ", "").replace(" [E]", "").replace("[E]", "")
+	return text
+
+
+func _input(event: InputEvent) -> void:
+	var dev: String = _device
+	if event is InputEventJoypadButton or (event is InputEventJoypadMotion and absf((event as InputEventJoypadMotion).axis_value) > 0.5):
+		dev = "pad"
+	elif event is InputEventScreenTouch:
+		dev = "touch"
+	elif event is InputEventKey or event is InputEventMouseButton:
+		dev = "kb"
+	if dev != _device:
+		_device = dev
+		if not _prompt_key.is_empty():
+			prompt_label.text = device_prompt(tr(_prompt_key), _device)
 
 
 func _on_map_changed(map_path: String, _spawn_id: StringName) -> void:

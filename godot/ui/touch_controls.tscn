@@ -1,7 +1,28 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://ui/touch_controls.gd" id="1_tc"]
 [ext_resource type="Script" path="res://ui/joystick_drawer.gd" id="2_draw"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/btn_round.png" id="3_r"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/btn_round_p.png" id="4_rp"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/btn_round_big.png" id="5_rb"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/btn_round_big_p.png" id="6_rbp"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/ic_sword_big.png" id="7_sw"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/ic_roll.png" id="8_roll"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/ic_talk.png" id="9_talk"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/ic_item_potion.png" id="10_pot"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/ic_fire.png" id="11_fire"]
+
+[sub_resource type="StyleBoxTexture" id="sb_r"]
+texture = ExtResource("3_r")
+
+[sub_resource type="StyleBoxTexture" id="sb_rp"]
+texture = ExtResource("4_rp")
+
+[sub_resource type="StyleBoxTexture" id="sb_rb"]
+texture = ExtResource("5_rb")
+
+[sub_resource type="StyleBoxTexture" id="sb_rbp"]
+texture = ExtResource("6_rbp")
 
 [node name="TouchControls" type="Control"]
 layout_mode = 3
@@ -33,55 +54,91 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -106.0
-offset_top = -92.0
-offset_right = -10.0
-offset_bottom = -10.0
+offset_left = -128.0
+offset_top = -100.0
+offset_right = -6.0
+offset_bottom = -6.0
 grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2
 
 [node name="AttackButton" type="Button" parent="ActionPad"]
 layout_mode = 0
-offset_left = 48.0
-offset_top = 34.0
-offset_right = 92.0
-offset_bottom = 66.0
+offset_left = 82.0
+offset_top = 54.0
+offset_right = 122.0
+offset_bottom = 94.0
+focus_mode = 0
+theme_override_styles/normal = SubResource("sb_rb")
+theme_override_styles/hover = SubResource("sb_rb")
+theme_override_styles/pressed = SubResource("sb_rbp")
+theme_override_styles/hover_pressed = SubResource("sb_rbp")
+theme_override_styles/focus = SubResource("sb_rb")
 action_mode = 0
-text = "Serang"
+icon = ExtResource("7_sw")
+icon_alignment = 1
 
 [node name="RollButton" type="Button" parent="ActionPad"]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 42.0
-offset_right = 44.0
-offset_bottom = 68.0
-action_mode = 0
-text = "Guling"
-
-[node name="InteractButton" type="Button" parent="ActionPad"]
-layout_mode = 0
 offset_left = 48.0
-offset_top = 2.0
-offset_right = 92.0
-offset_bottom = 28.0
+offset_top = 64.0
+offset_right = 78.0
+offset_bottom = 94.0
+focus_mode = 0
+theme_override_styles/normal = SubResource("sb_r")
+theme_override_styles/hover = SubResource("sb_r")
+theme_override_styles/pressed = SubResource("sb_rp")
+theme_override_styles/hover_pressed = SubResource("sb_rp")
+theme_override_styles/focus = SubResource("sb_r")
 action_mode = 0
-text = "Aksi"
-
-[node name="HealButton" type="Button" parent="ActionPad"]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 8.0
-offset_right = 44.0
-offset_bottom = 34.0
-action_mode = 0
-text = "Botol"
+icon = ExtResource("8_roll")
+icon_alignment = 1
 
 [node name="SkillButton" type="Button" parent="ActionPad"]
 layout_mode = 0
-offset_left = 4.0
-offset_top = -24.0
-offset_right = 44.0
-offset_bottom = 2.0
+offset_left = 56.0
+offset_top = 28.0
+offset_right = 86.0
+offset_bottom = 58.0
+focus_mode = 0
+theme_override_styles/normal = SubResource("sb_r")
+theme_override_styles/hover = SubResource("sb_r")
+theme_override_styles/pressed = SubResource("sb_rp")
+theme_override_styles/hover_pressed = SubResource("sb_rp")
+theme_override_styles/focus = SubResource("sb_r")
 action_mode = 0
-text = "Sihir"
+icon = ExtResource("11_fire")
+icon_alignment = 1
+
+[node name="HealButton" type="Button" parent="ActionPad"]
+layout_mode = 0
+offset_left = 88.0
+offset_top = 16.0
+offset_right = 118.0
+offset_bottom = 46.0
+focus_mode = 0
+theme_override_styles/normal = SubResource("sb_r")
+theme_override_styles/hover = SubResource("sb_r")
+theme_override_styles/pressed = SubResource("sb_rp")
+theme_override_styles/hover_pressed = SubResource("sb_rp")
+theme_override_styles/focus = SubResource("sb_r")
+action_mode = 0
+icon = ExtResource("10_pot")
+icon_alignment = 1
+
+[node name="InteractButton" type="Button" parent="ActionPad"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 40.0
+offset_right = 42.0
+offset_bottom = 70.0
+focus_mode = 0
+theme_override_styles/normal = SubResource("sb_rb")
+theme_override_styles/hover = SubResource("sb_rb")
+theme_override_styles/pressed = SubResource("sb_rbp")
+theme_override_styles/hover_pressed = SubResource("sb_rbp")
+theme_override_styles/focus = SubResource("sb_rb")
+action_mode = 0
+icon = ExtResource("9_talk")
+icon_alignment = 1
+

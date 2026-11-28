@@ -28,6 +28,9 @@ func enter(_msg: Dictionary) -> void:
 	var dir_in: Vector2 = p.get_move_input()
 	if dir_in.length_squared() > 0.01:
 		p.update_facing(dir_in)
+	var assist: Vector2 = p.aim_assist_dir(dir_in)
+	if assist != Vector2.ZERO:
+		p.update_facing(assist)
 
 	var lunge_spd: float = 165.0 if is_finisher else 110.0
 	p.velocity = p.facing * lunge_spd

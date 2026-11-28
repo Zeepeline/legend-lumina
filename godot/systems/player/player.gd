@@ -24,6 +24,8 @@ var roll_cooldown: float = 0.0
 var fireball_cooldown: float = 0.0
 var cast_anim_t: float = 0.0 ## sisa waktu pose merapal (anim cast_*), menahan anim diam/jalan
 var stamina_delay: float = 0.0
+const AIM_RANGE: float = 60.0
+
 var invuln_timer: float = 0.0
 var pending_knockback: Vector2 = Vector2.ZERO
 
@@ -371,6 +373,32 @@ func snap_camera() -> void:
 	camera.reset_smoothing()
 	camera.force_update_scroll()
 	_smoothing_restore_frames = 2
+
+
+## Bidik bantu: arah ke musuh hidup terdekat dalam AIM_RANGE. Bila ada arah masukan, hanya musuh dalam ±70° dari
+## arah itu yang dipertimbangkan (pemain tetap bisa memilih sasaran). Mengembalikan Vector2.ZERO bila tidak ada.
+func aim_assist_dir(input_dir: Vector2) -> Vector2:
+	if GameStateStore.ref == null or not GameStateStore.ref.aim_assist:
+		return Vector2.ZERO
+	var best: Vector2 = Vector2.ZERO
+	var best_d: float = AIM_RANGE
+	var from: Vector2 = global_position + Vector2(0.0, -8.0)
+	for n: Node in get_tree().get_nodes_in_group(&"enemies"):
+		var e: Node2D = n as Node2D
+		if e == null or not is_instance_valid(e) or not e.is_visible_in_tree():
+			continue
+		var sm: Variant = e.get("state_machine")
+		if sm != null and (sm as StateMachine).is_in(&"Dead"):
+			continue
+		var to: Vector2 = (e.global_position + Vector2(0.0, -8.0)) - from
+		var d: float = to.length()
+		if d < 1.0 or d >= best_d:
+			continue
+		if input_dir.length_squared() > 0.01 and input_dir.normalized().dot(to / d) < 0.34:
+			continue
+		best_d = d
+		best = to / d
+	return best
 
 
 func shake_camera(intensity: float, duration: float) -> void:

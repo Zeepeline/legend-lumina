@@ -8,6 +8,7 @@ extends Control
 @onready var skin_btn: Button = $Center/Panel/Margin/VBox/SkinBtn
 @onready var relaxed_btn: Button = $Center/Panel/Margin/VBox/RelaxedBtn
 @onready var touch_btn: Button = $Center/Panel/Margin/VBox/TouchBtn
+@onready var aim_btn: Button = $Center/Panel/Margin/VBox/AimBtn
 @onready var fullscreen_btn: Button = $Center/Panel/Margin/VBox/FullscreenBtn
 @onready var music_vol_btn: Button = $Center/Panel/Margin/VBox/MusicVolBtn
 @onready var sfx_vol_btn: Button = $Center/Panel/Margin/VBox/SfxVolBtn
@@ -22,6 +23,7 @@ func _ready() -> void:
 	skin_btn.pressed.connect(_on_switch_skin)
 	relaxed_btn.pressed.connect(_on_toggle_relaxed)
 	touch_btn.pressed.connect(_on_toggle_touch)
+	aim_btn.pressed.connect(_on_toggle_aim)
 	fullscreen_btn.pressed.connect(_on_toggle_fullscreen)
 	music_vol_btn.pressed.connect(_on_cycle_music_vol)
 	sfx_vol_btn.pressed.connect(_on_cycle_sfx_vol)
@@ -73,6 +75,7 @@ func _refresh_labels() -> void:
 	relaxed_btn.text = tr("ui_relaxed_mode") % tr(rel_key)
 	var touch_key: String = "ui_on" if gs.is_touch_enabled() else "ui_off"
 	touch_btn.text = tr("ui_touch_controls") % tr(touch_key)
+	aim_btn.text = tr("ui_aim_assist") % tr("ui_on" if gs.aim_assist else "ui_off")
 	var is_fs: bool = _is_fullscreen()
 	fullscreen_btn.text = "Layar Penuh: %s" % tr("ui_on" if is_fs else "ui_off")
 	music_vol_btn.text = tr("ui_music_vol") % ("%d%%" % roundi(gs.music_volume * 100.0))
@@ -109,6 +112,12 @@ func _on_switch_skin() -> void:
 func _on_toggle_relaxed() -> void:
 	AudioService.ref.play_ui_id(&"ui_click")
 	GameStateStore.ref.toggle_relaxed_mode()
+	_refresh_labels()
+
+
+func _on_toggle_aim() -> void:
+	AudioService.ref.play_ui_id(&"ui_click")
+	GameStateStore.ref.toggle_aim_assist()
 	_refresh_labels()
 
 

@@ -227,6 +227,7 @@ func _on_interacted(by: Node) -> void:
 				EventsBus.ref.notification_requested.emit(tr("msg_skill_learned") % tr(String(sk["name_key"])))
 	if dialogue != null:
 		_is_talking = true
+		DialogueBox.pending_sheet = sprite_sheet
 		EventsBus.ref.dialogue_requested.emit(dialogue)
 
 

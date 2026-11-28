@@ -49,6 +49,8 @@ var flags: Dictionary = {}
 var inventory: Dictionary = {"potion": 2, "ether": 1}
 var play_time_sec: float = 0.0
 var touch_controls_override: int = -1
+## Bidik bantu: saat menyerang, pemain otomatis menghadap musuh terdekat (bawaan aktif).
+var aim_assist: bool = true
 
 var _hour_emit_accum: float = 0.0
 
@@ -529,6 +531,11 @@ func is_touch_enabled() -> bool:
 	return DisplayServer.is_touchscreen_available()
 
 
+func toggle_aim_assist() -> bool:
+	aim_assist = not aim_assist
+	return aim_assist
+
+
 func toggle_touch_controls() -> bool:
 	var next_enabled: bool = not is_touch_enabled()
 	touch_controls_override = 1 if next_enabled else 0
@@ -591,6 +598,7 @@ func to_dict() -> Dictionary:
 		"inventory": inventory.duplicate(true),
 		"play_time_sec": play_time_sec,
 		"touch_controls_override": touch_controls_override,
+		"aim_assist": aim_assist,
 	}
 
 
@@ -693,6 +701,7 @@ func from_dict(d: Dictionary) -> void:
 	inventory = loaded_inv.duplicate(true) if loaded_inv is Dictionary else {"potion": 2}
 	play_time_sec = maxf(0.0, float(d.get("play_time_sec", 0.0)))
 	touch_controls_override = clampi(int(d.get("touch_controls_override", -1)), -1, 1)
+	aim_assist = bool(d.get("aim_assist", true))
 	_emit_stats()
 	_emit_inventory()
 	if EventsBus.ref != null:
