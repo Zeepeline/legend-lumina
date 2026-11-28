@@ -218,6 +218,7 @@ ICONS = {
              "...FPPF...", "...FFFF..."],
     'holy': ["....Y.....", "....Y.....", ".Y..Y..Y..", "..YYWYY...", "YYYWWWYYY.", "..YYWYY...", ".Y..Y..Y..", "....Y.....",
              "....Y.....", ".........."],
+    'scroll': [".FFFFFF.", "FWCCCCWF", ".FWWWWF.", ".FWCCWF.", ".FWWWWF.", ".FWCCWF.", "FWCCCCWF", ".FFFFFF."],
     'lock': ["...FFF....", "..F...F...", "..F...F...", ".FFFFFFF..", ".FSSSSSF..", ".FSSFSSF..", ".FSSFSSF..", ".FTTTTTF..",
              "..FFFFF...", ".........."],
 }

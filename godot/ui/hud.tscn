@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://ui/spellbar.gd" id="2_spell"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/ic_bag.png" id="7_bag"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/ic_map.png" id="8_map"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/ic_gear.png" id="9_gear"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/ic_scroll.png" id="10_scroll"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_face"]
 atlas = ExtResource("5_hero")
@@ -125,17 +126,12 @@ layout_mode = 0
 mouse_filter = 2
 
 [node name="QuickBar" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -54.0
+layout_mode = 0
+offset_left = 130.0
 offset_top = 3.0
-offset_right = 54.0
+offset_right = 235.0
 offset_bottom = 27.0
-grow_horizontal = 2
-theme_override_constants/separation = 4
-alignment = 1
+theme_override_constants/separation = 3
 
 [node name="JournalButton" type="Button" parent="QuickBar"]
 custom_minimum_size = Vector2(24, 24)
@@ -177,17 +173,16 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -150.0
+offset_left = -238.0
 offset_top = 3.0
 offset_right = -3.0
-offset_bottom = 28.0
+offset_bottom = 21.0
 grow_horizontal = 0
-mouse_filter = 2
+theme_type_variation = &"PlankPanel"
 
 [node name="HBox" type="HBoxContainer" parent="TopRightCapsule"]
 layout_mode = 2
 theme_override_constants/separation = 3
-alignment = 1
 
 [node name="TimeGroup" type="HBoxContainer" parent="TopRightCapsule/HBox"]
 layout_mode = 2
@@ -201,17 +196,25 @@ icon_kind = "sun"
 
 [node name="TimeLabel" type="Label" parent="TopRightCapsule/HBox/TimeGroup"]
 layout_mode = 2
+theme_type_variation = &"LightLabel"
 text = "09:00"
 
 [node name="CompassIcon" type="Control" parent="TopRightCapsule/HBox"]
+visible = false
 custom_minimum_size = Vector2(7, 9)
 layout_mode = 2
 script = ExtResource("4_icon")
 icon_kind = "compass"
 
 [node name="CompassLabel" type="Label" parent="TopRightCapsule/HBox"]
+visible = false
 layout_mode = 2
 text = "U"
+
+[node name="Gap1" type="Control" parent="TopRightCapsule/HBox"]
+custom_minimum_size = Vector2(3, 0)
+layout_mode = 2
+mouse_filter = 2
 
 [node name="CoinIcon" type="Control" parent="TopRightCapsule/HBox"]
 custom_minimum_size = Vector2(6, 9)
@@ -221,7 +224,13 @@ icon_kind = "coin"
 
 [node name="GoldLabel" type="Label" parent="TopRightCapsule/HBox"]
 layout_mode = 2
+theme_type_variation = &"LightLabel"
 text = "0"
+
+[node name="Gap2" type="Control" parent="TopRightCapsule/HBox"]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 2
+mouse_filter = 2
 
 [node name="PotionIcon" type="Control" parent="TopRightCapsule/HBox"]
 custom_minimum_size = Vector2(6, 9)
@@ -231,23 +240,51 @@ icon_kind = "potion"
 
 [node name="FlaskLabel" type="Label" parent="TopRightCapsule/HBox"]
 layout_mode = 2
-theme_type_variation = &"HeadLabel"
-text = "•••"
+theme_type_variation = &"LightLabel"
+text = "3"
 
 [node name="PotionCountLabel" type="Label" parent="TopRightCapsule/HBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.32, 0.48, 0.2, 1)
+theme_override_colors/font_color = Color(0.651, 0.671, 0.251, 1)
 text = "+0"
 
+[node name="Divider" type="ColorRect" parent="TopRightCapsule/HBox"]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.024, 0.004, 0.02, 1)
+
+[node name="QuestIcon" type="TextureRect" parent="TopRightCapsule/HBox"]
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("10_scroll")
+stretch_mode = 3
+
+[node name="QuestNameBtn" type="Button" parent="TopRightCapsule/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_colors/font_color = Color(0.94, 0.76, 0.443, 1)
+theme_override_colors/font_hover_color = Color(0.98, 0.94, 0.86, 1)
+theme_override_colors/font_pressed_color = Color(0.98, 0.94, 0.86, 1)
+theme_override_constants/h_separation = 0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_flat")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_flat")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_flat")
+text = "-"
+alignment = 0
+text_overrun_behavior = 3
+
 [node name="QuestCard" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -150.0
-offset_top = 31.0
+offset_top = 23.0
 offset_right = -3.0
-offset_bottom = 60.0
+offset_bottom = 50.0
 grow_horizontal = 0
 theme_type_variation = &"ParchmentPanel"
 
@@ -274,7 +311,7 @@ theme_override_colors/font_pressed_color = Color(0.639, 0.161, 0.11, 1)
 theme_override_styles/normal = SubResource("StyleBoxEmpty_flat")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_flat")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_flat")
-text = "-"
+text = "x"
 
 [node name="QuestDivider" type="ColorRect" parent="QuestCard/VBox"]
 custom_minimum_size = Vector2(0, 1)
@@ -287,7 +324,6 @@ custom_minimum_size = Vector2(135, 0)
 layout_mode = 2
 text = "-"
 autowrap_mode = 3
-max_lines_visible = 3
 
 [node name="RegionBanner" type="PanelContainer" parent="."]
 visible = false

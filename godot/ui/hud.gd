@@ -28,6 +28,7 @@ const PEACE_FADE_DELAY: float = 5.0
 @onready var dev_button: Button = $QuickBar/DevButton
 
 @onready var quest_card: PanelContainer = $QuestCard
+@onready var quest_name_btn: Button = $TopRightCapsule/HBox/QuestNameBtn
 @onready var quest_title_label: Label = $QuestCard/VBox/Header/QuestTitleLabel
 @onready var quest_toggle_btn: Button = $QuestCard/VBox/Header/QuestToggleBtn
 @onready var quest_divider: ColorRect = $QuestCard/VBox/QuestDivider
@@ -53,7 +54,7 @@ var _boss_trail_ratio: float = 1.0
 var _boss_active: bool = false
 var _peace_timer: float = 0.0
 var _stats_faded: bool = false
-var _quest_collapsed: bool = false
+var _quest_collapsed: bool = true
 var _last_banner_id: String = ""
 var _last_compass_dir: String = ""
 var _toast_tween: Tween = null
@@ -91,6 +92,7 @@ func _ready() -> void:
 	menu_button.pressed.connect(func() -> void: _tap_action(&"pause"))
 	dev_button.pressed.connect(_on_dev_pressed)
 	quest_toggle_btn.pressed.connect(_toggle_quest_card)
+	quest_name_btn.pressed.connect(_toggle_quest_card)
 	stats_panel.mouse_entered.connect(_wake_stats_panel)
 
 	_refresh_stats()
@@ -197,10 +199,7 @@ func _refresh_stats() -> void:
 	exp_bar.set_ratios(exp_ratio)
 
 	gold_label.text = "%d" % gs.gold
-	var dots: String = ""
-	for i: int in gs.flask_max:
-		dots += "•" if i < gs.flask_charges else "·"
-	flask_label.text = dots
+	flask_label.text = "%d" % gs.flask_charges
 	var pot_count: int = (
 		InventoryLogic.count_item(gs.inventory, &"potion")
 		+ InventoryLogic.count_item(gs.inventory, &"hi_potion")
@@ -231,9 +230,11 @@ func _refresh_quest_card() -> void:
 	if chosen.is_empty():
 		quest_title_label.text = tr("ui_quest_card_title").to_upper()
 		quest_desc_label.text = tr("ui_quest_none")
+		quest_name_btn.text = tr("ui_quest_none")
 		return
 
 	var q_name: String = tr(String(chosen["name_key"]))
+	quest_name_btn.text = q_name + ("!" if not claimable_entry.is_empty() else "")
 	if not claimable_entry.is_empty():
 		quest_title_label.text = "%s · %s" % [tr("ui_quest_card_title").to_upper(), tr("ui_quest_ready")]
 		quest_desc_label.text = q_name
@@ -244,9 +245,7 @@ func _refresh_quest_card() -> void:
 
 func _toggle_quest_card() -> void:
 	_quest_collapsed = not _quest_collapsed
-	quest_divider.visible = not _quest_collapsed
-	quest_desc_label.visible = not _quest_collapsed
-	quest_toggle_btn.text = "+" if _quest_collapsed else "-"
+	quest_card.visible = not _quest_collapsed
 	if AudioService.ref != null:
 		AudioService.ref.play_ui_id(&"ui_click")
 

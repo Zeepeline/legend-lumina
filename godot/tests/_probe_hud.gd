@@ -12,6 +12,9 @@ func _process(_d: float) -> bool:
 			(n as CanvasItem).visible = false
 	if frame == 310 and OS.get_environment("TOUCH") == "1":
 		GameStateStore.ref.toggle_touch_controls()
+	if frame == 330 and OS.get_environment("QUEST") == "1":
+		for n: Node in root.find_children("QuestNameBtn", "", true, false):
+			(n as Button).pressed.emit()
 	if frame == 420:
 		root.get_viewport().get_texture().get_image().save_png("/tmp/gt/hud.png")
 		return true
